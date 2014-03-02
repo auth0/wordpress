@@ -1,4 +1,4 @@
 Wordpress Plugin for Auth0
 ====
 
-Demo: auth0-wp.azurewebsites.net
+Demo: <http://auth0-wp.azurewebsites.net>
