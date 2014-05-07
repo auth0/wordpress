@@ -22,6 +22,10 @@ class WP_Auth0 {
 
         add_action( 'init', array(__CLASS__, 'wp_init') );
 
+        // Add hooks for clear up session
+        add_action( 'wp_logout', array(__CLASS__, 'end_session') );
+        add_action( 'wp_login', array(__CLASS__, 'end_session') );
+
         register_activation_hook( WPA0_PLUGIN_FILE, array(__CLASS__, 'install') );
         register_deactivation_hook( WPA0_PLUGIN_FILE, array(__CLASS__, 'uninstall') );
 
@@ -29,6 +33,9 @@ class WP_Auth0 {
         add_action( 'template_redirect', array(__CLASS__, 'init_auth0'), 1 );
 
         add_filter( 'login_message', array(__CLASS__, 'render_form') );
+        // Add hook to redirect directly on login auto
+        add_action('login_init', array(__CLASS__, 'login_auto'));
+
         add_shortcode( 'auth0', array(__CLASS__, 'shortcode' ) );
 
         add_action( 'wp_enqueue_scripts', array(__CLASS__, 'wp_enqueue'));
@@ -37,11 +44,11 @@ class WP_Auth0 {
         // NOTE: Would love if wordpress just added a simple flash system
         add_filter('the_content', array(__CLASS__,'show_error'));
 
+
         WP_Auth0_Admin::init();
     }
 
     public static function wp_enqueue(){
-        // die("wp enqueue!");
         $activated = absint(WP_Auth0_Options::get( 'active' ));
         if(!$activated)
             return;
@@ -58,7 +65,6 @@ class WP_Auth0 {
                 ));
             }
         }else{
-            // die("muajaja");
             wp_enqueue_script( 'auth0-wp-login-form', WPA0_PLUGIN_URL . 'assets/js/auth0.min.js', array('jquery') );
         }
     }
@@ -70,6 +76,7 @@ class WP_Auth0 {
         return $html;
     }
 
+
     public static function render_form( $html ){
         $activated = absint(WP_Auth0_Options::get( 'active' ));
         $auto_login = absint(WP_Auth0_Options::get( 'auto_login' ));
@@ -78,12 +85,11 @@ class WP_Auth0 {
             return $html;
 
         ob_start();
-        // die("mudafuca!");
+
         if(!$auto_login) {
             include WPA0_PLUGIN_DIR . 'templates/login-form.php';
         }
         else {
-            // die("EA EA auto login!");
             include WPA0_PLUGIN_DIR . 'templates/login-auto.php';
         }
 
@@ -109,6 +115,9 @@ class WP_Auth0 {
 
         $code = $wp_query->query_vars['code'];
         $state = $wp_query->query_vars['state'];
+        $stateFromGet = json_decode(stripcslashes($state));
+        $stateFromSession = json_decode($_SESSION['auth0_state']);
+
         $domain = WP_Auth0_Options::get( 'domain' );
         $endpoint = "https://" . $domain . "/";
         $client_id = WP_Auth0_Options::get( 'client_id' );
@@ -117,6 +126,9 @@ class WP_Auth0 {
         if(empty($client_id)) wp_die(__('Error: Your Auth0 Client ID has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG));
         if(empty($client_secret)) wp_die(__('Error: Your Auth0 Client Secret has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG));
         if(empty($domain)) wp_die(__('Error: No Domain defined in Wordpress Administration!', WPA0_LANG));
+
+        if ($stateFromSession->uuid != $stateFromGet->uuid)
+            wp_die(__('Error: The state code doesn\'t match! Are you sure you are comming from the page?', WPA0_LANG));
 
         $body = array(
             'client_id' => $client_id,
@@ -135,7 +147,7 @@ class WP_Auth0 {
             'headers' => $headers,
             'body' => $body
         ));
-        // die("-".$endpoint . 'oauth/token-');
+
         if ($response instanceof WP_Error) {
             error_log($response->get_error_message());
             return wp_redirect( home_url() . '?auth0_error=1');
@@ -147,7 +159,18 @@ class WP_Auth0 {
             $response = wp_remote_get( $endpoint . 'userinfo/?access_token=' . $data->access_token );
             $userinfo = json_decode( $response['body'] );
 
-            self::login_user($userinfo);
+            if (self::login_user($userinfo)) {
+                if ($stateFromGet->interim) {
+                    include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
+                    exit();
+                    ob_start();
+
+                    return ob_get_clean();
+
+                } else {
+                    wp_safe_redirect( home_url() );
+                }
+            }
         }else{
             // Login failed!
             wp_redirect( home_url() . '?message=' . $data->error_description );
@@ -164,8 +187,7 @@ class WP_Auth0 {
         if($user instanceof WP_User){
             // User exists! Log in
             wp_set_auth_cookie( $user->ID );
-            wp_redirect( home_url() );
-            exit();
+            return true;
         }else{
             // User doesn't exist - create it!
             $user_id = (int)WP_Auth0_Users::create_user($userinfo);
@@ -174,8 +196,8 @@ class WP_Auth0 {
             if($user_id > 0){
                 // User created! Login and redirect
                 wp_set_auth_cookie( $user_id );
-                wp_redirect( home_url() );
-                exit();
+                return true;
+
             }elseif($user_id == -2){
                 $msg = __('Error: Could not create user. The registration process were rejected. Please verify that your account is whitelisted for this system.', WPA0_LANG);
                 $msg .= '<br/><br/>';
@@ -193,6 +215,14 @@ class WP_Auth0 {
 
     public static function wp_init(){
         self::setup_rewrites();
+        // Initialize session
+        if(!session_id()) {
+            session_start();
+        }
+    }
+
+    public static function end_session() {
+        session_destroy ();
     }
 
     private static function setup_rewrites(){

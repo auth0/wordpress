@@ -7,6 +7,14 @@ $domain = WP_Auth0_Options::get('domain');
 $show_icon = absint(WP_Auth0_Options::get('show_icon'));
 $wp_login = absint(WP_Auth0_Options::get('wp_login_form'));
 $form_desc = WP_Auth0_Options::get('form_desc');
+if (isset($_GET['interim-login']) && $_GET['interim-login'] == 1) {
+    $interim_login = true;
+} else {
+    $interim_login = false;
+}
+
+$stateObj = array("interim" => $interim_login, "uuid" =>uniqid());
+$state = $_SESSION['auth0_state'] = json_encode($stateObj);
 
 if(empty($client_id) || empty($domain)): ?>
     <p><?php _e('Auth0 Integration has not yet been set up! Please visit your Wordpress Auth0 settings and fill in the required settings.', WPA0_LANG); ?></p>
@@ -41,7 +49,8 @@ if(empty($client_id) || empty($domain)): ?>
             chrome: true,
             clientID:       '<?php echo $client_id; ?>',
             callbackURL:    '<?php echo site_url('/index.php?auth0=1'); ?>',
-            container:      'auth0-login-form'
+            container:      'auth0-login-form',
+            state:          '<?php echo $state; ?>'
         });
 
         widget.signin({
