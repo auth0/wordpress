@@ -23,7 +23,7 @@ class WP_Auth0 {
         add_action( 'init', array(__CLASS__, 'wp_init') );
 
         // Add hooks for clear up session
-        add_action( 'wp_logout', array(__CLASS__, 'end_session') );
+        add_action( 'wp_logout', array(__CLASS__, 'logout') );
         add_action( 'wp_login', array(__CLASS__, 'end_session') );
 
         register_activation_hook( WPA0_PLUGIN_FILE, array(__CLASS__, 'install') );
@@ -74,6 +74,38 @@ class WP_Auth0 {
         include WPA0_PLUGIN_DIR . 'templates/login-form.php';
         $html = ob_get_clean();
         return $html;
+    }
+
+    public static function login_auto() {
+        $auto_login = absint(WP_Auth0_Options::get( 'auto_login' ));
+
+        if ($auto_login && $_GET["action"] != "logout") {
+
+            $stateObj = array("interim" => false, "uuid" =>uniqid());
+            $state = $_SESSION['auth0_state'] = json_encode($stateObj);
+            // Create the link to log in
+
+            $login_url = "https://". WP_Auth0_Options::get('domain') .
+                         "/authorize?response_type=code&scope=openid%20profile".
+                         "&client_id=".WP_Auth0_Options::get('client_id') .
+                         "&redirect_uri=".site_url('/index.php?auth0=1') .
+                         "&state=".urlencode($state).
+                         "&connection=".WP_Auth0_Options::get('auto_login_method');
+
+            wp_redirect($login_url);
+            die();
+        }
+    }
+
+    public static function logout() {
+        self::end_session();
+
+        $auto_login = absint(WP_Auth0_Options::get( 'auto_login' ));
+        if ($auto_login) {
+            wp_redirect(home_url());
+            die();
+        }
+
     }
 
 
@@ -220,7 +252,6 @@ class WP_Auth0 {
             session_start();
         }
     }
-
     public static function end_session() {
         session_destroy ();
     }
