@@ -53,19 +53,13 @@ class WP_Auth0 {
         if(!$activated)
             return;
 
-        $auto_login = absint(WP_Auth0_Options::get( 'auto_login' ));
+        wp_enqueue_style( 'auth0-widget', WPA0_PLUGIN_URL . 'assets/css/main.css' );
 
-        if(!$auto_login){
-            wp_enqueue_style( 'auth0-widget', WPA0_PLUGIN_URL . 'assets/css/main.css' );
-
-            if(WP_Auth0_Options::get('wp_login_form')){
-                wp_enqueue_script( 'auth0-wp-login-form', WPA0_PLUGIN_URL . 'assets/js/wp-login.js', array('jquery') );
-                wp_localize_script( 'auth0-wp-login-form', 'wpa0', array(
-                    'wp_btn' => WP_Auth0_Options::get('wp_login_btn_text')
-                ));
-            }
-        }else{
-            wp_enqueue_script( 'auth0-wp-login-form', WPA0_PLUGIN_URL . 'assets/js/auth0.min.js', array('jquery') );
+        if(WP_Auth0_Options::get('wp_login_form')){
+            wp_enqueue_script( 'auth0-wp-login-form', WPA0_PLUGIN_URL . 'assets/js/wp-login.js', array('jquery') );
+            wp_localize_script( 'auth0-wp-login-form', 'wpa0', array(
+                'wp_btn' => WP_Auth0_Options::get('wp_login_btn_text')
+            ));
         }
     }
 
@@ -111,19 +105,13 @@ class WP_Auth0 {
 
     public static function render_form( $html ){
         $activated = absint(WP_Auth0_Options::get( 'active' ));
-        $auto_login = absint(WP_Auth0_Options::get( 'auto_login' ));
 
         if(!$activated)
             return $html;
 
         ob_start();
 
-        if(!$auto_login) {
-            include WPA0_PLUGIN_DIR . 'templates/login-form.php';
-        }
-        else {
-            include WPA0_PLUGIN_DIR . 'templates/login-auto.php';
-        }
+        include WPA0_PLUGIN_DIR . 'templates/login-form.php';
 
         $html = ob_get_clean();
         return $html;
