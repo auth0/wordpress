@@ -13,6 +13,12 @@ if (isset($_GET['interim-login']) && $_GET['interim-login'] == 1) {
     $interim_login = false;
 }
 
+// Get title for login widget
+$title = WP_Auth0_Options::get('form_title');
+if (empty($title)) {
+    $title = "Sign In";
+}
+
 $stateObj = array("interim" => $interim_login, "uuid" =>uniqid());
 $state = $_SESSION['auth0_state'] = json_encode($stateObj);
 
@@ -22,12 +28,7 @@ if(empty($client_id) || empty($domain)): ?>
     <div id="form-signin-wrapper" class="auth0-login">
         <?php include 'error-msg.php'; ?>
         <div class="form-signin">
-            <h2 class="form-signin-heading"><?php echo WP_Auth0_Options::get('form_title'); ?></h2>
-            <?php if(!empty($form_desc)): ?>
-            <p>
-                <?php echo $form_desc; ?>
-            </p>
-            <?php endif; ?>
+
             <div id="auth0-login-form" style=" min-height: 440px;"></div>
             <?php if($wp_login): ?>
             <div id="wp-login-form-wrapper">
@@ -50,7 +51,8 @@ if(empty($client_id) || empty($domain)): ?>
             clientID:       '<?php echo $client_id; ?>',
             callbackURL:    '<?php echo site_url('/index.php?auth0=1'); ?>',
             container:      'auth0-login-form',
-            state:          '<?php echo $state; ?>'
+            state:          '<?php echo $state; ?>',
+            dict:           { signin: { title: '<?php echo $title ?>' } }
         });
 
         widget.signin({

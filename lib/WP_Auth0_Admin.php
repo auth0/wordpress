@@ -140,14 +140,6 @@ class WP_Auth0_Admin{
             array('label_for' => 'wpa0_form_title')
         );
         add_settings_field(
-            'wpa0_form_desc',
-            __('Form Description', WPA0_LANG),
-            array(__CLASS__, 'render_form_desc'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_settings_section',
-            array('label_for' => 'wpa0_form_desc')
-        );
-        add_settings_field(
             'wpa0_show_icon',
             __('Show Icon', WPA0_LANG),
             array(__CLASS__, 'render_show_icon'),
@@ -186,10 +178,6 @@ class WP_Auth0_Admin{
     public static function render_form_title(){
         $v = WP_Auth0_Options::get( 'form_title' );
         echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[form_title]" id="wpa0_form_title" value="' . esc_attr( $v ) . '"/>';
-    }
-    public static function render_form_desc(){
-        $v = WP_Auth0_Options::get( 'form_desc' );
-        echo '<textarea name="' . WP_Auth0_Options::OPTIONS_NAME . '[form_desc]" id="wpa0_form_desc">' . esc_textarea( $v ) . '</textarea>';
     }
     public static function render_wp_login_btn_text(){
         $v = WP_Auth0_Options::get( 'wp_login_btn_text' );

@@ -42,7 +42,6 @@ class WP_Auth0_Options {
             'client_secret' => '',
             'domain' => '',
             'form_title' => '',
-            'form_desc' => '',
             'show_icon' => 0,
             'icon_url' => '',
             // 'redirect_referer' => 0,
