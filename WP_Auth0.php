@@ -44,23 +44,19 @@ class WP_Auth0 {
         // NOTE: Would love if wordpress just added a simple flash system
         add_filter('the_content', array(__CLASS__,'show_error'));
 
+        // This is a hack for removing the Lost your password link
+        add_filter( 'gettext', array(__CLASS__,'remove_lostpassword_text'));
 
         WP_Auth0_Admin::init();
     }
 
     public static function wp_enqueue(){
         $activated = absint(WP_Auth0_Options::get( 'active' ));
-        if(!$activated)
+        if(!$activated) {
             return;
+        }
 
         wp_enqueue_style( 'auth0-widget', WPA0_PLUGIN_URL . 'assets/css/main.css' );
-
-        if(WP_Auth0_Options::get('wp_login_form')){
-            wp_enqueue_script( 'auth0-wp-login-form', WPA0_PLUGIN_URL . 'assets/js/wp-login.js', array('jquery') );
-            wp_localize_script( 'auth0-wp-login-form', 'wpa0', array(
-                'wp_btn' => WP_Auth0_Options::get('wp_login_btn_text')
-            ));
-        }
     }
 
     public static function shortcode( $atts ){
@@ -68,6 +64,13 @@ class WP_Auth0 {
         include WPA0_PLUGIN_DIR . 'templates/login-form.php';
         $html = ob_get_clean();
         return $html;
+    }
+
+    public static function remove_lostpassword_text ( $text ) {
+        if ($text == 'Lost your password?'){
+            $text = '';
+        }
+        return $text;
     }
 
     public static function login_auto() {
@@ -176,7 +179,13 @@ class WP_Auth0 {
         $data = json_decode( $response['body'] );
 
         if(isset($data->access_token)){
+            // Get the user information
             $response = wp_remote_get( $endpoint . 'userinfo/?access_token=' . $data->access_token );
+            if ($response instanceof WP_Error) {
+                error_log($response->get_error_message());
+                return wp_redirect( home_url() . '?auth0_error=1');
+            }
+
             $userinfo = json_decode( $response['body'] );
 
             if (self::login_user($userinfo)) {
@@ -280,16 +289,24 @@ class WP_Auth0 {
                     PRIMARY KEY  (id)
                 );";
 
+        $sql[] = "CREATE TABLE ".$wpdb->auth0_user." (
+                    auth0_id varchar(100) NOT NULL,
+                    wp_id INT(11)  NOT NULL
+                    PRIMARY KEY  (auth0_id)
+                );";
+
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
-        foreach($sql as $s)
+        foreach($sql as $s) {
             dbDelta($s);
+        }
     }
 
     public static function initialize_wpdb_tables(){
         global $wpdb;
 
         $wpdb->auth0_log = $wpdb->prefix."auth0_log";
+        $wpdb->auth0_user = $wpdb->prefix."auth0_user";
     }
 
     private static function autoloader($class){

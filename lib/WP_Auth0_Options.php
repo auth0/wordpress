@@ -44,11 +44,9 @@ class WP_Auth0_Options {
             'form_title' => '',
             'show_icon' => 0,
             'icon_url' => '',
-            // 'redirect_referer' => 0,
             'ip_range_check' => 0,
             'ip_ranges' => '',
-            'wp_login_form' => 0,
-            'wp_login_btn_text' => __('Regular Login', WPA0_LANG)
+            'cdn_url' => 'https://d19p4zemcycm7a.cloudfront.net/w2/auth0-widget-2.4.min.js'
         );
     }
 }
