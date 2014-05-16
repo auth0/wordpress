@@ -7,7 +7,7 @@ $domain = WP_Auth0_Options::get('domain');
 $show_icon = absint(WP_Auth0_Options::get('show_icon'));
 $cdn = WP_Auth0_Options::get('cdn_url');
 $allow_signup = WP_Auth0_Options::get('allow_signup') == 1;
-
+$extra_css = apply_filters( 'auth0_login_css');
 
 $form_desc = WP_Auth0_Options::get('form_desc');
 if (isset($_GET['interim-login']) && $_GET['interim-login'] == 1) {
@@ -35,6 +35,11 @@ if(empty($client_id) || empty($domain)): ?>
             <div id="auth0-login-form" style=" min-height: 440px;"></div>
         </div>
     </div>
+    <?php if (!empty($extra_css)): ?>
+    <style type="text/css">
+        <?php echo $extra_css; ?>
+    </style>
+    <?php endif; ?>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script id="auth0" src="<?php echo $cdn ?>"></script>
     <script type="text/javascript">

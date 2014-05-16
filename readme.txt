@@ -46,3 +46,9 @@ For both scenarios you may configure in the admin to require that the user has a
 In any case, you may end up with a situation where a user has two accounts. Remember that wordpress allows you to do something similar to a user merge. To do so, you need to delete an account and attribute its contents to the user you want to merge with. You can go to Users, select the account you want to delete, and in the confirmation dialog you can select another user to attribute content.
 
 Wordpress defines a function called `get_currentuserinfo` to populate the global variable `current_user` with the logged in WP_User. Similary we define `get_currentauth0userinfo` that populates `current_user` and `currentauth0_user` with the information of the [Normalized profile](https://docs.auth0.com/user-profile)
+
+You can style the login form by adding a filter like this
+
+    add_filter( 'auth0_login_css', function() {
+        return "form a.a0-btn-small { background-color: red }";
+    } );
