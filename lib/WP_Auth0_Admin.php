@@ -86,6 +86,24 @@ class WP_Auth0_Admin{
         );
 
         add_settings_field(
+            'wpa0_verified_email',
+            __('Requires verified email', WPA0_LANG),
+            array(__CLASS__, 'render_verified_email'),
+            WP_Auth0_Options::OPTIONS_NAME,
+            'wp_auth0_advanced_settings_section',
+            array('label_for' => 'wpa0_verified_email')
+        );
+
+        add_settings_field(
+            'wpa0_allow_signup',
+            __('Allow signup', WPA0_LANG),
+            array(__CLASS__, 'render_allow_signup'),
+            WP_Auth0_Options::OPTIONS_NAME,
+            'wp_auth0_advanced_settings_section',
+            array('label_for' => 'wpa0_allow_signup')
+        );
+
+        add_settings_field(
             'wpa0_auto_login',
             __('Auto Login (no widget)', WPA0_LANG),
             array(__CLASS__, 'render_auto_login'),
@@ -122,6 +140,7 @@ class WP_Auth0_Admin{
                 'wp_auth0_advanced_settings_section',
                 array('label_for' => 'wpa0_ip_ranges')
             );
+
         add_settings_field(
             'wpa0_show_icon',
             __('Show Icon', WPA0_LANG),
@@ -214,6 +233,18 @@ class WP_Auth0_Admin{
         echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[cdn_url]" id="wpa0_cdn_url" value="' . esc_attr( $v ) . '"/>';
         echo '<br/><span class="description">' . __('Point this to the latest widget available in the CDN', WPA0_LANG) . '</span>';
     }
+    public static function render_verified_email () {
+        $v = absint(WP_Auth0_Options::get( 'requires_verified_email' ));
+        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[requires_verified_email]" id="wpa0_verified_email" value="1" ' . checked( $v, 1, false ) . '/>';
+        echo '<br/><span class="description">' . __('Mark this if you require the user to have a verified email to login', WPA0_LANG) . '</span>';
+    }
+
+    public static function render_allow_signup () {
+        $v = absint(WP_Auth0_Options::get( 'allow_signup' ));
+        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[allow_signup]" id="wpa0_allow_signup" value="1" ' . checked( $v, 1, false ) . '/>';
+        echo '<br/><span class="description">' . __('If you have database connection you can allow users to signup in the widget', WPA0_LANG) . '</span>';
+    }
+
 
     public static function render_basic_description(){
 
@@ -244,6 +275,8 @@ class WP_Auth0_Admin{
         else
             $input['show_icon'] = (isset($input['show_icon']) ? 1 : 0);
         $input['active'] = (isset($input['active']) ? 1 : 0);
+        $input['requires_verified_email'] = (isset($input['requires_verified_email']) ? 1 : 0);
+        $input['allow_signup'] = (isset($input['allow_signup']) ? 1 : 0);
 
         $error = "";
         if (empty($input["domain"]) ) {

@@ -6,6 +6,8 @@ $client_id = WP_Auth0_Options::get('client_id');
 $domain = WP_Auth0_Options::get('domain');
 $show_icon = absint(WP_Auth0_Options::get('show_icon'));
 $cdn = WP_Auth0_Options::get('cdn_url');
+$allow_signup = WP_Auth0_Options::get('allow_signup') == 1;
+
 
 $form_desc = WP_Auth0_Options::get('form_desc');
 if (isset($_GET['interim-login']) && $_GET['interim-login'] == 1) {
@@ -48,6 +50,7 @@ if(empty($client_id) || empty($domain)): ?>
             callbackURL:    '<?php echo site_url('/index.php?auth0=1'); ?>',
             container:      'auth0-login-form',
             state:          '<?php echo $state; ?>',
+            showSignup:     <?php echo $allow_signup?'true':'false' ?>,
             dict:           { signin: { title: '<?php echo $title ?>' } }
         });
 
