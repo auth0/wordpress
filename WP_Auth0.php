@@ -46,9 +46,6 @@ class WP_Auth0 {
 
         add_action( 'wp_enqueue_scripts', array(__CLASS__, 'wp_enqueue'));
 
-        // This is a hack for removing the Lost your password link
-        add_filter( 'gettext', array(__CLASS__,'remove_lostpassword_text'));
-
         WP_Auth0_Admin::init();
     }
 
@@ -66,13 +63,6 @@ class WP_Auth0 {
         include WPA0_PLUGIN_DIR . 'templates/login-form.php';
         $html = ob_get_clean();
         return $html;
-    }
-
-    public static function remove_lostpassword_text ( $text ) {
-        if ($text == 'Lost your password?'){
-            $text = '';
-        }
-        return $text;
     }
 
     public static function login_auto() {

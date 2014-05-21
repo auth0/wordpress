@@ -69,6 +69,14 @@ if(empty($client_id) || empty($domain)): ?>
 
     </script>
     <style type="text/css">
-        #loginform{display: none;}
+        body.a0-widget-open>* {
+            display: inherit;
+        }
+        #loginform{
+            display: none;
+        }
+        #login #nav {
+            display: none;
+        }
     </style>
 <?php endif;
