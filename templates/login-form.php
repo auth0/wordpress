@@ -7,7 +7,7 @@ $domain = WP_Auth0_Options::get('domain');
 $show_icon = absint(WP_Auth0_Options::get('show_icon'));
 $cdn = WP_Auth0_Options::get('cdn_url');
 $allow_signup = WP_Auth0_Options::get('allow_signup') == 1;
-$extra_css = apply_filters( 'auth0_login_css');
+$extra_css = apply_filters( 'auth0_login_css', '');
 
 $form_desc = WP_Auth0_Options::get('form_desc');
 if (isset($_GET['interim-login']) && $_GET['interim-login'] == 1) {

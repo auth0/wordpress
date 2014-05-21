@@ -46,10 +46,6 @@ class WP_Auth0 {
 
         add_action( 'wp_enqueue_scripts', array(__CLASS__, 'wp_enqueue'));
 
-        // Filter that handles the showing of an error.
-        // NOTE: Would love if wordpress just added a simple flash system
-        add_filter('the_content', array(__CLASS__,'show_error'));
-
         // This is a hack for removing the Lost your password link
         add_filter( 'gettext', array(__CLASS__,'remove_lostpassword_text'));
 
@@ -126,15 +122,6 @@ class WP_Auth0 {
         return $html;
     }
 
-    public static function show_error($content) {
-        global $wp_query;
-
-        if(!isset($wp_query->query_vars['auth0_error'])) {
-            return $content;
-        }
-        return "Sorry there was a problem logging you in";
-    }
-
     public static function init_auth0(){
         global $wp_query;
 
@@ -179,27 +166,29 @@ class WP_Auth0 {
 
         if ($response instanceof WP_Error) {
             error_log($response->get_error_message());
-            return wp_redirect( home_url() . '?auth0_error=1');
+            $msg = __('Sorry. There was a problem logging you in.', WPA0_LANG);
+            $msg .= '<br/><br/>';
+            $msg .= '<a href="' . wp_login_url() . '">' . __('← Login', WPA0_LANG) . '</a>';
+            wp_die($msg);
         }
 
         $data = json_decode( $response['body'] );
-
         if(isset($data->access_token)){
             // Get the user information
             $response = wp_remote_get( $endpoint . 'userinfo/?access_token=' . $data->access_token );
             if ($response instanceof WP_Error) {
                 error_log($response->get_error_message());
-                return wp_redirect( home_url() . '?auth0_error=1');
+                $msg = __('Sorry, there was a problem logging you in.', WPA0_LANG);
+                $msg .= '<br/><br/>';
+                $msg .= '<a href="' . wp_login_url() . '">' . __('← Login', WPA0_LANG) . '</a>';
+                wp_die($msg);
             }
 
             $userinfo = json_decode( $response['body'] );
-            if (self::login_user($userinfo)) {
+            if (self::login_user($userinfo, $data)) {
                 if ($stateFromGet->interim) {
                     include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
                     exit();
-                    ob_start();
-
-                    return ob_get_clean();
 
                 } else {
                     wp_safe_redirect( home_url() );
@@ -264,18 +253,24 @@ class WP_Auth0 {
         $wpdb->delete( $wpdb->auth0_user, array( 'wp_id' => $user_id), array( '%d' ) );
     }
 
-    private static function dieWithVerifyEmail() {
-        $msg = __('Please verify your email and log in again.', WPA0_LANG);
-        $msg .= '<br/><br/>';
-        $msg .= '<a href="' . wp_login_url() . '">' . __('← Login', WPA0_LANG) . '</a>';
+    private static function dieWithVerifyEmail($userinfo, $data) {
 
-        wp_die($msg);
+        ob_start();
+        $domain = WP_Auth0_Options::get( 'domain' );
+        $token =  $data->id_token;
+        $email = $userinfo->email;
+        include WPA0_PLUGIN_DIR . 'templates/verify-email.php';
+
+        $html = ob_get_clean();
+
+        wp_die($html);
+
     }
-    private static function login_user( $userinfo ){
+    private static function login_user( $userinfo, $data ){
         // If the userinfo has an unverified email, and in the options we require a verified email
         // notify the user he cant login until he does so.
         if (!$userinfo->email_verified && WP_Auth0_Options::get( 'requires_verified_email' )) {
-            self::dieWithVerifyEmail();
+            self::dieWithVerifyEmail($userinfo, $data);
         }
 
         // See if there is a user in the auth0_user table with the user info client id
@@ -306,7 +301,7 @@ class WP_Auth0 {
                 // Don't allow creation or assignation of user if the email is not verified, that would
                 // be hijacking
                 if (!$userinfo->email_verified) {
-                    self::dieWithVerifyEmail();
+                    self::dieWithVerifyEmail($userinfo, $data);
                 }
                 $user_id = $joinUser->ID;
             } else {
