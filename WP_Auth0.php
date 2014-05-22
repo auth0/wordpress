@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: 1337 ApS
  * Author URI: http://1337.dk
  */
@@ -249,6 +249,7 @@ class WP_Auth0 {
         $domain = WP_Auth0_Options::get( 'domain' );
         $token =  $data->id_token;
         $email = $userinfo->email;
+        $connection = $userinfo->identities[0]->connection;
         include WPA0_PLUGIN_DIR . 'templates/verify-email.php';
 
         $html = ob_get_clean();

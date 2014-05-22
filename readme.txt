@@ -27,7 +27,11 @@ Before you start, make sure the admin user has a valid email that you own, read 
 == Screenshots ==
 
 1. The new login page
-2. The admin to configure it
+2. The admin to configure the plugin
+3. Auth0 admin to create a new Application
+4. You can enable or disable social plugins
+5. This is what happens if you are in the admin and your session expires
+6. You can configure enterprise connections
 
 == Technical Notes ==
 

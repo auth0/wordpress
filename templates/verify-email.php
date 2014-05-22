@@ -1,5 +1,6 @@
 <?php echo __('Please verify your email and log in again.', WPA0_LANG);?>
-<a id="resend"><?php echo __('Resend verification email.', WPA0_LANG);?> </a>
+<br/>
+<strong><a id="resend" href=""><?php echo __('Resend verification email.', WPA0_LANG);?> </a></strong>
 <br/><br/>
 <a href="<?php echo wp_login_url()?>"> <?php echo __('← Login', WPA0_LANG) ?> </a>
 <script type="text/javascript">
@@ -15,7 +16,7 @@
         }
 
         var url = "https://<?php echo $domain ?>/api/users/send_verification_email";
-        var data = '{"email" : "<?php echo $email ?>", "connection" : "Username-Password-Authentication"}';
+        var data = '{"email" : "<?php echo $email ?>", "connection" : "<?php echo $connection?>"}';
         xmlhttp.open("POST", url, true);
         xmlhttp.setRequestHeader("Authorization", "Bearer <?php echo $token ?>");
         xmlhttp.setRequestHeader("Content-Type", "application/json");
