@@ -24,6 +24,10 @@ Before you start, make sure the admin user has a valid email that you own, read 
 1. In `settings` - `Auth0 Settings` edit the *Domain*, *Client ID* and *Client Secret* from your auth0 dashboard
 1. Go to your auth0 dashboard, edit your application and add this to the available callbacks http://<your-domain>/index.php?auth0=1
 
+== Screenshots ==
+
+1. The new login page
+2. The admin to configure it
 
 == Technical Notes ==
 
