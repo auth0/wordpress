@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: 1337 ApS
  * Author URI: http://1337.dk
  */
@@ -249,6 +249,8 @@ class WP_Auth0 {
         $domain = WP_Auth0_Options::get( 'domain' );
         $token =  $data->id_token;
         $email = $userinfo->email;
+        $connection = $userinfo->identities[0]->connection;
+        $userId = $userinfo->user_id;
         include WPA0_PLUGIN_DIR . 'templates/verify-email.php';
 
         $html = ob_get_clean();
@@ -257,10 +259,20 @@ class WP_Auth0 {
 
     }
     private static function login_user( $userinfo, $data ){
-        // If the userinfo has an unverified email, and in the options we require a verified email
+        // If the userinfo has no email or an unverified email, and in the options we require a verified email
         // notify the user he cant login until he does so.
-        if (!$userinfo->email_verified && WP_Auth0_Options::get( 'requires_verified_email' )) {
-            self::dieWithVerifyEmail($userinfo, $data);
+        if (WP_Auth0_Options::get( 'requires_verified_email' )){
+            if (empty($userinfo->email)) {
+                $msg = __('This account does not have an email associated. Please login with a different provider.', WPA0_LANG);
+                $msg .= '<br/><br/>';
+                $msg .= '<a href="' . site_url() . '">' . __('← Go back', WPA0_LANG) . '</a>';
+
+                wp_die($msg);
+            }
+            if (!$userinfo->email_verified) {
+                self::dieWithVerifyEmail($userinfo, $data);
+            }
+
         }
 
         // See if there is a user in the auth0_user table with the user info client id

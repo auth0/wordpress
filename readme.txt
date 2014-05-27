@@ -24,6 +24,14 @@ Before you start, make sure the admin user has a valid email that you own, read 
 1. In `settings` - `Auth0 Settings` edit the *Domain*, *Client ID* and *Client Secret* from your auth0 dashboard
 1. Go to your auth0 dashboard, edit your application and add this to the available callbacks http://<your-domain>/index.php?auth0=1
 
+== Screenshots ==
+
+1. The new login page
+2. The admin to configure the plugin
+3. Auth0 admin to create a new Application
+4. You can enable or disable social plugins
+5. This is what happens if you are in the admin and your session expires
+6. You can configure enterprise connections
 
 == Technical Notes ==
 
