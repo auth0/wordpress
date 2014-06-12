@@ -16,7 +16,6 @@ define('AUTH0_DB_VERSION', 2);
 class WP_Auth0 {
     public static function init(){
         spl_autoload_register(array(__CLASS__, 'autoloader'));
-        register_shutdown_function(array('WP_Auth0_Utils', 'log_crash'));
 
         // WP_Auth0_Referer_Check::init();
         WP_Auth0_Ip_Check::init();
@@ -286,7 +285,7 @@ class WP_Auth0 {
             // If the user doesn't exist we need to either create a new one, or asign him to an existing one
             $isDatabaseUser = false;
             foreach ($userinfo->identities as $identity) {
-                if ($identity->connection == "Username-Password-Authentication") {
+                if ($identity->provider == "auth0") {
                     $isDatabaseUser = true;
                 }
             }
