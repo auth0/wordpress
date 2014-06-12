@@ -3,14 +3,14 @@
 <strong><a id="resend" href="#"><?php echo __('Resend verification email.', WPA0_LANG);?> </a></strong>
 <br/><br/>
 <a href="<?php echo wp_login_url()?>"> <?php echo __('← Login', WPA0_LANG) ?> </a>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/reqwest/1.1.0/reqwest.min.js" type="text/javascript"></script>
+
+<script src="<?php echo plugins_url( 'reqwest.min.js', __FILE__ ); ?>" type="text/javascript"></script>
 <script type="text/javascript">
     function resendEmail() {
 
         reqwest({
             url: 'https://<?php echo $domain ?>/api/users/<?php echo $userId ?>/send_verification_email',
             type: 'html',
-            // data: '{"email" : "<?php echo $email ?>", "connection" : "<?php echo $connection?>"}',
             data: '{}',
             method: 'post',
             contentType: 'application/json',

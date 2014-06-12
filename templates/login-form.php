@@ -40,7 +40,6 @@ if(empty($client_id) || empty($domain)): ?>
         <?php echo $extra_css; ?>
     </style>
     <?php endif; ?>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script id="auth0" src="<?php echo $cdn ?>"></script>
     <script type="text/javascript">
         var callback = null;
