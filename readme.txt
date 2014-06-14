@@ -1,4 +1,4 @@
-=== Wordpress Auth0 Integration ===
+=== Auth0 - Single Sign On with Social, Enterprise and User/Passwords ===
 Tags: login, oauth, authentication, single sign on, ldap, active directory, saml, windows azure ad, google apps, two factor, two-factor, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer
 Tested up to: 3.9
 Requires at least: 3.8
