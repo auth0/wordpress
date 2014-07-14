@@ -46,7 +46,7 @@ class WP_Auth0_Options {
             'icon_url' => '',
             'ip_range_check' => 0,
             'ip_ranges' => '',
-            'cdn_url' => 'http://cdn.auth0.com/w2/auth0-widget-4.0.0.min.js',
+            'cdn_url' => '//cdn.auth0.com/w2/auth0-widget-4.0.0.min.js',
             'requires_verified_email' => true,
             'allow_signup' => true
         );
