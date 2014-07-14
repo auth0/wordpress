@@ -64,7 +64,7 @@ Wordpress defines a function called `get_currentuserinfo` to populate the global
 
 = What should I do if I end up with two accounts for the same user? =
 
-In any case, you may end up with a situation where a user has two accounts. Remember that wordpress allows you to do something similar to a user merge. To do so, you need to delete an account and attribute its contents to the user you want to merge with. You can go to Users, select the account you want to delete, and in the confirmation dialog you can select another user to transfer the content.
+Under some situations, you may end up with a user with two accounts. Wordpress allows you to do merge users. You just delete one of the accounts and then attribute its contents to the user you want to merge with. Go to Users, select the account you want to delete, and in the confirmation dialog select another user to transfer the content.
 
 = Can I customize the Login Widget? =
 
@@ -78,7 +78,7 @@ The Login Widget is Open Source. For more information about it: https://github.c
 
 = Can I access the user profile information? =
 
-Wordpress defines a function called `get_currentuserinfo` to populate the global variable `current_user` with the logged in WP_User. Similary we define `get_currentauth0userinfo` that populates `current_user` and `currentauth0_user` with the information of the user. Auth0 normalizes the profile between all providers and will provide any extra attributes. [Read more here](https://docs.auth0.com/user-profile)
+The Auth0 plugin transparently handles login information for your Wordpress site and the plugins you use, so that it looks like any other login.
 
 = When I install this plugin, will existing users still be able to login? =
 
@@ -90,4 +90,4 @@ For a complete list look at https://docs.auth0.com/identityproviders
 
 = "This account does not have an email associated..." = 
 
-If you get this error, make sure you have checked the Email attribute in the Auth0 Dashboard under Connections -> Social (expand each provider). Some will provide it by default, others like Facebook or Windows Live not. Twitter for instance, won't provide an email. You might decide
+If you get this error, make sure you are requesting the Email attribute from each provider in the Auth0 Dashboard under Connections -> Social (expand each provider). Take into account that not all providers return Email addresses for users (e.g. Twitter). If this happens, you can always add an Email address to any logged in user through the Auth0 Dashbaord (pr API). See Users -> Edit. 
