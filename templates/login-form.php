@@ -23,7 +23,7 @@ if (empty($title)) {
 }
 
 $stateObj = array("interim" => $interim_login, "uuid" =>uniqid());
-$state = $_SESSION['auth0_state'] = json_encode($stateObj);
+$state = json_encode($stateObj);
 
 if(empty($client_id) || empty($domain)): ?>
     <p><?php _e('Auth0 Integration has not yet been set up! Please visit your Wordpress Auth0 settings and fill in the required settings.', WPA0_LANG); ?></p>
