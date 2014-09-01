@@ -70,7 +70,7 @@ class WP_Auth0 {
         if ($auto_login && $_GET["action"] != "logout") {
 
             $stateObj = array("interim" => false, "uuid" =>uniqid());
-            $state = $_SESSION['auth0_state'] = json_encode($stateObj);
+            $state = json_encode($stateObj);
             // Create the link to log in
 
             $login_url = "https://". WP_Auth0_Options::get('domain') .
@@ -121,8 +121,7 @@ class WP_Auth0 {
         $code = $wp_query->query_vars['code'];
         $state = $wp_query->query_vars['state'];
         $stateFromGet = json_decode(stripcslashes($state));
-        $stateFromSession = json_decode($_SESSION['auth0_state']);
-
+        
         $domain = WP_Auth0_Options::get( 'domain' );
         $endpoint = "https://" . $domain . "/";
         $client_id = WP_Auth0_Options::get( 'client_id' );
@@ -131,9 +130,6 @@ class WP_Auth0 {
         if(empty($client_id)) wp_die(__('Error: Your Auth0 Client ID has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG));
         if(empty($client_secret)) wp_die(__('Error: Your Auth0 Client Secret has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG));
         if(empty($domain)) wp_die(__('Error: No Domain defined in Wordpress Administration!', WPA0_LANG));
-
-        if ($stateFromSession->uuid != $stateFromGet->uuid)
-            wp_die(__('Error: The state code doesn\'t match! Are you sure you are comming from the page?', WPA0_LANG));
 
         $body = array(
             'client_id' => $client_id,
