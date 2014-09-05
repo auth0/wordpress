@@ -11,7 +11,7 @@ Before you start, **make sure the admin user has a valid email that you own**, r
 
 1. Install from the WordPress Store or upload the entire wp-auth0 folder to the /wp-content/plugins/ directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Create an account in Auth0 (https://auth0.com) and add a new Application. 
+3. Create an account in Auth0 (https://auth0.com) and add a new Application.
 4. Copy the Client ID, Client Secret and Domain from the Settings of the Application.
 5. On the Settings of the Auth0 application change the Callback URL to be: http://your-domain/index.php?auth0=1. Using TLS/SSL is recommended for production.
 6. Go back to WordPress Settings - Auth0 Settings edit the Domain, Client ID and Client Secret with the ones you copied from Auth0 Dashboard.
@@ -32,7 +32,7 @@ For both scenarios you may configure in the WP admin whether is mandatory that t
 
 ### Accesing Profile Information
 
-You can access the rich user profile information coming from the Identity Providers. WordPress defines a function called get_currentuserinfo to populate the global variable current_user with the logged in WP_User. Similary we define get_currentauth0userinfo that populates current_user and currentauth0_user with the information of the Normalized profile
+You can access the rich user profile information coming from the Identity Providers. WordPress defines a function called `get_currentuserinfo` to populate the global variable `current_user` with the logged in `WP_User`. Similary we define `get_currentauth0userinfo` that populates `current_user` and `currentauth0_user` with the information of the Normalized profile.
 
 ## FAQs
 
@@ -54,7 +54,7 @@ The Login Widget is Open Source. For more information about it: https://github.c
 
 The Auth0 plugin transparently handles login information for your Wordpress site and the plugins you use, so that it looks like any other login.
 
-### When I install this plugin, will existing users still be able to login? 
+### When I install this plugin, will existing users still be able to login?
 
 Yes. Read more about the requirements for that to happen in the Technical Notes.
 
@@ -64,7 +64,7 @@ For a complete list look at https://docs.auth0.com/identityproviders
 
 ### "This account does not have an email associated..."
 
-If you get this error, make sure you are requesting the Email attribute from each provider in the Auth0 Dashboard under Connections -> Social (expand each provider). Take into account that not all providers return Email addresses for users (e.g. Twitter). If this happens, you can always add an Email address to any logged in user through the Auth0 Dashbaord (pr API). See Users -> Edit. 
+If you get this error, make sure you are requesting the Email attribute from each provider in the Auth0 Dashboard under Connections -> Social (expand each provider). Take into account that not all providers return Email addresses for users (e.g. Twitter). If this happens, you can always add an Email address to any logged in user through the Auth0 Dashbaord (pr API). See Users -> Edit.
 
 ## Screenshots
 
