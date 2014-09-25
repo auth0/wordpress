@@ -96,6 +96,11 @@ class WP_Auth0 {
 
     }
 
+    public static function render_back_to_auth0() {
+
+        include WPA0_PLUGIN_DIR . 'templates/back-to-auth0.php';
+
+    }
 
     public static function render_form( $html ){
         $activated = absint(WP_Auth0_Options::get( 'active' ));
