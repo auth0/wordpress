@@ -1,35 +1,3 @@
-<style type="text/css">
-    body.a0-widget-open>* {
-        display: inherit;
-    }
-    #loginform{
-        display: none;
-    }
-    #login #nav {
-        display: none;
-    }
-    #a0-widget .a0-panel{
-        margin: auto;
-    }
-    #auth0-login-form {
-        margin-bottom: 20px;
-    }
-    .wp-login-link {
-        display: inline-block;
-        padding-left: 40px;
-        line-height: 32px;
-        height: 32px;
-        transition-duration: 0s;
-        background: transparent url('/wp-content/plugins/wp-auth0/assets/img/wordpress-logo-sprite.png') no-repeat left -38px;
-    }
-    .wp-login-link:hover {
-        background: transparent url('/wp-content/plugins/wp-auth0/assets/img/wordpress-logo-sprite.png') no-repeat left 0px;
-    }
-    #auth0-login-form {
-        min-height: 250px;
-    }
-</style>
-
 <?php
 $client_id = WP_Auth0_Options::get('client_id');
 $domain = WP_Auth0_Options::get('domain');
