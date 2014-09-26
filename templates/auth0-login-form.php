@@ -6,7 +6,6 @@ $cdn = WP_Auth0_Options::get('cdn_url');
 $allow_signup = WP_Auth0_Options::get('allow_signup') == 1;
 $extra_css = apply_filters( 'auth0_login_css', '');
 
-$form_desc = WP_Auth0_Options::get('form_desc');
 if (isset($_GET['interim-login']) && $_GET['interim-login'] == 1) {
     $interim_login = true;
 } else {
@@ -49,24 +48,32 @@ if(empty($client_id) || empty($domain)): ?>
         callback = a0_wp_login.initialize
     }
 
-    var widget = new Auth0Widget({
-        domain:     '<?php echo $domain; ?>',
-        chrome: true,
-        clientID:       '<?php echo $client_id; ?>',
+    var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
+    var options = {
         callbackURL:    '<?php echo site_url('/index.php?auth0=1'); ?>',
         container:      'auth0-login-form',
-        state:          '<?php echo $state; ?>',
-        showSignup:     <?php echo $allow_signup?'true':'false' ?>,
-        dict:           { signin: { title: '<?php echo $title ?>' } }
-    });
+        authParams: {
+            state:      '<?php echo $state; ?>'
+        },
+        dict: {
+            signin: {
+                title: '<?php echo $title ?>'
+            }
+        }
+    };
 
-    widget.signin({
-        onestep: true,
-        theme: 'static',
-        standalone: true,
-        showIcon: <?php echo ($show_icon ? 'true' : 'false'); ?>,
-        icon: '<?php echo ($show_icon ? WP_Auth0_Options::get('icon_url') : ''); ?>'
-    }, callback);
+    <?php if ($show_icon) { ?>
+        options['icon'] = WP_Auth0_Options::get('icon_url');
+    <?php } ?>
+
+    <?php if ($allow_signup) { ?>
+        lock.show(options, callback);
+    <?php } else { ?>
+        lock.showSignin(options, callback);
+    <?php } ?>
+
+
+
 
 </script>
 <?php

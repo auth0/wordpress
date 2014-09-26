@@ -355,6 +355,14 @@ class WP_Auth0 {
 
     public static function wp_init(){
         self::setup_rewrites();
+
+        $cdn_url = WP_Auth0_Options::get('cdn_url');
+        if (strpos($cdn_url, 'auth0-widget-5') !== false)
+        {
+            WP_Auth0_Options::set( 'cdn_url', '//cdn.auth0.com/js/lock-6.min.js' );
+            //WP_Auth0_Options::set( 'version', 1 );
+        }
+
         // Initialize session
         if(!session_id()) {
             session_start();
