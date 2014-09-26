@@ -357,10 +357,11 @@ class WP_Auth0 {
         self::setup_rewrites();
 
         $cdn_url = WP_Auth0_Options::get('cdn_url');
-        if (strpos($cdn_url, 'auth0-widget-5') !== false)
+
+        if (strpos($cdn_url, 'w2/auth0-widget') !== false)
         {
             WP_Auth0_Options::set( 'cdn_url', '//cdn.auth0.com/js/lock-6.min.js' );
-            //WP_Auth0_Options::set( 'version', 1 );
+            WP_Auth0_Options::set( 'version', 1 );
         }
 
         // Initialize session
