@@ -70,8 +70,10 @@ class WP_Auth0 {
 
     public static function shortcode( $atts ){
         ob_start();
-        include WPA0_PLUGIN_DIR . 'templates/login-form.php';
+
+        require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
         renderAuth0Form();
+
         $html = ob_get_clean();
         return $html;
     }
@@ -129,7 +131,7 @@ class WP_Auth0 {
 
         ob_start();
 
-        include WPA0_PLUGIN_DIR . 'templates/login-form.php';
+        require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
         renderAuth0Form();
 
         $html = ob_get_clean();
