@@ -72,7 +72,7 @@ class WP_Auth0 {
         ob_start();
 
         require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
-        renderAuth0Form();
+        renderAuth0Form(false);
 
         $html = ob_get_clean();
         return $html;
