@@ -5,7 +5,6 @@ $show_icon = absint(WP_Auth0_Options::get('show_icon'));
 $cdn = WP_Auth0_Options::get('cdn_url');
 $allow_signup = WP_Auth0_Options::get('allow_signup') == 1;
 $extra_css = apply_filters( 'auth0_login_css', '');
-$activated = absint(WP_Auth0_Options::get( 'active' )) == 1;
 
 $form_desc = WP_Auth0_Options::get('form_desc');
 if (isset($_GET['interim-login']) && $_GET['interim-login'] == 1) {
@@ -31,7 +30,7 @@ if(empty($client_id) || empty($domain)): ?>
     <div class="form-signin">
         <div id="auth0-login-form">
         </div>
-        <?php if ($wordpress_login_enabled && $activated): ?>
+        <?php if ($wordpress_login_enabled && $canShowLegacyLogin): ?>
             <div id="extra-options">
                 <a href="?wle">Login with WordPress username</a>
             </div>
