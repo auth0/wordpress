@@ -50,7 +50,13 @@ class WP_Auth0 {
 
         add_action( 'wp_enqueue_scripts', array(__CLASS__, 'wp_enqueue'));
 
+        add_action( 'widgets_init', array(__CLASS__, 'wp_register_widget'));
+
         WP_Auth0_Admin::init();
+    }
+
+    public static function wp_register_widget() {
+        register_widget( 'wp_auth0_widget' );
     }
 
     public static function wp_enqueue(){
@@ -65,6 +71,7 @@ class WP_Auth0 {
     public static function shortcode( $atts ){
         ob_start();
         include WPA0_PLUGIN_DIR . 'templates/login-form.php';
+        renderAuth0Form();
         $html = ob_get_clean();
         return $html;
     }
@@ -123,6 +130,7 @@ class WP_Auth0 {
         ob_start();
 
         include WPA0_PLUGIN_DIR . 'templates/login-form.php';
+        renderAuth0Form();
 
         $html = ob_get_clean();
         return $html;
