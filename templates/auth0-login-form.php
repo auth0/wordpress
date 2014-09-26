@@ -32,7 +32,7 @@ if(empty($client_id) || empty($domain)): ?>
         </div>
         <?php if ($wordpress_login_enabled): ?>
             <div id="extra-options">
-                <a href="?wle" class="wp-login-link">Login with WordPress username</a>
+                <a href="?wle">Login with WordPress username</a>
             </div>
         <?php endif; ?>
     </div>

@@ -30,18 +30,6 @@ body.a0-widget-open>* {
 #auth0-login-form {
     margin-bottom: 20px;
 }
-.wp-login-link {
-    display: inline-block;
-    padding-left: 40px;
-    line-height: 32px;
-    height: 32px;
-    transition-duration: 0s;
-
-    background: transparent url('../img/wordpress-logo-sprite.png') no-repeat left -38px;
-}
-.wp-login-link:hover {
-    background-position: 0 0;
-}
 #auth0-login-form {
     min-height: 250px;
 }
