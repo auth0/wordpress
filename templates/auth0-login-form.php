@@ -30,7 +30,7 @@ if(empty($client_id) || empty($domain)): ?>
     <div class="form-signin">
         <div id="auth0-login-form">
         </div>
-        <?php if ($wordpress_login_enabled): ?>
+        <?php if ($wordpress_login_enabled && $canShowLegacyLogin): ?>
             <div id="extra-options">
                 <a href="?wle">Login with WordPress username</a>
             </div>
