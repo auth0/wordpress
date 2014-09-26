@@ -1,3 +1,4 @@
+
 <?php
 
 class WP_Auth0_Options {
@@ -28,14 +29,13 @@ class WP_Auth0_Options {
 
     public static function set( $key, $value ){
         $options = self::get_options();
-
         $options[$key] = $value;
-
         update_option( self::OPTIONS_NAME, $options );
     }
 
     private static function defaults(){
         return array(
+            'version' => 1,
             'active' => 0,
             'auto_login' => 0,
             'auto_login_method' => '',
@@ -47,7 +47,7 @@ class WP_Auth0_Options {
             'icon_url' => '',
             'ip_range_check' => 0,
             'ip_ranges' => '',
-            'cdn_url' => '//cdn.auth0.com/w2/auth0-widget-5.min.js',
+            'cdn_url' => '//cdn.auth0.com/js/lock-6.min.js',
             'requires_verified_email' => true,
             'allow_signup' => true,
             'wordpress_login_enabled' => true
