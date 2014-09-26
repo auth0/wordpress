@@ -31,7 +31,7 @@ class WP_Auth0_Widget extends WP_Widget {
         {
             echo $args['before_widget'];
 
-            require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
+            include WPA0_PLUGIN_DIR . 'templates/login-form.php';
             renderAuth0Form(false);
 
             echo $args['after_widget'];
