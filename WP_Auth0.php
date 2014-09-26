@@ -35,7 +35,12 @@ class WP_Auth0 {
         add_action( 'plugins_loaded', array(__CLASS__, 'initialize_wpdb_tables'));
         add_action( 'template_redirect', array(__CLASS__, 'init_auth0'), 1 );
 
+        // Add an action to append a stylesheet for the login page
+        add_action( 'login_enqueue_scripts', array(__CLASS__, 'render_auth0_login_css') );
+
+        // Add a hook to add Auth0 code on the login page
         add_filter( 'login_message', array(__CLASS__, 'render_form') );
+
         // Add hook to redirect directly on login auto
         add_action('login_init', array(__CLASS__, 'login_auto'));
         // Add hook to handle when a user is deleted
@@ -96,6 +101,15 @@ class WP_Auth0 {
 
     }
 
+    public static function render_back_to_auth0() {
+
+        include WPA0_PLUGIN_DIR . 'templates/back-to-auth0.php';
+
+    }
+
+    public static function render_auth0_login_css() { ?>
+        <link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' />
+    <?php }
 
     public static function render_form( $html ){
         $activated = absint(WP_Auth0_Options::get( 'active' ));

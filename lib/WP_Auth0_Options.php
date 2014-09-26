@@ -7,6 +7,7 @@ class WP_Auth0_Options {
     private static function get_options(){
         if(empty(self::$_opt)){
             $options = get_option( self::OPTIONS_NAME, array());
+
             if(!is_array($options))
                 $options = self::defaults();
 
@@ -48,7 +49,8 @@ class WP_Auth0_Options {
             'ip_ranges' => '',
             'cdn_url' => '//cdn.auth0.com/w2/auth0-widget-5.min.js',
             'requires_verified_email' => true,
-            'allow_signup' => true
+            'allow_signup' => true,
+            'wordpress_login_enabled' => true
         );
     }
 }

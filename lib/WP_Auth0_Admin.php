@@ -67,6 +67,15 @@ class WP_Auth0_Admin{
             array('label_for' => 'wpa0_client_secret')
         );
 
+        add_settings_field(
+            'wpa0_login_enabled',
+            __('WordPress login enabled', WPA0_LANG),
+            array(__CLASS__, 'render_allow_wordpress_login'),
+            WP_Auth0_Options::OPTIONS_NAME,
+            'wp_auth0_basic_settings_section',
+            array('label_for' => 'wpa0_login_enabled')
+        );
+
 
 
         add_settings_section(
@@ -246,6 +255,12 @@ class WP_Auth0_Admin{
         echo '<br/><span class="description">' . __('If you have database connection you can allow users to signup in the widget', WPA0_LANG) . '</span>';
     }
 
+    public static function render_allow_wordpress_login () {
+        $v = absint(WP_Auth0_Options::get( 'wordpress_login_enabled' ));
+        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[wordpress_login_enabled]" id="wpa0_wp_login_enabled" value="1" ' . checked( $v, 1, false ) . '/>';
+        echo '<br/><span class="description">' . __('Mark this if you want to enable the regular WordPress login', WPA0_LANG) . '</span>';
+    }
+
 
     public static function render_basic_description(){
 
@@ -277,6 +292,7 @@ class WP_Auth0_Admin{
             $input['show_icon'] = (isset($input['show_icon']) ? 1 : 0);
         $input['active'] = (isset($input['active']) ? 1 : 0);
         $input['requires_verified_email'] = (isset($input['requires_verified_email']) ? 1 : 0);
+        $input['wordpress_login_enabled'] = (isset($input['wordpress_login_enabled']) ? 1 : 0);
         $input['allow_signup'] = (isset($input['allow_signup']) ? 1 : 0);
 
         $error = "";
