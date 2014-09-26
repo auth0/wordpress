@@ -30,7 +30,6 @@ class WP_Auth0_Options {
     public static function set( $key, $value ){
         $options = self::get_options();
         $options[$key] = $value;
-        self::$_opt = $options;
         update_option( self::OPTIONS_NAME, $options );
     }
 
