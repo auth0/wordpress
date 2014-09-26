@@ -5,7 +5,7 @@ class WP_Auth0_Options {
     const OPTIONS_NAME = 'wp_auth0_settings';
     private static $_opt = null;
 
-    public static function get_options(){
+    private static function get_options(){
         if(empty(self::$_opt)){
             $options = get_option( self::OPTIONS_NAME, array());
 
@@ -30,7 +30,6 @@ class WP_Auth0_Options {
     public static function set( $key, $value ){
         $options = self::get_options();
         $options[$key] = $value;
-        self::$_opt = $options;
         update_option( self::OPTIONS_NAME, $options );
     }
 
@@ -50,14 +49,8 @@ class WP_Auth0_Options {
             'ip_ranges' => '',
             'cdn_url' => '//cdn.auth0.com/js/lock-6.min.js',
             'requires_verified_email' => true,
-            'remember_last_login' => true,
             'allow_signup' => true,
-            'wordpress_login_enabled' => true,
-            'dict' => '',
-            'social_big_buttons' => true,
-            'username_style' => 'email',
-            'gravatar' => true,
-            'extra_conf' => '',
+            'wordpress_login_enabled' => true
         );
     }
 }
