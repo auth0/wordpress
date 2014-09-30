@@ -21,160 +21,72 @@ class WP_Auth0_Admin{
         ));
     }
 
+    protected static function init_option_section($sectionName, $settings)
+    {
+        $lowerName = strtolower($sectionName);
+        add_settings_section(
+            "wp_auth0_{$lowerName}_settings_section",
+            __($sectionName, WPA0_LANG),
+            array(__CLASS__, "render_{$lowerName}_description"),
+            WP_Auth0_Options::OPTIONS_NAME
+        );
+
+        foreach ($settings as $setting)
+        {
+            if (!isset($setting['enabled']) || $setting['enabled']){
+                add_settings_field(
+                    $setting['id'],
+                    __($setting['name'], WPA0_LANG),
+                    array(__CLASS__, $setting['function']),
+                    WP_Auth0_Options::OPTIONS_NAME,
+                    "wp_auth0_{$lowerName}_settings_section",
+                    array('label_for' => $setting['id'])
+                );
+            }
+        }
+    }
+
     public static function init_admin(){
-        add_settings_section(
-            'wp_auth0_basic_settings_section',
-            __('Basic', WPA0_LANG),
-            array(__CLASS__, 'render_basic_description'),
-            WP_Auth0_Options::OPTIONS_NAME
-        );
 
+/* ------------------------- BASIC ------------------------- */
 
+        self::init_option_section('Basic', array(
 
-        add_settings_field(
-            'wpa0_active',
-            __('Activate Auth0', WPA0_LANG),
-            array(__CLASS__, 'render_activate'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_basic_settings_section',
-            array('label_for' => 'wpa0_active')
-        );
+            array('id' => 'wpa0_active', 'name' => 'Activate Auth0', 'function' => 'render_activate'),
+            array('id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain'),
+            array('id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id'),
+            array('id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret'),
+            array('id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login'),
 
-        add_settings_field(
-            'wpa0_domain',
-            __('Domain', WPA0_LANG),
-            array(__CLASS__, 'render_domain'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_basic_settings_section',
-            array('label_for' => 'wpa0_domain')
-        );
+        ));
 
-        add_settings_field(
-            'wpa0_client_id',
-            __('Client ID', WPA0_LANG),
-            array(__CLASS__, 'render_client_id'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_basic_settings_section',
-            array('label_for' => 'wpa0_client_id')
-        );
+/* ------------------------- Appearance ------------------------- */
 
-        add_settings_field(
-            'wpa0_client_secret',
-            __('Client Secret', WPA0_LANG),
-            array(__CLASS__, 'render_client_secret'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_basic_settings_section',
-            array('label_for' => 'wpa0_client_secret')
-        );
+        self::init_option_section('Appearance', array(
 
-        add_settings_field(
-            'wpa0_login_enabled',
-            __('WordPress login enabled', WPA0_LANG),
-            array(__CLASS__, 'render_allow_wordpress_login'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_basic_settings_section',
-            array('label_for' => 'wpa0_login_enabled')
-        );
+            array('id' => 'wpa0_form_title', 'name' => 'Form Title', 'function' => 'render_form_title'),
+            array('id' => 'wpa0_social_big_buttons', 'name' => 'Show big social buttons', 'function' => 'render_social_big_buttons'),
+            array('id' => 'wpa0_show_icon', 'name' => 'Show Icon', 'function' => 'render_show_icon'),
+            array('id' => 'wpa0_icon_url', 'name' => 'Icon URL', 'function' => 'render_icon_url'),
 
+        ));
 
-
-        add_settings_section(
-            'wp_auth0_advanced_settings_section',
-            __('Advanced', WPA0_LANG),
-            array(__CLASS__, 'render_advanced_description'),
-            WP_Auth0_Options::OPTIONS_NAME
-        );
-
-        add_settings_field(
-            'wpa0_form_title',
-            __('Form Title', WPA0_LANG),
-            array(__CLASS__, 'render_form_title'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_advanced_settings_section',
-            array('label_for' => 'wpa0_form_title')
-        );
-
-        add_settings_field(
-            'wpa0_verified_email',
-            __('Requires verified email', WPA0_LANG),
-            array(__CLASS__, 'render_verified_email'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_advanced_settings_section',
-            array('label_for' => 'wpa0_verified_email')
-        );
-
-        add_settings_field(
-            'wpa0_allow_signup',
-            __('Allow signup', WPA0_LANG),
-            array(__CLASS__, 'render_allow_signup'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_advanced_settings_section',
-            array('label_for' => 'wpa0_allow_signup')
-        );
-
-        add_settings_field(
-            'wpa0_auto_login',
-            __('Auto Login (no widget)', WPA0_LANG),
-            array(__CLASS__, 'render_auto_login'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_advanced_settings_section',
-            array('label_for' => 'wpa0_auto_login')
-        );
-
-        add_settings_field(
-            'wpa0_auto_login_method',
-            __('Auto Login Method', WPA0_LANG),
-            array(__CLASS__, 'render_auto_login_method'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_advanced_settings_section',
-            array('label_for' => 'wpa0_auto_login_method')
-        );
-
-        add_settings_field(
-            'wpa0_ip_range_check',
-            __('Enable on IP Ranges', WPA0_LANG),
-            array(__CLASS__, 'render_ip_range_check'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_advanced_settings_section',
-            array('label_for' => 'wpa0_ip_range_check')
-        );
+/* ------------------------- ADVANCED ------------------------- */
 
         $use_ip_ranges = absint(WP_Auth0_Options::get( 'ip_range_check' )) == 1;
-        if($use_ip_ranges)
-            add_settings_field(
-                'wpa0_ip_ranges',
-                __('IP Ranges', WPA0_LANG),
-                array(__CLASS__, 'render_ip_ranges'),
-                WP_Auth0_Options::OPTIONS_NAME,
-                'wp_auth0_advanced_settings_section',
-                array('label_for' => 'wpa0_ip_ranges')
-            );
 
-        add_settings_field(
-            'wpa0_show_icon',
-            __('Show Icon', WPA0_LANG),
-            array(__CLASS__, 'render_show_icon'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_advanced_settings_section',
-            array('label_for' => 'wpa0_show_icon')
-        );
-        add_settings_field(
-            'wpa0_icon_url',
-            __('Icon URL', WPA0_LANG),
-            array(__CLASS__, 'render_icon_url'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_advanced_settings_section',
-            array('label_for' => 'wpa0_icon_url')
-        );
+        self::init_option_section('Advanced', array(
 
-        add_settings_field(
-            'wpa0_cdn_url',
-            __('Widget URL', WPA0_LANG),
-            array(__CLASS__, 'render_cdn_url'),
-            WP_Auth0_Options::OPTIONS_NAME,
-            'wp_auth0_advanced_settings_section',
-            array('label_for' => 'wpa0_cdn_url')
-        );
+            array('id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict'),
+            array('id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email'),
+            array('id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup'),
+            array('id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)', 'function' => 'render_auto_login'),
+            array('id' => 'wpa0_auto_login_method', 'name' => 'Auto Login Method', 'function' => 'render_auto_login_method'),
+            array('id' => 'wpa0_ip_range_check', 'name' => 'Enable on IP Ranges', 'function' => 'render_ip_range_check'),
+            array('id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges', 'function' => 'render_ip_ranges', 'enabled' => $use_ip_ranges),
+            array('id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url'),
+
+        ));
 
         register_setting(WP_Auth0_Options::OPTIONS_NAME, WP_Auth0_Options::OPTIONS_NAME, array(__CLASS__, 'input_validator'));
     }
@@ -199,7 +111,12 @@ class WP_Auth0_Admin{
         $v = WP_Auth0_Options::get( 'form_title' );
         echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[form_title]" id="wpa0_form_title" value="' . esc_attr( $v ) . '"/>';
         echo '<br/><span class="description">' . __('This is the title for the login widget', WPA0_LANG) . '</span>';
+    }
 
+    public static function render_dict(){
+        $v = WP_Auth0_Options::get( 'dict' );
+        echo '<textarea name="' . WP_Auth0_Options::OPTIONS_NAME . '[dict]" id="wpa0_dict">' . esc_attr( $v ) . '</textarea>';
+        echo '<br/><span class="description">' . __('This is the widget\'s dict param.', WPA0_LANG) . '<br><a href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject">' . __('More info', WPA0_LANG) . '</a></span>';
     }
 
     public static function render_activate(){
@@ -228,6 +145,11 @@ class WP_Auth0_Admin{
     public static function render_show_icon(){
         $v = absint(WP_Auth0_Options::get( 'show_icon' ));
         echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[show_icon]" id="wpa0_show_icon" value="1" ' . checked( $v, 1, false ) . '/>';
+    }
+
+    public static function render_social_big_buttons(){
+        $v = absint(WP_Auth0_Options::get( 'social_big_buttons' ));
+        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[show_icon]" id="wpa0_social_big_buttons" value="1" ' . checked( $v, 1, false ) . '/>';
     }
 
     public static function render_icon_url(){
@@ -263,6 +185,10 @@ class WP_Auth0_Admin{
 
 
     public static function render_basic_description(){
+
+    }
+
+    public static function render_appearance_description(){
 
     }
 
@@ -304,6 +230,14 @@ class WP_Auth0_Admin{
         }
         if (empty($input["client_secret"])) {
             $error = __("You need to specify a client secret", WPA0_LANG);
+        }
+
+        if (trim($input["dict"]) != '')
+        {
+            if (strpos($input["dict"], '{') !== false && json_decode($input["dict"]) === null)
+            {
+                $error = __("The dict parameter should be a valid json object", WPA0_LANG);
+            }
         }
 
         if ($error != "") {
