@@ -68,7 +68,6 @@ class WP_Auth0_Admin{
             array('id' => 'wpa0_social_big_buttons', 'name' => 'Show big social buttons', 'function' => 'render_social_big_buttons'),
             array('id' => 'wpa0_show_icon', 'name' => 'Show Icon', 'function' => 'render_show_icon'),
             array('id' => 'wpa0_icon_url', 'name' => 'Icon URL', 'function' => 'render_icon_url'),
-            array('id' => 'wpa0_gravatar', 'name' => 'Enable Gravatar integration', 'function' => 'render_gravatar'),
 
         ));
 
@@ -79,15 +78,12 @@ class WP_Auth0_Admin{
         self::init_option_section('Advanced', array(
 
             array('id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict'),
-            array('id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style'),
-            array('id' => 'wpa0_remember_last_login', 'name' => 'Remember last login', 'function' => 'render_remember_last_login'),
             array('id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email'),
             array('id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup'),
             array('id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)', 'function' => 'render_auto_login'),
             array('id' => 'wpa0_auto_login_method', 'name' => 'Auto Login Method', 'function' => 'render_auto_login_method'),
             array('id' => 'wpa0_ip_range_check', 'name' => 'Enable on IP Ranges', 'function' => 'render_ip_range_check'),
             array('id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges', 'function' => 'render_ip_ranges', 'enabled' => $use_ip_ranges),
-            array('id' => 'wpa0_extra_conf', 'name' => 'Extra settings', 'function' => 'render_extra_conf'),
             array('id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url'),
 
         ));
@@ -123,21 +119,6 @@ class WP_Auth0_Admin{
         echo '<br/><span class="description">' . __('This is the widget\'s dict param.', WPA0_LANG) . '<br><a href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject">' . __('More info', WPA0_LANG) . '</a></span>';
     }
 
-    public static function render_extra_conf(){
-        $v = WP_Auth0_Options::get( 'extra_conf' );
-        echo '<textarea name="' . WP_Auth0_Options::OPTIONS_NAME . '[extra_conf]" id="wpa0_extra_conf">' . esc_attr( $v ) . '</textarea>';
-        echo '<br/><span class="description">' . __('Other options will override this settings.', WPA0_LANG) . '<br><a href="https://github.com/auth0/lock/wiki/Auth0Lock-customization">' . __('More info', WPA0_LANG) . '</a></span>';
-    }
-
-    public static function render_username_style(){
-        $v = WP_Auth0_Options::get( 'username_style' );
-        echo '<input type="radio" name="' . WP_Auth0_Options::OPTIONS_NAME . '[username_style]" id="wpa0_username_style_email" value="email" ' . (esc_attr( $v ) == 'email' ? 'checked="true"' : '') . '"/>';
-        echo '<label for="wpa0_username_style_email">' . __('Email', WPA0_LANG) . '</label>';
-        echo ' ';
-        echo '<input type="radio" name="' . WP_Auth0_Options::OPTIONS_NAME . '[username_style]" id="wpa0_username_style_username" value="username" ' . (esc_attr( $v ) == 'username' ? 'checked="true"' : '') . '"/>';
-        echo '<label for="wpa0_username_style_username">' . __('Username', WPA0_LANG) . '</label>';
-    }
-
     public static function render_activate(){
         $v = absint(WP_Auth0_Options::get( 'active' ));
         echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[active]" id="wpa0_active" value="1" ' . checked( $v, 1, false ) . '/>';
@@ -168,12 +149,7 @@ class WP_Auth0_Admin{
 
     public static function render_social_big_buttons(){
         $v = absint(WP_Auth0_Options::get( 'social_big_buttons' ));
-        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[social_big_buttons]" id="wpa0_social_big_buttons" value="1" ' . checked( $v, 1, false ) . '/>';
-    }
-
-    public static function render_gravatar(){
-        $v = absint(WP_Auth0_Options::get( 'gravatar' ));
-        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[gravatar]" id="wpa0_gravatar" value="1" ' . checked( $v, 1, false ) . '/>';
+        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[show_icon]" id="wpa0_social_big_buttons" value="1" ' . checked( $v, 1, false ) . '/>';
     }
 
     public static function render_icon_url(){
@@ -193,11 +169,6 @@ class WP_Auth0_Admin{
         $v = absint(WP_Auth0_Options::get( 'requires_verified_email' ));
         echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[requires_verified_email]" id="wpa0_verified_email" value="1" ' . checked( $v, 1, false ) . '/>';
         echo '<br/><span class="description">' . __('Mark this if you require the user to have a verified email to login', WPA0_LANG) . '</span>';
-    }
-
-    public static function render_remember_last_login () {
-        $v = absint(WP_Auth0_Options::get( 'remember_last_login' ));
-        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[remember_last_login]" id="wpa0_remember_last_login" value="1" ' . checked( $v, 1, false ) . '/>';
     }
 
     public static function render_allow_signup () {
@@ -237,25 +208,18 @@ class WP_Auth0_Admin{
     public static function input_validator( $input ){
         $input['client_id'] = sanitize_text_field( $input['client_id'] );
         $input['form_title'] = sanitize_text_field( $input['form_title'] );
-
         $input['icon_url'] = esc_url( $input['icon_url'], array(
             'http',
             'https'
         ));
-
         if(empty($input['icon_url']))
             $input['show_icon'] = 0;
         else
             $input['show_icon'] = (isset($input['show_icon']) ? 1 : 0);
-
         $input['active'] = (isset($input['active']) ? 1 : 0);
         $input['requires_verified_email'] = (isset($input['requires_verified_email']) ? 1 : 0);
         $input['wordpress_login_enabled'] = (isset($input['wordpress_login_enabled']) ? 1 : 0);
         $input['allow_signup'] = (isset($input['allow_signup']) ? 1 : 0);
-        $input['remember_last_login'] = (isset($input['remember_last_login']) ? 1 : 0);
-
-        $input['social_big_buttons'] = (isset($input['social_big_buttons']) ? 1 : 0);
-        $input['gravatar'] = (isset($input['gravatar']) ? 1 : 0);
 
         $error = "";
         if (empty($input["domain"]) ) {
@@ -272,15 +236,7 @@ class WP_Auth0_Admin{
         {
             if (strpos($input["dict"], '{') !== false && json_decode($input["dict"]) === null)
             {
-                $error = __("The Translation parameter should be a valid json object", WPA0_LANG);
-            }
-        }
-
-        if (trim($input["extra_conf"]) != '')
-        {
-            if (json_decode($input["extra_conf"]) === null)
-            {
-                $error = __("The Extra settings parameter should be a valid json object", WPA0_LANG);
+                $error = __("The dict parameter should be a valid json object", WPA0_LANG);
             }
         }
 
