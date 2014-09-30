@@ -30,6 +30,7 @@ class WP_Auth0_Options {
     public static function set( $key, $value ){
         $options = self::get_options();
         $options[$key] = $value;
+        self::$_opt = $options;
         update_option( self::OPTIONS_NAME, $options );
     }
 
@@ -52,11 +53,9 @@ class WP_Auth0_Options {
             'allow_signup' => true,
             'wordpress_login_enabled' => true,
             'dict' => '',
-            'extra_conf' => '',
             'social_big_buttons' => true,
             'username_style' => 'email',
             'gravatar' => true,
-            'remember_last_login' => true,
         );
     }
 }
