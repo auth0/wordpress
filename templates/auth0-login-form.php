@@ -8,7 +8,9 @@ $extra_css = apply_filters( 'auth0_login_css', '');
 $activated = absint(WP_Auth0_Options::get( 'active' )) == 1;
 
 $dict = WP_Auth0_Options::get('dict');
+$username_style = WP_Auth0_Options::get('username_style');
 $social_big_buttons = WP_Auth0_Options::get('social_big_buttons') == 1;
+$gravatar = WP_Auth0_Options::get('gravatar') == 1;
 
 if (isset($_GET['interim-login']) && $_GET['interim-login'] == 1) {
     $interim_login = true;
@@ -64,7 +66,9 @@ if(empty($client_id) || empty($domain)): ?>
                 title: '<?php echo $title ?>'
             }
         },
-        socialBigButtons: <?php echo ($social_big_buttons ? 'true' : 'false') ;?>
+        socialBigButtons: <?php echo ($social_big_buttons ? 'true' : 'false') ;?>,
+        gravatar: <?php echo ($gravatar ? 'true' : 'false') ;?>,
+        usernameStyle: '<?php echo $username_style;?>',
     };
 
     <?php if ($show_icon) { ?>
