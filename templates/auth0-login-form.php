@@ -10,6 +10,7 @@ $dict = WP_Auth0_Options::get('dict');
 $username_style = WP_Auth0_Options::get('username_style');
 $social_big_buttons = WP_Auth0_Options::get('social_big_buttons') == 1;
 $gravatar = WP_Auth0_Options::get('gravatar') == 1;
+$remember_last_login = WP_Auth0_Options::get('remember_last_login') == 1;
 
 if (isset($_GET['interim-login']) && $_GET['interim-login'] == 1) {
     $interim_login = true;
@@ -54,25 +55,27 @@ if(empty($client_id) || empty($domain)): ?>
     }
 
     var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
-    var options = {
-        callbackURL:    '<?php echo site_url('/index.php?auth0=1'); ?>',
-        container:      'auth0-login-form',
-        authParams: {
-            state:      '<?php echo $state; ?>'
-        },
-        dict: {
-            signin: {
-                title: '<?php echo $title ?>'
-            }
-        },
-        socialBigButtons: <?php echo ($social_big_buttons ? 'true' : 'false') ;?>,
-        gravatar: <?php echo ($gravatar ? 'true' : 'false') ;?>,
-        usernameStyle: '<?php echo $username_style;?>',
-    };
 
-    <?php if ($show_icon) { ?>
-        options['icon'] = WP_Auth0_Options::get('icon_url');
-    <?php } ?>
+<?php
+
+    $optionsObj = array(
+        "callbackURL"   =>  site_url('/index.php?auth0=1'),
+        "container"     =>  'auth0-login-form',
+        "authParams"    => array("state" => $state),
+        "dict" => array(
+            "signin" => array(
+                "title" => $title
+            )
+        ),
+        "socialBigButtons"  => $social_big_buttons,
+        "gravatar"          => $gravatar,
+        "usernameStyle"     => $username_style,
+        "rememberLastLogin" => $remember_last_login
+    );
+
+    $options = json_encode($optionsObj);
+?>
+    var options = <?php echo $options; ?>;
 
     <?php if ($allow_signup) { ?>
         lock.show(options, callback);

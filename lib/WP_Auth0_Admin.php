@@ -80,6 +80,7 @@ class WP_Auth0_Admin{
 
             array('id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict'),
             array('id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style'),
+            array('id' => 'wpa0_remember_last_login', 'name' => 'Remember last login', 'function' => 'render_remember_last_login'),
             array('id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email'),
             array('id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup'),
             array('id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)', 'function' => 'render_auto_login'),
@@ -128,6 +129,11 @@ class WP_Auth0_Admin{
         echo ' ';
         echo '<input type="radio" name="' . WP_Auth0_Options::OPTIONS_NAME . '[username_style]" id="wpa0_username_style_username" value="username" ' . (esc_attr( $v ) == 'username' ? 'checked="true"' : '') . '"/>';
         echo '<label for="wpa0_username_style_username">' . __('Username', WPA0_LANG) . '</label>';
+    }
+
+    public static function render_remember_last_login(){
+        $v = absint(WP_Auth0_Options::get( 'remember_last_login' ));
+        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[remember_last_login]" id="wpa0_remember_last_login" value="1" ' . checked( $v, 1, false ) . '/>';
     }
 
     public static function render_activate(){
@@ -237,6 +243,7 @@ class WP_Auth0_Admin{
         $input['wordpress_login_enabled'] = (isset($input['wordpress_login_enabled']) ? 1 : 0);
         $input['allow_signup'] = (isset($input['allow_signup']) ? 1 : 0);
 
+        $input['remember_last_login'] = (isset($input['remember_last_login']) ? 1 : 0);
         $input['social_big_buttons'] = (isset($input['social_big_buttons']) ? 1 : 0);
         $input['gravatar'] = (isset($input['gravatar']) ? 1 : 0);
 

@@ -56,6 +56,7 @@ class WP_Auth0_Options {
             'social_big_buttons' => true,
             'username_style' => 'email',
             'gravatar' => true,
+            'remember_last_login' => true,
         );
     }
 }
