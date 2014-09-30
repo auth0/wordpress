@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.1.0
+ * Version: 1.0.9
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -50,18 +50,11 @@ class WP_Auth0 {
 
         add_action( 'wp_enqueue_scripts', array(__CLASS__, 'wp_enqueue'));
 
-        add_action( 'widgets_init', array(__CLASS__, 'wp_register_widget'));
-
         WP_Auth0_Admin::init();
-    }
-
-    public static function wp_register_widget() {
-        register_widget( 'wp_auth0_widget' );
     }
 
     public static function wp_enqueue(){
         $activated = absint(WP_Auth0_Options::get( 'active' ));
-
         if(!$activated) {
             return;
         }
@@ -70,16 +63,8 @@ class WP_Auth0 {
     }
 
     public static function shortcode( $atts ){
-
-        $settings = WP_Auth0::buildSettings($atts);
-        $settings[ 'show_as_modal' ] = (isset($atts[ 'show_as_modal' ]) && strtolower($atts[ 'show_as_modal' ]) == 'true' ? 1 : false);
-        $settings[ 'modal_trigger_name' ] = (isset($atts[ 'modal_trigger_name' ]) ? $atts[ 'modal_trigger_name' ] : 'Login');
-
         ob_start();
-
-        require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
-        renderAuth0Form(false, $settings);
-
+        include WPA0_PLUGIN_DIR . 'templates/login-form.php';
         $html = ob_get_clean();
         return $html;
     }
@@ -122,87 +107,19 @@ class WP_Auth0 {
 
     }
 
-    protected static function GetBoolean($value)
-    {
-        return ($value == 1 || strtolower($value) == 'true');
-    }
-
-    protected static function IsValid($array, $key)
-    {
-        return (isset($array[$key]) && trim($array[$key]) != '');
-    }
-
-    public static function buildSettings($settings)
-    {
-        $options_obj = array();
-
-        if (isset($settings['form_title']) &&
-            (!isset($settings['dict']) || (isset($settings['dict']) && trim($settings['dict']) == '')) &&
-            trim($settings['form_title']) != '') {
-            $options_obj['dict'] = array(
-                "signin" => array(
-                    "title" => $settings['form_title']
-                )
-            );
-        }
-        elseif (isset($settings['dict']) && trim($settings['dict']) != '') {
-            if ($oDict = json_decode($settings['dict'], true)) {
-                $options_obj['dict'] = $oDict;
-            }
-            else{
-                $options_obj['dict'] = $settings['dict'];
-            }
-        }
-
-        if (self::IsValid($settings,'social_big_buttons')) {
-            $options_obj['socialBigButtons'] = self::GetBoolean($settings['social_big_buttons']);
-        }
-        if (self::IsValid($settings,'gravatar')) {
-            $options_obj['gravatar'] = self::GetBoolean($settings['gravatar']);
-        }
-
-        if (self::IsValid($settings,'username_style')) {
-            $options_obj['usernameStyle'] = $settings['username_style'];
-        }
-
-        if (self::IsValid($settings,'remember_last_login')) {
-            $options_obj['rememberLastLogin'] = self::GetBoolean($settings['remember_last_login']);
-        }
-
-        if (self::IsValid($settings,'show_icon') && isset($settings['icon_url'])) {
-            $options_obj['icon'] = self::GetBoolean($settings['show_icon']) ? $settings['icon_url'] : '';
-        }
-
-        if (isset($settings['extra_conf']) && trim($settings['extra_conf']) != '') {
-            $extra_conf_arr = json_decode($settings['extra_conf'], true);
-            $options_obj = array_merge( $extra_conf_arr, $options_obj  );
-        }
-
-        return $options_obj;
-
-    }
-
-    public static function render_auth0_login_css() {
-        $activated = absint(WP_Auth0_Options::get( 'active' ));
-
-        if(!$activated) {
-            return;
-        }
-    ?>
+    public static function render_auth0_login_css() { ?>
         <link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' />
-    <?php
-    }
+    <?php }
 
     public static function render_form( $html ){
-        $activated = absint(WP_Auth0_Options::get( 'active' )) == 1;
+        $activated = absint(WP_Auth0_Options::get( 'active' ));
 
         if(!$activated)
             return $html;
 
         ob_start();
 
-        require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
-        renderAuth0Form();
+        include WPA0_PLUGIN_DIR . 'templates/login-form.php';
 
         $html = ob_get_clean();
         return $html;
@@ -428,14 +345,6 @@ class WP_Auth0 {
 
     public static function wp_init(){
         self::setup_rewrites();
-
-        $cdn_url = WP_Auth0_Options::get('cdn_url');
-        if (strpos($cdn_url, 'auth0-widget-5') !== false)
-        {
-            WP_Auth0_Options::set( 'cdn_url', '//cdn.auth0.com/js/lock-6.min.js' );
-            //WP_Auth0_Options::set( 'version', 1 );
-        }
-
         // Initialize session
         if(!session_id()) {
             session_start();
