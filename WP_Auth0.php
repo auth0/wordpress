@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.0.10
+ * Version: 1.10.0
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -50,13 +50,7 @@ class WP_Auth0 {
 
         add_action( 'wp_enqueue_scripts', array(__CLASS__, 'wp_enqueue'));
 
-        add_action( 'widgets_init', array(__CLASS__, 'wp_register_widget'));
-
         WP_Auth0_Admin::init();
-    }
-
-    public static function wp_register_widget() {
-        register_widget( 'wp_auth0_widget' );
     }
 
     public static function wp_enqueue(){
@@ -70,10 +64,7 @@ class WP_Auth0 {
 
     public static function shortcode( $atts ){
         ob_start();
-
-        require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
-        renderAuth0Form(false);
-
+        include WPA0_PLUGIN_DIR . 'templates/login-form.php';
         $html = ob_get_clean();
         return $html;
     }
@@ -128,8 +119,7 @@ class WP_Auth0 {
 
         ob_start();
 
-        require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
-        renderAuth0Form();
+        include WPA0_PLUGIN_DIR . 'templates/login-form.php';
 
         $html = ob_get_clean();
         return $html;
@@ -355,15 +345,6 @@ class WP_Auth0 {
 
     public static function wp_init(){
         self::setup_rewrites();
-
-        $cdn_url = WP_Auth0_Options::get('cdn_url');
-
-        if (strpos($cdn_url, 'w2/auth0-widget') !== false)
-        {
-            WP_Auth0_Options::set( 'cdn_url', '//cdn.auth0.com/js/lock-6.min.js' );
-            WP_Auth0_Options::set( 'version', 1 );
-        }
-
         // Initialize session
         if(!session_id()) {
             session_start();
