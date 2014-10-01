@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.0.10
+ * Version: 1.1.0
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -61,6 +61,7 @@ class WP_Auth0 {
 
     public static function wp_enqueue(){
         $activated = absint(WP_Auth0_Options::get( 'active' ));
+
         if(!$activated) {
             return;
         }
@@ -116,12 +117,19 @@ class WP_Auth0 {
 
     }
 
-    public static function render_auth0_login_css() { ?>
+    public static function render_auth0_login_css() {
+        $activated = absint(WP_Auth0_Options::get( 'active' ));
+
+        if(!$activated) {
+            return;
+        }
+    ?>
         <link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' />
-    <?php }
+    <?php
+    }
 
     public static function render_form( $html ){
-        $activated = absint(WP_Auth0_Options::get( 'active' ));
+        $activated = absint(WP_Auth0_Options::get( 'active' )) == 1;
 
         if(!$activated)
             return $html;
