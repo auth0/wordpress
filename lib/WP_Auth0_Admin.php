@@ -78,7 +78,6 @@ class WP_Auth0_Admin{
 
         self::init_option_section('Advanced', array(
 
-            array('id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict'),
             array('id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style'),
             array('id' => 'wpa0_remember_last_login', 'name' => 'Remember last login', 'function' => 'render_remember_last_login'),
             array('id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email'),
@@ -88,6 +87,8 @@ class WP_Auth0_Admin{
             array('id' => 'wpa0_ip_range_check', 'name' => 'Enable on IP Ranges', 'function' => 'render_ip_range_check'),
             array('id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges', 'function' => 'render_ip_ranges', 'enabled' => $use_ip_ranges),
             array('id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url'),
+            array('id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict'),
+            array('id' => 'wpa0_extra_conf', 'name' => 'Extra configurations', 'function' => 'render_extra_conf'),
 
         ));
 
@@ -119,7 +120,25 @@ class WP_Auth0_Admin{
     public static function render_dict(){
         $v = WP_Auth0_Options::get( 'dict' );
         echo '<textarea name="' . WP_Auth0_Options::OPTIONS_NAME . '[dict]" id="wpa0_dict">' . esc_attr( $v ) . '</textarea>';
-        echo '<br/><span class="description">' . __('This is the widget\'s dict param.', WPA0_LANG) . '<br><a href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject">' . __('More info', WPA0_LANG) . '</a></span>';
+        echo '<br/><span class="description">';
+        echo    __('This is the widget\'s dict param.', WPA0_LANG);
+        echo '  <a href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject">';
+        echo        __('More info', WPA0_LANG);
+        echo    '</a>';
+        echo '  <br><i><b>'.__('Note', WPA0_LANG).':</b> '.__('This will override the "Form title" setting', WPA0_LANG).'.</i>';
+        echo '</span>';
+    }
+
+    public static function render_extra_conf(){
+        $v = WP_Auth0_Options::get( 'extra_conf' );
+        echo '<textarea name="' . WP_Auth0_Options::OPTIONS_NAME . '[extra_conf]" id="wpa0_extra_conf">' . esc_attr( $v ) . '</textarea>';
+        echo '<br/><span class="description">';
+        echo    __('This field allows you to set all the widget settings.', WPA0_LANG);
+        echo '  <a href="https://github.com/auth0/lock/wiki/Auth0Lock-customization">';
+        echo        __('More info', WPA0_LANG);
+        echo    '</a>';
+        echo '  <br><i><b>'.__('Note', WPA0_LANG).':</b> '.__('The other settings will override this configuration', WPA0_LANG).'.</i>';
+        echo '</span>';
     }
 
     public static function render_username_style(){
@@ -234,10 +253,12 @@ class WP_Auth0_Admin{
             'http',
             'https'
         ));
+
         if(empty($input['icon_url']))
             $input['show_icon'] = 0;
         else
             $input['show_icon'] = (isset($input['show_icon']) ? 1 : 0);
+
         $input['active'] = (isset($input['active']) ? 1 : 0);
         $input['requires_verified_email'] = (isset($input['requires_verified_email']) ? 1 : 0);
         $input['wordpress_login_enabled'] = (isset($input['wordpress_login_enabled']) ? 1 : 0);
@@ -263,6 +284,14 @@ class WP_Auth0_Admin{
             if (strpos($input["dict"], '{') !== false && json_decode($input["dict"]) === null)
             {
                 $error = __("The dict parameter should be a valid json object", WPA0_LANG);
+            }
+        }
+
+        if (trim($input["extra_conf"]) != '')
+        {
+            if (json_decode($input["extra_conf"]) === null)
+            {
+                $error = __("The \"Extra Configuration\" parameter should be a valid json object", WPA0_LANG);
             }
         }
 
