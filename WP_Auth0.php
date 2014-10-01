@@ -117,6 +117,55 @@ class WP_Auth0 {
 
     }
 
+    public static function buildSettings($settings)
+    {
+        $options_obj = array();
+
+        if (isset($settings['dict']) && isset($settings['form_title']) && trim($settings['dict']) == '' && trim($settings['form_title']) != '') {
+            $options_obj['dict'] = array(
+                "signin" => array(
+                    "title" => $settings['form_title']
+                )
+            );
+        }
+        elseif (isset($settings['dict']) && trim($settings['dict']) != '') {
+            if ($oDict = json_decode($settings['dict'], true)) {
+                $options_obj['dict'] = $oDict;
+            }
+            else{
+                $options_obj['dict'] = $settings['dict'];
+            }
+        }
+
+        if (isset($settings['social_big_buttons'])) {
+            $options_obj['socialBigButtons'] = $settings['social_big_buttons'] == 1;
+        }
+
+        if (isset($settings['gravatar'])) {
+            $options_obj['gravatar'] = $settings['gravatar'] == 1;
+        }
+
+        if (isset($settings['username_style'])) {
+            $options_obj['usernameStyle'] = $settings['username_style'];
+        }
+
+        if (isset($settings['remember_last_login'])) {
+            $options_obj['rememberLastLogin'] = $settings['remember_last_login'] == 1;
+        }
+
+        if (isset($settings['show_icon']) && $settings['show_icon'] == 1) {
+            $options_obj['icon'] = $settings['icon_url'];
+        }
+
+        if (isset($settings['extra_conf']) && trim($settings['extra_conf']) != '') {
+            $extra_conf_arr = json_decode($settings['extra_conf'], true);
+            $options_obj = array_merge( $extra_conf_arr, $options_obj  );
+        }
+
+        return $options_obj;
+
+    }
+
     public static function render_auth0_login_css() {
         $activated = absint(WP_Auth0_Options::get( 'active' ));
 

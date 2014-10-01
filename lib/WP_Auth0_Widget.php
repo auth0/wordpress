@@ -23,6 +23,7 @@ class WP_Auth0_Widget extends WP_Widget {
 
     }
 
+
     public function widget( $args, $instance ) {
 
         $activated = absint(WP_Auth0_Options::get( 'active' ));
@@ -31,8 +32,11 @@ class WP_Auth0_Widget extends WP_Widget {
         {
             echo $args['before_widget'];
 
-            include WPA0_PLUGIN_DIR . 'templates/login-form.php';
-            renderAuth0Form(false);
+            $settings = WP_Auth0::buildSettings($instance);
+
+
+            require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
+            renderAuth0Form(false, $settings);
 
             echo $args['after_widget'];
         }

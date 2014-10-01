@@ -6,7 +6,7 @@ $gravatar = isset($instance[ 'gravatar' ]) ? $instance[ 'gravatar' ] : '';
 $show_icon = isset($instance[ 'show_icon' ]) ? $instance[ 'show_icon' ] : '';
 $icon_url = isset($instance[ 'icon_url' ]) ? $instance[ 'icon_url' ] : '';
 $dict = isset($instance[ 'dict' ]) ? $instance[ 'dict' ] : '';
-$extra_configuration = isset($instance[ 'extra_configuration' ]) ? $instance[ 'extra_configuration' ] : '';
+$extra_conf = isset($instance[ 'extra_conf' ]) ? $instance[ 'extra_conf' ] : '';
 $username_style = isset($instance[ 'username_style' ]) ? $instance[ 'username_style' ] : '';
 $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'remember_last_login' ] : '';
 
@@ -82,10 +82,10 @@ $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'r
     </span>
 </p>
 <p>
-    <label for="<?php echo $this->get_field_id( 'extra_configuration' ); ?>"><?php _e( 'Extra configuration:' ); ?></label>
-    <textarea class="widefat" id="<?php echo $this->get_field_id( 'extra_configuration' ); ?>"
-              name="<?php echo $this->get_field_name( 'extra_configuration' ); ?>">
-        <?php echo esc_attr( $extra_configuration ); ?>
+    <label for="<?php echo $this->get_field_id( 'extra_conf' ); ?>"><?php _e( 'Extra configuration:' ); ?></label>
+    <textarea class="widefat" id="<?php echo $this->get_field_id( 'extra_conf' ); ?>"
+              name="<?php echo $this->get_field_name( 'extra_conf' ); ?>">
+        <?php echo esc_attr( $extra_conf ); ?>
     </textarea>
     <br/><span class="description">
             <?php echo __('This field allows you to set all the widget settings.', WPA0_LANG); ?>

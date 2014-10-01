@@ -5,7 +5,7 @@ class WP_Auth0_Options {
     const OPTIONS_NAME = 'wp_auth0_settings';
     private static $_opt = null;
 
-    private static function get_options(){
+    public static function get_options(){
         if(empty(self::$_opt)){
             $options = get_option( self::OPTIONS_NAME, array());
 
