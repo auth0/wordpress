@@ -107,12 +107,15 @@ class WP_Auth0 {
 
     }
 
-    public static function render_auth0_login_css() { ?>
-        <link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' />
-    <?php }
+    public static function render_auth0_login_css() {
+        $activated = absint(WP_Auth0_Options::get( 'active' )) == 1;
+        if (!$activated) return;
+
+        ?> <link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' /> <?php
+    }
 
     public static function render_form( $html ){
-        $activated = absint(WP_Auth0_Options::get( 'active' ));
+        $activated = absint(WP_Auth0_Options::get( 'active' )) == 1;
 
         if(!$activated)
             return $html;
