@@ -61,6 +61,7 @@ if(empty($client_id) || empty($domain)){ ?>
     <script id="auth0" src="<?php echo $cdn ?>"></script>
     <script type="text/javascript">
         var callback = null;
+
         if(typeof(a0_wp_login) === "object") {
             callback = a0_wp_login.initialize
         }
@@ -81,13 +82,9 @@ if(empty($client_id) || empty($domain)){ ?>
             $options_obj = array_merge( $options_obj , $specialSettings );
         }
 
-        if ($showAsModal){
-            $options_obj['popup'] = true;
-        }
-        else{
+        if (!$showAsModal) {
             $options_obj['container'] = 'auth0-login-form';
         }
-
 
         $options = json_encode($options_obj);
     ?>
