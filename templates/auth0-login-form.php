@@ -5,7 +5,15 @@ $domain = WP_Auth0_Options::get('domain');
 $cdn = WP_Auth0_Options::get('cdn_url');
 $allow_signup = WP_Auth0_Options::get('allow_signup') == 1;
 $extra_css = apply_filters( 'auth0_login_css', '');
+$showAsModal = (isset($specialSettings['show_as_modal']) && $specialSettings['show_as_modal'] == 1);
+$modalTriggerName = 'Login';
+if (isset($specialSettings['modal_trigger_name']) && $specialSettings['modal_trigger_name'] != '')
+{
+    $modalTriggerName = $specialSettings['modal_trigger_name'];
+}
 
+if (isset($specialSettings['show_as_modal'])) unset($specialSettings['show_as_modal']);
+if (isset($specialSettings['modal_trigger_namemodal_trigger_name'])) unset($specialSettings['modal_trigger_name']);
 
 if (isset($_GET['interim-login']) && $_GET['interim-login'] == 1) {
     $interim_login = true;
@@ -29,8 +37,15 @@ if(empty($client_id) || empty($domain)){ ?>
     <div id="form-signin-wrapper" class="auth0-login">
         <?php include 'error-msg.php'; ?>
         <div class="form-signin">
-            <div id="auth0-login-form">
-            </div>
+
+            <?php if ($showAsModal) { ?>
+
+                <button id="a0LoginButton" onclick="a0ShowLoginModal();" ><?php echo $modalTriggerName; ?></button>
+
+            <?php } else { ?>
+                <div id="auth0-login-form">
+                </div>
+            <?php } ?>
             <?php if ($activated && $wordpress_login_enabled && $canShowLegacyLogin) { ?>
                 <div id="extra-options">
                     <a href="?wle">Login with WordPress username</a>
@@ -59,24 +74,36 @@ if(empty($client_id) || empty($domain)){ ?>
 
         $options_obj = array_merge( array(
             "callbackURL"   =>  site_url('/index.php?auth0=1'),
-            "container"     =>  'auth0-login-form',
             "authParams"    => array("state" => $state),
         ), $options_obj  );
 
-        if (isset($specialSettings))
-        {
+        if (isset($specialSettings)){
             $options_obj = array_merge( $options_obj , $specialSettings );
         }
 
+        if ($showAsModal){
+            $options_obj['popup'] = true;
+        }
+        else{
+            $options_obj['container'] = 'auth0-login-form';
+        }
+
+
         $options = json_encode($options_obj);
     ?>
-        var options = <?php echo $options; ?>;
+        function a0ShowLoginModal() {
+            var options = <?php echo $options; ?>;
 
         <?php if ($allow_signup) { ?>
             lock.show(options, callback);
         <?php } else { ?>
             lock.showSignin(options, callback);
         <?php } ?>
+        }
+
+    <?php if (!$showAsModal) { ?>
+        a0ShowLoginModal();
+    <?php } ?>
 
     </script>
 <?php

@@ -33,7 +33,8 @@ class WP_Auth0_Widget extends WP_Widget {
             echo $args['before_widget'];
 
             $settings = WP_Auth0::buildSettings($instance);
-
+            $settings[ 'show_as_modal' ] = isset($instance[ 'show_as_modal' ]) ? $instance[ 'show_as_modal' ] : false;
+            $settings[ 'modal_trigger_name' ] = isset($instance[ 'modal_trigger_name' ]) ? $instance[ 'modal_trigger_name' ] : 'Login';
 
             require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
             renderAuth0Form(false, $settings);

@@ -1,5 +1,7 @@
 <?php
 
+$show_as_modal = isset($instance[ 'show_as_modal' ]) ? $instance[ 'show_as_modal' ] : '';
+$modal_trigger_name = isset($instance[ 'modal_trigger_name' ]) ? $instance[ 'modal_trigger_name' ] : '';
 $form_title = isset($instance[ 'form_title' ]) ? $instance[ 'form_title' ] : '';
 $social_big_buttons = isset($instance[ 'social_big_buttons' ]) ? $instance[ 'social_big_buttons' ] : '';
 $gravatar = isset($instance[ 'gravatar' ]) ? $instance[ 'gravatar' ] : '';
@@ -29,6 +31,18 @@ $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'r
            name="<?php echo $this->get_field_name( 'username_style' ); ?>"
            type="radio" value="username" <?php echo (esc_attr( $username_style ) == 'username' ? 'checked="true"' : ''); ?> />
     <label for="<?php echo $this->get_field_id( 'username_style' ); ?>_email"><?php _e( 'Username' ); ?></label>
+</p>
+<p>
+    <input id="<?php echo $this->get_field_id( 'show_as_modal' ); ?>"
+           name="<?php echo $this->get_field_name( 'show_as_modal' ); ?>"
+           type="checkbox" value="1" <?php echo (esc_attr( $show_as_modal ) == 1 ? 'checked="true"' : ''); ?> />
+    <label for="<?php echo $this->get_field_id( 'show_as_modal' ); ?>"><?php _e( 'Show as modal' ); ?></label>
+</p>
+<p>
+    <label for="<?php echo $this->get_field_id( 'modal_trigger_name' ); ?>"><?php _e( 'Modal button name' ); ?></label>
+    <input class="widefat" id="<?php echo $this->get_field_id( 'modal_trigger_name' ); ?>"
+           name="<?php echo $this->get_field_name( 'modal_trigger_name' ); ?>"
+           type="text" value="<?php echo esc_attr( $modal_trigger_name ); ?>" />
 </p>
 <p>
     <input id="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>"
