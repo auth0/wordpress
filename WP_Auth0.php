@@ -70,10 +70,15 @@ class WP_Auth0 {
     }
 
     public static function shortcode( $atts ){
+
+        $settings = WP_Auth0::buildSettings($atts);
+        $settings[ 'show_as_modal' ] = (isset($atts[ 'show_as_modal' ]) && strtolower($atts[ 'show_as_modal' ]) == 'true' ? 1 : false);
+        $settings[ 'modal_trigger_name' ] = (isset($atts[ 'modal_trigger_name' ]) ? $atts[ 'modal_trigger_name' ] : 'Login');
+
         ob_start();
 
         require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
-        renderAuth0Form(false);
+        renderAuth0Form(false, $settings);
 
         $html = ob_get_clean();
         return $html;
@@ -117,6 +122,11 @@ class WP_Auth0 {
 
     }
 
+    protected static function GetBoolean($value)
+    {
+        return ($value == 1 || strtolower($value) == 'true');
+    }
+
     public static function buildSettings($settings)
     {
         $options_obj = array();
@@ -138,11 +148,11 @@ class WP_Auth0 {
         }
 
         if (isset($settings['social_big_buttons'])) {
-            $options_obj['socialBigButtons'] = $settings['social_big_buttons'] == 1;
+            $options_obj['socialBigButtons'] = self::GetBoolean($settings['social_big_buttons']);
         }
 
         if (isset($settings['gravatar'])) {
-            $options_obj['gravatar'] = $settings['gravatar'] == 1;
+            $options_obj['gravatar'] = self::GetBoolean($settings['gravatar']);
         }
 
         if (isset($settings['username_style'])) {
@@ -150,10 +160,10 @@ class WP_Auth0 {
         }
 
         if (isset($settings['remember_last_login'])) {
-            $options_obj['rememberLastLogin'] = $settings['remember_last_login'] == 1;
+            $options_obj['rememberLastLogin'] = self::GetBoolean($settings['remember_last_login']);
         }
 
-        if (isset($settings['show_icon']) && $settings['show_icon'] == 1) {
+        if (isset($settings['show_icon']) && self::GetBoolean($settings['show_icon'])) {
             $options_obj['icon'] = $settings['icon_url'];
         }
 
