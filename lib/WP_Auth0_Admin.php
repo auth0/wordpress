@@ -237,14 +237,17 @@ class WP_Auth0_Admin{
     public static function input_validator( $input ){
         $input['client_id'] = sanitize_text_field( $input['client_id'] );
         $input['form_title'] = sanitize_text_field( $input['form_title'] );
+
         $input['icon_url'] = esc_url( $input['icon_url'], array(
             'http',
             'https'
         ));
+
         if(empty($input['icon_url']))
             $input['show_icon'] = 0;
         else
             $input['show_icon'] = (isset($input['show_icon']) ? 1 : 0);
+
         $input['active'] = (isset($input['active']) ? 1 : 0);
         $input['requires_verified_email'] = (isset($input['requires_verified_email']) ? 1 : 0);
         $input['wordpress_login_enabled'] = (isset($input['wordpress_login_enabled']) ? 1 : 0);

@@ -8,7 +8,8 @@ jQuery(document).ready(function($) {
          media_frame.close();
 
         var related_control_id = 'wpa0_icon_url';
-        if ($(this).attr('related') != '')
+        if (typeof($(this).attr('related')) != 'undefined' &&
+            $(this).attr('related') != '')
         {
             related_control_id = $(this).attr('related');
         }
