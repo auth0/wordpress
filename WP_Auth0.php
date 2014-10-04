@@ -74,7 +74,7 @@ class WP_Auth0 {
         $settings = WP_Auth0::buildSettings($atts);
         $settings[ 'show_as_modal' ] = (isset($atts[ 'show_as_modal' ]) && strtolower($atts[ 'show_as_modal' ]) == 'true' ? 1 : false);
         $settings[ 'modal_trigger_name' ] = (isset($atts[ 'modal_trigger_name' ]) ? $atts[ 'modal_trigger_name' ] : 'Login');
-var_dump($settings);
+
         ob_start();
 
         require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
@@ -169,8 +169,8 @@ var_dump($settings);
             $options_obj['rememberLastLogin'] = self::GetBoolean($settings['remember_last_login']);
         }
 
-        if (self::IsValid($settings,'icon_url')) {
-            $options_obj['icon'] = $settings['icon_url'];
+        if (self::IsValid($settings,'show_icon') && isset($settings['icon_url'])) {
+            $options_obj['icon'] = self::GetBoolean($settings['show_icon']) ? $settings['icon_url'] : '';
         }
 
         if (isset($settings['extra_conf']) && trim($settings['extra_conf']) != '') {
