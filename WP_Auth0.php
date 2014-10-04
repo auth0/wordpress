@@ -127,6 +127,11 @@ class WP_Auth0 {
         return ($value == 1 || strtolower($value) == 'true');
     }
 
+    protected static function IsValid($array, $key)
+    {
+        return (isset($array[$key]) && trim($array[$key]) != '');
+    }
+
     public static function buildSettings($settings)
     {
         $options_obj = array();
@@ -147,24 +152,23 @@ class WP_Auth0 {
             }
         }
 
-        if (isset($settings['social_big_buttons'])) {
+        if (self::IsValid($settings,'social_big_buttons')) {
             $options_obj['socialBigButtons'] = self::GetBoolean($settings['social_big_buttons']);
         }
-
-        if (isset($settings['gravatar'])) {
+        if (self::IsValid($settings,'gravatar')) {
             $options_obj['gravatar'] = self::GetBoolean($settings['gravatar']);
         }
 
-        if (isset($settings['username_style'])) {
+        if (self::IsValid($settings,'username_style')) {
             $options_obj['usernameStyle'] = $settings['username_style'];
         }
 
-        if (isset($settings['remember_last_login'])) {
+        if (self::IsValid($settings,'remember_last_login')) {
             $options_obj['rememberLastLogin'] = self::GetBoolean($settings['remember_last_login']);
         }
 
-        if (isset($settings['show_icon']) && self::GetBoolean($settings['show_icon'])) {
-            $options_obj['icon'] = $settings['icon_url'];
+        if (self::IsValid($settings,'show_icon')) {
+            $options_obj['icon'] = self::GetBoolean($settings['show_icon']) ? $settings['icon_url'] : '';
         }
 
         if (isset($settings['extra_conf']) && trim($settings['extra_conf']) != '') {
