@@ -60,9 +60,10 @@ And can be customized by adding the following parameters:
 * gravatar: boolean
 * username_style: string, "email" or "username"
 * remember_last_login: boolean
-* show_icon: boolean
 * icon_url: string (valid url)
 * extra_conf: string, valid json
+* show_as_modal: boolean
+* modal_trigger_name: string, button text
 
 Example:
 
