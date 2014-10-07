@@ -20,15 +20,13 @@ class WP_Auth0_Widget extends WP_Widget {
             'media_button' => __('Choose icon', WPA0_LANG)
         ));
         require WPA0_PLUGIN_DIR . 'templates/a0-widget-setup-form.php';
-
     }
-
 
     public function widget( $args, $instance ) {
 
-        $activated = absint(WP_Auth0_Options::get( 'active' ));
+        $client_id = WP_Auth0_Options::get('client_id');
 
-        if($activated)
+        if (trim($client_id) != "")
         {
             echo $args['before_widget'];
 

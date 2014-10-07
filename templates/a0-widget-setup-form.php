@@ -9,7 +9,6 @@ $show_icon = isset($instance[ 'show_icon' ]) ? $instance[ 'show_icon' ] : '';
 $icon_url = isset($instance[ 'icon_url' ]) ? $instance[ 'icon_url' ] : '';
 $dict = isset($instance[ 'dict' ]) ? $instance[ 'dict' ] : '';
 $extra_conf = isset($instance[ 'extra_conf' ]) ? $instance[ 'extra_conf' ] : '';
-$username_style = isset($instance[ 'username_style' ]) ? $instance[ 'username_style' ] : '';
 $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'remember_last_login' ] : '';
 
 ?>
@@ -19,18 +18,6 @@ $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'r
     <input class="widefat" id="<?php echo $this->get_field_id( 'form_title' ); ?>"
            name="<?php echo $this->get_field_name( 'form_title' ); ?>"
            type="text" value="<?php echo esc_attr( $form_title ); ?>" />
-</p>
-<p>
-    <label><?php _e( 'Username style:' ); ?></label>
-    <input id="<?php echo $this->get_field_id( 'username_style' ); ?>_email"
-           name="<?php echo $this->get_field_name( 'username_style' ); ?>"
-           type="radio" value="email" <?php echo (esc_attr( $username_style ) == 'email' ? 'checked="true"' : ''); ?> />
-    <label for="<?php echo $this->get_field_id( 'username_style' ); ?>_email"><?php _e( 'Email' ); ?></label>
-
-    <input id="<?php echo $this->get_field_id( 'username_style' ); ?>_username"
-           name="<?php echo $this->get_field_name( 'username_style' ); ?>"
-           type="radio" value="username" <?php echo (esc_attr( $username_style ) == 'username' ? 'checked="true"' : ''); ?> />
-    <label for="<?php echo $this->get_field_id( 'username_style' ); ?>_email"><?php _e( 'Username' ); ?></label>
 </p>
 <p>
     <label><?php _e( 'Show as modal:' ); ?></label>

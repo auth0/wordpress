@@ -66,7 +66,7 @@ class WP_Auth0 {
     }
 
     public static function wp_register_widget() {
-        register_widget( 'wp_auth0_widget' );
+        register_widget( 'WP_Auth0_Widget' );
     }
 
     public static function wp_enqueue(){

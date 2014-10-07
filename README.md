@@ -136,6 +136,10 @@ Have in mind that all the "Extra settings" that we allow to set up in the plugin
 
 ![](https://raw.githubusercontent.com/auth0/wp-auth0/master/screenshot-6.png)
 
+![](https://raw.githubusercontent.com/auth0/wp-auth0/master/screenshot-7.png)
+
+![](https://raw.githubusercontent.com/auth0/wp-auth0/master/screenshot-8.png)
+
 Contributed by
 =====
 
