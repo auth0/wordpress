@@ -52,7 +52,17 @@ class WP_Auth0 {
 
         add_action( 'widgets_init', array(__CLASS__, 'wp_register_widget'));
 
+        $plugin = plugin_basename(__FILE__);
+        add_filter("plugin_action_links_$plugin", array(__CLASS__, 'wp_add_plugin_settings_link'));
+
         WP_Auth0_Admin::init();
+    }
+
+    // Add settings link on plugin page
+    public static function wp_add_plugin_settings_link($links) {
+        $settings_link = '<a href="options-general.php?page=wpa0">Settings</a>';
+        array_unshift($links, $settings_link);
+        return $links;
     }
 
     public static function wp_register_widget() {
@@ -60,11 +70,9 @@ class WP_Auth0 {
     }
 
     public static function wp_enqueue(){
-        $activated = absint(WP_Auth0_Options::get( 'active' ));
+        $client_id = WP_Auth0_Options::get('client_id');
 
-        if(!$activated) {
-            return;
-        }
+        if (trim($client_id) == "") return;
 
         wp_enqueue_style( 'auth0-widget', WPA0_PLUGIN_URL . 'assets/css/main.css' );
     }
@@ -117,11 +125,20 @@ class WP_Auth0 {
 
     }
 
+    protected static function GetBoolean($value)
+    {
+        return ($value == 1 || strtolower($value) == 'true');
+    }
+    protected static function IsValid($array, $key)
+    {
+        return (isset($array[$key]) && trim($array[$key]) != '');
+    }
     public static function buildSettings($settings)
     {
         $options_obj = array();
-
-        if (isset($settings['dict']) && isset($settings['form_title']) && trim($settings['dict']) == '' && trim($settings['form_title']) != '') {
+        if (isset($settings['form_title']) &&
+            (!isset($settings['dict']) || (isset($settings['dict']) && trim($settings['dict']) == '')) &&
+            trim($settings['form_title']) != '') {
             $options_obj['dict'] = array(
                 "signin" => array(
                     "title" => $settings['form_title']
@@ -136,52 +153,41 @@ class WP_Auth0 {
                 $options_obj['dict'] = $settings['dict'];
             }
         }
-
-        if (isset($settings['social_big_buttons'])) {
-            $options_obj['socialBigButtons'] = $settings['social_big_buttons'] == 1;
+        if (self::IsValid($settings,'social_big_buttons')) {
+            $options_obj['socialBigButtons'] = self::GetBoolean($settings['social_big_buttons']);
         }
-
-        if (isset($settings['gravatar'])) {
-            $options_obj['gravatar'] = $settings['gravatar'] == 1;
+        if (self::IsValid($settings,'gravatar')) {
+            $options_obj['gravatar'] = self::GetBoolean($settings['gravatar']);
         }
-
-        if (isset($settings['username_style'])) {
+        if (self::IsValid($settings,'username_style')) {
             $options_obj['usernameStyle'] = $settings['username_style'];
         }
-
-        if (isset($settings['remember_last_login'])) {
-            $options_obj['rememberLastLogin'] = $settings['remember_last_login'] == 1;
+        if (self::IsValid($settings,'remember_last_login')) {
+            $options_obj['rememberLastLogin'] = self::GetBoolean($settings['remember_last_login']);
         }
-
-        if (isset($settings['show_icon']) && $settings['show_icon'] == 1) {
+        if (self::IsValid($settings,'icon_url')) {
             $options_obj['icon'] = $settings['icon_url'];
         }
-
         if (isset($settings['extra_conf']) && trim($settings['extra_conf']) != '') {
             $extra_conf_arr = json_decode($settings['extra_conf'], true);
-            $options_obj = array_merge( $extra_conf_arr, $options_obj  );
+            $options_obj = array_merge( $extra_conf_arr, $options_obj );
         }
-
         return $options_obj;
-
     }
 
     public static function render_auth0_login_css() {
-        $activated = absint(WP_Auth0_Options::get( 'active' ));
+        $client_id = WP_Auth0_Options::get('client_id');
 
-        if(!$activated) {
-            return;
-        }
+        if (trim($client_id) == "") return;
     ?>
         <link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' />
     <?php
     }
 
     public static function render_form( $html ){
-        $activated = absint(WP_Auth0_Options::get( 'active' )) == 1;
+        $client_id = WP_Auth0_Options::get('client_id');
 
-        if(!$activated)
-            return $html;
+        if (trim($client_id) == "") return;
 
         ob_start();
 

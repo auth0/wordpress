@@ -70,7 +70,7 @@ Example:
     [auth0 show_as_modal="true" social_big_buttons="true" modal_trigger_name="Login button: This text is configurable!"]
 
 
-All the details about the parameters on the lock wiki (https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject)
+All the details about the parameters on the lock wiki (https://github.com/auth0/lock/wiki/Auth0Lock-customization)
 
 ## FAQs
 
@@ -120,7 +120,7 @@ To change the form_title in this case, you need to add the following attribute t
 
 We added a new field called "Extra settings" that allows you to add a json object with all the settings you want to configure.
 
-Have in mind that all the "Extra settings" that we allow to set up in the plugin settings page will be overrided.
+Have in mind that all the "Extra settings" that we allow to set up in the plugin settings page will be overrided (For more information about it: https://github.com/auth0/widget).
 
 ## Screenshots
 

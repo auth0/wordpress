@@ -33,10 +33,18 @@ $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'r
     <label for="<?php echo $this->get_field_id( 'username_style' ); ?>_email"><?php _e( 'Username' ); ?></label>
 </p>
 <p>
-    <input id="<?php echo $this->get_field_id( 'show_as_modal' ); ?>"
+    <label><?php _e( 'Show as modal:' ); ?></label>
+
+    <input id="<?php echo $this->get_field_id( 'show_as_modal' ); ?>_yes"
            name="<?php echo $this->get_field_name( 'show_as_modal' ); ?>"
-           type="checkbox" value="1" <?php echo (esc_attr( $show_as_modal ) == 1 ? 'checked="true"' : ''); ?> />
-    <label for="<?php echo $this->get_field_id( 'show_as_modal' ); ?>"><?php _e( 'Show as modal' ); ?></label>
+           type="radio" value="1" <?php echo (esc_attr( $show_as_modal ) == 1 ? 'checked="true"' : ''); ?> />
+    <label for="<?php echo $this->get_field_id( 'show_as_modal' ); ?>_yes"><?php _e( 'Yes' ); ?></label>
+
+    <input id="<?php echo $this->get_field_id( 'show_as_modal' ); ?>_no"
+           name="<?php echo $this->get_field_name( 'show_as_modal' ); ?>"
+           type="radio" value="0" <?php echo (esc_attr( $show_as_modal ) == 0 ? 'checked="true"' : ''); ?> />
+    <label for="<?php echo $this->get_field_id( 'show_as_modal' ); ?>_no"><?php _e( 'No' ); ?></label>
+
 </p>
 <p>
     <label for="<?php echo $this->get_field_id( 'modal_trigger_name' ); ?>"><?php _e( 'Modal button name' ); ?></label>
@@ -45,28 +53,63 @@ $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'r
            type="text" value="<?php echo esc_attr( $modal_trigger_name ); ?>" />
 </p>
 <p>
-    <input id="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>"
+    <label><?php _e( 'Show big social buttons:' ); ?></label>
+
+    <input id="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>_yes"
            name="<?php echo $this->get_field_name( 'social_big_buttons' ); ?>"
-           type="checkbox" value="1" <?php echo (esc_attr( $social_big_buttons ) == 1 ? 'checked="true"' : ''); ?> />
-    <label for="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>"><?php _e( 'Show big social buttons' ); ?></label>
+           type="radio" value="1" <?php echo (esc_attr( $social_big_buttons ) == 1 ? 'checked="true"' : ''); ?> />
+    <label for="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>_yes"><?php _e( 'Yes' ); ?></label>
+
+    <input id="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>_no"
+           name="<?php echo $this->get_field_name( 'social_big_buttons' ); ?>"
+           type="radio" value="0" <?php echo (esc_attr( $social_big_buttons ) == 0 ? 'checked="true"' : ''); ?> />
+    <label for="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>_no"><?php _e( 'No' ); ?></label>
+
+    <input id="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>_inherit"
+           name="<?php echo $this->get_field_name( 'social_big_buttons' ); ?>"
+           type="radio" value="" <?php echo (esc_attr( $social_big_buttons ) === '' ? 'checked="true"' : ''); ?> />
+    <label for="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>_no"><?php _e( 'Inherit' ); ?></label>
+
 </p>
 <p>
-    <input id="<?php echo $this->get_field_id( 'gravatar' ); ?>"
+    <label><?php _e( 'Enable Gravatar integration:' ); ?></label>
+
+    <input id="<?php echo $this->get_field_id( 'gravatar' ); ?>_yes"
            name="<?php echo $this->get_field_name( 'gravatar' ); ?>"
-           type="checkbox" value="1" <?php echo (esc_attr( $gravatar ) == 1 ? 'checked="true"' : ''); ?> />
-    <label for="<?php echo $this->get_field_id( 'gravatar' ); ?>"><?php _e( 'Enable Gravatar integration' ); ?></label>
+           type="radio" value="1" <?php echo (esc_attr( $gravatar ) == 1 ? 'checked="true"' : ''); ?> />
+    <label for="<?php echo $this->get_field_id( 'gravatar' ); ?>_yes"><?php _e( 'Yes' ); ?></label>
+
+    <input id="<?php echo $this->get_field_id( 'gravatar' ); ?>_no"
+           name="<?php echo $this->get_field_name( 'gravatar' ); ?>"
+           type="radio" value="0" <?php echo (esc_attr( $gravatar ) == 0 ? 'checked="true"' : ''); ?> />
+    <label for="<?php echo $this->get_field_id( 'gravatar' ); ?>_no"><?php _e( 'No' ); ?></label>
+
+    <input id="<?php echo $this->get_field_id( 'gravatar' ); ?>_inherit"
+           name="<?php echo $this->get_field_name( 'gravatar' ); ?>"
+           type="radio" value="" <?php echo (esc_attr( $gravatar ) === '' ? 'checked="true"' : ''); ?> />
+    <label for="<?php echo $this->get_field_id( 'gravatar' ); ?>_no"><?php _e( 'Inherit' ); ?></label>
+
+
 </p>
 <p>
-    <input id="<?php echo $this->get_field_id( 'remember_last_login' ); ?>"
+
+    <label><?php _e( 'Remember last login:' ); ?></label>
+
+    <input id="<?php echo $this->get_field_id( 'remember_last_login' ); ?>_yes"
            name="<?php echo $this->get_field_name( 'remember_last_login' ); ?>"
-           type="checkbox" value="1" <?php echo (esc_attr( $remember_last_login ) == 1 ? 'checked="true"' : ''); ?> />
-    <label for="<?php echo $this->get_field_id( 'remember_last_login' ); ?>"><?php _e( 'Remember last login' ); ?></label>
-</p>
-<p>
-    <input id="<?php echo $this->get_field_id( 'show_icon' ); ?>"
-           name="<?php echo $this->get_field_name( 'show_icon' ); ?>"
-           type="checkbox" value="1" <?php echo (esc_attr( $show_icon ) == 1 ? 'checked="true"' : ''); ?> />
-    <label for="<?php echo $this->get_field_id( 'show_icon' ); ?>"><?php _e( 'Show Icon' ); ?></label>
+           type="radio" value="1" <?php echo (esc_attr( $remember_last_login ) == 1 ? 'checked="true"' : ''); ?> />
+    <label for="<?php echo $this->get_field_id( 'remember_last_login' ); ?>_yes"><?php _e( 'Yes' ); ?></label>
+
+    <input id="<?php echo $this->get_field_id( 'remember_last_login' ); ?>_no"
+           name="<?php echo $this->get_field_name( 'remember_last_login' ); ?>"
+           type="radio" value="0" <?php echo (esc_attr( $remember_last_login ) == 0 ? 'checked="true"' : ''); ?> />
+    <label for="<?php echo $this->get_field_id( 'remember_last_login' ); ?>_no"><?php _e( 'No' ); ?></label>
+
+    <input id="<?php echo $this->get_field_id( 'remember_last_login' ); ?>_inherit"
+           name="<?php echo $this->get_field_name( 'remember_last_login' ); ?>"
+           type="radio" value="" <?php echo (esc_attr( $remember_last_login ) === '' ? 'checked="true"' : ''); ?> />
+    <label for="<?php echo $this->get_field_id( 'remember_last_login' ); ?>_no"><?php _e( 'Inherit' ); ?></label>
+
 </p>
 <p>
     <label for="<?php echo $this->get_field_id( 'icon_url' ); ?>"><?php _e( 'Icon Url:' ); ?></label>
@@ -86,7 +129,7 @@ $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'r
     </textarea>
     <br/><span class="description">
             <?php echo __('This is the widget\'s dict param.', WPA0_LANG); ?>
-        <a href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject"><?php echo __('More info', WPA0_LANG); ?></a>
+        <a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject"><?php echo __('More info', WPA0_LANG); ?></a>
         </span><br>
         <span class="description">
             <i><b><?php echo __('Note', WPA0_LANG); ?>:</b>
@@ -103,7 +146,7 @@ $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'r
     </textarea>
     <br/><span class="description">
             <?php echo __('This field allows you to set all the widget settings.', WPA0_LANG); ?>
-        <a href="https://github.com/auth0/lock/wiki/Auth0Lock-customization"><?php echo __('More info', WPA0_LANG); ?></a>
+        <a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization"><?php echo __('More info', WPA0_LANG); ?></a>
         </span><br>
         <span class="description">
             <i><b><?php echo __('Note', WPA0_LANG); ?>:</b>
@@ -112,6 +155,7 @@ $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'r
         </span>
     </span>
 </p>
+
 
 
 

@@ -1,6 +1,8 @@
 <?php
-$activated = absint(WP_Auth0_Options::get( 'active' )) == 1;
 $client_id = WP_Auth0_Options::get('client_id');
+
+if (trim($client_id) == "") return;
+
 $domain = WP_Auth0_Options::get('domain');
 $cdn = WP_Auth0_Options::get('cdn_url');
 $allow_signup = WP_Auth0_Options::get('allow_signup') == 1;
@@ -47,7 +49,7 @@ if(empty($client_id) || empty($domain)){ ?>
                 <div id="auth0-login-form">
                 </div>
             <?php } ?>
-            <?php if ($activated && $wordpress_login_enabled && $canShowLegacyLogin) { ?>
+            <?php if ($wordpress_login_enabled && $canShowLegacyLogin) { ?>
                 <div id="extra-options">
                     <a href="?wle">Login with WordPress username</a>
                 </div>

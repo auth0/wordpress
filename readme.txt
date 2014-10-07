@@ -95,7 +95,7 @@ Example:
 
     [auth0 show_as_modal="true" social_big_buttons="true" modal_trigger_name="Login button: This text is configurable!"]
 
-All the details about the parameters on the lock wiki (https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject)
+All the details about the parameters on the lock wiki (https://github.com/auth0/lock/wiki/Auth0Lock-customization)
 
 == Frequently Asked Questions ==
 

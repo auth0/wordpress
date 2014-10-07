@@ -5,7 +5,7 @@ class WP_Auth0_Widget extends WP_Widget {
     function __construct() {
         parent::__construct(
             'wp_auth0_widget',
-            __('Auth0 login widget', 'wp_auth0_widget_domain'),
+            __('Auth0 Login widget', 'wp_auth0_widget_domain'),
             array( 'description' => __( 'Auth0 widget to embed the login form.', 'wpb_widget_domain' ), )
         );
     }
@@ -42,6 +42,24 @@ class WP_Auth0_Widget extends WP_Widget {
             echo $args['after_widget'];
         }
 
+    }
+
+    public function update( $new_instance, $old_instance ) {
+        if (trim($new_instance["dict"]) != '')
+        {
+            if (strpos($new_instance["dict"], '{') !== false && json_decode($new_instance["dict"]) === null)
+            {
+                $new_instance["dict"] = $old_instance["dict"];
+            }
+        }
+        if (trim($new_instance["extra_conf"]) != '')
+        {
+            if (json_decode($new_instance["extra_conf"]) === null)
+            {
+                $new_instance["extra_conf"] = $old_instance["extra_conf"];
+            }
+        }
+        return $new_instance;
     }
 }
 

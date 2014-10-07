@@ -37,14 +37,12 @@ class WP_Auth0_Options {
     private static function defaults(){
         return array(
             'version' => 1,
-            'active' => 0,
             'auto_login' => 0,
             'auto_login_method' => '',
             'client_id' => '',
             'client_secret' => '',
             'domain' => '',
             'form_title' => '',
-            'show_icon' => 0,
             'icon_url' => '',
             'ip_range_check' => 0,
             'ip_ranges' => '',
@@ -53,8 +51,10 @@ class WP_Auth0_Options {
             'allow_signup' => true,
             'wordpress_login_enabled' => true,
             'dict' => '',
-            'social_big_buttons' => true,
+            'social_big_buttons' => false,
             'username_style' => 'email',
+            'extra_conf' => '',
+            'remember_last_login' => true,
             'gravatar' => true,
         );
     }
