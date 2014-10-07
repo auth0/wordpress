@@ -84,10 +84,7 @@ if(empty($client_id) || empty($domain)){ ?>
             $options_obj = array_merge( $options_obj , $specialSettings );
         }
 
-        if ($showAsModal){
-            $options_obj['popup'] = true;
-        }
-        else{
+        if (!$showAsModal){
             $options_obj['container'] = 'auth0-login-form';
         }
 
