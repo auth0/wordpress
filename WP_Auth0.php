@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.0.10
+ * Version: 1.1.0
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -50,21 +50,39 @@ class WP_Auth0 {
 
         add_action( 'wp_enqueue_scripts', array(__CLASS__, 'wp_enqueue'));
 
+        add_action( 'widgets_init', array(__CLASS__, 'wp_register_widget'));
+
+        $plugin = plugin_basename(__FILE__);
+        add_filter("plugin_action_links_$plugin", array(__CLASS__, 'wp_add_plugin_settings_link'));
+
         WP_Auth0_Admin::init();
     }
 
+    // Add settings link on plugin page
+    public static function wp_add_plugin_settings_link($links) {
+        $settings_link = '<a href="options-general.php?page=wpa0">Settings</a>';
+        array_unshift($links, $settings_link);
+        return $links;
+    }
+
+    public static function wp_register_widget() {
+        register_widget( 'WP_Auth0_Widget' );
+    }
+
     public static function wp_enqueue(){
-        $activated = absint(WP_Auth0_Options::get( 'active' ));
-        if(!$activated) {
-            return;
-        }
+        $client_id = WP_Auth0_Options::get('client_id');
+
+        if (trim($client_id) == "") return;
 
         wp_enqueue_style( 'auth0-widget', WPA0_PLUGIN_URL . 'assets/css/main.css' );
     }
 
     public static function shortcode( $atts ){
         ob_start();
-        include WPA0_PLUGIN_DIR . 'templates/login-form.php';
+
+        require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
+        renderAuth0Form(false);
+
         $html = ob_get_clean();
         return $html;
     }
@@ -107,22 +125,74 @@ class WP_Auth0 {
 
     }
 
-    public static function render_auth0_login_css() {
-        $activated = absint(WP_Auth0_Options::get( 'active' )) == 1;
-        if (!$activated) return;
+    protected static function GetBoolean($value)
+    {
+        return ($value == 1 || strtolower($value) == 'true');
+    }
+    protected static function IsValid($array, $key)
+    {
+        return (isset($array[$key]) && trim($array[$key]) != '');
+    }
+    public static function buildSettings($settings)
+    {
+        $options_obj = array();
+        if (isset($settings['form_title']) &&
+            (!isset($settings['dict']) || (isset($settings['dict']) && trim($settings['dict']) == '')) &&
+            trim($settings['form_title']) != '') {
+            $options_obj['dict'] = array(
+                "signin" => array(
+                    "title" => $settings['form_title']
+                )
+            );
+        }
+        elseif (isset($settings['dict']) && trim($settings['dict']) != '') {
+            if ($oDict = json_decode($settings['dict'], true)) {
+                $options_obj['dict'] = $oDict;
+            }
+            else{
+                $options_obj['dict'] = $settings['dict'];
+            }
+        }
+        if (self::IsValid($settings,'social_big_buttons')) {
+            $options_obj['socialBigButtons'] = self::GetBoolean($settings['social_big_buttons']);
+        }
+        if (self::IsValid($settings,'gravatar')) {
+            $options_obj['gravatar'] = self::GetBoolean($settings['gravatar']);
+        }
+        if (self::IsValid($settings,'username_style')) {
+            $options_obj['usernameStyle'] = $settings['username_style'];
+        }
+        if (self::IsValid($settings,'remember_last_login')) {
+            $options_obj['rememberLastLogin'] = self::GetBoolean($settings['remember_last_login']);
+        }
+        if (self::IsValid($settings,'icon_url')) {
+            $options_obj['icon'] = $settings['icon_url'];
+        }
+        if (isset($settings['extra_conf']) && trim($settings['extra_conf']) != '') {
+            $extra_conf_arr = json_decode($settings['extra_conf'], true);
+            $options_obj = array_merge( $extra_conf_arr, $options_obj );
+        }
+        return $options_obj;
+    }
 
-        ?> <link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' /> <?php
+    public static function render_auth0_login_css() {
+        $client_id = WP_Auth0_Options::get('client_id');
+
+        if (trim($client_id) == "") return;
+    ?>
+        <link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' />
+    <?php
     }
 
     public static function render_form( $html ){
-        $activated = absint(WP_Auth0_Options::get( 'active' )) == 1;
+        $client_id = WP_Auth0_Options::get('client_id');
 
-        if(!$activated)
-            return $html;
+        if (trim($client_id) == "") return;
 
         ob_start();
 
-        include WPA0_PLUGIN_DIR . 'templates/login-form.php';
+        require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
+        renderAuth0Form();
 
         $html = ob_get_clean();
         return $html;
@@ -348,6 +418,14 @@ class WP_Auth0 {
 
     public static function wp_init(){
         self::setup_rewrites();
+
+        $cdn_url = WP_Auth0_Options::get('cdn_url');
+        if (strpos($cdn_url, 'auth0-widget-5') !== false)
+        {
+            WP_Auth0_Options::set( 'cdn_url', '//cdn.auth0.com/js/lock-6.min.js' );
+            //WP_Auth0_Options::set( 'version', 1 );
+        }
+
         // Initialize session
         if(!session_id()) {
             session_start();

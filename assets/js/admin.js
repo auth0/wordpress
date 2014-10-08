@@ -7,6 +7,13 @@ jQuery(document).ready(function($) {
         if (typeof(media_frame)!=="undefined")
          media_frame.close();
 
+        var related_control_id = 'wpa0_icon_url';
+        if (typeof($(this).attr('related')) != 'undefined' &&
+            $(this).attr('related') != '')
+        {
+            related_control_id = $(this).attr('related');
+        }
+
         //Create WP media frame.
         media_frame = wp.media.frames.customHeader = wp.media({
             title: wpa0.media_title,
@@ -22,7 +29,8 @@ jQuery(document).ready(function($) {
         // Set the frame callback
         media_frame.on('select', function() {
             var attachment = media_frame.state().get('selection').first().toJSON();
-            $('#wpa0_icon_url').val(attachment.url);
+            $('#'+related_control_id).val(attachment.url);
+            console.log($('#'+related_control_id));
         });
 
         //Open modal
