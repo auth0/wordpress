@@ -66,7 +66,8 @@ class WP_Auth0 {
     }
 
     public static function wp_register_widget() {
-        register_widget( 'WP_Auth0_Widget' );
+        register_widget( 'WP_Auth0_Embed_Widget' );
+        register_widget( 'WP_Auth0_Popup_Widget' );
     }
 
     public static function wp_enqueue(){

@@ -1,6 +1,6 @@
 <?php
 
-$show_as_modal = isset($instance[ 'show_as_modal' ]) ? $instance[ 'show_as_modal' ] : '';
+$show_as_modal = $this->showAsModal();
 $modal_trigger_name = isset($instance[ 'modal_trigger_name' ]) ? $instance[ 'modal_trigger_name' ] : '';
 $form_title = isset($instance[ 'form_title' ]) ? $instance[ 'form_title' ] : '';
 $social_big_buttons = isset($instance[ 'social_big_buttons' ]) ? $instance[ 'social_big_buttons' ] : '';
@@ -13,31 +13,19 @@ $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'r
 
 ?>
 
+<? if($show_as_modal) { ?>
+    <p>
+        <label for="<?php echo $this->get_field_id( 'modal_trigger_name' ); ?>"><?php _e( 'Button text' ); ?></label>
+        <input class="widefat" id="<?php echo $this->get_field_id( 'modal_trigger_name' ); ?>"
+               name="<?php echo $this->get_field_name( 'modal_trigger_name' ); ?>"
+               type="text" value="<?php echo esc_attr( $modal_trigger_name ); ?>" />
+    </p>
+<? } ?>
 <p>
     <label for="<?php echo $this->get_field_id( 'form_title' ); ?>"><?php _e( 'Form title:' ); ?></label>
     <input class="widefat" id="<?php echo $this->get_field_id( 'form_title' ); ?>"
            name="<?php echo $this->get_field_name( 'form_title' ); ?>"
            type="text" value="<?php echo esc_attr( $form_title ); ?>" />
-</p>
-<p>
-    <label><?php _e( 'Show as modal:' ); ?></label>
-
-    <input id="<?php echo $this->get_field_id( 'show_as_modal' ); ?>_yes"
-           name="<?php echo $this->get_field_name( 'show_as_modal' ); ?>"
-           type="radio" value="1" <?php echo (esc_attr( $show_as_modal ) == 1 ? 'checked="true"' : ''); ?> />
-    <label for="<?php echo $this->get_field_id( 'show_as_modal' ); ?>_yes"><?php _e( 'Yes' ); ?></label>
-
-    <input id="<?php echo $this->get_field_id( 'show_as_modal' ); ?>_no"
-           name="<?php echo $this->get_field_name( 'show_as_modal' ); ?>"
-           type="radio" value="0" <?php echo (esc_attr( $show_as_modal ) == 0 ? 'checked="true"' : ''); ?> />
-    <label for="<?php echo $this->get_field_id( 'show_as_modal' ); ?>_no"><?php _e( 'No' ); ?></label>
-
-</p>
-<p>
-    <label for="<?php echo $this->get_field_id( 'modal_trigger_name' ); ?>"><?php _e( 'Modal button name' ); ?></label>
-    <input class="widefat" id="<?php echo $this->get_field_id( 'modal_trigger_name' ); ?>"
-           name="<?php echo $this->get_field_name( 'modal_trigger_name' ); ?>"
-           type="text" value="<?php echo esc_attr( $modal_trigger_name ); ?>" />
 </p>
 <p>
     <label><?php _e( 'Show big social buttons:' ); ?></label>

@@ -92,14 +92,15 @@ class WP_Auth0_Admin{
     public static function render_extra_conf(){
         $v = WP_Auth0_Options::get( 'extra_conf' );
         echo '<textarea name="' . WP_Auth0_Options::OPTIONS_NAME . '[extra_conf]" id="wpa0_extra_conf">' . esc_attr( $v ) . '</textarea>';
-        echo '<br/><span class="description">' . __('This field should be a valid json with any setting that is not editable here. Other options will override this settings.', WPA0_LANG)
+        echo '<br/><span class="description">' . __('This field is the JSon that describes the options to call Lock with. It\'ll override any other option set here. See all the posible options ', WPA0_LANG)
+            . '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization">' . __('here', WPA0_LANG) . '</a>'
             . '<br/>' . __('(IE: {"disableResetAction": true }) ', WPA0_LANG)
-            . '<a href="https://github.com/auth0/lock/wiki/Auth0Lock-customization">' . __('More info', WPA0_LANG) . '</a></span>';
+            . '</span>';
     }
     public static function render_remember_last_login () {
         $v = absint(WP_Auth0_Options::get( 'remember_last_login' ));
         echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[remember_last_login]" id="wpa0_remember_last_login" value="1" ' . checked( $v, 1, false ) . '/>';
-        echo '<br/><span class="description">' . __('Request for SSO data and enable Last time you signed in with[...] message.', WPA0_LANG) . '<a href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#rememberlastlogin-boolean">' . __('More info', WPA0_LANG) . '</a></span>';
+        echo '<br/><span class="description">' . __('Request for SSO data and enable Last time you signed in with[...] message.', WPA0_LANG) . '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#rememberlastlogin-boolean">' . __('More info', WPA0_LANG) . '</a></span>';
     }
 
     public static function render_client_id(){
@@ -169,12 +170,14 @@ class WP_Auth0_Admin{
     public static function render_gravatar(){
         $v = absint(WP_Auth0_Options::get( 'gravatar' ));
         echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[gravatar]" id="wpa0_gravatar" value="1" ' . checked( $v, 1, false ) . '/>';
+        echo '<br/><span class="description">' . __('Read more about the gravatar integration ', WPA0_LANG);
+        echo '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#gravatar-boolean">' . __('HERE', WPA0_LANG) . '</a></span>';
     }
 
     public static function render_icon_url(){
         $v = WP_Auth0_Options::get( 'icon_url' );
         echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[icon_url]" id="wpa0_icon_url" value="' . esc_attr( $v ) . '"/>';
-        echo ' <a href="javascript:void(0);" id="wpa0_choose_icon" class="button-secondary">' . __( 'Choose Icon', WPA0_LANG ) . '</a>';
+        echo ' <a target="_blank" href="javascript:void(0);" id="wpa0_choose_icon" class="button-secondary">' . __( 'Choose Icon', WPA0_LANG ) . '</a>';
         echo '<br/><span class="description">' . __('The icon should be 32x32 pixels!', WPA0_LANG) . '</span>';
     }
 
