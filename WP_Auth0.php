@@ -238,6 +238,9 @@ class WP_Auth0 {
         ));
 
         if ($response instanceof WP_Error) {
+
+            self::insertAuth0Error($response);
+
             error_log($response->get_error_message());
             $msg = __('Sorry. There was a problem logging you in.', WPA0_LANG);
             $msg .= '<br/><br/>';
@@ -303,6 +306,23 @@ class WP_Auth0 {
             array(
                 '%s',
                 '%d',
+                '%s'
+            )
+        );
+    }
+
+    private static function insertAuth0Error(WP_Error $wp_error) {
+        global $wpdb;
+        $wpdb->insert(
+            $wpdb->auth0_error_logs,
+            array(
+                'date' => date('c'),
+                'code' => $wp_error->get_error_code(),
+                'message' => $wp_error->get_error_message()
+            ),
+            array(
+                '%s',
+                '%s',
                 '%s'
             )
         );
@@ -479,6 +499,14 @@ class WP_Auth0 {
                     PRIMARY KEY  (auth0_id)
                 );";
 
+        $sql[] = "CREATE TABLE ".$wpdb->auth0_error_logs." (
+                    id INT(11) AUTO_INCREMENT NOT NULL,
+                    date DATETIME  NOT NULL,
+                    code VARCHAR(255),
+                    message TEXT,
+                    PRIMARY KEY  (id)
+                );";
+
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
         foreach($sql as $s) {
@@ -499,6 +527,7 @@ class WP_Auth0 {
 
         $wpdb->auth0_log = $wpdb->prefix."auth0_log";
         $wpdb->auth0_user = $wpdb->prefix."auth0_user";
+        $wpdb->auth0_error_logs = $wpdb->prefix."auth0_error_logs";
     }
 
     private static function autoloader($class){

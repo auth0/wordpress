@@ -84,6 +84,7 @@ class WP_Auth0_Admin{
             array('id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges', 'function' => 'render_ip_ranges'),
             array('id' => 'wpa0_extra_conf', 'name' => 'Extra settings', 'function' => 'render_extra_conf'),
             array('id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url'),
+            array('id' => 'wpa0_error_log', 'name' => 'Error Log:', 'function' => 'render_error_log'),
 
         ));
 
@@ -204,6 +205,43 @@ class WP_Auth0_Admin{
         $v = absint(WP_Auth0_Options::get( 'wordpress_login_enabled' ));
         echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[wordpress_login_enabled]" id="wpa0_wp_login_enabled" value="1" ' . checked( $v, 1, false ) . '/>';
         echo '<br/><span class="description">' . __('Mark this if you want to enable the regular WordPress login', WPA0_LANG) . '</span>';
+    }
+
+    public static function render_error_log () {
+
+        global $wpdb;
+        $sql = 'SELECT *
+                FROM ' . $wpdb->auth0_error_logs .'
+                WHERE date > %s
+                ORDER BY date DESC';
+
+        $data = $wpdb->get_results($wpdb->prepare($sql, date('c', strtotime('1 month ago'))));
+
+        if (is_null($data) || $data instanceof WP_Error ) {
+            return null;
+        }
+
+        echo '<div class="scrolled-content">';
+        echo    '<table>';
+        echo        '<thead><tr>';
+        echo            '<th>Date</th>';
+        echo            '<th>Error code</th>';
+        echo            '<th>Message</th>';
+        echo        '</tr></thead>';
+        echo        '<tbody>';
+
+        foreach ($data as $item)
+        {
+            echo        '<tr>';
+            echo            '<td>'. date('m/d/Y H:i:s', strtotime($item->date)) .'</td>';
+            echo            '<td>'. $item->code .'</td>';
+            echo            '<td>'. $item->message .'</td>';
+            echo        '</tr>';
+        }
+
+        echo        '</tbody>';
+        echo    '</table>';
+        echo '</div>';
     }
 
 

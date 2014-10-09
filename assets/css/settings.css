@@ -6,3 +6,26 @@ textarea {
     width: 70%;
     height: 100px;
 }
+
+.scrolled-content {
+    width: 70%;
+    max-height: 200px;
+    overflow: auto;
+}
+
+.scrolled-content tr td,
+.scrolled-content tr th{
+    padding:5px 0;
+    margin:0;
+}
+
+.scrolled-content table {
+    border-spacing: 0;
+}
+.scrolled-content tr th {
+    border-bottom: 2px solid #999;
+}
+
+.scrolled-content tr td {
+    border-bottom: 1px solid #999;
+}
