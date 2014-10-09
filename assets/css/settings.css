@@ -7,25 +7,21 @@ textarea {
     height: 100px;
 }
 
-.scrolled-content {
-    width: 70%;
-    max-height: 200px;
-    overflow: auto;
+.a0-table {
+    border-spacing: 0;
+    margin-top: 20px;
 }
 
-.scrolled-content tr td,
-.scrolled-content tr th{
-    padding:5px 0;
+.a0-table tr td,
+.a0-table tr th{
+    padding: 8px 10px;
     margin:0;
 }
 
-.scrolled-content table {
-    border-spacing: 0;
-}
-.scrolled-content tr th {
+.a0-table tr th {
     border-bottom: 2px solid #999;
 }
 
-.scrolled-content tr td {
-    border-bottom: 1px solid #999;
+.a0-table tr:nth-child(2n+1) {
+    background: #f9f9f9;
 }

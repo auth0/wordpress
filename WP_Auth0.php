@@ -56,12 +56,18 @@ class WP_Auth0 {
         add_filter("plugin_action_links_$plugin", array(__CLASS__, 'wp_add_plugin_settings_link'));
 
         WP_Auth0_Admin::init();
+        WP_Auth0_ErrorLog::init();
     }
 
     // Add settings link on plugin page
     public static function wp_add_plugin_settings_link($links) {
+
+        $settings_link = '<a href="options-general.php?page=wpa0-errors">Error Log</a>';
+        array_unshift($links, $settings_link);
+
         $settings_link = '<a href="options-general.php?page=wpa0">Settings</a>';
         array_unshift($links, $settings_link);
+
         return $links;
     }
 
@@ -222,7 +228,7 @@ class WP_Auth0 {
         $body = array(
             'client_id' => $client_id,
             'redirect_uri' => home_url(),
-            'client_secret' => $client_secret,
+            'client_secret' => '0'.$client_secret,
             'code' => $code,
             'grant_type' => 'authorization_code'
         );
@@ -239,7 +245,7 @@ class WP_Auth0 {
 
         if ($response instanceof WP_Error) {
 
-            self::insertAuth0Error($response);
+            self::insertAuth0Error('init_auth0_oauth/token',$response);
 
             error_log($response->get_error_message());
             $msg = __('Sorry. There was a problem logging you in.', WPA0_LANG);
@@ -249,10 +255,15 @@ class WP_Auth0 {
         }
 
         $data = json_decode( $response['body'] );
+        //var_dump($response);exit;
+
         if(isset($data->access_token)){
             // Get the user information
             $response = wp_remote_get( $endpoint . 'userinfo/?access_token=' . $data->access_token );
             if ($response instanceof WP_Error) {
+
+                self::insertAuth0Error('init_auth0_userinfo',$response);
+
                 error_log($response->get_error_message());
                 $msg = __('Sorry, there was a problem logging you in.', WPA0_LANG);
                 $msg .= '<br/><br/>';
@@ -270,6 +281,10 @@ class WP_Auth0 {
                     wp_safe_redirect( home_url() );
                 }
             }
+        }elseif (is_array($response['response']) && $response['response']['code'] == 401)
+        {
+            wp_redirect( home_url() . '?message=unauthorized' );
+
         }else{
             // Login failed!
             wp_redirect( home_url() . '?message=' . $data->error_description );
@@ -287,6 +302,9 @@ class WP_Auth0 {
                 WHERE a.auth0_id = %s';
         $userRow = $wpdb->get_row($wpdb->prepare($sql, $id));
         if (is_null($userRow) || $userRow instanceof WP_Error ) {
+
+            self::insertAuth0Error('findAuth0User',$userRow);
+
             return null;
         }
         $user = new WP_User();
@@ -311,16 +329,18 @@ class WP_Auth0 {
         );
     }
 
-    private static function insertAuth0Error(WP_Error $wp_error) {
+    private static function insertAuth0Error($section, WP_Error $wp_error) {
         global $wpdb;
         $wpdb->insert(
             $wpdb->auth0_error_logs,
             array(
+                'section' => $section,
                 'date' => date('c'),
                 'code' => $wp_error->get_error_code(),
                 'message' => $wp_error->get_error_message()
             ),
             array(
+                '%s',
                 '%s',
                 '%s',
                 '%s'
@@ -502,6 +522,7 @@ class WP_Auth0 {
         $sql[] = "CREATE TABLE ".$wpdb->auth0_error_logs." (
                     id INT(11) AUTO_INCREMENT NOT NULL,
                     date DATETIME  NOT NULL,
+                    section VARCHAR(255),
                     code VARCHAR(255),
                     message TEXT,
                     PRIMARY KEY  (id)
@@ -565,6 +586,9 @@ function get_currentauth0userinfo() {
                 WHERE wp_id = %d';
         $result = $wpdb->get_row($wpdb->prepare($sql, $current_user->ID));
         if (is_null($result) || $result instanceof WP_Error ) {
+
+            self::insertAuth0Error('get_currentauth0userinfo',$result);
+
             return null;
         }
         $currentauth0_user = unserialize($result->auth0_obj);
