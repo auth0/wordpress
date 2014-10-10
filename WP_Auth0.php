@@ -315,7 +315,6 @@ class WP_Auth0 {
 
             self::insertAuth0Error('init_auth0_oauth/token',$error);
 
-            error_log($response->get_error_message());
             $msg = __('Please check your Client Secret on the settings plugin is the same as the one on the Auth0 dashboard.', WPA0_LANG);
             $msg .= '<br/><br/>';
             $msg .= '<a href="' . wp_login_url() . '">' . __('← Login', WPA0_LANG) . '</a>';
