@@ -17,7 +17,7 @@
         {
             ?>
             <tr>
-                <td class="message" colspan="4">There were any errors in the last month.</td>
+                <td class="message" colspan="4">No errors.</td>
             </tr>
         <?php
         }
