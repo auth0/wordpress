@@ -70,7 +70,7 @@ class WP_Auth0 {
 
         switch (strtolower($_GET['message']))
         {
-            case 'unauthorized': $message = "Please check your Client Secret on the settings plugin is the same as the one on the Auth0 dashboard."; break;
+            //case '': $message = ""; break;
         }
 
         if ($message)
@@ -256,7 +256,7 @@ class WP_Auth0 {
         $body = array(
             'client_id' => $client_id,
             'redirect_uri' => home_url(),
-            'client_secret' =>'0'. $client_secret,
+            'client_secret' =>$client_secret,
             'code' => $code,
             'grant_type' => 'authorization_code'
         );
@@ -309,9 +309,17 @@ class WP_Auth0 {
                     wp_safe_redirect( home_url() );
                 }
             }
-        }elseif (is_array($response['response']) && $response['response']['code'] == 401)
-        {
-            wp_redirect( home_url() . '?message=unauthorized' );
+        }elseif (is_array($response['response']) && $response['response']['code'] == 401) {
+
+            $error = new WP_Error('401', 'auth/token response code: 401 Unauthorized');
+
+            self::insertAuth0Error('init_auth0_oauth/token',$error);
+
+            error_log($response->get_error_message());
+            $msg = __('Please check your Client Secret on the settings plugin is the same as the one on the Auth0 dashboard.', WPA0_LANG);
+            $msg .= '<br/><br/>';
+            $msg .= '<a href="' . wp_login_url() . '">' . __('← Login', WPA0_LANG) . '</a>';
+            wp_die($msg);
 
         }else{
             // Login failed!
