@@ -320,6 +320,19 @@ class WP_Auth0 {
             wp_die($msg);
 
         }else{
+
+            $error = '';
+            $description = '';
+
+            if (isset($data->error)) $error = $data->error;
+            if (isset($data->error_description)) $description = $data->error_description;
+
+            if (!empty($error) || !empty($description))
+            {
+                $error = new WP_Error($error, $description);
+                self::insertAuth0Error('init_auth0_oauth/token',$error);
+            }
+
             // Login failed!
             wp_redirect( home_url() . '?message=' . $data->error_description );
             //echo "Error logging in! Description received was:<br/>" . $data->error_description;
