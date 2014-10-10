@@ -25,3 +25,11 @@ textarea {
 .a0-table tr:nth-child(2n+1) {
     background: #f9f9f9;
 }
+
+.a0-table tr td.message
+{
+    padding: 25px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 18px;
+}

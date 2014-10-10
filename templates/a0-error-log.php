@@ -13,6 +13,15 @@
         </thead>
         <tbody>
     <?php
+        if (empty($data))
+        {
+            ?>
+            <tr>
+                <td class="message" colspan="4">There were any errors in the last month.</td>
+            </tr>
+        <?php
+        }
+
         foreach ($data as $item)
         {
     ?>
