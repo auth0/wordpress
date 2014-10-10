@@ -5,7 +5,14 @@ if (trim($client_id) == "") return;
 
 $domain = WP_Auth0_Options::get('domain');
 $cdn = WP_Auth0_Options::get('cdn_url');
-$allow_signup = WP_Auth0_Options::get('allow_signup') == 1;
+
+$allow_signup = false;
+
+if (WP_Auth0_Options::is_wp_registration_enabled())
+{
+    $allow_signup = WP_Auth0_Options::get('allow_signup') == 1;
+}
+
 $extra_css = apply_filters( 'auth0_login_css', '');
 $showAsModal = (isset($specialSettings['show_as_modal']) && $specialSettings['show_as_modal'] == 1);
 $modalTriggerName = 'Login';
