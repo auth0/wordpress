@@ -55,8 +55,31 @@ class WP_Auth0 {
         $plugin = plugin_basename(__FILE__);
         add_filter("plugin_action_links_$plugin", array(__CLASS__, 'wp_add_plugin_settings_link'));
 
+        if (isset($_GET['message']))
+        {
+            add_action( 'wp_footer', array( __CLASS__, 'a0_render_message' ) );
+        }
+
         WP_Auth0_Admin::init();
         WP_Auth0_ErrorLog::init();
+    }
+
+    public static function a0_render_message()
+    {
+        $message = null;
+
+        switch (strtolower($_GET['message']))
+        {
+            case 'unauthorized': $message = "Please check your Client Secret on the settings plugin is the same as the one on the Auth0 dashboard."; break;
+        }
+
+        if ($message)
+        {
+            echo "<div class=\"a0-message\">$message <small onclick=\"jQuery('.a0-message').hide();\">(Close)</small></div>";
+            echo '<script type="text/javascript">
+                setTimeout(function(){jQuery(".a0-message").hide();}, 10 * 1000);
+            </script>';
+        }
     }
 
     // Add settings link on plugin page
@@ -80,6 +103,11 @@ class WP_Auth0 {
         $client_id = WP_Auth0_Options::get('client_id');
 
         if (trim($client_id) == "") return;
+
+        if (isset($_GET['message']))
+        {
+            wp_enqueue_script('jquery');
+        }
 
         wp_enqueue_style( 'auth0-widget', WPA0_PLUGIN_URL . 'assets/css/main.css' );
     }
@@ -228,7 +256,7 @@ class WP_Auth0 {
         $body = array(
             'client_id' => $client_id,
             'redirect_uri' => home_url(),
-            'client_secret' => $client_secret,
+            'client_secret' =>'0'. $client_secret,
             'code' => $code,
             'grant_type' => 'authorization_code'
         );
