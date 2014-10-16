@@ -86,10 +86,10 @@ class WP_Auth0 {
     // Add settings link on plugin page
     public static function wp_add_plugin_settings_link($links) {
 
-        $settings_link = '<a href="options-general.php?page=wpa0-errors">Error Log</a>';
+        $settings_link = '<a href="admin.php?page=wpa0-errors">Error Log</a>';
         array_unshift($links, $settings_link);
 
-        $settings_link = '<a href="options-general.php?page=wpa0">Settings</a>';
+        $settings_link = '<a href="admin.php?page=wpa0">Settings</a>';
         array_unshift($links, $settings_link);
 
         return $links;
