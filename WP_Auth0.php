@@ -249,7 +249,7 @@ class WP_Auth0 {
             return;
         }
 
-        if (isset($wp_query->query_vars['error_description']))
+        if (isset($wp_query->query_vars['error_description']) && trim($wp_query->query_vars['error_description']) != '')
         {
             $msg = __('Sorry, there was a problem logging you in.', WPA0_LANG);
             $msg .= '<br/>';
@@ -258,7 +258,7 @@ class WP_Auth0 {
             $msg .= '<a href="' . wp_login_url() . '">' . __('← Login', WPA0_LANG) . '</a>';
             wp_die($msg);
         }
-        if (isset($wp_query->query_vars['error']))
+        if (isset($wp_query->query_vars['error']) && trim($wp_query->query_vars['error']) != '')
         {
             $msg = __('Sorry, there was a problem logging you in.', WPA0_LANG);
             $msg .= '<br/>';
@@ -493,7 +493,8 @@ class WP_Auth0 {
             // If the user has a verified email or is a database user try to see if there is
             // a user to join with. The isDatabase is because we don't want to allow database
             // user creation if there is an existing one with no verified email
-            if ((isset($userinfo->email_verified) && $userinfo->email_verified) || $isDatabaseUser) {
+
+            if (isset($userinfo->email) && ((isset($userinfo->email_verified) && $userinfo->email_verified) || $isDatabaseUser)) {
                 $joinUser = get_user_by( 'email', $userinfo->email );
             }
 
