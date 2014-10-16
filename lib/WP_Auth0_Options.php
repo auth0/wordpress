@@ -52,7 +52,6 @@ class WP_Auth0_Options {
             'ip_ranges' => '',
             'cdn_url' => '//cdn.auth0.com/js/lock-6.min.js',
             'requires_verified_email' => true,
-            'allow_signup' => true,
             'wordpress_login_enabled' => true,
             'dict' => '',
             'social_big_buttons' => false,

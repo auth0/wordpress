@@ -349,10 +349,11 @@ class WP_Auth0 {
                 JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id
                 WHERE a.auth0_id = %s';
         $userRow = $wpdb->get_row($wpdb->prepare($sql, $id));
-        if (is_null($userRow) || $userRow instanceof WP_Error ) {
 
+        if (is_null($userRow)) {
+            return null;
+        }elseif($userRow instanceof WP_Error ) {
             self::insertAuth0Error('findAuth0User',$userRow);
-
             return null;
         }
         $user = new WP_User();
@@ -377,7 +378,7 @@ class WP_Auth0 {
         );
     }
 
-    private static function insertAuth0Error($section, WP_Error $wp_error) {
+    public static function insertAuth0Error($section, WP_Error $wp_error) {
         global $wpdb;
         $wpdb->insert(
             $wpdb->auth0_error_logs,
@@ -465,9 +466,11 @@ class WP_Auth0 {
             // If the user has a verified email or is a database user try to see if there is
             // a user to join with. The isDatabase is because we don't want to allow database
             // user creation if there is an existing one with no verified email
-            if ($userinfo->email_verified || $isDatabaseUser) {
+            if ((isset($userinfo->email_verified) && $userinfo->email_verified) || $isDatabaseUser) {
                 $joinUser = get_user_by( 'email', $userinfo->email );
             }
+
+            $allow_signup = WP_Auth0_Options::is_wp_registration_enabled();
 
             if (!is_null($joinUser) && $joinUser instanceof WP_User) {
                 // If we are here, we have a potential join user
@@ -477,13 +480,20 @@ class WP_Auth0 {
                     self::dieWithVerifyEmail($userinfo, $data);
                 }
                 $user_id = $joinUser->ID;
-            } else {
+            } elseif ($allow_signup) {
                 // If we are here, we need to create the user
                 $user_id = (int)WP_Auth0_Users::create_user($userinfo);
 
                 // Check if user was created
 
-                if($user_id == -2){
+                if( is_wp_error($user_id) ) {
+                    $msg = __('Error: Could not create user.', WPA0_LANG);
+                    $msg =  ' ' . $user_id->get_error_message();
+                    $msg .= '<br/><br/>';
+                    $msg .= '<a href="' . site_url() . '">' . __('← Go back', WPA0_LANG) . '</a>';
+                    wp_die($msg);
+
+                }elseif($user_id == -2){
                     $msg = __('Error: Could not create user. The registration process were rejected. Please verify that your account is whitelisted for this system.', WPA0_LANG);
                     $msg .= '<br/><br/>';
                     $msg .= '<a href="' . site_url() . '">' . __('← Go back', WPA0_LANG) . '</a>';
@@ -495,6 +505,11 @@ class WP_Auth0 {
                     $msg .= '<a href="' . site_url() . '">' . __('← Go back', WPA0_LANG) . '</a>';
                     wp_die($msg);
                 }
+            } else {
+                $msg = __('Error: Could not create user. The registration process is not available.', WPA0_LANG);
+                $msg .= '<br/><br/>';
+                $msg .= '<a href="' . site_url() . '">' . __('← Go back', WPA0_LANG) . '</a>';
+                wp_die($msg);
             }
             // If we are here we should have a valid $user_id with a new user or an existing one
             // log him in, and update the auth0_user table

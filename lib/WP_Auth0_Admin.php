@@ -194,9 +194,23 @@ class WP_Auth0_Admin{
     }
 
     public static function render_allow_signup () {
-        $v = absint(WP_Auth0_Options::get( 'allow_signup' ));
-        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[allow_signup]" id="wpa0_allow_signup" value="1" ' . checked( $v, 1, false ) . '/>';
-        echo '<br/><span class="description">' . __('If you have database connection you can allow users to signup in the widget', WPA0_LANG) . '</span>';
+        $allow_signup = WP_Auth0_Options::is_wp_registration_enabled();
+
+        echo '<span class="description">' . __('Signup will be ', WPA0_LANG);
+
+        if ($allow_signup){
+            echo '<b>' . __('disabled', WPA0_LANG) . '</b>';
+            echo __(' because you have turned on the setting " Anyone can register" off WordPress', WPA0_LANG) . '<br>';
+        }
+        else{
+            echo '<b>' . __('enabled', WPA0_LANG) . '</b>';
+            echo __(' because you have turned on the setting " Anyone can register" on WordPress', WPA0_LANG) . '<br>';
+        }
+
+
+
+        echo __('You can manage this setting on Settings > General > Membership, Anyone can register', WPA0_LANG) . '</span>';
+
     }
 
     public static function render_allow_wordpress_login () {
