@@ -2,7 +2,6 @@
 
 class WP_Auth0_Admin{
     public static function init(){
-        add_action( 'admin_menu', array(__CLASS__, 'init_menu') );
         add_action( 'admin_init', array(__CLASS__, 'init_admin'));
         add_action( 'admin_enqueue_scripts', array(__CLASS__, 'admin_enqueue'));
     }
@@ -216,10 +215,6 @@ class WP_Auth0_Admin{
 
     public static function render_advanced_description(){
 
-    }
-
-    public static function init_menu(){
-        add_options_page( __('Auth0 Settings', WPA0_LANG), __('Auth0 Settings', WPA0_LANG), 'manage_options', 'wpa0', array(__CLASS__, 'render_settings_page') );
     }
 
     public static function render_settings_page(){

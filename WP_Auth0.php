@@ -60,6 +60,7 @@ class WP_Auth0 {
             add_action( 'wp_footer', array( __CLASS__, 'a0_render_message' ) );
         }
 
+        WP_Auth0_Settings_Section::init();
         WP_Auth0_Admin::init();
         WP_Auth0_ErrorLog::init();
     }
