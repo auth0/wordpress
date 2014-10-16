@@ -52,6 +52,9 @@ class WP_Auth0 {
 
         add_action( 'widgets_init', array(__CLASS__, 'wp_register_widget'));
 
+        add_filter('query_vars', array(__CLASS__, 'a0_register_query_vars'));
+
+
         $plugin = plugin_basename(__FILE__);
         add_filter("plugin_action_links_$plugin", array(__CLASS__, 'wp_add_plugin_settings_link'));
 
@@ -63,6 +66,11 @@ class WP_Auth0 {
         WP_Auth0_Settings_Section::init();
         WP_Auth0_Admin::init();
         WP_Auth0_ErrorLog::init();
+    }
+
+    public static function  a0_register_query_vars( $qvars ) {
+        $qvars[] = 'error_description';
+        return $qvars;
     }
 
     public static function a0_render_message()
@@ -239,6 +247,25 @@ class WP_Auth0 {
 
         if(!isset($wp_query->query_vars['auth0']) || $wp_query->query_vars['auth0'] != '1') {
             return;
+        }
+
+        if (isset($wp_query->query_vars['error_description']))
+        {
+            $msg = __('Sorry, there was a problem logging you in.', WPA0_LANG);
+            $msg .= '<br/>';
+            $msg .= ' '.$wp_query->query_vars['error_description'];
+            $msg .= '<br/><br/>';
+            $msg .= '<a href="' . wp_login_url() . '">' . __('← Login', WPA0_LANG) . '</a>';
+            wp_die($msg);
+        }
+        if (isset($wp_query->query_vars['error']))
+        {
+            $msg = __('Sorry, there was a problem logging you in.', WPA0_LANG);
+            $msg .= '<br/>';
+            $msg .= ' '.$wp_query->query_vars['error'];
+            $msg .= '<br/><br/>';
+            $msg .= '<a href="' . wp_login_url() . '">' . __('← Login', WPA0_LANG) . '</a>';
+            wp_die($msg);
         }
 
         $code = $wp_query->query_vars['code'];
