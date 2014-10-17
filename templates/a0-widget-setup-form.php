@@ -10,6 +10,7 @@ $icon_url = isset($instance[ 'icon_url' ]) ? $instance[ 'icon_url' ] : '';
 $dict = isset($instance[ 'dict' ]) ? $instance[ 'dict' ] : '';
 $extra_conf = isset($instance[ 'extra_conf' ]) ? $instance[ 'extra_conf' ] : '';
 $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'remember_last_login' ] : '';
+$custom_css = isset($instance[ 'custom_css' ]) ? $instance[ 'custom_css' ] : '';
 
 ?>
 
@@ -127,6 +128,18 @@ $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'r
             <i><b><?php echo __('Note', WPA0_LANG); ?>:</b>
                 <?php echo __('The other settings will override this configuration', WPA0_LANG); ?>
             </i>
+        </span>
+    </span>
+</p>
+<p>
+    <label for="<?php echo $this->get_field_id( 'extra_conf' ); ?>"><?php _e( 'Customize the Login Widget CSS:' ); ?></label>
+    <textarea class="widefat" id="<?php echo $this->get_field_id( 'custom_css' ); ?>"
+              name="<?php echo $this->get_field_name( 'custom_css' ); ?>">
+        <?php echo esc_attr( $custom_css ); ?>
+    </textarea>
+    <br/><span class="description">
+            <?php echo __('This should be a valid CSS to customize the Auth0 login widget.', WPA0_LANG); ?>
+        <a target="_blank" href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget"><?php echo __('More info', WPA0_LANG); ?></a>
         </span>
     </span>
 </p>

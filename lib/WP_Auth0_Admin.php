@@ -65,6 +65,7 @@ class WP_Auth0_Admin{
             array('id' => 'wpa0_social_big_buttons', 'name' => 'Show big social buttons', 'function' => 'render_social_big_buttons'),
             array('id' => 'wpa0_icon_url', 'name' => 'Icon URL', 'function' => 'render_icon_url'),
             array('id' => 'wpa0_gravatar', 'name' => 'Enable Gravatar integration', 'function' => 'render_gravatar'),
+            array('id' => 'wpa0_custom_css', 'name' => 'Customize the Login Widget CSS', 'function' => 'render_custom_css'),
 
         ));
 
@@ -129,6 +130,12 @@ class WP_Auth0_Admin{
         $v = WP_Auth0_Options::get( 'dict' );
         echo '<textarea name="' . WP_Auth0_Options::OPTIONS_NAME . '[dict]" id="wpa0_dict">' . esc_attr( $v ) . '</textarea>';
         echo '<br/><span class="description">' . __('This is the widget\'s dict param.', WPA0_LANG) . '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject">' . __('More info', WPA0_LANG) . '</a></span>';
+    }
+
+    public static function render_custom_css(){
+        $v = WP_Auth0_Options::get( 'custom_css' );
+        echo '<textarea name="' . WP_Auth0_Options::OPTIONS_NAME . '[custom_css]" id="wpa0_custom_css">' . esc_attr( $v ) . '</textarea>';
+        echo '<br/><span class="description">' . __('This should be a valid CSS to customize the Auth0 login widget. ', WPA0_LANG) . '<a target="_blank" href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget">' . __('More info', WPA0_LANG) . '</a></span>';
     }
 
     public static function render_username_style(){

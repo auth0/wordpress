@@ -34,11 +34,42 @@ if (empty($title)) {
 $stateObj = array("interim" => $interim_login, "uuid" =>uniqid());
 $state = json_encode($stateObj);
 
+
+$options_obj = WP_Auth0::buildSettings(WP_Auth0_Options::get_options());
+
+$options_obj = array_merge( array(
+    "callbackURL"   =>  site_url('/index.php?auth0=1'),
+    "authParams"    => array("state" => $state),
+), $options_obj  );
+
+if (isset($specialSettings)){
+    $options_obj = array_merge( $options_obj , $specialSettings );
+}
+
+if (!$showAsModal){
+    $options_obj['container'] = 'auth0-login-form';
+}
+
+if (!$allow_signup) {
+    $options_obj['disableSignupAction'] = true;
+}
+$options = json_encode($options_obj);
+
 if(empty($client_id) || empty($domain)){ ?>
 
     <p><?php _e('Auth0 Integration has not yet been set up! Please visit your Wordpress Auth0 settings and fill in the required settings.', WPA0_LANG); ?></p>
 
 <?php } else { ?>
+
+    <?php if($options_obj['customCSS']) { ?>
+
+        <style type="text/css">
+            <?php echo $options_obj['customCSS'];?>
+        </style>
+
+    <?php } ?>
+
+
     <div id="form-signin-wrapper" class="auth0-login">
         <?php include 'error-msg.php'; ?>
         <div class="form-signin">
@@ -72,30 +103,6 @@ if(empty($client_id) || empty($domain)){ ?>
 
         var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
 
-    <?php
-
-
-        $options_obj = WP_Auth0::buildSettings(WP_Auth0_Options::get_options());
-
-        $options_obj = array_merge( array(
-            "callbackURL"   =>  site_url('/index.php?auth0=1'),
-            "authParams"    => array("state" => $state),
-        ), $options_obj  );
-
-        if (isset($specialSettings)){
-            $options_obj = array_merge( $options_obj , $specialSettings );
-        }
-
-        if (!$showAsModal){
-            $options_obj['container'] = 'auth0-login-form';
-        }
-
-        if (!$allow_signup) {
-            $options_obj['disableSignupAction'] = true;
-        }
-
-        $options = json_encode($options_obj);
-    ?>
         function a0ShowLoginModal() {
             var options = <?php echo $options; ?>;
 

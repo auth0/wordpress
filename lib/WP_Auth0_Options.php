@@ -58,6 +58,7 @@ class WP_Auth0_Options {
             'username_style' => 'email',
             'extra_conf' => '',
             'remember_last_login' => true,
+            'custom_css' => '',
             'gravatar' => true,
         );
     }
