@@ -256,8 +256,7 @@ class WP_Auth0 {
 
         if (isset($wp_query->query_vars['error_description']) && trim($wp_query->query_vars['error_description']) != '')
         {
-            $msg = __('Sorry, there was a problem logging you in.', WPA0_LANG);
-            $msg .= '<br/>';
+            $msg = __('There was a problem with your log in:', WPA0_LANG);
             $msg .= ' '.$wp_query->query_vars['error_description'];
             $msg .= '<br/><br/>';
             $msg .= '<a href="' . wp_login_url() . '">' . __('← Login', WPA0_LANG) . '</a>';
@@ -265,8 +264,7 @@ class WP_Auth0 {
         }
         if (isset($wp_query->query_vars['error']) && trim($wp_query->query_vars['error']) != '')
         {
-            $msg = __('Sorry, there was a problem logging you in.', WPA0_LANG);
-            $msg .= '<br/>';
+            $msg = __('There was a problem with your log in:', WPA0_LANG);
             $msg .= ' '.$wp_query->query_vars['error'];
             $msg .= '<br/><br/>';
             $msg .= '<a href="' . wp_login_url() . '">' . __('← Login', WPA0_LANG) . '</a>';
@@ -325,7 +323,7 @@ class WP_Auth0 {
                 self::insertAuth0Error('init_auth0_userinfo',$response);
 
                 error_log($response->get_error_message());
-                $msg = __('Sorry, there was a problem logging you in.', WPA0_LANG);
+                $msg = __('There was a problem with your log in.', WPA0_LANG);
                 $msg .= '<br/><br/>';
                 $msg .= '<a href="' . wp_login_url() . '">' . __('← Login', WPA0_LANG) . '</a>';
                 wp_die($msg);
