@@ -68,6 +68,11 @@ class WP_Auth0 {
         WP_Auth0_ErrorLog::init();
     }
 
+    public static function getPluginDirUrl()
+    {
+        return plugin_dir_url( __FILE__ );
+    }
+
     public static function  a0_register_query_vars( $qvars ) {
         $qvars[] = 'error_description';
         return $qvars;
