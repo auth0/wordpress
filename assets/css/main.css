@@ -10,3 +10,19 @@
 .auth0-login .form-signin-heading {
     margin-bottom: 10px;
 }
+.a0-message{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #FFF;
+    line-height: 2em;
+    text-align: center;
+    font-weight: bold;
+    z-index: 999;
+}
+
+.a0-message small {
+    font-weight: normal;
+    cursor: pointer;
+}

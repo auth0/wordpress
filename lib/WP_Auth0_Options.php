@@ -4,6 +4,11 @@ class WP_Auth0_Options {
     const OPTIONS_NAME = 'wp_auth0_settings';
     private static $_opt = null;
 
+    public static function is_wp_registration_enabled()
+    {
+        return (get_option('users_can_register', 0) == 1);
+    }
+
     public static function get_options(){
         if(empty(self::$_opt)){
             $options = get_option( self::OPTIONS_NAME, array());
@@ -47,13 +52,13 @@ class WP_Auth0_Options {
             'ip_ranges' => '',
             'cdn_url' => '//cdn.auth0.com/js/lock-6.min.js',
             'requires_verified_email' => true,
-            'allow_signup' => true,
             'wordpress_login_enabled' => true,
             'dict' => '',
             'social_big_buttons' => false,
             'username_style' => 'email',
             'extra_conf' => '',
             'remember_last_login' => true,
+            'custom_css' => '',
             'gravatar' => true,
         );
     }

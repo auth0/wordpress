@@ -2,7 +2,6 @@
 
 class WP_Auth0_Admin{
     public static function init(){
-        add_action( 'admin_menu', array(__CLASS__, 'init_menu') );
         add_action( 'admin_init', array(__CLASS__, 'init_admin'));
         add_action( 'admin_enqueue_scripts', array(__CLASS__, 'admin_enqueue'));
     }
@@ -66,6 +65,7 @@ class WP_Auth0_Admin{
             array('id' => 'wpa0_social_big_buttons', 'name' => 'Show big social buttons', 'function' => 'render_social_big_buttons'),
             array('id' => 'wpa0_icon_url', 'name' => 'Icon URL', 'function' => 'render_icon_url'),
             array('id' => 'wpa0_gravatar', 'name' => 'Enable Gravatar integration', 'function' => 'render_gravatar'),
+            array('id' => 'wpa0_custom_css', 'name' => 'Customize the Login Widget CSS', 'function' => 'render_custom_css'),
 
         ));
 
@@ -132,6 +132,12 @@ class WP_Auth0_Admin{
         echo '<br/><span class="description">' . __('This is the widget\'s dict param.', WPA0_LANG) . '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject">' . __('More info', WPA0_LANG) . '</a></span>';
     }
 
+    public static function render_custom_css(){
+        $v = WP_Auth0_Options::get( 'custom_css' );
+        echo '<textarea name="' . WP_Auth0_Options::OPTIONS_NAME . '[custom_css]" id="wpa0_custom_css">' . esc_attr( $v ) . '</textarea>';
+        echo '<br/><span class="description">' . __('This should be a valid CSS to customize the Auth0 login widget. ', WPA0_LANG) . '<a target="_blank" href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget">' . __('More info', WPA0_LANG) . '</a></span>';
+    }
+
     public static function render_username_style(){
         $v = WP_Auth0_Options::get( 'username_style' );
         echo '<input type="radio" name="' . WP_Auth0_Options::OPTIONS_NAME . '[username_style]" id="wpa0_username_style_email" value="email" ' . (esc_attr( $v ) == 'email' ? 'checked="true"' : '') . '"/>';
@@ -195,9 +201,23 @@ class WP_Auth0_Admin{
     }
 
     public static function render_allow_signup () {
-        $v = absint(WP_Auth0_Options::get( 'allow_signup' ));
-        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[allow_signup]" id="wpa0_allow_signup" value="1" ' . checked( $v, 1, false ) . '/>';
-        echo '<br/><span class="description">' . __('If you have database connection you can allow users to signup in the widget', WPA0_LANG) . '</span>';
+        $allow_signup = WP_Auth0_Options::is_wp_registration_enabled();
+
+        echo '<span class="description">' . __('Signup will be ', WPA0_LANG);
+
+        if ($allow_signup){
+            echo '<b>' . __('disabled', WPA0_LANG) . '</b>';
+            echo __(' because you have turned on the setting " Anyone can register" off WordPress', WPA0_LANG) . '<br>';
+        }
+        else{
+            echo '<b>' . __('enabled', WPA0_LANG) . '</b>';
+            echo __(' because you have turned on the setting " Anyone can register" on WordPress', WPA0_LANG) . '<br>';
+        }
+
+
+
+        echo __('You can manage this setting on Settings > General > Membership, Anyone can register', WPA0_LANG) . '</span>';
+
     }
 
     public static function render_allow_wordpress_login () {
@@ -205,7 +225,6 @@ class WP_Auth0_Admin{
         echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[wordpress_login_enabled]" id="wpa0_wp_login_enabled" value="1" ' . checked( $v, 1, false ) . '/>';
         echo '<br/><span class="description">' . __('Mark this if you want to enable the regular WordPress login', WPA0_LANG) . '</span>';
     }
-
 
     public static function render_basic_description(){
 
@@ -217,11 +236,6 @@ class WP_Auth0_Admin{
 
     public static function render_advanced_description(){
 
-    }
-
-
-    public static function init_menu(){
-        add_options_page( __('Auth0 Settings', WPA0_LANG), __('Auth0 Settings', WPA0_LANG), 'manage_options', 'wpa0', array(__CLASS__, 'render_settings_page') );
     }
 
     public static function render_settings_page(){

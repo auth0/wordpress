@@ -1,7 +1,11 @@
 <?php
 class WP_Auth0_Users {
 	public static function create_user( $userinfo ){
-		$email = $userinfo->email;
+		$email = null;
+        if (isset($userinfo->email))
+        {
+            $email = $userinfo->email;
+        }
 		if (empty($email)) {
 			$email = "change_this_email@" . uniqid() .".com";
 		}
@@ -46,7 +50,7 @@ class WP_Auth0_Users {
 		$user_id = wp_insert_user( $user_data );
 
 		if(!is_numeric($user_id))
-			return -1;
+			return $user_id;
 
 		do_action( 'wpa0_user_created', $user_id, $email, $password, $firstname, $lastname );
 
