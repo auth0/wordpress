@@ -202,6 +202,9 @@ class WP_Auth0 {
                 $options_obj['dict'] = $settings['dict'];
             }
         }
+        if (self::IsValid($settings,'custom_css')) {
+            $options_obj['customCSS'] = $settings['custom_css'];
+        }
         if (self::IsValid($settings,'social_big_buttons')) {
             $options_obj['socialBigButtons'] = self::GetBoolean($settings['social_big_buttons']);
         }

@@ -80,13 +80,11 @@ Under some situations, you may end up with a user with two accounts.  **WordPres
 
 ### Can I customize the Login Widget?
 
-You can style the login form by adding a filter like this
+You can style the login form by adding your css on the "Customize the Login Widget CSS" Auth0 setting and the widget settings
 
-    add_filter( 'auth0_login_css', function() {
-        return "form a.a0-btn-small { background-color: red }";
-    } );
+    form a.a0-btn-small { background-color: red !important; }
 
-The Login Widget is Open Source. For more information about it: https://github.com/auth0/widget
+The Login Widget is Open Source. For more information about it: https://github.com/auth0/lock
 
 ### Can I access the user profile information?
 
