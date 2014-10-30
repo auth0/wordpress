@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.1.3
+ * Version: 1.1.4
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -203,7 +203,7 @@ class WP_Auth0 {
             }
         }
         if (self::IsValid($settings,'custom_css')) {
-            $options_obj['customCSS'] = $settings['custom_css'];
+            $options_obj['custom_css'] = $settings['custom_css'];
         }
         if (self::IsValid($settings,'social_big_buttons')) {
             $options_obj['socialBigButtons'] = self::GetBoolean($settings['social_big_buttons']);
