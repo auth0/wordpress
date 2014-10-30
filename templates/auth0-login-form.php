@@ -61,10 +61,10 @@ if(empty($client_id) || empty($domain)){ ?>
 
 <?php } else { ?>
 
-    <?php if($options_obj['customCSS']) { ?>
+    <?php if(isset($options_obj['custom_css'])) { ?>
 
         <style type="text/css">
-            <?php echo $options_obj['customCSS'];?>
+            <?php echo $options_obj['custom_css'];?>
         </style>
 
     <?php } ?>
