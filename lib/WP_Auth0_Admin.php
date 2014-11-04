@@ -48,14 +48,23 @@ class WP_Auth0_Admin{
 
 /* ------------------------- BASIC ------------------------- */
 
-        self::init_option_section('Basic', array(
+        $basicSection = array(
 
             array('id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain'),
             array('id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id'),
             array('id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret'),
             array('id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login'),
 
-        ));
+        );
+
+        if (trim(WP_Auth0_Options::get( 'client_id' )) == '')
+        {
+            array_unshift($basicSection,
+                array('id' => 'wpa0_create_account_message', 'name' => '', 'function' => 'create_account_message')
+            );
+        }
+
+        self::init_option_section('Basic', $basicSection);
 
 /* ------------------------- Appearance ------------------------- */
 
@@ -104,6 +113,13 @@ class WP_Auth0_Admin{
         echo '<br/><span class="description">' . __('Request for SSO data and enable Last time you signed in with[...] message.', WPA0_LANG) . '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#rememberlastlogin-boolean">' . __('More info', WPA0_LANG) . '</a></span>';
     }
 
+    public static function create_account_message(){
+        echo '<div  id="message" class="updated"><p><strong>'
+            . __('In order to use this plugin, you need to first', WPA0_LANG)
+            . ' <a target="_blank" href="https://app.auth0.com/#/applications">'.__('create an application', WPA0_LANG) . '</a>'
+            . __(' on Auth0 and copy the information here.', WPA0_LANG)
+            . '</strong></p></div>';
+    }
     public static function render_client_id(){
         $v = WP_Auth0_Options::get( 'client_id' );
         echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[client_id]" id="wpa0_client_id" value="' . esc_attr( $v ) . '"/>';
