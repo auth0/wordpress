@@ -258,6 +258,16 @@ class WP_Auth0_Admin{
         include WPA0_PLUGIN_DIR . 'templates/settings.php';
     }
 
+    protected static function add_validation_error($error)
+    {
+        add_settings_error(
+            WP_Auth0_Options::OPTIONS_NAME,
+            WP_Auth0_Options::OPTIONS_NAME,
+            $error,
+            'error'
+        );
+    }
+
     public static function input_validator( $input ){
         $input['client_id'] = sanitize_text_field( $input['client_id'] );
         $input['form_title'] = sanitize_text_field( $input['form_title'] );
@@ -276,21 +286,46 @@ class WP_Auth0_Admin{
         $input['remember_last_login'] = (isset($input['remember_last_login']) ? 1 : 0);
 
         $error = "";
+        $completeBasicData = true;
         if (empty($input["domain"]) ) {
             $error = __("You need to specify domain", WPA0_LANG);
+            self::add_validation_error($error);
+            $completeBasicData = false;
         }
+
         if (empty($input["client_id"])) {
             $error = __("You need to specify a client id", WPA0_LANG);
+            self::add_validation_error($error);
+            $completeBasicData = false;
         }
         if (empty($input["client_secret"])) {
             $error = __("You need to specify a client secret", WPA0_LANG);
+            self::add_validation_error($error);
+            $completeBasicData = false;
         }
+
+        if ($completeBasicData)
+        {
+            $response = WP_Auth0_Api_Client::get_token($input["domain"], $input["client_id"], $input["client_secret"]);
+
+            if ($response instanceof WP_Error) {
+                $error = $response->get_error_message();
+                self::add_validation_error($error);
+            }
+            elseif ($response['response']['code'] != 200)
+            {
+                $error = __("The client id or secret is not valid. ", WPA0_LANG);
+                self::add_validation_error($error);
+            }
+        }
+
 
         if (trim($input["dict"]) != '')
         {
             if (strpos($input["dict"], '{') !== false && json_decode($input["dict"]) === null)
             {
                 $error = __("The Translation parameter should be a valid json object", WPA0_LANG);
+                self::add_validation_error($error);
             }
         }
 
@@ -299,22 +334,9 @@ class WP_Auth0_Admin{
             if (json_decode($input["extra_conf"]) === null)
             {
                 $error = __("The Extra settings parameter should be a valid json object", WPA0_LANG);
+                self::add_validation_error($error);
             }
         }
-
-        if ($error != "") {
-            add_settings_error(
-                WP_Auth0_Options::OPTIONS_NAME,
-                WP_Auth0_Options::OPTIONS_NAME,
-                $error,
-                'error'
-            );
-
-        }
-
-        // $input['endpoint'] = esc_url( $input['endpoint'], array('https', 'http') );
-        // if(!empty($input['endpoint']))
-        //  $input['endpoint'] = trailingslashit($input['endpoint']);
 
         return $input;
     }
