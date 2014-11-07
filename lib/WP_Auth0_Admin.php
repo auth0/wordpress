@@ -85,6 +85,7 @@ class WP_Auth0_Admin{
             array('id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict'),
             array('id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style'),
             array('id' => 'wpa0_remember_last_login', 'name' => 'Remember last login', 'function' => 'render_remember_last_login'),
+            array('id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL', 'function' => 'render_default_login_redirection'),
             array('id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email'),
             array('id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup'),
             array('id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)', 'function' => 'render_auto_login'),
@@ -140,6 +141,12 @@ class WP_Auth0_Admin{
         $v = WP_Auth0_Options::get( 'form_title' );
         echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[form_title]" id="wpa0_form_title" value="' . esc_attr( $v ) . '"/>';
         echo '<br/><span class="description">' . __('This is the title for the login widget', WPA0_LANG) . '</span>';
+    }
+
+    public static function render_default_login_redirection(){
+        $v = WP_Auth0_Options::get( 'default_login_redirection' );
+        echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[default_login_redirection]" id="wpa0_default_login_redirection" value="' . esc_attr( $v ) . '"/>';
+        echo '<br/><span class="description">' . __('This is the URL that all users will be redirected by default after login', WPA0_LANG) . '</span>';
     }
 
     public static function render_dict(){
@@ -284,6 +291,35 @@ class WP_Auth0_Admin{
         $input['gravatar'] = (isset($input['gravatar']) ? 1 : 0);
 
         $input['remember_last_login'] = (isset($input['remember_last_login']) ? 1 : 0);
+
+        $input['default_login_redirection'] = esc_url_raw($input['default_login_redirection']);
+        $home_url = home_url();
+
+        if (empty($input['default_login_redirection']))
+        {
+            $input['default_login_redirection'] = $home_url;
+        }
+        else
+        {
+            if (strpos($input['default_login_redirection'], $home_url) !== 0)
+            {
+                if (strpos($input['default_login_redirection'], 'http') === 0)
+                {
+                    $input['default_login_redirection'] = $home_url;
+
+                    $error = __("The 'Login redirect URL' cannot point to a foreign page.", WPA0_LANG);
+                    self::add_validation_error($error);
+                }
+            }
+
+            if (strpos($input['default_login_redirection'], 'action=logout') !== false)
+            {
+                $input['default_login_redirection'] = $home_url;
+
+                $error = __("The 'Login redirect URL' cannot point to the logout page.", WPA0_LANG);
+                self::add_validation_error($error);
+            }
+        }
 
         $error = "";
         $completeBasicData = true;

@@ -241,8 +241,12 @@ class WP_Auth0 {
 
         if (trim($client_id) == "") return;
 
-        ob_start();
+        if (isset($_GET['redirect_to']))
+        {
+            setcookie("login-redirect", $_GET['redirect_to'], time()+3600);
+        }
 
+        ob_start();
         require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
         renderAuth0Form();
 
@@ -339,7 +343,18 @@ class WP_Auth0 {
                     exit();
 
                 } else {
-                    wp_safe_redirect( home_url() );
+
+                    if (isset($_COOKIE['login-redirect']))
+                    {
+                        $redirectURL = $_COOKIE['login-redirect'];
+                        setcookie("login-redirect", '', time()-3600);
+                    }
+                    else
+                    {
+                        $redirectURL = WP_Auth0_Options::get( 'default_login_redirection' );
+                    }
+
+                    wp_safe_redirect( $redirectURL );
                 }
             }
         }elseif (is_array($response['response']) && $response['response']['code'] == 401) {
