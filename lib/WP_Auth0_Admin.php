@@ -107,17 +107,17 @@ class WP_Auth0_Admin{
     public static function render_client_id(){
         $v = WP_Auth0_Options::get( 'client_id' );
         echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[client_id]" id="wpa0_client_id" value="' . esc_attr( $v ) . '"/>';
-        echo '<br/><span class="description">' . __('Application id, copy from the auth0 dashboard', WPA0_LANG) . '</span>';
+        echo '<br/><span class="description">' . __('Application ID, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG) . '</span>';
     }
     public static function render_client_secret(){
         $v = WP_Auth0_Options::get( 'client_secret' );
         echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[client_secret]" id="wpa0_client_secret" value="' . esc_attr( $v ) . '"/>';
-        echo '<br/><span class="description">' . __('Application secret, copy from the auth0 dashboard', WPA0_LANG) . '</span>';
+        echo '<br/><span class="description">' . __('Application secret, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG) . '</span>';
     }
     public static function render_domain(){
         $v = WP_Auth0_Options::get( 'domain' );
         echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[domain]" id="wpa0_domain" value="' . esc_attr( $v ) . '"/>';
-        echo '<br/><span class="description">' . __('Your Auth0 domain, you can see it in the auth0 dashboard', WPA0_LANG) . '</span>';
+        echo '<br/><span class="description">' . __('Your Auth0 domain, you can see it in the dashboard. Example: foo.auth0.com', WPA0_LANG) . '</span>';
     }
 
     public static function render_form_title(){
