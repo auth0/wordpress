@@ -48,23 +48,15 @@ class WP_Auth0_Admin{
 
 /* ------------------------- BASIC ------------------------- */
 
-        $basicSection = array(
+        self::init_option_section('Basic', array(
 
+            array('id' => 'wpa0_create_account_message', 'name' => '', 'function' => 'create_account_message'),
             array('id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain'),
             array('id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id'),
             array('id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret'),
             array('id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login'),
 
-        );
-
-        if (trim(WP_Auth0_Options::get( 'client_id' )) == '')
-        {
-            array_unshift($basicSection,
-                array('id' => 'wpa0_create_account_message', 'name' => '', 'function' => 'create_account_message')
-            );
-        }
-
-        self::init_option_section('Basic', $basicSection);
+        ));
 
 /* ------------------------- Appearance ------------------------- */
 
