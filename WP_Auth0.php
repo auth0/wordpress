@@ -243,7 +243,9 @@ class WP_Auth0 {
 
         if (isset($_GET['redirect_to']))
         {
-            setcookie("login-redirect", $_GET['redirect_to'], time()+3600);
+            $redirect_to = $_GET['redirect_to'];
+            setcookie("login-redirect", $redirect_to, time()+3600);
+            $_SESSION["login-redirect"] = $redirect_to;
         }
 
         ob_start();
@@ -344,7 +346,13 @@ class WP_Auth0 {
 
                 } else {
 
-                    if (isset($_COOKIE['login-redirect']))
+                    if (isset($_SESSION["login-redirect"]))
+                    {
+                        $redirectURL = $_SESSION['login-redirect'];
+                        setcookie("login-redirect", '', time()-3600);
+                        unset($_SESSION['login-redirect']);
+                    }
+                    elseif (isset($_COOKIE['login-redirect']))
                     {
                         $redirectURL = $_COOKIE['login-redirect'];
                         setcookie("login-redirect", '', time()-3600);
