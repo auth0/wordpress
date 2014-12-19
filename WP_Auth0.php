@@ -142,6 +142,9 @@ class WP_Auth0 {
         if ($auto_login && $_GET["action"] != "logout") {
 
             $stateObj = array("interim" => false, "uuid" =>uniqid());
+            if (isset($_GET['redirect_to'])) {
+                $stateObj["redirect_to"] = $_GET['redirect_to'];
+            }
             $state = json_encode($stateObj);
             // Create the link to log in
 
@@ -241,13 +244,6 @@ class WP_Auth0 {
 
         if (trim($client_id) == "") return;
 
-        if (isset($_GET['redirect_to']))
-        {
-            $redirect_to = $_GET['redirect_to'];
-            setcookie("login-redirect", $redirect_to, time()+3600);
-            $_SESSION["login-redirect"] = $redirect_to;
-        }
-
         ob_start();
         require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
         renderAuth0Form();
@@ -283,7 +279,7 @@ class WP_Auth0 {
         $code = $wp_query->query_vars['code'];
         $state = $wp_query->query_vars['state'];
         $stateFromGet = json_decode(stripcslashes($state));
-        
+
         $domain = WP_Auth0_Options::get( 'domain' );
         $endpoint = "https://" . $domain . "/";
         $client_id = WP_Auth0_Options::get( 'client_id' );
@@ -346,23 +342,13 @@ class WP_Auth0 {
 
                 } else {
 
-                    if (isset($_SESSION["login-redirect"]))
-                    {
-                        $redirectURL = $_SESSION['login-redirect'];
-                        setcookie("login-redirect", '', time()-3600);
-                        unset($_SESSION['login-redirect']);
-                    }
-                    elseif (isset($_COOKIE['login-redirect']))
-                    {
-                        $redirectURL = $_COOKIE['login-redirect'];
-                        setcookie("login-redirect", '', time()-3600);
-                    }
-                    else
-                    {
+                    if (isset($stateFromGet->redirect_to)) {
+                        $redirectURL = $stateFromGet->redirect_to;
+                    } else {
                         $redirectURL = WP_Auth0_Options::get( 'default_login_redirection' );
                     }
 
-                    wp_safe_redirect( $redirectURL );
+                    wp_safe_redirect($redirectURL);
                 }
             }
         }elseif (is_array($response['response']) && $response['response']['code'] == 401) {

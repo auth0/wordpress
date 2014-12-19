@@ -32,6 +32,10 @@ if (empty($title)) {
 }
 
 $stateObj = array("interim" => $interim_login, "uuid" =>uniqid());
+if (isset($_GET['redirect_to'])) {
+    $stateObj["redirect_to"] = $_GET['redirect_to'];
+}
+
 $state = json_encode($stateObj);
 
 
@@ -53,6 +57,7 @@ if (!$showAsModal){
 if (!$allow_signup) {
     $options_obj['disableSignupAction'] = true;
 }
+
 $options = json_encode($options_obj);
 
 if(empty($client_id) || empty($domain)){ ?>
