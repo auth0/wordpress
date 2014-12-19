@@ -50,6 +50,7 @@ class WP_Auth0_Admin{
 
         self::init_option_section('Basic', array(
 
+            array('id' => 'wpa0_create_account_message', 'name' => '', 'function' => 'create_account_message'),
             array('id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain'),
             array('id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id'),
             array('id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret'),
@@ -76,6 +77,7 @@ class WP_Auth0_Admin{
             array('id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict'),
             array('id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style'),
             array('id' => 'wpa0_remember_last_login', 'name' => 'Remember last login', 'function' => 'render_remember_last_login'),
+            array('id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL', 'function' => 'render_default_login_redirection'),
             array('id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email'),
             array('id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup'),
             array('id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)', 'function' => 'render_auto_login'),
@@ -104,6 +106,13 @@ class WP_Auth0_Admin{
         echo '<br/><span class="description">' . __('Request for SSO data and enable Last time you signed in with[...] message.', WPA0_LANG) . '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#rememberlastlogin-boolean">' . __('More info', WPA0_LANG) . '</a></span>';
     }
 
+    public static function create_account_message(){
+        echo '<div  id="message" class="updated"><p><strong>'
+            . __('In order to use this plugin, you need to first', WPA0_LANG)
+            . ' <a target="_blank" href="https://app.auth0.com/#/applications">'.__('create an application', WPA0_LANG) . '</a>'
+            . __(' on Auth0 and copy the information here.', WPA0_LANG)
+            . '</strong></p></div>';
+    }
     public static function render_client_id(){
         $v = WP_Auth0_Options::get( 'client_id' );
         echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[client_id]" id="wpa0_client_id" value="' . esc_attr( $v ) . '"/>';
@@ -124,6 +133,12 @@ class WP_Auth0_Admin{
         $v = WP_Auth0_Options::get( 'form_title' );
         echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[form_title]" id="wpa0_form_title" value="' . esc_attr( $v ) . '"/>';
         echo '<br/><span class="description">' . __('This is the title for the login widget', WPA0_LANG) . '</span>';
+    }
+
+    public static function render_default_login_redirection(){
+        $v = WP_Auth0_Options::get( 'default_login_redirection' );
+        echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[default_login_redirection]" id="wpa0_default_login_redirection" value="' . esc_attr( $v ) . '"/>';
+        echo '<br/><span class="description">' . __('This is the URL that all users will be redirected by default after login', WPA0_LANG) . '</span>';
     }
 
     public static function render_dict(){
@@ -242,6 +257,16 @@ class WP_Auth0_Admin{
         include WPA0_PLUGIN_DIR . 'templates/settings.php';
     }
 
+    protected static function add_validation_error($error)
+    {
+        add_settings_error(
+            WP_Auth0_Options::OPTIONS_NAME,
+            WP_Auth0_Options::OPTIONS_NAME,
+            $error,
+            'error'
+        );
+    }
+
     public static function input_validator( $input ){
         $input['client_id'] = sanitize_text_field( $input['client_id'] );
         $input['form_title'] = sanitize_text_field( $input['form_title'] );
@@ -259,22 +284,76 @@ class WP_Auth0_Admin{
 
         $input['remember_last_login'] = (isset($input['remember_last_login']) ? 1 : 0);
 
+        $input['default_login_redirection'] = esc_url_raw($input['default_login_redirection']);
+        $home_url = home_url();
+
+        if (empty($input['default_login_redirection']))
+        {
+            $input['default_login_redirection'] = $home_url;
+        }
+        else
+        {
+            if (strpos($input['default_login_redirection'], $home_url) !== 0)
+            {
+                if (strpos($input['default_login_redirection'], 'http') === 0)
+                {
+                    $input['default_login_redirection'] = $home_url;
+
+                    $error = __("The 'Login redirect URL' cannot point to a foreign page.", WPA0_LANG);
+                    self::add_validation_error($error);
+                }
+            }
+
+            if (strpos($input['default_login_redirection'], 'action=logout') !== false)
+            {
+                $input['default_login_redirection'] = $home_url;
+
+                $error = __("The 'Login redirect URL' cannot point to the logout page.", WPA0_LANG);
+                self::add_validation_error($error);
+            }
+        }
+
         $error = "";
+        $completeBasicData = true;
         if (empty($input["domain"]) ) {
             $error = __("You need to specify domain", WPA0_LANG);
+            self::add_validation_error($error);
+            $completeBasicData = false;
         }
+
         if (empty($input["client_id"])) {
             $error = __("You need to specify a client id", WPA0_LANG);
+            self::add_validation_error($error);
+            $completeBasicData = false;
         }
         if (empty($input["client_secret"])) {
             $error = __("You need to specify a client secret", WPA0_LANG);
+            self::add_validation_error($error);
+            $completeBasicData = false;
         }
+
+        if ($completeBasicData)
+        {
+            $response = WP_Auth0_Api_Client::get_token($input["domain"], $input["client_id"], $input["client_secret"]);
+
+            if ($response instanceof WP_Error) {
+                $error = $response->get_error_message();
+                self::add_validation_error($error);
+            }
+            elseif ($response['response']['code'] != 200)
+            {
+                $error = __("The client id or secret is not valid. ", WPA0_LANG);
+                self::add_validation_error($error);
+            }
+        }
+
 
         if (trim($input["dict"]) != '')
         {
             if (strpos($input["dict"], '{') !== false && json_decode($input["dict"]) === null)
             {
                 $error = __("The Translation parameter should be a valid json object", WPA0_LANG);
+                self::add_validation_error($error);
             }
         }
 
@@ -283,22 +362,9 @@ class WP_Auth0_Admin{
             if (json_decode($input["extra_conf"]) === null)
             {
                 $error = __("The Extra settings parameter should be a valid json object", WPA0_LANG);
+                self::add_validation_error($error);
             }
         }
-
-        if ($error != "") {
-            add_settings_error(
-                WP_Auth0_Options::OPTIONS_NAME,
-                WP_Auth0_Options::OPTIONS_NAME,
-                $error,
-                'error'
-            );
-
-        }
-
-        // $input['endpoint'] = esc_url( $input['endpoint'], array('https', 'http') );
-        // if(!empty($input['endpoint']))
-        //  $input['endpoint'] = trailingslashit($input['endpoint']);
 
         return $input;
     }

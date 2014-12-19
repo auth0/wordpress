@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.1.4
+ * Version: 1.1.5
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -142,6 +142,9 @@ class WP_Auth0 {
         if ($auto_login && $_GET["action"] != "logout") {
 
             $stateObj = array("interim" => false, "uuid" =>uniqid());
+            if (isset($_GET['redirect_to'])) {
+                $stateObj["redirect_to"] = $_GET['redirect_to'];
+            }
             $state = json_encode($stateObj);
             // Create the link to log in
 
@@ -242,7 +245,6 @@ class WP_Auth0 {
         if (trim($client_id) == "") return;
 
         ob_start();
-
         require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
         renderAuth0Form();
 
@@ -277,7 +279,7 @@ class WP_Auth0 {
         $code = $wp_query->query_vars['code'];
         $state = $wp_query->query_vars['state'];
         $stateFromGet = json_decode(stripcslashes($state));
-        
+
         $domain = WP_Auth0_Options::get( 'domain' );
         $endpoint = "https://" . $domain . "/";
         $client_id = WP_Auth0_Options::get( 'client_id' );
@@ -339,7 +341,14 @@ class WP_Auth0 {
                     exit();
 
                 } else {
-                    wp_safe_redirect( home_url() );
+
+                    if (isset($stateFromGet->redirect_to)) {
+                        $redirectURL = $stateFromGet->redirect_to;
+                    } else {
+                        $redirectURL = WP_Auth0_Options::get( 'default_login_redirection' );
+                    }
+
+                    wp_safe_redirect($redirectURL);
                 }
             }
         }elseif (is_array($response['response']) && $response['response']['code'] == 401) {
