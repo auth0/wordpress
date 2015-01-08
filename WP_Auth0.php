@@ -139,7 +139,7 @@ class WP_Auth0 {
     public static function login_auto() {
         $auto_login = absint(WP_Auth0_Options::get( 'auto_login' ));
 
-        if ($auto_login && $_GET["action"] != "logout") {
+        if ($auto_login && $_GET["action"] != "logout" && !isset($_GET['wle'])) {
 
             $stateObj = array("interim" => false, "uuid" =>uniqid());
             if (isset($_GET['redirect_to'])) {
