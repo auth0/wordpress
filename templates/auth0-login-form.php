@@ -3,6 +3,8 @@ $client_id = WP_Auth0_Options::get('client_id');
 
 if (trim($client_id) == "") return;
 
+$wordpress_login_enabled = WP_Auth0_Options::get('wordpress_login_enabled') == 1;
+
 $domain = WP_Auth0_Options::get('domain');
 $cdn = WP_Auth0_Options::get('cdn_url');
 
