@@ -138,7 +138,15 @@ Have in mind that all the "Extra settings" that we allow to set up in the plugin
 
 ![](https://raw.githubusercontent.com/auth0/wp-auth0/master/screenshot-8.png)
 
-Contributed by
-=====
+## Issue Reporting
+
+If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+
+## Author
 
 * [LaunchPeople](http://launchpeople.dk/)
+* [Auth0](auth0.com)
+
+## License
+
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more info.
