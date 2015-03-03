@@ -50,7 +50,7 @@ class WP_Auth0_Options {
             'icon_url' => '',
             'ip_range_check' => 0,
             'ip_ranges' => '',
-            'cdn_url' => '//cdn.auth0.com/js/lock-6.min.js',
+            'cdn_url' => '//cdn.auth0.com/js/lock-7.min.js',
             'requires_verified_email' => true,
             'wordpress_login_enabled' => true,
             'dict' => '',
