@@ -7,6 +7,7 @@ $wordpress_login_enabled = WP_Auth0_Options::get('wordpress_login_enabled') == 1
 
 $domain = WP_Auth0_Options::get('domain');
 $cdn = WP_Auth0_Options::get('cdn_url');
+$dict = WP_Auth0_Options::get('dict');
 
 $allow_signup = WP_Auth0_Options::is_wp_registration_enabled();
 
