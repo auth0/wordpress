@@ -494,6 +494,7 @@ class WP_Auth0 {
         if (!is_null($user)) {
             // User exists! Log in
             self::updateAuth0Object($userinfo);
+
             wp_set_auth_cookie( $user->ID );
             return true;
         } else {
@@ -573,13 +574,15 @@ class WP_Auth0 {
             //WP_Auth0_Options::set( 'version', 1 );
         }
 
-        // Initialize session
-        if(!session_id()) {
-            session_start();
-        }
+        // Initialize session. Disabled
+        //if(!session_id()) {
+            //session_start();
+        //}
     }
     public static function end_session() {
-        session_destroy ();
+        if(session_id()) {
+            session_destroy ();
+        }
     }
 
     private static function setup_rewrites(){
@@ -644,7 +647,8 @@ class WP_Auth0 {
     }
 
     public static function check_update() {
-        if ( get_site_option( 'auth0_db_version' ) !== AUTH0_DB_VERSION) {
+
+        if ( get_option( 'auth0_db_version' ) != AUTH0_DB_VERSION) {
             self::install_db();
         }
     }
