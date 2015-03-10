@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.1.7
+ * Version: 1.1.8
  * Author: Auth0
  * Author URI: https://auth0.com
  */
