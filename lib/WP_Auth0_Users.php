@@ -33,9 +33,10 @@ class WP_Auth0_Users {
 		}
 
 		$username = $userinfo->nickname;
-		if (empty($username)) {
+		if (empty($username) || username_exists($username)) {
 			$username = $email;
 		}
+		
 		// Create the user data array for updating first- and lastname
 		$user_data = array(
 			'user_email' => $email,
