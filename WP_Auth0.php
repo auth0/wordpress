@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.1.7
+ * Version: 1.1.8
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -488,9 +488,9 @@ class WP_Auth0 {
             }
 
         }
-
         // See if there is a user in the auth0_user table with the user info client id
         $user = self::findAuth0User($userinfo->user_id);
+
         if (!is_null($user)) {
             // User exists! Log in
             self::updateAuth0Object($userinfo);
@@ -525,7 +525,7 @@ class WP_Auth0 {
                 $user_id = $joinUser->ID;
             } elseif ($allow_signup) {
                 // If we are here, we need to create the user
-                $user_id = (int)WP_Auth0_Users::create_user($userinfo);
+                $user_id = WP_Auth0_Users::create_user($userinfo);
 
                 // Check if user was created
 
@@ -644,7 +644,7 @@ class WP_Auth0 {
     }
 
     public static function check_update() {
-        if ( get_site_option( 'auth0_db_version' ) !== AUTH0_DB_VERSION) {
+        if ( get_site_option( 'auth0_db_version' ) != AUTH0_DB_VERSION) {
             self::install_db();
         }
     }
