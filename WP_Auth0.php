@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.1.8
+ * Version: 1.1.9
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -211,7 +211,7 @@ class WP_Auth0 {
         ob_start();
 
         require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
-        renderAuth0Form(false);
+        renderAuth0Form(false, self::buildSettings($atts));
 
         $html = ob_get_clean();
         return $html;
@@ -220,7 +220,7 @@ class WP_Auth0 {
     public static function login_auto() {
         $auto_login = absint(WP_Auth0_Options::get( 'auto_login' ));
 
-        if ($auto_login && $_GET["action"] != "logout") {
+        if ($auto_login && $_GET["action"] != "logout" && !isset($_GET['wle'])) {
 
             $stateObj = array("interim" => false, "uuid" =>uniqid());
             if (isset($_GET['redirect_to'])) {
@@ -655,12 +655,14 @@ class WP_Auth0 {
         }
 
         // Initialize session
-        if(!session_id()) {
-            session_start();
-        }
+        // if(!session_id()) {
+            // session_start();
+        // }
     }
     public static function end_session() {
-        session_destroy ();
+        if(session_id()) {
+            session_destroy();
+        }
     }
 
     private static function setup_rewrites(){
