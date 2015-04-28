@@ -116,6 +116,7 @@ class WP_Auth0 {
             }
             catch(Exception $e) {
                 $wp_json_basic_auth_error = $e->getMessage();
+                return null;
             }
 
             $objuser = self::findAuth0User($token->sub);
@@ -153,7 +154,7 @@ class WP_Auth0 {
                 throw new CoreException("This token is not intended for us.");
             }
         } catch(\UnexpectedValueException $e) {
-            throw new CoreException($e->getMessage());
+            throw new Exception($e->getMessage());
         }
 
         return $decodedToken;
