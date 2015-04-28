@@ -54,9 +54,6 @@ class WP_Auth0 {
 
         add_filter('query_vars', array(__CLASS__, 'a0_register_query_vars'));
 
-        add_filter( 'determine_current_user', array(__CLASS__, 'determine_current_user'), 10);
-        add_filter( 'json_authentication_errors', array(__CLASS__, 'json_authentication_errors'));
-
         $plugin = plugin_basename(__FILE__);
         add_filter("plugin_action_links_$plugin", array(__CLASS__, 'wp_add_plugin_settings_link'));
 
@@ -78,86 +75,6 @@ class WP_Auth0 {
     public static function  a0_register_query_vars( $qvars ) {
         $qvars[] = 'error_description';
         return $qvars;
-    }
-
-    public static function json_authentication_errors ( $error ) {
-    	// Passthrough other errors
-    	if ( ! empty( $error ) ) {
-    		return $error;
-    	}
-
-    	global $wp_json_basic_auth_error;
-
-    	return $wp_json_basic_auth_error;
-    }
-    public static function determine_current_user ($user) {
-        global $wp_json_basic_auth_error;
-
-	    $wp_json_basic_auth_error = null;
-
-        $authorization = false;
-
-        if (function_exists('getallheaders'))
-        {
-            $headers = getallheaders();
-
-            if (isset($headers['Authorization'])) {
-                $authorization = $headers['Authorization'];
-            }
-        }
-        elseif (isset($_SERVER["Authorization"])){
-            $authorization = $_SERVER["Authorization"];
-        }
-
-        if ($authorization !== false) {
-
-            try {
-                $token = self::decodeJWT($authorization);
-            }
-            catch(Exception $e) {
-                $wp_json_basic_auth_error = $e->getMessage();
-                return null;
-            }
-
-            $objuser = self::findAuth0User($token->sub);
-
-            if (!$objuser) {
-                $wp_json_basic_auth_error = 'Invalid user';
-            }
-
-            $user = $objuser->ID;
-        }
-
-        $wp_json_basic_auth_error = true;
-
-        return $user;
-    }
-
-    protected static function decodeJWT($authorization) {
-        require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Exceptions/BeforeValidException.php';
-        require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Exceptions/ExpiredException.php';
-        require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Exceptions/SignatureInvalidException.php';
-        require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Authentication/JWT.php';
-
-        $client_id = WP_Auth0_Options::get( 'client_id' );
-        $client_secret = WP_Auth0_Options::get( 'client_secret' );
-
-        $encUser = str_replace('Bearer ', '', $authorization);
-
-        $secret = base64_decode(strtr($client_secret, '-_', '+/'));
-
-        try {
-            // Decode the user
-            $decodedToken = \JWT::decode($encUser, $secret, ['HS256']);
-            // validate that this JWT was made for us
-            if ($decodedToken->aud != $client_id) {
-                throw new CoreException("This token is not intended for us.");
-            }
-        } catch(\UnexpectedValueException $e) {
-            throw new Exception($e->getMessage());
-        }
-
-        return $decodedToken;
     }
 
     public static function a0_render_message()
