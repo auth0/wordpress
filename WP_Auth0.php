@@ -65,7 +65,27 @@ class WP_Auth0 {
         WP_Auth0_Settings_Section::init();
         WP_Auth0_Admin::init();
         WP_Auth0_ErrorLog::init();
+
+        self::checkJWTAuth();
     }
+
+    protected static function checkJWTAuth() {
+
+        if(is_plugin_active('jwt-auth/JWT_AUTH.php')) {
+            add_action( 'admin_notices', array(__CLASS__,'notify_jwt' ));
+        }
+
+    }
+
+    public static function notify_jwt() {
+        ?>
+        <div class="update-nag">
+            JWT Auth installed. To configure it to work the Auth0 plugin, click <a href="admin.php?page=wpa0-jwt-auth">HERE</a>
+        </div>
+        <?php
+
+    }
+
 
     public static function getPluginDirUrl()
     {
