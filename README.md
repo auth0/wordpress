@@ -22,15 +22,15 @@ The last version of the plugin provides the ability to authenticate api calls vi
 
 After the user logs in via Auth0 in your Api client (ie: using Lock in a mobile app) you will get a JWT (Json Web Token). Then you need to send this token in a HTTP header in the following way:
 
-'''
+```
 Authorization: Bearer ##jwt##
-'''
+```
 
 For example:
 
-'''
+```
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZW50IjoiVGhpcyBpcyB5b3VyIHVzZXIgSldUIHByb3ZpZGVkIGJ5IHRoZSBBdXRoMCBzZXJ2ZXIifQ.b47GoWoY_5n4jIyG0hPTLFEQtSegnVydcvl6gpWNeUE
-'''
+```
 
 This JWT should match with a registered user in your WP instalation.
 
@@ -68,7 +68,9 @@ Also, you can use the Auth0 widget as a shortcode in your posts.
 
 The way to use it is just adding the following:
 
+```
     [auth0]
+```
 
 And can be customized by adding the following parameters:
 
@@ -85,8 +87,9 @@ And can be customized by adding the following parameters:
 
 Example:
 
+```
     [auth0 show_as_modal="true" social_big_buttons="true" modal_trigger_name="Login button: This text is configurable!"]
-
+```
 
 All the details about the parameters on the lock wiki (https://github.com/auth0/lock/wiki/Auth0Lock-customization)
 
@@ -100,7 +103,9 @@ Under some situations, you may end up with a user with two accounts.  **WordPres
 
 You can style the login form by adding your css on the "Customize the Login Widget CSS" Auth0 setting and the widget settings
 
+```
     form a.a0-btn-small { background-color: red !important; }
+```
 
 The Login Widget is Open Source. For more information about it: https://github.com/auth0/lock
 
@@ -126,11 +131,13 @@ Internally, the plugin uses the dict setting to change the Auth0 widget title. W
 
 To change the form_title in this case, you need to add the following attribute to the dict json:
 
+```
       {
         signin:{
             title: "The desired form title"
         }
       }
+```
 
 ### How can I set up the settings that are not provided in the settings page?
 
