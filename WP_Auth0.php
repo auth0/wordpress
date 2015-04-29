@@ -65,13 +65,31 @@ class WP_Auth0 {
         WP_Auth0_Settings_Section::init();
         WP_Auth0_Admin::init();
         WP_Auth0_ErrorLog::init();
-
+        WP_Auth0_Configure_JWTAUTH::init();
+        
         self::checkJWTAuth();
     }
 
-    protected static function checkJWTAuth() {
+    public static function isJWTAuthEnabled() {
+        return is_plugin_active('jwt-auth/JWT_AUTH.php');
+    }
 
-        if(is_plugin_active('jwt-auth/JWT_AUTH.php') && (JWT_AUTH_Options::get('override_user_repo') != 'WP_Auth0_UsersRepo') ) {
+    public static function isJWTConfigured() {
+
+        return (
+            JWT_AUTH_Options::get('aud') == WP_Auth0_Options::get('client_id') &&
+            JWT_AUTH_Options::get('secret') == WP_Auth0_Options::get('client_secret') &&
+            JWT_AUTH_Options::get('secret_base64_encoded') &&
+            JWT_AUTH_Options::get('override_user_repo') == 'WP_Auth0_UsersRepo' &&
+            JWT_AUTH_Options::get('jwt_attribute') == 'sub'
+        );
+
+    }
+
+    protected static function checkJWTAuth() {
+        if ( isset($_REQUEST['page']) && $_REQUEST['page'] == 'wpa0-jwt-auth' ) return;
+
+        if( self::isJWTAuthEnabled() && !self::isJWTConfigured() ) {
             add_action( 'admin_notices', array(__CLASS__,'notify_jwt' ));
         }
 
