@@ -24,15 +24,15 @@ class WP_Auth0_configureJWTAUTH{
 
             $done = true;
 
-            $secret = WP_Auth0_Options::get('client_id');
-            $secret = base64_decode(strtr($secret, '-_', '+/'));
+            $secret = WP_Auth0_Options::get('client_secret');
 
             JWT_AUTH_Options::set('aud', WP_Auth0_Options::get('client_id'));
-            JWT_AUTH_Options::set('secret', "secret");
-            JWT_AUTH_Options::set('override_user_query', 'SELECT u.*
-                    FROM ' . $wpdb->auth0_user .' a
-                    JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id
-                    WHERE a.auth0_id = %s;');
+
+            JWT_AUTH_Options::set('secret', $secret);
+            JWT_AUTH_Options::set('secret_base64_encoded', true);
+
+            JWT_AUTH_Options::set('override_user_repo', 'WP_Auth0_UsersRepo');
+
             JWT_AUTH_Options::set('jwt_attribute', 'sub');
 
             include WPA0_PLUGIN_DIR . 'templates/configure-jwt-auth.php';

@@ -71,7 +71,7 @@ class WP_Auth0 {
 
     protected static function checkJWTAuth() {
 
-        if(is_plugin_active('jwt-auth/JWT_AUTH.php')) {
+        if(is_plugin_active('jwt-auth/JWT_AUTH.php') && (JWT_AUTH_Options::get('override_user_repo') != 'WP_Auth0_UsersRepo') ) {
             add_action( 'admin_notices', array(__CLASS__,'notify_jwt' ));
         }
 
