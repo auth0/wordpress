@@ -36,6 +36,9 @@ class WP_Auth0_Users {
 		if (empty($username)) {
 			$username = $email;
 		}
+		while(username_exists($username)) {
+			$username = $username . rand(0,9);
+		}
 		// Create the user data array for updating first- and lastname
 		$user_data = array(
 			'user_email' => $email,
