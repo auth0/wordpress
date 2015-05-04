@@ -2,7 +2,7 @@
 
 class WP_Auth0_UsersRepo {
 
-    public static function getUser($id) {
+    public static function getUser($jwt) {
         global $wpdb;
 
         $sql = 'SELECT u.*
@@ -10,7 +10,7 @@ class WP_Auth0_UsersRepo {
                 JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id
                 WHERE a.auth0_id = %s;';
 
-        $userRow = $wpdb->get_row($wpdb->prepare($sql, $id));
+        $userRow = $wpdb->get_row($wpdb->prepare($sql, $jwt->sub));
 
         if (is_null($userRow)) {
             return null;

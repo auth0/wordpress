@@ -37,7 +37,6 @@ class WP_Auth0_Configure_JWTAUTH{
             JWT_AUTH_Options::set('secret', WP_Auth0_Options::get('client_secret'));
             JWT_AUTH_Options::set('secret_base64_encoded', true);
             JWT_AUTH_Options::set('override_user_repo', 'WP_Auth0_UsersRepo');
-            JWT_AUTH_Options::set('jwt_attribute', 'sub');
         }
     }
 
