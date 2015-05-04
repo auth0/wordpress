@@ -550,7 +550,8 @@ class WP_Auth0 {
                 $joinUser = get_user_by( 'email', $userinfo->email );
             }
 
-            $allow_signup = WP_Auth0_Options::is_wp_registration_enabled();
+            $auto_provisioning = WP_Auth0_Options::get('auto_provisioning');
+            $allow_signup = WP_Auth0_Options::is_wp_registration_enabled() || $auto_provisioning;
 
             if (!is_null($joinUser) && $joinUser instanceof WP_User) {
                 // If we are here, we have a potential join user
