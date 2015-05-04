@@ -18,7 +18,9 @@ Before you start, **make sure the admin user has a valid email that you own**, r
 
 ## API authentication
 
-The last version of the plugin provides the ability to authenticate api calls via a HTTP Authorization Header.
+The last version of the plugin provides the ability integrate with **wp-jwt-auth** plugin to authenticate api calls via a HTTP Authorization Header.
+
+This plugin will detect if you have wp-jwt-auth installed and active and will offer to configure it. Accepting this, will set up the client id, secret and the custom user repository.
 
 After the user logs in via Auth0 in your Api client (ie: using Lock in a mobile app) you will get a JWT (Json Web Token). Then you need to send this token in a HTTP header in the following way:
 
@@ -33,6 +35,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZW50IjoiVGhpc
 ```
 
 This JWT should match with a registered user in your WP instalation.
+
+You can use this feature with API's provided by plugins like **WP REST API (WP API)**.
 
 ## Technical Notes
 
