@@ -120,7 +120,7 @@ class WP_Auth0_Admin{
     }
     public static function render_client_secret(){
         $v = WP_Auth0_Options::get( 'client_secret' );
-        echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[client_secret]" id="wpa0_client_secret" value="' . esc_attr( $v ) . '"/>';
+        echo '<input type="text" autocomplete="off" name="' . WP_Auth0_Options::OPTIONS_NAME . '[client_secret]" id="wpa0_client_secret" value="' . esc_attr( $v ) . '"/>';
         echo '<br/><span class="description">' . __('Application secret, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG) . '</span>';
     }
     public static function render_domain(){

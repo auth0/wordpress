@@ -66,7 +66,7 @@ class WP_Auth0 {
         WP_Auth0_Admin::init();
         WP_Auth0_ErrorLog::init();
         WP_Auth0_Configure_JWTAUTH::init();
-        
+
         self::checkJWTAuth();
     }
 
