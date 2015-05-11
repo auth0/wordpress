@@ -54,7 +54,7 @@ if(!$auth0_implicit_workflow) {
     $extraOptions["callbackURL"] = site_url('/index.php?auth0=1');
 }
 else {
-    $extraOptions["authParams"]["scope"] = "openid name email email_verified identities";
+    $extraOptions["authParams"]["scope"] = "openid name email nickname email_verified identities";
 }
 
 $options_obj = array_merge( $extraOptions, $options_obj  );
