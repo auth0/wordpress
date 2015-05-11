@@ -292,7 +292,15 @@ class WP_Auth0 {
     public static function init_auth0(){
         global $wp_query;
 
-        if(!isset($wp_query->query_vars['auth0']) || $wp_query->query_vars['auth0'] != '1') {
+        if(!isset($wp_query->query_vars['auth0'])) {
+            return;
+        }
+
+        if ($wp_query->query_vars['auth0'] == 'implicit') {
+            self::implicitLogin();
+        }
+
+        if ($wp_query->query_vars['auth0'] != '1') {
             return;
         }
 
@@ -457,15 +465,25 @@ class WP_Auth0 {
         );
     }
 
-    public static function insertAuth0Error($section, WP_Error $wp_error) {
+    public static function insertAuth0Error($section, $wp_error) {
+
+        if ($wp_error instanceof WP_Error) {
+            $code = $wp_error->get_error_code();
+            $message = $wp_error->get_error_message();
+        }
+        elseif($wp_error instanceof Exception) {
+            $code = $wp_error->getCode();
+            $message = $wp_error->getMessage();
+        }
+        
         global $wpdb;
         $wpdb->insert(
             $wpdb->auth0_error_logs,
             array(
                 'section' => $section,
                 'date' => date('c'),
-                'code' => $wp_error->get_error_code(),
-                'message' => $wp_error->get_error_message()
+                'code' => $code,
+                'message' => $message
             ),
             array(
                 '%s',
@@ -598,6 +616,58 @@ class WP_Auth0 {
             self::insertAuth0User($userinfo, $user_id);
             wp_set_auth_cookie( $user_id );
             return true;
+        }
+    }
+
+    public static function implicitLogin() {
+
+        require_once JWT_AUTH_PLUGIN_DIR . 'lib/php-jwt/Exceptions/BeforeValidException.php';
+        require_once JWT_AUTH_PLUGIN_DIR . 'lib/php-jwt/Exceptions/ExpiredException.php';
+        require_once JWT_AUTH_PLUGIN_DIR . 'lib/php-jwt/Exceptions/SignatureInvalidException.php';
+        require_once JWT_AUTH_PLUGIN_DIR . 'lib/php-jwt/Authentication/JWT.php';
+
+        $token = $_POST["token"];
+        $stateFromGet = json_decode($_POST["state"]);
+
+        $secret = WP_Auth0_Options::get('client_secret');
+        $secret = base64_decode(strtr($secret, '-_', '+/'));
+
+        try {
+            // Decode the user
+            $decodedToken = \JWT::decode($token, $secret, ['HS256']);
+
+            // validate that this JWT was made for us
+            if ($decodedToken->aud != WP_Auth0_Options::get('client_id')) {
+                throw new Exception("This token is not intended for us.");
+            }
+
+            $decodedToken->user_id = $decodedToken->sub;
+
+            if (self::login_user($decodedToken, $token)) {
+                if ($stateFromGet->interim) {
+                    include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
+                    exit();
+
+                } else {
+
+                    if (isset($stateFromGet->redirect_to)) {
+                        $redirectURL = $stateFromGet->redirect_to;
+                    } else {
+                        $redirectURL = WP_Auth0_Options::get( 'default_login_redirection' );
+                    }
+
+                    wp_safe_redirect($redirectURL);
+                }
+            }
+
+        } catch(\UnexpectedValueException $e) {
+            self::insertAuth0Error('implicitLogin',$e);
+
+            error_log($e->getMessage());
+            $msg = __('Sorry. There was a problem logging you in.', WPA0_LANG);
+            $msg .= '<br/><br/>';
+            $msg .= '<a href="' . wp_login_url() . '">' . __('← Login', WPA0_LANG) . '</a>';
+            wp_die($msg);
         }
 
     }

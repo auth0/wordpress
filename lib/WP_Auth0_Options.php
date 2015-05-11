@@ -59,6 +59,7 @@ class WP_Auth0_Options {
             'extra_conf' => '',
             'remember_last_login' => true,
             'custom_css' => '',
+            'auth0_implicit_workflow' => false,
             'gravatar' => true,
             // 'auto_provisioning' => true,
             'default_login_redirection' => home_url(),
