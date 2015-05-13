@@ -71,7 +71,7 @@ class WP_Auth0 {
     }
 
     public static function isJWTAuthEnabled() {
-        return is_plugin_active('jwt-auth/JWT_AUTH.php');
+        return is_plugin_active('wp-jwt-auth/JWT_AUTH.php');
     }
 
     public static function isJWTConfigured() {
