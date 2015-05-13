@@ -609,10 +609,10 @@ class WP_Auth0 {
 
     public static function implicitLogin() {
 
-        require_once WPA0_AUTH_PLUGIN_DIR . 'lib/php-jwt/Exceptions/BeforeValidException.php';
-        require_once WPA0_AUTH_PLUGIN_DIR . 'lib/php-jwt/Exceptions/ExpiredException.php';
-        require_once WPA0_AUTH_PLUGIN_DIR . 'lib/php-jwt/Exceptions/SignatureInvalidException.php';
-        require_once WPA0_AUTH_PLUGIN_DIR . 'lib/php-jwt/Authentication/JWT.php';
+        require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Exceptions/BeforeValidException.php';
+        require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Exceptions/ExpiredException.php';
+        require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Exceptions/SignatureInvalidException.php';
+        require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Authentication/JWT.php';
 
         $token = $_POST["token"];
         $stateFromGet = json_decode($_POST["state"]);
