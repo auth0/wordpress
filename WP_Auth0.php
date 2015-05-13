@@ -326,7 +326,7 @@ class WP_Auth0 {
         $stateFromGet = json_decode(stripcslashes($state));
 
         $domain = WP_Auth0_Options::get( 'domain' );
-        $endpoint = "https://" . $domain . "/";
+
         $client_id = WP_Auth0_Options::get( 'client_id' );
         $client_secret = WP_Auth0_Options::get( 'client_secret' );
 
@@ -334,23 +334,10 @@ class WP_Auth0 {
         if(empty($client_secret)) wp_die(__('Error: Your Auth0 Client Secret has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG));
         if(empty($domain)) wp_die(__('Error: No Domain defined in Wordpress Administration!', WPA0_LANG));
 
-        $body = array(
-            'client_id' => $client_id,
-            'redirect_uri' => home_url(),
-            'client_secret' =>$client_secret,
-            'code' => $code,
-            'grant_type' => 'authorization_code'
-        );
-
-        $headers = array(
-            'content-type' => 'application/x-www-form-urlencoded'
-        );
-
-
-        $response = wp_remote_post( $endpoint . 'oauth/token', array(
-            'headers' => $headers,
-            'body' => $body
-        ));
+        $response = WP_Auth0_Api_Client::get_token($domain, $client_id, $client_secret, 'authorization_code', array(
+                'redirect_uri' => home_url(),
+                'code' => $code,
+            ));
 
         if ($response instanceof WP_Error) {
 
@@ -367,7 +354,8 @@ class WP_Auth0 {
 
         if(isset($data->access_token)){
             // Get the user information
-            $response = wp_remote_get( $endpoint . 'userinfo/?access_token=' . $data->access_token );
+            $response = WP_Auth0_Api_Client::get_user_info($domain, $data->access_token);
+
             if ($response instanceof WP_Error) {
 
                 self::insertAuth0Error('init_auth0_userinfo',$response);
@@ -621,10 +609,10 @@ class WP_Auth0 {
 
     public static function implicitLogin() {
 
-        require_once JWT_AUTH_PLUGIN_DIR . 'lib/php-jwt/Exceptions/BeforeValidException.php';
-        require_once JWT_AUTH_PLUGIN_DIR . 'lib/php-jwt/Exceptions/ExpiredException.php';
-        require_once JWT_AUTH_PLUGIN_DIR . 'lib/php-jwt/Exceptions/SignatureInvalidException.php';
-        require_once JWT_AUTH_PLUGIN_DIR . 'lib/php-jwt/Authentication/JWT.php';
+        require_once WPA0_AUTH_PLUGIN_DIR . 'lib/php-jwt/Exceptions/BeforeValidException.php';
+        require_once WPA0_AUTH_PLUGIN_DIR . 'lib/php-jwt/Exceptions/ExpiredException.php';
+        require_once WPA0_AUTH_PLUGIN_DIR . 'lib/php-jwt/Exceptions/SignatureInvalidException.php';
+        require_once WPA0_AUTH_PLUGIN_DIR . 'lib/php-jwt/Authentication/JWT.php';
 
         $token = $_POST["token"];
         $stateFromGet = json_decode($_POST["state"]);
