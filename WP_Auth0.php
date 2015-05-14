@@ -67,10 +67,13 @@ class WP_Auth0 {
         WP_Auth0_ErrorLog::init();
         WP_Auth0_Configure_JWTAUTH::init();
 
-        self::checkJWTAuth();
+        add_action('plugins_loaded', array( __CLASS__, 'checkJWTAuth' ));
     }
 
     public static function isJWTAuthEnabled() {
+        if (!function_exists('is_plugin_active')) {
+            require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        }
         return is_plugin_active('wp-jwt-auth/JWT_AUTH.php');
     }
 
@@ -86,7 +89,7 @@ class WP_Auth0 {
 
     }
 
-    protected static function checkJWTAuth() {
+    public static function checkJWTAuth() {
         if ( isset($_REQUEST['page']) && $_REQUEST['page'] == 'wpa0-jwt-auth' ) return;
 
         if( self::isJWTAuthEnabled() && !self::isJWTConfigured() ) {
