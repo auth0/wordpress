@@ -80,6 +80,8 @@ class WP_Auth0_Admin{
             array('id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL', 'function' => 'render_default_login_redirection'),
             array('id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email'),
             array('id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup'),
+            //array('id' => 'wpa0_auto_provisioning', 'name' => 'Auto Provisioning', 'function' => 'render_auto_provisioning'),
+            array('id' => 'wpa0_auth0_implicit_workflow', 'name' => 'Auth0 Implicit flow', 'function' => 'render_auth0_implicit_workflow'),
             array('id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)', 'function' => 'render_auto_login'),
             array('id' => 'wpa0_auto_login_method', 'name' => 'Auto Login Method', 'function' => 'render_auto_login_method'),
             array('id' => 'wpa0_ip_range_check', 'name' => 'Enable on IP Ranges', 'function' => 'render_ip_range_check'),
@@ -120,7 +122,7 @@ class WP_Auth0_Admin{
     }
     public static function render_client_secret(){
         $v = WP_Auth0_Options::get( 'client_secret' );
-        echo '<input type="text" name="' . WP_Auth0_Options::OPTIONS_NAME . '[client_secret]" id="wpa0_client_secret" value="' . esc_attr( $v ) . '"/>';
+        echo '<input type="text" autocomplete="off" name="' . WP_Auth0_Options::OPTIONS_NAME . '[client_secret]" id="wpa0_client_secret" value="' . esc_attr( $v ) . '"/>';
         echo '<br/><span class="description">' . __('Application secret, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG) . '</span>';
     }
     public static function render_domain(){
@@ -162,6 +164,12 @@ class WP_Auth0_Admin{
         echo '<label for="wpa0_username_style_username">' . __('Username', WPA0_LANG) . '</label>';
 
         echo '<br/><span class="description">' . __('If you don\'t want to validate that the user enters an email, just set this to username.', WPA0_LANG) . '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#usernamestyle-string">' . __('More info', WPA0_LANG) . '</a></span>';
+    }
+
+    public static function render_auth0_implicit_workflow(){
+        $v = absint(WP_Auth0_Options::get( 'auth0_implicit_workflow' ));
+        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[auth0_implicit_workflow]" id="wpa0_auth0_implicit_workflow" value="1" ' . checked( $v, 1, false ) . '/>';
+        echo '<br/><span class="description">' . __('Mark this to change the login workflow to allow the plugin work when the server does not have internet access)', WPA0_LANG) . '</span>';
     }
 
     public static function render_auto_login(){
@@ -220,7 +228,7 @@ class WP_Auth0_Admin{
 
         echo '<span class="description">' . __('Signup will be ', WPA0_LANG);
 
-        if ($allow_signup){
+        if (!$allow_signup){
             echo '<b>' . __('disabled', WPA0_LANG) . '</b>';
             echo __(' because you have turned on the setting " Anyone can register" off WordPress', WPA0_LANG) . '<br>';
         }
@@ -240,6 +248,22 @@ class WP_Auth0_Admin{
         echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[wordpress_login_enabled]" id="wpa0_wp_login_enabled" value="1" ' . checked( $v, 1, false ) . '/>';
         echo '<br/><span class="description">' . __('Mark this if you want to enable the regular WordPress login', WPA0_LANG) . '</span>';
     }
+
+    // public static function render_auto_provisioning () {
+    //     $allow_signup = WP_Auth0_Options::is_wp_registration_enabled();
+    //
+    //     if (!$allow_signup){
+    //         $v = absint(WP_Auth0_Options::get( 'auto_provisioning' ));
+    //         echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[auto_provisioning]" id="wpa0_auto_provisioning" value="1" ' . checked( $v, 1, false ) . '/>';
+    //         echo '<br/><span class="description">' . __('Mark this if you want to enable the creation of users that exists on the Auth0 database but not on Wordpress. This is overrided by the Wordpress "Anyone can register" setting when it is active.', WPA0_LANG) . '</span>';
+    //     }
+    //     else{
+    //         echo '<span class="description">' . __('Auto provisioning is ', WPA0_LANG);
+    //         echo '<b>' . __('enabled', WPA0_LANG) . '</b>';
+    //         echo __(' because you have turned on the setting " Anyone can register" on WordPress', WPA0_LANG) . '<br>';
+    //         echo __('You can manage this setting on Settings > General > Membership, Anyone can register', WPA0_LANG) . '</span>';
+    //     }
+    // }
 
     public static function render_basic_description(){
 
@@ -278,11 +302,14 @@ class WP_Auth0_Admin{
         $input['requires_verified_email'] = (isset($input['requires_verified_email']) ? 1 : 0);
         $input['wordpress_login_enabled'] = (isset($input['wordpress_login_enabled']) ? 1 : 0);
         $input['allow_signup'] = (isset($input['allow_signup']) ? 1 : 0);
+        $input['auth0_implicit_workflow'] = (isset($input['auth0_implicit_workflow']) ? 1 : 0);
 
         $input['social_big_buttons'] = (isset($input['social_big_buttons']) ? 1 : 0);
         $input['gravatar'] = (isset($input['gravatar']) ? 1 : 0);
 
         $input['remember_last_login'] = (isset($input['remember_last_login']) ? 1 : 0);
+
+        //$input['auto_provisioning'] = (isset($input['auto_provisioning']) ? 1 : 0);
 
         $input['default_login_redirection'] = esc_url_raw($input['default_login_redirection']);
         $home_url = home_url();

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.1.8
+ * Version: 1.2
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -54,7 +54,6 @@ class WP_Auth0 {
 
         add_filter('query_vars', array(__CLASS__, 'a0_register_query_vars'));
 
-
         $plugin = plugin_basename(__FILE__);
         add_filter("plugin_action_links_$plugin", array(__CLASS__, 'wp_add_plugin_settings_link'));
 
@@ -66,7 +65,48 @@ class WP_Auth0 {
         WP_Auth0_Settings_Section::init();
         WP_Auth0_Admin::init();
         WP_Auth0_ErrorLog::init();
+        WP_Auth0_Configure_JWTAUTH::init();
+
+        add_action('plugins_loaded', array( __CLASS__, 'checkJWTAuth' ));
     }
+
+    public static function isJWTAuthEnabled() {
+        if (!function_exists('is_plugin_active')) {
+            require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        }
+        return is_plugin_active('wp-jwt-auth/JWT_AUTH.php');
+    }
+
+    public static function isJWTConfigured() {
+
+        return (
+            JWT_AUTH_Options::get('aud') == WP_Auth0_Options::get('client_id') &&
+            JWT_AUTH_Options::get('secret') == WP_Auth0_Options::get('client_secret') &&
+            JWT_AUTH_Options::get('secret_base64_encoded') &&
+            JWT_AUTH_Options::get('override_user_repo') == 'WP_Auth0_UsersRepo' &&
+            JWT_AUTH_Options::get('jwt_attribute') == 'sub'
+        );
+
+    }
+
+    public static function checkJWTAuth() {
+        if ( isset($_REQUEST['page']) && $_REQUEST['page'] == 'wpa0-jwt-auth' ) return;
+
+        if( self::isJWTAuthEnabled() && !self::isJWTConfigured() ) {
+            add_action( 'admin_notices', array(__CLASS__,'notify_jwt' ));
+        }
+
+    }
+
+    public static function notify_jwt() {
+        ?>
+        <div class="update-nag">
+            JWT Auth installed. To configure it to work the Auth0 plugin, click <a href="admin.php?page=wpa0-jwt-auth">HERE</a>
+        </div>
+        <?php
+
+    }
+
 
     public static function getPluginDirUrl()
     {
@@ -130,7 +170,7 @@ class WP_Auth0 {
         ob_start();
 
         require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
-        renderAuth0Form(false);
+        renderAuth0Form(false, self::buildSettings($atts));
 
         $html = ob_get_clean();
         return $html;
@@ -139,7 +179,7 @@ class WP_Auth0 {
     public static function login_auto() {
         $auto_login = absint(WP_Auth0_Options::get( 'auto_login' ));
 
-        if ($auto_login && $_GET["action"] != "logout") {
+        if ($auto_login && $_GET["action"] != "logout" && !isset($_GET['wle'])) {
 
             $stateObj = array("interim" => false, "uuid" =>uniqid());
             if (isset($_GET['redirect_to'])) {
@@ -255,7 +295,15 @@ class WP_Auth0 {
     public static function init_auth0(){
         global $wp_query;
 
-        if(!isset($wp_query->query_vars['auth0']) || $wp_query->query_vars['auth0'] != '1') {
+        if(!isset($wp_query->query_vars['auth0'])) {
+            return;
+        }
+
+        if ($wp_query->query_vars['auth0'] == 'implicit') {
+            self::implicitLogin();
+        }
+
+        if ($wp_query->query_vars['auth0'] != '1') {
             return;
         }
 
@@ -281,7 +329,7 @@ class WP_Auth0 {
         $stateFromGet = json_decode(stripcslashes($state));
 
         $domain = WP_Auth0_Options::get( 'domain' );
-        $endpoint = "https://" . $domain . "/";
+
         $client_id = WP_Auth0_Options::get( 'client_id' );
         $client_secret = WP_Auth0_Options::get( 'client_secret' );
 
@@ -289,23 +337,10 @@ class WP_Auth0 {
         if(empty($client_secret)) wp_die(__('Error: Your Auth0 Client Secret has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG));
         if(empty($domain)) wp_die(__('Error: No Domain defined in Wordpress Administration!', WPA0_LANG));
 
-        $body = array(
-            'client_id' => $client_id,
-            'redirect_uri' => home_url(),
-            'client_secret' =>$client_secret,
-            'code' => $code,
-            'grant_type' => 'authorization_code'
-        );
-
-        $headers = array(
-            'content-type' => 'application/x-www-form-urlencoded'
-        );
-
-
-        $response = wp_remote_post( $endpoint . 'oauth/token', array(
-            'headers' => $headers,
-            'body' => $body
-        ));
+        $response = WP_Auth0_Api_Client::get_token($domain, $client_id, $client_secret, 'authorization_code', array(
+                'redirect_uri' => home_url(),
+                'code' => $code,
+            ));
 
         if ($response instanceof WP_Error) {
 
@@ -322,7 +357,8 @@ class WP_Auth0 {
 
         if(isset($data->access_token)){
             // Get the user information
-            $response = wp_remote_get( $endpoint . 'userinfo/?access_token=' . $data->access_token );
+            $response = WP_Auth0_Api_Client::get_user_info($domain, $data->access_token);
+
             if ($response instanceof WP_Error) {
 
                 self::insertAuth0Error('init_auth0_userinfo',$response);
@@ -420,15 +456,25 @@ class WP_Auth0 {
         );
     }
 
-    public static function insertAuth0Error($section, WP_Error $wp_error) {
+    public static function insertAuth0Error($section, $wp_error) {
+
+        if ($wp_error instanceof WP_Error) {
+            $code = $wp_error->get_error_code();
+            $message = $wp_error->get_error_message();
+        }
+        elseif($wp_error instanceof Exception) {
+            $code = $wp_error->getCode();
+            $message = $wp_error->getMessage();
+        }
+        
         global $wpdb;
         $wpdb->insert(
             $wpdb->auth0_error_logs,
             array(
                 'section' => $section,
                 'date' => date('c'),
-                'code' => $wp_error->get_error_code(),
-                'message' => $wp_error->get_error_message()
+                'code' => $code,
+                'message' => $message
             ),
             array(
                 '%s',
@@ -513,6 +559,8 @@ class WP_Auth0 {
                 $joinUser = get_user_by( 'email', $userinfo->email );
             }
 
+            // $auto_provisioning = WP_Auth0_Options::get('auto_provisioning');
+            // $allow_signup = WP_Auth0_Options::is_wp_registration_enabled() || $auto_provisioning;
             $allow_signup = WP_Auth0_Options::is_wp_registration_enabled();
 
             if (!is_null($joinUser) && $joinUser instanceof WP_User) {
@@ -560,6 +608,58 @@ class WP_Auth0 {
             wp_set_auth_cookie( $user_id );
             return true;
         }
+    }
+
+    public static function implicitLogin() {
+
+        require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Exceptions/BeforeValidException.php';
+        require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Exceptions/ExpiredException.php';
+        require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Exceptions/SignatureInvalidException.php';
+        require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Authentication/JWT.php';
+
+        $token = $_POST["token"];
+        $stateFromGet = json_decode($_POST["state"]);
+
+        $secret = WP_Auth0_Options::get('client_secret');
+        $secret = base64_decode(strtr($secret, '-_', '+/'));
+
+        try {
+            // Decode the user
+            $decodedToken = \JWT::decode($token, $secret, ['HS256']);
+
+            // validate that this JWT was made for us
+            if ($decodedToken->aud != WP_Auth0_Options::get('client_id')) {
+                throw new Exception("This token is not intended for us.");
+            }
+
+            $decodedToken->user_id = $decodedToken->sub;
+
+            if (self::login_user($decodedToken, $token)) {
+                if ($stateFromGet->interim) {
+                    include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
+                    exit();
+
+                } else {
+
+                    if (isset($stateFromGet->redirect_to)) {
+                        $redirectURL = $stateFromGet->redirect_to;
+                    } else {
+                        $redirectURL = WP_Auth0_Options::get( 'default_login_redirection' );
+                    }
+
+                    wp_safe_redirect($redirectURL);
+                }
+            }
+
+        } catch(\UnexpectedValueException $e) {
+            self::insertAuth0Error('implicitLogin',$e);
+
+            error_log($e->getMessage());
+            $msg = __('Sorry. There was a problem logging you in.', WPA0_LANG);
+            $msg .= '<br/><br/>';
+            $msg .= '<a href="' . wp_login_url() . '">' . __('← Login', WPA0_LANG) . '</a>';
+            wp_die($msg);
+        }
 
     }
 
@@ -574,12 +674,14 @@ class WP_Auth0 {
         }
 
         // Initialize session
-        if(!session_id()) {
-            session_start();
-        }
+        // if(!session_id()) {
+            // session_start();
+        // }
     }
     public static function end_session() {
-        session_destroy ();
+        if(session_id()) {
+            session_destroy();
+        }
     }
 
     private static function setup_rewrites(){
@@ -701,4 +803,5 @@ function get_currentauth0userinfo() {
     }
 }
 endif;
+
 WP_Auth0::init();

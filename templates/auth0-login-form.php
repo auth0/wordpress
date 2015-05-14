@@ -5,8 +5,11 @@ if (trim($client_id) == "") return;
 
 $wordpress_login_enabled = WP_Auth0_Options::get('wordpress_login_enabled') == 1;
 
+$auth0_implicit_workflow = WP_Auth0_Options::get('auth0_implicit_workflow') == 1;
+
 $domain = WP_Auth0_Options::get('domain');
 $cdn = WP_Auth0_Options::get('cdn_url');
+
 
 $allow_signup = WP_Auth0_Options::is_wp_registration_enabled();
 
@@ -43,10 +46,18 @@ $state = json_encode($stateObj);
 
 $options_obj = WP_Auth0::buildSettings(WP_Auth0_Options::get_options());
 
-$options_obj = array_merge( array(
-    "callbackURL"   =>  site_url('/index.php?auth0=1'),
+$extraOptions = array(
     "authParams"    => array("state" => $state),
-), $options_obj  );
+);
+
+if(!$auth0_implicit_workflow) {
+    $extraOptions["callbackURL"] = site_url('/index.php?auth0=1');
+}
+else {
+    $extraOptions["authParams"]["scope"] = "openid name email nickname email_verified identities";
+}
+
+$options_obj = array_merge( $extraOptions, $options_obj  );
 
 if (isset($specialSettings)){
     $options_obj = array_merge( $options_obj , $specialSettings );
@@ -104,9 +115,18 @@ if(empty($client_id) || empty($domain)){ ?>
     <script id="auth0" src="<?php echo $cdn ?>"></script>
     <script type="text/javascript">
         var callback = null;
-        if(typeof(a0_wp_login) === "object") {
-            callback = a0_wp_login.initialize
-        }
+        <?php if ($auth0_implicit_workflow) { ?>
+            
+            callback = function(err,profile, token) {
+
+                post('/index.php?auth0=implicit', {
+                    token:token,
+                    state:'<?php echo $state; ?>'
+                }, 'POST');
+                
+            };
+
+        <?php } ?>
 
         var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
 
@@ -114,6 +134,30 @@ if(empty($client_id) || empty($domain)){ ?>
             var options = <?php echo $options; ?>;
 
             lock.show(options, callback);
+        }
+
+        function post(path, params, method) {
+            method = method || "post"; // Set method to post by default if not specified.
+
+            // The rest of this code assumes you are not using a library.
+            // It can be made less wordy if you use one.
+            var form = document.createElement("form");
+            form.setAttribute("method", method);
+            form.setAttribute("action", path);
+
+            for(var key in params) {
+                if(params.hasOwnProperty(key)) {
+                    var hiddenField = document.createElement("input");
+                    hiddenField.setAttribute("type", "hidden");
+                    hiddenField.setAttribute("name", key);
+                    hiddenField.setAttribute("value", params[key]);
+
+                    form.appendChild(hiddenField);
+                 }
+            }
+
+            document.body.appendChild(form);
+            form.submit();
         }
 
     <?php if (!$showAsModal) { ?>

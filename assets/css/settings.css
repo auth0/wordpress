@@ -33,3 +33,7 @@ textarea {
     text-align: center;
     font-size: 18px;
 }
+
+.text-alone {
+    margin: 10px;
+}

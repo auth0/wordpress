@@ -14,5 +14,10 @@ class WP_Auth0_Settings_Section {
 
         add_submenu_page('wpa0', __('Auth0 Settings', WPA0_LANG), __('Settings', WPA0_LANG), 'manage_options', 'wpa0', array('WP_Auth0_Admin', 'render_settings_page') );
         add_submenu_page('wpa0', __('Auth0 Error Log', WPA0_LANG), __('Error Log', WPA0_LANG), 'manage_options', 'wpa0-errors', array('WP_Auth0_ErrorLog', 'render_settings_page') );
+
+        if (WP_Auth0::isJWTAuthEnabled())
+        {
+            add_submenu_page('wpa0', __('JWT Auth integration', WPA0_LANG), __('JWT Auth integration', WPA0_LANG), 'manage_options', 'wpa0-jwt-auth', array('WP_Auth0_Configure_JWTAUTH', 'render_settings_page') );
+        }
     }
 }
