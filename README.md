@@ -22,10 +22,6 @@ There are cases where the server is behind a firewall and does not have access t
 
 When it is enabled, the token is returned in the login callback and then sent back to the WordPress sever so it doesn't need to call the Auth0 webervices.
 
-## WooCommerce support
-
-This plugin overrides the WooCommerce login form.
-
 ## API authentication
 
 The last version of the plugin provides the ability integrate with **wp-jwt-auth** plugin to authenticate api calls via a HTTP Authorization Header.
@@ -108,6 +104,10 @@ Example:
 All the details about the parameters on the lock wiki (https://github.com/auth0/lock/wiki/Auth0Lock-customization)
 
 ## FAQs
+
+### Is this plugin compatible with WooCommerce?
+
+Yes, this plugin will override the default WooCommerce login forms with the Lock widget.
 
 ### What should I do if I end up with two accounts for the same user?
 
