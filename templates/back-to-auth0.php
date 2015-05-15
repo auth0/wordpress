@@ -6,7 +6,9 @@ if (empty($title)) {
 ?>
 
 <style>
-    #loginform{
+    #loginform,
+    .woocommerce-account .woocommerce h2,
+	.woocommerce-account .woocommerce form.login {
         display: block !important;
     }
 </style>

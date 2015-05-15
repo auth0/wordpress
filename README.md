@@ -22,6 +22,10 @@ There are cases where the server is behind a firewall and does not have access t
 
 When it is enabled, the token is returned in the login callback and then sent back to the WordPress sever so it doesn't need to call the Auth0 webervices.
 
+## WooCommerce support
+
+This plugin overrides the WooCommerce login form.
+
 ## API authentication
 
 The last version of the plugin provides the ability integrate with **wp-jwt-auth** plugin to authenticate api calls via a HTTP Authorization Header.
