@@ -8,7 +8,7 @@ class WP_Auth0_Api_Client {
         return array(
             'Auth0-Client' => base64_encode(json_encode(array(
                 'name' => 'wp-auth0',
-                'version' => WPA0_VERSION
+                'version' => WPA0_VERSION,
 
                 'environment' => array(
                     'PHP' => phpversion(),
