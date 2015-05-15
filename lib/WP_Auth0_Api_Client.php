@@ -6,10 +6,14 @@ class WP_Auth0_Api_Client {
         global $wp_version;
 
         return array(
-            'User-Agent' => 'PHP/' . phpversion() . ' (WordPress:' . $wp_version . ')',
             'Auth0-Client' => base64_encode(json_encode(array(
                 'name' => 'wp-auth0',
                 'version' => WPA0_VERSION
+
+                'environment' => array(
+                    'PHP' => phpversion(),
+                    'WordPress' => $wp_version,
+                )
             )))
         );
     }
