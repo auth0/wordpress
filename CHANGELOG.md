@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.2.2](https://github.com/auth0/wp-auth0/tree/1.2.2) (2015-05-19)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.2.1...1.2.2)
+
+**Implemented enhancements:**
+
+- Auto Login \(no widget\) Does not work with WooCommerce My Account Login [\#45](https://github.com/auth0/wp-auth0/issues/45)
+
+**Merged pull requests:**
+
+- Added support for WooCommerce + updated info headers [\#63](https://github.com/auth0/wp-auth0/pull/63) ([glena](https://github.com/glena))
+
 ## [1.2.1](https://github.com/auth0/wp-auth0/tree/1.2.1) (2015-05-14)
 
 **Implemented enhancements:**
