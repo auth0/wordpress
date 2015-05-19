@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.2.1
+ * Version: 1.2.2
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,7 +12,7 @@ define('WPA0_PLUGIN_DIR', trailingslashit(plugin_dir_path(__FILE__)));
 define('WPA0_PLUGIN_URL', trailingslashit(plugin_dir_url(__FILE__) ));
 define('WPA0_LANG', 'wp-auth0');
 define('AUTH0_DB_VERSION', 2);
-define('WPA0_VERSION', '1.2.1');
+define('WPA0_VERSION', '1.2.2');
 
 class WP_Auth0 {
     public static function init(){
@@ -69,6 +69,21 @@ class WP_Auth0 {
         WP_Auth0_Configure_JWTAUTH::init();
 
         add_action('plugins_loaded', array( __CLASS__, 'checkJWTAuth' ));
+        add_filter( 'woocommerce_checkout_login_message', array(__CLASS__, 'override_woocommerce_checkout_login_form') );
+        add_filter( 'woocommerce_before_customer_login_form', array(__CLASS__, 'override_woocommerce_login_form') );
+    }
+
+    public static function override_woocommerce_checkout_login_form( $html ){
+        self::override_woocommerce_login_form($html);
+
+        if (isset($_GET['wle'])) {
+            echo "<style>.woocommerce-checkout .woocommerce-info{display:block;}</style>";
+        }
+    }
+
+    public static function override_woocommerce_login_form( $html ){
+        self::render_auth0_login_css();
+        echo self::render_form('');
     }
 
     public static function isJWTAuthEnabled() {

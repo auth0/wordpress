@@ -13,12 +13,6 @@
 body.a0-widget-open>* {
     display: inherit;
 }
-#loginform{
-    display: none;
-}
-#login #nav {
-    display: none;
-}
 #a0-widget .a0-panel{
     margin: auto;
 }
@@ -31,4 +25,20 @@ body.a0-widget-open>* {
 }
 .auth0-login{
     margin-bottom: 20px;
+}
+
+#loginform,
+#login #nav,
+.woocommerce-checkout .woocommerce-info,
+.woocommerce-account .woocommerce h2,
+.woocommerce-account .woocommerce form.login {
+    display: none;
+}
+
+.woocommerce-checkout .woocommerce-info ~ .woocommerce-info {
+    display: block;
+}
+
+.woocommerce-account #extra-options {
+    padding:0;
 }

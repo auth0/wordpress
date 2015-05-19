@@ -105,6 +105,10 @@ All the details about the parameters on the lock wiki (https://github.com/auth0/
 
 ## FAQs
 
+### Is this plugin compatible with WooCommerce?
+
+Yes, this plugin will override the default WooCommerce login forms with the Lock widget.
+
 ### What should I do if I end up with two accounts for the same user?
 
 Under some situations, you may end up with a user with two accounts.  **WordPress** allows you to do merge users. You just delete one of the accounts and then attribute its contents to the user you want to merge with. Go to Users, select the account you want to delete, and in the confirmation dialog select another user to transfer the content.
