@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.2.3](https://github.com/auth0/wp-auth0/tree/1.2.3) (2015-05-19)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.2.2...1.2.3)
+
+**Merged pull requests:**
+
+- Fix issue with email verified requirement [\#65](https://github.com/auth0/wp-auth0/pull/65) ([glena](https://github.com/glena))
+
 ## [1.2.2](https://github.com/auth0/wp-auth0/tree/1.2.2) (2015-05-19)
 
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/1.2.1...1.2.2)
