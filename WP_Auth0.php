@@ -388,13 +388,13 @@ class WP_Auth0 {
 
             $userinfo = json_decode( $response['body'] );
             if (self::login_user($userinfo, $data)) {
-                if ($stateFromGet->interim) {
+                if ($stateFromGet !== null && isset($stateFromGet->interim) && $stateFromGet->interim) {
                     include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
                     exit();
 
                 } else {
 
-                    if (isset($stateFromGet->redirect_to)) {
+                    if ($stateFromGet !== null && isset($stateFromGet->redirect_to)) {
                         $redirectURL = $stateFromGet->redirect_to;
                     } else {
                         $redirectURL = WP_Auth0_Options::get( 'default_login_redirection' );
@@ -656,13 +656,13 @@ class WP_Auth0 {
             $decodedToken->user_id = $decodedToken->sub;
 
             if (self::login_user($decodedToken, $token)) {
-                if ($stateFromGet->interim) {
+                if ($stateFromGet !== null && isset($stateFromGet->interim) && $stateFromGet->interim) {
                     include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
                     exit();
 
                 } else {
 
-                    if (isset($stateFromGet->redirect_to)) {
+                    if ($stateFromGet !== null && isset($stateFromGet->redirect_to)) {
                         $redirectURL = $stateFromGet->redirect_to;
                     } else {
                         $redirectURL = WP_Auth0_Options::get( 'default_login_redirection' );
