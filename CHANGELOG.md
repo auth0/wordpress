@@ -1,5 +1,17 @@
 # Change Log
 
+## [Unreleased](https://github.com/auth0/wp-auth0/tree/HEAD)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.2.3...HEAD)
+
+**Closed issues:**
+
+- State shouldn't be required [\#66](https://github.com/auth0/wp-auth0/issues/66)
+
+**Merged pull requests:**
+
+- Fix error when the state param is not present [\#67](https://github.com/auth0/wp-auth0/pull/67) ([glena](https://github.com/glena))
+
 ## [1.2.3](https://github.com/auth0/wp-auth0/tree/1.2.3) (2015-05-19)
 
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/1.2.2...1.2.3)
