@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.2.4
+ * Version: 1.2.5
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,7 +12,7 @@ define('WPA0_PLUGIN_DIR', trailingslashit(plugin_dir_path(__FILE__)));
 define('WPA0_PLUGIN_URL', trailingslashit(plugin_dir_url(__FILE__) ));
 define('WPA0_LANG', 'wp-auth0');
 define('AUTH0_DB_VERSION', 2);
-define('WPA0_VERSION', '1.2.4');
+define('WPA0_VERSION', '1.2.5');
 
 class WP_Auth0 {
     public static function init(){
@@ -646,7 +646,7 @@ class WP_Auth0 {
 
         try {
             // Decode the user
-            $decodedToken = \JWT::decode($token, $secret, ['HS256']);
+            $decodedToken = \JWT::decode($token, $secret, array('HS256'));
 
             // validate that this JWT was made for us
             if ($decodedToken->aud != WP_Auth0_Options::get('client_id')) {
