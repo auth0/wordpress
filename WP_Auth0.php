@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.2.3
+ * Version: 1.2.4
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,7 +12,7 @@ define('WPA0_PLUGIN_DIR', trailingslashit(plugin_dir_path(__FILE__)));
 define('WPA0_PLUGIN_URL', trailingslashit(plugin_dir_url(__FILE__) ));
 define('WPA0_LANG', 'wp-auth0');
 define('AUTH0_DB_VERSION', 2);
-define('WPA0_VERSION', '1.2.3');
+define('WPA0_VERSION', '1.2.4');
 
 class WP_Auth0 {
     public static function init(){
@@ -388,13 +388,13 @@ class WP_Auth0 {
 
             $userinfo = json_decode( $response['body'] );
             if (self::login_user($userinfo, $data)) {
-                if ($stateFromGet->interim) {
+                if ($stateFromGet !== null && isset($stateFromGet->interim) && $stateFromGet->interim) {
                     include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
                     exit();
 
                 } else {
 
-                    if (isset($stateFromGet->redirect_to)) {
+                    if ($stateFromGet !== null && isset($stateFromGet->redirect_to)) {
                         $redirectURL = $stateFromGet->redirect_to;
                     } else {
                         $redirectURL = WP_Auth0_Options::get( 'default_login_redirection' );
@@ -656,13 +656,13 @@ class WP_Auth0 {
             $decodedToken->user_id = $decodedToken->sub;
 
             if (self::login_user($decodedToken, $token)) {
-                if ($stateFromGet->interim) {
+                if ($stateFromGet !== null && isset($stateFromGet->interim) && $stateFromGet->interim) {
                     include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
                     exit();
 
                 } else {
 
-                    if (isset($stateFromGet->redirect_to)) {
+                    if ($stateFromGet !== null && isset($stateFromGet->redirect_to)) {
                         $redirectURL = $stateFromGet->redirect_to;
                     } else {
                         $redirectURL = WP_Auth0_Options::get( 'default_login_redirection' );
