@@ -2,11 +2,15 @@
 
 ## [Unreleased](https://github.com/auth0/wp-auth0/tree/HEAD)
 
-[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.2.3...HEAD)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.2.4...HEAD)
 
 **Closed issues:**
 
 - State shouldn't be required [\#66](https://github.com/auth0/wp-auth0/issues/66)
+
+## [1.2.4](https://github.com/auth0/wp-auth0/tree/1.2.4) (2015-05-21)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.2.3...1.2.4)
 
 **Merged pull requests:**
 
