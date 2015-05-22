@@ -2,7 +2,13 @@
 
 class WP_Auth0_UsersRepo {
 
-    public static function getUser($jwt) {
+    public static function init() {
+        if (WP_Auth0_Options::get('jwt_auth_integration')) {
+            add_filter( 'wp_jwt_auth_get_user', array( __CLASS__, 'getUser' ), 1);
+        }
+    }
+
+    public static function getUser($jwt) { 
         global $wpdb;
 
         $sql = 'SELECT u.*

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.2.5
+ * Version: 1.2.6
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,7 +12,7 @@ define('WPA0_PLUGIN_DIR', trailingslashit(plugin_dir_path(__FILE__)));
 define('WPA0_PLUGIN_URL', trailingslashit(plugin_dir_url(__FILE__) ));
 define('WPA0_LANG', 'wp-auth0');
 define('AUTH0_DB_VERSION', 2);
-define('WPA0_VERSION', '1.2.5');
+define('WPA0_VERSION', '1.2.6');
 
 class WP_Auth0 {
     public static function init(){
@@ -63,6 +63,7 @@ class WP_Auth0 {
             add_action( 'wp_footer', array( __CLASS__, 'a0_render_message' ) );
         }
 
+        WP_Auth0_UsersRepo::init();
         WP_Auth0_Settings_Section::init();
         WP_Auth0_Admin::init();
         WP_Auth0_ErrorLog::init();
@@ -99,7 +100,7 @@ class WP_Auth0 {
             JWT_AUTH_Options::get('aud') == WP_Auth0_Options::get('client_id') &&
             JWT_AUTH_Options::get('secret') == WP_Auth0_Options::get('client_secret') &&
             JWT_AUTH_Options::get('secret_base64_encoded') &&
-            JWT_AUTH_Options::get('override_user_repo') == 'WP_Auth0_UsersRepo' &&
+            WP_Auth0_Options::get('jwt_auth_integration') &&
             JWT_AUTH_Options::get('jwt_attribute') == 'sub'
         );
 
