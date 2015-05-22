@@ -28,18 +28,29 @@ class WP_Auth0_UsersRepo {
 
             $auth0User = json_decode($response['body']);
 
-            // WP_Auth0::login_user($auth0User, $data);
+            try {
+                $creator = new WP_Auth0_UserCreator();
+                $user_id = $creator->create($auth0User,$encodedJWT);
 
-            var_dump($auth0User);exit;
+                return new WP_User($user_id);
+            }
+            catch (WP_Auth0_CouldNotCreateUserException $e) {
+                return null;
+            }
+            catch (WP_Auth0_RegistrationNotEnabledException $e) {
+                return null;
+            }
 
             return null;
         }elseif($userRow instanceof WP_Error ) {
             self::insertAuth0Error('findAuth0User',$userRow);
             return null;
+        }else{
+            $user = new WP_User();
+            $user->init($userRow);
+            return $user;
         }
-        $user = new WP_User();
-        $user->init($userRow);
-        return $user;
+        
 
     }
 

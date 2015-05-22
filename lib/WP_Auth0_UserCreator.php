@@ -2,7 +2,7 @@
 
 class WP_Auth0_UserCreator {
 
-	public function create($auth0User) {
+	public function create($userinfo, $token) {
 
 		// If the user doesn't exist we need to either create a new one, or asign him to an existing one
         $isDatabaseUser = false;
@@ -29,7 +29,7 @@ class WP_Auth0_UserCreator {
             // Don't allow creation or assignation of user if the email is not verified, that would
             // be hijacking
             if (!$userinfo->email_verified) {
-                self::dieWithVerifyEmail($userinfo, $id_token);
+                throw new WP_Auth0_EmailNotVerifiedException($userinfo, $token);
             }
             $user_id = $joinUser->ID;
         } elseif ($allow_signup) {
@@ -51,9 +51,26 @@ class WP_Auth0_UserCreator {
         // If we are here we should have a valid $user_id with a new user or an existing one
         // log him in, and update the auth0_user table
         self::insertAuth0User($userinfo, $user_id);
-        wp_set_auth_cookie( $user_id );
-        return true;
+
+        return $user_id;
 
 	}
+
+    public function insertAuth0User($userinfo, $user_id) {
+        global $wpdb;
+        $wpdb->insert(
+            $wpdb->auth0_user,
+            array(
+                'auth0_id' => $userinfo->user_id,
+                'wp_id' => $user_id,
+                'auth0_obj' => serialize($userinfo)
+            ),
+            array(
+                '%s',
+                '%d',
+                '%s'
+            )
+        );
+    }
 
 }
