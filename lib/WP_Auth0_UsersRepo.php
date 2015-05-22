@@ -4,11 +4,11 @@ class WP_Auth0_UsersRepo {
 
     public static function init() {
         if (WP_Auth0_Options::get('jwt_auth_integration')) {
-            add_filter( 'wp_jwt_auth_get_user', array( __CLASS__, 'getUser' ), 1);
+            add_filter( 'wp_jwt_auth_get_user', array( __CLASS__, 'getUser' ), 1,2);
         }
     }
 
-    public static function getUser($jwt) { 
+    public static function getUser($jwt, $encodedJWT) { 
         global $wpdb;
 
         $sql = 'SELECT u.*
@@ -19,6 +19,19 @@ class WP_Auth0_UsersRepo {
         $userRow = $wpdb->get_row($wpdb->prepare($sql, $jwt->sub));
 
         if (is_null($userRow)) {
+
+            $domain = WP_Auth0_Options::get( 'domain' );
+
+            $response = WP_Auth0_Api_Client::get_user($domain, $encodedJWT, $jwt->sub);
+            
+            if ($response['response']['code'] != 200) return null;
+
+            $auth0User = json_decode($response['body']);
+
+            // WP_Auth0::login_user($auth0User, $data);
+
+            var_dump($auth0User);exit;
+
             return null;
         }elseif($userRow instanceof WP_Error ) {
             self::insertAuth0Error('findAuth0User',$userRow);

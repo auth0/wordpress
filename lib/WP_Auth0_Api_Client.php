@@ -63,4 +63,17 @@ class WP_Auth0_Api_Client {
 
     }
 
+    public static function get_user($domain, $jwt, $user_id) {
+        $endpoint = "https://$domain/api/v2/users/" . urlencode($user_id);
+
+        $headers = self::get_info_headers();
+
+        $headers['Authorization'] = "Bearer $jwt";
+
+        return wp_remote_get( $endpoint  , array(
+            'headers' => $headers
+        ));
+
+    }
+
 } 

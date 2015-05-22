@@ -15,7 +15,7 @@ define('AUTH0_DB_VERSION', 2);
 define('WPA0_VERSION', '1.2.6');
 
 class WP_Auth0 {
-    public static function init(){
+    public static function init(){ 
         spl_autoload_register(array(__CLASS__, 'autoloader'));
 
         // WP_Auth0_Referer_Check::init();
@@ -388,7 +388,7 @@ class WP_Auth0 {
             }
 
             $userinfo = json_decode( $response['body'] );
-            if (self::login_user($userinfo, $data)) {
+            if (self::login_user($userinfo, $data->id_token)) {
                 if ($stateFromGet !== null && isset($stateFromGet->interim) && $stateFromGet->interim) {
                     include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
                     exit();
@@ -520,11 +520,11 @@ class WP_Auth0 {
         $wpdb->delete( $wpdb->auth0_user, array( 'wp_id' => $user_id), array( '%d' ) );
     }
 
-    private static function dieWithVerifyEmail($userinfo, $data) {
+    private static function dieWithVerifyEmail($userinfo, $id_token) {
 
         ob_start();
         $domain = WP_Auth0_Options::get( 'domain' );
-        $token =  $data->id_token;
+        $token =  $id_token;
         $email = $userinfo->email;
         $connection = $userinfo->identities[0]->connection;
         $userId = $userinfo->user_id;
@@ -535,7 +535,7 @@ class WP_Auth0 {
         wp_die($html);
 
     }
-    private static function login_user( $userinfo, $data ){
+    public static function login_user( $userinfo, $id_token ){
         // If the userinfo has no email or an unverified email, and in the options we require a verified email
         // notify the user he cant login until he does so.
         $requires_verified_email = WP_Auth0_Options::get( 'requires_verified_email' );
@@ -552,7 +552,7 @@ class WP_Auth0 {
            
 
             if (!$userinfo->email_verified) {
-                self::dieWithVerifyEmail($userinfo, $data);
+                self::dieWithVerifyEmail($userinfo, $id_token);
             }
 
         }
@@ -565,6 +565,10 @@ class WP_Auth0 {
             wp_set_auth_cookie( $user->ID );
             return true;
         } else {
+
+            $creator = new WP_Auth0_UserCreator();
+            
+
             // If the user doesn't exist we need to either create a new one, or asign him to an existing one
             $isDatabaseUser = false;
             foreach ($userinfo->identities as $identity) {
@@ -590,7 +594,7 @@ class WP_Auth0 {
                 // Don't allow creation or assignation of user if the email is not verified, that would
                 // be hijacking
                 if (!$userinfo->email_verified) {
-                    self::dieWithVerifyEmail($userinfo, $data);
+                    self::dieWithVerifyEmail($userinfo, $id_token);
                 }
                 $user_id = $joinUser->ID;
             } elseif ($allow_signup) {
@@ -788,6 +792,7 @@ class WP_Auth0 {
 
         $paths[] = $path;
         $paths[] = $path.'lib/';
+        $paths[] = $path.'lib/exceptions/';
 
         foreach($paths as $p)
             foreach($exts as $ext){
