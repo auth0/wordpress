@@ -26,10 +26,16 @@ class WP_Auth0_UsersRepo {
             
             if ($response['response']['code'] != 200) return null;
 
-            $auth0User = json_decode($response['body']);
+            $creator = new WP_Auth0_UserCreator();
+
+            if ($creator->tokenHasRequiredScopes($jwt->email)) {
+                $auth0User = $jwt
+            }
+            else {
+                $auth0User = json_decode($response['body']);
+            }
 
             try {
-                $creator = new WP_Auth0_UserCreator();
                 $user_id = $creator->create($auth0User,$encodedJWT);
 
                 return new WP_User($user_id);

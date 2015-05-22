@@ -2,6 +2,15 @@
 
 class WP_Auth0_UserCreator {
 
+    public function tokenHasRequiredScopes($jwt) {
+
+        return (
+            (isset($jwt->email) || isset($jwt->nickname))
+            && isset(identities)
+        );
+
+    }
+
 	public function create($userinfo, $token) {
 
 		// If the user doesn't exist we need to either create a new one, or asign him to an existing one

@@ -7,7 +7,7 @@ License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE.md
 Stable tag: trunk
 Contributors: hrajchert, rrauch
 
-Single Sign On for Enterprises + Social Login + User/Passwords. For all your WorpdPress instances. Powered by Auth0.
+Single Sign On for Enterprises + Social Login + User/Passwords. For all your WordPress instances. Powered by Auth0.
 
 == Description ==
 
