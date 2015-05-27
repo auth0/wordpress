@@ -31,12 +31,11 @@ class WP_Auth0_Configure_JWTAUTH{
 
     protected static function setupjwt() {
         if(WP_Auth0::isJWTAuthEnabled()) {
-            global $wpdb;
-
             JWT_AUTH_Options::set('aud', WP_Auth0_Options::get('client_id'));
             JWT_AUTH_Options::set('secret', WP_Auth0_Options::get('client_secret'));
             JWT_AUTH_Options::set('secret_base64_encoded', true);
             JWT_AUTH_Options::set('override_user_repo', 'WP_Auth0_UsersRepo');
+            WP_Auth0_Options::set('jwt_auth_integration', true);
         }
     }
 

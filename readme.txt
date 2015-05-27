@@ -1,27 +1,35 @@
-=== Auth0 - Single Sign On with Social, Enterprise and User/Passwords ===
+=== Auth0 ===
 Tags: login, oauth, authentication, single sign on, ldap, active directory, saml, windows azure ad, google apps, two factor, two-factor, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer
 Tested up to: 3.9
 Requires at least: 3.8
 License: MIT
 License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE.md
 Stable tag: trunk
-Contributors: hrajchert, rrauch
+Contributors: hrajchert, rrauch, glena
 
-Single Sign On for Enterprises + Social Login + User/Passwords. For all your WorpdPress instances. Powered by Auth0.
+Single Sign On for Enterprises + Social Login + User/Passwords. For all your WordPress instances. Powered by Auth0.
 
 == Description ==
 
 This plugin gives WordPress a new Login Widget (powered by [Auth0](https://auth0.com)) that enables:
 
-* Single Sign On with **Enterprise Directories** (LDAP, AD, Google Apps, Office365 and SAML Provider)
-* Shared **User/Password between multiple Wordpresses** for Single Sign On
-* Single Sign On with **+30 Social Providers** (https://docs.auth0.com/identityproviders)
-* **User Management** Dashboard
-* Optional **Two Factor Authentication**
-* Single Sign On between Wordpress and other Applications
-* **Reporting and Analytics**
-
-... and **we use multi hash iterations algorithm to store users passwords (bcrypt)**, meaning that you won't have issues with hackers trying to get into your web site.
+- Easy setup
+    + 5 minutes installatio
+    + Extensible custom rules
+- Universal authentication
+    + +30 Social Providers
+    + Enterprise conections (ADFS, Active directory / LDAP, SAML, Office 365, Google Apps and more)
+    + Connect your own database
+    + Passwordless connections (using SMS or Touch ID)
+- Ultra secure
+    + Multifactor authentication
+    + Password policies
+    + Email validation
+    + Mitigate brute force attacks
+- Easy access to your users data
+    + User stats
+    + Profile data
+    + Login history and locations
 
 == Installation ==
 

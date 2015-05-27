@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.2.5
+ * Version: 1.2.6
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,10 +12,10 @@ define('WPA0_PLUGIN_DIR', trailingslashit(plugin_dir_path(__FILE__)));
 define('WPA0_PLUGIN_URL', trailingslashit(plugin_dir_url(__FILE__) ));
 define('WPA0_LANG', 'wp-auth0');
 define('AUTH0_DB_VERSION', 2);
-define('WPA0_VERSION', '1.2.5');
+define('WPA0_VERSION', '1.2.6');
 
 class WP_Auth0 {
-    public static function init(){
+    public static function init(){ 
         spl_autoload_register(array(__CLASS__, 'autoloader'));
 
         // WP_Auth0_Referer_Check::init();
@@ -63,6 +63,7 @@ class WP_Auth0 {
             add_action( 'wp_footer', array( __CLASS__, 'a0_render_message' ) );
         }
 
+        WP_Auth0_UsersRepo::init();
         WP_Auth0_Settings_Section::init();
         WP_Auth0_Admin::init();
         WP_Auth0_ErrorLog::init();
@@ -99,7 +100,7 @@ class WP_Auth0 {
             JWT_AUTH_Options::get('aud') == WP_Auth0_Options::get('client_id') &&
             JWT_AUTH_Options::get('secret') == WP_Auth0_Options::get('client_secret') &&
             JWT_AUTH_Options::get('secret_base64_encoded') &&
-            JWT_AUTH_Options::get('override_user_repo') == 'WP_Auth0_UsersRepo' &&
+            WP_Auth0_Options::get('jwt_auth_integration') &&
             JWT_AUTH_Options::get('jwt_attribute') == 'sub'
         );
 
@@ -387,7 +388,7 @@ class WP_Auth0 {
             }
 
             $userinfo = json_decode( $response['body'] );
-            if (self::login_user($userinfo, $data)) {
+            if (self::login_user($userinfo, $data->id_token)) {
                 if ($stateFromGet !== null && isset($stateFromGet->interim) && $stateFromGet->interim) {
                     include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
                     exit();
@@ -455,23 +456,6 @@ class WP_Auth0 {
         return $user;
     }
 
-    private static function insertAuth0User($userinfo, $user_id) {
-        global $wpdb;
-        $wpdb->insert(
-            $wpdb->auth0_user,
-            array(
-                'auth0_id' => $userinfo->user_id,
-                'wp_id' => $user_id,
-                'auth0_obj' => serialize($userinfo)
-            ),
-            array(
-                '%s',
-                '%d',
-                '%s'
-            )
-        );
-    }
-
     public static function insertAuth0Error($section, $wp_error) {
 
         if ($wp_error instanceof WP_Error) {
@@ -519,11 +503,11 @@ class WP_Auth0 {
         $wpdb->delete( $wpdb->auth0_user, array( 'wp_id' => $user_id), array( '%d' ) );
     }
 
-    private static function dieWithVerifyEmail($userinfo, $data) {
+    private static function dieWithVerifyEmail($userinfo, $id_token) {
 
         ob_start();
         $domain = WP_Auth0_Options::get( 'domain' );
-        $token =  $data->id_token;
+        $token =  $id_token;
         $email = $userinfo->email;
         $connection = $userinfo->identities[0]->connection;
         $userId = $userinfo->user_id;
@@ -534,7 +518,7 @@ class WP_Auth0 {
         wp_die($html);
 
     }
-    private static function login_user( $userinfo, $data ){
+    public static function login_user( $userinfo, $id_token ){
         // If the userinfo has no email or an unverified email, and in the options we require a verified email
         // notify the user he cant login until he does so.
         $requires_verified_email = WP_Auth0_Options::get( 'requires_verified_email' );
@@ -548,10 +532,8 @@ class WP_Auth0 {
                 wp_die($msg);
             }
 
-           
-
             if (!$userinfo->email_verified) {
-                self::dieWithVerifyEmail($userinfo, $data);
+                self::dieWithVerifyEmail($userinfo, $id_token);
             }
 
         }
@@ -564,69 +546,31 @@ class WP_Auth0 {
             wp_set_auth_cookie( $user->ID );
             return true;
         } else {
-            // If the user doesn't exist we need to either create a new one, or asign him to an existing one
-            $isDatabaseUser = false;
-            foreach ($userinfo->identities as $identity) {
-                if ($identity->provider == "auth0") {
-                    $isDatabaseUser = true;
-                }
+
+            try {
+                $creator = new WP_Auth0_UserCreator();
+                $user_id = $creator->create($userinfo, $id_token);
+
+                wp_set_auth_cookie( $user_id );
             }
-            $joinUser = null;
-            // If the user has a verified email or is a database user try to see if there is
-            // a user to join with. The isDatabase is because we don't want to allow database
-            // user creation if there is an existing one with no verified email
-
-            if (isset($userinfo->email) && ((isset($userinfo->email_verified) && $userinfo->email_verified) || $isDatabaseUser)) {
-                $joinUser = get_user_by( 'email', $userinfo->email );
+            catch (WP_Auth0_CouldNotCreateUserException $e) {
+                $msg = __('Error: Could not create user.', WPA0_LANG);
+                $msg =  ' ' . $e->getMessage();
+                $msg .= '<br/><br/>';
+                $msg .= '<a href="' . site_url() . '">' . __('← Go back', WPA0_LANG) . '</a>';
+                wp_die($msg);
             }
-
-            // $auto_provisioning = WP_Auth0_Options::get('auto_provisioning');
-            // $allow_signup = WP_Auth0_Options::is_wp_registration_enabled() || $auto_provisioning;
-            $allow_signup = WP_Auth0_Options::is_wp_registration_enabled();
-
-            if (!is_null($joinUser) && $joinUser instanceof WP_User) {
-                // If we are here, we have a potential join user
-                // Don't allow creation or assignation of user if the email is not verified, that would
-                // be hijacking
-                if (!$userinfo->email_verified) {
-                    self::dieWithVerifyEmail($userinfo, $data);
-                }
-                $user_id = $joinUser->ID;
-            } elseif ($allow_signup) {
-                // If we are here, we need to create the user
-                $user_id = WP_Auth0_Users::create_user($userinfo);
-
-                // Check if user was created
-
-                if( is_wp_error($user_id) ) {
-                    $msg = __('Error: Could not create user.', WPA0_LANG);
-                    $msg =  ' ' . $user_id->get_error_message();
-                    $msg .= '<br/><br/>';
-                    $msg .= '<a href="' . site_url() . '">' . __('← Go back', WPA0_LANG) . '</a>';
-                    wp_die($msg);
-
-                }elseif($user_id == -2){
-                    $msg = __('Error: Could not create user. The registration process were rejected. Please verify that your account is whitelisted for this system.', WPA0_LANG);
-                    $msg .= '<br/><br/>';
-                    $msg .= '<a href="' . site_url() . '">' . __('← Go back', WPA0_LANG) . '</a>';
-
-                    wp_die($msg);
-                }elseif ($user_id <0){
-                    $msg = __('Error: Could not create user.', WPA0_LANG);
-                    $msg .= '<br/><br/>';
-                    $msg .= '<a href="' . site_url() . '">' . __('← Go back', WPA0_LANG) . '</a>';
-                    wp_die($msg);
-                }
-            } else {
+            catch (WP_Auth0_RegistrationNotEnabledException $e) {
                 $msg = __('Error: Could not create user. The registration process is not available.', WPA0_LANG);
                 $msg .= '<br/><br/>';
                 $msg .= '<a href="' . site_url() . '">' . __('← Go back', WPA0_LANG) . '</a>';
                 wp_die($msg);
             }
-            // If we are here we should have a valid $user_id with a new user or an existing one
-            // log him in, and update the auth0_user table
-            self::insertAuth0User($userinfo, $user_id);
-            wp_set_auth_cookie( $user_id );
+            catch (WP_Auth0_EmailNotVerifiedException $e) {
+                self::dieWithVerifyEmail($e->userinfo, $e->id_token);
+            }
+
+            
             return true;
         }
     }
@@ -787,6 +731,7 @@ class WP_Auth0 {
 
         $paths[] = $path;
         $paths[] = $path.'lib/';
+        $paths[] = $path.'lib/exceptions/';
 
         foreach($paths as $p)
             foreach($exts as $ext){

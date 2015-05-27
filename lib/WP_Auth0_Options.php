@@ -61,6 +61,7 @@ class WP_Auth0_Options {
             'custom_css' => '',
             'auth0_implicit_workflow' => false,
             'gravatar' => true,
+            'jwt_auth_integration' => false,
             // 'auto_provisioning' => true,
             'default_login_redirection' => home_url(),
         );

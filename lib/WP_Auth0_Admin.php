@@ -72,7 +72,7 @@ class WP_Auth0_Admin{
 
 /* ------------------------- ADVANCED ------------------------- */
 
-        self::init_option_section('Advanced', array(
+        $advancedOptions = array(
 
             array('id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict'),
             array('id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style'),
@@ -89,7 +89,16 @@ class WP_Auth0_Admin{
             array('id' => 'wpa0_extra_conf', 'name' => 'Extra settings', 'function' => 'render_extra_conf'),
             array('id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url'),
 
-        ));
+        );
+    
+        
+
+        if (WP_Auth0::isJWTAuthEnabled()) {
+            $advancedOptions[] = array('id' => 'wpa0_jwt_auth_integration', 'name' => 'Enable JWT Auth integration', 'function' => 'render_jwt_auth_integration');
+        }
+
+        self::init_option_section('Advanced', $advancedOptions);
+        
 
         register_setting(WP_Auth0_Options::OPTIONS_NAME, WP_Auth0_Options::OPTIONS_NAME, array(__CLASS__, 'input_validator'));
     }
@@ -106,6 +115,11 @@ class WP_Auth0_Admin{
         $v = absint(WP_Auth0_Options::get( 'remember_last_login' ));
         echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[remember_last_login]" id="wpa0_remember_last_login" value="1" ' . checked( $v, 1, false ) . '/>';
         echo '<br/><span class="description">' . __('Request for SSO data and enable Last time you signed in with[...] message.', WPA0_LANG) . '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#rememberlastlogin-boolean">' . __('More info', WPA0_LANG) . '</a></span>';
+    }
+    public static function render_jwt_auth_integration () {
+        $v = absint(WP_Auth0_Options::get( 'jwt_auth_integration' ));
+        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[jwt_auth_integration]" id="wpa0_jwt_auth_integration" value="1" ' . checked( $v, 1, false ) . '/>';
+        echo '<br/><span class="description">' . __('This will enable the JWT Auth\'s Users Repository override.', WPA0_LANG) . '</span>';
     }
 
     public static function create_account_message(){
@@ -301,6 +315,7 @@ class WP_Auth0_Admin{
 
         $input['requires_verified_email'] = (isset($input['requires_verified_email']) ? 1 : 0);
         $input['wordpress_login_enabled'] = (isset($input['wordpress_login_enabled']) ? 1 : 0);
+        $input['jwt_auth_integration'] = (isset($input['jwt_auth_integration']) ? 1 : 0);
         $input['allow_signup'] = (isset($input['allow_signup']) ? 1 : 0);
         $input['auth0_implicit_workflow'] = (isset($input['auth0_implicit_workflow']) ? 1 : 0);
 
