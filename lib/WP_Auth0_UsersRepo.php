@@ -3,12 +3,13 @@
 class WP_Auth0_UsersRepo {
 
     public static function init() {
-        if (WP_Auth0_Options::get('jwt_auth_integration')) {
-            add_filter( 'wp_jwt_auth_get_user', array( __CLASS__, 'getUser' ), 1,2);
+        if (WP_Auth0_Options::get('jwt_auth_integration') == 1) {
+            add_filter( 'wp_jwt_auth_get_user', array( __CLASS__, 'getUser' ), 0,2);
         }
     }
 
     public static function getUser($jwt, $encodedJWT) { 
+
         global $wpdb;
 
         $sql = 'SELECT u.*
@@ -28,8 +29,8 @@ class WP_Auth0_UsersRepo {
 
             $creator = new WP_Auth0_UserCreator();
 
-            if ($creator->tokenHasRequiredScopes($jwt->email)) {
-                $auth0User = $jwt
+            if ($creator->tokenHasRequiredScopes($jwt)) {
+                $auth0User = $jwt;
             }
             else {
                 $auth0User = json_decode($response['body']);

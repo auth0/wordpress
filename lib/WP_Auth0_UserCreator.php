@@ -6,7 +6,7 @@ class WP_Auth0_UserCreator {
 
         return (
             (isset($jwt->email) || isset($jwt->nickname))
-            && isset(identities)
+            && isset($jwt->identities)
         );
 
     }
@@ -57,6 +57,7 @@ class WP_Auth0_UserCreator {
         } else {
             throw new WP_Auth0_RegistrationNotEnabledException();
         }
+        
         // If we are here we should have a valid $user_id with a new user or an existing one
         // log him in, and update the auth0_user table
         self::insertAuth0User($userinfo, $user_id);
