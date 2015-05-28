@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.2.6
+ * Version: 1.2.7
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,7 +12,7 @@ define('WPA0_PLUGIN_DIR', trailingslashit(plugin_dir_path(__FILE__)));
 define('WPA0_PLUGIN_URL', trailingslashit(plugin_dir_url(__FILE__) ));
 define('WPA0_LANG', 'wp-auth0');
 define('AUTH0_DB_VERSION', 2);
-define('WPA0_VERSION', '1.2.6');
+define('WPA0_VERSION', '1.2.7');
 
 class WP_Auth0 {
     public static function init(){ 
@@ -264,6 +264,9 @@ class WP_Auth0 {
         }
         if (self::IsValid($settings,'custom_css')) {
             $options_obj['custom_css'] = $settings['custom_css'];
+        }
+        if (self::IsValid($settings,'custom_js')) {
+            $options_obj['custom_js'] = $settings['custom_js'];
         }
         if (self::IsValid($settings,'social_big_buttons')) {
             $options_obj['socialBigButtons'] = self::GetBoolean($settings['social_big_buttons']);

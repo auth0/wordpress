@@ -80,6 +80,7 @@ class WP_Auth0_Admin{
             array('id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL', 'function' => 'render_default_login_redirection'),
             array('id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email'),
             array('id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup'),
+            array('id' => 'wpa0_custom_js', 'name' => 'Customize the Login Widget with custom JS', 'function' => 'render_custom_js'),
             //array('id' => 'wpa0_auto_provisioning', 'name' => 'Auto Provisioning', 'function' => 'render_auto_provisioning'),
             array('id' => 'wpa0_auth0_implicit_workflow', 'name' => 'Auth0 Implicit flow', 'function' => 'render_auth0_implicit_workflow'),
             array('id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)', 'function' => 'render_auto_login'),
@@ -167,6 +168,12 @@ class WP_Auth0_Admin{
         $v = WP_Auth0_Options::get( 'custom_css' );
         echo '<textarea name="' . WP_Auth0_Options::OPTIONS_NAME . '[custom_css]" id="wpa0_custom_css">' . esc_attr( $v ) . '</textarea>';
         echo '<br/><span class="description">' . __('This should be a valid CSS to customize the Auth0 login widget. ', WPA0_LANG) . '<a target="_blank" href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget">' . __('More info', WPA0_LANG) . '</a></span>';
+    }
+
+    public static function render_custom_js(){
+        $v = WP_Auth0_Options::get( 'custom_js' );
+        echo '<textarea name="' . WP_Auth0_Options::OPTIONS_NAME . '[custom_js]" id="wpa0_custom_js">' . esc_attr( $v ) . '</textarea>';
+        echo '<br/><span class="description">' . __('This should be a valid JS to customize the Auth0 login widget to, for example, add custom buttons. ', WPA0_LANG) . '<a target="_blank" href="https://auth0.com/docs/hrd#3">' . __('More info', WPA0_LANG) . '</a></span>';
     }
 
     public static function render_username_style(){
