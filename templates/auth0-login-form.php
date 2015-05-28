@@ -119,7 +119,7 @@ if(empty($client_id) || empty($domain)){ ?>
             
             callback = function(err,profile, token) {
 
-                post('/index.php?auth0=implicit', {
+                post(<?php echo site_url('/index.php?auth0=implicit'); ?>, {
                     token:token,
                     state:'<?php echo $state; ?>'
                 }, 'POST');
@@ -129,6 +129,12 @@ if(empty($client_id) || empty($domain)){ ?>
         <?php } ?>
 
         var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
+
+    <?php if(isset($options_obj['custom_js'])) { ?>
+
+        <?php echo $options_obj['custom_js'];?> 
+
+    <?php } ?>
 
         function a0ShowLoginModal() {
             var options = <?php echo $options; ?>;

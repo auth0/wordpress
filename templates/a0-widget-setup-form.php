@@ -11,6 +11,7 @@ $dict = isset($instance[ 'dict' ]) ? $instance[ 'dict' ] : '';
 $extra_conf = isset($instance[ 'extra_conf' ]) ? $instance[ 'extra_conf' ] : '';
 $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'remember_last_login' ] : '';
 $custom_css = isset($instance[ 'custom_css' ]) ? $instance[ 'custom_css' ] : '';
+$custom_js = isset($instance[ 'custom_js' ]) ? $instance[ 'custom_js' ] : '';
 
 ?>
 
@@ -139,6 +140,10 @@ $custom_css = isset($instance[ 'custom_css' ]) ? $instance[ 'custom_css' ] : '';
     <textarea class="widefat" id="<?php echo $this->get_field_id( 'custom_css' ); ?>"
               name="<?php echo $this->get_field_name( 'custom_css' ); ?>">
         <?php echo esc_attr( $custom_css ); ?>
+    </textarea>
+    <textarea class="widefat" id="<?php echo $this->get_field_id( 'custom_js' ); ?>"
+              name="<?php echo $this->get_field_name( 'custom_js' ); ?>">
+        <?php echo esc_attr( $custom_js ); ?>
     </textarea>
     <br/><span class="description">
             <?php echo __('This should be a valid CSS to customize the Auth0 login widget.', WPA0_LANG); ?>

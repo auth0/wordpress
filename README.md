@@ -5,6 +5,8 @@ Single Sign On for Enterprises + Social Login + User/Passwords. For all your Wor
 
 Demo: <http://auth0wp.azurewebsites.net>
 
+Documentation: <https://auth0.com/docs/cms>
+
 ## Installation
 
 Before you start, **make sure the admin user has a valid email that you own**, read the Technical Notes for more information.

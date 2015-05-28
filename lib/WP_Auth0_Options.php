@@ -59,6 +59,7 @@ class WP_Auth0_Options {
             'extra_conf' => '',
             'remember_last_login' => true,
             'custom_css' => '',
+            'custom_js' => '',
             'auth0_implicit_workflow' => false,
             'gravatar' => true,
             'jwt_auth_integration' => false,
