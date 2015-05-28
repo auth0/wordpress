@@ -1,12 +1,28 @@
 # Change Log
 
-## [Unreleased](https://github.com/auth0/wp-auth0/tree/HEAD)
+## [1.2.7](https://github.com/auth0/wp-auth0/tree/1.2.7) (2015-05-28)
 
-[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.2.4...HEAD)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.2.4...1.2.7)
 
 **Closed issues:**
 
+- Add custom js to add custom buttons [\#73](https://github.com/auth0/wp-auth0/issues/73)
+
+- Hardwired redirect url after login [\#71](https://github.com/auth0/wp-auth0/issues/71)
+
 - State shouldn't be required [\#66](https://github.com/auth0/wp-auth0/issues/66)
+
+- Enable new users creation on JWT authentication [\#57](https://github.com/auth0/wp-auth0/issues/57)
+
+**Merged pull requests:**
+
+- fix implicit wf in subdirectories, added custom JS [\#72](https://github.com/auth0/wp-auth0/pull/72) ([glena](https://github.com/glena))
+
+- New jwt auth integration + auto user creation with JWT [\#70](https://github.com/auth0/wp-auth0/pull/70) ([glena](https://github.com/glena))
+
+- Fix array notation [\#69](https://github.com/auth0/wp-auth0/pull/69) ([glena](https://github.com/glena))
+
+- Fix array notation [\#68](https://github.com/auth0/wp-auth0/pull/68) ([glena](https://github.com/glena))
 
 ## [1.2.4](https://github.com/auth0/wp-auth0/tree/1.2.4) (2015-05-21)
 
