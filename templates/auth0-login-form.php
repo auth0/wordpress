@@ -119,7 +119,7 @@ if(empty($client_id) || empty($domain)){ ?>
             
             callback = function(err,profile, token) {
 
-                post(<?php echo site_url('/index.php?auth0=implicit'); ?>, {
+                post('<?php echo site_url('/index.php?auth0=implicit'); ?>', {
                     token:token,
                     state:'<?php echo $state; ?>'
                 }, 'POST');
