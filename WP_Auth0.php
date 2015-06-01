@@ -280,6 +280,12 @@ class WP_Auth0 {
         if (self::IsValid($settings,'remember_last_login')) {
             $options_obj['rememberLastLogin'] = self::GetBoolean($settings['remember_last_login']);
         }
+        if (self::IsValid($settings,'sso')) {
+            $options_obj['sso'] = self::GetBoolean($settings['sso']);
+        }
+        if (self::IsValid($settings,'auth0_implicit_workflow')) {
+            $options_obj['auth0_implicit_workflow'] = self::GetBoolean($settings['auth0_implicit_workflow']);
+        }
         if (self::IsValid($settings,'icon_url')) {
             $options_obj['icon'] = $settings['icon_url'];
         }
