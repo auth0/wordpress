@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.3.0](https://github.com/auth0/wp-auth0/tree/1.3.0) (2015-06-01)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.2.7...1.3.0)
+
+**Implemented enhancements:**
+
+- Support for SSO [\#64](https://github.com/auth0/wp-auth0/issues/64)
+
+**Merged pull requests:**
+
+- Added SSO features [\#74](https://github.com/auth0/wp-auth0/pull/74) ([glena](https://github.com/glena))
+
 ## [1.2.7](https://github.com/auth0/wp-auth0/tree/1.2.7) (2015-05-28)
 
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/1.2.4...1.2.7)
