@@ -4,12 +4,10 @@ $client_id = WP_Auth0_Options::get('client_id');
 if (trim($client_id) == "") return;
 
 $wordpress_login_enabled = WP_Auth0_Options::get('wordpress_login_enabled') == 1;
-
 $auth0_implicit_workflow = WP_Auth0_Options::get('auth0_implicit_workflow') == 1;
 
 $domain = WP_Auth0_Options::get('domain');
 $cdn = WP_Auth0_Options::get('cdn_url');
-
 
 $allow_signup = WP_Auth0_Options::is_wp_registration_enabled();
 
@@ -46,15 +44,22 @@ $state = json_encode($stateObj);
 
 $options_obj = WP_Auth0::buildSettings(WP_Auth0_Options::get_options());
 
+$sso = $options_obj['sso'];
+
 $extraOptions = array(
     "authParams"    => array("state" => $state),
 );
-
+$callbackURL = site_url('/index.php?auth0=1');
 if(!$auth0_implicit_workflow) {
-    $extraOptions["callbackURL"] = site_url('/index.php?auth0=1');
+    $extraOptions["callbackURL"] = $callbackURL;
 }
 else {
     $extraOptions["authParams"]["scope"] = "openid name email nickname email_verified identities";
+
+    if ($sso) {
+        $extraOptions["callbackOnLocationHash"] = true;
+        $extraOptions["callbackURL"] = site_url('/wp-login.php');
+    }
 }
 
 $options_obj = array_merge( $extraOptions, $options_obj  );
@@ -115,6 +120,7 @@ if(empty($client_id) || empty($domain)){ ?>
     <script id="auth0" src="<?php echo $cdn ?>"></script>
     <script type="text/javascript">
         var callback = null;
+
         <?php if ($auth0_implicit_workflow) { ?>
             
             callback = function(err,profile, token) {
@@ -126,49 +132,102 @@ if(empty($client_id) || empty($domain)){ ?>
                 
             };
 
+            function post(path, params, method) {
+                method = method || "post"; // Set method to post by default if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", path);
+
+                for(var key in params) {
+                    if(params.hasOwnProperty(key)) {
+                        var hiddenField = document.createElement("input");
+                        hiddenField.setAttribute("type", "hidden");
+                        hiddenField.setAttribute("name", key);
+                        hiddenField.setAttribute("value", params[key]);
+
+                        form.appendChild(hiddenField);
+                     }
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+
+            function a0ShowLoginModal() {
+                var options = <?php echo $options; ?>;
+
+                lock.show(options, callback);
+            }
+
+            <?php if ($sso) { ?>
+
+                function getHashParams() {
+
+                    var hashParams = {};
+                    var e,
+                        a = /\+/g,  // Regex for replacing addition symbol with a space
+                        r = /([^&;=]+)=?([^&;]*)/g,
+                        d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
+                        q = window.location.hash.substring(1);
+
+                    while (e = r.exec(q))
+                       hashParams[d(e[1])] = d(e[2]);
+
+                    return hashParams;
+                }
+
+                var hashParams = getHashParams();
+                if (hashParams && hashParams.id_token) {
+
+                    callback(null,null, hashParams.id_token);
+
+                }
+
+            <?php } ?>
+
+        <?php } else { ?>
+
+            function a0ShowLoginModal() {
+                var options = <?php echo $options; ?>;
+
+                lock.show(options, '<?php echo $callbackURL; ?>');
+            }
+
         <?php } ?>
+
 
         var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
 
-    <?php if(isset($options_obj['custom_js'])) { ?>
+        <?php if(isset($options_obj['custom_js'])) { ?>
 
-        <?php echo $options_obj['custom_js'];?> 
+            <?php echo $options_obj['custom_js'];?> 
 
-    <?php } ?>
+        <?php } ?>
 
-        function a0ShowLoginModal() {
-            var options = <?php echo $options; ?>;
+    <?php if ($sso) { ?>
+        
 
-            lock.show(options, callback);
-        }
+        lock.$auth0.getSSOData(function(err, data) {
+            if (!err && data.sso) {
+                lock.$auth0.signin(<?php echo $options; ?>); 
+            } else {
 
-        function post(path, params, method) {
-            method = method || "post"; // Set method to post by default if not specified.
+            <?php if (!$showAsModal) { ?>
+                a0ShowLoginModal();
+            <?php } ?>
 
-            // The rest of this code assumes you are not using a library.
-            // It can be made less wordy if you use one.
-            var form = document.createElement("form");
-            form.setAttribute("method", method);
-            form.setAttribute("action", path);
-
-            for(var key in params) {
-                if(params.hasOwnProperty(key)) {
-                    var hiddenField = document.createElement("input");
-                    hiddenField.setAttribute("type", "hidden");
-                    hiddenField.setAttribute("name", key);
-                    hiddenField.setAttribute("value", params[key]);
-
-                    form.appendChild(hiddenField);
-                 }
             }
+        });
 
-            document.body.appendChild(form);
-            form.submit();
-        }
-
-    <?php if (!$showAsModal) { ?>
-        a0ShowLoginModal();
+    <?php } else { ?>
+        <?php if (!$showAsModal) { ?>
+            a0ShowLoginModal();
+        <?php } ?>
     <?php } ?>
+    
 
     </script>
 <?php

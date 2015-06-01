@@ -61,6 +61,7 @@ class WP_Auth0_Options {
             'custom_css' => '',
             'custom_js' => '',
             'auth0_implicit_workflow' => false,
+            'sso' => false,
             'gravatar' => true,
             'jwt_auth_integration' => false,
             // 'auto_provisioning' => true,

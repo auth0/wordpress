@@ -74,6 +74,7 @@ class WP_Auth0_Admin{
 
         $advancedOptions = array(
 
+            array('id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)', 'function' => 'render_sso'),
             array('id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict'),
             array('id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style'),
             array('id' => 'wpa0_remember_last_login', 'name' => 'Remember last login', 'function' => 'render_remember_last_login'),
@@ -238,6 +239,13 @@ class WP_Auth0_Admin{
         echo '<br/><span class="description">' . __('Point this to the latest widget available in the CDN', WPA0_LANG) . '</span>';
     }
 
+    public static function render_sso () {
+        $v = absint(WP_Auth0_Options::get( 'sso' ));
+        echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[sso]" id="wpa0_sso" value="1" ' . checked( $v, 1, false ) . '/>';
+        echo '<br/><span class="description">' . __('Mark this if you want to enable SSO. More info ', WPA0_LANG);
+        echo '<a target="_blank" href="https://auth0.com/docs/sso/single-sign-on">' . __('HERE', WPA0_LANG) . '</a></span>';
+    }
+
     public static function render_verified_email () {
         $v = absint(WP_Auth0_Options::get( 'requires_verified_email' ));
         echo '<input type="checkbox" name="' . WP_Auth0_Options::OPTIONS_NAME . '[requires_verified_email]" id="wpa0_verified_email" value="1" ' . checked( $v, 1, false ) . '/>';
@@ -320,6 +328,7 @@ class WP_Auth0_Admin{
             'https'
         ));
 
+        $input['sso'] = (isset($input['sso']) ? 1 : 0);
         $input['requires_verified_email'] = (isset($input['requires_verified_email']) ? 1 : 0);
         $input['wordpress_login_enabled'] = (isset($input['wordpress_login_enabled']) ? 1 : 0);
         $input['jwt_auth_integration'] = (isset($input['jwt_auth_integration']) ? 1 : 0);
