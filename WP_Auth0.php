@@ -220,9 +220,14 @@ class WP_Auth0 {
     public static function logout() {
         self::end_session();
 
+        $sso = WP_Auth0_Options::get( 'sso' );
         $auto_login = absint(WP_Auth0_Options::get( 'auto_login' ));
         if ($auto_login) {
             wp_redirect(home_url());
+            die();
+        }
+        if ($sso) {
+            wp_redirect("https://". WP_Auth0_Options::get('domain') . "/v2/logout?returnTo=" . urlencode(home_url()));
             die();
         }
 
