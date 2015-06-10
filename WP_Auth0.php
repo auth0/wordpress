@@ -180,7 +180,7 @@ class WP_Auth0 {
             wp_enqueue_script('jquery');
         }
 
-        wp_enqueue_style( 'auth0-widget', WPA0_PLUGIN_URL . 'assets/css/main.css' );
+        wp_enqueue_style( 'auth0-widget', trailingslashit(plugin_dir_url(__FILE__) ) . 'assets/css/main.css' );
     }
 
     public static function shortcode( $atts ){
@@ -558,6 +558,9 @@ class WP_Auth0 {
             // User exists! Log in
             self::updateAuth0Object($userinfo);
             wp_set_auth_cookie( $user->ID );
+
+            do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token ); 
+
             return true;
         } else {
 
@@ -566,6 +569,8 @@ class WP_Auth0 {
                 $user_id = $creator->create($userinfo, $id_token);
 
                 wp_set_auth_cookie( $user_id );
+
+                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token ); 
             }
             catch (WP_Auth0_CouldNotCreateUserException $e) {
                 $msg = __('Error: Could not create user.', WPA0_LANG);
