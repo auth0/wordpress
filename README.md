@@ -24,7 +24,7 @@ There are cases where the server is behind a firewall and does not have access t
 
 When it is enabled, the token is returned in the login callback and then sent back to the WordPress sever so it doesn't need to call the Auth0 webervices.
 
-## Interating with the plugin
+## Integrating with the plugin
 
 The plugin provides an action to get notified each time a user logs in or is created in WordPress. This action is called `auth0_user_login` and receives 4 params:
 1. $user_id (int): the id of the user logged in
