@@ -1,5 +1,27 @@
 # Change Log
 
+## [Unreleased](https://github.com/auth0/wp-auth0/tree/HEAD)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.3.1...HEAD)
+
+**Closed issues:**
+
+- Support Storing Stripe id in Auth0 [\#77](https://github.com/auth0/wp-auth0/issues/77)
+
+- Allow loading / saving Shipping Addresses used by WooCommerce in Auth0 Profile [\#76](https://github.com/auth0/wp-auth0/issues/76)
+
+## [1.3.1](https://github.com/auth0/wp-auth0/tree/1.3.1) (2015-06-10)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.3.0...1.3.1)
+
+**Closed issues:**
+
+- Mixed content warning [\#75](https://github.com/auth0/wp-auth0/issues/75)
+
+**Merged pull requests:**
+
+- Fixed Mixed content warning \#75 & added login action for issue \#76 \#77 [\#78](https://github.com/auth0/wp-auth0/pull/78) ([glena](https://github.com/glena))
+
 ## [1.3.0](https://github.com/auth0/wp-auth0/tree/1.3.0) (2015-06-01)
 
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/1.2.7...1.3.0)
