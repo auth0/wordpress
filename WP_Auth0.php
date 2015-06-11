@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.3.1
+ * Version: 1.3.2
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,7 +12,7 @@ define('WPA0_PLUGIN_DIR', trailingslashit(plugin_dir_path(__FILE__)));
 define('WPA0_PLUGIN_URL', trailingslashit(plugin_dir_url(__FILE__) ));
 define('WPA0_LANG', 'wp-auth0');
 define('AUTH0_DB_VERSION', 2);
-define('WPA0_VERSION', '1.3.1');
+define('WPA0_VERSION', '1.3.2');
 
 class WP_Auth0 {
     public static function init(){ 
@@ -222,12 +222,20 @@ class WP_Auth0 {
 
         $sso = WP_Auth0_Options::get( 'sso' );
         $auto_login = absint(WP_Auth0_Options::get( 'auto_login' ));
+
+        if (isset($_REQUEST['redirect_to'])) {
+            $redirect_to = $_REQUEST['redirect_to'];
+        }
+        else {
+            $redirect_to = home_url();
+        }
+
         if ($auto_login) {
             wp_redirect(home_url());
             die();
         }
         if ($sso) {
-            wp_redirect("https://". WP_Auth0_Options::get('domain') . "/v2/logout?returnTo=" . urlencode(home_url()));
+            wp_redirect("https://". WP_Auth0_Options::get('domain') . "/v2/logout?returnTo=" . urlencode($redirect_to));
             die();
         }
 
@@ -402,7 +410,7 @@ class WP_Auth0 {
             }
 
             $userinfo = json_decode( $response['body'] );
-            if (self::login_user($userinfo, $data->id_token)) {
+            if (self::login_user($userinfo, $data->id_token, $data->access_token)) {
                 if ($stateFromGet !== null && isset($stateFromGet->interim) && $stateFromGet->interim) {
                     include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
                     exit();
@@ -532,7 +540,7 @@ class WP_Auth0 {
         wp_die($html);
 
     }
-    public static function login_user( $userinfo, $id_token ){
+    public static function login_user( $userinfo, $id_token, $access_token ){
         // If the userinfo has no email or an unverified email, and in the options we require a verified email
         // notify the user he cant login until he does so.
         $requires_verified_email = WP_Auth0_Options::get( 'requires_verified_email' );
@@ -559,7 +567,7 @@ class WP_Auth0 {
             self::updateAuth0Object($userinfo);
             wp_set_auth_cookie( $user->ID );
 
-            do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token ); 
+            do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token ); 
 
             return true;
         } else {
@@ -570,7 +578,7 @@ class WP_Auth0 {
 
                 wp_set_auth_cookie( $user_id );
 
-                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token ); 
+                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token ); 
             }
             catch (WP_Auth0_CouldNotCreateUserException $e) {
                 $msg = __('Error: Could not create user.', WPA0_LANG);
@@ -602,7 +610,7 @@ class WP_Auth0 {
         require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Authentication/JWT.php';
 
         $token = $_POST["token"];
-        $stateFromGet = json_decode($_POST["state"]);
+        $stateFromGet = json_decode(stripcslashes($_POST["state"]));
 
         $secret = WP_Auth0_Options::get('client_secret');
         $secret = base64_decode(strtr($secret, '-_', '+/'));
@@ -618,7 +626,7 @@ class WP_Auth0 {
 
             $decodedToken->user_id = $decodedToken->sub;
 
-            if (self::login_user($decodedToken, $token)) {
+            if (self::login_user($decodedToken, $token, null)) {
                 if ($stateFromGet !== null && isset($stateFromGet->interim) && $stateFromGet->interim) {
                     include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
                     exit();
