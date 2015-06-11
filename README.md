@@ -7,6 +7,10 @@ Demo: <http://auth0wp.azurewebsites.net>
 
 Documentation: <https://auth0.com/docs/cms>
 
+## Contributions
+
+All PR should be done towards the `dev` branch.
+
 ## Installation
 
 Before you start, **make sure the admin user has a valid email that you own**, read the Technical Notes for more information.
