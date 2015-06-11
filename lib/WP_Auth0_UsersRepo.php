@@ -39,6 +39,8 @@ class WP_Auth0_UsersRepo {
             try {
                 $user_id = $creator->create($auth0User,$encodedJWT);
 
+                do_action( 'auth0_user_login' , $user_id, $response, true, $encodedJWT, null ); 
+
                 return new WP_User($user_id);
             }
             catch (WP_Auth0_CouldNotCreateUserException $e) {
@@ -55,6 +57,9 @@ class WP_Auth0_UsersRepo {
         }else{
             $user = new WP_User();
             $user->init($userRow);
+
+            do_action( 'auth0_user_login' , $user->ID, $response, false, $encodedJWT, null ); 
+
             return $user;
         }
         

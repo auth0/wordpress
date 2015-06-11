@@ -402,7 +402,7 @@ class WP_Auth0 {
             }
 
             $userinfo = json_decode( $response['body'] );
-            if (self::login_user($userinfo, $data->id_token)) {
+            if (self::login_user($userinfo, $data->id_token, $data->access_token)) {
                 if ($stateFromGet !== null && isset($stateFromGet->interim) && $stateFromGet->interim) {
                     include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
                     exit();
@@ -532,7 +532,7 @@ class WP_Auth0 {
         wp_die($html);
 
     }
-    public static function login_user( $userinfo, $id_token ){
+    public static function login_user( $userinfo, $id_token, $access_token ){
         // If the userinfo has no email or an unverified email, and in the options we require a verified email
         // notify the user he cant login until he does so.
         $requires_verified_email = WP_Auth0_Options::get( 'requires_verified_email' );
@@ -559,7 +559,7 @@ class WP_Auth0 {
             self::updateAuth0Object($userinfo);
             wp_set_auth_cookie( $user->ID );
 
-            do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token ); 
+            do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token ); 
 
             return true;
         } else {
@@ -570,7 +570,7 @@ class WP_Auth0 {
 
                 wp_set_auth_cookie( $user_id );
 
-                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token ); 
+                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token ); 
             }
             catch (WP_Auth0_CouldNotCreateUserException $e) {
                 $msg = __('Error: Could not create user.', WPA0_LANG);
@@ -618,7 +618,7 @@ class WP_Auth0 {
 
             $decodedToken->user_id = $decodedToken->sub;
 
-            if (self::login_user($decodedToken, $token)) {
+            if (self::login_user($decodedToken, $token, null)) {
                 if ($stateFromGet !== null && isset($stateFromGet->interim) && $stateFromGet->interim) {
                     include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
                     exit();
