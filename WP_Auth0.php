@@ -222,12 +222,20 @@ class WP_Auth0 {
 
         $sso = WP_Auth0_Options::get( 'sso' );
         $auto_login = absint(WP_Auth0_Options::get( 'auto_login' ));
+
+        if (isset($_REQUEST['redirect_to'])) {
+            $redirect_to = $_REQUEST['redirect_to'];
+        }
+        else {
+            $redirect_to = home_url();
+        }
+
         if ($auto_login) {
             wp_redirect(home_url());
             die();
         }
         if ($sso) {
-            wp_redirect("https://". WP_Auth0_Options::get('domain') . "/v2/logout?returnTo=" . urlencode(home_url()));
+            wp_redirect("https://". WP_Auth0_Options::get('domain') . "/v2/logout?returnTo=" . urlencode($redirect_to));
             die();
         }
 
@@ -602,7 +610,7 @@ class WP_Auth0 {
         require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Authentication/JWT.php';
 
         $token = $_POST["token"];
-        $stateFromGet = json_decode($_POST["state"]);
+        $stateFromGet = json_decode(stripcslashes($_POST["state"]));
 
         $secret = WP_Auth0_Options::get('client_secret');
         $secret = base64_decode(strtr($secret, '-_', '+/'));
