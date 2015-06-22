@@ -2,6 +2,12 @@
 
 class WP_Auth0_Dashboard_Plugins_Location implements WP_Auth0_Dashboard_Plugins_Interface {
 
+	/*
+		this handles:
+			linkedin location field
+			facebook location field
+	*/
+
 	public function getId() {
 		return 'auth0_dashboard_widget_Location';
 	}
@@ -22,22 +28,17 @@ class WP_Auth0_Dashboard_Plugins_Location implements WP_Auth0_Dashboard_Plugins_
 		$data = array();
 
 		foreach ($this->users as $user) {
-			if (isset($user->location)) {
-				if ($user->location instanceof stdClass) {
-					
-					$location = '';
+			
+			if (isset($user->location) && $user->location instanceof stdClass) {
 
-					if(isset($user->location->country)) {
-						$location = 'country ' . $user->location->country->code;
-					}
-
-				}
-				else
-				{
-					$location = $user->location;
+				if(isset($user->location->name)) {
+					$data[] = $user->location->name;
 				}
 
-				$data[] = $location;
+			}
+			elseif(isset($user->location))
+			{
+				$data[] = $user->location;
 			}
 		}
 
@@ -57,6 +58,7 @@ class WP_Auth0_Dashboard_Plugins_Location implements WP_Auth0_Dashboard_Plugins_
 		        var map = new google.maps.Map(document.getElementById('auth0ChartLocations'), {
 		          zoom: 1,
 		          center: center,
+		          streetViewControl: false,
 		          mapTypeId: google.maps.MapTypeId.ROADMAP
 		        });
 

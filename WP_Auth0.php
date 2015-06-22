@@ -565,7 +565,9 @@ class WP_Auth0 {
 
         if (!is_null($user)) {
             // User exists! Log in
+
             self::updateAuth0Object($userinfo);
+
             wp_set_auth_cookie( $user->ID );
 
             do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token ); 
