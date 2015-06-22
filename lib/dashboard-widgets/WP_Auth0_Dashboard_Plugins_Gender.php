@@ -7,7 +7,7 @@ class WP_Auth0_Dashboard_Plugins_Gender implements WP_Auth0_Dashboard_Plugins_In
 	}
 
 	public function getName() {
-		return 'Auth0 Gender Chart';
+		return 'Auth0 - User\'s Gender';
 	}
 
 	protected $users = array();

@@ -7,7 +7,7 @@ class WP_Auth0_Dashboard_Plugins_IdP implements WP_Auth0_Dashboard_Plugins_Inter
 	}
 
 	public function getName() {
-		return 'Auth0 Identity Providers Chart';
+		return 'Auth0 - Identity Providers';
 	}
 
 	protected $users = array();

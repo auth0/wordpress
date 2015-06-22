@@ -7,7 +7,7 @@ class WP_Auth0_Dashboard_Plugins_Age implements WP_Auth0_Dashboard_Plugins_Inter
 	}
 
 	public function getName() {
-		return 'Auth0 Age Chart';
+		return 'Auth0 - User\'s Age';
 	}
 
 	protected $users = array();
