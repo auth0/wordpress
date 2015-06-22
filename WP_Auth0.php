@@ -11,7 +11,7 @@ define('WPA0_PLUGIN_FILE', __FILE__);
 define('WPA0_PLUGIN_DIR', trailingslashit(plugin_dir_path(__FILE__)));
 define('WPA0_PLUGIN_URL', trailingslashit(plugin_dir_url(__FILE__) ));
 define('WPA0_LANG', 'wp-auth0');
-define('AUTH0_DB_VERSION', 2);
+define('AUTH0_DB_VERSION', 3);
 define('WPA0_VERSION', '1.3.3');
 
 class WP_Auth0 {
@@ -68,6 +68,7 @@ class WP_Auth0 {
         WP_Auth0_Admin::init();
         WP_Auth0_ErrorLog::init();
         WP_Auth0_Configure_JWTAUTH::init();
+        WP_Auth0_Dashboard_Plugins::init();
 
         add_action('plugins_loaded', array( __CLASS__, 'checkJWTAuth' ));
         add_filter( 'woocommerce_checkout_login_message', array(__CLASS__, 'override_woocommerce_checkout_login_form') );
@@ -123,7 +124,6 @@ class WP_Auth0 {
         <?php
 
     }
-
 
     public static function getPluginDirUrl()
     {
@@ -658,18 +658,6 @@ class WP_Auth0 {
 
     public static function wp_init(){
         self::setup_rewrites();
-
-        $cdn_url = WP_Auth0_Options::get('cdn_url');
-        if (strpos($cdn_url, 'auth0-widget-5') !== false)
-        {
-            WP_Auth0_Options::set( 'cdn_url', '//cdn.auth0.com/js/lock-6.min.js' );
-            //WP_Auth0_Options::set( 'version', 1 );
-        }
-
-        // Initialize session
-        // if(!session_id()) {
-            // session_start();
-        // }
     }
     public static function end_session() {
         if(session_id()) {
@@ -736,6 +724,12 @@ class WP_Auth0 {
         }
         update_option( "auth0_db_version", AUTH0_DB_VERSION );
 
+        $cdn_url = WP_Auth0_Options::get('cdn_url');
+        if (strpos($cdn_url, 'auth0-widget-5') !== false || strpos($cdn_url, 'lock-6') !== false)
+        {
+            WP_Auth0_Options::set( 'cdn_url', '//cdn.auth0.com/js/lock-7.min.js' );
+        }
+
     }
 
     public static function check_update() {
@@ -760,6 +754,7 @@ class WP_Auth0 {
         $paths[] = $path;
         $paths[] = $path.'lib/';
         $paths[] = $path.'lib/exceptions/';
+        $paths[] = $path.'lib/dashboard-widgets/';
 
         foreach($paths as $p)
             foreach($exts as $ext){
