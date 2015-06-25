@@ -2,11 +2,6 @@
 
 class WP_Auth0_Dashboard_Plugins_Gender implements WP_Auth0_Dashboard_Plugins_Interface {
 
-	/*
-		this handles:
-			facebook gender field
-	*/
-
 	public function getId() {
 		return 'auth0_dashboard_widget_gender';
 	}
@@ -43,6 +38,12 @@ class WP_Auth0_Dashboard_Plugins_Gender implements WP_Auth0_Dashboard_Plugins_In
 
 	public function render() {
 		$data = $this->processData();
+
+		if (empty($data)) {
+            echo "No data available";
+            return;
+        }
+
 		$chartData = array();
 
 		foreach ($data as $key => $value) {
@@ -52,14 +53,16 @@ class WP_Auth0_Dashboard_Plugins_Gender implements WP_Auth0_Dashboard_Plugins_In
 		?>
 		<div id="auth0ChartGender"></div>
 		<script type="text/javascript">
-			var chart = c3.generate({
-				bindto: '#auth0ChartGender',
-			    data: {
-			        columns: <?php echo json_encode($chartData); ?>,
-			        type : 'pie'
-			    }
-			});
-		</script>	
+			(function(){
+				var chart = c3.generate({
+					bindto: '#auth0ChartGender',
+				    data: {
+				        columns: <?php echo json_encode($chartData); ?>,
+				        type : 'pie'
+				    }
+				});
+			})();
+		</script>
 		<?php
 	}
 

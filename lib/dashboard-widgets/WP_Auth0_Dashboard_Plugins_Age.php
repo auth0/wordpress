@@ -1,7 +1,7 @@
 <?php
 
 class WP_Auth0_Dashboard_Plugins_Age implements WP_Auth0_Dashboard_Plugins_Interface {
-	
+
 	public function getId() {
 		return 'auth0_dashboard_widget_age';
 	}
@@ -17,7 +17,7 @@ class WP_Auth0_Dashboard_Plugins_Age implements WP_Auth0_Dashboard_Plugins_Inter
 	}
 
 	protected function getAge($user){
-		if (isset($user->age)) {]
+		if (isset($user->age)) {
 			return $user->age;
 		}
 		if (isset($user->dateOfBirth)) {
@@ -44,7 +44,7 @@ class WP_Auth0_Dashboard_Plugins_Age implements WP_Auth0_Dashboard_Plugins_Inter
 
 	protected function processData() {
 		$data = array();
-		
+
 		foreach ($this->users as $user) {
 			$age = $this->getAge($user);
 
@@ -58,6 +58,12 @@ class WP_Auth0_Dashboard_Plugins_Age implements WP_Auth0_Dashboard_Plugins_Inter
 	public function render() {
 
 		$data = $this->processData();
+
+		if (empty($data)) {
+            echo "No data available";
+            return;
+        }
+
 		$chartData = array();
 
 		foreach ($data as $key => $value) {
@@ -67,14 +73,16 @@ class WP_Auth0_Dashboard_Plugins_Age implements WP_Auth0_Dashboard_Plugins_Inter
 		?>
 		<div id="auth0ChartAge"></div>
 		<script type="text/javascript">
-			var chart = c3.generate({
-				bindto: '#auth0ChartAge',
-			    data: {
-			        columns: <?php echo json_encode($chartData); ?>,
-			        type : 'pie'
-			    }
-			});
-		</script>	
+			(function(){
+				var chart = c3.generate({
+					bindto: '#auth0ChartAge',
+				    data: {
+				        columns: <?php echo json_encode($chartData); ?>,
+				        type : 'pie'
+				    }
+				});
+			})();
+		</script>
 		<?php
 
 	}

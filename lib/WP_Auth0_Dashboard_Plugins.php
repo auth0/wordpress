@@ -21,10 +21,11 @@ class WP_Auth0_Dashboard_Plugins  {
 			new WP_Auth0_Dashboard_Plugins_IdP($usersObjs),
 			new WP_Auth0_Dashboard_Plugins_Location($usersObjs),
 			new WP_Auth0_Dashboard_Plugins_Income($usersObjs),
+			new WP_Auth0_Dashboard_Plugins_Signups($usersObjs),
 		);
 
 		foreach ($widgets as $widget) {
-			wp_add_dashboard_widget( $widget->getId(), $widget->getName(), array($widget, 'render') );	
+			wp_add_dashboard_widget( $widget->getId(), $widget->getName(), array($widget, 'render') );
 		}
 	}
 
@@ -34,7 +35,7 @@ class WP_Auth0_Dashboard_Plugins  {
 
 	protected static function getUsers() {
 		global $wpdb;
-        $sql = sprintf('SELECT * FROM %s a JOIN %s u ON a.wp_id = u.id', $wpdb->auth0_user, $wpdb->users);
+        $sql = sprintf('SELECT a.* FROM %s a JOIN %s u ON a.wp_id = u.id', $wpdb->auth0_user, $wpdb->users);
         $results = $wpdb->get_results($sql);
 
         if($results instanceof WP_Error ) {

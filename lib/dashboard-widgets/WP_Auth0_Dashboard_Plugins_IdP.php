@@ -1,7 +1,7 @@
 <?php
 
 class WP_Auth0_Dashboard_Plugins_IdP implements WP_Auth0_Dashboard_Plugins_Interface {
-	
+
 	public function getId() {
 		return 'auth0_dashboard_widget_idp';
 	}
@@ -33,6 +33,12 @@ class WP_Auth0_Dashboard_Plugins_IdP implements WP_Auth0_Dashboard_Plugins_Inter
 
 	public function render() {
 		$data = $this->processData();
+
+		if (empty($data)) {
+            echo "No data available";
+            return;
+        }
+
 		$chartData = array();
 
 		foreach ($data as $key => $value) {
@@ -42,14 +48,16 @@ class WP_Auth0_Dashboard_Plugins_IdP implements WP_Auth0_Dashboard_Plugins_Inter
 		?>
 		<div id="auth0ChartIdP"></div>
 		<script type="text/javascript">
-			var chart = c3.generate({
-				bindto: '#auth0ChartIdP',
-			    data: {
-			        columns: <?php echo json_encode($chartData); ?>,
-			        type : 'pie'
-			    }
-			});
-		</script>	
+			(function(){
+				var chart = c3.generate({
+					bindto: '#auth0ChartIdP',
+				    data: {
+				        columns: <?php echo json_encode($chartData); ?>,
+				        type : 'pie'
+				    }
+				});
+			})();
+		</script>
 		<?php
 
 	}
