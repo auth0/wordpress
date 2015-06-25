@@ -17,6 +17,18 @@ class WP_Auth0_Dashboard_Plugins_Age implements WP_Auth0_Dashboard_Plugins_Inter
 	}
 
 	protected function getAge($user){
+		if (isset($user->age)) {]
+			return $user->age;
+		}
+		if (isset($user->dateOfBirth)) {
+
+			$birthDate = explode("-", $user->birthday);
+
+			$age = (date("md", date("U", mktime(0, 0, 0, $birthDate[3], $birthDate[1], $birthDate[0]))) > date("md")
+				? ((date("Y") - $birthDate[0]) - 1)
+				: (date("Y") - $birthDate[0]));
+			return $age;
+		}
 		if (isset($user->birthday)) {
 
 			$birthDate = explode("/", $user->birthday);
