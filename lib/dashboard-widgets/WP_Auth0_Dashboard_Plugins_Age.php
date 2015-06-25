@@ -31,6 +31,8 @@ class WP_Auth0_Dashboard_Plugins_Age implements WP_Auth0_Dashboard_Plugins_Inter
 	}
 
 	protected function processData() {
+		$data = array();
+		
 		foreach ($this->users as $user) {
 			$age = $this->getAge($user);
 

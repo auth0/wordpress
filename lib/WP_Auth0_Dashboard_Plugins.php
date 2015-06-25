@@ -20,6 +20,7 @@ class WP_Auth0_Dashboard_Plugins  {
 			new WP_Auth0_Dashboard_Plugins_Gender($usersObjs),
 			new WP_Auth0_Dashboard_Plugins_IdP($usersObjs),
 			new WP_Auth0_Dashboard_Plugins_Location($usersObjs),
+			new WP_Auth0_Dashboard_Plugins_Income($usersObjs),
 		);
 
 		foreach ($widgets as $widget) {

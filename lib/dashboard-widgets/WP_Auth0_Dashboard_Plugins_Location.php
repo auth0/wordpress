@@ -28,17 +28,8 @@ class WP_Auth0_Dashboard_Plugins_Location implements WP_Auth0_Dashboard_Plugins_
 		$data = array();
 
 		foreach ($this->users as $user) {
-			
-			if (isset($user->location) && $user->location instanceof stdClass) {
-
-				if(isset($user->location->name)) {
-					$data[] = $user->location->name;
-				}
-
-			}
-			elseif(isset($user->location))
-			{
-				$data[] = $user->location;
+			if (isset($user->app_metadata) && isset($user->app_metadata->geoip)) {
+				$data[] = $user->app_metadata->geoip;
 			}
 		}
 
@@ -53,33 +44,33 @@ class WP_Auth0_Dashboard_Plugins_Location implements WP_Auth0_Dashboard_Plugins_
 		<script type="text/javascript">
 
 			function initialize() {
-				var center = new google.maps.LatLng(0, 0);
 				var geocoder = new google.maps.Geocoder();
+				var bounds = new google.maps.LatLngBounds();
+
 		        var map = new google.maps.Map(document.getElementById('auth0ChartLocations'), {
-		          zoom: 1,
-		          center: center,
+		          minZoom: 1, 
+		          maxZoom: 15,
 		          streetViewControl: false,
 		          mapTypeControl:false,
-		          styles:[{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#e0efef"}]},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"hue":"#1900ff"},{"color":"#c0e8e8"}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":100},{"visibility":"simplified"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"visibility":"on"},{"lightness":700}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#7dcdcd"}]}],
+		          styles:[{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#e0efef"}]},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"hue":"#1900ff"},{"color":"#c0e8e8"}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":100},{"visibility":"simplified"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"visibility":"on"},{"lightness":700}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#7dcdcd"}]}]	,
 		          mapTypeId: google.maps.MapTypeId.ROADMAP
 		        });
 
-				function codeAddress(address) {
-					geocoder.geocode( { 'address': address}, function(results, status) {
-						if (status == google.maps.GeocoderStatus.OK) {
-							var marker = new google.maps.Marker({
-								map: map,
-								position: results[0].geometry.location
-							});
-						}
+				function codeAddress(latitude, longitude) {
+					var marker = new google.maps.Marker({
+						map: map,
+						position: new google.maps.LatLng(latitude, longitude)
 					});
+					bounds.extend(marker.position);
 				}
 
 				var data = <?php echo json_encode($data);?>;
 
 			    data.forEach(function(d){
-		    		codeAddress(d);
-			    });				
+		    		codeAddress(d.latitude, d.longitude);//postal_code
+			    });	
+
+			    map.fitBounds(bounds);	
 		    }
 
 	        google.maps.event.addDomListener(window, 'load', initialize);

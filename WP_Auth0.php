@@ -69,6 +69,7 @@ class WP_Auth0 {
         WP_Auth0_ErrorLog::init();
         WP_Auth0_Configure_JWTAUTH::init();
         WP_Auth0_Dashboard_Plugins::init();
+        WP_Auth0_Amplificator::init();
 
         add_action('plugins_loaded', array( __CLASS__, 'checkJWTAuth' ));
         add_filter( 'woocommerce_checkout_login_message', array(__CLASS__, 'override_woocommerce_checkout_login_form') );
@@ -168,6 +169,7 @@ class WP_Auth0 {
     public static function wp_register_widget() {
         register_widget( 'WP_Auth0_Embed_Widget' );
         register_widget( 'WP_Auth0_Popup_Widget' );
+        register_widget( 'WP_Auth0_SocialAmplification_Widget' );
     }
 
     public static function wp_enqueue(){
@@ -779,19 +781,21 @@ function get_currentauth0userinfo() {
     global $wpdb;
 
     get_currentuserinfo();
+
     if ($current_user instanceof WP_User && $current_user->ID > 0 ) {
         $sql = 'SELECT auth0_obj
                 FROM ' . $wpdb->auth0_user .'
                 WHERE wp_id = %d';
         $result = $wpdb->get_row($wpdb->prepare($sql, $current_user->ID));
-        if (is_null($result) || $result instanceof WP_Error ) {
 
-            self::insertAuth0Error('get_currentauth0userinfo',$result);
+        if (is_null($result) || $result instanceof WP_Error ) {
 
             return null;
         }
         $currentauth0_user = unserialize($result->auth0_obj);
     }
+
+    return $currentauth0_user;
 }
 endif;
 
