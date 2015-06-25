@@ -56,7 +56,7 @@ class WP_Auth0_Dashboard_Plugins_Income implements WP_Auth0_Dashboard_Plugins_In
 
 		if (empty($data)) {
 			echo "No income data available";
-			exit;
+			return;
 		}
 
 		$chartData = array();

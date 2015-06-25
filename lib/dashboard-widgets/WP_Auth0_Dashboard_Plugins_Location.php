@@ -67,7 +67,7 @@ class WP_Auth0_Dashboard_Plugins_Location implements WP_Auth0_Dashboard_Plugins_
 				var data = <?php echo json_encode($data);?>;
 
 			    data.forEach(function(d){
-		    		codeAddress(d.latitude, d.longitude);//postal_code
+		    		codeAddress(d.latitude, d.longitude);
 			    });	
 
 			    map.fitBounds(bounds);	
