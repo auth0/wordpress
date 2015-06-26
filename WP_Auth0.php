@@ -15,7 +15,7 @@ define('AUTH0_DB_VERSION', 3);
 define('WPA0_VERSION', '1.3.3');
 
 class WP_Auth0 {
-    public static function init(){ 
+    public static function init(){
         spl_autoload_register(array(__CLASS__, 'autoloader'));
 
         // WP_Auth0_Referer_Check::init();
@@ -198,7 +198,7 @@ class WP_Auth0 {
     public static function login_auto() {
         $auto_login = absint(WP_Auth0_Options::get( 'auto_login' ));
 
-        if ($auto_login && $_GET["action"] != "logout" && !isset($_GET['wle'])) {
+        if ($auto_login && (!isset($_GET["action"]) || $_GET["action"] != "logout") && !isset($_GET['wle'])) {
 
             $stateObj = array("interim" => false, "uuid" =>uniqid());
             if (isset($_GET['redirect_to'])) {
@@ -491,7 +491,7 @@ class WP_Auth0 {
             $code = $wp_error->getCode();
             $message = $wp_error->getMessage();
         }
-        
+
         global $wpdb;
         $wpdb->insert(
             $wpdb->auth0_error_logs,
@@ -572,7 +572,7 @@ class WP_Auth0 {
 
             wp_set_auth_cookie( $user->ID );
 
-            do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token ); 
+            do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token );
 
             return true;
         } else {
@@ -583,7 +583,7 @@ class WP_Auth0 {
 
                 wp_set_auth_cookie( $user_id );
 
-                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token ); 
+                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token );
             }
             catch (WP_Auth0_CouldNotCreateUserException $e) {
                 $msg = __('Error: Could not create user.', WPA0_LANG);
@@ -602,7 +602,7 @@ class WP_Auth0 {
                 self::dieWithVerifyEmail($e->userinfo, $e->id_token);
             }
 
-            
+
             return true;
         }
     }
