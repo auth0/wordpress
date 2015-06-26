@@ -18,13 +18,18 @@ class WP_Auth0_Dashboard_Plugins_Signups implements WP_Auth0_Dashboard_Plugins_I
 
 	protected function processData() {
 		$data = array();
+		$limitDate = strtotime('2 months ago');
 
 		foreach ($this->users as $user) {
-			$day = date('Y-m-d',strtotime($user->created_at));
+			$created_at = strtotime($user->created_at);
+			if ($created_at > $limitDate) {
+				$day = date('Y-m-d',$created_at);
 
-            if (!isset($data[$day])) $data[$day] = 0;
+				if (!isset($data[$day])) $data[$day] = 0;
 
-			$data[$day]++;
+				$data[$day]++;
+			}
+
 		}
 		return $data;
 	}
