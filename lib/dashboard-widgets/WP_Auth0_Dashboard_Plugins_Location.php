@@ -2,12 +2,6 @@
 
 class WP_Auth0_Dashboard_Plugins_Location implements WP_Auth0_Dashboard_Plugins_Interface {
 
-	/*
-		this handles:
-			linkedin location field
-			facebook location field
-	*/
-
 	public function getId() {
 		return 'auth0_dashboard_widget_Location';
 	}
