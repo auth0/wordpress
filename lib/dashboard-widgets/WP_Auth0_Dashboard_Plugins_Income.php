@@ -73,8 +73,8 @@ class WP_Auth0_Dashboard_Plugins_Income implements WP_Auth0_Dashboard_Plugins_In
 			function loadChart(data, incomes) {
 
 				var x_arr = ['x'];
-				var zipcodes_arr = ['Zipcodes'];
-				var incomes_arr = ['Incomes'];
+				var zipcodes_arr = ['zipcodes'];
+				var incomes_arr = ['incomes'];
 
 				data.forEach(function(d){
 					zipcodes_arr.push(d.count)
@@ -91,14 +91,18 @@ class WP_Auth0_Dashboard_Plugins_Income implements WP_Auth0_Dashboard_Plugins_In
 				            zipcodes_arr,
 				            incomes_arr
 				        ],
-				        type: 'bar'
+				        type: 'bar',
+						colors:{
+							zipcodes:'#E67E22',
+							incomes:'#2ECC71'
+						}
 				    },
 				    bar: {
 				        width: {
 				            ratio: 0.5
 				        }
 				    },
-				     axis: {
+				    axis: {
 				        x: {
 				            type: 'category'
 				        }

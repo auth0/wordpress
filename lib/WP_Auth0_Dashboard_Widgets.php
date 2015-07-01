@@ -11,7 +11,6 @@ class WP_Auth0_Dashboard_Widgets  {
 
 		if (!in_array('administrator', $current_user->roles)) return;
 
-
 		wp_enqueue_style( 'auth0-dashboard-c3-css', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/lib/c3/c3.min.css' );
 		wp_enqueue_style( 'auth0-dashboard-css', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/css/dashboard.css' );
 
