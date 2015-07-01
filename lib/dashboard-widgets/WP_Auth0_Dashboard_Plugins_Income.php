@@ -16,20 +16,6 @@ class WP_Auth0_Dashboard_Plugins_Income implements WP_Auth0_Dashboard_Plugins_In
 		$this->users = $users;
 	}
 
-	protected function getAge($user){
-		if (isset($user->birthday)) {
-
-			$birthDate = explode("/", $user->birthday);
-
-			$age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md")
-				? ((date("Y") - $birthDate[2]) - 1)
-				: (date("Y") - $birthDate[2]));
-			return $age;
-		}
-
-		return 'unknown';
-	}
-
 	protected function processData() {
 		$data = array();
 
@@ -39,12 +25,13 @@ class WP_Auth0_Dashboard_Plugins_Income implements WP_Auth0_Dashboard_Plugins_In
 				if (isset($user->app_metadata->geoip->postal_code)){
 					$postal_code = $user->app_metadata->geoip->postal_code;
 					$country_name = $user->app_metadata->geoip->country_name;
+					$country_code = $user->app_metadata->geoip->country_code;
 
 					$key = "$country_name - $postal_code";
 
-					if (!isset($data[$key])) $data[$key] = 0;
+					if (!isset($data[$key])) $data[$key] = array('postal_code' => $postal_code, 'country' => $country_name, 'country_code' => $country_code, 'count' => 0);
 
-					$data[$key]++;
+					$data[$key]['count']++;
 				}
 			}
 
@@ -62,15 +49,12 @@ class WP_Auth0_Dashboard_Plugins_Income implements WP_Auth0_Dashboard_Plugins_In
 			return;
 		}
 
-		$chartData = array();
-
-		foreach ($data as $key => $value) {
-			$chartData[] = array('postal_code' => $key, 'count' => $value);
-		}
+		$chartData = array_values($data);
 
 		$jsonData = json_encode($chartData);
 		?>
 		<div id="auth0ChartIncome"></div>
+		<span class="auth0Note">Income is shown in hundreds of dollars.</span>
 
 		<script type="text/javascript">
 
@@ -79,7 +63,7 @@ class WP_Auth0_Dashboard_Plugins_Income implements WP_Auth0_Dashboard_Plugins_In
 			var data = <?php echo $jsonData; ?>;
 
 			jQuery.ajax({
-				    	url:'<?php echo trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . "assets/data/agizip.json"; ?>',
+				    	url:'http://assets.auth0.com/zip-income/agizip.json',
 				    	dataType:'json',
 				    	success:function(incomes){
 				    		loadChart(data, incomes);
@@ -94,8 +78,8 @@ class WP_Auth0_Dashboard_Plugins_Income implements WP_Auth0_Dashboard_Plugins_In
 
 				data.forEach(function(d){
 					zipcodes_arr.push(d.count)
-					incomes_arr.push( incomes[d.postal_code] ? incomes[d.postal_code] : 0)
-					x_arr.push(d.postal_code)
+					incomes_arr.push( (d.postal_code && d.country_code == 'US' && incomes[d.postal_code.toString()]) ? incomes[d.postal_code.toString()]/100000 : 0)
+					x_arr.push(d.country + ' - ' +d.postal_code)
 				});
 
 				var chart = c3.generate({
@@ -111,12 +95,12 @@ class WP_Auth0_Dashboard_Plugins_Income implements WP_Auth0_Dashboard_Plugins_In
 				    },
 				    bar: {
 				        width: {
-				            ratio: 0.5 // this makes bar width 50% of length between ticks
+				            ratio: 0.5
 				        }
 				    },
 				     axis: {
 				        x: {
-				            type: 'category' // this needed to load string x value
+				            type: 'category'
 				        }
 				    }
 				});

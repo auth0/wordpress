@@ -2,6 +2,8 @@
 
 class WP_Auth0_Dashboard_Plugins_Gender implements WP_Auth0_Dashboard_Plugins_Interface {
 
+	const UNKNOWN_KEY = 'unknown';
+
 	public function getId() {
 		return 'auth0_dashboard_widget_gender';
 	}
@@ -19,18 +21,25 @@ class WP_Auth0_Dashboard_Plugins_Gender implements WP_Auth0_Dashboard_Plugins_In
 	}
 
 	protected function processData() {
-		$data = array('unknown' => 0);
+		$data = array('female' => 0, 'male' => 0, self::UNKNOWN_KEY => 0);
 
 		foreach ($this->users as $user) {
 			if (isset($user->gender)) {
-				if (!isset($data[$user->gender])) {
-					$data[$user->gender] = 0;
-				}
-				$data[$user->gender] ++;
+				$genderName = strtolower($user->gender);
+			}
+			elseif (isset($user->user_metadata) && isset($user->user_metadata->fullContactInfo) && isset($user->user_metadata->fullContactInfo->demographics) && isset($user->user_metadata->fullContactInfo->demographics->gender)) {
+				$genderName = strtolower($user->user_metadata->fullContactInfo->demographics->gender);
+			}
+			elseif (isset($user->app_metadata) && isset($user->app_metadata->fullContactInfo) && isset($user->app_metadata->fullContactInfo->demographics) && isset($user->user_metadata->fullContactInfo->demographics->gender)) {
+				$genderName = strtolower($user->app_metadata->fullContactInfo->demographics->gender);
 			}
 			else {
-				$data['unknown'] ++;
+				$genderName = self::UNKNOWN_KEY;
 			}
+			if (!isset($data[$genderName])) {
+				$data[$genderName] = 0;
+			}
+			$data[$genderName] ++;
 		}
 
 		return $data;
@@ -59,7 +68,10 @@ class WP_Auth0_Dashboard_Plugins_Gender implements WP_Auth0_Dashboard_Plugins_In
 				    data: {
 				        columns: <?php echo json_encode($chartData); ?>,
 				        type : 'pie'
-				    }
+				    },
+					color: {
+					  pattern: ['#ff4282','#3e68ef', '#CACACA','#1ABC9C','#2ECC71','#3498DB','#9B59B6','#34495E','#F1C40F','#E67E22','#E74C3C','#F39C12']
+					}
 				});
 			})();
 		</script>

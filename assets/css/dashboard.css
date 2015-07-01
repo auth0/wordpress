@@ -1,0 +1,10 @@
+.c3 text {
+    text-transform: capitalize;
+}
+.auth0Note {
+    text-align: center;
+    font-size: 10px;
+    font-style: italic;
+    display: inline-block;
+    width: 100%;
+}

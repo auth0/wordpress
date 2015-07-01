@@ -68,7 +68,7 @@ class WP_Auth0 {
         WP_Auth0_Admin::init();
         WP_Auth0_ErrorLog::init();
         WP_Auth0_Configure_JWTAUTH::init();
-        WP_Auth0_Dashboard_Plugins::init();
+        WP_Auth0_Dashboard_Widgets::init();
         // WP_Auth0_Amplificator::init();
 
         add_action('plugins_loaded', array( __CLASS__, 'checkJWTAuth' ));
@@ -140,10 +140,10 @@ class WP_Auth0 {
     {
         $message = null;
 
-        switch (strtolower($_GET['message']))
-        {
+        // switch (strtolower($_GET['message']))
+        // {
             //case '': $message = ""; break;
-        }
+        // }
 
         if ($message)
         {

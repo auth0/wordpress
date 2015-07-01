@@ -25,6 +25,9 @@ class WP_Auth0_Dashboard_Plugins_Location implements WP_Auth0_Dashboard_Plugins_
 			if (isset($user->app_metadata) && isset($user->app_metadata->geoip)) {
 				$data[] = $user->app_metadata->geoip;
 			}
+			if (isset($user->user_metadata) && isset($user->user_metadata->geoip)) {
+				$data[] = $user->user_metadata->geoip;
+			}
 		}
 
 		return $data;
