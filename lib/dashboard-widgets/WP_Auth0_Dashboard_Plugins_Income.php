@@ -93,7 +93,7 @@ class WP_Auth0_Dashboard_Plugins_Income implements WP_Auth0_Dashboard_Plugins_In
 				        ],
 				        type: 'bar',
 						colors:{
-							zipcodes:'#E67E22',
+							zipcodes:'#3498DB',
 							incomes:'#2ECC71'
 						}
 				    },
