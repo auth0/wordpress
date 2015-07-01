@@ -1,6 +1,6 @@
 <?php
 
-class WP_Auth0_Dashboard_Plugins_Age implements WP_Auth0_Dashboard_Plugins_Interface {
+class WP_Auth0_Dashboard_Plugins_Age {
 
 	const UNKNOWN_KEY = 'unknown';
 

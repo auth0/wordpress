@@ -1,6 +1,6 @@
 <?php
 
-class WP_Auth0_Dashboard_Plugins_Signups implements WP_Auth0_Dashboard_Plugins_Interface {
+class WP_Auth0_Dashboard_Plugins_Signups {
 
 	public function getId() {
 		return 'auth0_dashboard_widget_signups';
