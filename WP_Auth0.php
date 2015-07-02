@@ -20,15 +20,13 @@ class WP_Auth0 {
 
         // WP_Auth0_Referer_Check::init();
         WP_Auth0_Ip_Check::init();
+        WP_Auth0_DBManager::init();
 
         add_action( 'init', array(__CLASS__, 'wp_init') );
 
         // Add hooks for install uninstall and update
         register_activation_hook( WPA0_PLUGIN_FILE, array(__CLASS__, 'install') );
         register_deactivation_hook( WPA0_PLUGIN_FILE, array(__CLASS__, 'uninstall') );
-
-
-        add_action( 'plugins_loaded', array(__CLASS__, 'initialize_wpdb_tables'));
 
         // Add an action to append a stylesheet for the login page
         add_action( 'login_enqueue_scripts', array(__CLASS__, 'render_auth0_login_css') );
@@ -55,7 +53,6 @@ class WP_Auth0 {
             add_action( 'wp_footer', array( __CLASS__, 'a0_render_message' ) );
         }
 
-        WP_Auth0_DBManager::init();
         WP_Auth0_LoginManager::init();
         WP_Auth0_UsersRepo::init();
         WP_Auth0_Settings_Section::init();
@@ -63,24 +60,10 @@ class WP_Auth0 {
         WP_Auth0_ErrorLog::init();
         WP_Auth0_Configure_JWTAUTH::init();
         WP_Auth0_Dashboard_Widgets::init();
+        WP_Auth0_WooCommerceOverrides::init();
         // WP_Auth0_Amplificator::init();
 
         add_action('plugins_loaded', array( __CLASS__, 'checkJWTAuth' ));
-        add_filter( 'woocommerce_checkout_login_message', array(__CLASS__, 'override_woocommerce_checkout_login_form') );
-        add_filter( 'woocommerce_before_customer_login_form', array(__CLASS__, 'override_woocommerce_login_form') );
-    }
-
-    public static function override_woocommerce_checkout_login_form( $html ){
-        self::override_woocommerce_login_form($html);
-
-        if (isset($_GET['wle'])) {
-            echo "<style>.woocommerce-checkout .woocommerce-info{display:block;}</style>";
-        }
-    }
-
-    public static function override_woocommerce_login_form( $html ){
-        self::render_auth0_login_css();
-        echo self::render_form('');
     }
 
     public static function isJWTAuthEnabled() {
@@ -331,14 +314,6 @@ class WP_Auth0 {
 
     public static function uninstall(){
         flush_rewrite_rules();
-    }
-
-    public static function initialize_wpdb_tables(){
-        global $wpdb;
-
-        $wpdb->auth0_log = $wpdb->prefix."auth0_log";
-        $wpdb->auth0_user = $wpdb->prefix."auth0_user";
-        $wpdb->auth0_error_logs = $wpdb->prefix."auth0_error_logs";
     }
 
     private static function autoloader($class){

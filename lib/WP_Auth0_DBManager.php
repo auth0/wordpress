@@ -3,7 +3,16 @@
 class WP_Auth0_DBManager {
 
     public static function init() {
+        add_action( 'plugins_loaded', array(__CLASS__, 'initialize_wpdb_tables'));
         add_action( 'plugins_loaded', array(__CLASS__, 'check_update'));
+    }
+
+    public static function initialize_wpdb_tables(){
+        global $wpdb;
+
+        $wpdb->auth0_log = $wpdb->prefix."auth0_log";
+        $wpdb->auth0_user = $wpdb->prefix."auth0_user";
+        $wpdb->auth0_error_logs = $wpdb->prefix."auth0_error_logs";
     }
 
     public static function check_update() {
