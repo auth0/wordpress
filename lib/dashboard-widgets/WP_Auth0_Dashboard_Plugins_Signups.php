@@ -78,7 +78,12 @@ class WP_Auth0_Dashboard_Plugins_Signups {
 	                        tick: {
 	                            format: '%Y-%m-%d'
 	                        }
-	                    }
+	                    },
+						y:{
+							tick:{
+								format:function(x){return (x == Math.floor(x)) ? x: "";}
+							}
+						}
 	                }
 	            });
 			})();

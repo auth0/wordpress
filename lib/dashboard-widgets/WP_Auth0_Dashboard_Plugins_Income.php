@@ -105,7 +105,15 @@ class WP_Auth0_Dashboard_Plugins_Income {
 				    axis: {
 				        x: {
 				            type: 'category'
-				        }
+				        },
+						y:{
+							tick:{
+								format:function(x){
+									if (x == Math.floor(x)) return x;
+									return "";
+								}
+							}
+						}
 				    }
 				});
 			}
