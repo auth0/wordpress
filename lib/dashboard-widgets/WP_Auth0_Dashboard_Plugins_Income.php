@@ -2,127 +2,127 @@
 
 class WP_Auth0_Dashboard_Plugins_Income {
 
-	public function getId() {
-		return 'auth0_dashboard_widget_income';
-	}
+    public function getId() {
+        return 'auth0_dashboard_widget_income';
+    }
 
-	public function getName() {
-		return 'Auth0 - User\'s Income';
-	}
+    public function getName() {
+        return 'Auth0 - User\'s Income';
+    }
 
-	protected $users = array();
+    protected $users = array();
 
-	public function __construct($users) {
-		$this->users = $users;
-	}
+    public function __construct($users) {
+        $this->users = $users;
+    }
 
-	protected function processData() {
-		$data = array();
+    protected function processData() {
+        $data = array();
 
-		foreach ($this->users as $user) {
+        foreach ($this->users as $user) {
 
-			if (isset($user->app_metadata) && isset($user->app_metadata->geoip)) {
-				if (isset($user->app_metadata->geoip->postal_code)){
-					$postal_code = $user->app_metadata->geoip->postal_code;
-					$country_name = $user->app_metadata->geoip->country_name;
-					$country_code = $user->app_metadata->geoip->country_code;
+            if (isset($user->app_metadata) && isset($user->app_metadata->geoip)) {
+                if (isset($user->app_metadata->geoip->postal_code)){
+                    $postal_code = $user->app_metadata->geoip->postal_code;
+                    $country_name = $user->app_metadata->geoip->country_name;
+                    $country_code = $user->app_metadata->geoip->country_code;
 
-					$key = "$country_name - $postal_code";
+                    $key = "$country_name - $postal_code";
 
-					if (!isset($data[$key])) $data[$key] = array('postal_code' => $postal_code, 'country' => $country_name, 'country_code' => $country_code, 'count' => 0);
+                    if (!isset($data[$key])) $data[$key] = array('postal_code' => $postal_code, 'country' => $country_name, 'country_code' => $country_code, 'count' => 0);
 
-					$data[$key]['count']++;
-				}
-			}
+                    $data[$key]['count']++;
+                }
+            }
 
-		}
+        }
 
-		return $data;
-	}
+        return $data;
+    }
 
-	public function render() {
+    public function render() {
 
-		$data = $this->processData();
+        $data = $this->processData();
 
-		if (empty($data)) {
-			echo "No income data available";
-			return;
-		}
+        if (empty($data)) {
+            echo "No income data available";
+            return;
+        }
 
-		$chartData = array_values($data);
+        $chartData = array_values($data);
 
-		$jsonData = json_encode($chartData);
-		?>
-		<div id="auth0ChartIncome"></div>
-		<span class="auth0Note">Income is shown in hundreds of dollars.</span>
+        $jsonData = json_encode($chartData);
+        ?>
+        <div id="auth0ChartIncome"></div>
+        <span class="auth0Note">Income is shown in hundreds of dollars.</span>
 
-		<script type="text/javascript">
+        <script type="text/javascript">
 
-		(function(){
+        (function(){
 
-			var data = <?php echo $jsonData; ?>;
+            var data = <?php echo $jsonData; ?>;
 
-			jQuery.ajax({
-				    	url:'http://assets.auth0.com/zip-income/agizip.json',
-				    	dataType:'json',
-				    	success:function(incomes){
-				    		loadChart(data, incomes);
-					    }
-				    })
+            jQuery.ajax({
+                        url:'http://assets.auth0.com/zip-income/agizip.json',
+                        dataType:'json',
+                        success:function(incomes){
+                            loadChart(data, incomes);
+                        }
+                    })
 
-			function loadChart(data, incomes) {
+            function loadChart(data, incomes) {
 
-				var x_arr = ['x'];
-				var zipcodes_arr = ['zipcodes'];
-				var incomes_arr = ['incomes'];
+                var x_arr = ['x'];
+                var zipcodes_arr = ['zipcodes'];
+                var incomes_arr = ['incomes'];
 
-				data.forEach(function(d){
-					zipcodes_arr.push(d.count)
-					incomes_arr.push( (d.postal_code && d.country_code == 'US' && incomes[d.postal_code.toString()]) ? incomes[d.postal_code.toString()]/100000 : 0)
-					x_arr.push(d.country + ' - ' +d.postal_code)
-				});
+                data.forEach(function(d){
+                    zipcodes_arr.push(d.count)
+                    incomes_arr.push( (d.postal_code && d.country_code == 'US' && incomes[d.postal_code.toString()]) ? incomes[d.postal_code.toString()]/100000 : 0)
+                    x_arr.push(d.country + ' - ' +d.postal_code)
+                });
 
-				var chart = c3.generate({
-					bindto: '#auth0ChartIncome',
-				    data: {
-				    	x:'x',
-				        columns: [
-				        	x_arr,
-				            zipcodes_arr,
-				            incomes_arr
-				        ],
-				        type: 'bar',
-						colors:{
-							zipcodes:'#3498DB',
-							incomes:'#2ECC71'
-						}
-				    },
-				    bar: {
-				        width: {
-				            ratio: 0.5
-				        }
-				    },
-				    axis: {
-				        x: {
-				            type: 'category'
-				        },
-						y:{
-							tick:{
-								format:function(x){
-									if (x == Math.floor(x)) return x;
-									return "";
-								}
-							}
-						}
-				    }
-				});
-			}
+                var chart = c3.generate({
+                    bindto: '#auth0ChartIncome',
+                    data: {
+                        x:'x',
+                        columns: [
+                            x_arr,
+                            zipcodes_arr,
+                            incomes_arr
+                        ],
+                        type: 'bar',
+                        colors:{
+                            zipcodes:'#3498DB',
+                            incomes:'#2ECC71'
+                        }
+                    },
+                    bar: {
+                        width: {
+                            ratio: 0.5
+                        }
+                    },
+                    axis: {
+                        x: {
+                            type: 'category'
+                        },
+                        y:{
+                            tick:{
+                                format:function(x){
+                                    if (x == Math.floor(x)) return x;
+                                    return "";
+                                }
+                            }
+                        }
+                    }
+                });
+            }
 
-		})();
-		</script>
+        })();
+        </script>
 
-		<?php
+        <?php
 
-	}
+    }
 
 }
