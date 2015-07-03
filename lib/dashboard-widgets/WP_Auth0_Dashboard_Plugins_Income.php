@@ -88,7 +88,7 @@ class WP_Auth0_Dashboard_Plugins_Income {
             function loadChart(data) {
 
                 var x_arr = ['x'];
-                var zipcodes_arr = ['zipcodes'];
+                var zipcodes_arr = ['users count'];
                 var incomes_arr = ['incomes'];
 
                 data.forEach(function(d){
