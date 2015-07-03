@@ -80,6 +80,8 @@ class WP_Auth0_LoginManager {
     }
 
     public static function redirectLogin(){
+        global $wp_query;
+
         if ($wp_query->query_vars['auth0'] != '1') {
             return;
         }

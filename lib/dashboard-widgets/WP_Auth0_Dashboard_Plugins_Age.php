@@ -28,6 +28,12 @@ class WP_Auth0_Dashboard_Plugins_Age {
         if (isset($user->app_metadata) && isset($user->app_metadata->fullContactInfo) && isset($user->app_metadata->fullContactInfo->age)) {
             return $user->app_metadata->fullContactInfo->age;
         }
+        if (isset($user->user_metadata) && isset($user->user_metadata->fullContactInfo) && isset($user->user_metadata->fullContactInfo->demographics) && isset($user->user_metadata->fullContactInfo->demographics->age)) {
+            return $user->user_metadata->fullContactInfo->demographics->age;
+        }
+        if (isset($user->app_metadata) && isset($user->app_metadata->fullContactInfo) && isset($user->app_metadata->fullContactInfo->demographics) && isset($user->user_metadata->fullContactInfo->demographics->age)) {
+            return $user->user_metadata->app_metadata->demographics->age;
+        }
 
         if (isset($user->user_metadata) && isset($user->user_metadata->fullContactInfo) && isset($user->user_metadata->fullContactInfo->birthDate)) {
             $birthDate = explode("-", $user->user_metadata->fullContactInfo->birthDate);
