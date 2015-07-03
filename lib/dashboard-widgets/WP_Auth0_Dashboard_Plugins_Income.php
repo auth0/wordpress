@@ -89,7 +89,7 @@ class WP_Auth0_Dashboard_Plugins_Income {
 
                 var x_arr = ['x'];
                 var zipcodes_arr = ['users count'];
-                var incomes_arr = ['incomes'];
+                var incomes_arr = ['income (AGI)'];
 
                 data.forEach(function(d){
                     zipcodes_arr.push(d.count)
