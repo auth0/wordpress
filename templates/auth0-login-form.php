@@ -42,7 +42,7 @@ if (isset($_GET['redirect_to'])) {
 $state = json_encode($stateObj);
 
 
-$options_obj = WP_Auth0::buildSettings(WP_Auth0_Options::get_options());
+$options_obj = WP_Auth0::build_settings(WP_Auth0_Options::get_options());
 
 $sso = $options_obj['sso'];
 
@@ -122,14 +122,14 @@ if(empty($client_id) || empty($domain)){ ?>
         var callback = null;
 
         <?php if ($auth0_implicit_workflow) { ?>
-            
+
             callback = function(err,profile, token) {
 
                 post('<?php echo site_url('/index.php?auth0=implicit'); ?>', {
                     token:token,
                     state:'<?php echo $state; ?>'
                 }, 'POST');
-                
+
             };
 
             function post(path, params, method) {
@@ -203,16 +203,16 @@ if(empty($client_id) || empty($domain)){ ?>
 
         <?php if(isset($options_obj['custom_js'])) { ?>
 
-            <?php echo $options_obj['custom_js'];?> 
+            <?php echo $options_obj['custom_js'];?>
 
         <?php } ?>
 
     <?php if ($sso) { ?>
-        
+
 
         lock.$auth0.getSSOData(function(err, data) {
             if (!err && data.sso) {
-                lock.$auth0.signin(<?php echo $options; ?>); 
+                lock.$auth0.signin(<?php echo $options; ?>);
             } else {
 
             <?php if (!$showAsModal) { ?>
@@ -227,7 +227,7 @@ if(empty($client_id) || empty($domain)){ ?>
             a0ShowLoginModal();
         <?php } ?>
     <?php } ?>
-    
+
 
     </script>
 <?php

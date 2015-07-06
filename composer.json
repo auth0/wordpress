@@ -1,0 +1,17 @@
+{
+    "name": "auth0/wp-auth0",
+    "require-dev": {
+        "phpmd/phpmd": "@stable",
+        "sebastian/phpcpd": "*",
+        "sebastian/phpdcd": "*",
+        "squizlabs/php_codesniffer": "2.*",
+        "pdepend/pdepend" : "2.1.0",
+        "mayflower/php-codebrowser": "~1.1"
+    },
+    "authors": [
+        {
+            "name": "Auth0",
+            "email": "support@auth0.com"
+        }
+    ]
+}

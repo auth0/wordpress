@@ -123,7 +123,7 @@ class WP_Auth0_LoginManager {
 
         if ($response instanceof WP_Error) {
 
-            WP_Auth0::insertAuth0Error('init_auth0_oauth/token',$response);
+            WP_Auth0::insert_auth0_error('init_auth0_oauth/token',$response);
 
             error_log($response->get_error_message());
             $msg = __('Sorry. There was a problem logging you in.', WPA0_LANG);
@@ -140,7 +140,7 @@ class WP_Auth0_LoginManager {
 
             if ($response instanceof WP_Error) {
 
-                WP_Auth0::insertAuth0Error('init_auth0_userinfo',$response);
+                WP_Auth0::insert_auth0_error('init_auth0_userinfo',$response);
 
                 error_log($response->get_error_message());
                 $msg = __('There was a problem with your log in.', WPA0_LANG);
@@ -170,7 +170,7 @@ class WP_Auth0_LoginManager {
 
             $error = new WP_Error('401', 'auth/token response code: 401 Unauthorized');
 
-            WP_Auth0::insertAuth0Error('init_auth0_oauth/token',$error);
+            WP_Auth0::insert_auth0_error('init_auth0_oauth/token',$error);
 
             $msg = __('Error: the Client Secret configured on the Auth0 plugin is wrong. Make sure to copy the right one from the Auth0 dashboard.', WPA0_LANG);
             $msg .= '<br/><br/>';
@@ -186,7 +186,7 @@ class WP_Auth0_LoginManager {
             if (!empty($error) || !empty($description))
             {
                 $error = new WP_Error($error, $description);
-                WP_Auth0::insertAuth0Error('init_auth0_oauth/token',$error);
+                WP_Auth0::insert_auth0_error('init_auth0_oauth/token',$error);
             }
             // Login failed!
             wp_redirect( home_url() . '?message=' . $data->error_description );
@@ -234,7 +234,7 @@ class WP_Auth0_LoginManager {
                 }
             }
         } catch(\UnexpectedValueException $e) {
-            WP_Auth0::insertAuth0Error('implicitLogin',$e);
+            WP_Auth0::insert_auth0_error('implicitLogin',$e);
 
             error_log($e->getMessage());
             $msg = __('Sorry. There was a problem logging you in.', WPA0_LANG);
@@ -318,7 +318,7 @@ class WP_Auth0_LoginManager {
         if (is_null($userRow)) {
             return null;
         }elseif($userRow instanceof WP_Error ) {
-            WP_Auth0::insertAuth0Error('findAuth0User',$userRow);
+            WP_Auth0::insert_auth0_error('findAuth0User',$userRow);
             return null;
         }
         $user = new WP_User();

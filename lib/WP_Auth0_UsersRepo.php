@@ -52,7 +52,7 @@ class WP_Auth0_UsersRepo {
 
             return null;
         }elseif($userRow instanceof WP_Error ) {
-            self::insertAuth0Error('findAuth0User',$userRow);
+            self::insert_auth0_error('findAuth0User',$userRow);
             return null;
         }else{
             $user = new WP_User();
