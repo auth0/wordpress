@@ -2,7 +2,7 @@
 
 class WP_Auth0_Api_Client {
 
-	protected static function get_info_headers() {
+	public static function get_info_headers() {
 		global $wp_version;
 
 		return array(

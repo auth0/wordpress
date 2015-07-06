@@ -22,7 +22,7 @@ class WP_Auth0_LoginManager {
 		}
 
 		if ( $sso ) {
-			wp_redirect( 'https://' . WP_Auth0_Options::get( 'domain' ) . '/v2/logout?returnTo=' . urlencode( $redirect_to ) );
+			wp_redirect( 'https://' . WP_Auth0_Options::get( 'domain' ) . '/v2/logout?returnTo=' . urlencode( $redirect_to ) . '&auth0Client=' . WP_Auth0_Api_Client::get_info_headers() );
 			die();
 		}
 
@@ -55,7 +55,8 @@ class WP_Auth0_LoginManager {
 						 "&client_id=".WP_Auth0_Options::get( 'client_id' ) .
 						 "&redirect_uri=".site_url( '/index.php?auth0=1' ) .
 						 "&state=".urlencode( $state ).
-						 "&connection=".WP_Auth0_Options::get( 'auto_login_method' );
+						 "&connection=".WP_Auth0_Options::get( 'auto_login_method' ).
+						 "&auth0Client=" . WP_Auth0_Api_Client::get_info_headers();
 
 			wp_redirect( $login_url );
 			die();

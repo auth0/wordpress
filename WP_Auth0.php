@@ -92,7 +92,7 @@ class WP_Auth0 {
 			return;
 		}
 
-		if ( self::isJWTAuthEnabled() && ! self::is_jwt_configured() ) {
+		if ( self::is_jwt_auth_enabled() && ! self::is_jwt_configured() ) {
 			add_action( 'admin_notices', array( __CLASS__, 'notify_jwt' ) );
 		}
 	}
