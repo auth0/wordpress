@@ -75,6 +75,8 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
                 var zipcodes_arr = ['users count'];
                 var incomes_arr = ['income (AGI)'];
 
+                data = data.filter(function(d){ return d.income; });
+                
                 data.forEach(function(d){
                     zipcodes_arr.push(d.count)
                     incomes_arr.push( d.income ? d.income/100000 : 0)
