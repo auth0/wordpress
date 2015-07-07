@@ -60,7 +60,6 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
         $jsonData = json_encode($chartData);
         ?>
         <div id="auth0ChartIncome"></div>
-        <span class="auth0Note">Income is shown in hundreds of dollars.</span>
 
         <script type="text/javascript">
 
@@ -73,13 +72,13 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
 
                 var x_arr = ['x'];
                 var zipcodes_arr = ['users count'];
-                var incomes_arr = ['income (AGI)'];
+                var incomes_arr = ['Median household income (in 1000)'];
 
                 data = data.filter(function(d){ return d.income; });
-                
+
                 data.forEach(function(d){
                     zipcodes_arr.push(d.count)
-                    incomes_arr.push( d.income ? d.income/100000 : 0)
+                    incomes_arr.push( d.income ? d.income/1000 : 0)
                     x_arr.push(d.country + ' - ' +d.postal_code)
                 });
 
