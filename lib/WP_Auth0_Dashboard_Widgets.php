@@ -20,16 +20,22 @@ class WP_Auth0_Dashboard_Widgets  {
 		wp_enqueue_script( 'auth0-dashboard-c3-js', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/c3/c3.min.js' );
 
 		$users = self::get_users();
-		$usersObjs = array_map( array( __CLASS__, 'get_a0_user_obj' ), $users );
 
 		$widgets = array(
-			new WP_Auth0_Dashboard_Plugins_Age( $usersObjs ),
-			new WP_Auth0_Dashboard_Plugins_Gender( $usersObjs ),
-			new WP_Auth0_Dashboard_Plugins_IdP( $usersObjs ),
-			new WP_Auth0_Dashboard_Plugins_Location( $usersObjs ),
-			new WP_Auth0_Dashboard_Plugins_Income( $usersObjs ),
-			new WP_Auth0_Dashboard_Plugins_Signups( $usersObjs ),
+			new WP_Auth0_Dashboard_Plugins_Age(),
+			new WP_Auth0_Dashboard_Plugins_Gender(),
+			new WP_Auth0_Dashboard_Plugins_IdP(),
+			new WP_Auth0_Dashboard_Plugins_Location(),
+			new WP_Auth0_Dashboard_Plugins_Income(),
+			new WP_Auth0_Dashboard_Plugins_Signups(),
 		);
+
+		foreach ($users as $user) {
+			$userObj = self::get_a0_user_obj($user);
+			foreach ($widgets as $widget) {
+				$widget->addUser($userObj);
+			}
+		}
 
 		foreach ( $widgets as $widget ) {
 			wp_add_dashboard_widget( $widget->getId(), $widget->getName(), array( $widget, 'render' ) );

@@ -1,52 +1,32 @@
 <?php
 
-class WP_Auth0_Dashboard_Plugins_Gender {
+class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Generic {
 
-    const UNKNOWN_KEY = 'unknown';
+    protected $id = 'auth0_dashboard_widget_gender';
+    protected $name = 'Auth0 - User\'s Gender';
 
-    public function getId() {
-        return 'auth0_dashboard_widget_gender';
-    }
+    protected $users = array('female' => 0, 'male' => 0, self::UNKNOWN_KEY => 0);
 
-    public function getName() {
-        return 'Auth0 - User\'s Gender';
-    }
+    protected function getType($user) {
 
-    protected $users = array();
-
-    public function __construct($users) {
-
-        $this->users = $users;
-
-    }
-
-    protected function processData() {
-        $data = array('female' => 0, 'male' => 0, self::UNKNOWN_KEY => 0);
-
-        foreach ($this->users as $user) {
-            if (isset($user->gender)) {
-                $genderName = strtolower($user->gender);
-            }
-            elseif (isset($user->user_metadata) && isset($user->user_metadata->fullContactInfo) && isset($user->user_metadata->fullContactInfo->demographics) && isset($user->user_metadata->fullContactInfo->demographics->gender)) {
-                $genderName = strtolower($user->user_metadata->fullContactInfo->demographics->gender);
-            }
-            elseif (isset($user->app_metadata) && isset($user->app_metadata->fullContactInfo) && isset($user->app_metadata->fullContactInfo->demographics) && isset($user->user_metadata->fullContactInfo->demographics->gender)) {
-                $genderName = strtolower($user->app_metadata->fullContactInfo->demographics->gender);
-            }
-            else {
-                $genderName = self::UNKNOWN_KEY;
-            }
-            if (!isset($data[$genderName])) {
-                $data[$genderName] = 0;
-            }
-            $data[$genderName] ++;
+        if (isset($user->gender)) {
+            $genderName = strtolower($user->gender);
+        }
+        elseif (isset($user->user_metadata) && isset($user->user_metadata->fullContactInfo) && isset($user->user_metadata->fullContactInfo->demographics) && isset($user->user_metadata->fullContactInfo->demographics->gender)) {
+            $genderName = strtolower($user->user_metadata->fullContactInfo->demographics->gender);
+        }
+        elseif (isset($user->app_metadata) && isset($user->app_metadata->fullContactInfo) && isset($user->app_metadata->fullContactInfo->demographics) && isset($user->user_metadata->fullContactInfo->demographics->gender)) {
+            $genderName = strtolower($user->app_metadata->fullContactInfo->demographics->gender);
+        }
+        else {
+            $genderName = self::UNKNOWN_KEY;
         }
 
-        return $data;
+        return $genderName;
     }
 
     public function render() {
-        $data = $this->processData();
+        $data = $this->users;
 
         if (empty($data)) {
             echo "No data available";

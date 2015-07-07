@@ -1,40 +1,25 @@
 <?php
 
-class WP_Auth0_Dashboard_Plugins_Location {
+class WP_Auth0_Dashboard_Plugins_Location extends WP_Auth0_Dashboard_Plugins_Generic {
 
-    public function getId() {
-        return 'auth0_dashboard_widget_Location';
-    }
+    protected $id = 'auth0_dashboard_widget_Location';
+    protected $name = 'Auth0 - User\'s Location';
 
-    public function getName() {
-        return 'Auth0 - User\'s Location';
-    }
-
-    protected $users = array();
-
-    public function __construct($users) {
+    public function __construct() {
         wp_enqueue_script( 'auth0-dashboard-gmaps-js', 'https://maps.googleapis.com/maps/api/js' );
-
-        $this->users = $users;
     }
 
-    protected function processData() {
-        $data = array();
-
-        foreach ($this->users as $user) {
-            if (isset($user->app_metadata) && isset($user->app_metadata->geoip)) {
-                $data[] = $user->app_metadata->geoip;
-            }
-            if (isset($user->user_metadata) && isset($user->user_metadata->geoip)) {
-                $data[] = $user->user_metadata->geoip;
-            }
+    public function addUser($user) {
+        if (isset($user->app_metadata) && isset($user->app_metadata->geoip)) {
+            $this->users[] = $user->app_metadata->geoip;
         }
-
-        return $data;
+        if (isset($user->user_metadata) && isset($user->user_metadata->geoip)) {
+            $this->users[] = $user->user_metadata->geoip;
+        }
     }
 
     public function render() {
-        $data = $this->processData();
+        $data = $this->users;
 
         if (empty($data)) {
             echo "No data available";

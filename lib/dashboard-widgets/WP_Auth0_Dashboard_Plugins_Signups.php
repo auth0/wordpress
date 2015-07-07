@@ -1,42 +1,24 @@
 <?php
 
-class WP_Auth0_Dashboard_Plugins_Signups {
+class WP_Auth0_Dashboard_Plugins_Signups extends WP_Auth0_Dashboard_Plugins_Generic {
 
-    public function getId() {
-        return 'auth0_dashboard_widget_signups';
-    }
+    protected $id = 'auth0_dashboard_widget_signups';
+    protected $name = 'Auth0 - User\'s Signups';
 
-    public function getName() {
-        return 'Auth0 - User\'s Signups';
-    }
-
-    protected $users = array();
-
-    public function __construct($users) {
-        $this->users = $users;
-    }
-
-    protected function processData() {
-        $data = array();
+    protected function getType($user) {
         $limitDate = strtotime('2 months ago');
 
-        foreach ($this->users as $user) {
-            $created_at = strtotime($user->created_at);
-            if ($created_at > $limitDate) {
-                $day = date('Y-m-d',$created_at);
-
-                if (!isset($data[$day])) $data[$day] = 0;
-
-                $data[$day]++;
-            }
-
+        $created_at = strtotime($user->created_at);
+        if ($created_at > $limitDate) {
+            return date('Y-m-d',$created_at);
         }
-        return $data;
+
+        return null;
     }
 
     public function render() {
 
-        $data = $this->processData();
+        $data = $this->users;
         ksort($data);
         if (empty($data)) {
             echo "No data available";
@@ -72,6 +54,7 @@ class WP_Auth0_Dashboard_Plugins_Signups {
                             data_arr
                         ]
                     },
+                    type: 'spline',
                     axis: {
                         x: {
                             type: 'timeseries',

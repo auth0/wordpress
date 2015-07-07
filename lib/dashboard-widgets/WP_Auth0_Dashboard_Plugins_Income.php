@@ -1,70 +1,54 @@
 <?php
 
-class WP_Auth0_Dashboard_Plugins_Income {
+class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Generic {
 
-    public function getId() {
-        return 'auth0_dashboard_widget_income';
-    }
+    protected $id = 'auth0_dashboard_widget_income';
+    protected $name = 'Auth0 - Identity Income';
 
-    public function getName() {
-        return 'Auth0 - User\'s Income';
-    }
+    public function addUser($user) {
 
-    protected $users = array();
-
-    public function __construct($users) {
-        $this->users = $users;
-    }
-
-    protected function processData() {
-        $data = array();
-
-        foreach ($this->users as $user) {
-            $geoip = null;
-            if (isset($user->app_metadata) && isset($user->app_metadata->geoip)) {
-                $geoip = $user->app_metadata->geoip;
-            }elseif (isset($user->user_metadata) && isset($user->user_metadata->geoip)) {
-                $geoip = $user->user_metadata->geoip;
-            }
-
-            if ($geoip) {
-                if (isset($geoip->postal_code)){
-
-                    $postal_code = $geoip->postal_code;
-                    $country_name = $geoip->country_name;
-                    $country_code = $geoip->country_code;
-                    $income = null;
-                    if (isset($user->app_metadata->zipcode_income))
-                    {
-                        $income = $user->app_metadata->zipcode_income;
-                    }
-                    elseif (isset($user->user_metadata->zipcode_income))
-                    {
-                        $income = $user->user_metadata->zipcode_income;
-                    }
-
-                    $key = "$country_name - $postal_code";
-
-                    if (!isset($data[$key])) {
-                        $data[$key] = array('postal_code' => $postal_code, 'country' => $country_name, 'income' => $income, 'country_code' => $country_code, 'count' => 0);
-                    }
-
-                    $data[$key]['count']++;
-                    if ($income && $data[$key]['income'] != $income)
-                    {
-                        $data[$key]['income'] = $income;
-                    }
-                }
-            }
-
+        $geoip = null;
+        if (isset($user->app_metadata) && isset($user->app_metadata->geoip)) {
+            $geoip = $user->app_metadata->geoip;
+        }elseif (isset($user->user_metadata) && isset($user->user_metadata->geoip)) {
+            $geoip = $user->user_metadata->geoip;
         }
 
-        return $data;
+        if ($geoip) {
+            if (isset($geoip->postal_code)){
+
+                $postal_code = $geoip->postal_code;
+                $country_name = $geoip->country_name;
+                $country_code = $geoip->country_code;
+                $income = null;
+                if (isset($user->app_metadata->zipcode_income))
+                {
+                    $income = $user->app_metadata->zipcode_income;
+                }
+                elseif (isset($user->user_metadata->zipcode_income))
+                {
+                    $income = $user->user_metadata->zipcode_income;
+                }
+
+                $key = "$country_name - $postal_code";
+
+                if (!isset($this->users[$key])) {
+                    $this->users[$key] = array('postal_code' => $postal_code, 'country' => $country_name, 'income' => $income, 'country_code' => $country_code, 'count' => 0);
+                }
+
+                $this->users[$key]['count']++;
+                if ($income && $this->users[$key]['income'] != $income)
+                {
+                    $this->users[$key]['income'] = $income;
+                }
+            }
+        }
+
     }
 
     public function render() {
 
-        $data = $this->processData();
+        $data = $this->users;
 
         if (empty($data)) {
             echo "No income data available";

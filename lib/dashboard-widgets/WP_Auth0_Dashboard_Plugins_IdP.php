@@ -1,38 +1,24 @@
 <?php
 
-class WP_Auth0_Dashboard_Plugins_IdP {
+class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic {
 
-    public function getId() {
-        return 'auth0_dashboard_widget_idp';
-    }
+    protected $id = 'auth0_dashboard_widget_idp';
+    protected $name = 'Auth0 - Identity Providers';
 
-    public function getName() {
-        return 'Auth0 - Identity Providers';
-    }
+    protected function getType($user) {
+        $idPs = array();
 
-    protected $users = array();
+        foreach ($user->identities as $identity) {
 
-    public function __construct($users) {
+            $idPs[] = $identity->provider;
 
-        $this->users = $users;
-
-    }
-
-    protected function processData() {
-        $data = array();
-        foreach ($this->users as $user) {
-            foreach ($user->identities as $identity) {
-
-                if (!isset($data[$identity->provider])) $data[$identity->provider] = 0;
-                $data[$identity->provider] ++;
-
-            }
         }
-        return $data;
+
+        return $idPs;
     }
 
     public function render() {
-        $data = $this->processData();
+        $data = $this->users;
 
         if (empty($data)) {
             echo "No data available";
