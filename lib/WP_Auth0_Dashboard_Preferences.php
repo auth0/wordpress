@@ -29,9 +29,9 @@ class WP_Auth0_Dashboard_Preferences {
 
 	public static function init_admin() {
 
-        if ( ! isset( $_REQUEST['page'] ) || 'wpa0-dashboard' !== $_REQUEST['page'] ) {
-			return;
-		}
+        // if ( ! isset( $_REQUEST['page'] ) || 'wpa0-dashboard' !== $_REQUEST['page'] ) {
+		// 	return;
+		// }
 
         self::init_option_section( 'Age chart', array(
 
@@ -61,10 +61,10 @@ class WP_Auth0_Dashboard_Preferences {
 
     public static function render_age_chart_type() {
     	$v = WP_Auth0_Dashboard_Options::Instance()->get( 'chart_age_type' );
-    	echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[age_chart_type]" id="wpa0_auth0_age_chart_type_pie" value="pie" ' . checked( $v, 'pie', false ) . '/>';
+    	echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[chart_age_type]" id="wpa0_auth0_age_chart_type_pie" value="pie" ' . checked( $v, 'pie', false ) . '/>';
     	echo '<label for="wpa0_auth0_age_chart_type_pie">' . __( 'Pie', WPA0_LANG ) . '</label>';
         echo ' ';
-        echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[age_chart_type]" id="wpa0_auth0_age_chart_type_bars" value="bars" ' . checked( $v, 'bars', false ) . '/>';
+        echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[chart_age_type]" id="wpa0_auth0_age_chart_type_bar" value="bar" ' . checked( $v, 'bar', false ) . '/>';
         echo '<label for="wpa0_auth0_age_chart_type_bars">' . __( 'Bars', WPA0_LANG ) . '</label>';
     }
 
@@ -74,10 +74,10 @@ class WP_Auth0_Dashboard_Preferences {
 
     public static function render_idp_chart_type() {
     	$v = WP_Auth0_Dashboard_Options::Instance()->get( 'chart_idp_type' );
-    	echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[idp_chart_type]" id="wpa0_auth0_idp_chart_type_pie" value="pie" ' . checked( $v, 'pie', false ) . '/>';
+    	echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[chart_idp_type]" id="wpa0_auth0_idp_chart_type_pie" value="pie" ' . checked( $v, 'pie', false ) . '/>';
     	echo '<label for="wpa0_auth0_idp_chart_type_pie">' . __( 'Pie', WPA0_LANG ) . '</label>';
         echo ' ';
-        echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[idp_chart_type]" id="wpa0_auth0_idp_chart_type_bars" value="bars" ' . checked( $v, 'bars', false ) . '/>';
+        echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[chart_idp_type]" id="wpa0_auth0_idp_chart_type_bar" value="bar" ' . checked( $v, 'bar', false ) . '/>';
         echo '<label for="wpa0_auth0_idp_chart_type_bars">' . __( 'Bars', WPA0_LANG ) . '</label>';
     }
 
@@ -87,10 +87,10 @@ class WP_Auth0_Dashboard_Preferences {
 
     public static function render_gender_chart_type() {
     	$v = WP_Auth0_Dashboard_Options::Instance()->get( 'chart_gender_type' );
-    	echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[gender_chart_type]" id="wpa0_auth0_gender_chart_type_pie" value="pie" ' . checked( $v, 'pie', false ) . '/>';
+    	echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[chart_gender_type]" id="wpa0_auth0_gender_chart_type_pie" value="pie" ' . checked( $v, 'pie', false ) . '/>';
     	echo '<label for="wpa0_auth0_gender_chart_type_pie">' . __( 'Pie', WPA0_LANG ) . '</label>';
         echo ' ';
-        echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[gender_chart_type]" id="wpa0_auth0_gender_chart_type_bars" value="bars" ' . checked( $v, 'bars', false ) . '/>';
+        echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[chart_gender_type]" id="wpa0_auth0_gender_chart_type_bar" value="bar" ' . checked( $v, 'bar', false ) . '/>';
         echo '<label for="wpa0_auth0_gender_chart_type_bars">' . __( 'Bars', WPA0_LANG ) . '</label>';
     }
 
@@ -99,7 +99,7 @@ class WP_Auth0_Dashboard_Preferences {
     }
 
     protected static function validate_chart_type($type) {
-        $validChartTypes = array('pie','bars');
+        $validChartTypes = array('pie','bar');
 
         if ( in_array( $type, $validChartTypes ) ) {
             return $type;
@@ -109,7 +109,6 @@ class WP_Auth0_Dashboard_Preferences {
     }
 
     public static function input_validator( $input ){
-        $validChartTypes = array('pie','bars');
 
 		$input['chart_gender_type'] = self::validate_chart_type( $input['chart_gender_type'] );
 		$input['chart_idp_type'] = self::validate_chart_type( $input['chart_idp_type'] );

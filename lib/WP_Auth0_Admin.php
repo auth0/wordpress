@@ -23,12 +23,14 @@ class WP_Auth0_Admin {
 	}
 
 	protected static function init_option_section($sectionName, $settings) {
+		$options_name = WP_Auth0_Options::Instance()->get_options_name();
 		$lowerName = strtolower( $sectionName );
+
 		add_settings_section(
 			"wp_auth0_{$lowerName}_settings_section",
 			__( $sectionName, WPA0_LANG ),
 			array( __CLASS__, "render_{$lowerName}_description" ),
-			WP_Auth0_Options::Instance()->get_options_name()
+			$options_name
 		);
 
 		foreach ( $settings as $setting ) {
@@ -36,7 +38,7 @@ class WP_Auth0_Admin {
 				$setting['id'],
 				__( $setting['name'], WPA0_LANG ),
 				array( __CLASS__, $setting['function'] ),
-				WP_Auth0_Options::Instance()->get_options_name(),
+				$options_name,
 				"wp_auth0_{$lowerName}_settings_section",
 				array( 'label_for' => $setting['id'] )
 			);
@@ -45,9 +47,9 @@ class WP_Auth0_Admin {
 
 	public static function init_admin() {
 
-		if ( ! isset( $_REQUEST['page'] ) || 'wpa0' !== $_REQUEST['page'] ) {
-			return;
-		}
+		// if ( ! isset( $_REQUEST['page'] ) || 'wpa0' !== $_REQUEST['page'] ) {
+		// 	return;
+		// }
 
 		/* ------------------------- BASIC ------------------------- */
 

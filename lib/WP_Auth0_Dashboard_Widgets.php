@@ -21,10 +21,12 @@ class WP_Auth0_Dashboard_Widgets  {
 
 		$users = self::get_users();
 
+		$options = WP_Auth0_Dashboard_Options::Instance();
+
 		$widgets = array(
-			new WP_Auth0_Dashboard_Plugins_Age(),
-			new WP_Auth0_Dashboard_Plugins_Gender(),
-			new WP_Auth0_Dashboard_Plugins_IdP(),
+			new WP_Auth0_Dashboard_Plugins_Age($options->get('chart_age_type')),
+			new WP_Auth0_Dashboard_Plugins_Gender($options->get('chart_gender_type')),
+			new WP_Auth0_Dashboard_Plugins_IdP($options->get('chart_idp_type')),
 			new WP_Auth0_Dashboard_Plugins_Location(),
 			new WP_Auth0_Dashboard_Plugins_Income(),
 			new WP_Auth0_Dashboard_Plugins_Signups(),

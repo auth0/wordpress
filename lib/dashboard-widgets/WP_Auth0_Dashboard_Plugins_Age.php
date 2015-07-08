@@ -4,6 +4,11 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
 
     protected $id = 'auth0_dashboard_widget_age';
     protected $name = 'Auth0 - User\'s Age';
+    protected $type;
+
+    public function __construct($type) {
+        $this->type = $type;
+    }
 
     protected function getType($user) {
 
@@ -72,33 +77,51 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
 
         $chartData = array();
 
-        foreach ($data as $key => $value) {
-            $chartData[] = array($key, $value);
+        if ( $this->type == 'pie' ) {
+            foreach ( $data as $key => $value ) {
+                $chartData[] = array( $key, $value );
+            }
+
+            usort($chartData, array(__CLASS__, 'sortAges'));
+        } else {
+            $keys = array_keys($data);
+            $values = array_values($data);
+
+            array_unshift($keys, 'x');
+            array_unshift($values, 'Users count');
+
+            $chartData[] = $keys;
+            $chartData[] = $values;
         }
 
-        usort($chartData, array(__CLASS__, 'sortAges'));
+        $chartSetup = array(
+            'bindto' => '#auth0ChartAge',
+            'data' => array(
+                'columns' => $chartData,
+                'type' => $this->type,
+            ),
+            'color' => array(
+              'pattern' => $this->getColors($chartData),
+            ),
+            'axis' => array(
+                'x' => array(
+                    'type' => 'category'
+                )
+            )
+
+        );
+
+        if ( $this->type == 'bar' ) {
+            $chartSetup['data']['x'] = 'x';
+        }
 
         ?>
         <div id="auth0ChartAge"></div>
+
         <script type="text/javascript">
-
-            var chartType = 'pie';
-            var chart = c3.generate({
-                bindto: '#auth0ChartAge',
-                data: {
-                    columns: <?php echo json_encode($chartData); ?>,
-                    type : chartType
-                },
-                color: {
-                  pattern: <?php echo json_encode($this->getColors($chartData)); ?>
-                }
-            });
-
-            function toggleAgeChartType() {
-                chartType = chartType == 'pie' ? 'bars' : chartType;
-                chart.transform(chartType);
-            }
-
+            (function(){
+                var chart = c3.generate(<?php echo json_encode($chartSetup);?>);
+            })();
         </script>
         <?php
 
