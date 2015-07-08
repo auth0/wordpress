@@ -30,8 +30,8 @@ class WP_Auth0_UserCreator {
         }
 
         // $auto_provisioning = WP_Auth0_Options::get('auto_provisioning');
-        // $allow_signup = WP_Auth0_Options::is_wp_registration_enabled() || $auto_provisioning;
-        $allow_signup = WP_Auth0_Options::is_wp_registration_enabled();
+        // $allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled() || $auto_provisioning;
+        $allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled();
 
         if (!is_null($joinUser) && $joinUser instanceof WP_User) {
             // If we are here, we have a potential join user
@@ -57,7 +57,7 @@ class WP_Auth0_UserCreator {
         } else {
             throw new WP_Auth0_RegistrationNotEnabledException();
         }
-        
+
         // If we are here we should have a valid $user_id with a new user or an existing one
         // log him in, and update the auth0_user table
         self::insertAuth0User($userinfo, $user_id);

@@ -61,9 +61,11 @@ class WP_Auth0_DBManager {
 		}
 		update_option( 'auth0_db_version', AUTH0_DB_VERSION );
 
-		$cdn_url = WP_Auth0_Options::get( 'cdn_url' );
+
+		$options = WP_Auth0_Options::Instance();
+		$cdn_url = $options->get( 'cdn_url' );
 		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-6' ) !== false ) {
-			WP_Auth0_Options::set( 'cdn_url', '//cdn.auth0.com/js/lock-7.min.js' );
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-7.min.js' );
 		}
 
 	}

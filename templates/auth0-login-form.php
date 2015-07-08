@@ -1,15 +1,18 @@
 <?php
-$client_id = WP_Auth0_Options::get('client_id');
+
+$options = WP_Auth0_Options::Instance();
+
+$client_id = $options->get('client_id');
 
 if (trim($client_id) == "") return;
 
-$wordpress_login_enabled = WP_Auth0_Options::get('wordpress_login_enabled') == 1;
-$auth0_implicit_workflow = WP_Auth0_Options::get('auth0_implicit_workflow') == 1;
+$wordpress_login_enabled = $options->get('wordpress_login_enabled') == 1;
+$auth0_implicit_workflow = $options->get('auth0_implicit_workflow') == 1;
 
-$domain = WP_Auth0_Options::get('domain');
-$cdn = WP_Auth0_Options::get('cdn_url');
+$domain = $options->get('domain');
+$cdn = $options->get('cdn_url');
 
-$allow_signup = WP_Auth0_Options::is_wp_registration_enabled();
+$allow_signup = $options->is_wp_registration_enabled();
 
 $extra_css = apply_filters( 'auth0_login_css', '');
 $showAsModal = (isset($specialSettings['show_as_modal']) && $specialSettings['show_as_modal'] == 1);
@@ -22,7 +25,7 @@ if (isset($specialSettings['modal_trigger_name']) && $specialSettings['modal_tri
 if (isset($specialSettings['show_as_modal'])) unset($specialSettings['show_as_modal']);
 if (isset($specialSettings['modal_trigger_namemodal_trigger_name'])) unset($specialSettings['modal_trigger_name']);
 
-$form_desc = WP_Auth0_Options::get('form_desc');
+$form_desc = $options->get('form_desc');
 if (isset($_GET['interim-login']) && $_GET['interim-login'] == 1) {
     $interim_login = true;
 } else {
@@ -42,7 +45,7 @@ if (isset($_GET['redirect_to'])) {
 $state = json_encode($stateObj);
 
 
-$options_obj = WP_Auth0::build_settings(WP_Auth0_Options::get_options());
+$options_obj = WP_Auth0::build_settings($options->get_options());
 
 $sso = $options_obj['sso'];
 

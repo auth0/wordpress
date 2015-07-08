@@ -1,7 +1,7 @@
 <?php
 class WP_Auth0_Ip_Check {
 	public static function init() {
-		if ( ! WP_Auth0_Options::get( 'ip_range_check' ) || is_admin() ) {
+		if ( ! WP_Auth0_Options::Instance()->get( 'ip_range_check' ) || is_admin() ) {
 			return;
 		}
 
@@ -43,7 +43,7 @@ class WP_Auth0_Ip_Check {
 	}
 
 	private function get_ranges() {
-		$data = WP_Auth0_Options::get( 'ip_ranges' );
+		$data = WP_Auth0_Options::Instance()->get( 'ip_ranges' );
 		$data = str_replace( "\r\n", "\n", $data );
 
 		$raw = explode( "\n", $data );

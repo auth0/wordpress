@@ -3,12 +3,12 @@
 class WP_Auth0_UsersRepo {
 
     public static function init() {
-        if (WP_Auth0_Options::get('jwt_auth_integration') == 1) {
+        if (WP_Auth0_Options::Instance()->get('jwt_auth_integration') == 1) {
             add_filter( 'wp_jwt_auth_get_user', array( __CLASS__, 'getUser' ), 0,2);
         }
     }
 
-    public static function getUser($jwt, $encodedJWT) { 
+    public static function getUser($jwt, $encodedJWT) {
 
         global $wpdb;
 
@@ -21,10 +21,10 @@ class WP_Auth0_UsersRepo {
 
         if (is_null($userRow)) {
 
-            $domain = WP_Auth0_Options::get( 'domain' );
+            $domain = WP_Auth0_Options::Instance()->get( 'domain' );
 
             $response = WP_Auth0_Api_Client::get_user($domain, $encodedJWT, $jwt->sub);
-            
+
             if ($response['response']['code'] != 200) return null;
 
             $creator = new WP_Auth0_UserCreator();
@@ -39,7 +39,7 @@ class WP_Auth0_UsersRepo {
             try {
                 $user_id = $creator->create($auth0User,$encodedJWT);
 
-                do_action( 'auth0_user_login' , $user_id, $response, true, $encodedJWT, null ); 
+                do_action( 'auth0_user_login' , $user_id, $response, true, $encodedJWT, null );
 
                 return new WP_User($user_id);
             }
@@ -58,11 +58,11 @@ class WP_Auth0_UsersRepo {
             $user = new WP_User();
             $user->init($userRow);
 
-            do_action( 'auth0_user_login' , $user->ID, $response, false, $encodedJWT, null ); 
+            do_action( 'auth0_user_login' , $user->ID, $response, false, $encodedJWT, null );
 
             return $user;
         }
-        
+
 
     }
 

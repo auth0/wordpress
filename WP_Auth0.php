@@ -60,6 +60,7 @@ class WP_Auth0 {
 		WP_Auth0_UsersRepo::init();
 		WP_Auth0_Settings_Section::init();
 		WP_Auth0_Admin::init();
+		WP_Auth0_Dashboard_Preferences::init();
 		WP_Auth0_ErrorLog::init();
 		WP_Auth0_Configure_JWTAUTH::init();
 		WP_Auth0_Dashboard_Widgets::init();
@@ -78,11 +79,12 @@ class WP_Auth0 {
 	}
 
 	public static function is_jwt_configured() {
+		$options = WP_Auth0_Options::Instance();
 		return (
-			JWT_AUTH_Options::get( 'aud' ) === WP_Auth0_Options::get( 'client_id' ) &&
-			JWT_AUTH_Options::get( 'secret' ) === WP_Auth0_Options::get( 'client_secret' ) &&
+			JWT_AUTH_Options::get( 'aud' ) === $options->get( 'client_id' ) &&
+			JWT_AUTH_Options::get( 'secret' ) === $options->get( 'client_secret' ) &&
 			JWT_AUTH_Options::get( 'secret_base64_encoded' ) &&
-			WP_Auth0_Options::get( 'jwt_auth_integration' ) &&
+			$options->get( 'jwt_auth_integration' ) &&
 			JWT_AUTH_Options::get( 'jwt_attribute' ) === 'sub'
 		);
 	}
@@ -146,7 +148,8 @@ class WP_Auth0 {
 	}
 
 	public static function wp_enqueue() {
-		$client_id = WP_Auth0_Options::get( 'client_id' );
+		$options = WP_Auth0_Options::Instance();
+		$client_id = $options->get( 'client_id' );
 
 		if ( trim( $client_id ) === '' ) {
 			return;
@@ -237,7 +240,7 @@ class WP_Auth0 {
 	}
 
 	public static function render_auth0_login_css() {
-		$client_id = WP_Auth0_Options::get( 'client_id' );
+		$client_id = WP_Auth0_Options::Instance()->get( 'client_id' );
 
 		if ( trim( $client_id ) === '' ) {
 			return;
@@ -248,7 +251,7 @@ class WP_Auth0 {
 	}
 
 	public static function render_form( $html ) {
-		$client_id = WP_Auth0_Options::get( 'client_id' );
+		$client_id = WP_Auth0_Options::Instance()->get( 'client_id' );
 
 		if ( trim( $client_id ) === '' ) {
 			return;

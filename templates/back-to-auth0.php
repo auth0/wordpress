@@ -1,5 +1,5 @@
 <?php
-$title = WP_Auth0_Options::get('form_title');
+$title = WP_Auth0_Options::Instance()->get('form_title');
 if (empty($title)) {
     $title = "Auth0";
 }

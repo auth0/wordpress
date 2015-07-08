@@ -13,6 +13,7 @@ class WP_Auth0_Settings_Section {
             85.55 );
 
         add_submenu_page('wpa0', __('Auth0 Settings', WPA0_LANG), __('Settings', WPA0_LANG), 'manage_options', 'wpa0', array('WP_Auth0_Admin', 'render_settings_page') );
+        add_submenu_page('wpa0', __('Auth0 Dashboard preferences', WPA0_LANG), __('Dashboard Setup', WPA0_LANG), 'manage_options', 'wpa0-dashboard', array('WP_Auth0_Dashboard_Preferences', 'render_dashboard_preferences_page') );
         add_submenu_page('wpa0', __('Auth0 Error Log', WPA0_LANG), __('Error Log', WPA0_LANG), 'manage_options', 'wpa0-errors', array('WP_Auth0_ErrorLog', 'render_settings_page') );
 
         if (WP_Auth0::is_jwt_auth_enabled())

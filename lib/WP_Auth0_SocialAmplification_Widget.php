@@ -66,7 +66,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
                 return null;
             }
-            
+
             foreach ($results as $value) {
                 $userData[] = unserialize($value->auth0_obj);
             }
@@ -78,7 +78,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
     public function widget( $args, $instance ) {
 
-        $client_id = WP_Auth0_Options::get('client_id');
+        $client_id = WP_Auth0_Options::Instance()->get('client_id');
         $userData = $this->getInfo();
 
         if (trim($client_id) != "" && $userData)
@@ -94,9 +94,9 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
                 }
             }
             $providers = array_intersect($providers, $supportedProviders);
-            
+
             wp_enqueue_style('auth0-aplificator-css', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/css/amplificator.css');
-            
+
             wp_register_script('auth0-aplificator-js', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/js/amplificator.js');
             wp_localize_script('auth0-aplificator-js', 'auth0_ajax',array( 'ajax_url' => admin_url( 'admin-ajax.php' )));
             wp_enqueue_script('auth0-aplificator-js');
@@ -114,5 +114,3 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
     }
 
 }
-
-

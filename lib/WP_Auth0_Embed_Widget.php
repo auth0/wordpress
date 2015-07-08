@@ -40,7 +40,7 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 
-		$client_id = WP_Auth0_Options::get( 'client_id' );
+		$client_id = WP_Auth0_Options::Instance()->get( 'client_id' );
 
 		if ( trim( $client_id ) !== '' ) {
 			echo $args['before_widget'];

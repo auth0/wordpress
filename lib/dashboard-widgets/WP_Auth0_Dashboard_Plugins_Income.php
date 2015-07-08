@@ -71,7 +71,7 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
             function loadChart(data) {
 
                 var x_arr = ['x'];
-                var zipcodes_arr = ['users count'];
+                var zipcodes_arr = ['Users count'];
                 var incomes_arr = ['Median household income (in 1000)'];
 
                 data = data.filter(function(d){ return d.income; });

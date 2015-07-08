@@ -12,8 +12,10 @@ class WP_Auth0_LoginManager {
 	public static function logout() {
 		self::end_session();
 
-		$sso = WP_Auth0_Options::get( 'sso' );
-		$auto_login = absint( WP_Auth0_Options::get( 'auto_login' ) );
+		$options = WP_Auth0_Options::Instance();
+
+		$sso = $options->get( 'sso' );
+		$auto_login = absint( $options->get( 'auto_login' ) );
 
 		if ( isset( $_REQUEST['redirect_to'] ) ) {
 			$redirect_to = $_REQUEST['redirect_to'];
@@ -22,7 +24,7 @@ class WP_Auth0_LoginManager {
 		}
 
 		if ( $sso ) {
-			wp_redirect( 'https://' . WP_Auth0_Options::get( 'domain' ) . '/v2/logout?returnTo=' . urlencode( $redirect_to ) . '&auth0Client=' . WP_Auth0_Api_Client::get_info_headers() );
+			wp_redirect( 'https://' . $options->get( 'domain' ) . '/v2/logout?returnTo=' . urlencode( $redirect_to ) . '&auth0Client=' . WP_Auth0_Api_Client::get_info_headers() );
 			die();
 		}
 
@@ -39,7 +41,9 @@ class WP_Auth0_LoginManager {
 	}
 
 	public static function login_auto() {
-		$auto_login = absint( WP_Auth0_Options::get( 'auto_login' ) );
+		$options = WP_Auth0_Options::Instance();
+
+		$auto_login = absint( $options->get( 'auto_login' ) );
 
 		if ( $auto_login && ( ! isset( $_GET['action'] ) || 'logout' !== $_GET['action'] ) && ! isset( $_GET['wle'] ) ) {
 
@@ -50,12 +54,12 @@ class WP_Auth0_LoginManager {
 			$state = wp_json_encode( $stateObj );
 
 			// Create the link to log in.
-			$login_url = "https://". WP_Auth0_Options::get( 'domain' ) .
+			$login_url = "https://". $options->get( 'domain' ) .
 						 "/authorize?response_type=code&scope=openid%20profile".
-						 "&client_id=".WP_Auth0_Options::get( 'client_id' ) .
+						 "&client_id=".$options->get( 'client_id' ) .
 						 "&redirect_uri=".site_url( '/index.php?auth0=1' ) .
 						 "&state=".urlencode( $state ).
-						 "&connection=".WP_Auth0_Options::get( 'auto_login_method' ).
+						 "&connection=".$options->get( 'auto_login_method' ).
 						 "&auth0Client=" . WP_Auth0_Api_Client::get_info_headers();
 
 			wp_redirect( $login_url );
@@ -100,14 +104,16 @@ class WP_Auth0_LoginManager {
 			wp_die( $msg );
 		}
 
+		$options = WP_Auth0_Options::Instance();
+
 		$code = $wp_query->query_vars['code'];
 		$state = $wp_query->query_vars['state'];
 		$stateFromGet = json_decode( stripcslashes( $state ) );
 
-		$domain = WP_Auth0_Options::get( 'domain' );
+		$domain = $options->get( 'domain' );
 
-		$client_id = WP_Auth0_Options::get( 'client_id' );
-		$client_secret = WP_Auth0_Options::get( 'client_secret' );
+		$client_id = $options->get( 'client_id' );
+		$client_secret = $options->get( 'client_secret' );
 
 		if ( empty( $client_id ) ) {
 			wp_die( __( 'Error: Your Auth0 Client ID has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG ) );
@@ -159,7 +165,7 @@ class WP_Auth0_LoginManager {
 					if ( null !== $stateFromGet && isset( $stateFromGet->redirect_to ) ) {
 						$redirectURL = $stateFromGet->redirect_to;
 					} else {
-						$redirectURL = WP_Auth0_Options::get( 'default_login_redirection' );
+						$redirectURL = $options->get( 'default_login_redirection' );
 					}
 
 					wp_safe_redirect( $redirectURL );
@@ -207,7 +213,9 @@ class WP_Auth0_LoginManager {
 		$token = $_POST['token'];
 		$stateFromGet = json_decode( stripcslashes( $_POST['state'] ) );
 
-		$secret = WP_Auth0_Options::get( 'client_secret' );
+		$options = WP_Auth0_Options::Instance();
+
+		$secret = $options->get( 'client_secret' );
 		$secret = base64_decode( strtr( $secret, '-_', '+/' ) );
 
 		try {
@@ -215,7 +223,7 @@ class WP_Auth0_LoginManager {
 			$decodedToken = JWT::decode( $token, $secret, array( 'HS256' ) );
 
 			// validate that this JWT was made for us
-			if ( WP_Auth0_Options::get( 'client_id' ) !== $decodedToken->aud ) {
+			if ( $options->get( 'client_id' ) !== $decodedToken->aud ) {
 				throw new Exception( 'This token is not intended for us.' );
 			}
 
@@ -229,7 +237,7 @@ class WP_Auth0_LoginManager {
 					if ( null !== $stateFromGet && isset( $stateFromGet->redirect_to ) ) {
 						$redirectURL = $stateFromGet->redirect_to;
 					} else {
-						$redirectURL = WP_Auth0_Options::get( 'default_login_redirection' );
+						$redirectURL = $options->get( 'default_login_redirection' );
 					}
 
 					wp_safe_redirect( $redirectURL );
@@ -250,7 +258,7 @@ class WP_Auth0_LoginManager {
 	public static function login_user( $userinfo, $id_token, $access_token ) {
 		// If the userinfo has no email or an unverified email, and in the options we require a verified email
 		// notify the user he cant login until he does so.
-		$requires_verified_email = WP_Auth0_Options::get( 'requires_verified_email' );
+		$requires_verified_email = WP_Auth0_Options::Instance()->get( 'requires_verified_email' );
 
 		if ( 1 === $requires_verified_email ) {
 			if ( empty( $userinfo->email ) ) {
@@ -341,7 +349,7 @@ class WP_Auth0_LoginManager {
 
 	private static function dieWithVerifyEmail($userinfo, $id_token) {
 		ob_start();
-		$domain = WP_Auth0_Options::get( 'domain' );
+		$domain = WP_Auth0_Options::Instance()->get( 'domain' );
 		$token = $id_token;
 		$email = $userinfo->email;
 		$connection = $userinfo->identities[0]->connection;
