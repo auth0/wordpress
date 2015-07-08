@@ -5,16 +5,15 @@ class WP_Auth0_Dashboard_Options  extends WP_Auth0_Options_Generic {
     protected static $instance = null;
     public static function Instance() {
         if (self::$instance === null) {
-            self::$instance = new WP_Auth0_Options;
+            self::$instance = new WP_Auth0_Dashboard_Options;
         }
         return self::$instance;
     }
 
     protected $options_name = 'wp_auth0_dashboard_settings';
 
-    public function is_wp_registration_enabled()
-    {
-        return (get_option('users_can_register', 0) == 1);
+    public function get_options_name() {
+        return $this->options_name;
     }
 
     protected function defaults(){
