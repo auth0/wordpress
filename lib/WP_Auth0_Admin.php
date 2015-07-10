@@ -333,17 +333,17 @@ class WP_Auth0_Admin {
 			'https',
 		) );
 
-		$input['sso'] = ( isset( $input['sso'] ) ? 1 : 0 );
-		$input['requires_verified_email'] = ( isset( $input['requires_verified_email'] ) ? 1 : 0 );
-		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] ) ? 1 : 0 );
-		$input['jwt_auth_integration'] = ( isset( $input['jwt_auth_integration'] ) ? 1 : 0 );
-		$input['allow_signup'] = ( isset( $input['allow_signup'] ) ? 1 : 0 );
-		$input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? 1 : 0 );
+		$input['sso'] = ( isset( $input['sso'] ) ? $input['sso'] : 0 );
+		$input['requires_verified_email'] = ( isset( $input['requires_verified_email'] ) ? $input['requires_verified_email'] : 0 );
+		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] ) ? $input['wordpress_login_enabled'] : 0 );
+		$input['jwt_auth_integration'] = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
+		$input['allow_signup'] = ( isset( $input['allow_signup'] ) ? $input['allow_signup'] : 0 );
+		$input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
 
-		$input['social_big_buttons'] = ( isset( $input['social_big_buttons'] ) ? 1 : 0 );
-		$input['gravatar'] = ( isset( $input['gravatar'] ) ? 1 : 0 );
+		$input['social_big_buttons'] = ( isset( $input['social_big_buttons'] ) ? $input['social_big_buttons'] : 0 );
+		$input['gravatar'] = ( isset( $input['gravatar'] ) ? $input['gravatar'] : 0 );
 
-		$input['remember_last_login'] = ( isset( $input['remember_last_login'] ) ? 1 : 0 );
+		$input['remember_last_login'] = ( isset( $input['remember_last_login'] ) ? $input['remember_last_login'] : 0 );
 
 		//$input['auto_provisioning'] = ( isset( $input['auto_provisioning'] ) ? 1 : 0 );
 
