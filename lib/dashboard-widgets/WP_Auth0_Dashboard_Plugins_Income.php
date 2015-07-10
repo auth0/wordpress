@@ -7,41 +7,24 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
 
     public function addUser($user) {
 
-        $geoip = null;
-        if (isset($user->app_metadata) && isset($user->app_metadata->geoip)) {
-            $geoip = $user->app_metadata->geoip;
-        }elseif (isset($user->user_metadata) && isset($user->user_metadata->geoip)) {
-            $geoip = $user->user_metadata->geoip;
+        if ( ! $user->get_geoip() ) return;
+
+        $postal_code = $user->get_zipcode();
+        $country_name = $user->get_country_name();
+        $country_code = $user->get_country_code();
+
+        $income = $user->get_income();
+
+        $key = "$country_name - $postal_code";
+
+        if (!isset($this->users[$key])) {
+            $this->users[$key] = array('postal_code' => $postal_code, 'country' => $country_name, 'income' => $income, 'country_code' => $country_code, 'count' => 0);
         }
 
-        if ($geoip) {
-            if (isset($geoip->postal_code)){
-
-                $postal_code = $geoip->postal_code;
-                $country_name = $geoip->country_name;
-                $country_code = $geoip->country_code;
-                $income = null;
-                if (isset($user->app_metadata->zipcode_income))
-                {
-                    $income = $user->app_metadata->zipcode_income;
-                }
-                elseif (isset($user->user_metadata->zipcode_income))
-                {
-                    $income = $user->user_metadata->zipcode_income;
-                }
-
-                $key = "$country_name - $postal_code";
-
-                if (!isset($this->users[$key])) {
-                    $this->users[$key] = array('postal_code' => $postal_code, 'country' => $country_name, 'income' => $income, 'country_code' => $country_code, 'count' => 0);
-                }
-
-                $this->users[$key]['count']++;
-                if ($income && $this->users[$key]['income'] != $income)
-                {
-                    $this->users[$key]['income'] = $income;
-                }
-            }
+        $this->users[$key]['count']++;
+        if ($income && $this->users[$key]['income'] != $income)
+        {
+            $this->users[$key]['income'] = $income;
         }
 
     }

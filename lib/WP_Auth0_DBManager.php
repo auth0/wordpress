@@ -69,4 +69,24 @@ class WP_Auth0_DBManager {
 		}
 
 	}
+
+	public static function get_auth0_users($user_ids = null) {
+		global $wpdb;
+
+		$where = '';
+		if ( $user_ids ) {
+			$ids = esc_sql( implode( ',',  array_filter( $user_ids, 'ctype_digit' ) ) );
+			$where .= " AND u.id IN ($ids) ";
+		}
+
+		$sql = sprintf( 'SELECT a.* FROM %s a JOIN %s u ON a.wp_id = u.id %s', $wpdb->auth0_user, $wpdb->users, $where );
+		$results = $wpdb->get_results( $sql );
+
+		if ( $results instanceof WP_Error ) {
+			self::insert_auth0_error( 'findAuth0User',$userRow );
+			return array();
+		}
+
+		return $results;
+	}
 }

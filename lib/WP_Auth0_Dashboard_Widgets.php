@@ -19,7 +19,7 @@ class WP_Auth0_Dashboard_Widgets  {
 		wp_enqueue_script( 'auth0-dashboard-d3', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/d3/d3.min.js' );
 		wp_enqueue_script( 'auth0-dashboard-c3-js', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/c3/c3.min.js' );
 
-		$users = self::get_users();
+		$users = WP_Auth0_DBManager::get_auth0_users();
 
 		$options = WP_Auth0_Dashboard_Options::Instance();
 
@@ -33,7 +33,7 @@ class WP_Auth0_Dashboard_Widgets  {
 		);
 
 		foreach ($users as $user) {
-			$userObj = self::get_a0_user_obj($user);
+			$userObj = new WP_Auth0_UserProfile($user->auth0_obj);
 			foreach ($widgets as $widget) {
 				$widget->addUser($userObj);
 			}
@@ -42,23 +42,6 @@ class WP_Auth0_Dashboard_Widgets  {
 		foreach ( $widgets as $widget ) {
 			wp_add_dashboard_widget( $widget->getId(), $widget->getName(), array( $widget, 'render' ) );
 		}
-	}
-
-	public static function get_a0_user_obj( $userArr ) {
-		return unserialize( $userArr->auth0_obj );
-	}
-
-	protected static function get_users() {
-		global $wpdb;
-		$sql = sprintf( 'SELECT a.* FROM %s a JOIN %s u ON a.wp_id = u.id', $wpdb->auth0_user, $wpdb->users );
-		$results = $wpdb->get_results( $sql );
-
-		if ( $results instanceof WP_Error ) {
-			self::insert_auth0_error( 'findAuth0User',$userRow );
-			return array();
-		}
-
-		return $results;
 	}
 
 }

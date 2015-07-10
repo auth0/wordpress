@@ -10,12 +10,10 @@ class WP_Auth0_Dashboard_Plugins_Location extends WP_Auth0_Dashboard_Plugins_Gen
     }
 
     public function addUser($user) {
-        if (isset($user->app_metadata) && isset($user->app_metadata->geoip)) {
-            $this->users[] = $user->app_metadata->geoip;
-        }
-        if (isset($user->user_metadata) && isset($user->user_metadata->geoip)) {
-            $this->users[] = $user->user_metadata->geoip;
-        }
+        $this->users[] = array(
+            "latitude" => $user->get_latitude(),
+            "longitude" => $user->get_longitude(),
+        );
     }
 
     public function render() {

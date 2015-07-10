@@ -6,6 +6,8 @@ class WP_Auth0_Dashboard_Plugins_Signups extends WP_Auth0_Dashboard_Plugins_Gene
     protected $name = 'Auth0 - User\'s Signups';
 
     protected function getType($user) {
+        if ( ! isset( $user->created_at ) ) return;
+        
         $limitDate = strtotime('1 months ago');
 
         $created_at = strtotime($user->created_at);

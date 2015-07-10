@@ -65,6 +65,7 @@ class WP_Auth0 {
 		WP_Auth0_Configure_JWTAUTH::init();
 		WP_Auth0_Dashboard_Widgets::init();
 		WP_Auth0_WooCommerceOverrides::init();
+		WP_Auth0_Export_Users::init();
 		// WP_Auth0_Amplificator::init();.
 
 		add_action( 'plugins_loaded', array( __CLASS__, 'check_jwt_auth' ) );

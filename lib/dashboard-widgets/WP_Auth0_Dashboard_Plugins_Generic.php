@@ -31,7 +31,6 @@ class WP_Auth0_Dashboard_Plugins_Generic {
         if ( ! is_array( $types ) ) {
             $types = array( $types );
         }
-
         foreach ( $types as $type ) {
             if ( ! isset( $this->users[$type] )) {
                 $this->users[$type] = 0;

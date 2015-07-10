@@ -11,60 +11,8 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
     }
 
     protected function getType($user) {
-
-        if (isset($user->age)) {
-            return $user->age;
-        }
-        if (isset($user->user_metadata) && isset($user->user_metadata->fullContactInfo) && isset($user->user_metadata->fullContactInfo->age)) {
-            return $user->user_metadata->fullContactInfo->age;
-        }
-        if (isset($user->app_metadata) && isset($user->app_metadata->fullContactInfo) && isset($user->app_metadata->fullContactInfo->age)) {
-            return $user->app_metadata->fullContactInfo->age;
-        }
-        if (isset($user->user_metadata) && isset($user->user_metadata->fullContactInfo) && isset($user->user_metadata->fullContactInfo->demographics) && isset($user->user_metadata->fullContactInfo->demographics->age)) {
-            return $user->user_metadata->fullContactInfo->demographics->age;
-        }
-        if (isset($user->app_metadata) && isset($user->app_metadata->fullContactInfo) && isset($user->app_metadata->fullContactInfo->demographics) && isset($user->user_metadata->fullContactInfo->demographics->age)) {
-            return $user->user_metadata->app_metadata->demographics->age;
-        }
-
-        if (isset($user->user_metadata) && isset($user->user_metadata->fullContactInfo) && isset($user->user_metadata->fullContactInfo->birthDate)) {
-            $birthDate = explode("-", $user->user_metadata->fullContactInfo->birthDate);
-
-            $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[3], $birthDate[1], $birthDate[0]))) > date("md")
-                ? ((date("Y") - $birthDate[0]) - 1)
-                : (date("Y") - $birthDate[0]));
-            return $age;
-        }
-        if (isset($user->app_metadata) && isset($user->app_metadata->fullContactInfo) && isset($user->app_metadata->fullContactInfo->birthDate)) {
-            $birthDate = explode("-", $user->app_metadata->fullContactInfo->birthDate);
-
-            $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[3], $birthDate[1], $birthDate[0]))) > date("md")
-                ? ((date("Y") - $birthDate[0]) - 1)
-                : (date("Y") - $birthDate[0]));
-            return $age;
-        }
-
-        if (isset($user->dateOfBirth)) {
-
-            $birthDate = explode("-", $user->birthday);
-
-            $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[3], $birthDate[1], $birthDate[0]))) > date("md")
-                ? ((date("Y") - $birthDate[0]) - 1)
-                : (date("Y") - $birthDate[0]));
-            return $age;
-        }
-        if (isset($user->birthday)) {
-
-            $birthDate = explode("/", $user->birthday);
-
-            $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md")
-                ? ((date("Y") - $birthDate[2]) - 1)
-                : (date("Y") - $birthDate[2]));
-            return $age;
-        }
-
-        return self::UNKNOWN_KEY;
+        $age = $user->get_age();
+        return $age ? $age : self::UNKNOWN_KEY;
     }
 
     public function render() {

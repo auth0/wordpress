@@ -11,15 +11,7 @@ class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic 
     }
 
     protected function getType($user) {
-        $idPs = array();
-
-        foreach ($user->identities as $identity) {
-
-            $idPs[] = $identity->provider;
-
-        }
-
-        return $idPs;
+        return $user->get_idp();
     }
 
     public function render() {

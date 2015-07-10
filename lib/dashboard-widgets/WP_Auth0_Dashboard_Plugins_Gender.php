@@ -15,21 +15,8 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
 
 
     protected function getType($user) {
-
-        if (isset($user->gender)) {
-            $genderName = strtolower($user->gender);
-        }
-        elseif (isset($user->user_metadata) && isset($user->user_metadata->fullContactInfo) && isset($user->user_metadata->fullContactInfo->demographics) && isset($user->user_metadata->fullContactInfo->demographics->gender)) {
-            $genderName = strtolower($user->user_metadata->fullContactInfo->demographics->gender);
-        }
-        elseif (isset($user->app_metadata) && isset($user->app_metadata->fullContactInfo) && isset($user->app_metadata->fullContactInfo->demographics) && isset($user->user_metadata->fullContactInfo->demographics->gender)) {
-            $genderName = strtolower($user->app_metadata->fullContactInfo->demographics->gender);
-        }
-        else {
-            $genderName = self::UNKNOWN_KEY;
-        }
-
-        return $genderName;
+        $gender = $user->get_gender();
+        return $gender ? $gender : self::UNKNOWN_KEY;
     }
 
     public function render() {
