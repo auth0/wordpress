@@ -66,6 +66,7 @@ class WP_Auth0 {
 		WP_Auth0_Dashboard_Widgets::init();
 		WP_Auth0_WooCommerceOverrides::init();
 		WP_Auth0_Export_Users::init();
+		WP_Auth0_InitialSetup::init();
 		// WP_Auth0_Amplificator::init();.
 
 		add_action( 'plugins_loaded', array( __CLASS__, 'check_jwt_auth' ) );
@@ -330,6 +331,7 @@ class WP_Auth0 {
 		$paths[] = $path;
 		$paths[] = $path.'lib/';
 		$paths[] = $path.'lib/exceptions/';
+		$paths[] = $path.'lib/wizard/';
 		$paths[] = $path.'lib/dashboard-widgets/';
 
 		foreach ( $paths as $p ) {

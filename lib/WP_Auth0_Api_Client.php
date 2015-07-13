@@ -70,4 +70,27 @@ class WP_Auth0_Api_Client {
 			'headers' => $headers,
 		) );
 	}
+
+	public static function create_client($domain, $app_token, $name, $callbackUrl) {
+
+		$endpoint = "https://$domain/api/v2/clients";
+
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+		$headers['content-type'] = "application/json";
+
+		$response = wp_remote_post( $endpoint  , array(
+			'method' => 'POST',
+			'headers' => $headers,
+			'body' => json_encode(array(
+				'name' => $name,
+				'callbacks' => array( $callbackUrl )
+			))
+		) );
+		
+		if ( $response['response']['code'] !== 201 ) return false;
+
+		return json_decode($response['body']);
+	}
 }
