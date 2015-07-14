@@ -7,7 +7,10 @@
     <form method="post" action="<?php echo admin_url( 'admin.php' ); ?>">
         <input type="hidden" name="action" value="wpauth0_initialsetup_step2" />
         <input type="text" name="app_token" value="" autocomplete="off" />
-        <input type="submit" name="contiue" value="Continue" />
+
+		<p class="submit">
+			<input type="submit" name="contiue" class="button button-primary" value="Save">
+		</p>
     </form>
 
 </div>

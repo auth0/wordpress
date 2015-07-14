@@ -1,4 +1,5 @@
 <div class="wrap">
+
 	<?php screen_icon(); ?>
 	<h2><?php _e('Auth0 - Initial setup', WPA0_LANG); ?></h2>
 
@@ -14,6 +15,8 @@
         <li><b>Read and write rules</b> this will be used to help you enable features as MFA and geo information recolection to be used in the dashboard.</li>
     </ul>
 
-    <a href="#" class="auth0-btn">Click here</a>
+	<div class="auth0-btn-container">
+	    <a href="<?php echo admin_url( 'admin.php?page=wpa0-setup&step=2' ); ?>" class="auth0-btn">Click here</a>
+	</div>
 
 </div>

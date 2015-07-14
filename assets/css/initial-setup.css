@@ -3,15 +3,30 @@ ul.auth0 {
     list-style: disc;
 }
 
+
+.auth0-btn-container {
+    padding-top: 20px;
+    text-align: center;
+}
 .auth0-btn {
   margin-bottom: 6px;
-  padding-left: 30px;
-  padding-right: 30px;
+  padding: 10px 30px;
   background-color: #eb5424;
+  text-decoration: none;
   color: #fff;
   border-color: transparent;
-  line-height: 30px;
-  font-size: 15px;
+  font-size: 15px/30px sans-serif;;
   border-radius: 3px;
   display: inline-block;
+  text-transform: uppercase;
+
+  -webkit-transition: background-color .2s ease;
+  -moz-transition: background-color .2s ease;
+  -ms-transition: background-color .2s ease;
+  -o-transition: background-color .2s ease;
+  transition: background-color .2s ease;
+}
+.auth0-btn:hover {
+  background-color: #ae3610;
+  color: #fff;
 }
