@@ -1,11 +1,12 @@
 <?php
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJqY05ZOHd4YVoxWnVRYjhldlJJSGgzYkt3V0dWdEdqZyIsInNjb3BlcyI6eyJjbGllbnRzIjp7ImFjdGlvbnMiOlsicmVhZCIsImNyZWF0ZSIsInVwZGF0ZSJdfSwiY2xpZW50X2tleXMiOnsiYWN0aW9ucyI6WyJyZWFkIl19LCJjb25uZWN0aW9ucyI6eyJhY3Rpb25zIjpbInJlYWQiLCJjcmVhdGUiLCJ1cGRhdGUiXX0sInJ1bGVzIjp7ImFjdGlvbnMiOlsicmVhZCIsImNyZWF0ZSIsInVwZGF0ZSJdfSwidXNlcnMiOnsiYWN0aW9ucyI6WyJyZWFkIiwiY3JlYXRlIiwidXBkYXRlIl19LCJ1c2Vyc19hcHBfbWV0YWRhdGEiOnsiYWN0aW9ucyI6WyJ1cGRhdGUiXX19LCJpYXQiOjE0MzY4MTk4NDAsImp0aSI6IjRlMzYyZmU4NDE3ZGQ1YjBjMzdhN2VlMjI0N2VjMDhjIn0.CcOVZcdkXdazB0-hdkGaNGFLs65G7szJOBTGgehVito
+
 class WP_Auth0_InitialSetup {
 
     public static function init() {
 
         add_action( 'admin_action_wpauth0_initialsetup_step2', array(__CLASS__, 'step2_action') );
         add_action( 'admin_action_wpauth0_initialsetup_step3', array(__CLASS__, 'step3_action') );
+        add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue' ) );
 
         $options = WP_Auth0_Options::Instance();
         $auth0_jwt = $options->get('auth0_app_token');
@@ -15,6 +16,17 @@ class WP_Auth0_InitialSetup {
         }
 
     }
+
+    public static function admin_enqueue() {
+		if ( ! isset( $_REQUEST['page'] ) || 'wpa0-setup' !== $_REQUEST['page'] ) {
+			return;
+		}
+
+		wp_enqueue_media();
+		wp_enqueue_style( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/css/initial-setup.css' );
+		wp_enqueue_style( 'media' );
+
+	}
 
     public static function notify_setup() {
 		?>

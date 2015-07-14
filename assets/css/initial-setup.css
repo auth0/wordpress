@@ -1,0 +1,17 @@
+ul.auth0 {
+    padding-left: 20px;
+    list-style: disc;
+}
+
+.auth0-btn {
+  margin-bottom: 6px;
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: #eb5424;
+  color: #fff;
+  border-color: transparent;
+  line-height: 30px;
+  font-size: 15px;
+  border-radius: 3px;
+  display: inline-block;
+}
