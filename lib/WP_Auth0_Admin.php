@@ -59,6 +59,7 @@ class WP_Auth0_Admin {
 			array( 'id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain' ),
 			array( 'id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id' ),
 			array( 'id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret' ),
+			array( 'id' => 'wpa0_auth0_app_token', 'name' => 'App token', 'function' => 'render_auth0_app_token' ),
 			array( 'id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login' ),
 
 		) );
@@ -141,6 +142,14 @@ class WP_Auth0_Admin {
 		$v = WP_Auth0_Options::Instance()->get( 'client_id' );
 		echo '<input type="text" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[client_id]" id="wpa0_client_id" value="' . esc_attr( $v ) . '"/>';
 		echo '<br/><span class="description">' . __( 'Application ID, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG ) . '</span>';
+	}
+
+	public static function render_auth0_app_token() {
+		$v = WP_Auth0_Options::Instance()->get( 'auth0_app_token' );
+		echo '<input type="text" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[auth0_app_token]" id="wpa0_auth0_app_token" value="' . esc_attr( $v ) . '"/>';
+		echo '<br/><span class="description">' . __( 'The token should be generated via the ', WPA0_LANG );
+		echo '<a href="https://auth0.com/docs/api/v2" target="_blank">' . __( 'token generator', WPA0_LANG ) . '</a>';
+		echo __( ' with the scopres required to create, read and update your account clients, users, rules and connections', WPA0_LANG ) . '.</span>';
 	}
 
 	public static function render_client_secret() {

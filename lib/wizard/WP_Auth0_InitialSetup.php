@@ -86,7 +86,7 @@ class WP_Auth0_InitialSetup {
         $options->set( 'client_id', $response->client_id );
         $options->set( 'client_secret', $response->client_secret );
 
-        wp_redirect( admin_url( 'admin.php?page=wpa0-setup' ) );
+        wp_redirect( admin_url( 'admin.php?page=wpa0' ) );
         exit();
 
     }

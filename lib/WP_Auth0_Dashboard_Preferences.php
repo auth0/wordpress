@@ -33,21 +33,11 @@ class WP_Auth0_Dashboard_Preferences {
 		// 	return;
 		// }
 
-        self::init_option_section( 'Age chart', array(
+        self::init_option_section( 'Chart types', array(
 
-			array( 'id' => 'wpa0_chart_age_type', 'name' => 'Chart type', 'function' => 'render_age_chart_type' ),
-
-		) );
-
-        self::init_option_section( 'Identity providers chart', array(
-
-			array( 'id' => 'wpa0_chart_idp_type', 'name' => 'Chart type', 'function' => 'render_idp_chart_type' ),
-
-		) );
-
-        self::init_option_section( 'Gender chart', array(
-
-			array( 'id' => 'wpa0_chart_gender_type', 'name' => 'Chart type', 'function' => 'render_gender_chart_type' ),
+			array( 'id' => 'wpa0_chart_age_type', 'name' => 'Age', 'function' => 'render_age_chart_type' ),
+			array( 'id' => 'wpa0_chart_idp_type', 'name' => 'Identity providers', 'function' => 'render_idp_chart_type' ),
+			array( 'id' => 'wpa0_chart_gender_type', 'name' => 'Gender', 'function' => 'render_gender_chart_type' ),
 
 		) );
 
@@ -55,7 +45,7 @@ class WP_Auth0_Dashboard_Preferences {
         register_setting( $options_name, $options_name, array( __CLASS__, 'input_validator' ) );
     }
 
-    public static function render_age_chart_description() {
+    public static function render_chart_types_description() {
 
     }
 
@@ -68,10 +58,6 @@ class WP_Auth0_Dashboard_Preferences {
         echo '<label for="wpa0_auth0_age_chart_type_bars">' . __( 'Bars', WPA0_LANG ) . '</label>';
     }
 
-    public static function render_identity_providers_chart_description() {
-
-    }
-
     public static function render_idp_chart_type() {
     	$v = WP_Auth0_Dashboard_Options::Instance()->get( 'chart_idp_type' );
     	echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[chart_idp_type]" id="wpa0_auth0_idp_chart_type_pie" value="pie" ' . checked( $v, 'pie', false ) . '/>';
@@ -79,10 +65,6 @@ class WP_Auth0_Dashboard_Preferences {
         echo ' ';
         echo '<input type="radio" name="' . WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '[chart_idp_type]" id="wpa0_auth0_idp_chart_type_bar" value="bar" ' . checked( $v, 'bar', false ) . '/>';
         echo '<label for="wpa0_auth0_idp_chart_type_bars">' . __( 'Bars', WPA0_LANG ) . '</label>';
-    }
-
-    public static function render_gender_chart_description() {
-
     }
 
     public static function render_gender_chart_type() {

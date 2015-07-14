@@ -9,8 +9,8 @@ class WP_Auth0_Settings_Section {
     public static function init_menu(){
 
         $options = WP_Auth0_Options::Instance();
-        $auth0_jwt = $options->get('auth0_jwt');
-        $show_initial_setup = ( ! $auth0_jwt );
+        $auth0_app_token = $options->get('auth0_app_token');
+        $show_initial_setup = ( ! $auth0_app_token );
 
         $main_menu = 'wpa0';
 
@@ -25,12 +25,12 @@ class WP_Auth0_Settings_Section {
             85.55 );
 
         if ( $show_initial_setup ) {
-            add_submenu_page($main_menu, __('Auth0 Setup', WPA0_LANG), __('Set up', WPA0_LANG), 'manage_options', 'wpa0-setup', array('WP_Auth0_InitialSetup', 'render_setup_page') );
+            add_submenu_page($main_menu, __('Quick setup', WPA0_LANG), __('Quick setup', WPA0_LANG), 'manage_options', 'wpa0-setup', array('WP_Auth0_InitialSetup', 'render_setup_page') );
         }
 
-        add_submenu_page($main_menu, __('Auth0 Settings', WPA0_LANG), __('Settings', WPA0_LANG), 'manage_options', 'wpa0', array('WP_Auth0_Admin', 'render_settings_page') );
-        add_submenu_page($main_menu, __('Auth0 Dashboard preferences', WPA0_LANG), __('Dashboard Setup', WPA0_LANG), 'manage_options', 'wpa0-dashboard', array('WP_Auth0_Dashboard_Preferences', 'render_dashboard_preferences_page') );
-        add_submenu_page($main_menu, __('Auth0 Error Log', WPA0_LANG), __('Error Log', WPA0_LANG), 'manage_options', 'wpa0-errors', array('WP_Auth0_ErrorLog', 'render_settings_page') );
+        add_submenu_page($main_menu, __('Settings', WPA0_LANG), __('Settings', WPA0_LANG), 'manage_options', 'wpa0', array('WP_Auth0_Admin', 'render_settings_page') );
+        add_submenu_page($main_menu, __('Dashboard preferencecs', WPA0_LANG), __('Dashboard Setup', WPA0_LANG), 'manage_options', 'wpa0-dashboard', array('WP_Auth0_Dashboard_Preferences', 'render_dashboard_preferences_page') );
+        add_submenu_page($main_menu, __('Error Log', WPA0_LANG), __('Error Log', WPA0_LANG), 'manage_options', 'wpa0-errors', array('WP_Auth0_ErrorLog', 'render_settings_page') );
 
         if (WP_Auth0::is_jwt_auth_enabled())
         {
