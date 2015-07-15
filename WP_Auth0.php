@@ -140,6 +140,13 @@ class WP_Auth0 {
 		$settings_link = '<a href="admin.php?page=wpa0">Settings</a>';
 		array_unshift( $links, $settings_link );
 
+		$options = WP_Auth0_Options::Instance();
+		$auth0_app_token = $options->get('auth0_app_token');
+		if ( ! $auth0_app_token ) {
+			$settings_link = '<a href="admin.php?page=wpa0-setup">Quick Setup</a>';
+			array_unshift( $links, $settings_link );
+		}
+
 		return $links;
 	}
 
