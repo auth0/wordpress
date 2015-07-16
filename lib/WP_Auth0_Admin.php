@@ -276,9 +276,10 @@ class WP_Auth0_Admin {
 
 	public static function render_mfa() {
 		$v = WP_Auth0_Options::Instance()->get( 'mfa' );
+
 		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[mfa]" id="wpa0_mfa" value="1" ' . (is_null($v) ? '' : 'checked') . '/>';
 		echo '<br/><span class="description">' . __( 'Mark this if you want to enable multifactor authentication with Google Authenticator. More info ', WPA0_LANG );
-		echo '<a target="_blank" href="https://auth0.com/docs/mfa>' . __( 'HERE', WPA0_LANG ) . '</a></span>';
+		echo '<a target="_blank" href="https://auth0.com/docs/mfa">' . __( 'HERE', WPA0_LANG ) . '</a></span>';
 	}
 
 	public static function render_verified_email() {

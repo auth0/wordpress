@@ -20,8 +20,22 @@ function (user, context, callback) {
     // }
   }
   callback(null, user, context);
-}
-        "
+}"
     );
-    
+
+    public static $geo = array(
+        'name' => 'Store-Geo-Location-Do-Not-Rename',
+        'script' => "
+function (user, context, callback) {
+  user.user_metadata = user.user_metadata || {};
+  user.user_metadata.geoip = context.request.geoip;
+  auth0.users.updateUserMetadata(user.user_id, user.user_metadata)
+    .then(function(){
+      callback(null, user, context);
+    })
+    .catch(function(err){
+      callback(err);
+    });
+}"
+    );
 }
