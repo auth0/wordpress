@@ -88,8 +88,76 @@ class WP_Auth0_Api_Client {
 				'callbacks' => array( $callbackUrl )
 			))
 		) );
-		
+
 		if ( $response['response']['code'] !== 201 ) return false;
+
+		return json_decode($response['body']);
+	}
+
+	public static function update_client($domain, $app_token, $client_id, $sso) {
+
+		$endpoint = "https://$domain/api/v2/clients/$client_id";
+
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+		$headers['content-type'] = "application/json";
+
+		$response = wp_remote_post( $endpoint  , array(
+			'method' => 'PATCH',
+			'headers' => $headers,
+			'body' => json_encode(array(
+				'sso' => $sso,
+			))
+		) );
+
+		if ( $response['response']['code'] !== 201 ) return false;
+
+		return json_decode($response['body']);
+	}
+
+	public static function create_rule($domain, $app_token, $name, $script, $enabled = true) {
+		$payload = array(
+			"name" => $name,
+			"script" => $script,
+			// "order" => 2,
+			"enabled" => $enabled,
+			"stage" => "login_success"
+		);
+
+		$endpoint = "https://$domain/api/v2/rules";
+
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+		$headers['content-type'] = "application/json";
+
+		$response = wp_remote_post( $endpoint  , array(
+			'method' => 'POST',
+			'headers' => $headers,
+			'body' => json_encode($payload)
+		) );
+
+		if ( $response['response']['code'] >= 300 ) return false;
+
+		return json_decode($response['body']);
+	}
+
+	public static function delete_rule($domain, $app_token, $id) {
+
+		$endpoint = "https://$domain/api/v2/rules/$id";
+
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+		$headers['content-type'] = "application/json";
+
+		$response = wp_remote_post( $endpoint  , array(
+			'method' => 'DELETE',
+			'headers' => $headers
+		) );
+
+		if ( $response['response']['code'] !== 200 ) return false;
 
 		return json_decode($response['body']);
 	}

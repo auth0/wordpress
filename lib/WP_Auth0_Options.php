@@ -44,6 +44,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
             'gravatar' => true,
             'jwt_auth_integration' => false,
             'auth0_app_token' => null,
+            'mfa' => null,
             // 'auto_provisioning' => true,
             'default_login_redirection' => home_url(),
         );

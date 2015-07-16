@@ -64,6 +64,15 @@ class WP_Auth0_Admin {
 
 		) );
 
+		/* ------------------------- Features ------------------------- */
+
+		self::init_option_section( 'Features', array(
+
+			array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)', 'function' => 'render_sso' ),
+			array( 'id' => 'wpa0_mfa', 'name' => 'Multifactor Authentication (MFA)', 'function' => 'render_mfa' ),
+
+		) );
+
 		/* ------------------------- Appearance ------------------------- */
 
 		self::init_option_section( 'Appearance', array(
@@ -73,6 +82,9 @@ class WP_Auth0_Admin {
 			array( 'id' => 'wpa0_icon_url', 'name' => 'Icon URL', 'function' => 'render_icon_url' ),
 			array( 'id' => 'wpa0_gravatar', 'name' => 'Enable Gravatar integration', 'function' => 'render_gravatar' ),
 			array( 'id' => 'wpa0_custom_css', 'name' => 'Customize the Login Widget CSS', 'function' => 'render_custom_css' ),
+			array( 'id' => 'wpa0_custom_js', 'name' => 'Customize the Login Widget with custom JS', 'function' => 'render_custom_js' ),
+			array( 'id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style' ),
+			array( 'id' => 'wpa0_remember_last_login', 'name' => 'Remember last login', 'function' => 'render_remember_last_login' ),
 
 		) );
 
@@ -80,14 +92,11 @@ class WP_Auth0_Admin {
 
 		$advancedOptions = array(
 
-			array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)', 'function' => 'render_sso' ),
+
 			array( 'id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict' ),
-			array( 'id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style' ),
-			array( 'id' => 'wpa0_remember_last_login', 'name' => 'Remember last login', 'function' => 'render_remember_last_login' ),
 			array( 'id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL', 'function' => 'render_default_login_redirection' ),
 			array( 'id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email' ),
 			array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
-			array( 'id' => 'wpa0_custom_js', 'name' => 'Customize the Login Widget with custom JS', 'function' => 'render_custom_js' ),
 			// array( 'id' => 'wpa0_auto_provisioning', 'name' => 'Auto Provisioning', 'function' => 'render_auto_provisioning' ),
 			array( 'id' => 'wpa0_auth0_implicit_workflow', 'name' => 'Auth0 Implicit flow', 'function' => 'render_auth0_implicit_workflow' ),
 			array( 'id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)', 'function' => 'render_auto_login' ),
@@ -265,6 +274,13 @@ class WP_Auth0_Admin {
 		echo '<a target="_blank" href="https://auth0.com/docs/sso/single-sign-on">' . __( 'HERE', WPA0_LANG ) . '</a></span>';
 	}
 
+	public static function render_mfa() {
+		$v = WP_Auth0_Options::Instance()->get( 'mfa' );
+		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[mfa]" id="wpa0_mfa" value="1" ' . (is_null($v) ? '' : 'checked') . '/>';
+		echo '<br/><span class="description">' . __( 'Mark this if you want to enable multifactor authentication with Google Authenticator. More info ', WPA0_LANG );
+		echo '<a target="_blank" href="https://auth0.com/docs/mfa>' . __( 'HERE', WPA0_LANG ) . '</a></span>';
+	}
+
 	public static function render_verified_email() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'requires_verified_email' ) );
 		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[requires_verified_email]" id="wpa0_verified_email" value="1" ' . checked( $v, 1, false ) . '/>';
@@ -317,6 +333,10 @@ class WP_Auth0_Admin {
 
 	}
 
+	public static function render_features_description() {
+
+	}
+
 	public static function render_advanced_description() {
 
 	}
@@ -335,6 +355,8 @@ class WP_Auth0_Admin {
 	}
 
 	public static function input_validator( $input ){
+		$old_options = WP_Auth0_Options::Instance()->get_options();
+
 		$input['client_id'] = sanitize_text_field( $input['client_id'] );
 		$input['form_title'] = sanitize_text_field( $input['form_title'] );
 		$input['icon_url'] = esc_url( $input['icon_url'], array(
@@ -343,6 +365,27 @@ class WP_Auth0_Admin {
 		) );
 
 		$input['sso'] = ( isset( $input['sso'] ) ? $input['sso'] : 0 );
+		if ($old_options['sso'] != $input['sso'] && 1 == $input['sso']) {
+			WP_Auth0_Api_Client::update_client($input['domain'], $input['auth0_app_token'], $input['client_id'],$input['sso'] == 1);
+		}
+
+		$input['mfa'] = ( isset( $input['mfa'] ) ? $input['mfa'] : 0 );
+		if ($old_options['mfa'] == null && 1 == $input['mfa']) {
+			$mfa_script = WP_Auth0_RulesLib::$google_MFA['script'];
+			$mfa_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $mfa_script);
+			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $input['auth0_app_token'], WP_Auth0_RulesLib::$google_MFA['name'], $mfa_script);
+
+			$input['mfa'] = $rule->id;
+		}
+		elseif ($old_options['mfa'] != null && 0 == $input['mfa']) {
+			WP_Auth0_Api_Client::delete_rule($input['domain'], $input['auth0_app_token'], $input['mfa']);
+			$input['mfa'] = null;
+		}
+		else {
+			$input['mfa'] = $old_options['mfa'];
+		}
+
+
 		$input['requires_verified_email'] = ( isset( $input['requires_verified_email'] ) ? $input['requires_verified_email'] : 0 );
 		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] ) ? $input['wordpress_login_enabled'] : 0 );
 		$input['jwt_auth_integration'] = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
