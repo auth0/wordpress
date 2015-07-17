@@ -7,6 +7,10 @@ jQuery(document).ready(function($) {
         }).next().hide();
 
     jQuery(jQuery( "form h3" )[1]).click();
+    jQuery("#wpa0_fullcontact").click(function(){
+        jQuery("#wpa0_fullcontact_key_label").toggle();
+        jQuery("#wpa0_fullcontact_key").toggle().val('');
+    });
 
     //uploading files variable
     var media_frame;

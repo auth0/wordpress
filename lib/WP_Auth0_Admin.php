@@ -66,6 +66,7 @@ class WP_Auth0_Admin {
 
 			array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)', 'function' => 'render_sso' ),
 			array( 'id' => 'wpa0_mfa', 'name' => 'Multifactor Authentication (MFA)', 'function' => 'render_mfa' ),
+			array( 'id' => 'wpa0_fullcontact', 'name' => 'FullContact integration', 'function' => 'render_fullcontact' ),
 
 		) );
 
@@ -278,6 +279,18 @@ class WP_Auth0_Admin {
 		echo '<a target="_blank" href="https://auth0.com/docs/mfa">' . __( 'HERE', WPA0_LANG ) . '</a></span>';
 	}
 
+	public static function render_fullcontact() {
+		$v = WP_Auth0_Options::Instance()->get( 'fullcontact' );
+
+		echo '<input type="checkbox" id="wpa0_fullcontact" value="1" ' . (empty($v) ? '' : 'checked') . '/>';
+
+		echo '<br><label for="wpa0_fullcontact_key" class="'.(empty($v) ? 'hidden' : '') .'" id="wpa0_fullcontact_key_label">Enter your FullContact api key:</label>';
+		echo '<input type="text" id="wpa0_fullcontact_key" class="'.(empty($v) ? 'hidden' : '') .'" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[fullcontact]" value="'.$v.'" />';
+
+		echo '<br/><span class="description">' . __( 'Mark this if you want to hydrate your users profile with the data provided by FullContact. A valid api key is requiere.', WPA0_LANG );
+		echo '</span>';
+	}
+
 	public static function render_verified_email() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'requires_verified_email' ) );
 		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[requires_verified_email]" id="wpa0_verified_email" value="1" ' . checked( $v, 1, false ) . '/>';
@@ -364,6 +377,18 @@ class WP_Auth0_Admin {
 		$input['sso'] = ( isset( $input['sso'] ) ? $input['sso'] : 0 );
 		if ($old_options['sso'] != $input['sso'] && 1 == $input['sso']) {
 			WP_Auth0_Api_Client::update_client($input['domain'], $input['auth0_app_token'], $input['client_id'],$input['sso'] == 1);
+		}
+
+		if ($old_options['fullcontact'] != $input['fullcontact']) {
+			if (!empty($input['fullcontact'])) {
+				$fullcontact_script = WP_Auth0_RulesLib::$fullcontact['script'];
+				$fullcontact_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['fullcontact'], $fullcontact_script);
+				$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $input['auth0_app_token'], WP_Auth0_RulesLib::$fullcontact['name'], $fullcontact_script);
+				$input['fullcontact_rule'] = $rule->id;
+			}
+			else {
+				WP_Auth0_Api_Client::delete_rule($input['domain'], $input['auth0_app_token'], $old_options['fullcontact_rule']);
+			}
 		}
 
 		$input['mfa'] = ( isset( $input['mfa'] ) ? $input['mfa'] : 0 );

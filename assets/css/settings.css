@@ -47,3 +47,17 @@ h3 {
 .form-table th {
   padding-left: 10px;
 }
+
+#wpa0_fullcontact_key {
+    width:300px;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+#wpa0_fullcontact_key_label {
+    margin-right: 10px;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.hidden {
+    display: none;
+}

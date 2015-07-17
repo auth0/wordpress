@@ -45,6 +45,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
             'jwt_auth_integration' => false,
             'auth0_app_token' => null,
             'mfa' => null,
+            'fullcontact' => null,
             // 'auto_provisioning' => true,
             'default_login_redirection' => home_url(),
         );

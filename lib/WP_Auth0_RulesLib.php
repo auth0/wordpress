@@ -38,4 +38,41 @@ function (user, context, callback) {
     });
 }"
     );
+
+    public static $fullcontact = array(
+        'name' => 'Enrich-profile-with-FullContact-Do-Not-Rename',
+        'script' => "
+function (user, context, callback) {
+
+  var fullContactAPIKey = 'REPLACE_WITH_YOUR_CLIENT_ID';
+
+  if(!user.email) {
+    //the profile doesn't have email so we can't query fullcontact api.
+    return callback(null, user, context);
+  }
+
+  request({
+    url: 'https://api.fullcontact.com/v2/person.json',
+    qs: {
+      email:  user.email,
+      apiKey: fullContactAPIKey
+    }
+  }, function (e,r,b) {
+    if(e) return callback(e);
+
+    if(r.statusCode===200){
+      user.user_metadata = user.user_metadata || {};
+      user.user_metadata.fullContactInfo = JSON.parse(b);
+
+      auth0.users.updateUserMetadata(user.user_id, user.user_metadata)
+        .then(function(){
+          callback(null, user, context);
+        })
+        .catch(function(err){
+          callback(err);
+        });
+    }
+  });
+}"
+    );
 }
