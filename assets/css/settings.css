@@ -37,3 +37,13 @@ textarea {
 .text-alone {
     margin: 10px;
 }
+
+h3 {
+    background: #FAFAFA;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.form-table th {
+  padding-left: 10px;
+}

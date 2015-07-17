@@ -10,7 +10,8 @@ class WP_Auth0_Settings_Section {
 
         $options = WP_Auth0_Options::Instance();
         $auth0_app_token = $options->get('auth0_app_token');
-        $show_initial_setup = ( ! $auth0_app_token );
+        $client_id = $options->get('client_id');
+        $show_initial_setup = ! ( $auth0_app_token && $client_id );
 
         $main_menu = 'wpa0';
 

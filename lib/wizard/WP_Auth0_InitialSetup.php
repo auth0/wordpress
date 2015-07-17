@@ -48,6 +48,7 @@ class WP_Auth0_InitialSetup {
     protected static function render($step) {
         switch ( $step ) {
             case 3:
+                $name = get_bloginfo('name');
                 include WPA0_PLUGIN_DIR . 'templates/initial-setup-step3.php';
                 break;
 

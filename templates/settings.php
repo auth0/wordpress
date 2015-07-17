@@ -9,7 +9,7 @@
     <?php settings_errors(); ?>
 	<form action="options.php" method="post">
 		<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() ); ?>
-		<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() ); ?>  
+		<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() ); ?>
 		<?php submit_button(); ?>
 	</form>
 </div>

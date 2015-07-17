@@ -1,4 +1,13 @@
 jQuery(document).ready(function($) {
+    jQuery( "form h3" )
+        .append(' <small>(+)</small><small style="display:none">(-)</small>')
+        .click(function(){
+            jQuery(this).next().toggle();
+            jQuery(this).find('small').toggle();
+        }).next().hide();
+
+    jQuery(jQuery( "form h3" )[1]).click();
+
     //uploading files variable
     var media_frame;
     $(document).on('click', '#wpa0_choose_icon', function(event) {

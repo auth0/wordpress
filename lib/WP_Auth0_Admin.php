@@ -46,16 +46,12 @@ class WP_Auth0_Admin {
 	}
 
 	public static function init_admin() {
-
-		// if ( ! isset( $_REQUEST['page'] ) || 'wpa0' !== $_REQUEST['page'] ) {
-		// 	return;
-		// }
+		add_action( 'admin_notices', array( __CLASS__, 'create_account_message' ) );
 
 		/* ------------------------- BASIC ------------------------- */
 
 		self::init_option_section( 'Basic', array(
 
-			array( 'id' => 'wpa0_create_account_message', 'name' => '', 'function' => 'create_account_message' ),
 			array( 'id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain' ),
 			array( 'id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id' ),
 			array( 'id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret' ),
