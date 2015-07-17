@@ -67,6 +67,8 @@ class WP_Auth0_Admin {
 			array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)', 'function' => 'render_sso' ),
 			array( 'id' => 'wpa0_mfa', 'name' => 'Multifactor Authentication (MFA)', 'function' => 'render_mfa' ),
 			array( 'id' => 'wpa0_fullcontact', 'name' => 'FullContact integration', 'function' => 'render_fullcontact' ),
+			array( 'id' => 'wpa0_geo', 'name' => 'Store geolocation', 'function' => 'render_geo' ),
+			array( 'id' => 'wpa0_income', 'name' => 'Store zipcode income', 'function' => 'render_income' ),
 
 		) );
 
@@ -279,6 +281,22 @@ class WP_Auth0_Admin {
 		echo '<a target="_blank" href="https://auth0.com/docs/mfa">' . __( 'HERE', WPA0_LANG ) . '</a></span>';
 	}
 
+	public static function render_geo() {
+		$v = WP_Auth0_Options::Instance()->get( 'geo_rule' );
+
+		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[geo_rule]" id="wpa0_geo_rule" value="1" ' . (is_null($v) ? '' : 'checked') . '/>';
+		echo '<br/><span class="description">' . __( 'Mark this if you want to store geo location information based on your users IP in the user_metadata', WPA0_LANG );
+		echo '</span>';
+	}
+
+	public static function render_income() {
+		$v = WP_Auth0_Options::Instance()->get( 'income_rule' );
+
+		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[income_rule]" id="wpa0_income_rule" value="1" ' . (is_null($v) ? '' : 'checked') . '/>';
+		echo '<br/><span class="description">' . __( 'Mark this if you want to store income data based on the zipcode (calculated using the users IP).', WPA0_LANG ) . '</span>';
+		echo '<br/><span class="description">' . __( 'Represents the median income of the users zipcode, based on last US census data.', WPA0_LANG ) . '</span>';
+	}
+
 	public static function render_fullcontact() {
 		$v = WP_Auth0_Options::Instance()->get( 'fullcontact' );
 
@@ -400,11 +418,37 @@ class WP_Auth0_Admin {
 			$input['mfa'] = $rule->id;
 		}
 		elseif ($old_options['mfa'] != null && 0 == $input['mfa']) {
-			WP_Auth0_Api_Client::delete_rule($input['domain'], $input['auth0_app_token'], $input['mfa']);
+			WP_Auth0_Api_Client::delete_rule($input['domain'], $input['auth0_app_token'], $old_options['mfa']);
 			$input['mfa'] = null;
 		}
 		else {
 			$input['mfa'] = $old_options['mfa'];
+		}
+
+		$input['geo_rule'] = ( isset( $input['geo_rule'] ) ? $input['geo_rule'] : 0 );
+		if ($old_options['geo_rule'] == null && 1 == $input['geo_rule']) {
+			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $input['auth0_app_token'], WP_Auth0_RulesLib::$geo['name'], WP_Auth0_RulesLib::$geo['script']);
+			$input['geo_rule'] = $rule->id;
+		}
+		elseif ($old_options['geo_rule'] != null && 0 == $input['geo_rule']) {
+			WP_Auth0_Api_Client::delete_rule($input['domain'], $input['auth0_app_token'], $old_options['geo_rule']);
+			$input['geo_rule'] = null;
+		}
+		else {
+			$input['geo_rule'] = $old_options['geo_rule'];
+		}
+
+		$input['income_rule'] = ( isset( $input['income_rule'] ) ? $input['income_rule'] : 0 );
+		if ($old_options['income_rule'] == null && 1 == $input['income_rule']) {
+			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $input['auth0_app_token'], WP_Auth0_RulesLib::$income['name'], WP_Auth0_RulesLib::$income['script']);
+			$input['income_rule'] = $rule->id;
+		}
+		elseif ($old_options['income_rule'] != null && 0 == $input['income_rule']) {
+			WP_Auth0_Api_Client::delete_rule($input['domain'], $input['auth0_app_token'], $old_options['income_rule']);
+			$input['income_rule'] = null;
+		}
+		else {
+			$input['income_rule'] = $old_options['income_rule'];
 		}
 
 

@@ -157,7 +157,7 @@ class WP_Auth0_Api_Client {
 			'headers' => $headers
 		) );
 
-		if ( $response['response']['code'] !== 200 ) return false;
+		if ( $response['response']['code'] >= 300 ) return false;
 
 		return json_decode($response['body']);
 	}

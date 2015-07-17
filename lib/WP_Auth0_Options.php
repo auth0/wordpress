@@ -46,6 +46,9 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
             'auth0_app_token' => null,
             'mfa' => null,
             'fullcontact' => null,
+            'fullcontact_rule' => null,
+            'geo_rule' => null,
+            'income_rule' => null,
             // 'auto_provisioning' => true,
             'default_login_redirection' => home_url(),
         );
