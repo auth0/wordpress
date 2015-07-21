@@ -42,10 +42,60 @@ h3 {
     background: #FAFAFA;
     padding: 10px;
     cursor: pointer;
+    position: relative;
+    padding-left: 50px;
+    line-height: 20px;
+    margin-bottom: 0;
+    overflow: hidden;
+}
+h3 .title {
+    display: inline-block;
+}
+h3 .description {
+    float:right;
+    font-size:12px;
+    font-style: italic;
+    font-weight: normal;
+    padding-left: 1%;
+    width: 79%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    line-height: 20px;
+    text-align: right;
+}
+@media screen and (max-width: 550px) {
+    h3 .description {
+      width: 69%;
+    }
+}
+@media screen and (max-width: 400px) {
+    h3 .description {
+      width: 60%;
+    }
 }
 
+h3 .icon {
+    display: inline-block;
+    top:0;
+    left:0;
+    background: #0073aa;
+    color:#FFFFFF;
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 19px;
+}
+
+.form-table {
+    margin-top: 0;
+    background: #FFFFFF;
+}
 .form-table th {
-  padding-left: 10px;
+  padding-left: 20px;
 }
 
 #wpa0_fullcontact_key {
@@ -60,4 +110,9 @@ h3 {
 }
 .hidden {
     display: none;
+}
+
+.social label {
+    width: 70px;
+    display: inline-block;
 }

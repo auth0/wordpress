@@ -89,7 +89,7 @@ class WP_Auth0_Api_Client {
 			))
 		) );
 
-		if ( $response['response']['code'] !== 201 ) return false;
+		if ( $response['response']['code'] > 300 ) return false;
 
 		return json_decode($response['body']);
 	}
@@ -111,7 +111,7 @@ class WP_Auth0_Api_Client {
 			))
 		) );
 
-		if ( $response['response']['code'] !== 201 ) return false;
+		if ( $response['response']['code'] > 300 ) return false;
 
 		return json_decode($response['body']);
 	}
@@ -146,6 +146,80 @@ class WP_Auth0_Api_Client {
 	public static function delete_rule($domain, $app_token, $id) {
 
 		$endpoint = "https://$domain/api/v2/rules/$id";
+
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+		$headers['content-type'] = "application/json";
+
+		$response = wp_remote_post( $endpoint  , array(
+			'method' => 'DELETE',
+			'headers' => $headers
+		) );
+
+		if ( $response['response']['code'] >= 300 ) return false;
+
+		return json_decode($response['body']);
+	}
+
+	public static function create_connection($domain, $app_token, $payload) {
+		$endpoint = "https://$domain/api/v2/connections";
+
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+		$headers['content-type'] = "application/json";
+
+		$response = wp_remote_post( $endpoint  , array(
+			'method' => 'POST',
+			'headers' => $headers,
+			'body' => json_encode($payload)
+		) );
+
+		if ( $response['response']['code'] >= 300 ) return false;
+
+		return json_decode($response['body']);
+	}
+
+	public static function search_connection($domain, $app_token, $strategy) {
+		$endpoint = "https://$domain/api/v2/connections?strategy=$strategy";
+
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+
+		$response =  wp_remote_get( $endpoint  , array(
+			'headers' => $headers,
+		) );
+
+		if ( $response['response']['code'] >= 300 ) return false;
+
+		return json_decode($response['body']);
+	}
+
+	public static function update_connection($domain, $app_token, $id, $payload) {
+		$endpoint = "https://$domain/api/v2/connections/$id";
+echo $endpoint;
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+		$headers['content-type'] = "application/json";
+
+		$response = wp_remote_post( $endpoint  , array(
+			'method' => 'PATCH',
+			'headers' => $headers,
+			'body' => json_encode($payload)
+		) );
+
+var_dump($response);
+
+		if ( $response['response']['code'] >= 300 ) return false;
+
+		return json_decode($response['body']);
+	}
+
+	public static function delete_connection($domain, $app_token, $id) {
+		$endpoint = "https://$domain/api/v2/connections/$id";
 
 		$headers = self::get_info_headers();
 

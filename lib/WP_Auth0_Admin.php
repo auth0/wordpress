@@ -1,6 +1,12 @@
 <?php
 
 class WP_Auth0_Admin {
+
+	const BASIC_DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+	const FEATURES_DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+	const APPEARANCE_DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+	const ADVANCED_DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
 	public static function init() {
 		add_action( 'admin_init', array( __CLASS__, 'init_admin' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue' ) );
@@ -22,14 +28,13 @@ class WP_Auth0_Admin {
 		) );
 	}
 
-	protected static function init_option_section($sectionName, $settings) {
+	protected static function init_option_section($sectionName, $id, $settings) {
 		$options_name = WP_Auth0_Options::Instance()->get_options_name();
-		$lowerName = strtolower( $sectionName );
 
 		add_settings_section(
-			"wp_auth0_{$lowerName}_settings_section",
+			"wp_auth0_{$id}_settings_section",
 			__( $sectionName, WPA0_LANG ),
-			array( __CLASS__, "render_{$lowerName}_description" ),
+			array( __CLASS__, "render_{$id}_description" ),
 			$options_name
 		);
 
@@ -39,7 +44,7 @@ class WP_Auth0_Admin {
 				__( $setting['name'], WPA0_LANG ),
 				array( __CLASS__, $setting['function'] ),
 				$options_name,
-				"wp_auth0_{$lowerName}_settings_section",
+				"wp_auth0_{$id}_settings_section",
 				array( 'label_for' => $setting['id'] )
 			);
 		}
@@ -50,7 +55,7 @@ class WP_Auth0_Admin {
 
 		/* ------------------------- BASIC ------------------------- */
 
-		self::init_option_section( 'Basic', array(
+		self::init_option_section( self::build_section_title( 'Basic', self::BASIC_DESCRIPTION ), 'basic', array(
 
 			array( 'id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain' ),
 			array( 'id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id' ),
@@ -62,19 +67,20 @@ class WP_Auth0_Admin {
 
 		/* ------------------------- Features ------------------------- */
 
-		self::init_option_section( 'Features', array(
+		self::init_option_section( self::build_section_title( 'Features', self::FEATURES_DESCRIPTION ), 'features',array(
 
 			array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)', 'function' => 'render_sso' ),
 			array( 'id' => 'wpa0_mfa', 'name' => 'Multifactor Authentication (MFA)', 'function' => 'render_mfa' ),
 			array( 'id' => 'wpa0_fullcontact', 'name' => 'FullContact integration', 'function' => 'render_fullcontact' ),
 			array( 'id' => 'wpa0_geo', 'name' => 'Store geolocation', 'function' => 'render_geo' ),
 			array( 'id' => 'wpa0_income', 'name' => 'Store zipcode income', 'function' => 'render_income' ),
+			array( 'id' => 'wpa0_social_facebook', 'name' => 'Login with Facebook', 'function' => 'render_social_facebook' ),
 
 		) );
 
 		/* ------------------------- Appearance ------------------------- */
 
-		self::init_option_section( 'Appearance', array(
+		self::init_option_section( self::build_section_title( 'Appearance', self::APPEARANCE_DESCRIPTION ), 'appearance', array(
 
 			array( 'id' => 'wpa0_form_title', 'name' => 'Form Title', 'function' => 'render_form_title' ),
 			array( 'id' => 'wpa0_social_big_buttons', 'name' => 'Show big social buttons', 'function' => 'render_social_big_buttons' ),
@@ -111,7 +117,7 @@ class WP_Auth0_Admin {
 			$advancedOptions[] = array( 'id' => 'wpa0_jwt_auth_integration', 'name' => 'Enable JWT Auth integration', 'function' => 'render_jwt_auth_integration' );
 		}
 
-		self::init_option_section( 'Advanced', $advancedOptions );
+		self::init_option_section( self::build_section_title( 'Advanced', self::ADVANCED_DESCRIPTION ), 'advanced', $advancedOptions );
 
 		$options_name = WP_Auth0_Options::Instance()->get_options_name();
 		register_setting( $options_name, $options_name, array( __CLASS__, 'input_validator' ) );
@@ -309,6 +315,29 @@ class WP_Auth0_Admin {
 		echo '</span>';
 	}
 
+	public static function render_social_facebook() {
+		$social_facebook = WP_Auth0_Options::Instance()->get( 'social_facebook' );
+		$social_facebook_key = WP_Auth0_Options::Instance()->get( 'social_facebook_key' );
+		$social_facebook_secret = WP_Auth0_Options::Instance()->get( 'social_facebook_secret' );
+?>
+
+		<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook]" id="wpa0_social_facebook" value="1" <?php echo checked( $social_facebook, 1, false ); ?>/>
+		<div class="social social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
+			<label for="wpa0_social_facebook_key" id="wpa0_social_facebook_key_label">Api key:</label>
+			<input type="text" id="wpa0_social_facebook_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook_key]" value="<?php echo $social_facebook_key; ?>" />
+		</div>
+		<div class="social social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
+			<label for="wpa0_social_facebook_secret" id="wpa0_social_facebook_secret_label">Api secret:</label>
+			<input type="text" id="wpa0_social_facebook_secret" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook_secret]" value="<?php echo $social_facebook_secret; ?>" />
+		</div>
+		<div class="social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
+			<span class="description"><?php echo __( 'If you leave your keys empty Auth0 will use its own keys, but we recommend to use your own app. It will you customize the data you want to receive (ie, birthdate for the dashboard age chart).', WPA0_LANG ); ?></span>
+		</div>
+
+<?php
+
+	}
+
 	public static function render_verified_email() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'requires_verified_email' ) );
 		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[requires_verified_email]" id="wpa0_verified_email" value="1" ' . checked( $v, 1, false ) . '/>';
@@ -382,21 +411,48 @@ class WP_Auth0_Admin {
 		);
 	}
 
-	public static function input_validator( $input ){
-		$old_options = WP_Auth0_Options::Instance()->get_options();
-
+	public static function basic_validation( $old_options, $input ) {
 		$input['client_id'] = sanitize_text_field( $input['client_id'] );
 		$input['form_title'] = sanitize_text_field( $input['form_title'] );
-		$input['icon_url'] = esc_url( $input['icon_url'], array(
-			'http',
-			'https',
-		) );
+		$input['icon_url'] = esc_url( $input['icon_url'], array( 'http', 'https' ) );
+		$input['requires_verified_email'] = ( isset( $input['requires_verified_email'] ) ? $input['requires_verified_email'] : 0 );
+		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] ) ? $input['wordpress_login_enabled'] : 0 );
+		$input['jwt_auth_integration'] = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
+		$input['allow_signup'] = ( isset( $input['allow_signup'] ) ? $input['allow_signup'] : 0 );
+		$input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
+		$input['social_big_buttons'] = ( isset( $input['social_big_buttons'] ) ? $input['social_big_buttons'] : 0 );
+		$input['gravatar'] = ( isset( $input['gravatar'] ) ? $input['gravatar'] : 0 );
+		$input['remember_last_login'] = ( isset( $input['remember_last_login'] ) ? $input['remember_last_login'] : 0 );
+		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
 
+		//$input['auto_provisioning'] = ( isset( $input['auto_provisioning'] ) ? 1 : 0 );
+
+		if ( trim( $input['dict'] ) !== '' ) {
+			if ( strpos( $input['dict'], '{' ) !== false && json_decode( $input['dict'] ) === null ) {
+				$error = __( 'The Translation parameter should be a valid json object.', WPA0_LANG );
+				self::add_validation_error( $error );
+			}
+		}
+
+		if ( trim( $input['extra_conf'] ) !== '' ) {
+			if ( json_decode( $input['extra_conf'] ) === null ) {
+				$error = __( 'The Extra settings parameter should be a valid json object.', WPA0_LANG );
+				self::add_validation_error( $error );
+			}
+		}
+
+		return $input;
+	}
+
+	public static function sso_validation( $old_options, $input ) {
 		$input['sso'] = ( isset( $input['sso'] ) ? $input['sso'] : 0 );
 		if ($old_options['sso'] != $input['sso'] && 1 == $input['sso']) {
 			WP_Auth0_Api_Client::update_client($input['domain'], $input['auth0_app_token'], $input['client_id'],$input['sso'] == 1);
 		}
+		return $input;
+	}
 
+	public static function fullcontact_validation( $old_options, $input ) {
 		if ($old_options['fullcontact'] != $input['fullcontact']) {
 			if (!empty($input['fullcontact'])) {
 				$fullcontact_script = WP_Auth0_RulesLib::$fullcontact['script'];
@@ -408,7 +464,10 @@ class WP_Auth0_Admin {
 				WP_Auth0_Api_Client::delete_rule($input['domain'], $input['auth0_app_token'], $old_options['fullcontact_rule']);
 			}
 		}
+		return $input;
+	}
 
+	public static function mfa_validation( $old_options, $input ) {
 		$input['mfa'] = ( isset( $input['mfa'] ) ? $input['mfa'] : 0 );
 		if ($old_options['mfa'] == null && 1 == $input['mfa']) {
 			$mfa_script = WP_Auth0_RulesLib::$google_MFA['script'];
@@ -424,7 +483,10 @@ class WP_Auth0_Admin {
 		else {
 			$input['mfa'] = $old_options['mfa'];
 		}
+		return $input;
+	}
 
+	public static function georule_validation( $old_options, $input ) {
 		$input['geo_rule'] = ( isset( $input['geo_rule'] ) ? $input['geo_rule'] : 0 );
 		if ($old_options['geo_rule'] == null && 1 == $input['geo_rule']) {
 			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $input['auth0_app_token'], WP_Auth0_RulesLib::$geo['name'], WP_Auth0_RulesLib::$geo['script']);
@@ -437,7 +499,10 @@ class WP_Auth0_Admin {
 		else {
 			$input['geo_rule'] = $old_options['geo_rule'];
 		}
+		return $input;
+	}
 
+	public static function incomerule_validation( $old_options, $input ) {
 		$input['income_rule'] = ( isset( $input['income_rule'] ) ? $input['income_rule'] : 0 );
 		if ($old_options['income_rule'] == null && 1 == $input['income_rule']) {
 			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $input['auth0_app_token'], WP_Auth0_RulesLib::$income['name'], WP_Auth0_RulesLib::$income['script']);
@@ -450,22 +515,123 @@ class WP_Auth0_Admin {
 		else {
 			$input['income_rule'] = $old_options['income_rule'];
 		}
+		return $input;
+	}
 
+	/**
+	 * This function will sync and update the connection setting with auth0
+	 * First it checks if there is any connection with this strategy enabled for the app.
+	 * - If exists, it checks if it has the facebook keys, in this case will ignore WP setting and will update the WP settings
+	 * - If exists, it checks if it has the facebook keys, if not, it will update the connection with the new keys
+	 *
+	 * - If not exists, it will create a new connection
+	 *
+	 * In the case that the user disable the connection on WP, it check if there is an active connection with the client_id.
+	 * - If exists, it will remove the client_id and if there is no other client_id it will delete the connection.
+	 */
+	public static function socialfacebook_validation( $old_options, $input ) {
+		$input['social_facebook'] = ( isset( $input['social_facebook'] ) ? $input['social_facebook']  : 0);
+		$input['social_facebook_key'] = ( empty( $input['social_facebook_key'] ) ? null  : trim( $input['social_facebook_key'] ) );
+		$input['social_facebook_secret'] = ( empty( $input['social_facebook_secret'] ) ? null  : trim( $input['social_facebook_secret'] ) );
 
-		$input['requires_verified_email'] = ( isset( $input['requires_verified_email'] ) ? $input['requires_verified_email'] : 0 );
-		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] ) ? $input['wordpress_login_enabled'] : 0 );
-		$input['jwt_auth_integration'] = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
-		$input['allow_signup'] = ( isset( $input['allow_signup'] ) ? $input['allow_signup'] : 0 );
-		$input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
+		if (
+			$old_options['social_facebook'] != $input['social_facebook'] ||
+			$old_options['social_facebook_key'] != $input['social_facebook_key'] ||
+			$old_options['social_facebook_secret'] != $input['social_facebook_secret']
+			) {
 
-		$input['social_big_buttons'] = ( isset( $input['social_big_buttons'] ) ? $input['social_big_buttons'] : 0 );
-		$input['gravatar'] = ( isset( $input['gravatar'] ) ? $input['gravatar'] : 0 );
+			$connections = WP_Auth0_Api_Client::search_connection($input['domain'], $input['auth0_app_token'], 'facebook');
 
-		$input['remember_last_login'] = ( isset( $input['remember_last_login'] ) ? $input['remember_last_login'] : 0 );
+			$facebook_connection = null;
 
-		//$input['auto_provisioning'] = ( isset( $input['auto_provisioning'] ) ? 1 : 0 );
+			foreach ($connections as $connection) {
+				if (in_array($input['client_id'], $connection->enabled_clients)) {
+					$facebook_connection = $connection;
+					break;
+				} elseif ( ! $facebook_connection && count($connection->enabled_clients) == 0 ) {
+					$facebook_connection = $connection;
+					$facebook_connection->enabled_clients[] = $input['client_id'];
+				} elseif ( $connection->name == 'facebook' ) {
+					$facebook_connection = $connection;
+					$facebook_connection->enabled_clients[] = $input['client_id'];
+				}
+			}
+			if ( $facebook_connection === null && count($connections) === 1) {
+				$facebook_connection = $connections[0];
+				$facebook_connection->enabled_clients[] = $input['client_id'];
+			}
 
-		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
+			if ( $input['social_facebook'] ) {
+
+				if ( $facebook_connection && empty($facebook_connection->options->client_id) && empty($facebook_connection->options->client_secret) ) {
+
+					$data = array(
+						'options' => array(
+							"client_id" => $input['social_facebook_key'],
+      						"client_secret" => $input['social_facebook_secret'],
+							"public_profile" => true,
+							"email" => true,
+							"user_birthday" => true,
+						),
+						'enabled_clients' => $connection->enabled_clients
+					);
+
+					WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $facebook_connection->id, $data);
+				} elseif ( $facebook_connection && !empty($facebook_connection->options->client_id) && !empty($facebook_connection->options->client_secret) ) {
+
+					$input['social_facebook_key'] = $facebook_connection->options->client_id;
+					$input['social_facebook_secret'] = $facebook_connection->options->client_secret;
+
+					$data = array(
+						'options' => array(
+							"public_profile" => true,
+							"email" => true,
+							"user_birthday" => true,
+							"client_id" => $input['social_facebook_key'],
+      						"client_secret" => $input['social_facebook_secret'],
+						),
+						'enabled_clients' => $connection->enabled_clients
+					);
+
+					WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $facebook_connection->id, $data);
+
+				} elseif ( ! $facebook_connection ) {
+
+					$data = array(
+						'name' => 'facebook',
+						'strategy' => 'facebook',
+						'enabled_clients' => array( $input['client_id'] ),
+						'options' => array(
+							"client_id" => $input['social_facebook_key'],
+      						"client_secret" => $input['social_facebook_key'],
+							"public_profile" => true,
+							"email" => true,
+							"user_birthday" => true,
+						),
+					);
+					WP_Auth0_Api_Client::create_connection($input['domain'], $input['auth0_app_token'], $data);
+				}
+
+			}
+			else {
+				if ($facebook_connection) {
+					$data['enabled_clients'] = array();
+					foreach ($facebook_connection->enabled_clients as $client) {
+						if ($client != $input['client_id']) {
+							$data['enabled_clients'][] = $input['client_id'];
+						}
+					}
+
+					WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $facebook_connection->id, $data);
+				}
+			}
+
+		}
+
+		return $input;
+	}
+
+	public static function loginredirection_validation( $old_options, $input ) {
 		$home_url = home_url();
 
 		if ( empty( $input['default_login_redirection'] ) ) {
@@ -486,7 +652,10 @@ class WP_Auth0_Admin {
 				self::add_validation_error( $error );
 			}
 		}
+		return $input;
+	}
 
+	public static function basicdata_validation( $old_options, $input ) {
 		$error = '';
 		$completeBasicData = true;
 		if ( empty( $input['domain'] ) ) {
@@ -517,21 +686,32 @@ class WP_Auth0_Admin {
 				self::add_validation_error( $error );
 			}
 		}
+		return $input;
+	}
 
-		if ( trim( $input['dict'] ) !== '' ) {
-			if ( strpos( $input['dict'], '{' ) !== false && json_decode( $input['dict'] ) === null ) {
-				$error = __( 'The Translation parameter should be a valid json object.', WPA0_LANG );
-				self::add_validation_error( $error );
-			}
-		}
+	public static function input_validator( $input ){
+		$old_options = WP_Auth0_Options::Instance()->get_options();
 
-		if ( trim( $input['extra_conf'] ) !== '' ) {
-			if ( json_decode( $input['extra_conf'] ) === null ) {
-				$error = __( 'The Extra settings parameter should be a valid json object.', WPA0_LANG );
-				self::add_validation_error( $error );
-			}
+		$actions_middlewares = array(
+			'basic_validation',
+			'sso_validation',
+			'fullcontact_validation',
+			'mfa_validation',
+			'georule_validation',
+			'incomerule_validation',
+			'loginredirection_validation',
+			'basicdata_validation',
+			'socialfacebook_validation',
+		);
+
+		foreach ($actions_middlewares as $action) {
+			$input = self::$action($old_options, $input);
 		}
 
 		return $input;
+	}
+
+	protected static function build_section_title($title, $description) {
+		return "<span class=\"title\">$title</span><span class=\"description\" title=\"$description\">$description</span>";
 	}
 }

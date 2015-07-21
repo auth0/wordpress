@@ -1,15 +1,19 @@
 jQuery(document).ready(function($) {
     jQuery( "form h3" )
-        .append(' <small>(+)</small><small style="display:none">(-)</small>')
+        .prepend(' <span class="icon">+</span><span class="icon" style="display:none">-</span>')
         .click(function(){
             jQuery(this).next().toggle();
-            jQuery(this).find('small').toggle();
+            jQuery(this).find('.icon').toggle();
         }).next().hide();
 
     jQuery(jQuery( "form h3" )[1]).click();
     jQuery("#wpa0_fullcontact").click(function(){
         jQuery("#wpa0_fullcontact_key_label").toggle();
         jQuery("#wpa0_fullcontact_key").toggle().val('');
+    });
+
+    jQuery("#wpa0_social_facebook").click(function(){
+        jQuery(".social_facebook").toggle(this.checked);
     });
 
     //uploading files variable

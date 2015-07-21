@@ -49,6 +49,9 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
             'fullcontact_rule' => null,
             'geo_rule' => null,
             'income_rule' => null,
+            'social_facebook' => 0,
+            'social_facebook_key' => null,
+            'social_facebook_secret' => null,
             // 'auto_provisioning' => true,
             'default_login_redirection' => home_url(),
         );
