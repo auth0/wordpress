@@ -192,6 +192,7 @@ class WP_Auth0_Api_Client {
 			'headers' => $headers,
 		) );
 
+
 		if ( $response['response']['code'] >= 300 ) return false;
 
 		return json_decode($response['body']);
@@ -199,7 +200,7 @@ class WP_Auth0_Api_Client {
 
 	public static function update_connection($domain, $app_token, $id, $payload) {
 		$endpoint = "https://$domain/api/v2/connections/$id";
-echo $endpoint;
+
 		$headers = self::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
@@ -210,8 +211,6 @@ echo $endpoint;
 			'headers' => $headers,
 			'body' => json_encode($payload)
 		) );
-
-var_dump($response);
 
 		if ( $response['response']['code'] >= 300 ) return false;
 

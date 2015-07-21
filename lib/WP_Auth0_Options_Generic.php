@@ -34,6 +34,7 @@ class WP_Auth0_Options_Generic {
         $options = $this->get_options();
         $options[$key] = $value;
         $this->_opt = $options;
+
         update_option( $this->options_name, $options );
     }
 

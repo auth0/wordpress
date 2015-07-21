@@ -66,8 +66,11 @@ class WP_Auth0_InitialSetup {
     public static function step2_action() {
 
         $app_token = $_REQUEST['app_token'];
+        $app_domain = $_REQUEST['app_domain'];
         $options = WP_Auth0_Options::Instance();
         $options->set( 'auth0_app_token', $app_token );
+        $options->set( 'domain', $app_domain );
+
         wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=3' ) );
         exit();
 

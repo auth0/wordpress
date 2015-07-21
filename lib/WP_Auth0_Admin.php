@@ -518,6 +518,14 @@ class WP_Auth0_Admin {
 		return $input;
 	}
 
+	 public static function socialfacebook_validation( $old_options, $input ) {
+		return self::social_validation( $old_options, $input, 'facebook', array(
+			"public_profile" => true,
+			"email" => true,
+			"user_birthday" => true,
+		) );
+ 	}
+
 	/**
 	 * This function will sync and update the connection setting with auth0
 	 * First it checks if there is any connection with this strategy enabled for the app.
@@ -529,100 +537,93 @@ class WP_Auth0_Admin {
 	 * In the case that the user disable the connection on WP, it check if there is an active connection with the client_id.
 	 * - If exists, it will remove the client_id and if there is no other client_id it will delete the connection.
 	 */
-	public static function socialfacebook_validation( $old_options, $input ) {
-		$input['social_facebook'] = ( isset( $input['social_facebook'] ) ? $input['social_facebook']  : 0);
-		$input['social_facebook_key'] = ( empty( $input['social_facebook_key'] ) ? null  : trim( $input['social_facebook_key'] ) );
-		$input['social_facebook_secret'] = ( empty( $input['social_facebook_secret'] ) ? null  : trim( $input['social_facebook_secret'] ) );
+	public static function social_validation( $old_options, $input, $strategy, $connection_options ) {
+		$main_key = "social_$strategy";
+
+		$input[$main_key] = ( isset( $input[$main_key] ) ? $input[$main_key]  : 0);
+		$input["{$main_key}_key"] = ( empty( $input["{$main_key}_key"] ) ? null  : trim( $input["{$main_key}_key"] ) );
+		$input["{$main_key}_secret"] = ( empty( $input["{$main_key}_secret"] ) ? null  : trim( $input["{$main_key}_secret"] ) );
 
 		if (
-			$old_options['social_facebook'] != $input['social_facebook'] ||
-			$old_options['social_facebook_key'] != $input['social_facebook_key'] ||
-			$old_options['social_facebook_secret'] != $input['social_facebook_secret']
+			$old_options[$main_key] != $input[$main_key] ||
+			$old_options["{$main_key}_key"] != $input["{$main_key}_key"] ||
+			$old_options["{$main_key}_secret"] != $input["{$main_key}_secret"]
 			) {
 
-			$connections = WP_Auth0_Api_Client::search_connection($input['domain'], $input['auth0_app_token'], 'facebook');
+			$connections = WP_Auth0_Api_Client::search_connection($input['domain'], $input['auth0_app_token'], $strategy);
 
-			$facebook_connection = null;
+			$selected_connection = null;
 
 			foreach ($connections as $connection) {
 				if (in_array($input['client_id'], $connection->enabled_clients)) {
-					$facebook_connection = $connection;
+					$selected_connection = $connection;
 					break;
-				} elseif ( ! $facebook_connection && count($connection->enabled_clients) == 0 ) {
-					$facebook_connection = $connection;
-					$facebook_connection->enabled_clients[] = $input['client_id'];
+				} elseif ( ! $selected_connection && count($connection->enabled_clients) == 0 ) {
+					$selected_connection = $connection;
+					$selected_connection->enabled_clients[] = $input['client_id'];
 				} elseif ( $connection->name == 'facebook' ) {
-					$facebook_connection = $connection;
-					$facebook_connection->enabled_clients[] = $input['client_id'];
+					$selected_connection = $connection;
+					$selected_connection->enabled_clients[] = $input['client_id'];
 				}
 			}
-			if ( $facebook_connection === null && count($connections) === 1) {
-				$facebook_connection = $connections[0];
-				$facebook_connection->enabled_clients[] = $input['client_id'];
+			if ( $selected_connection === null && count($connections) === 1) {
+				$selected_connection = $connections[0];
+				$selected_connection->enabled_clients[] = $input['client_id'];
 			}
 
-			if ( $input['social_facebook'] ) {
+			if ( $input[$main_key] ) {
 
-				if ( $facebook_connection && empty($facebook_connection->options->client_id) && empty($facebook_connection->options->client_secret) ) {
+				if ( $selected_connection && empty($selected_connection->options->client_id) && empty($selected_connection->options->client_secret) ) {
 
 					$data = array(
-						'options' => array(
-							"client_id" => $input['social_facebook_key'],
-      						"client_secret" => $input['social_facebook_secret'],
-							"public_profile" => true,
-							"email" => true,
-							"user_birthday" => true,
-						),
+						'options' => array_merge($connection_options, array(
+							"client_id" => $input["{$main_key}_key"],
+      						"client_secret" => $input["{$main_key}_secret"],
+						) ),
 						'enabled_clients' => $connection->enabled_clients
 					);
 
-					WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $facebook_connection->id, $data);
-				} elseif ( $facebook_connection && !empty($facebook_connection->options->client_id) && !empty($facebook_connection->options->client_secret) ) {
+					WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $selected_connection->id, $data);
+				} elseif ( $selected_connection && !empty($selected_connection->options->client_id) && !empty($selected_connection->options->client_secret) ) {
 
-					$input['social_facebook_key'] = $facebook_connection->options->client_id;
-					$input['social_facebook_secret'] = $facebook_connection->options->client_secret;
+					$input["{$main_key}_key"] = $selected_connection->options->client_id;
+					$input["{$main_key}_secret"] = $selected_connection->options->client_secret;
 
 					$data = array(
-						'options' => array(
-							"public_profile" => true,
-							"email" => true,
-							"user_birthday" => true,
-							"client_id" => $input['social_facebook_key'],
-      						"client_secret" => $input['social_facebook_secret'],
-						),
+						'options' => array_merge($connection_options, array(
+							"client_id" => $input["{$main_key}_key"],
+      						"client_secret" => $input["{$main_key}_secret"],
+						) ),
 						'enabled_clients' => $connection->enabled_clients
 					);
 
-					WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $facebook_connection->id, $data);
+					WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $selected_connection->id, $data);
 
-				} elseif ( ! $facebook_connection ) {
+				} elseif ( ! $selected_connection ) {
 
 					$data = array(
-						'name' => 'facebook',
-						'strategy' => 'facebook',
+						'name' => $strategy,
+						'strategy' => $strategy,
 						'enabled_clients' => array( $input['client_id'] ),
-						'options' => array(
-							"client_id" => $input['social_facebook_key'],
-      						"client_secret" => $input['social_facebook_key'],
-							"public_profile" => true,
-							"email" => true,
-							"user_birthday" => true,
-						),
+						'options' => array_merge($connection_options, array(
+							"client_id" => $input["{$main_key}_key"],
+      						"client_secret" => $input["{$main_key}_secret"],
+						) ),
 					);
 					WP_Auth0_Api_Client::create_connection($input['domain'], $input['auth0_app_token'], $data);
 				}
 
 			}
 			else {
-				if ($facebook_connection) {
+				if ($selected_connection) {
 					$data['enabled_clients'] = array();
-					foreach ($facebook_connection->enabled_clients as $client) {
+					foreach ($selected_connection->enabled_clients as $client) {
 						if ($client != $input['client_id']) {
 							$data['enabled_clients'][] = $input['client_id'];
 						}
 					}
 
-					WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $facebook_connection->id, $data);
+					WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $selected_connection->id, $data);
 				}
 			}
 
