@@ -75,6 +75,7 @@ class WP_Auth0_Admin {
 			array( 'id' => 'wpa0_geo', 'name' => 'Store geolocation', 'function' => 'render_geo' ),
 			array( 'id' => 'wpa0_income', 'name' => 'Store zipcode income', 'function' => 'render_income' ),
 			array( 'id' => 'wpa0_social_facebook', 'name' => 'Login with Facebook', 'function' => 'render_social_facebook' ),
+			array( 'id' => 'wpa0_social_twitter', 'name' => 'Login with Twitter', 'function' => 'render_social_twitter' ),
 
 		) );
 
@@ -338,6 +339,29 @@ class WP_Auth0_Admin {
 
 	}
 
+	public static function render_social_twitter() {
+		$social_twitter = WP_Auth0_Options::Instance()->get( 'social_twitter' );
+		$social_twitter_key = WP_Auth0_Options::Instance()->get( 'social_twitter_key' );
+		$social_twitter_secret = WP_Auth0_Options::Instance()->get( 'social_twitter_secret' );
+?>
+
+		<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter]" id="wpa0_social_twitter" value="1" <?php echo checked( $social_twitter, 1, false ); ?>/>
+		<div class="social social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
+			<label for="wpa0_social_twitter_key" id="wpa0_social_twitter_key_label">Api key:</label>
+			<input type="text" id="wpa0_social_twitter_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter_key]" value="<?php echo $social_twitter_key; ?>" />
+		</div>
+		<div class="social social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
+			<label for="wpa0_social_twitter_secret" id="wpa0_social_twitter_secret_label">Api secret:</label>
+			<input type="text" id="wpa0_social_twitter_secret" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter_secret]" value="<?php echo $social_twitter_secret; ?>" />
+		</div>
+		<div class="social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
+			<span class="description"><?php echo __( 'If you leave your keys empty Auth0 will use its own keys, but we recommend to use your own app. It will you customize the data you want to receive (ie, birthdate for the dashboard age chart).', WPA0_LANG ); ?></span>
+		</div>
+
+<?php
+
+	}
+
 	public static function render_verified_email() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'requires_verified_email' ) );
 		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[requires_verified_email]" id="wpa0_verified_email" value="1" ' . checked( $v, 1, false ) . '/>';
@@ -526,6 +550,12 @@ class WP_Auth0_Admin {
 		) );
  	}
 
+	 public static function socialtwitter_validation( $old_options, $input ) {
+		return self::social_validation( $old_options, $input, 'twitter', array(
+			"profile" => true,
+		) );
+ 	}
+
 	/**
 	 * This function will sync and update the connection setting with auth0
 	 * First it checks if there is any connection with this strategy enabled for the app.
@@ -703,6 +733,7 @@ class WP_Auth0_Admin {
 			'loginredirection_validation',
 			'basicdata_validation',
 			'socialfacebook_validation',
+			'socialtwitter_validation',
 		);
 
 		foreach ($actions_middlewares as $action) {
