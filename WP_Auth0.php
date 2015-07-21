@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.3.3
+ * Version: 1.3.4
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,10 +12,10 @@ define('WPA0_PLUGIN_DIR', trailingslashit(plugin_dir_path(__FILE__)));
 define('WPA0_PLUGIN_URL', trailingslashit(plugin_dir_url(__FILE__) ));
 define('WPA0_LANG', 'wp-auth0');
 define('AUTH0_DB_VERSION', 2);
-define('WPA0_VERSION', '1.3.3');
+define('WPA0_VERSION', '1.3.4');
 
 class WP_Auth0 {
-    public static function init(){ 
+    public static function init(){
         spl_autoload_register(array(__CLASS__, 'autoloader'));
 
         // WP_Auth0_Referer_Check::init();
@@ -489,7 +489,7 @@ class WP_Auth0 {
             $code = $wp_error->getCode();
             $message = $wp_error->getMessage();
         }
-        
+
         global $wpdb;
         $wpdb->insert(
             $wpdb->auth0_error_logs,
@@ -568,7 +568,11 @@ class WP_Auth0 {
             self::updateAuth0Object($userinfo);
             wp_set_auth_cookie( $user->ID );
 
-            do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token ); 
+<<<<<<< Updated upstream
+            do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token );
+=======
+            do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token );
+>>>>>>> Stashed changes
 
             return true;
         } else {
@@ -579,7 +583,11 @@ class WP_Auth0 {
 
                 wp_set_auth_cookie( $user_id );
 
-                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token ); 
+<<<<<<< Updated upstream
+                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token );
+=======
+                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token );
+>>>>>>> Stashed changes
             }
             catch (WP_Auth0_CouldNotCreateUserException $e) {
                 $msg = __('Error: Could not create user.', WPA0_LANG);
@@ -598,7 +606,7 @@ class WP_Auth0 {
                 self::dieWithVerifyEmail($e->userinfo, $e->id_token);
             }
 
-            
+
             return true;
         }
     }

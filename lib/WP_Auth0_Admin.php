@@ -92,15 +92,15 @@ class WP_Auth0_Admin{
             array('id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url'),
 
         );
-    
-        
+
+
 
         if (WP_Auth0::isJWTAuthEnabled()) {
             $advancedOptions[] = array('id' => 'wpa0_jwt_auth_integration', 'name' => 'Enable JWT Auth integration', 'function' => 'render_jwt_auth_integration');
         }
 
         self::init_option_section('Advanced', $advancedOptions);
-        
+
 
         register_setting(WP_Auth0_Options::OPTIONS_NAME, WP_Auth0_Options::OPTIONS_NAME, array(__CLASS__, 'input_validator'));
     }
@@ -328,12 +328,12 @@ class WP_Auth0_Admin{
             'https'
         ));
 
-        $input['sso'] = (isset($input['sso']) ? 1 : 0);
+        $input['sso'] = (isset($input['sso']) ? $input['sso'] : 0);
         $input['requires_verified_email'] = (isset($input['requires_verified_email']) ? 1 : 0);
         $input['wordpress_login_enabled'] = (isset($input['wordpress_login_enabled']) ? 1 : 0);
         $input['jwt_auth_integration'] = (isset($input['jwt_auth_integration']) ? 1 : 0);
         $input['allow_signup'] = (isset($input['allow_signup']) ? 1 : 0);
-        $input['auth0_implicit_workflow'] = (isset($input['auth0_implicit_workflow']) ? 1 : 0);
+        $input['auth0_implicit_workflow'] = (isset($input['auth0_implicit_workflow']) ? $input['auth0_implicit_workflow'] : 0);
 
         $input['social_big_buttons'] = (isset($input['social_big_buttons']) ? 1 : 0);
         $input['gravatar'] = (isset($input['gravatar']) ? 1 : 0);
