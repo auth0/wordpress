@@ -39,7 +39,7 @@ if (empty($title)) {
 
 $stateObj = array("interim" => $interim_login, "uuid" =>uniqid());
 if (isset($_GET['redirect_to'])) {
-    $stateObj["redirect_to"] = $_GET['redirect_to'];
+    $stateObj["redirect_to"] = addslashes($_GET['redirect_to']);
 }
 
 $state = json_encode($stateObj);
@@ -130,7 +130,7 @@ if(empty($client_id) || empty($domain)){ ?>
 
                 post('<?php echo site_url('/index.php?auth0=implicit'); ?>', {
                     token:token,
-                    state:'<?php echo $state; ?>'
+                    state:<?php echo $state; ?>
                 }, 'POST');
 
             };
