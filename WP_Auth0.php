@@ -568,11 +568,7 @@ class WP_Auth0 {
             self::updateAuth0Object($userinfo);
             wp_set_auth_cookie( $user->ID );
 
-<<<<<<< Updated upstream
             do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token );
-=======
-            do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token );
->>>>>>> Stashed changes
 
             return true;
         } else {
@@ -583,11 +579,7 @@ class WP_Auth0 {
 
                 wp_set_auth_cookie( $user_id );
 
-<<<<<<< Updated upstream
-                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token );
-=======
-                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token );
->>>>>>> Stashed changes
+                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token ); 
             }
             catch (WP_Auth0_CouldNotCreateUserException $e) {
                 $msg = __('Error: Could not create user.', WPA0_LANG);
