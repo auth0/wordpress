@@ -17,6 +17,10 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
         return (get_option('users_can_register', 0) == 1);
     }
 
+    public function get_enabled_connections() {
+        return array('facebook','twitter');
+    }
+
     protected function defaults(){
         return array(
             'version' => 1,

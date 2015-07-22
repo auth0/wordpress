@@ -90,6 +90,20 @@ class WP_Auth0_InitialSetup {
         $options->set( 'client_id', $response->client_id );
         $options->set( 'client_secret', $response->client_secret );
 
+        $connections = WP_Auth0_Api_Client::search_connection($domain, $app_token);
+
+        $enabled_connections = $options->get_enabled_connections();
+
+        foreach ($connections as $connection) {
+            if ( in_array( $connection->name, $enabled_connections ) ) {
+
+                $options->set( "social_{$connection->name}" , 1 );
+                $options->set( "social_{$connection->name}_key" , $connection->options->client_id );
+                $options->set( "social_{$connection->name}_secret" , $connection->options->client_secret );
+
+            }
+        }
+
         wp_redirect( admin_url( 'admin.php?page=wpa0' ) );
         exit();
 

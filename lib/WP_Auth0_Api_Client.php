@@ -181,8 +181,12 @@ class WP_Auth0_Api_Client {
 		return json_decode($response['body']);
 	}
 
-	public static function search_connection($domain, $app_token, $strategy) {
-		$endpoint = "https://$domain/api/v2/connections?strategy=$strategy";
+	public static function search_connection($domain, $app_token, $strategy = null) {
+		$endpoint = "https://$domain/api/v2/connections";
+
+		if ($strategy) {
+			$endpoint .= "?strategy=$strategy";
+		}
 
 		$headers = self::get_info_headers();
 
