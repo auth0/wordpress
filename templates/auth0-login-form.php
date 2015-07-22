@@ -58,6 +58,7 @@ if(!$auth0_implicit_workflow) {
 }
 else {
     $extraOptions["authParams"]["scope"] = "openid name email nickname email_verified identities";
+    $extraOptions["scope"] = "openid name email nickname email_verified identities";
 
     if ($sso) {
         $extraOptions["callbackOnLocationHash"] = true;
@@ -174,7 +175,7 @@ if(empty($client_id) || empty($domain)){ ?>
                 lock.show(options, callback);
             }
 
-            <?php if ($sso) { ?>
+            <?php if ($auth0_implicit_workflow) { ?>
 
                 function getHashParams() {
 
