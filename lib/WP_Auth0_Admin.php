@@ -2,10 +2,10 @@
 
 class WP_Auth0_Admin {
 
-	const BASIC_DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-	const FEATURES_DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-	const APPEARANCE_DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-	const ADVANCED_DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+	const BASIC_DESCRIPTION = 'Basic settings related to auth0 credentials and basic WordPress integration.';
+	const FEATURES_DESCRIPTION = 'Settings related to specific features provided by the plugin.';
+	const APPEARANCE_DESCRIPTION = 'Settings related to the way the login widget is shown.';
+	const ADVANCED_DESCRIPTION = 'Settings related to specific scenarios.';
 
 	public static function init() {
 		add_action( 'admin_init', array( __CLASS__, 'init_admin' ) );
