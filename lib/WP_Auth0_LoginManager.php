@@ -216,6 +216,7 @@ class WP_Auth0_LoginManager {
 		$options = WP_Auth0_Options::Instance();
 
 		$secret = $options->get( 'client_secret' );
+
 		$secret = base64_decode( strtr( $secret, '-_', '+/' ) );
 
 		try {
@@ -245,6 +246,7 @@ class WP_Auth0_LoginManager {
 			}
 
 		} catch( UnexpectedValueException $e ) {
+
 			WP_Auth0::insert_auth0_error( 'implicit_login', $e );
 
 			error_log( $e->getMessage() );
@@ -260,7 +262,7 @@ class WP_Auth0_LoginManager {
 		// notify the user he cant login until he does so.
 		$requires_verified_email = WP_Auth0_Options::Instance()->get( 'requires_verified_email' );
 
-		if ( 1 === $requires_verified_email ) {
+		if ( 1 == $requires_verified_email ) {
 			if ( empty( $userinfo->email ) ) {
 				$msg = __( 'This account does not have an email associated. Please login with a different provider.', WPA0_LANG );
 				$msg .= '<br/><br/>';
@@ -274,6 +276,7 @@ class WP_Auth0_LoginManager {
 			}
 
 		}
+
 		// See if there is a user in the auth0_user table with the user info client id
 		$user = self::_find_auth0_user( $userinfo->user_id );
 

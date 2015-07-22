@@ -128,10 +128,12 @@ if(empty($client_id) || empty($domain)){ ?>
 
             callback = function(err,profile, token) {
 
-                post('<?php echo site_url('/index.php?auth0=implicit'); ?>', {
-                    token:token,
-                    state:<?php echo $state; ?>
-                }, 'POST');
+                if (!err) {
+                    post('<?php echo site_url('/index.php?auth0=implicit'); ?>', {
+                        token:token,
+                        state:<?php echo $state; ?>
+                    }, 'POST');
+                }
 
             };
 
@@ -149,7 +151,14 @@ if(empty($client_id) || empty($domain)){ ?>
                         var hiddenField = document.createElement("input");
                         hiddenField.setAttribute("type", "hidden");
                         hiddenField.setAttribute("name", key);
-                        hiddenField.setAttribute("value", params[key]);
+
+                        var value = params[key];
+
+                        if (typeof(value) === 'object') {
+                            value = JSON.stringify(value);
+                        }
+
+                        hiddenField.setAttribute("value", value);
 
                         form.appendChild(hiddenField);
                      }
