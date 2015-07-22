@@ -8,12 +8,12 @@ jQuery(document).ready(function($) {
 
     jQuery(jQuery( "form h3" )[1]).click();
     jQuery("#wpa0_fullcontact").click(function(){
-        jQuery("#wpa0_fullcontact_key_label").toggle();
-        jQuery("#wpa0_fullcontact_key").toggle().val('');
+        jQuery("#wpa0_fullcontact_key_label").toggle().removeClass('hidden');
+        jQuery("#wpa0_fullcontact_key").toggle().removeClass('hidden').val('');
     });
 
-    jQuery("#wpa0_social_facebook").click(function(){
-        jQuery(".social_facebook").toggle(this.checked);
+    jQuery(".wpa0_social_checkbox").click(function(){
+        jQuery(".social").toggle(this.checked).removeClass('hidden');
     });
 
     //uploading files variable

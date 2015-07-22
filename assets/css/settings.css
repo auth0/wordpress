@@ -65,16 +65,6 @@ h3 .description {
     line-height: 20px;
     text-align: right;
 }
-@media screen and (max-width: 550px) {
-    h3 .description {
-      width: 69%;
-    }
-}
-@media screen and (max-width: 400px) {
-    h3 .description {
-      width: 60%;
-    }
-}
 
 h3 .icon {
     display: inline-block;
@@ -97,6 +87,9 @@ h3 .icon {
 .form-table th {
   padding-left: 20px;
 }
+.form-table td {
+  padding-right: 20px;
+}
 
 #wpa0_fullcontact_key {
     width:300px;
@@ -109,10 +102,33 @@ h3 .icon {
     margin-bottom:10px;
 }
 .hidden {
-    display: none;
+    display: none !important;
 }
 
+.social {
+    margin: 10px 0;
+}
 .social label {
     width: 70px;
+    margin-bottom: 5px;
     display: inline-block;
+}
+@media screen and (max-width: 782px) {
+    .form-table td {
+      padding-left: 40px;
+    }
+    .form-table span.description {
+        font-size: 13px;
+        font-style: italic;
+    }
+}
+@media screen and (max-width: 550px) {
+    h3 .description {
+      width: 69%;
+    }
+}
+@media screen and (max-width: 400px) {
+    h3 .description {
+      width: 60%;
+    }
 }

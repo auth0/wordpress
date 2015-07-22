@@ -322,7 +322,7 @@ class WP_Auth0_Admin {
 		$social_facebook_secret = WP_Auth0_Options::Instance()->get( 'social_facebook_secret' );
 ?>
 
-		<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook]" id="wpa0_social_facebook" value="1" <?php echo checked( $social_facebook, 1, false ); ?>/>
+		<input type="checkbox" class="wpa0_social_checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook]" id="wpa0_social_facebook" value="1" <?php echo checked( $social_facebook, 1, false ); ?>/>
 		<div class="social social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
 			<label for="wpa0_social_facebook_key" id="wpa0_social_facebook_key_label">Api key:</label>
 			<input type="text" id="wpa0_social_facebook_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook_key]" value="<?php echo $social_facebook_key; ?>" />
@@ -345,7 +345,7 @@ class WP_Auth0_Admin {
 		$social_twitter_secret = WP_Auth0_Options::Instance()->get( 'social_twitter_secret' );
 ?>
 
-		<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter]" id="wpa0_social_twitter" value="1" <?php echo checked( $social_twitter, 1, false ); ?>/>
+		<input type="checkbox" class="wpa0_social_checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter]" id="wpa0_social_twitter" value="1" <?php echo checked( $social_twitter, 1, false ); ?>/>
 		<div class="social social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
 			<label for="wpa0_social_twitter_key" id="wpa0_social_twitter_key_label">Api key:</label>
 			<input type="text" id="wpa0_social_twitter_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter_key]" value="<?php echo $social_twitter_key; ?>" />
