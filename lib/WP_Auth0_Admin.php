@@ -102,7 +102,6 @@ class WP_Auth0_Admin {
 			array( 'id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict' ),
 			array( 'id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL', 'function' => 'render_default_login_redirection' ),
 			array( 'id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email' ),
-			// array( 'id' => 'wpa0_auto_provisioning', 'name' => 'Auto Provisioning', 'function' => 'render_auto_provisioning' ),
 			array( 'id' => 'wpa0_auth0_implicit_workflow', 'name' => 'Auth0 Implicit flow', 'function' => 'render_auth0_implicit_workflow' ),
 			array( 'id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)', 'function' => 'render_auto_login' ),
 			array( 'id' => 'wpa0_auto_login_method', 'name' => 'Auto Login Method', 'function' => 'render_auto_login_method' ),
@@ -125,290 +124,402 @@ class WP_Auth0_Admin {
 
 	public static function render_extra_conf() {
 		$v = WP_Auth0_Options::Instance()->get( 'extra_conf' );
-		echo '<textarea name="' . WP_Auth0_Options::Instance()->get_options_name() . '[extra_conf]" id="wpa0_extra_conf">' . esc_attr( $v ) . '</textarea>';
-		echo '<br/><span class="description">' . __( 'This field is the JSon that describes the options to call Lock with. It\'ll override any other option set here. See all the posible options ', WPA0_LANG )
-			. '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization">' . __( 'here', WPA0_LANG ) . '</a>'
-			. '<br/>' . __( '(IE: {"disableResetAction": true }) ', WPA0_LANG )
-			. '</span>';
+	?>
+		<textarea name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[extra_conf]" id="wpa0_extra_conf"><?php echo esc_attr( $v ); ?></textarea>
+		<div class="subelement">
+			<span class="description">
+				<?php echo __( 'This field is the JSon that describes the options to call Lock with. It\'ll override any other option set here. See all the posible options ', WPA0_LANG ); ?>
+				<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization"><?php echo __( 'here', WPA0_LANG ); ?></a>
+				(IE: <code>{"disableResetAction": true }</code>)
+			</span>
+		</div>
+	<?php
 	}
 
 	public static function render_remember_last_login() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'remember_last_login' ) );
-		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[remember_last_login]" id="wpa0_remember_last_login" value="1" ' . checked( $v, 1, false ) . '/>';
-		echo '<br/><span class="description">' . __( 'Request for SSO data and enable Last time you signed in with[...] message.', WPA0_LANG ) . '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#rememberlastlogin-boolean">' . __( 'More info', WPA0_LANG ) . '</a></span>';
+	?>
+		<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[remember_last_login]" id="wpa0_remember_last_login" value="1" <?php echo checked( $v, 1, false ); ?> />
+		<div class="subelement">
+			<span class="description">
+				<?php echo __( 'Request for SSO data and enable "Last time you signed in with[...]" message.', WPA0_LANG ); ?>
+				<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#rememberlastlogin-boolean"><?php echo __( 'More info', WPA0_LANG ); ?></a>
+			</span>
+		</div>
+	<?php
 	}
 
 	public static function render_jwt_auth_integration() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'jwt_auth_integration' ) );
-		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[jwt_auth_integration]" id="wpa0_jwt_auth_integration" value="1" ' . checked( $v, 1, false ) . '/>';
-		echo '<br/><span class="description">' . __( 'This will enable the JWT Auth\'s Users Repository override.', WPA0_LANG ) . '</span>';
+	?>
+		<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[jwt_auth_integration]" id="wpa0_jwt_auth_integration" value="1" <?php echo checked( $v, 1, false ); ?>/>
+		<div class="subelement">
+			<span class="description"><?php echo __( 'This will enable the JWT Auth\'s Users Repository override.', WPA0_LANG ); ?></span>
+		</div>
+	<?php
 	}
 
 	public static function create_account_message() {
-		echo '<div  id="message" class="updated"><p><strong>'
-			. __( 'In order to use this plugin, you need to first', WPA0_LANG )
-			. ' <a target="_blank" href="https://app.auth0.com/#/applications">'.__( 'create an application', WPA0_LANG ) . '</a>'
-			. __( ' on Auth0 and copy the information here.', WPA0_LANG )
-			. '</strong></p></div>';
+		?>
+		<div id="message" class="updated">
+			<p>
+				<strong>
+					<?php echo __( 'In order to use this plugin, you need to first', WPA0_LANG ); ?>
+					<a target="_blank" href="https://app.auth0.com/#/applications"><?php echo __( 'create an application', WPA0_LANG ); ?></a>
+					<?php echo __( ' on Auth0 and copy the information here.', WPA0_LANG ); ?>
+				</strong>
+			</p>
+		</div>
+		<?php
 	}
 
 	public static function render_client_id() {
 		$v = WP_Auth0_Options::Instance()->get( 'client_id' );
-		echo '<input type="text" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[client_id]" id="wpa0_client_id" value="' . esc_attr( $v ) . '"/>';
-		echo '<br/><span class="description">' . __( 'Application ID, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG ) . '</span>';
+		?>
+			<input type="text" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[client_id]" id="wpa0_client_id" value="<?php echo esc_attr( $v ); ?>"/>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'Application ID, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG ); ?></span>
+			</div>
+		<?php
 	}
 
 	public static function render_auth0_app_token() {
 		$v = WP_Auth0_Options::Instance()->get( 'auth0_app_token' );
-		echo '<input type="text" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[auth0_app_token]" id="wpa0_auth0_app_token" value="' . esc_attr( $v ) . '"/>';
-		echo '<br/><span class="description">' . __( 'The token should be generated via the ', WPA0_LANG );
-		echo '<a href="https://auth0.com/docs/api/v2" target="_blank">' . __( 'token generator', WPA0_LANG ) . '</a>';
-		echo __( ' with the scopres required to create, read and update your account clients, users, rules and connections', WPA0_LANG ) . '.</span>';
+		?>
+			<input type="text" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[auth0_app_token]" id="wpa0_auth0_app_token" value="<?php echo esc_attr( $v ); ?>"/>
+			<div class="subelement">
+				<span class="description">
+					<?php echo __( 'The token should be generated via the ', WPA0_LANG ); ?>
+					<a href="https://auth0.com/docs/api/v2" target="_blank"><?php echo __( 'token generator', WPA0_LANG ); ?></a>
+					<?php echo __( ' with the scopres required to create, read and update your account clients, users, rules and connections', WPA0_LANG ); ?>
+				</span>
+			</div>
+		<?php
 	}
 
 	public static function render_client_secret() {
 		$v = WP_Auth0_Options::Instance()->get( 'client_secret' );
-		echo '<input type="text" autocomplete="off" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[client_secret]" id="wpa0_client_secret" value="' . esc_attr( $v ) . '"/>';
-		echo '<br/><span class="description">' . __( 'Application secret, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG ) . '</span>';
+		?>
+			<input type="text" autocomplete="off" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[client_secret]" id="wpa0_client_secret" value="<?php echo esc_attr( $v ); ?>"/>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'Application secret, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG ); ?></span>
+			</div>
+		<?php
 	}
 
 	public static function render_domain() {
 		$v = WP_Auth0_Options::Instance()->get( 'domain' );
-		echo '<input type="text" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[domain]" id="wpa0_domain" value="' . esc_attr( $v ) . '"/>';
-		echo '<br/><span class="description">' . __( 'Your Auth0 domain, you can see it in the dashboard. Example: foo.auth0.com', WPA0_LANG ) . '</span>';
+		?>
+			<input type="text" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[domain]" id="wpa0_domain" value="<?php echo esc_attr( $v ); ?>"/>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'Your Auth0 domain, you can see it in the dashboard. Example: foo.auth0.com', WPA0_LANG ); ?></span>
+			</div>
+		<?php
 	}
 
 	public static function render_form_title() {
 		$v = WP_Auth0_Options::Instance()->get( 'form_title' );
-		echo '<input type="text" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[form_title]" id="wpa0_form_title" value="' . esc_attr( $v ) . '"/>';
-		echo '<br/><span class="description">' . __( 'This is the title for the login widget', WPA0_LANG ) . '</span>';
+		?>
+			<input type="text" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[form_title]" id="wpa0_form_title" value="<?php echo esc_attr( $v ); ?>"/>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'This is the title for the login widget', WPA0_LANG ); ?></span>
+			</div>
+		<?php
 	}
 
 	public static function render_default_login_redirection() {
 		$v = WP_Auth0_Options::Instance()->get( 'default_login_redirection' );
-		echo '<input type="text" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[default_login_redirection]" id="wpa0_default_login_redirection" value="' . esc_attr( $v ) . '"/>';
-		echo '<br/><span class="description">' . __( 'This is the URL that all users will be redirected by default after login', WPA0_LANG ) . '</span>';
+		?>
+			<input type="text" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[default_login_redirection]" id="wpa0_default_login_redirection" value="<?php echo esc_attr( $v ); ?>"/>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'This is the URL that all users will be redirected by default after login', WPA0_LANG ); ?></span>
+			</div>
+		<?php
 	}
 
 	public static function render_dict() {
 		$v = WP_Auth0_Options::Instance()->get( 'dict' );
-		echo '<textarea name="' . WP_Auth0_Options::Instance()->get_options_name() . '[dict]" id="wpa0_dict">' . esc_attr( $v ) . '</textarea>';
-		echo '<br/><span class="description">' . __( 'This is the widget\'s dict param.', WPA0_LANG ) . '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject">' . __( 'More info', WPA0_LANG ) . '</a></span>';
+		?>
+			<textarea name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[dict]" id="wpa0_dict"><?php echo esc_attr( $v ); ?></textarea>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'This is the widget\'s dict param.', WPA0_LANG ); ?><a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
+			</div>
+		<?php
 	}
 
 	public static function render_custom_css() {
 		$v = WP_Auth0_Options::Instance()->get( 'custom_css' );
-		echo '<textarea name="' . WP_Auth0_Options::Instance()->get_options_name() . '[custom_css]" id="wpa0_custom_css">' . esc_attr( $v ) . '</textarea>';
-		echo '<br/><span class="description">' . __( 'This should be a valid CSS to customize the Auth0 login widget. ', WPA0_LANG ) . '<a target="_blank" href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget">' . __( 'More info', WPA0_LANG ) . '</a></span>';
+		?>
+			<textarea name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[custom_css]" id="wpa0_custom_css"><?php echo esc_attr( $v ); ?></textarea>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'This should be a valid CSS to customize the Auth0 login widget. ', WPA0_LANG ); ?><a target="_blank" href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
+			</div>
+		<?php
 	}
 
 	public static function render_custom_js() {
 		$v = WP_Auth0_Options::Instance()->get( 'custom_js' );
-		echo '<textarea name="' . WP_Auth0_Options::Instance()->get_options_name() . '[custom_js]" id="wpa0_custom_js">' . esc_attr( $v ) . '</textarea>';
-		echo '<br/><span class="description">' . __( 'This should be a valid JS to customize the Auth0 login widget to, for example, add custom buttons. ', WPA0_LANG ) . '<a target="_blank" href="https://auth0.com/docs/hrd#3">' . __( 'More info', WPA0_LANG ) . '</a></span>';
+		?>
+			<textarea name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[custom_js]" id="wpa0_custom_js"><?php echo esc_attr( $v ); ?></textarea>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'This should be a valid JS to customize the Auth0 login widget to, for example, add custom buttons. ', WPA0_LANG ); ?><a target="_blank" href="https://auth0.com/docs/hrd#3"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
+			</div>
+		<?php
 	}
 
 	public static function render_username_style() {
 		$v = WP_Auth0_Options::Instance()->get( 'username_style' );
-		echo '<input type="radio" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[username_style]" id="wpa0_username_style_email" value="email" ' . (esc_attr( $v ) == 'email' ? 'checked="true"' : '' ) . '"/>';
-		echo '<label for="wpa0_username_style_email">' . __( 'Email', WPA0_LANG ) . '</label>';
-		echo ' ';
-		echo '<input type="radio" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[username_style]" id="wpa0_username_style_username" value="username" ' . (esc_attr( $v ) == 'username' ? 'checked="true"' : '' ) . '"/>';
-		echo '<label for="wpa0_username_style_username">' . __( 'Username', WPA0_LANG ) . '</label>';
-		echo '<br/><span class="description">' . __( 'If you don\'t want to validate that the user enters an email, just set this to username.', WPA0_LANG ) . '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#usernamestyle-string">' . __( 'More info', WPA0_LANG ) . '</a></span>';
+		?>
+			<input type="radio" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[username_style]" id="wpa0_username_style_email" value="email" <?php echo (esc_attr( $v ) == 'email' ? 'checked="true"' : '' ); ?> />
+			<label for="wpa0_username_style_email"><?php echo __( 'Email', WPA0_LANG ); ?></label>
+
+			&nbsp;
+
+			<input type="radio" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[username_style]" id="wpa0_username_style_username" value="username" <?php echo (esc_attr( $v ) == 'username' ? 'checked="true"' : '' ); ?> />
+			<label for="wpa0_username_style_username"><?php echo __( 'Username', WPA0_LANG ); ?></label>
+
+			<div class="subelement">
+				<span class="description">
+					<?php echo __( 'If you don\'t want to validate that the user enters an email, just set this to username.', WPA0_LANG ); ?>
+					<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#usernamestyle-string"><?php echo __( 'More info', WPA0_LANG ); ?></a>
+				</span>
+			</div>
+		<?php
 	}
 
 	public static function render_auth0_implicit_workflow() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'auth0_implicit_workflow' ) );
-		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[auth0_implicit_workflow]" id="wpa0_auth0_implicit_workflow" value="1" ' . checked( $v, 1, false ) . '/>';
-		echo '<br/><span class="description">' . __( 'Mark this to change the login workflow to allow the plugin work when the server does not have internet access)', WPA0_LANG ) . '</span>';
+		?>
+		<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[auth0_implicit_workflow]" id="wpa0_auth0_implicit_workflow" value="1" <?php echo checked( $v, 1, false ); ?>/>
+		<div class="subelement">
+			<span class="description"><?php echo __( 'Mark this to change the login workflow to allow the plugin work when the server does not have internet access)', WPA0_LANG ); ?></span>
+		</div>
+		<?php
 	}
 
 	public static function render_auto_login() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'auto_login' ) );
-		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[auto_login]" id="wpa0_auto_login" value="1" ' . checked( $v, 1, false ) . '/>';
-		echo '<br/><span class="description">' . __( 'Mark this to avoid the login page (you will have to select a single login provider)', WPA0_LANG ) . '</span>';
+		?>
+		<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[auto_login]" id="wpa0_auto_login" value="1" <?php echo checked( $v, 1, false ); ?>/>
+		<div class="subelement">
+			<span class="description"><?php echo __( 'Mark this to avoid the login page (you will have to select a single login provider)', WPA0_LANG ); ?></span>
+		</div>
+		<?php
 	}
 
 	public static function render_auto_login_method() {
 		$v = WP_Auth0_Options::Instance()->get( 'auto_login_method' );
-		echo '<input type="text" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[auto_login_method]" id="wpa0_auto_login_method" value="' . esc_attr( $v ) . '"/>';
-		echo '<br/><span class="description">' . __( 'To find the method name, log into Auth0 Dashboard, and navigate to: Connection -> [Connection Type] (eg. Social or Enterprise). Click the "down arrow" to expand the wanted method, and use the value in the "Name"-field. Example: google-oauth2', WPA0_LANG ) . '</span>';
+		?>
+		<input type="text" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[auto_login_method]" id="wpa0_auto_login_method" value="<?php echo esc_attr( $v ); ?>"/>
+		<div class="subelement">
+			<span class="description"><?php echo __( 'To find the method name, log into Auth0 Dashboard, and navigate to: Connection -> [Connection Type] (eg. Social or Enterprise). Click the "down arrow" to expand the wanted method, and use the value in the "Name"-field. Example: google-oauth2', WPA0_LANG ); ?></span>
+		</div>
+		<?php
 	}
 
 	public static function render_ip_range_check() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'ip_range_check' ) );
-		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[ip_range_check]" id="wpa0_ip_range_check" value="1" ' . checked( $v, 1, false ) . '/>';
+		?>
+			<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[ip_range_check]" id="wpa0_ip_range_check" value="1" <?php echo checked( $v, 1, false ); ?>/>
+		<?php
 	}
 
 	public static function render_ip_ranges() {
 		$v = WP_Auth0_Options::Instance()->get( 'ip_ranges' );
-		echo '<textarea cols="25" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[ip_ranges]" id="wpa0_ip_ranges">' . esc_textarea( $v ) . '</textarea>';
-		echo '<br/><span class="description">' . __( 'Only one range per line! Range format should be as: <code>xx.xx.xx.xx - yy.yy.yy.yy</code> (spaces will be trimmed)', WPA0_LANG ) . '</span>';
+		?>
+		<textarea cols="25" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[ip_ranges]" id="wpa0_ip_ranges"><?php echo esc_textarea( $v ); ?></textarea>
+		<div class="subelement">
+			<span class="description"><?php echo __( 'Only one range per line! Range format should be as: <code>xx.xx.xx.xx - yy.yy.yy.yy</code> (spaces will be trimmed)', WPA0_LANG ); ?></span>
+		</div>
+		<?php
 	}
 
 	public static function render_social_big_buttons() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'social_big_buttons' ) );
-		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[social_big_buttons]" id="wpa0_social_big_buttons" value="1" ' . checked( $v, 1, false ) . '/>';
+		?>
+		<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_big_buttons]" id="wpa0_social_big_buttons" value="1" <?php echo checked( $v, 1, false ); ?>/>
+		<?php
 	}
 
 	public static function render_gravatar() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'gravatar' ) );
-		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[gravatar]" id="wpa0_gravatar" value="1" ' . checked( $v, 1, false ) . '/>';
-		echo '<br/><span class="description">' . __( 'Read more about the gravatar integration ', WPA0_LANG );
-		echo '<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#gravatar-boolean">' . __( 'HERE', WPA0_LANG ) . '</a></span>';
+		?>
+			<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[gravatar]" id="wpa0_gravatar" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			<div class="subelement">
+				<span class="description">
+					<?php echo __( 'Read more about the gravatar integration ', WPA0_LANG ); ?>
+					<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#gravatar-boolean"><?php echo __( 'HERE', WPA0_LANG ); ?></a></span>
+			</div>
+		<?php
 	}
 
 	public static function render_icon_url() {
 		$v = WP_Auth0_Options::Instance()->get( 'icon_url' );
-		echo '<input type="text" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[icon_url]" id="wpa0_icon_url" value="' . esc_attr( $v ) . '"/>';
-		echo ' <a target="_blank" href="javascript:void(0 );" id="wpa0_choose_icon" class="button-secondary">' . __( 'Choose Icon', WPA0_LANG ) . '</a>';
-		echo '<br/><span class="description">' . __( 'The icon should be 32x32 pixels!', WPA0_LANG ) . '</span>';
+		?>
+			<input type="text" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[icon_url]" id="wpa0_icon_url" value="<?php echo esc_attr( $v ); ?>"/>
+			<a target="_blank" href="javascript:void(0);" id="wpa0_choose_icon" class="button-secondary"><?php echo __( 'Choose Icon', WPA0_LANG ); ?></a>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'The icon should be 32x32 pixels!', WPA0_LANG ); ?></span>
+			</div>
+		<?php
 	}
 
 	public static function render_cdn_url() {
 		$v = WP_Auth0_Options::Instance()->get( 'cdn_url' );
-		echo '<input type="text" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[cdn_url]" id="wpa0_cdn_url" value="' . esc_attr( $v ) . '"/>';
-		echo '<br/><span class="description">' . __( 'Point this to the latest widget available in the CDN', WPA0_LANG ) . '</span>';
+		?>
+			<input type="text" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[cdn_url]" id="wpa0_cdn_url" value="<?php echo esc_attr( $v ); ?>"/>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'Point this to the latest widget available in the CDN', WPA0_LANG ); ?></span>
+			</div>
+		<?php
 	}
 
 	public static function render_sso() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'sso' ) );
-		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[sso]" id="wpa0_sso" value="1" ' . checked( $v, 1, false ) . '/>';
-		echo '<br/><span class="description">' . __( 'Mark this if you want to enable SSO. More info ', WPA0_LANG );
-		echo '<a target="_blank" href="https://auth0.com/docs/sso/single-sign-on">' . __( 'HERE', WPA0_LANG ) . '</a></span>';
+		?>
+			<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[sso]" id="wpa0_sso" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			<div class="subelement">
+				<span class="description">
+					<?php echo __( 'Mark this if you want to enable SSO. More info ', WPA0_LANG ); ?>
+					<a target="_blank" href="https://auth0.com/docs/sso/single-sign-on"><?php echo __( 'HERE', WPA0_LANG ); ?></a>
+				</span>
+			</div>
+		<?php
 	}
 
 	public static function render_mfa() {
 		$v = WP_Auth0_Options::Instance()->get( 'mfa' );
-
-		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[mfa]" id="wpa0_mfa" value="1" ' . (is_null($v) ? '' : 'checked') . '/>';
-		echo '<br/><span class="description">' . __( 'Mark this if you want to enable multifactor authentication with Google Authenticator. More info ', WPA0_LANG );
-		echo '<a target="_blank" href="https://auth0.com/docs/mfa">' . __( 'HERE', WPA0_LANG ) . '</a></span>';
+		?>
+			<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[mfa]" id="wpa0_mfa" value="1" <?php echo (is_null($v) ? '' : 'checked'); ?>/>
+			<div class="subelement">
+				<span class="description">
+					<?php echo __( 'Mark this if you want to enable multifactor authentication with Google Authenticator. More info ', WPA0_LANG ); ?>
+					<a target="_blank" href="https://auth0.com/docs/mfa"><?php echo __( 'HERE', WPA0_LANG ); ?></a>
+				</span>
+			</div>
+		<?php
 	}
 
 	public static function render_geo() {
 		$v = WP_Auth0_Options::Instance()->get( 'geo_rule' );
-
-		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[geo_rule]" id="wpa0_geo_rule" value="1" ' . (is_null($v) ? '' : 'checked') . '/>';
-		echo '<br/><span class="description">' . __( 'Mark this if you want to store geo location information based on your users IP in the user_metadata', WPA0_LANG );
-		echo '</span>';
+		?>
+			<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[geo_rule]" id="wpa0_geo_rule" value="1" <?php echo (is_null($v) ? '' : 'checked'); ?>/>
+			<div class="subelement">
+				<span class="description">
+					<?php echo __( 'Mark this if you want to store geo location information based on your users IP in the user_metadata', WPA0_LANG );?>
+				</span>
+			</div>
+		<?php
 	}
 
 	public static function render_income() {
 		$v = WP_Auth0_Options::Instance()->get( 'income_rule' );
-
-		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[income_rule]" id="wpa0_income_rule" value="1" ' . (is_null($v) ? '' : 'checked') . '/>';
-		echo '<br/><span class="description">' . __( 'Mark this if you want to store income data based on the zipcode (calculated using the users IP).', WPA0_LANG ) . '</span>';
-		echo '<br/><span class="description">' . __( 'Represents the median income of the users zipcode, based on last US census data.', WPA0_LANG ) . '</span>';
+		?>
+			<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[income_rule]" id="wpa0_income_rule" value="1" <?php (is_null($v) ? '' : 'checked'); ?>/>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'Mark this if you want to store income data based on the zipcode (calculated using the users IP).', WPA0_LANG ); ?></span>
+			</div>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'Represents the median income of the users zipcode, based on last US census data.', WPA0_LANG ); ?></span>
+			</div>
+		<?php
 	}
 
 	public static function render_fullcontact() {
 		$v = WP_Auth0_Options::Instance()->get( 'fullcontact' );
-?>
-		<input type="checkbox" id="wpa0_fullcontact" value="1" <?php echo (empty($v) ? '' : 'checked'); ?> />
+		?>
+			<input type="checkbox" id="wpa0_fullcontact" value="1" <?php echo (empty($v) ? '' : 'checked'); ?> />
 
-		<div class="subelement fullcontact <?php echo (empty($v) ? 'hidden' : ''); ?>">
-			<label for="wpa0_fullcontact_key" id="wpa0_fullcontact_key_label">Enter your FullContact api key:</label>
-			<input type="text" id="wpa0_fullcontact_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[fullcontact]" value="<?php echo $v; ?>" />
-		</div>
+			<div class="subelement fullcontact <?php echo (empty($v) ? 'hidden' : ''); ?>">
+				<label for="wpa0_fullcontact_key" id="wpa0_fullcontact_key_label">Enter your FullContact api key:</label>
+				<input type="text" id="wpa0_fullcontact_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[fullcontact]" value="<?php echo $v; ?>" />
+			</div>
 
-		<div class="subelement">
-			<span class="description"><?php echo __( 'Mark this if you want to hydrate your users profile with the data provided by FullContact. A valid api key is requiere.', WPA0_LANG ); ?></span>
-		</div>
-
-<?php
+			<div class="subelement">
+				<span class="description"><?php echo __( 'Mark this if you want to hydrate your users profile with the data provided by FullContact. A valid api key is requiere.', WPA0_LANG ); ?></span>
+			</div>
+		<?php
 	}
 
 	public static function render_social_facebook() {
 		$social_facebook = WP_Auth0_Options::Instance()->get( 'social_facebook' );
 		$social_facebook_key = WP_Auth0_Options::Instance()->get( 'social_facebook_key' );
 		$social_facebook_secret = WP_Auth0_Options::Instance()->get( 'social_facebook_secret' );
-?>
-
-		<input type="checkbox" class="wpa0_social_checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook]" id="wpa0_social_facebook" value="1" <?php echo checked( $social_facebook, 1, false ); ?>/>
-		<div class="subelement social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
-			<label for="wpa0_social_facebook_key" id="wpa0_social_facebook_key_label">Api key:</label>
-			<input type="text" id="wpa0_social_facebook_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook_key]" value="<?php echo $social_facebook_key; ?>" />
-		</div>
-		<div class="subelement social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
-			<label for="wpa0_social_facebook_secret" id="wpa0_social_facebook_secret_label">Api secret:</label>
-			<input type="text" id="wpa0_social_facebook_secret" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook_secret]" value="<?php echo $social_facebook_secret; ?>" />
-		</div>
-		<div class="subelement social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
-			<span class="description"><?php echo __( 'If you leave your keys empty Auth0 will use its own keys, but we recommend to use your own app. It will you customize the data you want to receive (ie, birthdate for the dashboard age chart).', WPA0_LANG ); ?></span>
-		</div>
-
-<?php
-
+		?>
+			<input type="checkbox" class="wpa0_social_checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook]" id="wpa0_social_facebook" value="1" <?php echo checked( $social_facebook, 1, false ); ?>/>
+			<div class="subelement social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
+				<label for="wpa0_social_facebook_key" id="wpa0_social_facebook_key_label">Api key:</label>
+				<input type="text" id="wpa0_social_facebook_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook_key]" value="<?php echo $social_facebook_key; ?>" />
+			</div>
+			<div class="subelement social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
+				<label for="wpa0_social_facebook_secret" id="wpa0_social_facebook_secret_label">Api secret:</label>
+				<input type="text" id="wpa0_social_facebook_secret" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook_secret]" value="<?php echo $social_facebook_secret; ?>" />
+			</div>
+			<div class="subelement social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
+				<span class="description"><?php echo __( 'If you leave your keys empty Auth0 will use its own keys, but we recommend to use your own app. It will you customize the data you want to receive (ie, birthdate for the dashboard age chart).', WPA0_LANG ); ?></span>
+			</div>
+		<?php
 	}
 
 	public static function render_social_twitter() {
 		$social_twitter = WP_Auth0_Options::Instance()->get( 'social_twitter' );
 		$social_twitter_key = WP_Auth0_Options::Instance()->get( 'social_twitter_key' );
 		$social_twitter_secret = WP_Auth0_Options::Instance()->get( 'social_twitter_secret' );
-?>
-
-		<input type="checkbox" class="wpa0_social_checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter]" id="wpa0_social_twitter" value="1" <?php echo checked( $social_twitter, 1, false ); ?>/>
-		<div class="subelement social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
-			<label for="wpa0_social_twitter_key" id="wpa0_social_twitter_key_label">Api key:</label>
-			<input type="text" id="wpa0_social_twitter_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter_key]" value="<?php echo $social_twitter_key; ?>" />
-		</div>
-		<div class="subelement social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
-			<label for="wpa0_social_twitter_secret" id="wpa0_social_twitter_secret_label">Api secret:</label>
-			<input type="text" id="wpa0_social_twitter_secret" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter_secret]" value="<?php echo $social_twitter_secret; ?>" />
-		</div>
-		<div class="subelement social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
-			<span class="description"><?php echo __( 'If you leave your keys empty Auth0 will use its own keys, but we recommend to use your own app. It will you customize the data you want to receive (ie, birthdate for the dashboard age chart).', WPA0_LANG ); ?></span>
-		</div>
-
-<?php
-
+		?>
+			<input type="checkbox" class="wpa0_social_checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter]" id="wpa0_social_twitter" value="1" <?php echo checked( $social_twitter, 1, false ); ?>/>
+			<div class="subelement social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
+				<label for="wpa0_social_twitter_key" id="wpa0_social_twitter_key_label">Api key:</label>
+				<input type="text" id="wpa0_social_twitter_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter_key]" value="<?php echo $social_twitter_key; ?>" />
+			</div>
+			<div class="subelement social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
+				<label for="wpa0_social_twitter_secret" id="wpa0_social_twitter_secret_label">Api secret:</label>
+				<input type="text" id="wpa0_social_twitter_secret" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter_secret]" value="<?php echo $social_twitter_secret; ?>" />
+			</div>
+			<div class="subelement social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
+				<span class="description"><?php echo __( 'If you leave your keys empty Auth0 will use its own keys, but we recommend to use your own app. It will you customize the data you want to receive (ie, birthdate for the dashboard age chart).', WPA0_LANG ); ?></span>
+			</div>
+		<?php
 	}
 
 	public static function render_verified_email() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'requires_verified_email' ) );
-		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[requires_verified_email]" id="wpa0_verified_email" value="1" ' . checked( $v, 1, false ) . '/>';
-		echo '<br/><span class="description">' . __( 'Mark this if you require the user to have a verified email to login', WPA0_LANG ) . '</span>';
+		?>
+			<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[requires_verified_email]" id="wpa0_verified_email" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'Mark this if you require the user to have a verified email to login', WPA0_LANG ); ?></span>
+			</div>
+		<?php
 	}
 
 	public static function render_allow_signup() {
 		$allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled();
+		?>
+			<span class="description">
+				<?php echo __( 'Signup will be ', WPA0_LANG ); ?>
 
-		echo '<span class="description">' . __( 'Signup will be ', WPA0_LANG );
+				<?php if ( ! $allow_signup ) { ?>
+					<b><?php echo __( 'disabled', WPA0_LANG ); ?></b>
+					<?php echo __( ' because you have turned on the setting " Anyone can register" off WordPress', WPA0_LANG ); ?><br>
+				<?php } else { ?>
+					<b><?php echo __( 'enabled', WPA0_LANG ); ?></b>
+					<?php echo __( ' because you have turned on the setting " Anyone can register" on WordPress', WPA0_LANG ); ?><br>
+				<?php } ?>
 
-		if ( ! $allow_signup ) {
-			echo '<b>' . __( 'disabled', WPA0_LANG ) . '</b>';
-			echo __( ' because you have turned on the setting " Anyone can register" off WordPress', WPA0_LANG ) . '<br>';
-		} else {
-			echo '<b>' . __( 'enabled', WPA0_LANG ) . '</b>';
-			echo __( ' because you have turned on the setting " Anyone can register" on WordPress', WPA0_LANG ) . '<br>';
-		}
+				<?php echo __( 'You can manage this setting on Settings > General > Membership, Anyone can register', WPA0_LANG ); ?>?>
+			</span>
 
-		echo __( 'You can manage this setting on Settings > General > Membership, Anyone can register', WPA0_LANG ) . '</span>';
+		<?php
 	}
 
 	public static function render_allow_wordpress_login () {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'wordpress_login_enabled' ) );
-		echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[wordpress_login_enabled]" id="wpa0_wp_login_enabled" value="1" ' . checked( $v, 1, false ) . '/>';
-		echo '<br/><span class="description">' . __( 'Mark this if you want to enable the regular WordPress login', WPA0_LANG ) . '</span>';
+		?>
+			<input type="checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[wordpress_login_enabled]" id="wpa0_wp_login_enabled" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'Mark this if you want to enable the regular WordPress login', WPA0_LANG ); ?></span>
+			</div>
+		<?php
 	}
-
-	// public static function render_auto_provisioning () {
-	//     $allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled();
-	//
-	//     if (!$allow_signup){
-	//         $v = absint( WP_Auth0_Options::Instance()->get( 'auto_provisioning' ) );
-	//         echo '<input type="checkbox" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[auto_provisioning]" id="wpa0_auto_provisioning" value="1" ' . checked( $v, 1, false ) . '/>';
-	//         echo '<br/><span class="description">' . __( 'Mark this if you want to enable the creation of users that exists on the Auth0 database but not on Wordpress. This is overrided by the Wordpress "Anyone can register" setting when it is active.', WPA0_LANG ) . '</span>';
-	//     }
-	//     else{
-	//         echo '<span class="description">' . __( 'Auto provisioning is ', WPA0_LANG );
-	//         echo '<b>' . __( 'enabled', WPA0_LANG ) . '</b>';
-	//         echo __( ' because you have turned on the setting " Anyone can register" on WordPress', WPA0_LANG ) . '<br>';
-	//         echo __( 'You can manage this setting on Settings > General > Membership, Anyone can register', WPA0_LANG ) . '</span>';
-	//     }
-	// }
 
 	public static function render_basic_description() {
 
@@ -452,8 +563,6 @@ class WP_Auth0_Admin {
 		$input['gravatar'] = ( isset( $input['gravatar'] ) ? $input['gravatar'] : 0 );
 		$input['remember_last_login'] = ( isset( $input['remember_last_login'] ) ? $input['remember_last_login'] : 0 );
 		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
-
-		//$input['auto_provisioning'] = ( isset( $input['auto_provisioning'] ) ? 1 : 0 );
 
 		if ( trim( $input['dict'] ) !== '' ) {
 			if ( strpos( $input['dict'], '{' ) !== false && json_decode( $input['dict'] ) === null ) {
