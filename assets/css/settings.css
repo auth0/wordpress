@@ -48,32 +48,27 @@ h3 {
     margin-bottom: 0;
     overflow: hidden;
 }
-h3 .title {
-    display: inline-block;
-}
 h3 .description {
-    float:right;
     font-size:12px;
     font-style: italic;
     font-weight: normal;
-    padding-left: 1%;
-    width: 79%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
+    padding-left: 10px;
     line-height: 20px;
-    text-align: right;
 }
 
 h3 .icon {
     display: inline-block;
+
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+
     top:0;
     left:0;
+    bottom:0;
     background: #0073aa;
     color:#FFFFFF;
     position: absolute;
-    height: 40px;
     width: 40px;
     line-height: 40px;
     text-align: center;
@@ -87,10 +82,15 @@ h3 .icon {
 .form-table th {
   padding-left: 20px;
 }
-.form-table td {
-  padding-right: 20px;
+.form-table th label{
+      vertical-align: top;
 }
-
+.form-table td {
+  padding: 20px 20px 10px 10px;
+}
+.subelement.fullcontact label {
+    width: 200px;
+}
 #wpa0_fullcontact_key {
     width:300px;
     margin-top:10px;
@@ -105,10 +105,10 @@ h3 .icon {
     display: none !important;
 }
 
-.social {
+.subelement {
     margin: 10px 0;
 }
-.social label {
+.subelement label {
     width: 70px;
     margin-bottom: 5px;
     display: inline-block;

@@ -62,6 +62,7 @@ class WP_Auth0_Admin {
 			array( 'id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret' ),
 			array( 'id' => 'wpa0_auth0_app_token', 'name' => 'App token', 'function' => 'render_auth0_app_token' ),
 			array( 'id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login' ),
+			array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
 
 		) );
 
@@ -98,11 +99,9 @@ class WP_Auth0_Admin {
 
 		$advancedOptions = array(
 
-
 			array( 'id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict' ),
 			array( 'id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL', 'function' => 'render_default_login_redirection' ),
 			array( 'id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email' ),
-			array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
 			// array( 'id' => 'wpa0_auto_provisioning', 'name' => 'Auto Provisioning', 'function' => 'render_auto_provisioning' ),
 			array( 'id' => 'wpa0_auth0_implicit_workflow', 'name' => 'Auth0 Implicit flow', 'function' => 'render_auth0_implicit_workflow' ),
 			array( 'id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)', 'function' => 'render_auto_login' ),
@@ -306,14 +305,19 @@ class WP_Auth0_Admin {
 
 	public static function render_fullcontact() {
 		$v = WP_Auth0_Options::Instance()->get( 'fullcontact' );
+?>
+		<input type="checkbox" id="wpa0_fullcontact" value="1" <?php echo (empty($v) ? '' : 'checked'); ?> />
 
-		echo '<input type="checkbox" id="wpa0_fullcontact" value="1" ' . (empty($v) ? '' : 'checked') . '/>';
+		<div class="subelement fullcontact <?php echo (empty($v) ? 'hidden' : ''); ?>">
+			<label for="wpa0_fullcontact_key" id="wpa0_fullcontact_key_label">Enter your FullContact api key:</label>
+			<input type="text" id="wpa0_fullcontact_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[fullcontact]" value="<?php echo $v; ?>" />
+		</div>
 
-		echo '<br><label for="wpa0_fullcontact_key" class="'.(empty($v) ? 'hidden' : '') .'" id="wpa0_fullcontact_key_label">Enter your FullContact api key:</label>';
-		echo '<input type="text" id="wpa0_fullcontact_key" class="'.(empty($v) ? 'hidden' : '') .'" name="' . WP_Auth0_Options::Instance()->get_options_name() . '[fullcontact]" value="'.$v.'" />';
+		<div class="subelement">
+			<span class="description"><?php echo __( 'Mark this if you want to hydrate your users profile with the data provided by FullContact. A valid api key is requiere.', WPA0_LANG ); ?></span>
+		</div>
 
-		echo '<br/><span class="description">' . __( 'Mark this if you want to hydrate your users profile with the data provided by FullContact. A valid api key is requiere.', WPA0_LANG );
-		echo '</span>';
+<?php
 	}
 
 	public static function render_social_facebook() {
@@ -323,15 +327,15 @@ class WP_Auth0_Admin {
 ?>
 
 		<input type="checkbox" class="wpa0_social_checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook]" id="wpa0_social_facebook" value="1" <?php echo checked( $social_facebook, 1, false ); ?>/>
-		<div class="social social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
+		<div class="subelement social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
 			<label for="wpa0_social_facebook_key" id="wpa0_social_facebook_key_label">Api key:</label>
 			<input type="text" id="wpa0_social_facebook_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook_key]" value="<?php echo $social_facebook_key; ?>" />
 		</div>
-		<div class="social social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
+		<div class="subelement social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
 			<label for="wpa0_social_facebook_secret" id="wpa0_social_facebook_secret_label">Api secret:</label>
 			<input type="text" id="wpa0_social_facebook_secret" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_facebook_secret]" value="<?php echo $social_facebook_secret; ?>" />
 		</div>
-		<div class="social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
+		<div class="subelement social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
 			<span class="description"><?php echo __( 'If you leave your keys empty Auth0 will use its own keys, but we recommend to use your own app. It will you customize the data you want to receive (ie, birthdate for the dashboard age chart).', WPA0_LANG ); ?></span>
 		</div>
 
@@ -346,15 +350,15 @@ class WP_Auth0_Admin {
 ?>
 
 		<input type="checkbox" class="wpa0_social_checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter]" id="wpa0_social_twitter" value="1" <?php echo checked( $social_twitter, 1, false ); ?>/>
-		<div class="social social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
+		<div class="subelement social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
 			<label for="wpa0_social_twitter_key" id="wpa0_social_twitter_key_label">Api key:</label>
 			<input type="text" id="wpa0_social_twitter_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter_key]" value="<?php echo $social_twitter_key; ?>" />
 		</div>
-		<div class="social social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
+		<div class="subelement social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
 			<label for="wpa0_social_twitter_secret" id="wpa0_social_twitter_secret_label">Api secret:</label>
 			<input type="text" id="wpa0_social_twitter_secret" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter_secret]" value="<?php echo $social_twitter_secret; ?>" />
 		</div>
-		<div class="social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
+		<div class="subelement social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
 			<span class="description"><?php echo __( 'If you leave your keys empty Auth0 will use its own keys, but we recommend to use your own app. It will you customize the data you want to receive (ie, birthdate for the dashboard age chart).', WPA0_LANG ); ?></span>
 		</div>
 
