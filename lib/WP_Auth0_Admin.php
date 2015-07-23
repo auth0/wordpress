@@ -17,6 +17,8 @@ class WP_Auth0_Admin {
 			return;
 		}
 
+		add_action( 'admin_notices', array( __CLASS__, 'create_account_message' ) );
+
 		wp_enqueue_media();
 		wp_enqueue_script( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/js/admin.js', array( 'jquery' ) );
 		wp_enqueue_style( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/css/settings.css' );
@@ -51,7 +53,6 @@ class WP_Auth0_Admin {
 	}
 
 	public static function init_admin() {
-		add_action( 'admin_notices', array( __CLASS__, 'create_account_message' ) );
 
 		/* ------------------------- BASIC ------------------------- */
 
