@@ -78,6 +78,7 @@ class WP_Auth0_Admin {
 			array( 'id' => 'wpa0_income', 'name' => 'Store zipcode income', 'function' => 'render_income' ),
 			array( 'id' => 'wpa0_social_facebook', 'name' => 'Login with Facebook', 'function' => 'render_social_facebook' ),
 			array( 'id' => 'wpa0_social_twitter', 'name' => 'Login with Twitter', 'function' => 'render_social_twitter' ),
+			array( 'id' => 'wpa0_social_google_oauth2', 'name' => 'Login with Google +', 'function' => 'render_social_google_oauth2' ),
 
 		) );
 
@@ -243,7 +244,7 @@ class WP_Auth0_Admin {
 		?>
 			<textarea name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[dict]" id="wpa0_dict"><?php echo esc_attr( $v ); ?></textarea>
 			<div class="subelement">
-				<span class="description"><?php echo __( 'This is the widget\'s dict param.', WPA0_LANG ); ?><a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
+				<span class="description"><?php echo __( 'This is the widget\'s dict param.', WPA0_LANG ); ?><a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#4"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
 			</div>
 		<?php
 	}
@@ -395,7 +396,9 @@ class WP_Auth0_Admin {
 			<div class="subelement">
 				<span class="description">
 					<?php echo __( 'Mark this if you want to enable multifactor authentication with Google Authenticator. More info ', WPA0_LANG ); ?>
-					<a target="_blank" href="https://auth0.com/docs/mfa"><?php echo __( 'HERE', WPA0_LANG ); ?></a>
+					<a target="_blank" href="https://auth0.com/docs/mfa"><?php echo __( 'HERE', WPA0_LANG ); ?></a>.
+					<?php echo __( 'You can enable other MFA providers from the ', WPA0_LANG ); ?>
+					<a target="_blank" href="https://manage.auth0.com/#/multifactor"><?php echo __( 'Auth0 dashboard', WPA0_LANG ); ?></a>.
 				</span>
 			</div>
 		<?php
@@ -437,7 +440,11 @@ class WP_Auth0_Admin {
 			</div>
 
 			<div class="subelement">
-				<span class="description"><?php echo __( 'Mark this if you want to hydrate your users profile with the data provided by FullContact. A valid api key is requiere.', WPA0_LANG ); ?></span>
+				<span class="description">
+					<?php echo __( 'Mark this if you want to hydrate your users profile with the data provided by FullContact. A valid api key is requiere.', WPA0_LANG ); ?>
+					<?php echo __( 'More info ', WPA0_LANG ); ?>
+					<a href="https://auth0.com/docs/scenarios/fullcontact"><?php echo __( 'HERE', WPA0_LANG );?></a>
+				</span>
 			</div>
 		<?php
 	}
@@ -477,6 +484,26 @@ class WP_Auth0_Admin {
 				<input type="text" id="wpa0_social_twitter_secret" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_twitter_secret]" value="<?php echo $social_twitter_secret; ?>" />
 			</div>
 			<div class="subelement social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
+				<span class="description"><?php echo __( 'If you leave your keys empty Auth0 will use its own keys, but we recommend to use your own app. It will you customize the data you want to receive (ie, birthdate for the dashboard age chart).', WPA0_LANG ); ?></span>
+			</div>
+		<?php
+	}
+
+	public static function render_social_google_oauth2() {
+		$social_google_oauth2 = WP_Auth0_Options::Instance()->get( 'social_google-oauth2' );
+		$social_google_oauth2_key = WP_Auth0_Options::Instance()->get( 'social_google-oauth2_key' );
+		$social_google_oauth2_secret = WP_Auth0_Options::Instance()->get( 'social_google-oauth2_secret' );
+		?>
+			<input type="checkbox" class="wpa0_social_checkbox" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_google-oauth2]" id="wpa0_social_google_oauth2" value="1" <?php echo checked( $social_google_oauth2, 1, false ); ?>/>
+			<div class="subelement social_google_oauth2 <?php echo ($social_google_oauth2 ? '' : 'hidden'); ?>">
+				<label for="wpa0_social_google_oauth2_key" id="wpa0_social_google_oauth2_key_label">Api key:</label>
+				<input type="text" id="wpa0_social_google_oauth2_key" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_google-oauth2_key]" value="<?php echo $social_google_oauth2_key; ?>" />
+			</div>
+			<div class="subelement social_google_oauth2 <?php echo ($social_google_oauth2 ? '' : 'hidden'); ?>">
+				<label for="wpa0_social_google_oauth2_secret" id="wpa0_social_google_oauth2_secret_label">Api secret:</label>
+				<input type="text" id="wpa0_social_google_oauth2_secret" name="<?php echo WP_Auth0_Options::Instance()->get_options_name(); ?>[social_google-oauth2_secret]" value="<?php echo $social_google_oauth2_secret; ?>" />
+			</div>
+			<div class="subelement social_google_oauth2 <?php echo ($social_google_oauth2 ? '' : 'hidden'); ?>">
 				<span class="description"><?php echo __( 'If you leave your keys empty Auth0 will use its own keys, but we recommend to use your own app. It will you customize the data you want to receive (ie, birthdate for the dashboard age chart).', WPA0_LANG ); ?></span>
 			</div>
 		<?php
@@ -710,7 +737,7 @@ class WP_Auth0_Admin {
 		return $input;
 	}
 
-	 public static function socialfacebook_validation( $old_options, $input ) {
+	public static function socialfacebook_validation( $old_options, $input ) {
 		return self::social_validation( $old_options, $input, 'facebook', array(
 			"public_profile" => true,
 			"email" => true,
@@ -718,9 +745,17 @@ class WP_Auth0_Admin {
 		) );
  	}
 
-	 public static function socialtwitter_validation( $old_options, $input ) {
+	public static function socialtwitter_validation( $old_options, $input ) {
 		return self::social_validation( $old_options, $input, 'twitter', array(
 			"profile" => true,
+		) );
+ 	}
+
+	public static function socialgoogle_validation( $old_options, $input ) {
+		return self::social_validation( $old_options, $input, 'google-oauth2', array(
+			"google_plus" => true,
+			"email" => true,
+      		"profile" => true,
 		) );
  	}
 
@@ -803,6 +838,8 @@ class WP_Auth0_Admin {
 					$input["{$main_key}_key"] = $selected_connection->options->client_id;
 					$input["{$main_key}_secret"] = $selected_connection->options->client_secret;
 
+					self::add_validation_error('The connection has already setted an api key and secret and can not be overrided. Please update them from the <a href="https://manage.auth0.com/#/connections/social">Auth0 dashboard</a>');
+
 					$data = array(
 						'options' => array_merge($connection_options, array(
 							"client_id" => $input["{$main_key}_key"],
@@ -848,15 +885,17 @@ class WP_Auth0_Admin {
 					$data['enabled_clients'] = array();
 					foreach ($selected_connection->enabled_clients as $client) {
 						if ($client != $input['client_id']) {
-							$data['enabled_clients'][] = $input['client_id'];
+							$data['enabled_clients'][] = $client;
 						}
 					}
 
-					if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $selected_connection->id, $data) ) {
+					if ( false === $a = WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $selected_connection->id, $data) ) {
 						$error = __( 'There was an error disabling your social connection for this app.', WPA0_LANG );
 						self::add_validation_error( $error );
 						$input[$main_key] = 1;
 					}
+
+					var_dump($selected_connection,$a);exit;
 				}
 			}
 
@@ -935,8 +974,9 @@ class WP_Auth0_Admin {
 			'incomerule_validation',
 			'loginredirection_validation',
 			'basicdata_validation',
-			'socialfacebook_validation',
-			'socialtwitter_validation',
+			// 'socialfacebook_validation',
+			// 'socialtwitter_validation',
+			'socialgoogle_validation',
 		);
 
 		foreach ($actions_middlewares as $action) {

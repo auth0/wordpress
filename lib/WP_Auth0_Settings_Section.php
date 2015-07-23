@@ -31,7 +31,7 @@ class WP_Auth0_Settings_Section {
 
         add_submenu_page($main_menu, __('Settings', WPA0_LANG), __('Settings', WPA0_LANG), 'manage_options', 'wpa0', array('WP_Auth0_Admin', 'render_settings_page') );
         add_submenu_page($main_menu, __('Users export', WPA0_LANG), __('Users export', WPA0_LANG), 'manage_options', 'wpa0-users-export', array('WP_Auth0_Export_Users', 'render_export_users') );
-        add_submenu_page($main_menu, __('Dashboard preferences', WPA0_LANG), __('Dashboard Preferences', WPA0_LANG), 'manage_options', 'wpa0-dashboard', array('WP_Auth0_Dashboard_Preferences', 'render_dashboard_preferences_page') );
+        add_submenu_page($main_menu, __('Dashboard preferences', WPA0_LANG), __('Dashboard', WPA0_LANG), 'manage_options', 'wpa0-dashboard', array('WP_Auth0_Dashboard_Preferences', 'render_dashboard_preferences_page') );
         add_submenu_page($main_menu, __('Error Log', WPA0_LANG), __('Error Log', WPA0_LANG), 'manage_options', 'wpa0-errors', array('WP_Auth0_ErrorLog', 'render_settings_page') );
 
         if (WP_Auth0::is_jwt_auth_enabled())
