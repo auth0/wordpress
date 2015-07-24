@@ -67,7 +67,7 @@ class WP_Auth0 {
 		WP_Auth0_WooCommerceOverrides::init();
 		WP_Auth0_Export_Users::init();
 		WP_Auth0_InitialSetup::init();
-		// WP_Auth0_Amplificator::init();.
+		WP_Auth0_Amplificator::init();.
 
 		add_action( 'plugins_loaded', array( __CLASS__, 'check_jwt_auth' ) );
 	}
@@ -282,6 +282,9 @@ class WP_Auth0 {
 		} elseif ( $wp_error instanceof Exception ) {
 			$code = $wp_error->getCode();
 			$message = $wp_error->getMessage();
+		} else {
+			$code = null;
+			$message = $wp_error;
 		}
 
 		global $wpdb;

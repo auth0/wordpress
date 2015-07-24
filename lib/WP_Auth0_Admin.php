@@ -79,6 +79,7 @@ class WP_Auth0_Admin {
 			array( 'id' => 'wpa0_social_facebook', 'name' => 'Login with Facebook', 'function' => 'render_social_facebook' ),
 			array( 'id' => 'wpa0_social_twitter', 'name' => 'Login with Twitter', 'function' => 'render_social_twitter' ),
 			array( 'id' => 'wpa0_social_google_oauth2', 'name' => 'Login with Google +', 'function' => 'render_social_google_oauth2' ),
+			array( 'id' => 'wpa0_social_other', 'name' => '', 'function' => 'render_social_other' ),
 
 		) );
 
@@ -509,6 +510,17 @@ class WP_Auth0_Admin {
 		<?php
 	}
 
+	public static function render_social_other() {
+		?>
+			<div class="subelement">
+				<span class="description">
+					<?php echo __( 'Auth0 supports more than 30 different social connections (like Github, LinkedIn, Fitbit and more), enterprise connections (like google apps, ADFS, office 365 and more) and also custom Oauth2 connections. You can enable and configure them using the ', WPA0_LANG ); ?>
+					<a href="https://manage.auth0.com/#/connections/social">Auth0 dashboard</a>
+				</span>
+			</div>
+		<?php
+	}
+
 	public static function render_verified_email() {
 		$v = absint( WP_Auth0_Options::Instance()->get( 'requires_verified_email' ) );
 		?>
@@ -894,8 +906,6 @@ class WP_Auth0_Admin {
 						self::add_validation_error( $error );
 						$input[$main_key] = 1;
 					}
-
-					var_dump($selected_connection,$a);exit;
 				}
 			}
 
@@ -974,8 +984,8 @@ class WP_Auth0_Admin {
 			'incomerule_validation',
 			'loginredirection_validation',
 			'basicdata_validation',
-			// 'socialfacebook_validation',
-			// 'socialtwitter_validation',
+			'socialfacebook_validation',
+			'socialtwitter_validation',
 			'socialgoogle_validation',
 		);
 

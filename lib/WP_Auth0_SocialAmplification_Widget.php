@@ -83,10 +83,18 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
         if (trim($client_id) != "" && $userData)
         {
-            echo $args['before_widget'];
+            $options = WP_Auth0_Options::Instance();
 
+            $supportedProviders = array();
 
-            $supportedProviders = array('facebook','twitter');
+            if (!empty($options->social_facebook_key)) {
+                $supportedProviders[] = 'facebook';
+            }
+
+            if (!empty($options->social_twitter_key)) {
+                $supportedProviders[] = 'twitter';
+            }
+
             $providers = array();
             foreach ($userData as $value) {
                 foreach ($value->identities as $identity) {
@@ -95,20 +103,25 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
             }
             $providers = array_intersect($providers, $supportedProviders);
 
-            wp_enqueue_style('auth0-aplificator-css', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/css/amplificator.css');
 
-            wp_register_script('auth0-aplificator-js', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/js/amplificator.js');
-            wp_localize_script('auth0-aplificator-js', 'auth0_ajax',array( 'ajax_url' => admin_url( 'admin-ajax.php' )));
-            wp_enqueue_script('auth0-aplificator-js');
 
-            foreach ($providers as $provider) {
-            ?>
-                <button onclick="Auth0Amplify('<?php echo $provider; ?>')"><?php echo $provider; ?></button>
-            <?php
+            if ( count($providers) > 0 ) {
+                echo $args['before_widget'];
+
+                wp_enqueue_style('auth0-aplificator-css', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/css/amplificator.css');
+
+                wp_register_script('auth0-aplificator-js', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/js/amplificator.js');
+                wp_localize_script('auth0-aplificator-js', 'auth0_ajax',array( 'ajax_url' => admin_url( 'admin-ajax.php' )));
+                wp_enqueue_script('auth0-aplificator-js');
+
+                foreach ($providers as $provider) {
+                ?>
+                    <button onclick="Auth0Amplify('<?php echo $provider; ?>')"><?php echo $provider; ?></button>
+                <?php
+                }
+
+                echo $args['after_widget'];
             }
-
-
-            echo $args['after_widget'];
         }
 
     }
