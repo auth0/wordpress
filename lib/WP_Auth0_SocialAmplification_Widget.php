@@ -87,11 +87,11 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
             $supportedProviders = array();
 
-            if (!empty($options->social_facebook_key)) {
+            if (!empty($options->get('social_facebook_key'))) {
                 $supportedProviders[] = 'facebook';
             }
 
-            if (!empty($options->social_twitter_key)) {
+            if (!empty($options->get('social_twitter_key'))) {
                 $supportedProviders[] = 'twitter';
             }
 
@@ -101,9 +101,8 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
                     $providers[] = $identity->provider;
                 }
             }
+
             $providers = array_intersect($providers, $supportedProviders);
-
-
 
             if ( count($providers) > 0 ) {
                 echo $args['before_widget'];

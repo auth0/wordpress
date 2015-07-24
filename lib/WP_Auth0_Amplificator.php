@@ -17,7 +17,7 @@ class WP_Auth0_Amplificator {
 			case 'facebook': self::_share_facebook(); break;
 			case 'twitter': self::_share_twitter(); break;
 		}
- 
+
 		wp_die();
 	}
 
@@ -40,7 +40,7 @@ class WP_Auth0_Amplificator {
 
 	protected static function _share_twitter() {
 
-		require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Authentication/JWT.php';
+		require_once WPA0_PLUGIN_DIR . 'lib/twitter-api-php/TwitterAPIExchange.php';
 		$options = WP_Auth0_Options::Instance();
 		$user_profile = get_currentauth0userinfo();
 		$message = 'The message :)';
@@ -49,14 +49,14 @@ class WP_Auth0_Amplificator {
 			if ($identity->provider == 'twitter') {
 
 				$settings = array(
-				    'oauth_access_token' => $options->get('social_twitter_key'),
-				    'oauth_access_token_secret' => $options->get('social_twitter_secret'),
-				    'consumer_key' => "YOUR_CONSUMER_KEY",
-				    'consumer_secret' => "YOUR_CONSUMER_SECRET"
+				    'consumer_key' => $options->get('social_twitter_key'),
+				    'consumer_secret' => $options->get('social_twitter_secret'),
+				    'oauth_access_token' => $identity->access_token,
+				    'oauth_access_token_secret' => $identity->access_token_secret
 				);
 
 				$twitter = new TwitterAPIExchange($settings);
-				echo $twitter->buildOauth('https://api.twitter.com/1.1/statuses/update.json', 'POST')
+				$twitter->buildOauth('https://api.twitter.com/1.1/statuses/update.json', 'POST')
 				    ->setPostfields(array('status' => $message))
 				    ->performRequest();
 

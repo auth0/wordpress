@@ -107,7 +107,7 @@ class WP_Auth0_LoginManager {
 		$options = WP_Auth0_Options::Instance();
 
 		$code = $wp_query->query_vars['code'];
-		$state = $wp_query->query_vars['state'];
+		$state = (isset($wp_query->query_vars['state']) ? $wp_query->query_vars['state'] : null);
 		$stateFromGet = json_decode( stripcslashes( $state ) );
 
 		$domain = $options->get( 'domain' );
