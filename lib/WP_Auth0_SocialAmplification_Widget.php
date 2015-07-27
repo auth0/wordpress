@@ -75,7 +75,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
                 foreach ($providers as $provider) {
                 ?>
-                    <button onclick="Auth0Amplify('<?php echo $provider; ?>')"><?php echo $provider; ?></button>
+                    <button onclick="Auth0Amplify('<?php echo $provider; ?>', '<?php echo self::current_page_url(); ?>')"><?php echo $provider; ?></button>
                 <?php
                 }
 
@@ -83,6 +83,11 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
             }
         }
 
+    }
+
+    protected static function current_page_url() {
+
+        return site_url($_SERVER["REQUEST_URI"]);
     }
 
 }

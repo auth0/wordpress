@@ -754,6 +754,7 @@ class WP_Auth0_Admin {
 			"public_profile" => true,
 			"email" => true,
 			"user_birthday" => true,
+			"publish_actions" => true,
 		) );
  	}
 

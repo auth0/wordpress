@@ -12,16 +12,17 @@ class WP_Auth0_Amplificator {
 		}
 
 		$provider = $_POST['provider'];
+		$page_url = $_POST['page_url'];
 
 		switch ( $provider ) {
-			case 'facebook': self::_share_facebook(); break;
-			case 'twitter': self::_share_twitter(); break;
+			case 'facebook': self::_share_facebook($page_url); break;
+			case 'twitter': self::_share_twitter($page_url); break;
 		}
 
 		wp_die();
 	}
 
-	protected static function _share_facebook() {
+	protected static function _share_facebook($page_url) {
 		$user_profiles = WP_Auth0_DBManager::get_current_user_profiles();
 
 		foreach ($user_profiles as $user_profile) {
@@ -29,7 +30,12 @@ class WP_Auth0_Amplificator {
 				if ($identity->provider == 'facebook') {
 
 					$options = WP_Auth0_Options::Instance();
-					$message = urlencode($options->get('social_facebook_message'));
+					$message = $options->get('social_facebook_message');
+
+					$message = str_replace('%page_url%', $page_url, $message);
+					$message = str_replace('%site_url%', site_url('/'), $message);
+
+					$message = urlencode($message);
 
 					$url = "https://graph.facebook.com/{$identity->user_id}/feed?message={$message}&access_token={$identity->access_token}";
 					$response = wp_remote_post( $url );
@@ -41,7 +47,7 @@ class WP_Auth0_Amplificator {
 
 	}
 
-	protected static function _share_twitter() {
+	protected static function _share_twitter($page_url) {
 
 		require_once WPA0_PLUGIN_DIR . 'lib/twitter-api-php/TwitterAPIExchange.php';
 		$user_profiles = WP_Auth0_DBManager::get_current_user_profiles();
@@ -52,6 +58,8 @@ class WP_Auth0_Amplificator {
 
 					$options = WP_Auth0_Options::Instance();
 					$message = urlencode($options->get('social_twitter_message'));
+
+					$message = str_replace('%page_url%', $page_url, $message);
 
 					$settings = array(
 					    'consumer_key' => $options->get('social_twitter_key'),
