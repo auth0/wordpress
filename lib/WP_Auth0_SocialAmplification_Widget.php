@@ -26,26 +26,13 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
     }
 
     public function form( $instance ) {
-?>
-        <p><?php _e( 'To add this widget you need to use your own Facebook and Twitter apps.' ); ?></p>
-<?php
+        require WPA0_PLUGIN_DIR . 'templates/a0-widget-amplificator.php';
     }
 
     public function update( $new_instance, $old_instance ) {
-        if (trim($new_instance["dict"]) != '')
-        {
-            if (strpos($new_instance["dict"], '{') !== false && json_decode($new_instance["dict"]) === null)
-            {
-                $new_instance["dict"] = $old_instance["dict"];
-            }
-        }
-        if (trim($new_instance["extra_conf"]) != '')
-        {
-            if (json_decode($new_instance["extra_conf"]) === null)
-            {
-                $new_instance["extra_conf"] = $old_instance["extra_conf"];
-            }
-        }
+        $options = WP_Auth0_Options::Instance();
+        $options->set('social_facebook_message', $new_instance['social_facebook_message']);
+        $options->set('social_twitter_message', $new_instance['social_twitter_message']);
         return $new_instance;
     }
 

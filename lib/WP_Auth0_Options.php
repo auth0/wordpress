@@ -57,6 +57,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
             'social_facebook' => 0,
             'social_facebook_key' => null,
             'social_facebook_secret' => null,
+            'social_facebook_message' => '',
 
             'social_twitter' => 0,
             'social_twitter_key' => null,

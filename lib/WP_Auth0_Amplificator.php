@@ -23,11 +23,13 @@ class WP_Auth0_Amplificator {
 
 	protected static function _share_facebook() {
 		$user_profiles = WP_Auth0_DBManager::get_current_user_profiles();
-		$message = urlencode('The message :)');
 
 		foreach ($user_profiles as $user_profile) {
 			foreach ($user_profile->identities as $identity) {
 				if ($identity->provider == 'facebook') {
+
+					$options = WP_Auth0_Options::Instance();
+					$message = urlencode($options->get('social_facebook_message'));
 
 					$url = "https://graph.facebook.com/{$identity->user_id}/feed?message={$message}&access_token={$identity->access_token}";
 					$response = wp_remote_post( $url );
@@ -42,13 +44,14 @@ class WP_Auth0_Amplificator {
 	protected static function _share_twitter() {
 
 		require_once WPA0_PLUGIN_DIR . 'lib/twitter-api-php/TwitterAPIExchange.php';
-		$options = WP_Auth0_Options::Instance();
 		$user_profiles = WP_Auth0_DBManager::get_current_user_profiles();
-		$message = 'The message :)';
 
 		foreach ($user_profiles as $user_profile) {
 			foreach ($user_profile->identities as $identity) {
 				if ($identity->provider == 'twitter') {
+
+					$options = WP_Auth0_Options::Instance();
+					$message = urlencode($options->get('social_twitter_message'));
 
 					$settings = array(
 					    'consumer_key' => $options->get('social_twitter_key'),
