@@ -89,4 +89,31 @@ class WP_Auth0_DBManager {
 
 		return $results;
 	}
+
+	public static function get_current_user_profiles() {
+        global $current_user;
+        global $wpdb;
+
+        get_currentuserinfo();
+        $userData = array();
+
+        if ($current_user instanceof WP_User && $current_user->ID > 0 ) {
+            $sql = 'SELECT auth0_obj
+                    FROM ' . $wpdb->auth0_user .'
+                    WHERE wp_id = %d';
+            $results = $wpdb->get_results($wpdb->prepare($sql, $current_user->ID));
+
+            if (is_null($results) || $results instanceof WP_Error ) {
+
+                return null;
+            }
+
+            foreach ($results as $value) {
+                $userData[] = unserialize($value->auth0_obj);
+            }
+
+        }
+
+        return $userData;
+    }
 }

@@ -49,37 +49,10 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
         return $new_instance;
     }
 
-    protected function getInfo() {
-        global $current_user;
-        global $wpdb;
-
-        get_currentuserinfo();
-        $userData = array();
-
-        if ($current_user instanceof WP_User && $current_user->ID > 0 ) {
-            $sql = 'SELECT auth0_obj
-                    FROM ' . $wpdb->auth0_user .'
-                    WHERE wp_id = %d';
-            $results = $wpdb->get_results($wpdb->prepare($sql, $current_user->ID));
-
-            if (is_null($results) || $results instanceof WP_Error ) {
-
-                return null;
-            }
-
-            foreach ($results as $value) {
-                $userData[] = unserialize($value->auth0_obj);
-            }
-
-        }
-
-        return $userData;
-    }
-
     public function widget( $args, $instance ) {
 
         $client_id = WP_Auth0_Options::Instance()->get('client_id');
-        $userData = $this->getInfo();
+        $userData = WP_Auth0_DBManager::get_current_user_profiles();
 
         if (trim($client_id) != "" && $userData)
         {
@@ -102,7 +75,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
                 }
             }
 
-            $providers = array_intersect($providers, $supportedProviders);
+            $providers = array_intersect(array_unique($providers), $supportedProviders);
 
             if ( count($providers) > 0 ) {
                 echo $args['before_widget'];

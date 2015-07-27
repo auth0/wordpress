@@ -22,19 +22,20 @@ class WP_Auth0_Amplificator {
 	}
 
 	protected static function _share_facebook() {
-		$user_profile = get_currentauth0userinfo();
-		$message = 'The message :)';
+		$user_profiles = WP_Auth0_DBManager::get_current_user_profiles();
+		$message = urlencode('The message :)');
 
-		foreach ($user_profile->identities as $identity) {
-			if ($identity->provider == 'twitter') {
+		foreach ($user_profiles as $user_profile) {
+			foreach ($user_profile->identities as $identity) {
+				if ($identity->provider == 'facebook') {
 
-				$url = "https://graph.facebook.com/{$identity->user_id}/feed?message={$message}&access_token={$identity->access_token}";
-				wp_remote_post( $url );
+					$url = "https://graph.facebook.com/{$identity->user_id}/feed?message={$message}&access_token={$identity->access_token}";
+					$response = wp_remote_post( $url );
 
-				return;
+					return;
+				}
 			}
 		}
-
 
 	}
 
@@ -42,25 +43,27 @@ class WP_Auth0_Amplificator {
 
 		require_once WPA0_PLUGIN_DIR . 'lib/twitter-api-php/TwitterAPIExchange.php';
 		$options = WP_Auth0_Options::Instance();
-		$user_profile = get_currentauth0userinfo();
+		$user_profiles = WP_Auth0_DBManager::get_current_user_profiles();
 		$message = 'The message :)';
 
-		foreach ($user_profile->identities as $identity) {
-			if ($identity->provider == 'twitter') {
+		foreach ($user_profiles as $user_profile) {
+			foreach ($user_profile->identities as $identity) {
+				if ($identity->provider == 'twitter') {
 
-				$settings = array(
-				    'consumer_key' => $options->get('social_twitter_key'),
-				    'consumer_secret' => $options->get('social_twitter_secret'),
-				    'oauth_access_token' => $identity->access_token,
-				    'oauth_access_token_secret' => $identity->access_token_secret
-				);
+					$settings = array(
+					    'consumer_key' => $options->get('social_twitter_key'),
+					    'consumer_secret' => $options->get('social_twitter_secret'),
+					    'oauth_access_token' => $identity->access_token,
+					    'oauth_access_token_secret' => $identity->access_token_secret
+					);
 
-				$twitter = new TwitterAPIExchange($settings);
-				$twitter->buildOauth('https://api.twitter.com/1.1/statuses/update.json', 'POST')
-				    ->setPostfields(array('status' => $message))
-				    ->performRequest();
+					$twitter = new TwitterAPIExchange($settings);
+					$twitter->buildOauth('https://api.twitter.com/1.1/statuses/update.json', 'POST')
+					    ->setPostfields(array('status' => $message))
+					    ->performRequest();
 
-				return;
+					return;
+				}
 			}
 		}
 
