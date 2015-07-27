@@ -3,8 +3,15 @@
 $options = WP_Auth0_Options::Instance();
 $social_facebook_message = $options->get('social_facebook_message');
 $social_twitter_message = $options->get('social_twitter_message');
+$amplificator_title = $options->get('amplificator_title');
 
 ?>
+
+<p>
+    <label for="<?php echo $this->get_field_id( 'amplificator_title' ); ?>"><?php _e( 'Widget title:' ); ?></label>
+    <textarea class="widefat" id="<?php echo $this->get_field_id( 'amplificator_title' ); ?>"
+           name="<?php echo $this->get_field_name( 'amplificator_title' ); ?>" ><?php echo esc_attr( $amplificator_title ); ?></textarea>
+</p>
 
 <p>
     <label for="<?php echo $this->get_field_id( 'social_facebook_message' ); ?>"><?php _e( 'Facebook message:' ); ?></label>

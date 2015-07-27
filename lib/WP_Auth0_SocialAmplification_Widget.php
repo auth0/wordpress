@@ -33,6 +33,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
         $options = WP_Auth0_Options::Instance();
         $options->set('social_facebook_message', $new_instance['social_facebook_message']);
         $options->set('social_twitter_message', $new_instance['social_twitter_message']);
+        $options->set('amplificator_title', $new_instance['amplificator_title']);
         return $new_instance;
     }
 
@@ -67,6 +68,12 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
             if ( count($providers) > 0 ) {
                 echo $args['before_widget'];
 
+                $amplificator_title = $options->get('amplificator_title');
+
+                if (!empty($amplificator_title)) {
+                    echo "<h2 class=\"widget-title\">$amplificator_title</h2>";
+                }
+
                 wp_enqueue_style('auth0-aplificator-css', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/css/amplificator.css');
 
                 wp_register_script('auth0-aplificator-js', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/js/amplificator.js');
@@ -75,7 +82,15 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
                 foreach ($providers as $provider) {
                 ?>
-                    <button onclick="Auth0Amplify('<?php echo $provider; ?>', '<?php echo self::current_page_url(); ?>')"><?php echo $provider; ?></button>
+
+<div onclick="Auth0Amplify('<?php echo $provider; ?>', '<?php echo self::current_page_url(); ?>')"
+    title="<?php echo $provider; ?>"
+    class="a0-social a0-<?php echo $provider; ?>" dir="ltr">
+
+	<span><?php echo $provider; ?></span>
+    
+</div>
+
                 <?php
                 }
 
