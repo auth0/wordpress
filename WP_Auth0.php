@@ -172,8 +172,10 @@ class WP_Auth0 {
 	}
 
 	public static function shortcode( $atts ) {
-		ob_start();
+		wp_enqueue_script( 'jquery' );
+		wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
 
+		ob_start();
 		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
 		renderAuth0Form( false, self::buildSettings( $atts ) );
 
@@ -185,67 +187,6 @@ class WP_Auth0 {
 
 		include WPA0_PLUGIN_DIR . 'templates/back-to-auth0.php';
 
-	}
-
-	protected static function _get_boolean( $value ) {
-		return ( 1 === (int) $value || strtolower( $value ) === 'true');
-	}
-
-	protected static function _is_valid( $array, $key ) {
-		return ( isset( $array[$key] ) && trim( $array[$key] ) !== '' );
-	}
-
-	public static function build_settings( $settings ) {
-		$options_obj = array();
-		if ( isset( $settings['form_title'] ) &&
-			( ! isset( $settings['dict'] ) || ( isset( $settings['dict'] ) && trim( $settings['dict'] ) === '' ) ) &&
-			trim( $settings['form_title'] ) !== '' ) {
-
-			$options_obj['dict'] = array(
-				'signin' => array(
-					'title' => $settings['form_title'],
-				)
-			);
-
-		} elseif ( isset( $settings['dict'] ) && trim( $settings['dict'] ) !== '' ) {
-			if ( $oDict = json_decode( $settings['dict'], true ) ) {
-				$options_obj['dict'] = $oDict;
-			} else {
-				$options_obj['dict'] = $settings['dict'];
-			}
-		}
-		if ( self::_is_valid( $settings, 'custom_css' ) ) {
-			$options_obj['custom_css'] = $settings['custom_css'];
-		}
-		if ( self::_is_valid( $settings, 'custom_js' ) ) {
-			$options_obj['custom_js'] = $settings['custom_js'];
-		}
-		if ( self::_is_valid( $settings, 'social_big_buttons' ) ) {
-			$options_obj['socialBigButtons'] = self::_get_boolean( $settings['social_big_buttons'] );
-		}
-		if ( self::_is_valid( $settings, 'gravatar' ) ) {
-			$options_obj['gravatar'] = self::_get_boolean( $settings['gravatar'] );
-		}
-		if ( self::_is_valid( $settings, 'username_style' ) ) {
-			$options_obj['usernameStyle'] = $settings['username_style'];
-		}
-		if ( self::_is_valid( $settings, 'remember_last_login' ) ) {
-			$options_obj['rememberLastLogin'] = self::_get_boolean( $settings['remember_last_login'] );
-		}
-		if ( self::_is_valid( $settings, 'sso' ) ) {
-			$options_obj['sso'] = self::_get_boolean( $settings['sso'] );
-		}
-		if ( self::_is_valid( $settings, 'auth0_implicit_workflow' ) ) {
-			$options_obj['auth0_implicit_workflow'] = self::_get_boolean( $settings['auth0_implicit_workflow'] );
-		}
-		if ( self::_is_valid( $settings, 'icon_url' ) ) {
-			$options_obj['icon'] = $settings['icon_url'];
-		}
-		if ( isset( $settings['extra_conf'] ) && trim( $settings['extra_conf'] ) !== '' ) {
-			$extra_conf_arr = json_decode( $settings['extra_conf'], true );
-			$options_obj = array_merge( $extra_conf_arr, $options_obj );
-		}
-		return $options_obj;
 	}
 
 	public static function render_auth0_login_css() {
@@ -265,6 +206,9 @@ class WP_Auth0 {
 		if ( trim( $client_id ) === '' ) {
 			return;
 		}
+
+		wp_enqueue_script( 'jquery' );
+		wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
 
 		ob_start();
 		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';

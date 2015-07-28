@@ -7,6 +7,29 @@ class WP_Auth0_LoginManager {
 		add_action( 'wp_login', array( __CLASS__, 'end_session' ) );
 		add_action( 'login_init', array( __CLASS__, 'login_auto' ) );
 		add_action( 'template_redirect', array( __CLASS__, 'init_auth0' ), 1 );
+		add_action( 'wp_footer', array( __CLASS__, 'auth0_sso_footer') );
+		add_filter( 'login_message', array( __CLASS__, 'auth0_sso_footer' ) );
+	}
+
+	public static function auth0_sso_footer($previous_html) {
+		if (is_user_logged_in()) {
+			return;
+		}
+
+		echo $previous_html;
+
+		$lock_options = new WP_Auth0_Lock_Options();
+
+		$sso = $lock_options->get_sso();
+
+		if ( $sso ) {
+			$cdn = $lock_options->get_cdn_url();
+			$client_id = $lock_options->get_client_id();
+			$domain = $lock_options->get_domain();
+
+			wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
+			include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler.php';
+		}
 	}
 
 	public static function logout() {
@@ -242,11 +265,12 @@ class WP_Auth0_LoginManager {
 					}
 
 					wp_safe_redirect( $redirectURL );
+					exit;
 				}
 			}
 
 		} catch( UnexpectedValueException $e ) {
-
+echo $e;exit;
 			WP_Auth0::insert_auth0_error( 'implicit_login', $e );
 
 			error_log( $e->getMessage() );
