@@ -160,6 +160,7 @@ class WP_Auth0_Lock_Options {
         $state = $this->get_state_obj();
 
         $options_obj = $this->build_settings($this->wp_options->get_options());
+        $extended_settings = $this->build_settings($extended_settings);
 
         $extraOptions = array(
             "authParams"    => array("state" => $state),

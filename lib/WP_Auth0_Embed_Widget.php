@@ -39,18 +39,21 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
-return;
-		$client_id = WP_Auth0_Options::Instance()->get( 'client_id' );
+
+		$options = WP_Auth0_Options::Instance();
+		$client_id = $options->get( 'client_id' );
 
 		if ( trim( $client_id ) !== '' ) {
+
+			wp_enqueue_script( 'wpa0_lock', $options->get('cdn_url'), 'jquery' );
+
 			echo $args['before_widget'];
 
-			$settings = WP_Auth0::build_settings( $instance );
-			$settings['show_as_modal'] = $this->showAsModal();
-			$settings['modal_trigger_name'] = isset( $instance['modal_trigger_name'] ) ? $instance['modal_trigger_name'] : 'Login';
+			$instance['show_as_modal'] = $this->showAsModal();
+			$instance['modal_trigger_name'] = isset( $instance['modal_trigger_name'] ) ? $instance['modal_trigger_name'] : 'Login';
 
 			require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
-			renderAuth0Form( false, $settings );
+			renderAuth0Form( false, $instance );
 
 			echo $args['after_widget'];
 		}

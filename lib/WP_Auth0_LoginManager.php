@@ -270,7 +270,7 @@ class WP_Auth0_LoginManager {
 			}
 
 		} catch( UnexpectedValueException $e ) {
-echo $e;exit;
+
 			WP_Auth0::insert_auth0_error( 'implicit_login', $e );
 
 			error_log( $e->getMessage() );

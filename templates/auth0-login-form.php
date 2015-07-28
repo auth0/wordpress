@@ -27,7 +27,7 @@ $options = json_encode($lock_options->get_lock_options());
         <div class="form-signin">
 
             <?php if ($lock_options->show_as_modal()) { ?>
-                <button id="a0LoginButton" onclick="a0ShowLoginModal();" ><?php echo $lock_options->modal_button_name(); ?></button>
+                <button id="a0LoginButton" ><?php echo $lock_options->modal_button_name(); ?></button>
             <?php } else { ?>
                 <div id="auth0-login-form"></div>
             <?php } ?>
@@ -105,8 +105,6 @@ $options = json_encode($lock_options->get_lock_options());
                 lock.show(options, callback);
             }
 
-
-
             function getHashParams() {
 
                 var hashParams = {};
@@ -150,6 +148,10 @@ $options = json_encode($lock_options->get_lock_options());
 
         <?php if ( ! $lock_options->show_as_modal() ) { ?>
             a0ShowLoginModal();
+        <?php } else { ?>
+
+            jQuery('#a0LoginButton').click(a0ShowLoginModal);
+
         <?php } ?>
 
     });
