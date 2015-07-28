@@ -55,6 +55,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
             'income_rule' => null,
 
             'amplificator_title' => '',
+            'amplificator_subtitle' => '',
 
             'social_facebook' => 0,
             'social_facebook_key' => null,

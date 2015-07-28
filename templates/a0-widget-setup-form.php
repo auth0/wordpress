@@ -136,14 +136,10 @@ $custom_js = isset($instance[ 'custom_js' ]) ? $instance[ 'custom_js' ] : '';
     </span>
 </p>
 <p>
-    <label for="<?php echo $this->get_field_id( 'extra_conf' ); ?>"><?php _e( 'Customize the Login Widget CSS:' ); ?></label>
+    <label for="<?php echo $this->get_field_id( 'custom_css' ); ?>"><?php _e( 'Customize the Login Widget CSS:' ); ?></label>
     <textarea class="widefat" id="<?php echo $this->get_field_id( 'custom_css' ); ?>"
               name="<?php echo $this->get_field_name( 'custom_css' ); ?>">
         <?php echo esc_attr( $custom_css ); ?>
-    </textarea>
-    <textarea class="widefat" id="<?php echo $this->get_field_id( 'custom_js' ); ?>"
-              name="<?php echo $this->get_field_name( 'custom_js' ); ?>">
-        <?php echo esc_attr( $custom_js ); ?>
     </textarea>
     <br/><span class="description">
             <?php echo __('This should be a valid CSS to customize the Auth0 login widget.', WPA0_LANG); ?>
@@ -151,8 +147,12 @@ $custom_js = isset($instance[ 'custom_js' ]) ? $instance[ 'custom_js' ] : '';
         </span>
     </span>
 </p>
-
-
-
-
-
+<p>
+    <label for="<?php echo $this->get_field_id( 'custom_js' ); ?>"><?php _e( 'Customize the Login Widget JS:' ); ?></label>
+    <textarea class="widefat" id="<?php echo $this->get_field_id( 'custom_js' ); ?>"
+              name="<?php echo $this->get_field_name( 'custom_js' ); ?>">
+        <?php echo esc_attr( $custom_js ); ?>
+    </textarea>
+    <br/>
+    <span class="description"><?php echo __( 'This should be a valid JS to customize the Auth0 login widget to, for example, add custom buttons. ', WPA0_LANG ); ?><a target="_blank" href="https://auth0.com/docs/hrd#3"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
+</p>
