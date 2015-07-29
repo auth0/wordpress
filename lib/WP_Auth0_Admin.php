@@ -515,7 +515,7 @@ class WP_Auth0_Admin {
 			<div class="subelement">
 				<span class="description">
 					<?php echo __( 'Auth0 supports more than 30 different social connections (like Github, LinkedIn, Fitbit and more), enterprise connections (like google apps, ADFS, office 365 and more) and also custom Oauth2 connections. You can enable and configure them using the ', WPA0_LANG ); ?>
-					<a href="https://manage.auth0.com/#/connections/social">Auth0 dashboard</a>
+					<a href="https://manage.auth0.com/#/connections/social" target="_blank">Auth0 dashboard</a>
 				</span>
 			</div>
 		<?php
