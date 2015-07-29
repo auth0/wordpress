@@ -89,7 +89,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
                 foreach ($providers as $provider) {
                 ?>
 
-<div onclick="Auth0Amplify('<?php echo $provider; ?>', '<?php echo self::current_page_url(); ?>')"
+<div onclick="Auth0Amplify(this,'<?php echo $provider; ?>', '<?php echo self::current_page_url(); ?>')"
     title="<?php echo $provider; ?>"
     class="a0-social a0-<?php echo $provider; ?>" dir="ltr">
 

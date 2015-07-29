@@ -40,6 +40,23 @@ class WP_Auth0_Amplificator {
 					$url = "https://graph.facebook.com/{$identity->user_id}/feed?message={$message}&access_token={$identity->access_token}";
 					$response = wp_remote_post( $url );
 
+					$message = '';
+					$success = ($response['response']['code'] === 200);
+					if ( ! $success ) {
+						$body = json_decode($response['body']);
+						if ($body->error->code == 506) {
+							$message = 'Facebook does not allow to share the same content twice.';
+						} else {
+							$message = $body->error->error_user_msg;
+						}
+					}
+
+
+					echo json_encode(array(
+						'success' => $success,
+						'message' => $message
+					));
+
 					return;
 				}
 			}
@@ -57,7 +74,7 @@ class WP_Auth0_Amplificator {
 				if ($identity->provider == 'twitter') {
 
 					$options = WP_Auth0_Options::Instance();
-					$message = urlencode($options->get('social_twitter_message'));
+					$message = $options->get('social_twitter_message');
 
 					$message = str_replace('%page_url%', $page_url, $message);
 
@@ -69,9 +86,25 @@ class WP_Auth0_Amplificator {
 					);
 
 					$twitter = new TwitterAPIExchange($settings);
-					$twitter->buildOauth('https://api.twitter.com/1.1/statuses/update.json', 'POST')
+					$response = json_decode($twitter->buildOauth('https://api.twitter.com/1.1/statuses/update.json', 'POST')
 					    ->setPostfields(array('status' => $message))
-					    ->performRequest();
+					    ->performRequest());
+
+					$message = '';
+					$success = ( ! isset($response->errors) );
+					if ( ! $success ) {
+						if ($response->errors[0]->code == 187) {
+							$message = 'Twitter does not allow to share the same content twice.';
+						} else {
+							$message = $response->errors[0]->message;
+						}
+					}
+
+
+					echo json_encode(array(
+						'success' => $success,
+						'message' => $message
+					));
 
 					return;
 				}
