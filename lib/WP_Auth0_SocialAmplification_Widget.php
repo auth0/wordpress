@@ -86,10 +86,31 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
                 wp_localize_script('auth0-aplificator-js', 'auth0_ajax',array( 'ajax_url' => admin_url( 'admin-ajax.php' )));
                 wp_enqueue_script('auth0-aplificator-js');
 
-                foreach ($providers as $provider) {
+                $current_page_url = self::current_page_url();
+
+                foreach ($supportedProviders as $provider) {
+
+                    if (in_array($provider, $providers)) {
+                        $js_function = "Auth0Amplify(this,'$provider', '$current_page_url')";
+                    } else {
+
+                        $current_page_url = urlencode($current_page_url);
+
+                        switch ($provider)  {
+                            case 'facebook':
+                                $js_function = "javascript: void window.open('https://www.facebook.com/sharer/sharer.php?u=$current_page_url', '', 'height=300, width=600');";
+                                break;
+                            case 'twitter':
+                                $content = WP_Auth0_Amplificator::get_share_text('twitter', $current_page_url);
+                                $js_function = "javascript: void window.open('https://twitter.com/share?url=$current_page_url&text=$content', '', 'height=300, width=600');";
+                                break;
+                        }
+
+                    }
+
                 ?>
 
-<div onclick="Auth0Amplify(this,'<?php echo $provider; ?>', '<?php echo self::current_page_url(); ?>')"
+<div onclick="<?php echo $js_function; ?>"
     title="<?php echo $provider; ?>"
     class="a0-social a0-<?php echo $provider; ?>" dir="ltr">
 

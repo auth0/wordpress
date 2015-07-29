@@ -22,6 +22,15 @@ class WP_Auth0_Amplificator {
 		wp_die();
 	}
 
+	public static function get_share_text($provider, $page_url) {
+		$message = WP_Auth0_Options::Instance()->get("social_{$provider}_message");
+
+		$message = str_replace('%page_url%', $page_url, $message);
+		$message = str_replace('%site_url%', site_url('/'), $message);
+
+		return $message;
+	}
+
 	protected static function _share_facebook($page_url) {
 		$user_profiles = WP_Auth0_DBManager::get_current_user_profiles();
 
@@ -29,15 +38,9 @@ class WP_Auth0_Amplificator {
 			foreach ($user_profile->identities as $identity) {
 				if ($identity->provider == 'facebook') {
 
-					$options = WP_Auth0_Options::Instance();
-					$message = $options->get('social_facebook_message');
+					$share_text = urlencode(self::get_share_text('facebook', $page_url));
 
-					$message = str_replace('%page_url%', $page_url, $message);
-					$message = str_replace('%site_url%', site_url('/'), $message);
-
-					$message = urlencode($message);
-
-					$url = "https://graph.facebook.com/{$identity->user_id}/feed?message={$message}&access_token={$identity->access_token}";
+					$url = "https://graph.facebook.com/{$identity->user_id}/feed?message={$share_text}&access_token={$identity->access_token}";
 					$response = wp_remote_post( $url );
 
 					$message = '';
@@ -74,9 +77,7 @@ class WP_Auth0_Amplificator {
 				if ($identity->provider == 'twitter') {
 
 					$options = WP_Auth0_Options::Instance();
-					$message = $options->get('social_twitter_message');
-
-					$message = str_replace('%page_url%', $page_url, $message);
+					$share_text = self::get_share_text('twitter', $page_url);
 
 					$settings = array(
 					    'consumer_key' => $options->get('social_twitter_key'),
@@ -87,7 +88,7 @@ class WP_Auth0_Amplificator {
 
 					$twitter = new TwitterAPIExchange($settings);
 					$response = json_decode($twitter->buildOauth('https://api.twitter.com/1.1/statuses/update.json', 'POST')
-					    ->setPostfields(array('status' => $message))
+					    ->setPostfields(array('status' => $share_text))
 					    ->performRequest());
 
 					$message = '';
