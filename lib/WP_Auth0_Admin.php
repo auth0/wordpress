@@ -194,7 +194,8 @@ class WP_Auth0_Admin {
 				<span class="description">
 					<?php echo __( 'The token should be generated via the ', WPA0_LANG ); ?>
 					<a href="https://auth0.com/docs/api/v2" target="_blank"><?php echo __( 'token generator', WPA0_LANG ); ?></a>
-					<?php echo __( ' with the scopres required to create, read and update your account clients, users, rules and connections', WPA0_LANG ); ?>
+					<?php echo __( ' with the following scopes:', WPA0_LANG ); ?>
+					<code>create:clients</code> <?php echo __( 'and', WPA0_LANG ); ?> <code>read:connection</code>.
 				</span>
 			</div>
 		<?php
