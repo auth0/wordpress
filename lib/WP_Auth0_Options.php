@@ -65,6 +65,11 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
             'social_twitter' => 0,
             'social_twitter_key' => null,
             'social_twitter_secret' => null,
+            'social_twitter_message' => '',
+
+            'social_google-oauth2' => 0,
+            'social_google-oauth2_key' => null,
+            'social_google-oauth2_secret' => null,
 
             // 'auto_provisioning' => true,
             'default_login_redirection' => home_url(),

@@ -42,6 +42,9 @@ class WP_Auth0_DBManager {
 					auth0_id VARCHAR(100) NOT NULL,
 					wp_id INT(11)  NOT NULL,
 					auth0_obj TEXT,
+					id_token TEXT,
+					access_token TEXT,
+					last_update DATETIME,
 					PRIMARY KEY  (auth0_id)
 				);";
 

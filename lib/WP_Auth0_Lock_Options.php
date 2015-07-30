@@ -139,10 +139,12 @@ class WP_Auth0_Lock_Options {
     public function get_sso_options() {
         $options = $this->get_lock_options();
 
+        $extraOptions["scope"] = "openid update:clients update:connections create:connections create:rules delete:rules";
+
         if( $this->get_auth0_implicit_workflow() ) {
             $options["callbackOnLocationHash"] = true;
             $options["callbackURL"] = $this->get_implicit_callback_url();
-            $options["scope"] = "openid name email nickname email_verified identities";
+            $options["scope"] .= "name email nickname email_verified identities";
         } else {
             $options["callbackOnLocationHash"] = false;
             $options["callbackURL"] = $this->get_code_callback_url();
@@ -166,8 +168,10 @@ class WP_Auth0_Lock_Options {
             "authParams"    => array("state" => $state),
         );
 
+        $extraOptions["authParams"]["scope"] = "openid update:clients update:connections create:connections create:rules delete:rules";
+
         if( $this->get_auth0_implicit_workflow() ) {
-            $extraOptions["authParams"]["scope"] = "openid name email nickname email_verified identities";
+            $extraOptions["authParams"]["scope"] .= "name email nickname email_verified identities";
         } else {
             $extraOptions["responseType"] = 'code';
             $extraOptions["callbackURL"] = $this->get_code_callback_url();

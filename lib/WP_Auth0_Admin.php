@@ -624,7 +624,7 @@ class WP_Auth0_Admin {
 	public static function sso_validation( $old_options, $input ) {
 		$input['sso'] = ( isset( $input['sso'] ) ? $input['sso'] : 0 );
 		if ($old_options['sso'] != $input['sso'] && 1 == $input['sso']) {
-			if ( false === WP_Auth0_Api_Client::update_client($input['domain'], $input['auth0_app_token'], $input['client_id'],$input['sso'] == 1) ) {
+			if ( false === WP_Auth0_Api_Client::update_client($input['domain'], self::get_token(), $input['client_id'],$input['sso'] == 1) ) {
 
 				$error = __( 'There was an error updating your Auth0 App to enable SSO. To do it manually, turn it on ', WPA0_LANG );
 				$error .= '<a href="https://auth0.com/docs/sso/single-sign-on#1">HERE</a>.';
@@ -640,7 +640,7 @@ class WP_Auth0_Admin {
 			if (!empty($input['fullcontact'])) {
 				$fullcontact_script = WP_Auth0_RulesLib::$fullcontact['script'];
 				$fullcontact_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['fullcontact'], $fullcontact_script);
-				$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $input['auth0_app_token'], WP_Auth0_RulesLib::$fullcontact['name'], $fullcontact_script);
+				$rule = WP_Auth0_Api_Client::create_rule($input['domain'], self::get_token(), WP_Auth0_RulesLib::$fullcontact['name'], $fullcontact_script);
 
 				if ( $rule === false ) {
 					$error = __( 'There was an error creating the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
@@ -651,7 +651,7 @@ class WP_Auth0_Admin {
 				}
 			}
 			else {
-				if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], $input['auth0_app_token'], $old_options['fullcontact_rule']) ) {
+				if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], self::get_token(), $old_options['fullcontact_rule']) ) {
 					$error = __( 'There was an error deleting your Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
 					self::add_validation_error( $error );
 					$input['fullcontact'] = 1;
@@ -667,7 +667,7 @@ class WP_Auth0_Admin {
 		if ($old_options['mfa'] == null && 1 == $input['mfa']) {
 			$mfa_script = WP_Auth0_RulesLib::$google_MFA['script'];
 			$mfa_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $mfa_script);
-			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $input['auth0_app_token'], WP_Auth0_RulesLib::$google_MFA['name'], $mfa_script);
+			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], self::get_token(), WP_Auth0_RulesLib::$google_MFA['name'], $mfa_script);
 
 			if ( $rule === false ) {
 				$error = __( 'There was an error creating the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
@@ -679,7 +679,7 @@ class WP_Auth0_Admin {
 
 		}
 		elseif ($old_options['mfa'] != null && 0 == $input['mfa']) {
-			if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], $input['auth0_app_token'], $old_options['mfa']) ) {
+			if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], self::get_token(), $old_options['mfa']) ) {
 				$error = __( 'There was an error deleting the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
 				self::add_validation_error( $error );
 				$input['mfa'] = 1;
@@ -696,7 +696,7 @@ class WP_Auth0_Admin {
 	public static function georule_validation( $old_options, $input ) {
 		$input['geo_rule'] = ( isset( $input['geo_rule'] ) ? $input['geo_rule'] : 0 );
 		if ($old_options['geo_rule'] == null && 1 == $input['geo_rule']) {
-			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $input['auth0_app_token'], WP_Auth0_RulesLib::$geo['name'], WP_Auth0_RulesLib::$geo['script']);
+			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], self::get_token(), WP_Auth0_RulesLib::$geo['name'], WP_Auth0_RulesLib::$geo['script']);
 
 			if ( $rule === false ) {
 				$error = __( 'There was an error creating the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
@@ -707,7 +707,7 @@ class WP_Auth0_Admin {
 			}
 		}
 		elseif ($old_options['geo_rule'] != null && 0 == $input['geo_rule']) {
-			if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], $input['auth0_app_token'], $old_options['geo_rule']) ) {
+			if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], self::get_token(), $old_options['geo_rule']) ) {
 				$error = __( 'There was an error deleting the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
 				self::add_validation_error( $error );
 				$input['geo_rule'] = 1;
@@ -724,7 +724,7 @@ class WP_Auth0_Admin {
 	public static function incomerule_validation( $old_options, $input ) {
 		$input['income_rule'] = ( isset( $input['income_rule'] ) ? $input['income_rule'] : 0 );
 		if ($old_options['income_rule'] == null && 1 == $input['income_rule']) {
-			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $input['auth0_app_token'], WP_Auth0_RulesLib::$income['name'], WP_Auth0_RulesLib::$income['script']);
+			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], self::get_token(), WP_Auth0_RulesLib::$income['name'], WP_Auth0_RulesLib::$income['script']);
 
 			if ( $rule === false ) {
 				$error = __( 'There was an error creating the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
@@ -735,7 +735,7 @@ class WP_Auth0_Admin {
 			}
 		}
 		elseif ($old_options['income_rule'] != null && 0 == $input['income_rule']) {
-			if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], $input['auth0_app_token'], $old_options['income_rule']) ) {
+			if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], self::get_token(), $old_options['income_rule']) ) {
 				$error = __( 'There was an error deleting the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
 				self::add_validation_error( $error );
 				$input['income_rule'] = 1;
@@ -796,7 +796,7 @@ class WP_Auth0_Admin {
 			$old_options["{$main_key}_secret"] != $input["{$main_key}_secret"]
 			) {
 
-			$connections = WP_Auth0_Api_Client::search_connection($input['domain'], $input['auth0_app_token'], $strategy);
+			$connections = WP_Auth0_Api_Client::search_connection($input['domain'], self::get_token(), $strategy);
 
 			if ( ! $connections ) {
 				$error = __( 'There was an error searching your active social connections.', WPA0_LANG );
@@ -838,7 +838,7 @@ class WP_Auth0_Admin {
 						'enabled_clients' => $connection->enabled_clients
 					);
 
-					if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $selected_connection->id, $data) ) {
+					if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], self::get_token(), $selected_connection->id, $data) ) {
 						$error = __( 'There was an error updating your social connection', WPA0_LANG );
 						self::add_validation_error( $error );
 
@@ -861,7 +861,7 @@ class WP_Auth0_Admin {
 						'enabled_clients' => $connection->enabled_clients
 					);
 
-					if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $selected_connection->id, $data) ) {
+					if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], self::get_token(), $selected_connection->id, $data) ) {
 						$error = __( 'There was an error updating your social connection', WPA0_LANG );
 						self::add_validation_error( $error );
 
@@ -882,7 +882,7 @@ class WP_Auth0_Admin {
 						) ),
 					);
 
-					if ( false === WP_Auth0_Api_Client::create_connection($input['domain'], $input['auth0_app_token'], $data) ) {
+					if ( false === WP_Auth0_Api_Client::create_connection($input['domain'], self::get_token(), $data) ) {
 						$error = __( 'There was an error creating your social connection', WPA0_LANG );
 						self::add_validation_error( $error );
 
@@ -902,7 +902,7 @@ class WP_Auth0_Admin {
 						}
 					}
 
-					if ( false === $a = WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $selected_connection->id, $data) ) {
+					if ( false === $a = WP_Auth0_Api_Client::update_connection($input['domain'], self::get_token(), $selected_connection->id, $data) ) {
 						$error = __( 'There was an error disabling your social connection for this app.', WPA0_LANG );
 						self::add_validation_error( $error );
 						$input[$main_key] = 1;
@@ -999,5 +999,14 @@ class WP_Auth0_Admin {
 
 	protected static function build_section_title($title, $description) {
 		return "<span class=\"title\">$title</span><span class=\"description\" title=\"$description\">$description</span>";
+	}
+
+	protected static $token = null;
+	protected static function get_token() {
+		if ( self::$token === null ) {
+			$user = get_currentauth0user();
+			self::$token = $user->access_token;
+		}
+		return self::$token;
 	}
 }

@@ -87,6 +87,10 @@ class WP_Auth0_InitialSetup {
 
         $response = WP_Auth0_Api_Client::create_client($domain, $app_token, $name, $callbackUrl);
 
+        if ($response === false) {
+            die('ERROR WHILE CREATING THE CLIENT');
+        }
+
         $options->set( 'client_id', $response->client_id );
         $options->set( 'client_secret', $response->client_secret );
 

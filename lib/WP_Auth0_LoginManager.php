@@ -167,7 +167,7 @@ class WP_Auth0_LoginManager {
 
 		if ( isset( $data->access_token ) ) {
 			// Get the user information
-			$response = WP_Auth0_Api_Client::get_user_info( $domain, $data->access_token );
+			$response = WP_Auth0_Api_Client::get_current_user( $domain, $data->id_token );
 
 			if ( $response instanceof WP_Error ) {
 				WP_Auth0::insert_auth0_error( 'init_auth0_userinfo', $response );
@@ -306,7 +306,7 @@ class WP_Auth0_LoginManager {
 
 		if ( ! is_null( $user ) ) {
 			// User exists! Log in
-			self::_update_auth0_object( $userinfo );
+			self::_update_auth0_object( $userinfo, $id_token, $access_token );
 
 			wp_set_auth_cookie( $user->ID );
 
@@ -361,12 +361,16 @@ class WP_Auth0_LoginManager {
 		return $user;
 	}
 
-	private static function _update_auth0_object($userinfo) {
+	private static function _update_auth0_object($userinfo, $id_token, $access_token) {
 		global $wpdb;
+
 		$wpdb->update(
 			$wpdb->auth0_user,
 			array(
 				'auth0_obj' => serialize($userinfo),
+				'id_token' => $id_token,
+				'access_token' => $access_token,
+				'last_update' =>  date( 'c' ),
 			),
 			array( 'auth0_id' => $userinfo->user_id ),
 			array( '%s' ),

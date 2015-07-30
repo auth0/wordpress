@@ -11,7 +11,7 @@ define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'WPA0_LANG', 'wp-auth0' );
-define( 'AUTH0_DB_VERSION', 3 );
+define( 'AUTH0_DB_VERSION', 4 );
 define( 'WPA0_VERSION', '2.0.0' );
 
 /**
@@ -20,7 +20,6 @@ define( 'WPA0_VERSION', '2.0.0' );
 class WP_Auth0 {
 
 	public static function init() {
-
 		spl_autoload_register( array( __CLASS__, 'autoloader' ) );
 
 		WP_Auth0_Ip_Check::init();
@@ -303,23 +302,36 @@ class WP_Auth0 {
 
 if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 	function get_currentauth0userinfo() {
-		global $current_user;
+
 		global $currentauth0_user;
+
+		$result = get_currentauth0user();
+		if ($result) {
+			$currentauth0_user = unserialize( $result->auth0_obj );
+		}
+
+		return $currentauth0_user;
+	}
+}
+
+if ( ! function_exists( 'get_currentauth0user' ) ) {
+	function get_currentauth0user() {
+		global $current_user;
 		global $wpdb;
 
 		get_currentuserinfo();
 
 		if ( $current_user instanceof WP_User && $current_user->ID > 0 ) {
-			$sql = 'SELECT auth0_obj FROM ' . $wpdb->auth0_user .' WHERE wp_id = %d';
+			$sql = 'SELECT * FROM ' . $wpdb->auth0_user .' WHERE wp_id = %d order by last_update desc limit 1';
 			$result = $wpdb->get_row( $wpdb->prepare( $sql, $current_user->ID ) );
 
 			if ( is_null( $result ) || $result instanceof WP_Error ) {
 				return null;
 			}
-			$currentauth0_user = unserialize( $result->auth0_obj );
+
 		}
 
-		return $currentauth0_user;
+		return $result;
 	}
 }
 

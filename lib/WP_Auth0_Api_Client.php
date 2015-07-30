@@ -86,7 +86,23 @@ class WP_Auth0_Api_Client {
 			'headers' => $headers,
 			'body' => json_encode(array(
 				'name' => $name,
-				'callbacks' => array( $callbackUrl )
+				'callbacks' => array( $callbackUrl ),
+				"resource_servers" => array(
+					array(
+						"identifier" => "https://$domain/api/v2/",
+  			          	"scopes" => [
+							'update:clients',
+							'update:connections',
+							'create:connections',
+							'create:rules',
+							'delete:rules'
+						]
+					),
+					// array(
+					// 	"identifier" => "https://$domain/api/",
+  			      //     	"scopes" => [ '*' ]
+					// )
+				)
 			))
 		) );
 
@@ -261,6 +277,14 @@ class WP_Auth0_Api_Client {
 		if ( $response['response']['code'] >= 300 ) return false;
 
 		return json_decode($response['body']);
+	}
+
+	public static function get_current_user($domain, $app_token) {
+		list($head,$payload,$signature) = explode('.',$app_token);
+		require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Authentication/JWT.php';
+		$decoded = json_decode(JWT::urlsafeB64Decode($payload));
+
+		return self::get_user($domain, $app_token, $decoded->sub);
 	}
 
 	public static function update_connection($domain, $app_token, $id, $payload) {
