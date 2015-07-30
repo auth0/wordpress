@@ -97,11 +97,7 @@ class WP_Auth0_Api_Client {
 							'create:rules',
 							'delete:rules'
 						]
-					),
-					// array(
-					// 	"identifier" => "https://$domain/api/",
-  			      //     	"scopes" => [ '*' ]
-					// )
+					)
 				)
 			))
 		) );
@@ -180,7 +176,7 @@ class WP_Auth0_Api_Client {
 			return false;
 		}
 
-		if ( $response['response']['code'] != 200 ) {
+		if ( $response['response']['code'] != 201 ) {
 			WP_Auth0::insert_auth0_error( 'WP_Auth0_Api_Client::create_rule', $response['body'] );
 			error_log( $response['body'] );
 			return false;

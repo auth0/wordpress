@@ -31,7 +31,7 @@ class WP_Auth0_InitialSetup {
     public static function notify_setup() {
 		?>
 		<div class="update-nag">
-			Click <a href="<?php echo admin_url('admin.php?page=wpa0-setup&step=3'); ?>">HERE</a> to configure the Auth0 plugin.
+			Click <a href="<?php echo admin_url('admin.php?page=wpa0-setup'); ?>">HERE</a> to configure the Auth0 plugin.
 		</div>
 		<?php
 	}
