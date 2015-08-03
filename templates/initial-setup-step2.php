@@ -10,7 +10,7 @@
         <input type="text" name="app_token" value="<?php echo $token; ?>" autocomplete="off" />
 		<br>
 		Domain:
-        <input type="text" name="app_domain" value="" />
+        <input type="text" name="app_domain" value="<?php echo $domain; ?>" />
 
 		<p class="submit">
 			<input type="submit" name="contiue" class="button button-primary" value="Save">

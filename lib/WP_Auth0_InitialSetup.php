@@ -54,6 +54,7 @@ class WP_Auth0_InitialSetup {
 
             case 2:
                 $token = self::exchange_code();
+                $domain = self::parse_token_domain($token);
 
                 include WPA0_PLUGIN_DIR . 'templates/initial-setup-step2.php';
                 break;
@@ -65,6 +66,12 @@ class WP_Auth0_InitialSetup {
                 break;
         }
 	}
+
+    protected static function parse_token_domain($token) {
+        $parts = explode('.', $token);
+        $payload = json_decode( base64_decode( strtr( $parts[1], '-_', '+/' ) ) );
+        return str_replace( array('/api/v2', 'https://'), '', $payload->aud );
+    }
 
     public static function build_consent_url() {
 
@@ -120,7 +127,7 @@ class WP_Auth0_InitialSetup {
         $response = WP_Auth0_Api_Client::create_client($domain, $app_token, $name, $callbackUrl);
 
         if ($response === false) {
-            die('ERROR WHILE CREATING THE CLIENT');
+            wp_redirect( admin_url( 'admin.php?page=wpa0&error=cant_create_client' ) );
         }
 
         $options->set( 'client_id', $response->client_id );
