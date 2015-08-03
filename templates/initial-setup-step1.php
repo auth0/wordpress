@@ -16,7 +16,7 @@
     </ul>
 
 	<div class="auth0-btn-container">
-	    <a href="<?php echo admin_url( 'admin.php?page=wpa0-setup&step=2' ); ?>" class="auth0-btn">Click here</a>
+	    <a href="<?php echo $consent_url; ?>" class="auth0-btn">Click here</a>
 	</div>
 
 </div>

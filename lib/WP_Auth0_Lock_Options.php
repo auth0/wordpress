@@ -150,6 +150,14 @@ class WP_Auth0_Lock_Options {
             $options["callbackURL"] = $this->get_code_callback_url();
         }
 
+        if (
+            ! isset( $options["authParams"] ) ||
+            ! isset( $options["authParams"]["state"] ) ||
+            ! isset( $options["authParams"]["state"]["redirect_to"] )
+        ) {
+            $options["authParams"]["state"]["redirect_to"] = site_url($_SERVER["REQUEST_URI"]);
+        }
+
         return $options;
 
     }

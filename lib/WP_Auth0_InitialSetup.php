@@ -53,18 +53,50 @@ class WP_Auth0_InitialSetup {
                 break;
 
             case 2:
+                $token = self::exchange_code();
+
                 include WPA0_PLUGIN_DIR . 'templates/initial-setup-step2.php';
                 break;
 
             case 1:
             default:
+                $consent_url = self::build_consent_url();
                 include WPA0_PLUGIN_DIR . 'templates/initial-setup-step1.php';
                 break;
         }
 	}
 
-    public static function step2_action() {
+    public static function build_consent_url() {
 
+        $callback_url = urlencode( admin_url( 'admin.php?page=wpa0-setup&step=2' ) );
+        $client_id = base64_decode('QmxjVlh0VXVmRm54cnZUTFdLRXBTNG9ET3hCZm95eFo=');
+        $scope = urlencode( implode( ' ', array(
+            'read:connections',
+            'create:clients',
+        ) ) );
+
+        $url = "https://auth0.auth0.com/authorize?client_id={$client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}";
+
+        return $url;
+    }
+
+    public static function exchange_code() {
+        $code = $_REQUEST['code'];
+        $domain = 'auth0.auth0.com';
+        $client_id = base64_decode('QmxjVlh0VXVmRm54cnZUTFdLRXBTNG9ET3hCZm95eFo=');
+        $client_secret = base64_decode('a3JrN09COFJBWngwQ0JkcVEwdXVmV1k5WjJLdTUxV0l6Ml9qRjM3aVVSMmpQbWU5RjNUT1lBNmJUVkpseFNldQ==');
+        $callback_url = urlencode( admin_url( 'admin.php?page=wpa0-setup&step=2' ) );
+
+        $response = WP_Auth0_Api_Client::get_token( $domain, $client_id, $client_secret, 'authorization_code', array(
+                'redirect_uri' => home_url(),
+                'code' => $code,
+            ) );
+
+        $obj = json_decode($response['body']);
+
+        return $obj->access_token;
+    }
+    public static function step2_action() {
         $app_token = $_REQUEST['app_token'];
         $app_domain = $_REQUEST['app_domain'];
         $options = WP_Auth0_Options::Instance();

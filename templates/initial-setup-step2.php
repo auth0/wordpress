@@ -7,7 +7,7 @@
     <form method="post" action="<?php echo admin_url( 'admin.php' ); ?>">
         <input type="hidden" name="action" value="wpauth0_initialsetup_step2" />
 		Token:
-        <input type="text" name="app_token" value="" autocomplete="off" />
+        <input type="text" name="app_token" value="<?php echo $token; ?>" autocomplete="off" />
 		<br>
 		Domain:
         <input type="text" name="app_domain" value="" />
