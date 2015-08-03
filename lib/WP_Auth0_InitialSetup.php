@@ -5,7 +5,6 @@ class WP_Auth0_InitialSetup {
     public static function init() {
 
         add_action( 'admin_action_wpauth0_initialsetup_step2', array(__CLASS__, 'step2_action') );
-        add_action( 'admin_action_wpauth0_initialsetup_step3', array(__CLASS__, 'step3_action') );
         add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue' ) );
 
         $options = WP_Auth0_Options::Instance();
@@ -47,16 +46,13 @@ class WP_Auth0_InitialSetup {
 
     protected static function render($step) {
         switch ( $step ) {
-            case 3:
-                $name = get_bloginfo('name');
-                include WPA0_PLUGIN_DIR . 'templates/initial-setup-step3.php';
-                break;
 
             case 2:
-                $token = self::exchange_code();
-                $domain = self::parse_token_domain($token);
+                self::store_token_domain();
 
+                $name = get_bloginfo('name');
                 include WPA0_PLUGIN_DIR . 'templates/initial-setup-step2.php';
+
                 break;
 
             case 1:
@@ -103,20 +99,16 @@ class WP_Auth0_InitialSetup {
 
         return $obj->access_token;
     }
-    public static function step2_action() {
-        $app_token = $_REQUEST['app_token'];
-        $app_domain = $_REQUEST['app_domain'];
+    public static function store_token_domain() {
+        $app_token = self::exchange_code();
+        $app_domain = self::parse_token_domain($app_token);
+
         $options = WP_Auth0_Options::Instance();
         $options->set( 'auth0_app_token', $app_token );
         $options->set( 'domain', $app_domain );
-
-        wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=3' ) );
-        exit();
-
     }
 
-
-    public static function step3_action() {
+    public static function step2_action() {
 
         $name = $_REQUEST['app_name'];
         $options = WP_Auth0_Options::Instance();
