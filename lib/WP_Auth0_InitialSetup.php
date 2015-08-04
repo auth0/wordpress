@@ -45,11 +45,11 @@ class WP_Auth0_InitialSetup {
     }
 
     protected static function render($step) {
+        $consent_url = self::build_consent_url();
         switch ( $step ) {
 
             case 2:
-                self::store_token_domain();
-
+                $sucess = self::store_token_domain();
                 $name = get_bloginfo('name');
                 include WPA0_PLUGIN_DIR . 'templates/initial-setup-step2.php';
 
@@ -57,7 +57,6 @@ class WP_Auth0_InitialSetup {
 
             case 1:
             default:
-                $consent_url = self::build_consent_url();
                 include WPA0_PLUGIN_DIR . 'templates/initial-setup-step1.php';
                 break;
         }
@@ -97,15 +96,26 @@ class WP_Auth0_InitialSetup {
 
         $obj = json_decode($response['body']);
 
+        if (isset($obj->error)) {
+            return null;
+        }
+
         return $obj->access_token;
     }
     public static function store_token_domain() {
         $app_token = self::exchange_code();
+
+        if ($app_token === null) {
+            return false;
+        }
+
         $app_domain = self::parse_token_domain($app_token);
 
         $options = WP_Auth0_Options::Instance();
         $options->set( 'auth0_app_token', $app_token );
         $options->set( 'domain', $app_domain );
+
+        return true;
     }
 
     public static function step2_action() {
