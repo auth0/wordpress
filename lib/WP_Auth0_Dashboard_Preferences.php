@@ -4,7 +4,19 @@ class WP_Auth0_Dashboard_Preferences {
 
     public static function init() {
         add_action( 'admin_init', array( __CLASS__, 'init_admin' ) );
+        add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue' ) );
     }
+
+    public static function admin_enqueue() {
+		if ( ! isset( $_REQUEST['page'] ) || 'wpa0-dashboard' !== $_REQUEST['page'] ) {
+			return;
+		}
+
+		wp_enqueue_media();;
+		wp_enqueue_style( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/css/settings.css' );
+        wp_enqueue_script( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/js/dashboardsettings.js', array( 'jquery' ) );
+		wp_enqueue_style( 'media' );
+	}
 
     protected static function init_option_section($sectionName, $settings) {
 		$lowerName = strtolower( str_replace(' ', '_', $sectionName) );

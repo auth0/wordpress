@@ -6,7 +6,19 @@ class WP_Auth0_Export_Users {
         add_action('admin_footer', array( __CLASS__, 'a0_add_users_export'));
         add_action('load-users.php', array( __CLASS__, 'a0_export_selected_users'));
         add_action( 'admin_action_wpauth0_export_users', array(__CLASS__, 'a0_export_users') );
+        add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue' ) );
     }
+
+    public static function admin_enqueue() {
+		if ( ! isset( $_REQUEST['page'] ) || 'wpa0-users-export' !== $_REQUEST['page'] ) {
+			return;
+		}
+
+		wp_enqueue_media();
+		wp_enqueue_style( 'wpa0_admin_settings', WPA0_PLUGIN_URL . 'assets/css/settings.css' );
+		wp_enqueue_style( 'media' );
+
+	}
 
 	public static function a0_add_users_export() {
 	    $screen = get_current_screen();

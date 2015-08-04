@@ -22,7 +22,8 @@ class WP_Auth0_InitialSetup {
 		}
 
 		wp_enqueue_media();
-		wp_enqueue_style( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/css/initial-setup.css' );
+		wp_enqueue_style( 'wpa0_admin_initial_settup', WPA0_PLUGIN_URL . 'assets/css/initial-setup.css' );
+		wp_enqueue_style( 'wpa0_admin_setting', WPA0_PLUGIN_URL . 'assets/css/settings.css' );
 		wp_enqueue_style( 'media' );
 
 	}
@@ -83,6 +84,11 @@ class WP_Auth0_InitialSetup {
     }
 
     public static function exchange_code() {
+
+        if ( ! isset($_REQUEST['code']) ) {
+            return null;
+        }
+        
         $code = $_REQUEST['code'];
         $domain = 'auth0.auth0.com';
         $client_id = base64_decode('QmxjVlh0VXVmRm54cnZUTFdLRXBTNG9ET3hCZm95eFo=');

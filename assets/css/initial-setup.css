@@ -30,18 +30,3 @@ ul.auth0 {
   background-color: #ae3610;
   color: #fff;
 }
-
-.toplevel_page_wpa0-setup .wrap {
-    background: white none repeat scroll 0% 0%;
-    padding: 10px 20px;
-    max-width: 800px;
-}
-
-.toplevel_page_wpa0-setup .wrap form {
-    margin:0;
-}
-
-
-.toplevel_page_wpa0-setup .wrap input {
-    margin: 0.5em;
-}
