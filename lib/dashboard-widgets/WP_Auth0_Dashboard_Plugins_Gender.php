@@ -8,6 +8,7 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
     protected $users = array('female' => 0, 'male' => 0, self::UNKNOWN_KEY => 0);
 
     protected $type;
+    protected $has_data = false;
 
     public function __construct($type) {
         $this->type = $type;
@@ -15,6 +16,7 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
 
 
     protected function getType($user) {
+        $this->has_data = true;
         $gender = $user->get_gender();
         return $gender ? $gender : self::UNKNOWN_KEY;
     }
@@ -22,7 +24,7 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
     public function render() {
         $data = $this->users;
 
-        if (empty($data)) {
+        if ( ! $this->has_data) {
             echo "No data available";
             return;
         }

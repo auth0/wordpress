@@ -55,6 +55,8 @@ class WP_Auth0 {
 			add_action( 'wp_footer', array( __CLASS__, 'a0_render_message' ) );
 		}
 
+		add_action( 'profile_update', array(__CLASS__, 'user_profile_update'), 10, 2 );
+
 		WP_Auth0_LoginManager::init();
 		WP_Auth0_UsersRepo::init();
 		WP_Auth0_Settings_Section::init();
@@ -67,9 +69,17 @@ class WP_Auth0 {
 		WP_Auth0_Export_Users::init();
 		WP_Auth0_InitialSetup::init();
 		WP_Auth0_Amplificator::init();
+		WP_Auth0_Routes::init();
 
 		add_action( 'plugins_loaded', array( __CLASS__, 'check_jwt_auth' ) );
 	}
+
+	public static function user_profile_update( $user_id, $old_user_data ) {
+
+		$new_user = get_user_by( 'id', $user_id );
+
+		var_dump($new_user, $old_user_data);exit;
+    }
 
 	public static function is_jwt_auth_enabled() {
 		if ( ! function_exists( 'is_plugin_active' ) ) {
@@ -114,6 +124,7 @@ class WP_Auth0 {
 
 	public static function  a0_register_query_vars( $qvars ) {
 		$qvars[] = 'error_description';
+		$qvars[] = 'a0_action';
 		return $qvars;
 	}
 
@@ -262,7 +273,9 @@ class WP_Auth0 {
 		add_rewrite_tag( '%code%', '([^&]+)' );
 		add_rewrite_tag( '%state%', '([^&]+)' );
 		add_rewrite_tag( '%auth0_error%', '([^&]+)' );
+
 		add_rewrite_rule( '^auth0', 'index.php?auth0=1', 'top' );
+		add_rewrite_rule( '^oauth2-config?', 'index.php?a0_action=oauth2-config', 'top' );
 	}
 
 	public static function install() {
