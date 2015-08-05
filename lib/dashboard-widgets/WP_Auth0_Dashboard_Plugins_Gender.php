@@ -24,7 +24,7 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
     public function render() {
         $data = $this->users;
 
-        if ( ! $this->has_data) {
+        if ( ! $this->has_data ) {
             echo "No data available";
             return;
         }

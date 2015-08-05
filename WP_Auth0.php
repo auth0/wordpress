@@ -78,7 +78,7 @@ class WP_Auth0 {
 
 		$new_user = get_user_by( 'id', $user_id );
 
-		var_dump($new_user, $old_user_data);exit;
+
     }
 
 	public static function is_jwt_auth_enabled() {
