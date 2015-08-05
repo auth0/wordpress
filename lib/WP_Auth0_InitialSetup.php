@@ -88,7 +88,7 @@ class WP_Auth0_InitialSetup {
         if ( ! isset($_REQUEST['code']) ) {
             return null;
         }
-        
+
         $code = $_REQUEST['code'];
         $domain = 'auth0.auth0.com';
         $client_id = base64_decode('QmxjVlh0VXVmRm54cnZUTFdLRXBTNG9ET3hCZm95eFo=');

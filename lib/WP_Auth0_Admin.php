@@ -553,6 +553,34 @@ class WP_Auth0_Admin {
 	}
 
 	public static function render_allow_signup() {
+		if (is_multisite()) {
+			self::render_allow_signup_regular_multisite();
+		} else {
+			self::render_allow_signup_regular();
+		}
+	}
+
+	public static function render_allow_signup_regular_multisite() {
+		$allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled();
+		?>
+			<span class="description">
+				<?php echo __( 'Signup will be ', WPA0_LANG ); ?>
+
+				<?php if ( ! $allow_signup ) { ?>
+					<b><?php echo __( 'disabled', WPA0_LANG ); ?></b>
+					<?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', WPA0_LANG ); ?><br>
+				<?php } else { ?>
+					<b><?php echo __( 'enabled', WPA0_LANG ); ?></b>
+					<?php echo __( ' because it is enabled by the setting "Allow new registrations" nn the Network Admin.', WPA0_LANG ); ?><br>
+				<?php } ?>
+
+				<?php echo __( 'You can manage this setting on Network Admin > Settings > Network Settings > Allow new registrations (you need to set it up to <b>User accounts may be registered</b> or <b>Both sites and user accounts can be registered</b> depending on your preferences).', WPA0_LANG ); ?>
+			</span>
+
+		<?php
+	}
+
+	public static function render_allow_signup_regular() {
 		$allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled();
 		?>
 			<span class="description">
