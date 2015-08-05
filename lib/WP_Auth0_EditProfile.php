@@ -27,6 +27,8 @@ class WP_Auth0_EditProfile {
     			return;
     		}
 
+            $user_email = esc_html( trim( $_POST['email'] ) );
+
             $options = WP_Auth0_Options::Instance();
             $user_profiles = WP_Auth0_DBManager::get_current_user_profiles();
             $user_profile = $user_profiles[0];
@@ -47,7 +49,6 @@ class WP_Auth0_EditProfile {
 
             if ($response !== false) {
 
-                $user_email = esc_html( trim( $_POST['email'] ) );
         		if ( $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM {$wpdb->signups} WHERE user_login = %s", $current_user->user_login ) ) ) {
         			$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->signups} SET user_email = %s WHERE user_login = %s", $_POST['email'], $current_user->user_login ) );
                 }
@@ -66,8 +67,7 @@ class WP_Auth0_EditProfile {
 
     protected static function get_token() {
 		$user = get_currentauth0user();
-		self::$token = $user->access_token;
-		return self::$token;
+		return $user->access_token;
 	}
 
 }
