@@ -3,13 +3,13 @@
 class WP_Auth0_Export_Users {
 
     public static function init() {
-        add_action('admin_footer', array( __CLASS__, 'a0_add_users_export'));
-        add_action('load-users.php', array( __CLASS__, 'a0_export_selected_users'));
+        add_action( 'admin_footer', array( __CLASS__, 'a0_add_users_export') );
+        add_action( 'load-users.php', array( __CLASS__, 'a0_export_selected_users') );
         add_action( 'admin_action_wpauth0_export_users', array(__CLASS__, 'a0_export_users') );
         add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue' ) );
     }
 
-    public static function admin_enqueue() {
+    public static function admin_enqueue() { 
 		if ( ! isset( $_REQUEST['page'] ) || 'wpa0-users-export' !== $_REQUEST['page'] ) {
 			return;
 		}

@@ -95,7 +95,8 @@ class WP_Auth0_Api_Client {
 							'update:connections',
 							'create:connections',
 							'create:rules',
-							'delete:rules'
+							'delete:rules',
+							'update:users'
 						]
 					)
 				)
@@ -338,6 +339,37 @@ class WP_Auth0_Api_Client {
 			error_log( $response['body'] );
 			return false;
 		}
+
+		return json_decode($response['body']);
+	}
+
+	public static function update_user($domain, $app_token, $id, $payload) {
+		$endpoint = "https://$domain/api/v2/users/$id";
+
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+		$headers['content-type'] = "application/json";
+
+		$response = wp_remote_post( $endpoint  , array(
+			'method' => 'PATCH',
+			'headers' => $headers,
+			'body' => json_encode($payload)
+		) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0::create_rule( 'WP_Auth0_Api_Client::update_users', $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] != 200 ) {
+			WP_Auth0::insert_auth0_error( 'WP_Auth0_Api_Client::update_users', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		if ( $response['response']['code'] >= 300 ) return false;
 
 		return json_decode($response['body']);
 	}
