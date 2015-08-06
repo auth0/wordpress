@@ -93,6 +93,25 @@ class WP_Auth0_DBManager {
 		return $results;
 	}
 
+	public static function get_users_by_auth0id($auth0_id) {
+		global $wpdb;
+
+
+		$sql = sprintf( 'SELECT a.* FROM %s a JOIN %s u ON u.wp_id = a.id where u.auth0_id = "%s"',
+			$wpdb->users,
+			$wpdb->auth0_user,
+			$auth0_id );
+
+		$result = $wpdb->get_row( $sql );
+
+		if ( $result instanceof WP_Error ) {
+			self::insert_auth0_error( 'findAuth0User',$userRow );
+			return null;
+		}
+
+		return $result;
+	}
+
 	public static function get_current_user_profiles() {
         global $current_user;
         global $wpdb;

@@ -8,8 +8,14 @@ class WP_Auth0_EditProfile {
 
     public static function override_email_update() {
         global $wpdb;
+        global $errors;
 
         $current_user = wp_get_current_user();
+        $app_token = self::get_token();
+
+        if (!$app_token) {
+            return;
+        }
 
         if ( $current_user->ID != $_POST['user_id'] ) {
             return false;
@@ -38,7 +44,6 @@ class WP_Auth0_EditProfile {
             $client_id = $options->get('client_id');
             $domain = $options->get('domain');
             $requires_verified_email = $options->get('requires_verified_email');
-            $app_token = self::get_token();
 
             $response = WP_Auth0_Api_Client::update_user($domain, $app_token, $user_id, array(
                 'connection' => $connection,
@@ -67,7 +72,7 @@ class WP_Auth0_EditProfile {
 
     protected static function get_token() {
 		$user = get_currentauth0user();
-		return $user->access_token;
+		return ($user && isset($user->access_token) ? $user->access_token : null);
 	}
 
 }

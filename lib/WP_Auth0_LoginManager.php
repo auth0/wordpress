@@ -337,6 +337,9 @@ class WP_Auth0_LoginManager {
 			} catch ( WP_Auth0_EmailNotVerifiedException $e ) {
 				self::dieWithVerifyEmail( $e->userinfo, $e->id_token );
 			}
+			// catch ( Exception $e ) {
+			// 	echo $e;exit;
+			// }
 
 			return true;
 		}
