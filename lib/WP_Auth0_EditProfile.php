@@ -17,6 +17,10 @@ class WP_Auth0_EditProfile {
             return;
         }
 
+        if ( ! WP_Auth0_Api_Client::validate_user_token($app_token) ) {
+            return;
+		}
+
         if ( $current_user->ID != $_POST['user_id'] ) {
             return false;
         }

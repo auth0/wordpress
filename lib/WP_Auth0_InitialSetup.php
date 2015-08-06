@@ -66,7 +66,7 @@ class WP_Auth0_InitialSetup {
     protected static function parse_token_domain($token) {
         $parts = explode('.', $token);
         $payload = json_decode( base64_decode( strtr( $parts[1], '-_', '+/' ) ) );
-        return str_replace( array('/api/v2', 'https://'), '', $payload->aud );
+        return trim(str_replace( array('/api/v2', 'https://'), '', $payload->aud ), ' /');
     }
 
     public static function build_consent_url() {
@@ -75,7 +75,7 @@ class WP_Auth0_InitialSetup {
         $client_id = base64_decode('QmxjVlh0VXVmRm54cnZUTFdLRXBTNG9ET3hCZm95eFo=');
         $scope = urlencode( implode( ' ', array(
             'read:connections',
-            'create:clients',
+            'create:clients'
         ) ) );
 
         $url = "https://auth0.auth0.com/authorize?client_id={$client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}";

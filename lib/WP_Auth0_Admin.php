@@ -23,6 +23,8 @@ class WP_Auth0_Admin {
 			add_action( 'admin_notices', array( __CLASS__, 'cant_create_client_message' ) );
 		}
 
+		self::validate_required_api_scopes();
+
 		wp_enqueue_media();
 		wp_enqueue_script( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/js/admin.js', array( 'jquery' ) );
 		wp_enqueue_style( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/css/settings.css' );
@@ -32,6 +34,25 @@ class WP_Auth0_Admin {
 			'media_title' => __( 'Choose your icon', WPA0_LANG ),
 			'media_button' => __( 'Choose icon', WPA0_LANG ),
 		) );
+	}
+
+	protected static function validate_required_api_scopes() {
+		$app_token = self::get_token();
+		if ( ! WP_Auth0_Api_Client::validate_user_token($app_token) ) {
+			add_action( 'admin_notices', array( __CLASS__, 'cant_connect_to_auth0' ) );
+		}
+	}
+
+	public static function cant_connect_to_auth0(){
+		?>
+		<div id="message" class="error">
+			<p>
+				<strong>
+					<?php echo __( 'This user does not have enough scopes to manage the Auth0 account. The plugin will not be able to handle things like creation of rules and set up social connections.', WPA0_LANG ); ?>
+				</strong>
+			</p>
+		</div>
+		<?php
 	}
 
 	protected static function init_option_section($sectionName, $id, $settings) {
@@ -65,7 +86,7 @@ class WP_Auth0_Admin {
 			array( 'id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain' ),
 			array( 'id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id' ),
 			array( 'id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret' ),
-			array( 'id' => 'wpa0_auth0_app_token', 'name' => 'App token', 'function' => 'render_auth0_app_token' ),
+			// array( 'id' => 'wpa0_auth0_app_token', 'name' => 'App token', 'function' => 'render_auth0_app_token' ), //we are not going to show the token
 			array( 'id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login' ),
 			array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
 
@@ -652,6 +673,7 @@ class WP_Auth0_Admin {
 		$input['gravatar'] = ( isset( $input['gravatar'] ) ? $input['gravatar'] : 0 );
 		$input['remember_last_login'] = ( isset( $input['remember_last_login'] ) ? $input['remember_last_login'] : 0 );
 		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
+		$input['auth0_app_token'] = $old_options['auth0_app_token'];
 
 		if ( trim( $input['dict'] ) !== '' ) {
 			if ( strpos( $input['dict'], '{' ) !== false && json_decode( $input['dict'] ) === null ) {
@@ -1054,7 +1076,9 @@ class WP_Auth0_Admin {
 	protected static function get_token() {
 		if ( self::$token === null ) {
 			$user = get_currentauth0user();
-			self::$token = $user->access_token;
+			if ($user && isset($user->access_token)) {
+				self::$token = $user->access_token;
+			}
 		}
 		return self::$token;
 	}

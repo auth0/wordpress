@@ -2,6 +2,34 @@
 
 class WP_Auth0_Api_Client {
 
+	public static function validate_user_token($app_token) {
+		if ( empty($app_token) ) {
+			return false;
+		} else {
+			$parts = explode('.', $app_token);
+
+			if (count($parts) !== 3) {
+				return false;
+			} else {
+				$payload = json_decode( base64_decode( strtr( $parts[1], '-_', '+/' ) ) );
+
+				if (!isset($payload->scope)) {
+					return false;
+				} else {
+					$required_scopes = self::get_required_scopes();
+					$token_scopes = explode(' ', $payload->scope);
+					$intersect = array_intersect($required_scopes, $token_scopes);
+
+					if (count($intersect) != count($required_scopes)) {
+						return false;
+					}
+				}
+
+			}
+		}
+		return true;
+	}
+
 	public static function get_info_headers() {
 		global $wp_version;
 
@@ -72,6 +100,17 @@ class WP_Auth0_Api_Client {
 		) );
 	}
 
+	public static function get_required_scopes() {
+		return array(
+			'update:clients',
+			'update:connections',
+			'create:connections',
+			'create:rules',
+			'delete:rules',
+			'update:users'
+		);
+	}
+
 	public static function create_client($domain, $app_token, $name, $callbackUrl) {
 
 		$endpoint = "https://$domain/api/v2/clients";
@@ -90,14 +129,7 @@ class WP_Auth0_Api_Client {
 				"resource_servers" => array(
 					array(
 						"identifier" => "https://$domain/api/v2/",
-  			          	"scopes" => [
-							'update:clients',
-							'update:connections',
-							'create:connections',
-							'create:rules',
-							'delete:rules',
-							'update:users'
-						]
+  			          	"scopes" => self::get_required_scopes()
 					)
 				)
 			))
