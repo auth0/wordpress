@@ -66,47 +66,46 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
             $providers = array_intersect(array_unique($providers), $supportedProviders);
 
-            // if ( count($providers) > 0 ) {
-                echo $args['before_widget'];
+            echo $args['before_widget'];
 
-                $amplificator_title = $options->get('amplificator_title');
-                $amplificator_subtitle = $options->get('amplificator_subtitle');
+            $amplificator_title = $options->get('amplificator_title');
+            $amplificator_subtitle = $options->get('amplificator_subtitle');
 
-                if (!empty($amplificator_title)) {
-                    echo "<h2 class=\"widget-title\">$amplificator_title</h2>";
-                }
+            if (!empty($amplificator_title)) {
+                echo "<h2 class=\"widget-title\">$amplificator_title</h2>";
+            }
 
-                if (!empty($amplificator_subtitle)) {
-                    echo "<p>$amplificator_subtitle</p>";
-                }
+            if (!empty($amplificator_subtitle)) {
+                echo "<p>$amplificator_subtitle</p>";
+            }
 
-                wp_enqueue_style('auth0-aplificator-css', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/css/amplificator.css');
+            wp_enqueue_style('auth0-aplificator-css', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/css/amplificator.css');
 
-                wp_register_script('auth0-aplificator-js', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/js/amplificator.js');
-                wp_localize_script('auth0-aplificator-js', 'auth0_ajax',array( 'ajax_url' => admin_url( 'admin-ajax.php' )));
-                wp_enqueue_script('auth0-aplificator-js');
+            wp_register_script('auth0-aplificator-js', trailingslashit(plugin_dir_url(WPA0_PLUGIN_FILE) ) . 'assets/js/amplificator.js');
+            wp_localize_script('auth0-aplificator-js', 'auth0_ajax',array( 'ajax_url' => admin_url( 'admin-ajax.php' )));
+            wp_enqueue_script('auth0-aplificator-js');
 
-                $current_page_url = self::current_page_url();
+            $current_page_url = self::current_page_url();
 
-                foreach ($supportedProviders as $provider) {
+            foreach ($supportedProviders as $provider) {
 
-                    if (in_array($provider, $providers)) {
-                        $js_function = "Auth0Amplify(this,'$provider', '$current_page_url')";
-                    } else {
+                if (in_array($provider, $providers)) {
+                    $js_function = "Auth0Amplify(this,'$provider', '$current_page_url')";
+                } else {
 
-                        $current_page_url = urlencode($current_page_url);
+                    $current_page_url = urlencode($current_page_url);
 
-                        switch ($provider)  {
-                            case 'facebook':
-                                $js_function = "javascript: void window.open('https://www.facebook.com/sharer/sharer.php?u=$current_page_url', '', 'height=300, width=600');";
-                                break;
-                            case 'twitter':
-                                $content = WP_Auth0_Amplificator::get_share_text('twitter', $current_page_url);
-                                $js_function = "javascript: void window.open('https://twitter.com/share?url=$current_page_url&text=$content', '', 'height=300, width=600');";
-                                break;
-                        }
-
+                    switch ($provider)  {
+                        case 'facebook':
+                            $js_function = "javascript: void window.open('https://www.facebook.com/sharer/sharer.php?u=$current_page_url', '', 'height=300, width=600');";
+                            break;
+                        case 'twitter':
+                            $content = WP_Auth0_Amplificator::get_share_text('twitter', $current_page_url);
+                            $js_function = "javascript: void window.open('https://twitter.com/share?url=$current_page_url&text=$content', '', 'height=300, width=600');";
+                            break;
                     }
+
+                }
 
                 ?>
 
@@ -119,11 +118,10 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 </div>
 
                 <?php
-                }
-
-                echo $args['after_widget'];
             }
-        // }
+
+            echo $args['after_widget'];
+        }
 
     }
 
