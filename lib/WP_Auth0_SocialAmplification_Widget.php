@@ -66,7 +66,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
             $providers = array_intersect(array_unique($providers), $supportedProviders);
 
-            if ( count($providers) > 0 ) {
+            // if ( count($providers) > 0 ) {
                 echo $args['before_widget'];
 
                 $amplificator_title = $options->get('amplificator_title');
@@ -123,7 +123,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
                 echo $args['after_widget'];
             }
-        }
+        // }
 
     }
 
