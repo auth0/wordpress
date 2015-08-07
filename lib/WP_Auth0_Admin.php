@@ -19,10 +19,6 @@ class WP_Auth0_Admin {
 
 		add_action( 'admin_notices', array( __CLASS__, 'create_account_message' ) );
 
-		if ( isset( $_REQUEST['error'] ) && 'cant_create_client' == $_REQUEST['error'] ) {
-			add_action( 'admin_notices', array( __CLASS__, 'cant_create_client_message' ) );
-		}
-
 		self::validate_required_api_scopes();
 
 		wp_enqueue_media();
@@ -195,22 +191,6 @@ class WP_Auth0_Admin {
 					<?php echo __( 'In order to use this plugin, you need to first', WPA0_LANG ); ?>
 					<a target="_blank" href="https://manage.auth0.com/#/applications"><?php echo __( 'create an application', WPA0_LANG ); ?></a>
 					<?php echo __( ' on Auth0 and copy the information here.', WPA0_LANG ); ?>
-				</strong>
-			</p>
-		</div>
-		<?php
-	}
-
-	public static function cant_create_client_message() {
-		?>
-		<div id="message" class="error">
-			<p>
-				<strong>
-					<?php echo __( 'There was an error creating the Auth0 App. Check the ', WPA0_LANG ); ?>
-					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', WPA0_LANG ); ?></a>
-					<?php echo __( ' for more information. If the problem persists, plase create it manually in the ', WPA0_LANG ); ?>
-					<a target="_blank" href="https://manage.auth0.com/#/applications"><?php echo __( 'Auth0 Dashboard', WPA0_LANG ); ?></a>
-					<?php echo __( ' and copy the client_id and secret.', WPA0_LANG ); ?>
 				</strong>
 			</p>
 		</div>

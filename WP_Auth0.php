@@ -57,6 +57,7 @@ class WP_Auth0 {
 
 		add_action( 'profile_update', array(__CLASS__, 'user_profile_update'), 10, 2 );
 
+		WP_Auth0_InitialSetup::init();
 		WP_Auth0_LoginManager::init();
 		WP_Auth0_UsersRepo::init();
 		WP_Auth0_Settings_Section::init();
@@ -67,7 +68,6 @@ class WP_Auth0 {
 		WP_Auth0_Dashboard_Widgets::init();
 		WP_Auth0_WooCommerceOverrides::init();
 		WP_Auth0_Export_Users::init();
-		WP_Auth0_InitialSetup::init();
 		WP_Auth0_Amplificator::init();
 		WP_Auth0_EditProfile::init();
 		WP_Auth0_Routes::init();
