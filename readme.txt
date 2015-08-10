@@ -1,6 +1,6 @@
 === Auth0 ===
 Tags: login, oauth, authentication, single sign on, ldap, active directory, saml, windows azure ad, google apps, two factor, two-factor, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer
-Tested up to: 3.9
+Tested up to: 4.3
 Requires at least: 3.8
 License: MIT
 License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE.md
@@ -131,9 +131,9 @@ Yes. Read more about the requirements for that to happen in the Technical Notes.
 
 For a complete list look at https://docs.auth0.com/identityproviders
 
-= "This account does not have an email associated..." = 
+= "This account does not have an email associated..." =
 
-If you get this error, make sure you are requesting the Email attribute from each provider in the Auth0 Dashboard under Connections -> Social (expand each provider). Take into account that not all providers return Email addresses for users (e.g. Twitter). If this happens, you can always add an Email address to any logged in user through the Auth0 Dashbaord (pr API). See Users -> Edit. 
+If you get this error, make sure you are requesting the Email attribute from each provider in the Auth0 Dashboard under Connections -> Social (expand each provider). Take into account that not all providers return Email addresses for users (e.g. Twitter). If this happens, you can always add an Email address to any logged in user through the Auth0 Dashbaord (pr API). See Users -> Edit.
 
 = The form_title setting is ignored when I set up the dict setting =
 
