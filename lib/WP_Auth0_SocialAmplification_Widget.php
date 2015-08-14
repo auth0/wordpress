@@ -49,8 +49,8 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
             $supportedProviders = array();
 
-            $social_facebook_key = $options->get('social_facebook_key'));
-            if (!empty($social_facebook_key) {
+            $social_facebook_key = $options->get('social_facebook_key');
+            if (!empty($social_facebook_key)) {
                 $supportedProviders[] = 'facebook';
             }
 

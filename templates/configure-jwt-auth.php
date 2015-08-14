@@ -6,12 +6,12 @@
 	<?php if (!$ready) { ?>
 		<form action="options.php" method="post">
 			<input type="hidden" name="action" value="wpauth0_configure_jwt" />
-			<div class="text-alone">This action will override the JWT Auth configuration and will enable it to authenticate users using the Auth0 JWT.</div>
-			<div class="text-alone">Do you want to continue?</div>
-			<div class="text-alone"><input type="submit" name="setup" value="Yes" class="button button-primary"/></div>
+			<p>This action will override the JWT Auth configuration and will enable it to authenticate users using the Auth0 JWT.</p>
+			<p>Do you want to continue?</p>
+			<p><input type="submit" name="setup" value="Yes" class="button button-primary"/></p>
 		</form>
 	<?php } else { ?>
-		<div class="text-alone">JWT is configured and ready to work with Auth0 tokens.</div>
+		<p>JWT is configured and ready to work with Auth0 tokens.</p>
 	<?php } ?>
 	</div>
 </div>

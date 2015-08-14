@@ -1,4 +1,4 @@
-<div class="wrap">
+<div class="wrap dashboard">
 	<?php screen_icon(); ?>
 	<h2><?php _e('Auth0 Dashboard Settings', WPA0_LANG); ?></h2>
     <?php if( count(get_settings_errors()) == 0 && isset($_GET['settings-updated']) ) { ?>

@@ -15,12 +15,16 @@ class WP_Auth0_InitialSetup {
         }
 
         if ( isset( $_REQUEST['error'] ) && 'cant_create_client' == $_REQUEST['error'] ) {
-			add_action( 'admin_notices', array( __CLASS__, 'cant_create_client_message' ) );
-		}
+    			add_action( 'admin_notices', array( __CLASS__, 'cant_create_client_message' ) );
+    		}
 
         if ( isset( $_REQUEST['error'] ) && 'cant_exchange_token' == $_REQUEST['error'] ) {
-			add_action( 'admin_notices', array( __CLASS__, 'cant_exchange_token_message' ) );
-		}
+    			add_action( 'admin_notices', array( __CLASS__, 'cant_exchange_token_message' ) );
+    		}
+
+        if ( isset( $_REQUEST['error'] ) && 'rejected' == $_REQUEST['error'] ) {
+    			add_action( 'admin_notices', array( __CLASS__, 'rejected_message' ) );
+    		}
 
     }
 
@@ -66,21 +70,39 @@ class WP_Auth0_InitialSetup {
     public static function cant_exchange_token_message() {
         $options = WP_Auth0_Options::Instance();
         $domain = $options->get( 'domain' );
-		?>
-		<div id="message" class="error">
-			<p>
-				<strong>
-					<?php echo __( 'There was an error retieving your auth0 credentials. Check the ', WPA0_LANG ); ?>
-					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', WPA0_LANG ); ?></a>
-					<?php echo __( ' for more information. Please check that your sever has internet access and can reach "https://'.$domain.'/" ', WPA0_LANG ); ?>
-				</strong>
-			</p>
-		</div>
-		<?php
-	}
+  		?>
+  		<div id="message" class="error">
+  			<p>
+  				<strong>
+  					<?php echo __( 'There was an error retieving your auth0 credentials. Check the ', WPA0_LANG ); ?>
+  					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', WPA0_LANG ); ?></a>
+  					<?php echo __( ' for more information. Please check that your sever has internet access and can reach "https://'.$domain.'/" ', WPA0_LANG ); ?>
+  				</strong>
+  			</p>
+  		</div>
+  		<?php
+  	}
+    public static function rejected_message() {
+        $options = WP_Auth0_Options::Instance();
+        $domain = $options->get( 'domain' );
+  		?>
+  		<div id="message" class="error">
+  			<p>
+  				<strong>
+  					<?php echo __( 'The required scoped were rejected.', WPA0_LANG ); ?>
+  				</strong>
+  			</p>
+  		</div>
+  		<?php
+  	}
     public static function init_setup() {
         if ( ( ! isset( $_REQUEST['page'] ) ) || ( 'wpa0-setup' !== $_REQUEST['page'] ) || ( ! isset( $_REQUEST['callback'] ) ) ) {
             return;
+        }
+
+        if ( isset($_REQUEST['error']) ) {
+            wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=rejected' ) );
+            exit;
         }
 
         $sucess = self::store_token_domain();

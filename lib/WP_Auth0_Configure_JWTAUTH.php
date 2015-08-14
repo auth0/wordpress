@@ -13,7 +13,6 @@ class WP_Auth0_Configure_JWTAUTH {
 		}
 
 		wp_enqueue_media();
-		wp_enqueue_style( 'wpa0-jwt-settings', WPA0_PLUGIN_URL . 'assets/css/settings.css' );
 
 	}
 

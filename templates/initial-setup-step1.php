@@ -3,7 +3,6 @@
 	<?php screen_icon(); ?>
 	<h2><?php _e('Auth0 - Initial setup', WPA0_LANG); ?></h2>
 
-	<div class="container">
 
 		<p>The plugin needs to get access to your Auth0 account in order to help you configure it and sincronize the profiles and his wizard will guide you through the initial setup of the Auth0 client.</p>
 
@@ -18,9 +17,8 @@
 		<p><i><b>Note:</b> This plugin will call the Auth0 APIs in order to manage your accout settings. If the server is behing a firewall with restricted internet access, please whitelist the request directed to <b>*.auth0.com</b>. If this is not posible, you can manage your account using the <a href="https://manage.auth0.com">Auth0 dashboard</a></i>.</p>
 
 		<div class="auth0-btn-container">
-		    <a href="<?php echo $consent_url; ?>" class="auth0-btn">Click here to start</a>
+		    <a href="<?php echo $consent_url; ?>" class="button button-primary">Click here to start</a>
 		</div>
 
-	</div>
 
 </div>

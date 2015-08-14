@@ -14,7 +14,6 @@ class WP_Auth0_Dashboard_Preferences {
 
 		wp_enqueue_media();;
 		wp_enqueue_style( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/css/settings.css' );
-        wp_enqueue_script( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/js/dashboardsettings.js', array( 'jquery' ) );
 		wp_enqueue_style( 'media' );
 	}
 

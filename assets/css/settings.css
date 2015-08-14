@@ -48,6 +48,9 @@ h3 {
     margin-bottom: 0;
     overflow: hidden;
 }
+.dashboard h3 {
+    padding-left: 20px;
+}
 h3 .description {
     font-size:12px;
     font-style: italic;
