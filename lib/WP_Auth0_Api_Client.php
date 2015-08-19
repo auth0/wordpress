@@ -111,7 +111,7 @@ class WP_Auth0_Api_Client {
 		);
 	}
 
-	public static function create_client($domain, $app_token, $name, $callbackUrl) {
+	public static function create_client($domain, $app_token, $name) {
 
 		$endpoint = "https://$domain/api/v2/clients";
 
@@ -125,11 +125,17 @@ class WP_Auth0_Api_Client {
 			'headers' => $headers,
 			'body' => json_encode(array(
 				'name' => $name,
-				'callbacks' => array( $callbackUrl ),
+				'callbacks' => array(
+					site_url('/index.php?auth0=1'),
+					site_url('/wp-login.php')
+				),
+				"allowed_origins"=>array(
+					site_url('/wp-login.php')
+				),
 				"resource_servers" => array(
 					array(
 						"identifier" => "https://$domain/api/v2/",
-  			          	"scopes" => self::get_required_scopes()
+  			    "scopes" => self::get_required_scopes()
 					)
 				)
 			))

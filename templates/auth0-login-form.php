@@ -125,7 +125,7 @@ $options = json_encode($lock_options->get_lock_options());
 
                 callback(null,null, hashParams.id_token);
 
-            }
+            } 
 
         <?php } else { ?>
 

@@ -186,9 +186,8 @@ class WP_Auth0_InitialSetup {
 
       $app_token = $this->a0_options->get( 'auth0_app_token' );
       $domain = $this->a0_options->get( 'domain' );
-      $callbackUrl = site_url('/index.php?auth0=1');
 
-      $response = WP_Auth0_Api_Client::create_client($domain, $app_token, $name, $callbackUrl);
+      $response = WP_Auth0_Api_Client::create_client($domain, $app_token, $name);
 
       if ($response === false) {
           wp_redirect( admin_url( 'admin.php?page=wpa0&error=cant_create_client' ) );

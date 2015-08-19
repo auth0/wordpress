@@ -139,7 +139,7 @@ class WP_Auth0_Lock_Options {
     public function get_sso_options() {
         $options = $this->get_lock_options();
 
-        $extraOptions["scope"] = "openid update:clients update:connections create:connections create:rules delete:rules update:users";
+        $options["scope"] = "openid update:clients update:connections create:connections create:rules delete:rules update:users";
 
         if( $this->get_auth0_implicit_workflow() ) {
             $options["callbackOnLocationHash"] = true;
