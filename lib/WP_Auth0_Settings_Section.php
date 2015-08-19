@@ -49,7 +49,7 @@ class WP_Auth0_Settings_Section {
         add_submenu_page($main_menu, __('Dashboard preferences', WPA0_LANG), __('Dashboard', WPA0_LANG), 'manage_options', 'wpa0-dashboard', array($this->dashboard_preferences, 'render_dashboard_preferences_page') );
         add_submenu_page($main_menu, __('Error Log', WPA0_LANG), __('Error Log', WPA0_LANG), 'manage_options', 'wpa0-errors', array($this->error_log, 'render_settings_page') );
 
-        if (WP_Auth0::is_jwt_auth_enabled())
+        if (WP_Auth0_Configure_JWTAUTH::is_jwt_auth_enabled())
         {
             add_submenu_page($main_menu, __('JWT Auth integration', WPA0_LANG), __('JWT Auth integration', WPA0_LANG), 'manage_options', 'wpa0-jwt-auth', array($this->configure_jwt_auth, 'render_settings_page') );
         }

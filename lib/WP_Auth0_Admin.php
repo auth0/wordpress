@@ -142,7 +142,7 @@ class WP_Auth0_Admin {
 
 		);
 
-		if ( WP_Auth0::is_jwt_auth_enabled() ) {
+		if ( WP_Auth0_Configure_JWTAUTH::is_jwt_auth_enabled() ) {
 			$advancedOptions[] = array( 'id' => 'wpa0_jwt_auth_integration', 'name' => 'Enable JWT Auth integration', 'function' => 'render_jwt_auth_integration' );
 		}
 
