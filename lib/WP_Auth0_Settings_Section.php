@@ -2,15 +2,23 @@
 
 class WP_Auth0_Settings_Section {
 
-    public static function init(){
-        add_action( 'admin_menu', array(__CLASS__, 'init_menu'), 95.55, 0 );
+    protected $a0_options;
+    protected $initial_setup;
+
+    public function __construct(WP_Auth0_Options $a0_options, WP_Auth0_InitialSetup $initial_setup) {
+      $this->a0_options = $a0_options;
+      $this->initial_setup = $initial_setup;
     }
 
-    public static function init_menu(){
+    public function init(){
+        add_action( 'admin_menu', array($this, 'init_menu'), 95.55, 0 );
+    }
 
-        $options = WP_Auth0_Options::Instance();
-        $auth0_app_token = $options->get('auth0_app_token');
-        $client_id = $options->get('client_id');
+    public function init_menu(){
+
+        $auth0_app_token = $this->a0_options->get('auth0_app_token');
+        $client_id = $this->a0_options->get('client_id');
+
         $show_initial_setup = ! ( $auth0_app_token && $client_id );
 
         $main_menu = 'wpa0';
@@ -19,14 +27,11 @@ class WP_Auth0_Settings_Section {
             $main_menu = 'wpa0-setup';
         }
 
-        add_menu_page( __('Auth0', WPA0_LANG), __('Auth0', WPA0_LANG), 'manage_options',
-            $main_menu,
-            ( $show_initial_setup ? array('WP_Auth0_InitialSetup', 'render_setup_page') : array('WP_Auth0_Admin', 'render_settings_page') ),
-            WP_Auth0::get_plugin_dir_url() . 'assets/img/a0icon.png',
-            85.55 );
+        add_menu_page( __('Auth0', WPA0_LANG), __('Auth0', WPA0_LANG), 'manage_options', $main_menu,
+            ( $show_initial_setup ? array($this->initial_setup, 'render_setup_page') : array('WP_Auth0_Admin', 'render_settings_page') ), WP_Auth0::get_plugin_dir_url() . 'assets/img/a0icon.png', 85.55 );
 
         if ( $show_initial_setup ) {
-            add_submenu_page($main_menu, __('Quick setup', WPA0_LANG), __('Quick setup', WPA0_LANG), 'manage_options', 'wpa0-setup', array('WP_Auth0_InitialSetup', 'render_setup_page') );
+            add_submenu_page($main_menu, __('Quick setup', WPA0_LANG), __('Quick setup', WPA0_LANG), 'manage_options', 'wpa0-setup', array($this->initial_setup, 'render_setup_page') );
         }
 
         add_submenu_page($main_menu, __('Settings', WPA0_LANG), __('Settings', WPA0_LANG), 'manage_options', 'wpa0', array('WP_Auth0_Admin', 'render_settings_page') );

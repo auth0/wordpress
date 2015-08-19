@@ -1,14 +1,10 @@
 <?php
 class WP_Auth0_Ip_Check {
-	public static function init() {
+	public function init() {
 		if ( ! WP_Auth0_Options::Instance()->get( 'ip_range_check' ) || is_admin() ) {
 			return;
 		}
 
-		new WP_Auth0_Ip_Check();
-	}
-
-	private function __construct() {
 		add_filter( 'wp_auth0_get_option', array( $this, 'check_activate' ), 10, 2 );
 	}
 

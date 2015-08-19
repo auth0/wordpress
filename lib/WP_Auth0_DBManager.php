@@ -2,12 +2,12 @@
 
 class WP_Auth0_DBManager {
 
-	public static function init() {
-		add_action( 'plugins_loaded', array( __CLASS__, 'initialize_wpdb_tables' ) );
-		add_action( 'plugins_loaded', array( __CLASS__, 'check_update' ) );
+	public function init() {
+		add_action( 'plugins_loaded', array( $this, 'initialize_wpdb_tables' ) );
+		add_action( 'plugins_loaded', array( $this, 'check_update' ) );
 	}
 
-	public static function initialize_wpdb_tables() {
+	public function initialize_wpdb_tables() {
 		global $wpdb;
 
 		$wpdb->auth0_log = $wpdb->prefix.'auth0_log';
@@ -15,16 +15,16 @@ class WP_Auth0_DBManager {
 		$wpdb->auth0_error_logs = $wpdb->prefix.'auth0_error_logs';
 	}
 
-	public static function check_update() {
+	public function check_update() {
 		if ( (int) get_site_option( 'auth0_db_version' ) !== AUTH0_DB_VERSION ) {
-			self::install_db();
+			$this->install_db();
 		}
 	}
 
-	public static function install_db() {
+	public function install_db() {
 		global $wpdb;
 
-		self::initialize_wpdb_tables();
+		$this->initialize_wpdb_tables();
 
 		$sql = array();
 
@@ -73,7 +73,7 @@ class WP_Auth0_DBManager {
 
 	}
 
-	public static function get_auth0_users($user_ids = null) {
+	public function get_auth0_users($user_ids = null) {
 		global $wpdb;
 
 		$where = '';
@@ -86,14 +86,14 @@ class WP_Auth0_DBManager {
 		$results = $wpdb->get_results( $sql );
 
 		if ( $results instanceof WP_Error ) {
-			self::insert_auth0_error( 'findAuth0User',$userRow );
+			$this->insert_auth0_error( 'findAuth0User',$userRow );
 			return array();
 		}
 
 		return $results;
 	}
 
-	public static function get_users_by_auth0id($auth0_id) {
+	public function get_users_by_auth0id($auth0_id) {
 		global $wpdb;
 
 
@@ -105,14 +105,14 @@ class WP_Auth0_DBManager {
 		$result = $wpdb->get_row( $sql );
 
 		if ( $result instanceof WP_Error ) {
-			self::insert_auth0_error( 'findAuth0User',$userRow );
+			$this->insert_auth0_error( 'findAuth0User',$userRow );
 			return null;
 		}
 
 		return $result;
 	}
 
-	public static function get_current_user_profiles() {
+	public function get_current_user_profiles() {
         global $current_user;
         global $wpdb;
 

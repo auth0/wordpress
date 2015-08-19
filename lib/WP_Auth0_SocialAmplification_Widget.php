@@ -2,6 +2,14 @@
 
 class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
+    protected static $db_manager;
+    protected static $social_amplificator;
+
+    public static function set_context(WP_Auth0_DBManager $db_manager, WP_Auth0_Amplificator $social_amplificator) {
+      self::$db_manager = $db_manager;
+      self::$social_amplificator = $social_amplificator;
+    }
+
     function __construct() {
         parent::__construct(
             $this->getWidgetId(),
@@ -41,7 +49,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
     public function widget( $args, $instance ) {
 
         $client_id = WP_Auth0_Options::Instance()->get('client_id');
-        $userData = WP_Auth0_DBManager::get_current_user_profiles();
+        $userData = self::$db_manager->get_current_user_profiles();
 
         if (trim($client_id) != "" && $userData)
         {
@@ -102,7 +110,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
                             $js_function = "javascript: void window.open('https://www.facebook.com/sharer/sharer.php?u=$current_page_url', '', 'height=300, width=600');";
                             break;
                         case 'twitter':
-                            $content = WP_Auth0_Amplificator::get_share_text('twitter', $current_page_url);
+                            $content = self::$social_amplificator->get_share_text('twitter', $current_page_url);
                             $js_function = "javascript: void window.open('https://twitter.com/share?url=$current_page_url&text=$content', '', 'height=300, width=600');";
                             break;
                     }

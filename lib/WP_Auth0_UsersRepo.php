@@ -2,13 +2,19 @@
 
 class WP_Auth0_UsersRepo {
 
-    public static function init() {
+    protected $a0_options;
+
+    public function __construct(WP_Auth0_Options $a0_options) {
+      $this->a0_options = $a0_options;
+    }
+
+    public function init() {
         if (WP_Auth0_Options::Instance()->get('jwt_auth_integration') == 1) {
-            add_filter( 'wp_jwt_auth_get_user', array( __CLASS__, 'getUser' ), 0,2);
+            add_filter( 'wp_jwt_auth_get_user', array( $this, 'getUser' ), 0,2);
         }
     }
 
-    public static function getUser($jwt, $encodedJWT) {
+    public function getUser($jwt, $encodedJWT) {
 
         global $wpdb;
 
@@ -21,7 +27,7 @@ class WP_Auth0_UsersRepo {
 
         if (is_null($userRow)) {
 
-            $domain = WP_Auth0_Options::Instance()->get( 'domain' );
+            $domain = $this->a0_options->get( 'domain' );
 
             $response = WP_Auth0_Api_Client::get_user($domain, $encodedJWT, $jwt->sub);
 
@@ -52,7 +58,7 @@ class WP_Auth0_UsersRepo {
 
             return null;
         }elseif($userRow instanceof WP_Error ) {
-            self::insert_auth0_error('findAuth0User',$userRow);
+            $this->insert_auth0_error('findAuth0User',$userRow);
             return null;
         }else{
             $user = new WP_User();

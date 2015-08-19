@@ -19,68 +19,81 @@ define( 'WPA0_VERSION', '2.0.0' );
  */
 class WP_Auth0 {
 
-	public static function init() {
-		spl_autoload_register( array( __CLASS__, 'autoloader' ) );
+	protected $db_manager;
+	protected $a0_options;
+	protected $social_amplificator;
 
-		WP_Auth0_Ip_Check::init();
-		WP_Auth0_DBManager::init();
+	public function init() {
+		spl_autoload_register( array( $this, 'autoloader' ) );
 
-		add_action( 'init', array( __CLASS__, 'wp_init' ) );
+		$ip_checker = new WP_Auth0_Ip_Check();
+		$ip_checker->init();
+
+		$this->a0_options = WP_Auth0_Options::Instance();
+
+		$this->db_manager = new WP_Auth0_DBManager();
+		$this->db_manager->init();
+
+		add_action( 'init', array( $this, 'wp_init' ) );
 
 		// Add hooks for install uninstall and update.
-		register_activation_hook( WPA0_PLUGIN_FILE, array( __CLASS__, 'install' ) );
-		register_deactivation_hook( WPA0_PLUGIN_FILE, array( __CLASS__, 'uninstall' ) );
+		register_activation_hook( WPA0_PLUGIN_FILE, array( $this, 'install' ) );
+		register_deactivation_hook( WPA0_PLUGIN_FILE, array( $this, 'uninstall' ) );
 
 		// Add an action to append a stylesheet for the login page.
-		add_action( 'login_enqueue_scripts', array( __CLASS__, 'render_auth0_login_css' ) );
+		add_action( 'login_enqueue_scripts', array( $this, 'render_auth0_login_css' ) );
 
 		// Add a hook to add Auth0 code on the login page.
-		add_filter( 'login_message', array( __CLASS__, 'render_form' ) );
+		add_filter( 'login_message', array( $this, 'render_form' ) );
 
 		// Add hook to handle when a user is deleted.
-		add_action( 'delete_user', array( __CLASS__, 'delete_user' ) );
+		add_action( 'delete_user', array( $this, 'delete_user' ) );
 
-		add_shortcode( 'auth0', array( __CLASS__, 'shortcode' ) );
+		add_shortcode( 'auth0', array( $this, 'shortcode' ) );
 
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'wp_enqueue' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue' ) );
 
-		add_action( 'widgets_init', array( __CLASS__, 'wp_register_widget' ) );
+		add_action( 'widgets_init', array( $this, 'wp_register_widget' ) );
 
-		add_filter( 'query_vars', array( __CLASS__, 'a0_register_query_vars' ) );
+		add_filter( 'query_vars', array( $this, 'a0_register_query_vars' ) );
 
 		$plugin = plugin_basename( __FILE__ );
-		add_filter( "plugin_action_links_$plugin", array( __CLASS__, 'wp_add_plugin_settings_link' ) );
+		add_filter( "plugin_action_links_$plugin", array( $this, 'wp_add_plugin_settings_link' ) );
 
 		if ( isset( $_GET['message'] ) ) {
-			add_action( 'wp_footer', array( __CLASS__, 'a0_render_message' ) );
+			add_action( 'wp_footer', array( $this, 'a0_render_message' ) );
 		}
 
-		add_action( 'profile_update', array(__CLASS__, 'user_profile_update'), 10, 2 );
+		$initial_setup = new WP_Auth0_InitialSetup($this->a0_options);
+		$initial_setup->init();
 
-		WP_Auth0_InitialSetup::init();
 		WP_Auth0_LoginManager::init();
-		WP_Auth0_UsersRepo::init();
-		WP_Auth0_Settings_Section::init();
+
+		$users_repo = new WP_Auth0_UsersRepo($this->a0_options);
+		$users_repo->init();
+
+		$settings_section = new WP_Auth0_Settings_Section($this->a0_options, $initial_setup);
+		$settings_section->init();
+
 		WP_Auth0_Admin::init();
 		WP_Auth0_Dashboard_Preferences::init();
 		WP_Auth0_ErrorLog::init();
-		WP_Auth0_Configure_JWTAUTH::init();
+
+		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH($this->a0_options);
+		$configure_jwt_auth->init();
+
 		WP_Auth0_Dashboard_Widgets::init();
 		WP_Auth0_WooCommerceOverrides::init();
 		WP_Auth0_Export_Users::init();
-		WP_Auth0_Amplificator::init();
+
+		$this->social_amplificator = new WP_Auth0_Amplificator($this->db_manager, $this->a0_options);
+		$this->social_amplificator->init();
+
 		WP_Auth0_EditProfile::init();
 		WP_Auth0_Routes::init();
 
-		add_action( 'plugins_loaded', array( __CLASS__, 'check_jwt_auth' ) );
+		add_action( 'plugins_loaded', array( $this, 'check_jwt_auth' ) );
 	}
-
-	public static function user_profile_update( $user_id, $old_user_data ) {
-
-		$new_user = get_user_by( 'id', $user_id );
-
-
-    }
 
 	public static function is_jwt_auth_enabled() {
 		if ( ! function_exists( 'is_plugin_active' ) ) {
@@ -101,7 +114,7 @@ class WP_Auth0 {
 		);
 	}
 
-	public static function check_jwt_auth() {
+	public function check_jwt_auth() {
 		if ( isset( $_REQUEST['page'] ) && 'wpa0-jwt-auth' === $_REQUEST['page'] ) {
 			return;
 		}
@@ -123,13 +136,13 @@ class WP_Auth0 {
 		return plugin_dir_url( __FILE__ );
 	}
 
-	public static function  a0_register_query_vars( $qvars ) {
+	public function  a0_register_query_vars( $qvars ) {
 		$qvars[] = 'error_description';
 		$qvars[] = 'a0_action';
 		return $qvars;
 	}
 
-	public static function a0_render_message() {
+	public function a0_render_message() {
 		$message = null;
 
 		if ( $message ) {
@@ -143,7 +156,7 @@ class WP_Auth0 {
 	/**
 	 * Add settings link on plugin page.
 	 */
-	public static function wp_add_plugin_settings_link( $links ) {
+	public function wp_add_plugin_settings_link( $links ) {
 
 		$settings_link = '<a href="admin.php?page=wpa0-errors">Error Log</a>';
 		array_unshift( $links, $settings_link );
@@ -161,13 +174,15 @@ class WP_Auth0 {
 		return $links;
 	}
 
-	public static function wp_register_widget() {
+	public function wp_register_widget() {
 		register_widget( 'WP_Auth0_Embed_Widget' );
 		register_widget( 'WP_Auth0_Popup_Widget' );
+
+		WP_Auth0_SocialAmplification_Widget::set_context($this->db_manager, $this->social_amplificator);
 		register_widget( 'WP_Auth0_SocialAmplification_Widget' );
 	}
 
-	public static function wp_enqueue() {
+	public function wp_enqueue() {
 		$options = WP_Auth0_Options::Instance();
 		$client_id = $options->get( 'client_id' );
 
@@ -182,7 +197,7 @@ class WP_Auth0 {
 		wp_enqueue_style( 'auth0-widget', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/css/main.css' );
 	}
 
-	public static function shortcode( $atts ) {
+	public function shortcode( $atts ) {
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
 
@@ -200,7 +215,7 @@ class WP_Auth0 {
 
 	}
 
-	public static function render_auth0_login_css() {
+	public function render_auth0_login_css() {
 		$client_id = WP_Auth0_Options::Instance()->get( 'client_id' );
 
 		if ( trim( $client_id ) === '' ) {
@@ -211,7 +226,7 @@ class WP_Auth0 {
 	<?php
 	}
 
-	public static function render_form( $html ) {
+	public function render_form( $html ) {
 		$client_id = WP_Auth0_Options::Instance()->get( 'client_id' );
 
 		if ( trim( $client_id ) === '' ) {
@@ -260,12 +275,12 @@ class WP_Auth0 {
 		);
 	}
 
-	public static function delete_user( $user_id ) {
+	public function delete_user( $user_id ) {
 		global $wpdb;
 		$wpdb->delete( $wpdb->auth0_user, array( 'wp_id' => $user_id ), array( '%d' ) );
 	}
 
-	public static function wp_init() {
+	public function wp_init() {
 		self::setup_rewrites();
 	}
 
@@ -279,18 +294,18 @@ class WP_Auth0 {
 		add_rewrite_rule( '^oauth2-config?', 'index.php?a0_action=oauth2-config', 'top' );
 	}
 
-	public static function install() {
-		WP_Auth0_DBManager::install_db();
+	public function install() {
+		$this->db_manager->install_db();
 		self::setup_rewrites();
 
 		flush_rewrite_rules();
 	}
 
-	public static function uninstall() {
+	public function uninstall() {
 		flush_rewrite_rules();
 	}
 
-	private static function autoloader( $class ) {
+	private function autoloader( $class ) {
 		$path = WPA0_PLUGIN_DIR;
 		$paths = array();
 		$exts = array( '.php', '.class.php' );
@@ -300,6 +315,7 @@ class WP_Auth0 {
 		$paths[] = $path.'lib/exceptions/';
 		$paths[] = $path.'lib/wizard/';
 		$paths[] = $path.'lib/dashboard-widgets/';
+		$paths[] = $path.'lib/twitter-api-php/TwitterAPIExchange.php';
 
 		foreach ( $paths as $p ) {
 			foreach ( $exts as $ext ) {
@@ -349,4 +365,5 @@ if ( ! function_exists( 'get_currentauth0user' ) ) {
 	}
 }
 
-WP_Auth0::init();
+$a0_plugin = new WP_Auth0();
+$a0_plugin->init();
