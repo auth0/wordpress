@@ -25,13 +25,14 @@ class WP_Auth0_UsersRepo {
 
         $userRow = $wpdb->get_row($wpdb->prepare($sql, $jwt->sub));
 
+
+        $domain = $this->a0_options->get( 'domain' );
+
+        $response = WP_Auth0_Api_Client::get_user($domain, $encodedJWT, $jwt->sub);
+
+        if ($response['response']['code'] != 200) return null;
+        
         if (is_null($userRow)) {
-
-            $domain = $this->a0_options->get( 'domain' );
-
-            $response = WP_Auth0_Api_Client::get_user($domain, $encodedJWT, $jwt->sub);
-
-            if ($response['response']['code'] != 200) return null;
 
             $creator = new WP_Auth0_UserCreator();
 
