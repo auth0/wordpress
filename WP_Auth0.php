@@ -76,7 +76,8 @@ class WP_Auth0 {
 		$users_repo = new WP_Auth0_UsersRepo($this->a0_options);
 		$users_repo->init();
 
-		WP_Auth0_Admin::init();
+		$auth0_admin = new WP_Auth0_Admin($this->a0_options);
+		$auth0_admin->init();
 
 		$dashboard_preferences = new WP_Auth0_Dashboard_Preferences($this->dashboard_options);
 		$dashboard_preferences->init();
@@ -96,7 +97,7 @@ class WP_Auth0 {
 		$users_exporter = new WP_Auth0_Export_Users($this->db_manager);
 		$users_exporter->init();
 
-		$settings_section = new WP_Auth0_Settings_Section($this->a0_options, $initial_setup, $users_exporter, $configure_jwt_auth, $error_log, $dashboard_preferences);
+		$settings_section = new WP_Auth0_Settings_Section($this->a0_options, $initial_setup, $users_exporter, $configure_jwt_auth, $error_log, $dashboard_preferences, $auth0_admin);
 		$settings_section->init();
 
 		$this->social_amplificator = new WP_Auth0_Amplificator($this->db_manager, $this->a0_options);
