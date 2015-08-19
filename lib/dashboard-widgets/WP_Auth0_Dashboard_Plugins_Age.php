@@ -30,7 +30,7 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
                 $chartData[] = array( $key, $value );
             }
 
-            usort($chartData, array(__CLASS__, 'sortAges'));
+            usort($chartData, array($this, 'sortAges'));
         } else {
             $keys = array_keys($data);
             $values = array_values($data);
@@ -75,7 +75,7 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
 
     }
 
-    protected static function getColors($data) {
+    protected function getColors($data) {
         $unknownColor = '#CACACA';
         $palete = array('#F39C12','#2ECC71','#3498DB','#9B59B6','#34495E','#F1C40F','#E67E22','#E74C3C', '#1ABC9C');
         $colorIndex = 0;
@@ -89,7 +89,7 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
         return $colors;
     }
 
-    public static function sortAges($a,$b) {
+    public function sortAges($a,$b) {
         if ($a[0] == 'unknown') return 1;
         if ($b[0] == 'unknown') return -1;
 
