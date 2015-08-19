@@ -11,7 +11,7 @@ class WP_Auth0_Api_Client {
 			if (count($parts) !== 3) {
 				return false;
 			} else {
-				$payload = json_decode( base64_decode( strtr( $parts[1], '-_', '+/' ) ) );
+				$payload = json_decode( JWT::urlsafeB64Decode( $parts[1] ) );
 
 				if (!isset($payload->scope)) {
 					return false;
@@ -310,8 +310,7 @@ class WP_Auth0_Api_Client {
 
 	public static function get_current_user($domain, $app_token) {
 		list($head,$payload,$signature) = explode('.',$app_token);
-		require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Authentication/JWT.php';
-		$decoded = json_decode(JWT::urlsafeB64Decode($payload));
+		$decoded = json_decode( JWT::urlsafeB64Decode($payload) );
 
 		return self::get_user($domain, $app_token, $decoded->sub);
 	}

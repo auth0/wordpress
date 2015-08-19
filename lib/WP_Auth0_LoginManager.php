@@ -2,16 +2,22 @@
 
 class WP_Auth0_LoginManager {
 
-	public static function init() {
-		add_action( 'wp_logout', array( __CLASS__, 'logout' ) );
-		add_action( 'wp_login', array( __CLASS__, 'end_session' ) );
-		add_action( 'login_init', array( __CLASS__, 'login_auto' ) );
-		add_action( 'template_redirect', array( __CLASS__, 'init_auth0' ), 1 );
-		add_action( 'wp_footer', array( __CLASS__, 'auth0_sso_footer') );
-		add_filter( 'login_message', array( __CLASS__, 'auth0_sso_footer' ) );
+	protected $a0_options;
+
+	public function __construct(WP_Auth0_Options $a0_options) {
+		$this->a0_options = $a0_options;
 	}
 
-	public static function auth0_sso_footer($previous_html) {
+	public function init() {
+		add_action( 'wp_logout', array( $this, 'logout' ) );
+		add_action( 'wp_login', array( $this, 'end_session' ) );
+		add_action( 'login_init', array( $this, 'login_auto' ) );
+		add_action( 'template_redirect', array( $this, 'init_auth0' ), 1 );
+		add_action( 'wp_footer', array( $this, 'auth0_sso_footer') );
+		add_filter( 'login_message', array( $this, 'auth0_sso_footer' ) );
+	}
+
+	public function auth0_sso_footer($previous_html) {
 		if (is_user_logged_in()) {
 			return;
 		}
@@ -32,13 +38,11 @@ class WP_Auth0_LoginManager {
 		}
 	}
 
-	public static function logout() {
-		self::end_session();
+	public function logout() {
+		$this->end_session();
 
-		$options = WP_Auth0_Options::Instance();
-
-		$sso = $options->get( 'sso' );
-		$auto_login = absint( $options->get( 'auto_login' ) );
+		$sso = $this->a0_options->get( 'sso' );
+		$auto_login = absint( $this->a0_options->get( 'auto_login' ) );
 
 		if ( isset( $_REQUEST['redirect_to'] ) ) {
 			$redirect_to = $_REQUEST['redirect_to'];
@@ -47,7 +51,7 @@ class WP_Auth0_LoginManager {
 		}
 
 		if ( $sso ) {
-			wp_redirect( 'https://' . $options->get( 'domain' ) . '/v2/logout?returnTo=' . urlencode( $redirect_to ) . '&auth0Client=' . WP_Auth0_Api_Client::get_info_headers() );
+			wp_redirect( 'https://' . $this->a0_options->get( 'domain' ) . '/v2/logout?returnTo=' . urlencode( $redirect_to ) . '&auth0Client=' . WP_Auth0_Api_Client::get_info_headers() );
 			die();
 		}
 
@@ -57,16 +61,14 @@ class WP_Auth0_LoginManager {
 		}
 	}
 
-	public static function end_session() {
+	public function end_session() {
 		if ( session_id() ) {
 			session_destroy();
 		}
 	}
 
-	public static function login_auto() {
-		$options = WP_Auth0_Options::Instance();
-
-		$auto_login = absint( $options->get( 'auto_login' ) );
+	public function login_auto() {
+		$auto_login = absint( $this->a0_options->get( 'auto_login' ) );
 
 		if ( $auto_login && ( ! isset( $_GET['action'] ) || 'logout' !== $_GET['action'] ) && ! isset( $_GET['wle'] ) ) {
 
@@ -77,12 +79,12 @@ class WP_Auth0_LoginManager {
 			$state = wp_json_encode( $stateObj );
 
 			// Create the link to log in.
-			$login_url = "https://". $options->get( 'domain' ) .
+			$login_url = "https://". $this->a0_options->get( 'domain' ) .
 						 "/authorize?response_type=code&scope=openid%20profile".
-						 "&client_id=".$options->get( 'client_id' ) .
+						 "&client_id=".$this->a0_options->get( 'client_id' ) .
 						 "&redirect_uri=".site_url( '/index.php?auth0=1' ) .
 						 "&state=".urlencode( $state ).
-						 "&connection=".$options->get( 'auto_login_method' ).
+						 "&connection=".$this->a0_options->get( 'auto_login_method' ).
 						 "&auth0Client=" . WP_Auth0_Api_Client::get_info_headers();
 
 			wp_redirect( $login_url );
@@ -90,7 +92,7 @@ class WP_Auth0_LoginManager {
 		}
 	}
 
-	public static function init_auth0() {
+	public function init_auth0() {
 		global $wp_query;
 
 		if ( ! isset( $wp_query->query_vars['auth0'] ) ) {
@@ -98,13 +100,13 @@ class WP_Auth0_LoginManager {
 		}
 
 		if ( $wp_query->query_vars['auth0'] === 'implicit' ) {
-			self::implicit_login();
+			$this->implicit_login();
 		} else {
-			self::redirect_login();
+			$this->redirect_login();
 		}
 	}
 
-	public static function redirect_login() {
+	public function redirect_login() {
 		global $wp_query;
 
 		if ( '1' !== $wp_query->query_vars['auth0']) {
@@ -127,16 +129,15 @@ class WP_Auth0_LoginManager {
 			wp_die( $msg );
 		}
 
-		$options = WP_Auth0_Options::Instance();
-
 		$code = $wp_query->query_vars['code'];
+
 		$state = (isset($wp_query->query_vars['state']) ? $wp_query->query_vars['state'] : null);
 		$stateFromGet = json_decode( stripcslashes( $state ) );
 
-		$domain = $options->get( 'domain' );
+		$domain = $this->a0_options->get( 'domain' );
 
-		$client_id = $options->get( 'client_id' );
-		$client_secret = $options->get( 'client_secret' );
+		$client_id = $this->a0_options->get( 'client_id' );
+		$client_secret = $this->a0_options->get( 'client_secret' );
 
 		if ( empty( $client_id ) ) {
 			wp_die( __( 'Error: Your Auth0 Client ID has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG ) );
@@ -180,7 +181,7 @@ class WP_Auth0_LoginManager {
 			}
 
 			$userinfo = json_decode( $response['body'] );
-			if ( self::login_user( $userinfo, $data->id_token, $data->access_token ) ) {
+			if ( $this->login_user( $userinfo, $data->id_token, $data->access_token ) ) {
 				if ( null !== $stateFromGet && isset( $stateFromGet->interim ) && $stateFromGet->interim ) {
 					include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
 					exit();
@@ -188,7 +189,7 @@ class WP_Auth0_LoginManager {
 					if ( null !== $stateFromGet && isset( $stateFromGet->redirect_to ) ) {
 						$redirectURL = $stateFromGet->redirect_to;
 					} else {
-						$redirectURL = $options->get( 'default_login_redirection' );
+						$redirectURL = $this->a0_options->get( 'default_login_redirection' );
 					}
 
 					wp_safe_redirect( $redirectURL );
@@ -226,34 +227,27 @@ class WP_Auth0_LoginManager {
 		exit();
 	}
 
-	public static function implicit_login() {
-
-		require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Exceptions/BeforeValidException.php';
-		require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Exceptions/ExpiredException.php';
-		require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Exceptions/SignatureInvalidException.php';
-		require_once WPA0_PLUGIN_DIR . 'lib/php-jwt/Authentication/JWT.php';
+	public function implicit_login() {
 
 		$token = $_POST['token'];
 		$stateFromGet = json_decode( stripcslashes( $_POST['state'] ) );
 
-		$options = WP_Auth0_Options::Instance();
+		$secret = $this->a0_options->get( 'client_secret' );
 
-		$secret = $options->get( 'client_secret' );
-
-		$secret = base64_decode( strtr( $secret, '-_', '+/' ) );
+		$secret = JWT::urlsafeB64Decode( $secret );
 
 		try {
 			// Decode the user
 			$decodedToken = JWT::decode( $token, $secret, array( 'HS256' ) );
 
 			// validate that this JWT was made for us
-			if ( $options->get( 'client_id' ) !== $decodedToken->aud ) {
+			if ( $this->a0_options->get( 'client_id' ) !== $decodedToken->aud ) {
 				throw new Exception( 'This token is not intended for us.' );
 			}
 
 			$decodedToken->user_id = $decodedToken->sub;
 
-			if ( self::login_user( $decodedToken, $token, null ) ) {
+			if ( $this->login_user( $decodedToken, $token, null ) ) {
 				if ( null !== $stateFromGet && isset( $stateFromGet->interim ) && $stateFromGet->interim ) {
 					include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
 					exit();
@@ -261,7 +255,7 @@ class WP_Auth0_LoginManager {
 					if ( null !== $stateFromGet && isset( $stateFromGet->redirect_to ) ) {
 						$redirectURL = $stateFromGet->redirect_to;
 					} else {
-						$redirectURL = $options->get( 'default_login_redirection' );
+						$redirectURL = $this->a0_options->get( 'default_login_redirection' );
 					}
 
 					wp_safe_redirect( $redirectURL );
@@ -281,10 +275,10 @@ class WP_Auth0_LoginManager {
 		}
 	}
 
-	public static function login_user( $userinfo, $id_token, $access_token ) {
+	public function login_user( $userinfo, $id_token, $access_token ) {
 		// If the userinfo has no email or an unverified email, and in the options we require a verified email
 		// notify the user he cant login until he does so.
-		$requires_verified_email = WP_Auth0_Options::Instance()->get( 'requires_verified_email' );
+		$requires_verified_email = $this->a0_options->get( 'requires_verified_email' );
 
 		if ( 1 == $requires_verified_email ) {
 			if ( empty( $userinfo->email ) ) {
@@ -296,17 +290,17 @@ class WP_Auth0_LoginManager {
 			}
 
 			if ( ! $userinfo->email_verified ) {
-				self::dieWithVerifyEmail( $userinfo, $id_token );
+				$this->dieWithVerifyEmail( $userinfo, $id_token );
 			}
 
 		}
 
 		// See if there is a user in the auth0_user table with the user info client id
-		$user = self::_find_auth0_user( $userinfo->user_id );
+		$user = $this->_find_auth0_user( $userinfo->user_id );
 
 		if ( ! is_null( $user ) ) {
 			// User exists! Log in
-			self::_update_auth0_object( $userinfo, $id_token, $access_token );
+			$this->_update_auth0_object( $userinfo, $id_token, $access_token );
 
 			wp_set_auth_cookie( $user->ID );
 
@@ -335,7 +329,7 @@ class WP_Auth0_LoginManager {
 				$msg .= '<a href="' . site_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
 				wp_die( $msg );
 			} catch ( WP_Auth0_EmailNotVerifiedException $e ) {
-				self::dieWithVerifyEmail( $e->userinfo, $e->id_token );
+				$this->dieWithVerifyEmail( $e->userinfo, $e->id_token );
 			}
 			// catch ( Exception $e ) {
 			// 	echo $e;exit;
@@ -345,7 +339,7 @@ class WP_Auth0_LoginManager {
 		}
 	}
 
-	private static function _find_auth0_user( $id ) {
+	private function _find_auth0_user( $id ) {
 		global $wpdb;
 		$sql = 'SELECT u.*
 				FROM ' . $wpdb->auth0_user .' a
@@ -364,7 +358,7 @@ class WP_Auth0_LoginManager {
 		return $user;
 	}
 
-	private static function _update_auth0_object($userinfo, $id_token, $access_token) {
+	private function _update_auth0_object($userinfo, $id_token, $access_token) {
 		global $wpdb;
 
 		$wpdb->update(
@@ -381,9 +375,9 @@ class WP_Auth0_LoginManager {
 		);
 	}
 
-	private static function dieWithVerifyEmail($userinfo, $id_token) {
+	private function dieWithVerifyEmail($userinfo, $id_token) {
 		ob_start();
-		$domain = WP_Auth0_Options::Instance()->get( 'domain' );
+		$domain = $this->a0_options->get( 'domain' );
 		$token = $id_token;
 		$email = $userinfo->email;
 		$connection = $userinfo->identities[0]->connection;

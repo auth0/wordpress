@@ -7,7 +7,7 @@ class WP_Auth0_InitialSetup {
     public function __construct(WP_Auth0_Options $a0_options) {
         $this->a0_options = $a0_options;
     }
-    
+
     public function init() {
 
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
@@ -125,7 +125,7 @@ class WP_Auth0_InitialSetup {
 
     protected function parse_token_domain($token) {
       $parts = explode('.', $token);
-      $payload = json_decode( base64_decode( strtr( $parts[1], '-_', '+/' ) ) );
+      $payload = json_decode( JWT::urlsafeB64Decode( $parts[1] ) );
       return trim(str_replace( array('/api/v2', 'https://'), '', $payload->aud ), ' /');
     }
 

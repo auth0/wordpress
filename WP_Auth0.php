@@ -70,7 +70,8 @@ class WP_Auth0 {
 		$initial_setup = new WP_Auth0_InitialSetup($this->a0_options);
 		$initial_setup->init();
 
-		WP_Auth0_LoginManager::init();
+		$login_manager = new WP_Auth0_LoginManager($this->a0_options);
+		$login_manager->init();
 
 		$users_repo = new WP_Auth0_UsersRepo($this->a0_options);
 		$users_repo->init();
@@ -316,12 +317,14 @@ class WP_Auth0 {
 		$paths = array();
 		$exts = array( '.php', '.class.php' );
 
-		$paths[] = $path;
 		$paths[] = $path.'lib/';
 		$paths[] = $path.'lib/exceptions/';
 		$paths[] = $path.'lib/wizard/';
 		$paths[] = $path.'lib/dashboard-widgets/';
-		$paths[] = $path.'lib/twitter-api-php/TwitterAPIExchange.php';
+		$paths[] = $path.'lib/twitter-api-php/';
+		$paths[] = $path.'lib/php-jwt/Exceptions/';
+		$paths[] = $path.'lib/php-jwt/Authentication/';
+		$paths[] = $path;
 
 		foreach ( $paths as $p ) {
 			foreach ( $exts as $ext ) {
