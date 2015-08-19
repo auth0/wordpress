@@ -2,19 +2,29 @@
 
 class WP_Auth0_Routes {
 
-    public static function init() {
-        add_action('parse_request', array(__CLASS__, 'custom_requests'));
+    public function init() {
+        add_action('parse_request', array($this, 'custom_requests'));
     }
 
-    public static function custom_requests ( $wp ) {
+    public function setup_rewrites() {
+  		add_rewrite_tag( '%auth0%', '([^&]+)' );
+  		add_rewrite_tag( '%code%', '([^&]+)' );
+  		add_rewrite_tag( '%state%', '([^&]+)' );
+  		add_rewrite_tag( '%auth0_error%', '([^&]+)' );
+
+  		add_rewrite_rule( '^auth0', 'index.php?auth0=1', 'top' );
+  		add_rewrite_rule( '^oauth2-config?', 'index.php?a0_action=oauth2-config', 'top' );
+  	}
+
+    public function custom_requests ( $wp ) {
         if( ! empty($wp->query_vars['a0_action']) ) {
             switch ($wp->query_vars['a0_action']) {
-                case 'oauth2-config': self::oauth2_config(); exit;
+                case 'oauth2-config': $this->oauth2_config(); exit;
             }
         }
     }
 
-    protected static function oauth2_config() {
+    protected function oauth2_config() {
 
         $callback_url = admin_url( 'admin.php?page=wpa0-setup&step=2' );
 

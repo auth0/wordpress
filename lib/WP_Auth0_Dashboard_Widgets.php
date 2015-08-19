@@ -2,11 +2,19 @@
 
 class WP_Auth0_Dashboard_Widgets  {
 
-	public static function init() {
-		add_action( 'wp_dashboard_setup', array( __CLASS__, 'set_up' ) );
+	protected $db_manager;
+	protected $dashboard_options;
+
+	public function __construct(WP_Auth0_Dashboard_Options $dashboard_options, WP_Auth0_DBManager $db_manager) {
+		$this->db_manager = $db_manager;
+		$this->dashboard_options = $dashboard_options;
 	}
 
-	public static function set_up() {
+	public function init() {
+		add_action( 'wp_dashboard_setup', array( $this, 'set_up' ) );
+	}
+
+	public function set_up() {
 		global $current_user;
 
 		if ( ! in_array( 'administrator', $current_user->roles ) ) {
@@ -19,14 +27,12 @@ class WP_Auth0_Dashboard_Widgets  {
 		wp_enqueue_script( 'auth0-dashboard-d3', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/d3/d3.min.js' );
 		wp_enqueue_script( 'auth0-dashboard-c3-js', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/c3/c3.min.js' );
 
-		$users = WP_Auth0_DBManager::get_auth0_users();
-
-		$options = WP_Auth0_Dashboard_Options::Instance();
+		$users = $this->db_manager->get_auth0_users();
 
 		$widgets = array(
-			new WP_Auth0_Dashboard_Plugins_Age($options->get('chart_age_type')),
-			new WP_Auth0_Dashboard_Plugins_Gender($options->get('chart_gender_type')),
-			new WP_Auth0_Dashboard_Plugins_IdP($options->get('chart_idp_type')),
+			new WP_Auth0_Dashboard_Plugins_Age($this->dashboard_options->get('chart_age_type')),
+			new WP_Auth0_Dashboard_Plugins_Gender($this->dashboard_options->get('chart_gender_type')),
+			new WP_Auth0_Dashboard_Plugins_IdP($this->dashboard_options->get('chart_idp_type')),
 			new WP_Auth0_Dashboard_Plugins_Location(),
 			new WP_Auth0_Dashboard_Plugins_Income(),
 			new WP_Auth0_Dashboard_Plugins_Signups(),

@@ -21,7 +21,9 @@ class WP_Auth0 {
 
 	protected $db_manager;
 	protected $a0_options;
+	protected $dashboard_options;
 	protected $social_amplificator;
+	protected $router;
 
 	public function init() {
 		spl_autoload_register( array( $this, 'autoloader' ) );
@@ -30,6 +32,7 @@ class WP_Auth0 {
 		$ip_checker->init();
 
 		$this->a0_options = WP_Auth0_Options::Instance();
+		$this->dashboard_options = WP_Auth0_Dashboard_Options::Instance();
 
 		$this->db_manager = new WP_Auth0_DBManager();
 		$this->db_manager->init();
@@ -72,25 +75,37 @@ class WP_Auth0 {
 		$users_repo = new WP_Auth0_UsersRepo($this->a0_options);
 		$users_repo->init();
 
-		$settings_section = new WP_Auth0_Settings_Section($this->a0_options, $initial_setup);
-		$settings_section->init();
-
 		WP_Auth0_Admin::init();
-		WP_Auth0_Dashboard_Preferences::init();
-		WP_Auth0_ErrorLog::init();
+
+		$dashboard_preferences = new WP_Auth0_Dashboard_Preferences($this->dashboard_options);
+		$dashboard_preferences->init();
+
+		$error_log = new WP_Auth0_ErrorLog();
+		$error_log->init();
 
 		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH($this->a0_options);
 		$configure_jwt_auth->init();
 
-		WP_Auth0_Dashboard_Widgets::init();
-		WP_Auth0_WooCommerceOverrides::init();
-		WP_Auth0_Export_Users::init();
+		$dashboard_widgets = new WP_Auth0_Dashboard_Widgets($this->dashboard_options, $this->db_manager);
+		$dashboard_widgets->init();
+
+		$woocommerce_override = new WP_Auth0_WooCommerceOverrides($this);
+		$woocommerce_override->init();
+
+		$users_exporter = new WP_Auth0_Export_Users($this->db_manager);
+		$users_exporter->init();
+
+		$settings_section = new WP_Auth0_Settings_Section($this->a0_options, $initial_setup, $users_exporter, $configure_jwt_auth, $error_log, $dashboard_preferences);
+		$settings_section->init();
 
 		$this->social_amplificator = new WP_Auth0_Amplificator($this->db_manager, $this->a0_options);
 		$this->social_amplificator->init();
 
-		WP_Auth0_EditProfile::init();
-		WP_Auth0_Routes::init();
+		$edit_profile = new WP_Auth0_EditProfile($this->a0_options);
+		$edit_profile->init();
+
+		$this->router = new WP_Auth0_Routes();
+		$this->router->init();
 
 		add_action( 'plugins_loaded', array( $this, 'check_jwt_auth' ) );
 	}
@@ -281,22 +296,13 @@ class WP_Auth0 {
 	}
 
 	public function wp_init() {
-		self::setup_rewrites();
+		$this->router->setup_rewrites();
 	}
 
-	private static function setup_rewrites() {
-		add_rewrite_tag( '%auth0%', '([^&]+)' );
-		add_rewrite_tag( '%code%', '([^&]+)' );
-		add_rewrite_tag( '%state%', '([^&]+)' );
-		add_rewrite_tag( '%auth0_error%', '([^&]+)' );
-
-		add_rewrite_rule( '^auth0', 'index.php?auth0=1', 'top' );
-		add_rewrite_rule( '^oauth2-config?', 'index.php?a0_action=oauth2-config', 'top' );
-	}
 
 	public function install() {
 		$this->db_manager->install_db();
-		self::setup_rewrites();
+		$this->router->setup_rewrites();
 
 		flush_rewrite_rules();
 	}

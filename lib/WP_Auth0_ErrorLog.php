@@ -1,11 +1,11 @@
 <?php
 class WP_Auth0_ErrorLog {
 
-	public static function init() {
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue' ) );
+	public function init() {
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
 	}
 
-	public static function admin_enqueue() {
+	public function admin_enqueue() {
 		if ( ! isset( $_REQUEST['page'] ) || 'wpa0-errors' !== $_REQUEST['page'] ) {
 			return;
 		}
@@ -15,7 +15,7 @@ class WP_Auth0_ErrorLog {
 		wp_enqueue_style( 'media' );
 	}
 
-	public static function render_settings_page() {
+	public function render_settings_page() {
 		global $wpdb;
 		$sql = 'SELECT *
 				FROM ' . $wpdb->auth0_error_logs .'
