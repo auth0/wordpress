@@ -86,7 +86,7 @@ class WP_Auth0_DBManager {
 		$results = $wpdb->get_results( $sql );
 
 		if ( $results instanceof WP_Error ) {
-			$this->insert_auth0_error( 'findAuth0User',$userRow );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'findAuth0User',$userRow );
 			return array();
 		}
 
@@ -105,7 +105,7 @@ class WP_Auth0_DBManager {
 		$result = $wpdb->get_row( $sql );
 
 		if ( $result instanceof WP_Error ) {
-			$this->insert_auth0_error( 'findAuth0User',$userRow );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'findAuth0User',$userRow );
 			return null;
 		}
 

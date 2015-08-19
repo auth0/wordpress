@@ -222,37 +222,6 @@ class WP_Auth0 {
 		return $html;
 	}
 
-	public static function insert_auth0_error( $section, $wp_error ) {
-
-		if ( $wp_error instanceof WP_Error ) {
-			$code = $wp_error->get_error_code();
-			$message = $wp_error->get_error_message();
-		} elseif ( $wp_error instanceof Exception ) {
-			$code = $wp_error->getCode();
-			$message = $wp_error->getMessage();
-		} else {
-			$code = null;
-			$message = $wp_error;
-		}
-
-		global $wpdb;
-		$wpdb->insert(
-			$wpdb->auth0_error_logs,
-			array(
-				'section' => $section,
-				'date' => date( 'c' ),
-				'code' => $code,
-				'message' => $message,
-			),
-			array(
-				'%s',
-				'%s',
-				'%s',
-				'%s',
-			)
-		);
-	}
-
 	public function delete_user( $user_id ) {
 		global $wpdb;
 		$wpdb->delete( $wpdb->auth0_user, array( 'wp_id' => $user_id ), array( '%d' ) );
