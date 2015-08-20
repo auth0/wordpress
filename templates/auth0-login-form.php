@@ -49,7 +49,7 @@ $options = json_encode($lock_options->get_lock_options());
     <?php } ?>
 
     <script type="text/javascript">
-
+    var ignore_sso = false;
     document.addEventListener("DOMContentLoaded", function() {
 
         var callback = null;
@@ -122,10 +122,10 @@ $options = json_encode($lock_options->get_lock_options());
 
             var hashParams = getHashParams();
             if (hashParams && hashParams.id_token) {
-
+                ignore_sso = true;
                 callback(null,null, hashParams.id_token);
 
-            } 
+            }
 
         <?php } else { ?>
 
