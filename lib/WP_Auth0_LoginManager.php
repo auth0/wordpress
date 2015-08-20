@@ -27,7 +27,6 @@ class WP_Auth0_LoginManager {
 		$lock_options = new WP_Auth0_Lock_Options();
 
 		$sso = $lock_options->get_sso();
-		$implicit = $lock_options->get_auth0_implicit_workflow();
 
 		if ( $sso ) {
 			$cdn = $lock_options->get_cdn_url();
