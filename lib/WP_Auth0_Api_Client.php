@@ -210,7 +210,7 @@ class WP_Auth0_Api_Client {
 		) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0::create_rule( 'WP_Auth0_Api_Client::create_rule', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_rule', $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
@@ -239,7 +239,7 @@ class WP_Auth0_Api_Client {
 		) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0::create_rule( 'WP_Auth0_Api_Client::delete_rule', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::delete_rule', $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
@@ -268,7 +268,7 @@ class WP_Auth0_Api_Client {
 		) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0::create_rule( 'WP_Auth0_Api_Client::create_connection', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_connection', $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
@@ -298,7 +298,7 @@ class WP_Auth0_Api_Client {
 		) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0::create_rule( 'WP_Auth0_Api_Client::search_connection', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::search_connection', $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
@@ -336,7 +336,7 @@ class WP_Auth0_Api_Client {
 		) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0::create_rule( 'WP_Auth0_Api_Client::update_connection', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::update_connection', $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
@@ -366,7 +366,7 @@ class WP_Auth0_Api_Client {
 		) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0::create_rule( 'WP_Auth0_Api_Client::delete_connection', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::delete_connection', $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
@@ -395,7 +395,7 @@ class WP_Auth0_Api_Client {
 		) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0::create_rule( 'WP_Auth0_Api_Client::update_users', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::update_users', $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
