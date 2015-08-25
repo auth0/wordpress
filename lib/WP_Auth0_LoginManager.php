@@ -14,15 +14,17 @@ class WP_Auth0_LoginManager {
 		add_action( 'login_init', array( $this, 'login_auto' ) );
 		add_action( 'template_redirect', array( $this, 'init_auth0' ), 1 );
 		add_action( 'wp_footer', array( $this, 'auth0_sso_footer') );
+		add_action( 'wp_footer', array( $this, 'auth0_singlelogout_footer') );
 		add_filter( 'login_message', array( $this, 'auth0_sso_footer' ) );
 	}
 
 	public function auth0_sso_footer($previous_html) {
+
+		echo $previous_html;
+
 		if (is_user_logged_in()) {
 			return;
 		}
-
-		echo $previous_html;
 
 		$lock_options = new WP_Auth0_Lock_Options();
 
@@ -35,6 +37,25 @@ class WP_Auth0_LoginManager {
 
 			wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
 			include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler.php';
+		}
+	}
+	public function auth0_singlelogout_footer($previous_html) {
+
+		echo $previous_html;
+
+		if (!is_user_logged_in()) {
+			return;
+		}
+
+		$singlelogout = $this->a0_options->get('singlelogout');
+
+		if ( $singlelogout ) {
+			$cdn = $this->a0_options->get('cdn_url');
+			$client_id = $this->a0_options->get('client_id');
+			$domain = $this->a0_options->get('domain');
+
+			wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
+			include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
 		}
 	}
 

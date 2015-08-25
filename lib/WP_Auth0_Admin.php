@@ -99,6 +99,7 @@ class WP_Auth0_Admin {
 		$this->init_option_section( $this->build_section_title( 'Features', self::FEATURES_DESCRIPTION ), 'features',array(
 
 			array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)', 'function' => 'render_sso' ),
+			array( 'id' => 'wpa0_singlelogout', 'name' => 'Single Logout', 'function' => 'render_singlelogout' ),
 			array( 'id' => 'wpa0_mfa', 'name' => 'Multifactor Authentication (MFA)', 'function' => 'render_mfa' ),
 			array( 'id' => 'wpa0_fullcontact', 'name' => 'FullContact integration', 'function' => 'render_fullcontact' ),
 			array( 'id' => 'wpa0_geo', 'name' => 'Store geolocation', 'function' => 'render_geo' ),
@@ -418,6 +419,19 @@ class WP_Auth0_Admin {
 		<?php
 	}
 
+	public function render_singlelogout() {
+		$v = absint( $this->a0_options->get( 'singlelogout' ) );
+		?>
+			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[singlelogout]" id="wpa0_singlelogout" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			<div class="subelement">
+				<span class="description">
+					<?php echo __( 'Mark this if you want to enable Single Logout. More info ', WPA0_LANG ); ?>
+					<a target="_blank" href="https://auth0.com/docs/sso/single-sign-on"><?php echo __( 'HERE', WPA0_LANG ); ?></a>
+				</span>
+			</div>
+		<?php
+	}
+
 	public function render_mfa() {
 		$v = $this->a0_options->get( 'mfa' );
 		?>
@@ -658,7 +672,9 @@ class WP_Auth0_Admin {
 		$input['social_big_buttons'] = ( isset( $input['social_big_buttons'] ) ? $input['social_big_buttons'] : 0 );
 		$input['gravatar'] = ( isset( $input['gravatar'] ) ? $input['gravatar'] : 0 );
 		$input['remember_last_login'] = ( isset( $input['remember_last_login'] ) ? $input['remember_last_login'] : 0 );
+		$input['singlelogout'] = ( isset( $input['singlelogout'] ) ? $input['singlelogout'] : 0 );
 		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
+		$input['auth0_app_token'] = $old_options['auth0_app_token'];
 		$input['auth0_app_token'] = $old_options['auth0_app_token'];
 
 		if ( trim( $input['dict'] ) !== '' ) {

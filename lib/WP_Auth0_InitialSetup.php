@@ -4,6 +4,10 @@ class WP_Auth0_InitialSetup {
 
     protected $a0_options;
 
+    protected $domain = 'login0.myauth0.com';
+    protected $client_id = 'MefoL5F3mJHJ48RDbUTEertAWIT2nRCY';
+    protected $client_secret = 'QXxTULIzbPnfZTHk-PNZXIdkyEHNKmLhuuiqjk7qMfXAGc83tfQZvOV79-7iIXGv';
+
     public function __construct(WP_Auth0_Options $a0_options) {
         $this->a0_options = $a0_options;
     }
@@ -131,13 +135,13 @@ class WP_Auth0_InitialSetup {
 
     public function build_consent_url() {
       $callback_url = urlencode( admin_url( 'admin.php?page=wpa0-setup&callback=1' ) );
-      $client_id = base64_decode('QmxjVlh0VXVmRm54cnZUTFdLRXBTNG9ET3hCZm95eFo=');
+
       $scope = urlencode( implode( ' ', array(
           'read:connections',
           'create:clients'
       ) ) );
 
-      $url = "https://auth0.auth0.com/authorize?client_id={$client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}";
+      $url = "https://{$this->domain}/authorize?client_id={$this->client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}";
 
       return $url;
     }
@@ -148,12 +152,9 @@ class WP_Auth0_InitialSetup {
       }
 
       $code = $_REQUEST['code'];
-      $domain = 'auth0.auth0.com';
-      $client_id = base64_decode('QmxjVlh0VXVmRm54cnZUTFdLRXBTNG9ET3hCZm95eFo=');
-      $client_secret = base64_decode('a3JrN09COFJBWngwQ0JkcVEwdXVmV1k5WjJLdTUxV0l6Ml9qRjM3aVVSMmpQbWU5RjNUT1lBNmJUVkpseFNldQ==');
       $callback_url = urlencode( admin_url( 'admin.php?page=wpa0-setup&step=2' ) );
 
-      $response = WP_Auth0_Api_Client::get_token( $domain, $client_id, $client_secret, 'authorization_code', array(
+      $response = WP_Auth0_Api_Client::get_token( $this->domain, $this->client_id, $this->client_secret, 'authorization_code', array(
               'redirect_uri' => home_url(),
               'code' => $code,
           ) );
