@@ -26,6 +26,10 @@ class WP_Auth0_Routes {
 
     protected function oauth2_config() {
 
+        // $li = new WP_Auth0_LoginManager();
+        // var_dump($li->login_with_credentials('german.lena@gmail.com', '123456'));
+        // exit;
+
         $callback_url = admin_url( 'admin.php?page=wpa0-setup&step=2' );
 
         echo json_encode(array(

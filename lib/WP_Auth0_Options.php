@@ -18,7 +18,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
     }
 
     public function get_enabled_connections() {
-        return array('facebook','twitter');
+        return array('facebook','twitter','google-oauth2');
     }
 
     protected function defaults(){

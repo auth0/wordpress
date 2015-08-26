@@ -206,8 +206,8 @@ class WP_Auth0_InitialSetup {
           if ( in_array( $connection->name, $enabled_connections ) ) {
 
               $this->a0_options->set( "social_{$connection->name}" , 1 );
-              $this->a0_options->set( "social_{$connection->name}_key" , $connection->options->client_id );
-              $this->a0_options->set( "social_{$connection->name}_secret" , $connection->options->client_secret );
+              $this->a0_options->set( "social_{$connection->name}_key" , isset($connection->options->client_id) ? $connection->options->client_id : null );
+              $this->a0_options->set( "social_{$connection->name}_secret" , isset($connection->options->client_secret) ? $connection->options->client_secret : null );
 
           }
       }

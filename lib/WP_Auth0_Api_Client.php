@@ -2,6 +2,41 @@
 
 class WP_Auth0_Api_Client {
 
+	public static function ro($domain, $client_id, $username, $password, $connection, $scope) {
+
+		$endpoint = "https://$domain/";
+
+		$headers = array( 'content-type' => 'application/x-www-form-urlencoded' );
+		$body = array(
+			'client_id' => $client_id,
+			'username' => $username,
+			'password' => $password,
+			'connection' => $connection,
+			'grant_type' => 'password',
+			'scope' => $scope
+		);
+
+		$response = wp_remote_post( $endpoint . 'oauth/ro', array(
+			'headers' => $headers,
+			'body' => $body,
+		) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::ro', $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] != 200 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::ro', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		return json_decode($response['body']);
+
+	}
+
 	public static function validate_user_token($app_token) {
 		if ( empty($app_token) ) {
 			return false;
@@ -105,6 +140,7 @@ class WP_Auth0_Api_Client {
 			'update:clients',
 			'update:connections',
 			'create:connections',
+			'read:connections',
 			'create:rules',
 			'delete:rules',
 			'update:users'

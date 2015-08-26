@@ -462,7 +462,7 @@ class WP_Auth0_Admin {
 	public function render_income() {
 		$v = $this->a0_options->get( 'income_rule' );
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[income_rule]" id="wpa0_income_rule" value="1" <?php (is_null($v) ? '' : 'checked'); ?>/>
+			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[income_rule]" id="wpa0_income_rule" value="1" <?php echo (is_null($v) ? '' : 'checked'); ?>/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'Mark this if you want to store income data based on the zipcode (calculated using the users IP).', WPA0_LANG ); ?></span>
 			</div>
@@ -615,7 +615,7 @@ class WP_Auth0_Admin {
 					<?php echo __( ' because you have turned on the setting " Anyone can register" on WordPress', WPA0_LANG ); ?><br>
 				<?php } ?>
 
-				<?php echo __( 'You can manage this setting on Settings > General > Membership, Anyone can register', WPA0_LANG ); ?>?>
+				<?php echo __( 'You can manage this setting on Settings > General > Membership, Anyone can register', WPA0_LANG ); ?>
 			</span>
 
 		<?php
@@ -796,6 +796,7 @@ class WP_Auth0_Admin {
 
 	public function incomerule_validation( $old_options, $input ) {
 		$input['income_rule'] = ( isset( $input['income_rule'] ) ? $input['income_rule'] : 0 );
+
 		if ($old_options['income_rule'] == null && 1 == $input['income_rule']) {
 			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $this->get_token(), WP_Auth0_RulesLib::$income['name'], WP_Auth0_RulesLib::$income['script']);
 
@@ -871,14 +872,14 @@ class WP_Auth0_Admin {
 
 			$connections = WP_Auth0_Api_Client::search_connection($input['domain'], $this->get_token(), $strategy);
 
-			if ( ! $connections ) {
-				$error = __( 'There was an error searching your active social connections.', WPA0_LANG );
-				$this->add_validation_error( $error );
-
-				$input[$main_key] = 0;
-
-				return $input;
-			}
+			// if ( ! $connections ) {
+			// 	$error = __( 'There was an error searching your active social connections.', WPA0_LANG );
+			// 	$this->add_validation_error( $error );
+			//
+			// 	$input[$main_key] = 0;
+			//
+			// 	return $input;
+			// }
 
 			$selected_connection = null;
 

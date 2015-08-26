@@ -29,7 +29,7 @@
             <td><?php echo date('m/d/Y H:i:s', strtotime($item->date)); ?></td>
             <td><?php echo $item->section; ?></td>
             <td><?php echo (empty($item->code) ? '-' : $item->code); ?></td>
-            <td><?php echo $item->message; ?></td>
+            <td><?php echo strip_tags($item->message); ?></td>
         </tr>
     <?php
         }

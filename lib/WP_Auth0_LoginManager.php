@@ -4,8 +4,14 @@ class WP_Auth0_LoginManager {
 
 	protected $a0_options;
 
-	public function __construct(WP_Auth0_Options $a0_options) {
-		$this->a0_options = $a0_options;
+	public function __construct($a0_options = null) {
+
+		if ($a0_options instanceof WP_Auth0_Options) {
+				$this->a0_options = $a0_options;
+		} else {
+			$this->a0_options = WP_Auth0_Options::Instance();
+		}
+
 	}
 
 	public function init() {
@@ -407,6 +413,42 @@ class WP_Auth0_LoginManager {
 
 		$html = ob_get_clean();
 		wp_die( $html );
+	}
+
+	public function login_with_credentials($username, $password, $connection="Username-Password-Authentication") {
+
+		$domain = $this->a0_options->get( 'domain' );
+		$client_id = $this->a0_options->get( 'client_id' );
+
+		$response = WP_Auth0_Api_Client::ro($domain, $client_id, $username, $password, $connection, 'openid name email nickname email_verified identities');
+
+		$secret = $this->a0_options->get( 'client_secret' );
+
+		$secret = JWT::urlsafeB64Decode( $secret );
+
+		try {
+			// Decode the user
+			$decodedToken = JWT::decode( $response->id_token, $secret, array( 'HS256' ) );
+
+			// validate that this JWT was made for us
+			if ( $this->a0_options->get( 'client_id' ) !== $decodedToken->aud ) {
+				throw new Exception( 'This token is not intended for us.' );
+			}
+
+			$decodedToken->user_id = $decodedToken->sub;
+
+			if ( $this->login_user( $userinfo, $response->id_token, $response->access_token ) ) {
+					return false;
+			}
+
+		} catch( UnexpectedValueException $e ) {
+
+			WP_Auth0_ErrorManager::insert_auth0_error( 'login_with_credentials', $e );
+
+			error_log( $e->getMessage() );
+		}
+		return false;
+
 	}
 
 }
