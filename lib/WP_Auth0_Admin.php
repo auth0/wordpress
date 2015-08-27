@@ -727,8 +727,8 @@ class WP_Auth0_Admin {
 				if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], $this->get_token(), $old_options['fullcontact_rule']) ) {
 					$error = __( 'There was an error deleting your Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
 					$this->add_validation_error( $error );
-					$input['fullcontact'] = 1;
 				}
+				$input['fullcontact'] = null;
 			}
 		}
 		return $input;
@@ -756,9 +756,8 @@ class WP_Auth0_Admin {
 				$error = __( 'There was an error deleting the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
 				$this->add_validation_error( $error );
 				$input['mfa'] = 1;
-			} else {
-				$input['mfa'] = null;
 			}
+			$input['mfa'] = null;
 		}
 		else {
 			$input['mfa'] = $old_options['mfa'];
@@ -783,10 +782,8 @@ class WP_Auth0_Admin {
 			if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], $this->get_token(), $old_options['geo_rule']) ) {
 				$error = __( 'There was an error deleting the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
 				$this->add_validation_error( $error );
-				$input['geo_rule'] = 1;
-			} else {
-				$input['geo_rule'] = null;
 			}
+			$input['geo_rule'] = null;
 		}
 		else {
 			$input['geo_rule'] = $old_options['geo_rule'];
@@ -813,9 +810,8 @@ class WP_Auth0_Admin {
 				$error = __( 'There was an error deleting the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
 				$this->add_validation_error( $error );
 				$input['income_rule'] = 1;
-			} else {
-				$input['income_rule'] = null;
 			}
+			$input['income_rule'] = null;
 		}
 		else {
 			$input['income_rule'] = $old_options['income_rule'];
