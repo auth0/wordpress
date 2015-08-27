@@ -79,10 +79,9 @@ class WP_Auth0_Lock_Options {
         }
         $stateObj = array("interim" => $interim_login, "uuid" =>uniqid());
         if (isset($_GET['redirect_to'])) {
-            $stateObj["redirect_to"] = addslashes($_GET['redirect_to']);
-        } else {
-            $stateObj["redirect_to"] = addslashes(site_url($_SERVER["REQUEST_URI"]));
+          $stateObj["redirect_to"] = addslashes($_GET['redirect_to']);
         }
+        
         return json_encode($stateObj);
     }
 

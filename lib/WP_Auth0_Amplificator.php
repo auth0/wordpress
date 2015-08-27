@@ -58,7 +58,13 @@ class WP_Auth0_Amplificator {
 						if ($body->error->code == 506) {
 							$message = 'Facebook does not allow to share the same content twice.';
 						} else {
-							$message = $body->error->error_user_msg;
+							if (isset($body->error->error_user_msg)) {
+								$message = $body->error->error_user_msg;
+							} elseif (isset($body->error->message)) {
+								$message = $body->error->message;
+							} else {
+								$message = 'An error has occurred.';
+							}
 						}
 					}
 

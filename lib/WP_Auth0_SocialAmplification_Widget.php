@@ -55,16 +55,17 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
         {
             $options = WP_Auth0_Options::Instance();
 
-            $supportedProviders = array();
+            $supportedProviders = array('facebook', 'twitter');
+            $enabledProviders = array();
 
             $social_facebook_key = $options->get('social_facebook_key');
             if (!empty($social_facebook_key)) {
-                $supportedProviders[] = 'facebook';
+                $enabledProviders[] = 'facebook';
             }
 
             $social_twitter_key = $options->get('social_twitter_key');
             if (!empty($social_twitter_key)) {
-                $supportedProviders[] = 'twitter';
+                $enabledProviders[] = 'twitter';
             }
 
             $providers = array();
@@ -99,7 +100,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
             foreach ($supportedProviders as $provider) {
 
-                if (in_array($provider, $providers)) {
+                if (in_array($provider, $providers) && in_array($provider, $enabledProviders)) {
                     $js_function = "Auth0Amplify(this,'$provider', '$current_page_url')";
                 } else {
 
