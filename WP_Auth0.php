@@ -26,7 +26,7 @@ class WP_Auth0 {
 	protected $router;
 
 	public function init() {
-		
+
 		spl_autoload_register( array( $this, 'autoloader' ) );
 
 		$ip_checker = new WP_Auth0_Ip_Check();
