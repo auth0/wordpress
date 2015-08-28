@@ -26,6 +26,7 @@ class WP_Auth0 {
 	protected $router;
 
 	public function init() {
+		
 		spl_autoload_register( array( $this, 'autoloader' ) );
 
 		$ip_checker = new WP_Auth0_Ip_Check();
@@ -76,7 +77,10 @@ class WP_Auth0 {
 		$users_repo = new WP_Auth0_UsersRepo($this->a0_options);
 		$users_repo->init();
 
-		$auth0_admin = new WP_Auth0_Admin($this->a0_options);
+		$this->router = new WP_Auth0_Routes($this->a0_options);
+		$this->router->init();
+
+		$auth0_admin = new WP_Auth0_Admin($this->a0_options, $this->router);
 		$auth0_admin->init();
 
 		$dashboard_preferences = new WP_Auth0_Dashboard_Preferences($this->dashboard_options);
@@ -105,9 +109,6 @@ class WP_Auth0 {
 
 		$edit_profile = new WP_Auth0_EditProfile($this->a0_options);
 		$edit_profile->init();
-
-		$this->router = new WP_Auth0_Routes();
-		$this->router->init();
 	}
 
 	public static function get_plugin_dir_url() {

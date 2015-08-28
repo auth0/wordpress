@@ -8,9 +8,11 @@ class WP_Auth0_Admin {
 	const ADVANCED_DESCRIPTION = 'Settings related to specific scenarios.';
 
 	protected $a0_options;
+	protected $router;
 
-	public function __construct(WP_Auth0_Options $a0_options) {
+	public function __construct(WP_Auth0_Options $a0_options, WP_Auth0_Routes $router) {
 		$this->a0_options = $a0_options;
+		$this->router = $router;
 	}
 
 	public function init() {
@@ -130,6 +132,7 @@ class WP_Auth0_Admin {
 
 		$advancedOptions = array(
 
+			array( 'id' => 'wpa0_migration_ws', 'name' => 'Migrations WS', 'function' => 'render_migration_ws' ),
 			array( 'id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict' ),
 			array( 'id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL', 'function' => 'render_default_login_redirection' ),
 			array( 'id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email' ),
@@ -265,6 +268,16 @@ class WP_Auth0_Admin {
 			<input type="text" name="<?php echo $this->a0_options->get_options_name(); ?>[default_login_redirection]" id="wpa0_default_login_redirection" value="<?php echo esc_attr( $v ); ?>"/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'This is the URL that all users will be redirected by default after login', WPA0_LANG ); ?></span>
+			</div>
+		<?php
+	}
+
+	public function render_migration_ws() {
+		$v = $this->a0_options->get( 'migration_ws' );
+		?>
+			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[migration_ws]" id="wpa0_auth0_migration_ws" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'Mark this to expose a WS in order to easy the users migration process.', WPA0_LANG ); ?></span>
 			</div>
 		<?php
 	}
@@ -708,6 +721,22 @@ class WP_Auth0_Admin {
 		return $input;
 	}
 
+	public function migration_ws_validation( $old_options, $input ) {
+		$input['migration_ws'] = ( isset( $input['migration_ws'] ) ? $input['migration_ws'] : 0 );
+
+		if ( $old_options['migration_ws'] != $input['migration_ws'] ) {
+			if ( 1 == $input['migration_ws'] ) {
+				$input['migration_token'] = 'blabla';
+			} else {
+				$input['migration_token'] = null;
+			}
+
+			$this->router->setup_rewrites($input['migration_ws'] == 1);
+			flush_rewrite_rules();
+		}
+		return $input;
+	}
+
 	public function fullcontact_validation( $old_options, $input ) {
 		if ($old_options['fullcontact'] != $input['fullcontact']) {
 			if (!empty($input['fullcontact'])) {
@@ -1049,6 +1078,7 @@ class WP_Auth0_Admin {
 		$actions_middlewares = array(
 			'basic_validation',
 			'sso_validation',
+			'migration_ws_validation',
 			'fullcontact_validation',
 			'mfa_validation',
 			'georule_validation',
