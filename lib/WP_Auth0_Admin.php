@@ -274,10 +274,13 @@ class WP_Auth0_Admin {
 
 	public function render_migration_ws() {
 		$v = $this->a0_options->get( 'migration_ws' );
+		$token = $this->a0_options->get( 'migration_token' );
+
 		?>
 			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[migration_ws]" id="wpa0_auth0_migration_ws" value="1" <?php echo checked( $v, 1, false ); ?>/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'Mark this to expose a WS in order to easy the users migration process.', WPA0_LANG ); ?></span>
+				<span class="description"><?php echo __( 'Security token:', WPA0_LANG ); ?><code><?php echo $token; ?></code></span>
 			</div>
 		<?php
 	}
@@ -726,9 +729,15 @@ class WP_Auth0_Admin {
 
 		if ( $old_options['migration_ws'] != $input['migration_ws'] ) {
 			if ( 1 == $input['migration_ws'] ) {
-				$input['migration_token'] = 'blabla';
+
+				$secret = $this->a0_options->get( 'client_secret' );
+				$token_id = uniqid();
+				$input['migration_token'] = JWT::encode(array('scope' => 'migration_ws', 'jti' => $token_id), JWT::urlsafeB64Decode( $secret ));
+				$input['migration_token_id'] = $token_id;
+
 			} else {
 				$input['migration_token'] = null;
+				$input['migration_token_id'] = null;
 			}
 
 			$this->router->setup_rewrites($input['migration_ws'] == 1);

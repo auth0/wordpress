@@ -57,6 +57,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
             'migration_ws' => false,
             'migration_token' => null,
+            'migration_token_id' => null,
 
             'amplificator_title' => '',
             'amplificator_subtitle' => '',

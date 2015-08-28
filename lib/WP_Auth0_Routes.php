@@ -46,20 +46,55 @@ class WP_Auth0_Routes {
     }
   }
 
+  protected function getAuthorizationHeader() {
+      $authorization = false;
+      if (function_exists('getallheaders'))
+      {
+          $headers = getallheaders();
+          if (isset($headers['Authorization'])) {
+              $authorization = $headers['Authorization'];
+          }
+      }
+      elseif (isset($_SERVER["Authorization"])){
+          $authorization = $_SERVER["Authorization"];
+      }
+      return $authorization;
+  }
+
   protected function migration_ws() {
     if ( $this->a0_options->get('migration_ws') == 0 ) return;
 
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $authorization = $this->getAuthorizationHeader();
+    $authorization = str_replace('Bearer ', '', $authorization);
 
-    $user = wp_authenticate($username, $password);
+    $secret = $this->a0_options->get( 'client_secret' );
+    $token_id = $this->a0_options->get( 'migration_token_id' );
 
-    if ($user instanceof WP_Error) {
-      WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws',$user );
-      $user = null;
+    $user = null;
+
+    try {
+        $token = JWT::decode($authorization, JWT::urlsafeB64Decode( $secret ), array('HS256'));
+
+        if ($token->jti != $token_id) {
+            throw new Exception('Invalid token id');
+        }
+
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        $user = wp_authenticate($username, $password);
+
+        if ($user instanceof WP_Error) {
+          WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws',$user );
+          $user = array('error' => 'invalid credentials');
+        } else {
+          $user = apply_filters( 'auth0_migration_ws_authenticated', $user );
+        }
     }
-
-    $user = apply_filters( 'auth0_migration_ws_authenticated', $user );
+    catch(Exception $e) {
+        WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws', $e );
+        $user = array('error' => $e->getMessage());
+    }
 
     echo json_encode($user);
     exit;
