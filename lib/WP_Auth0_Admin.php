@@ -788,8 +788,10 @@ class WP_Auth0_Admin {
 				$input['migration_token_id'] = null;
 
 				$response = WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $connection_id, array(
-					'enabledDatabaseCustomization' => false,
-					'import_mode' => false
+					'options' => array(
+						'enabledDatabaseCustomization' => false,
+						'import_mode' => false
+					)
 				));
 
 				if ($response === null) {
