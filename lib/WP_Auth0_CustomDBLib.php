@@ -10,7 +10,7 @@ class WP_Auth0_CustomDBLib {
       headers:{"Authorization":"Bearer {THE_WS_TOKEN}"}
     }, function(error, response, body){
 
-      if (!error && response.statusCode == 200) {
+      if (!error && response.statusCode === 200) {
         var info = JSON.parse(body);
 
         var profile = {
@@ -37,7 +37,7 @@ class WP_Auth0_CustomDBLib {
       headers:{"Authorization":"Bearer {THE_WS_TOKEN}"}
     }, function(error, response, body){
 
-      if (!error && response.statusCode == 200) {
+      if (!error && response.statusCode === 200) {
         var info = JSON.parse(body);
 
         if (info) {

@@ -306,15 +306,22 @@ class WP_Auth0_LoginManager {
 		// If the userinfo has no email or an unverified email, and in the options we require a verified email
 		// notify the user he cant login until he does so.
 		$requires_verified_email = $this->a0_options->get( 'requires_verified_email' );
+		$force_email = true;
+
+		if ( $force_email && empty( $userinfo->email ) ) {
+
+
+
+		}
 
 		if ( 1 == $requires_verified_email ) {
-			if ( empty( $userinfo->email ) ) {
-				$msg = __( 'This account does not have an email associated. Please login with a different provider.', WPA0_LANG );
-				$msg .= '<br/><br/>';
-				$msg .= '<a href="' . site_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
-
-				wp_die( $msg );
-			}
+			// if ( empty( $userinfo->email ) ) {
+			// 	$msg = __( 'This account does not have an email associated. Please login with a different provider.', WPA0_LANG );
+			// 	$msg .= '<br/><br/>';
+			// 	$msg .= '<a href="' . site_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
+			//
+			// 	wp_die( $msg );
+			// }
 
 			if ( ! $userinfo->email_verified ) {
 				$this->dieWithVerifyEmail( $userinfo, $id_token );

@@ -280,7 +280,9 @@ class WP_Auth0_Admin {
 			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[migration_ws]" id="wpa0_auth0_migration_ws" value="1" <?php echo checked( $v, 1, false ); ?>/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'Mark this to expose a WS in order to easy the users migration process.', WPA0_LANG ); ?></span>
+			<?php if( ! empty($token) ) {?>
 				<span class="description"><?php echo __( 'Security token:', WPA0_LANG ); ?><code><?php echo $token; ?></code></span>
+			<?php } ?>
 			</div>
 		<?php
 	}
@@ -737,7 +739,7 @@ class WP_Auth0_Admin {
 						$connection_id = $connection->id;
 					}
 			}
-var_dump($connection_id);exit;
+
 			if ($connection_id === null) {
 				$error = __( 'There is not database connection enabled for this app. Create one ', WPA0_LANG );
 				$error .= '<a href="https://manage.auth0.com/#/connections/database">HERE</a>.';
@@ -759,17 +761,19 @@ var_dump($connection_id);exit;
 				$input['migration_token_id'] = $token_id;
 
 				$login_script = str_replace('{THE_WS_TOKEN}', $input['migration_token'], WP_Auth0_CustomDBLib::$login_script);
-				$login_script = str_replace('{THE_WS_URL}', $input['migration_token'], get_site_url() . '/migration-ws-login');
+				$login_script = str_replace('{THE_WS_URL}', get_site_url() . '/migration-ws-login', $login_script);
 
 				$get_user_script = str_replace('{THE_WS_TOKEN}', $input['migration_token'], WP_Auth0_CustomDBLib::$get_user_script);
-				$get_user_script = str_replace('{THE_WS_URL}', $input['migration_token'], get_site_url() . '/migration-ws-get-user');
+				$get_user_script = str_replace('{THE_WS_URL}', get_site_url() . '/migration-ws-get-user', $get_user_script);
 
-				$response = WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $id, array(
-					'enabledDatabaseCustomization' => true,
-					'import_mode' => true,
-					'customScripts' => array(
-						'login' => $login_script,
-						'get_user' => $get_user_script
+				$response = WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $connection_id, array(
+					'options' => array(
+						'enabledDatabaseCustomization' => true,
+						'import_mode' => true,
+						'customScripts' => array(
+							'login' => $login_script,
+							'get_user' => $get_user_script
+						)
 					)
 				));
 
@@ -783,7 +787,7 @@ var_dump($connection_id);exit;
 				$input['migration_token'] = null;
 				$input['migration_token_id'] = null;
 
-				$response = WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $id, array(
+				$response = WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $connection_id, array(
 					'enabledDatabaseCustomization' => false,
 					'import_mode' => false
 				));
