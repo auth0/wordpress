@@ -25,7 +25,6 @@ class WP_Auth0_Routes {
       add_rewrite_rule( '^migration-ws-login?', 'index.php?a0_action=migration-ws-login', 'top' );
       add_rewrite_rule( '^migration-ws-get-user?', 'index.php?a0_action=migration-ws-get-user', 'top' );
     }
-    flush_rewrite_rules();
 	}
 
   public function custom_requests ( $wp ) {
