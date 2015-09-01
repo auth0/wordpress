@@ -17,11 +17,13 @@ class WP_Auth0_InitialSetup {
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
         add_action( 'init', array( $this, 'init_setup' ), 1 );
 
-        $auth0_jwt = $this->a0_options->get('auth0_app_token');
+        if ( ! isset( $_REQUEST['page'] ) || 'wpa0-setup' !== $_REQUEST['page'] ) {
+          $client_id = $this->a0_options->get('client_id');
 
-        if ( ! $auth0_jwt ) {
-            add_action( 'admin_notices', array( $this, 'notify_setup' ) );
-        }
+          if ( ! $client_id ) {
+              add_action( 'admin_notices', array( $this, 'notify_setup' ) );
+          }
+    		}
 
         if ( isset( $_REQUEST['error'] ) && 'cant_create_client' == $_REQUEST['error'] ) {
     			add_action( 'admin_notices', array( $this, 'cant_create_client_message' ) );
@@ -51,7 +53,7 @@ class WP_Auth0_InitialSetup {
     public function notify_setup() {
   		?>
   		<div class="update-nag">
-  			Click <a href="<?php echo admin_url('admin.php?page=wpa0-setup'); ?>">HERE</a> to configure the Auth0 plugin.
+        Auth0 for WordPress is not yet configured. Click <a href="<?php echo admin_url('admin.php?page=wpa0-setup'); ?>">HERE</a> to configure the Auth0 for WordPress plugin using the Quick Setup Wizard.
   		</div>
   		<?php
   	}
