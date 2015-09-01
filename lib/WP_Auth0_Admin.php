@@ -52,7 +52,9 @@ class WP_Auth0_Admin {
 		<div id="message" class="error">
 			<p>
 				<strong>
-					<?php echo __( 'This user does not have enough scopes to manage the Auth0 account. The plugin will not be able to handle things like creation of rules and set up social connections.', WPA0_LANG ); ?>
+					<?php echo __( 'The current user is not authorized to manage the Auth0 account. You must be both a WordPress site administrator and a user known to Auth0 to control Auth0 from this settings page. Please see the', WPA0_LANG ); ?>
+					<a href="https://auth0.com/docs/wordpress"><?php echo __( 'documentation', WPA0_LANG ); ?></a>
+					<?php echo __( 'for more information.', WPA0_LANG ); ?>
 				</strong>
 			</p>
 		</div>
