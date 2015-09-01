@@ -25,7 +25,13 @@ class WP_Auth0_Admin {
 			return;
 		}
 
-		add_action( 'admin_notices', array( $this, 'create_account_message' ) );
+		$client_id = $this->a0_options->get('client_id');
+		$secret = $this->a0_options->get('client_secret');
+		$domain = $this->a0_options->get('domain');
+
+		if ( empty($client_id) || empty($secret) || empty($domain) ) {
+				add_action( 'admin_notices', array( $this, 'create_account_message' ) );
+		}
 
 		$this->validate_required_api_scopes();
 
