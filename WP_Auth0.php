@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Wordpress Auth0 Integration
+ * Plugin Name: Auth0 for WordPress
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
  * Version: 2.0.0
  * Author: Auth0
