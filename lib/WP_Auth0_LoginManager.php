@@ -328,6 +328,10 @@ class WP_Auth0_LoginManager {
 
 		if ( ! is_null( $user ) ) {
 			// User exists! Log in
+			if (isset($userinfo->email) && $user->data->user_email !== $userinfo->email) {
+				$user_id = wp_update_user( array( 'ID' => $user->data->ID, 'user_email' => $userinfo->email ) );
+			}
+
 			$this->_update_auth0_object( $userinfo, $id_token, $access_token );
 
 			wp_set_auth_cookie( $user->ID );
