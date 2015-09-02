@@ -19,8 +19,10 @@ class WP_Auth0_InitialSetup {
 
         if ( ! isset( $_REQUEST['page'] ) || 'wpa0-setup' !== $_REQUEST['page'] ) {
           $client_id = $this->a0_options->get('client_id');
+          $client_secret = $this->a0_options->get('client_secret');
+          $domain = $this->a0_options->get('domain');
 
-          if ( ! $client_id ) {
+          if ( ( ! $client_id) || ( ! $client_secret) || ( ! $domain) ) {
               add_action( 'admin_notices', array( $this, 'notify_setup' ) );
           }
     		}

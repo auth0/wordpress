@@ -140,7 +140,7 @@ class WP_Auth0_Admin {
 
 		$advancedOptions = array(
 
-			array( 'id' => 'wpa0_migration_ws', 'name' => 'Migrations WS', 'function' => 'render_migration_ws' ),
+			array( 'id' => 'wpa0_migration_ws', 'name' => 'Users Migration', 'function' => 'render_migration_ws' ),
 			array( 'id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict' ),
 			array( 'id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL', 'function' => 'render_default_login_redirection' ),
 			array( 'id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email' ),

@@ -24,12 +24,13 @@ class WP_Auth0_Settings_Section {
         add_action( 'admin_menu', array($this, 'init_menu'), 95.55, 0 );
     }
 
-    public function init_menu(){
+    public function init_menu() {
 
-        $auth0_app_token = $this->a0_options->get('auth0_app_token');
         $client_id = $this->a0_options->get('client_id');
+        $client_secret = $this->a0_options->get('client_secret');
+        $domain = $this->a0_options->get('domain');
 
-        $show_initial_setup = ! ( $auth0_app_token && $client_id );
+        $show_initial_setup = ( ( ! $client_id) || ( ! $client_secret) || ( ! $domain) ) ;
 
         $main_menu = 'wpa0';
 
@@ -49,8 +50,7 @@ class WP_Auth0_Settings_Section {
         add_submenu_page($main_menu, __('Dashboard preferences', WPA0_LANG), __('Dashboard', WPA0_LANG), 'manage_options', 'wpa0-dashboard', array($this->dashboard_preferences, 'render_dashboard_preferences_page') );
         add_submenu_page($main_menu, __('Error Log', WPA0_LANG), __('Error Log', WPA0_LANG), 'manage_options', 'wpa0-errors', array($this->error_log, 'render_settings_page') );
 
-        if (WP_Auth0_Configure_JWTAUTH::is_jwt_auth_enabled())
-        {
+        if (WP_Auth0_Configure_JWTAUTH::is_jwt_auth_enabled()) {
             add_submenu_page($main_menu, __('JWT Auth integration', WPA0_LANG), __('JWT Auth integration', WPA0_LANG), 'manage_options', 'wpa0-jwt-auth', array($this->configure_jwt_auth, 'render_settings_page') );
         }
     }
