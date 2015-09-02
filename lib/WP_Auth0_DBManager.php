@@ -112,6 +112,37 @@ class WP_Auth0_DBManager {
 		return $result;
 	}
 
+	function get_currentauth0userinfo() {
+
+		global $currentauth0_user;
+
+		$result = $this->get_currentauth0user();
+		if ($result) {
+			$currentauth0_user = unserialize( $result->auth0_obj );
+		}
+
+		return $currentauth0_user;
+	}
+
+	function get_currentauth0user() {
+		global $current_user;
+		global $wpdb;
+
+		get_currentuserinfo();
+
+		if ( $current_user instanceof WP_User && $current_user->ID > 0 ) {
+			$sql = 'SELECT * FROM ' . $wpdb->auth0_user .' WHERE wp_id = %d order by last_update desc limit 1';
+			$result = $wpdb->get_row( $wpdb->prepare( $sql, $current_user->ID ) );
+
+			if ( is_null( $result ) || $result instanceof WP_Error ) {
+				return null;
+			}
+
+		}
+
+		return $result;
+	}
+
 	public function get_current_user_profiles() {
         global $current_user;
         global $wpdb;

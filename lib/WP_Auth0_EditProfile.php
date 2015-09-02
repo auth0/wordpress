@@ -3,18 +3,59 @@
 class WP_Auth0_EditProfile {
 
   protected $a0_options;
+  protected $db_manager;
 
-  public function __construct(WP_Auth0_Options $a0_options) {
+  public function __construct(WP_Auth0_DBManager $db_manager,WP_Auth0_Options $a0_options) {
     $this->a0_options = $a0_options;
+    $this->db_manager = $db_manager;
   }
 
   public function init() {
+    global $pagenow;
+
     add_action( 'personal_options_update', array( $this, 'override_email_update' ), 1 );
+
+    if ( $pagenow == 'profile.php' ) {
+      add_action( 'admin_footer', array( $this, 'disable_email_field' ) );
+    }
+  }
+
+  public function disable_email_field() {
+
+    $user_profiles = $this->db_manager->get_current_user_profiles();
+
+    if (!empty($user_profiles)) {
+      $user_profile = $user_profiles[0];
+      $connection = null;
+
+      foreach ($user_profile->identities as $identity) {
+        if ($identity->provider === 'auth0') {
+          $connection = $identity->connection;
+        }
+      }
+
+      if ( $connection === null){
+        ?>
+        <script>
+          jQuery(document).ready( function($) {
+            if ( $('input[name=email]').length ) {
+              $('input[name=email]').attr("disabled", "disabled");
+              $('<span class="description">You can\'t change your email here if you logged in using a social connection.</span>').insertAfter($('input[name=email]'));
+            }
+          });
+        </script>
+        <?php
+      }
+    }
   }
 
   public function override_email_update() {
     global $wpdb;
     global $errors;
+
+    if ( ! is_object($errors) ) {
+      $errors = new WP_Error();
+    }
 
     $current_user = wp_get_current_user();
     $app_token = $this->get_token();
@@ -31,10 +72,32 @@ class WP_Auth0_EditProfile {
       return false;
     }
 
+    $user_profiles = $this->db_manager->get_current_user_profiles();
+
+    if (empty($user_profiles)) {
+      return;
+    }
+
+    $user_profile = $user_profiles[0];
+
     if ( $current_user->user_email != $_POST['email'] ) {
+
+      $connection = null;
+
+      foreach ($user_profile->identities as $identity) {
+        if ($identity->provider === 'auth0') {
+          $connection = $identity->connection;
+        }
+      }
+
+      if ( $connection === null ) {
+        $errors->add( 'user_email', __( "<strong>ERROR</strong>: You can't change your email if you are using a social connection." ), array( 'form-field' => 'email' ) );
+        return false;
+      }
+
       if ( ! is_email( $_POST['email'] ) ) {
         $errors->add( 'user_email', __( "<strong>ERROR</strong>: The email address isn&#8217;t correct." ), array( 'form-field' => 'email' ) );
-        return;
+        return false;
       }
 
       if ( $wpdb->get_var( $wpdb->prepare( "SELECT user_email FROM {$wpdb->users} WHERE user_email=%s", $_POST['email'] ) ) ) {
@@ -45,10 +108,6 @@ class WP_Auth0_EditProfile {
 
       $user_email = esc_html( trim( $_POST['email'] ) );
 
-      $user_profiles = WP_Auth0_DBManager::get_current_user_profiles();
-      $user_profile = $user_profiles[0];
-
-      $connection = $user_profile->identities[0]->connection;
       $user_id = $user_profile->user_id;
       $client_id = $this->a0_options->get('client_id');
       $domain = $this->a0_options->get('domain');
