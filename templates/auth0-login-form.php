@@ -75,6 +75,17 @@ if (!$showAsModal){
 if (!$allow_signup) {
     $options_obj['disableSignupAction'] = true;
 }
+$custom_js = null;
+$custom_css = null;
+if(isset($options_obj['custom_js'])) {
+  $custom_js = $options_obj['custom_js'];
+}
+if(isset($options_obj['custom_css'])) {
+  $custom_css = $options_obj['custom_css'];
+}
+
+unset ($options_obj['custom_js']);
+unset ($options_obj['custom_css']);
 
 $options = json_encode($options_obj);
 
@@ -84,10 +95,10 @@ if(empty($client_id) || empty($domain)){ ?>
 
 <?php } else { ?>
 
-    <?php if(isset($options_obj['custom_css'])) { ?>
+    <?php if($custom_css) { ?>
 
         <style type="text/css">
-            <?php echo $options_obj['custom_css'];?>
+            <?php echo $custom_css;?>
         </style>
 
     <?php } ?>
@@ -201,9 +212,9 @@ if(empty($client_id) || empty($domain)){ ?>
 
         var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
 
-        <?php if(isset($options_obj['custom_js'])) { ?>
+        <?php if($custom_js) { ?>
 
-            <?php echo $options_obj['custom_js'];?>
+            <?php echo $custom_js;?>
 
         <?php } ?>
 

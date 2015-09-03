@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.3.4
+ * Version: 1.3.5
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -579,7 +579,7 @@ class WP_Auth0 {
 
                 wp_set_auth_cookie( $user_id );
 
-                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token ); 
+                do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token );
             }
             catch (WP_Auth0_CouldNotCreateUserException $e) {
                 $msg = __('Error: Could not create user.', WPA0_LANG);
