@@ -343,8 +343,8 @@ class WP_Auth0_LoginManager {
 		} else {
 
 			try {
-				$creator = new WP_Auth0_UserCreator();
-				$user_id = $creator->create( $userinfo, $id_token );
+				$creator = new WP_Auth0_UserCreator($this->a0_options);
+				$user_id = $creator->create( $userinfo, $id_token, $access_token );
 
 				wp_set_auth_cookie( $user_id );
 

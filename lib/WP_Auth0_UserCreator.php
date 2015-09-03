@@ -2,16 +2,24 @@
 
 class WP_Auth0_UserCreator {
 
-    public function tokenHasRequiredScopes($jwt) {
+  protected $a0_options;
+  protected $db_manager;
 
-        return (
-            (isset($jwt->email) || isset($jwt->nickname))
-            && isset($jwt->identities)
-        );
+  public function __construct(WP_Auth0_Options $a0_options) {
+    $this->a0_options = $a0_options;
+    $this->db_manager = new WP_Auth0_DBManager();
+  }
 
-    }
+  public function tokenHasRequiredScopes($jwt) {
 
-	public function create($userinfo, $token) {
+    return (
+        (isset($jwt->email) || isset($jwt->nickname))
+        && isset($jwt->identities)
+    );
+
+  }
+
+	public function create($userinfo, $token, $access_token) {
 
 		// If the user doesn't exist we need to either create a new one, or asign him to an existing one
         $isDatabaseUser = false;
@@ -41,6 +49,26 @@ class WP_Auth0_UserCreator {
                 throw new WP_Auth0_EmailNotVerifiedException($userinfo, $token);
             }
             $user_id = $joinUser->ID;
+
+            $link_auth0_users = $this->a0_options->get('link_auth0_users');
+
+            if ($link_auth0_users && $userinfo->email_verified) {
+
+              $domain = $this->a0_options->get('domain');
+              $a0_main_users = $this->db_manager->get_auth0_users(array($user_id));
+
+              if ( ! empty($a0_main_users) ) {
+
+                $a0_main_user_row = $a0_main_users[0];
+                $a0_main_user = unserialize( $a0_main_user_row->auth0_obj );
+
+                WP_Auth0_Api_Client::link_users($domain, $token, $a0_main_user_id, $userinfo->user_id, $userinfo->identities[0]->provider, $userinfo->identities[0]->connection);
+
+              }
+
+            }
+
+
         } elseif ($allow_signup) {
             // If we are here, we need to create the user
             $user_id = WP_Auth0_Users::create_user($userinfo);
@@ -60,25 +88,31 @@ class WP_Auth0_UserCreator {
 
         // If we are here we should have a valid $user_id with a new user or an existing one
         // log him in, and update the auth0_user table
-        self::insertAuth0User($userinfo, $user_id);
+        self::insertAuth0User($userinfo, $user_id, $token, $access_token);
 
         return $user_id;
 
 	}
 
-    public function insertAuth0User($userinfo, $user_id) {
+    public function insertAuth0User($userinfo, $user_id, $id_token, $access_token) {
         global $wpdb;
         $wpdb->insert(
             $wpdb->auth0_user,
             array(
                 'auth0_id' => $userinfo->user_id,
                 'wp_id' => $user_id,
-                'auth0_obj' => serialize($userinfo)
+                'auth0_obj' => serialize($userinfo),
+                'id_token' => $id_token,
+        				'access_token' => $access_token,
+        				'last_update' =>  date( 'c' ),
             ),
             array(
                 '%s',
                 '%d',
-                '%s'
+                '%s',
+                '%s',
+                '%s',
+                '%s',
             )
         );
     }

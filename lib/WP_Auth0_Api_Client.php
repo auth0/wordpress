@@ -446,4 +446,41 @@ class WP_Auth0_Api_Client {
 
 		return json_decode($response['body']);
 	}
+
+	public static function link_users($domain, $app_token, $main_user_id, $user_id, $provider, $connection_id = null) {
+		$endpoint = "https://$domain/api/v2/users/$main_user_id";
+
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+		$headers['content-type'] = "application/json";
+
+		$payload = array();
+		$payload['provider'] = $provider;
+		$payload['user_id'] = $user_id;
+		if ($connection_id) {
+			$payload['connection_id'] = $connection_id;
+		}
+
+		$response = wp_remote_post( $endpoint  , array(
+			'headers' => $headers,
+			'body' => json_encode($payload)
+		) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::link_users', $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] != 201 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::link_users', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		if ( $response['response']['code'] >= 300 ) return false;
+
+		return json_decode($response['body']);
+	}
 }
