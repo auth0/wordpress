@@ -309,7 +309,7 @@ class WP_Auth0_Api_Client {
 			return false;
 		}
 
-		if ( $response['response']['code'] != 200 ) {
+		if ( $response['response']['code'] != 201 ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_connection', $response['body'] );
 			error_log( $response['body'] );
 			return false;

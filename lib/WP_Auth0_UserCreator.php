@@ -46,9 +46,6 @@ class WP_Auth0_UserCreator {
             // If we are here, we have a potential join user
             // Don't allow creation or assignation of user if the email is not verified, that would
             // be hijacking
-            // if (!$userinfo->email_verified) {
-            //     throw new WP_Auth0_EmailNotVerifiedException($userinfo, $token);
-            // }
 
             if ($userinfo->email_verified) {
               $user_id = $joinUser->ID;

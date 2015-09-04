@@ -757,26 +757,27 @@ class WP_Auth0_Admin {
 
 			foreach($connections as $connection) {
 					if (in_array($input['client_id'], $connection->enabled_clients)) {
-						$connection_id = $connection->id;
+						$db_connection = $connection;
 					}
 			}
 
-			if ($connection_id === null) {
-				$error = __( 'There is not database connection enabled for this app. Create one ', WPA0_LANG );
-				$error .= '<a href="https://manage.auth0.com/#/connections/database">HERE</a>.';
-				$this->add_validation_error( $error );
-
-				$input['migration_ws'] = 0;
-				$input['migration_token'] = null;
-				$input['migration_token_id'] = null;
-
-				return $input;
-			}
+			// if ($connection_id === null) {
+			// 	$error = __( 'There is not database connection enabled for this app. Create one ', WPA0_LANG );
+			// 	$error .= '<a href="https://manage.auth0.com/#/connections/database">HERE</a>.';
+			// 	$this->add_validation_error( $error );
+			//
+			// 	$input['migration_ws'] = 0;
+			// 	$input['migration_token'] = null;
+			// 	$input['migration_token_id'] = null;
+			//
+			// 	return $input;
+			// }
 
 
 			if ( 1 == $input['migration_ws'] ) {
 
 				$secret = $this->a0_options->get( 'client_secret' );
+				$client_id = $this->a0_options->get( 'client_id' );
 				$token_id = uniqid();
 				$input['migration_token'] = JWT::encode(array('scope' => 'migration_ws', 'jti' => $token_id), JWT::urlsafeB64Decode( $secret ));
 				$input['migration_token_id'] = $token_id;
@@ -787,7 +788,12 @@ class WP_Auth0_Admin {
 				$get_user_script = str_replace('{THE_WS_TOKEN}', $input['migration_token'], WP_Auth0_CustomDBLib::$get_user_script);
 				$get_user_script = str_replace('{THE_WS_URL}', get_site_url() . '/migration-ws-get-user', $get_user_script);
 
-				$response = WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $connection_id, array(
+				$response = WP_Auth0_Api_Client::create_connection($input['domain'], $this->get_token(), array(
+					'name' => 'DB-' . str_replace(' ', '-', get_bloginfo('name')),
+					'strategy' => 'auth0',
+					'enabled_clients' => array(
+						$client_id
+					),
 					'options' => array(
 						'enabledDatabaseCustomization' => true,
 						'import_mode' => true,
@@ -802,13 +808,23 @@ class WP_Auth0_Admin {
 					$error = __( 'There was an error enabling your custom database. Check how to do it manually ', WPA0_LANG );
 					$error .= '<a href="https://manage.auth0.com/#/connections/database">HERE</a>.';
 					$this->add_validation_error( $error );
+				} elseif($db_connection !== null) {
+
+					$input['migration_connection_id'] = $response->id;
+
+					$enabled_clients = array_diff($db_connection->enabled_clients, array($client_id));
+
+					WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(),$db_connection->id, array(
+						'enabled_clients' => array_values($enabled_clients)
+					));
+
 				}
 
 			} else {
 				$input['migration_token'] = null;
 				$input['migration_token_id'] = null;
 
-				$response = WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $connection_id, array(
+				$response = WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $old_options['migration_connection_id'], array(
 					'options' => array(
 						'enabledDatabaseCustomization' => false,
 						'import_mode' => false
