@@ -40,36 +40,43 @@ class WP_Auth0_UserCreator {
         // $auto_provisioning = WP_Auth0_Options::get('auto_provisioning');
         // $allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled() || $auto_provisioning;
         $allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled();
+        $user_id = null;
 
         if (!is_null($joinUser) && $joinUser instanceof WP_User) {
             // If we are here, we have a potential join user
             // Don't allow creation or assignation of user if the email is not verified, that would
             // be hijacking
-            if (!$userinfo->email_verified) {
+            // if (!$userinfo->email_verified) {
+            //     throw new WP_Auth0_EmailNotVerifiedException($userinfo, $token);
+            // }
+
+            if ($userinfo->email_verified) {
+              $user_id = $joinUser->ID;
+
+              $link_auth0_users = $this->a0_options->get('link_auth0_users');
+
+              if ($access_token && $link_auth0_users && $userinfo->email_verified) {
+
+                $domain = $this->a0_options->get('domain');
+                $a0_main_users = $this->db_manager->get_auth0_users(array((string)$user_id));
+
+                if ( ! empty($a0_main_users) ) {
+
+                  $a0_main_user_row = $a0_main_users[0];
+                  $a0_main_user = unserialize( $a0_main_user_row->auth0_obj );
+
+                  $connection_id = $this->look_for_connection_id($domain, $access_token, $userinfo->identities[0]->connection, $userinfo->identities[0]->provider);
+
+                  $link_response = WP_Auth0_Api_Client::link_users($domain, $access_token, $a0_main_user->user_id, $userinfo->identities[0]->user_id, $userinfo->identities[0]->provider, $connection_id);
+
+                }
+              }
+            } else {
                 throw new WP_Auth0_EmailNotVerifiedException($userinfo, $token);
             }
-            $user_id = $joinUser->ID;
+        }
+        if ($allow_signup && is_null($user_id)) {
 
-            $link_auth0_users = $this->a0_options->get('link_auth0_users');
-
-            if ($link_auth0_users && $userinfo->email_verified) {
-
-              $domain = $this->a0_options->get('domain');
-              $a0_main_users = $this->db_manager->get_auth0_users(array($user_id));
-
-              if ( ! empty($a0_main_users) ) {
-
-                $a0_main_user_row = $a0_main_users[0];
-                $a0_main_user = unserialize( $a0_main_user_row->auth0_obj );
-
-                WP_Auth0_Api_Client::link_users($domain, $token, $a0_main_user_id, $userinfo->user_id, $userinfo->identities[0]->provider, $userinfo->identities[0]->connection);
-
-              }
-
-            }
-
-
-        } elseif ($allow_signup) {
             // If we are here, we need to create the user
             $user_id = WP_Auth0_Users::create_user($userinfo);
 
@@ -82,7 +89,7 @@ class WP_Auth0_UserCreator {
             }elseif ($user_id <0){
                 throw new WP_Auth0_CouldNotCreateUserException();
             }
-        } else {
+        } elseif ( ! $allow_signup) {
             throw new WP_Auth0_RegistrationNotEnabledException();
         }
 
@@ -115,6 +122,18 @@ class WP_Auth0_UserCreator {
                 '%s',
             )
         );
+    }
+
+    protected function look_for_connection_id($domain, $access_token, $connection_name, $provider) {
+
+      $connections = WP_Auth0_Api_Client::search_connection($domain, $access_token, $provider);
+      foreach ($connections as $connection) {
+        if ($connection->name === $connection_name) {
+          return $connection->id;
+        }
+      }
+      return null;
+
     }
 
 }

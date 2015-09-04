@@ -448,7 +448,7 @@ class WP_Auth0_Api_Client {
 	}
 
 	public static function link_users($domain, $app_token, $main_user_id, $user_id, $provider, $connection_id = null) {
-		$endpoint = "https://$domain/api/v2/users/$main_user_id";
+		$endpoint = "https://$domain/api/v2/users/$main_user_id/identities";
 
 		$headers = self::get_info_headers();
 

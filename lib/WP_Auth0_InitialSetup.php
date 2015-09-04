@@ -5,8 +5,8 @@ class WP_Auth0_InitialSetup {
     protected $a0_options;
 
     protected $domain = 'login0.myauth0.com';
-    protected $client_id = 'MefoL5F3mJHJ48RDbUTEertAWIT2nRCY';
-    protected $client_secret = 'QXxTULIzbPnfZTHk-PNZXIdkyEHNKmLhuuiqjk7qMfXAGc83tfQZvOV79-7iIXGv';
+    protected $client_id = 'vGzHpD0XGHAlR1JIECGbFVuCKTCECUt4';
+    protected $client_secret = '8U1joJzZwVb5EBa6PS4zCsZW1RbRaz6cvxuDYxCeCzXNdAwbikqh7VrzUuBduS0r';
 
     public function __construct(WP_Auth0_Options $a0_options) {
         $this->a0_options = $a0_options;

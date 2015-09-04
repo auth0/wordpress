@@ -142,7 +142,7 @@ $options = json_encode($lock_options->get_lock_options());
 
         <?php if( ! empty( $custom_js )) { ?>
 
-            <?php echo custom_js;?>
+            <?php echo $custom_js;?>
 
         <?php } ?>
 
