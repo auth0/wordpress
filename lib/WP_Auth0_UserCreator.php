@@ -19,7 +19,7 @@ class WP_Auth0_UserCreator {
 
   }
 
-	public function create($userinfo, $token, $access_token) {
+	public function create($userinfo, $token, $access_token, $role = null) {
 
 		// If the user doesn't exist we need to either create a new one, or asign him to an existing one
         $isDatabaseUser = false;
@@ -75,7 +75,7 @@ class WP_Auth0_UserCreator {
         if ($allow_signup && is_null($user_id)) {
 
             // If we are here, we need to create the user
-            $user_id = WP_Auth0_Users::create_user($userinfo);
+            $user_id = WP_Auth0_Users::create_user($userinfo, $role);
 
             // Check if user was created
 

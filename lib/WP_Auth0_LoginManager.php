@@ -3,9 +3,11 @@
 class WP_Auth0_LoginManager {
 
 	protected $a0_options;
+	protected $default_role;
 
-	public function __construct($a0_options = null) {
+	public function __construct($a0_options = null, $default_role = null) {
 
+		$this->default_role = $default_role;
 		if ($a0_options instanceof WP_Auth0_Options) {
 				$this->a0_options = $a0_options;
 		} else {
@@ -344,7 +346,7 @@ class WP_Auth0_LoginManager {
 
 			try {
 				$creator = new WP_Auth0_UserCreator($this->a0_options);
-				$user_id = $creator->create( $userinfo, $id_token, $access_token );
+				$user_id = $creator->create( $userinfo, $id_token, $access_token, $this->default_role );
 
 				wp_set_auth_cookie( $user_id );
 

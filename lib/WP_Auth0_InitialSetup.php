@@ -17,6 +17,9 @@ class WP_Auth0_InitialSetup {
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
         add_action( 'init', array( $this, 'init_setup' ), 1 );
 
+        add_action( 'admin_action_wpauth0_callback_step2', array($this, 'callback_step2') );
+        add_action( 'admin_action_wpauth0_callback_step3', array($this, 'callback_step3') );
+
         if ( ! isset( $_REQUEST['page'] ) || 'wpa0-setup' !== $_REQUEST['page'] ) {
           $client_id = $this->a0_options->get('client_id');
           $client_secret = $this->a0_options->get('client_secret');
@@ -61,10 +64,83 @@ class WP_Auth0_InitialSetup {
   	}
 
     public function render_setup_page() {
-        //cant_exchange_token cant_create_client
-        $consent_url = $this->build_consent_url();
-        include WPA0_PLUGIN_DIR . 'templates/initial-setup-step1.php';
+
+        $step = (isset($_REQUEST['step']) ? $_REQUEST['step'] : 1);
+        $method = $_SERVER['REQUEST_METHOD'];
+
+        if (is_numeric($step) && $step >= 1 && $step <= 5) {
+
+          $last_step = $this->a0_options->get('last_step');
+
+          if ($step > $last_step) {
+            $this->a0_options->set('last_step', $step);
+          }
+
+          switch ($step) {
+
+            case 1:
+              $consent_url = $this->build_consent_url();
+              include WPA0_PLUGIN_DIR . 'templates/initial-setup/consent-disclaimer.php';
+              break;
+
+            case 2:
+
+              $migration_ws = $this->a0_options->get('migration_ws');
+              $token = $this->a0_options->get('migration_token');
+              $token_id = $this->a0_options->get('migration_token_id');
+
+              if (empty($token) || empty($token_id)) {
+                $secret = $this->a0_options->get( 'client_secret' );
+        				$token_id = uniqid();
+        				$token = JWT::encode(array('scope' => 'migration_ws', 'jti' => $token_id), JWT::urlsafeB64Decode( $secret ));
+              }
+
+              include WPA0_PLUGIN_DIR . 'templates/initial-setup/data-migration.php';
+              break;
+
+            case 3:
+              wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
+              $client_id = $this->a0_options->get( 'client_id' );
+              $domain = $this->a0_options->get( 'domain' );
+              include WPA0_PLUGIN_DIR . 'templates/initial-setup/admin-creation.php';
+              break;
+
+            case 4:
+              die('LEVEL 4');
+          }
+        }
+
   	}
+
+    public function callback_step2() {
+      $migration_ws = (isset($_REQUEST['migration_ws']) ? $_REQUEST['migration_ws'] : false);
+      $migration_token = (isset($_REQUEST['migration_token']) ? $_REQUEST['migration_token'] : null);
+      $migration_token_id = (isset($_REQUEST['migration_token_id']) ? $_REQUEST['migration_token_id'] : null);
+
+      $app_token = $this->a0_options->get( 'auth0_app_token' );
+
+      $this->a0_options->set('migration_ws', $migration_ws);
+      $this->a0_options->set('migration_token', $migration_token);
+      $this->a0_options->set('migration_token_id', $migration_token_id);
+
+      if ($migration_ws) {
+        $operations = new WP_Auth0_Api_Operations($this->a0_options);
+        $migration_connection_id = $operations->enable_users_migration($app_token, $migration_token);
+        $this->a0_options->set( 'migration_connection_id', $migration_connection_id );
+      }
+
+      wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=3' ) );
+      exit;
+    }
+
+    public function callback_step3() {
+
+      wp_logout();
+      $login_manager = new WP_Auth0_LoginManager($this->a0_options, 'administrator');
+      $login_manager->implicit_login();
+
+      die('yeyy');
+    }
 
     public function cant_create_client_message() {
   		?>
@@ -128,7 +204,7 @@ class WP_Auth0_InitialSetup {
       }
 
       $name = get_bloginfo('name');
-      $this->step2_action($name);
+      $this->consent_callback($name);
     }
 
     protected function parse_token_domain($token) {
@@ -142,6 +218,8 @@ class WP_Auth0_InitialSetup {
 
       $scope = urlencode( implode( ' ', array(
           'read:connections',
+          'create:connections',
+          'update:connections',
           'create:clients'
       ) ) );
 
@@ -187,7 +265,7 @@ class WP_Auth0_InitialSetup {
       return true;
     }
 
-    public function step2_action($name) {
+    public function consent_callback($name) {
 
       $app_token = $this->a0_options->get( 'auth0_app_token' );
       $domain = $this->a0_options->get( 'domain' );
@@ -216,7 +294,7 @@ class WP_Auth0_InitialSetup {
           }
       }
 
-      wp_redirect( admin_url( 'admin.php?page=wpa0' ) );
+      wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=2' ) );
       exit();
 
     }

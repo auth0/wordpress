@@ -1,6 +1,6 @@
 <?php
 class WP_Auth0_Users {
-	public static function create_user( $userinfo ){
+	public static function create_user( $userinfo, $role = null ){
 		$email = null;
         if (isset($userinfo->email))
         {
@@ -46,8 +46,12 @@ class WP_Auth0_Users {
 			'user_pass' => $password,
 			'first_name' => $firstname,
 			'last_name' => $lastname,
-			'display_name' => $username
+			'display_name' => $username,
 		);
+
+		if ($role) {
+			$user_data['role'] = 'administrator';
+		}
 
 		// Update the user
 		$user_id = wp_insert_user( $user_data );
