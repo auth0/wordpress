@@ -19,6 +19,7 @@ class WP_Auth0_InitialSetup {
 
         add_action( 'admin_action_wpauth0_callback_step2', array($this, 'callback_step2') );
         add_action( 'admin_action_wpauth0_callback_step3', array($this, 'callback_step3') );
+        add_action( 'admin_action_wpauth0_callback_step4', array($this, 'callback_step4') );
 
         if ( ! isset( $_REQUEST['page'] ) || 'wpa0-setup' !== $_REQUEST['page'] ) {
           $client_id = $this->a0_options->get('client_id');
@@ -106,7 +107,8 @@ class WP_Auth0_InitialSetup {
               break;
 
             case 4:
-              die('LEVEL 4');
+              include WPA0_PLUGIN_DIR . 'templates/initial-setup/connections.php';
+              break;
           }
         }
 
@@ -134,12 +136,13 @@ class WP_Auth0_InitialSetup {
     }
 
     public function callback_step3() {
-
       wp_logout();
       $login_manager = new WP_Auth0_LoginManager($this->a0_options, 'administrator');
       $login_manager->implicit_login();
+    }
 
-      die('yeyy');
+    public function callback_step4() {
+
     }
 
     public function cant_create_client_message() {
