@@ -72,7 +72,11 @@ class WP_Auth0_InitialSetup_Connections {
           $input["social_{$provider_name}_key"] = $_REQUEST["social_{$provider_name}_key"];
           $input["social_{$provider_name}_secret"] = $_REQUEST["social_{$provider_name}_secret"];
 
-          $input = $operations->social_validation($this->get_token(), $old_input, $input, $provider_name, $provider['options']);
+          try {
+            $input = $operations->social_validation($this->get_token(), $old_input, $input, $provider_name, $provider['options'] );
+          } catch (Exception $e) {
+            die($e->getMessage());
+          }
         }
 
         foreach ($input as $key => $value) {
@@ -82,4 +86,7 @@ class WP_Auth0_InitialSetup_Connections {
         wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=5' ) );
       }
 
-    }
+      public function add_validation_error($error) {
+        die($error);
+      }
+}

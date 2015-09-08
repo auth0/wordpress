@@ -512,12 +512,13 @@ class WP_Auth0_Admin {
 
 	public function render_fullcontact() {
 		$v = $this->a0_options->get( 'fullcontact' );
+		$apikey = $this->a0_options->get( 'fullcontact_apikey' );
 		?>
-			<input type="checkbox" id="wpa0_fullcontact" value="1" <?php echo (empty($v) ? '' : 'checked'); ?> />
+			<input type="checkbox" id="wpa0_fullcontact" name="<?php echo $this->a0_options->get_options_name(); ?>[fullcontact]" value="1" <?php echo (empty($v) ? '' : 'checked'); ?> />
 
 			<div class="subelement fullcontact <?php echo (empty($v) ? 'hidden' : ''); ?>">
 				<label for="wpa0_fullcontact_key" id="wpa0_fullcontact_key_label">Enter your FullContact api key:</label>
-				<input type="text" id="wpa0_fullcontact_key" name="<?php echo $this->a0_options->get_options_name(); ?>[fullcontact]" value="<?php echo $v; ?>" />
+				<input type="text" id="wpa0_fullcontact_key" name="<?php echo $this->a0_options->get_options_name(); ?>[fullcontact_apikey]" value="<?php echo $apikey; ?>" />
 			</div>
 
 			<div class="subelement">
@@ -792,140 +793,79 @@ class WP_Auth0_Admin {
 	}
 
 	public function fullcontact_validation( $old_options, $input ) {
-		if ($old_options['fullcontact'] != $input['fullcontact']) {
-			if (!empty($input['fullcontact'])) {
-				$fullcontact_script = WP_Auth0_RulesLib::$fullcontact['script'];
-				$fullcontact_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['fullcontact'], $fullcontact_script);
-				$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $this->get_token(), WP_Auth0_RulesLib::$fullcontact['name'], $fullcontact_script);
+		$fullcontact_script = WP_Auth0_RulesLib::$fullcontact['script'];
+		$fullcontact_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['fullcontact_apikey'], $fullcontact_script);
+		return $this->rule_validation($old_options, $input, 'fullcontact', WP_Auth0_RulesLib::$fullcontact['name'], $fullcontact_script);
+	}
 
-				if ( $rule === false ) {
-					$error = __( 'There was an error creating the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
-					$this->add_validation_error( $error );
-					$input['fullcontact'] = 0;
-				} else {
-					$input['fullcontact_rule'] = $rule->id;
-				}
-			}
-			else {
-				if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], $this->get_token(), $old_options['fullcontact_rule']) ) {
-					$error = __( 'There was an error deleting your Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
-					$this->add_validation_error( $error );
-				}
-				$input['fullcontact'] = null;
+	public function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {
+		$input[$key] = ( isset( $input[$key] ) ? $input[$key] : null );
+
+		if ($input[$key] !== null && $old_options[$key] === null || $input[$key] === null && $old_options[$key] !== null) {
+			try {
+
+				$operations = new WP_Auth0_Api_Operations($this->a0_options);
+				$input[$key] = $operations->toggle_rule ( $this->get_token(), (is_null($input[$key]) ? $old_options[$key] : null), $rule_name, $rule_script );
+
+			} catch (Exception $e) {
+				$this->add_validation_error( $e->getMessage() );
+				$input[$key] = null;
 			}
 		}
+
 		return $input;
 	}
 
 	public function mfa_validation( $old_options, $input ) {
-		$input['mfa'] = ( isset( $input['mfa'] ) ? $input['mfa'] : 0 );
-
-		if ($old_options['mfa'] == null && 1 == $input['mfa']) {
-			$mfa_script = WP_Auth0_RulesLib::$google_MFA['script'];
-			$mfa_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $mfa_script);
-			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $this->get_token(), WP_Auth0_RulesLib::$google_MFA['name'], $mfa_script);
-
-			if ( $rule === false ) {
-				$error = __( 'There was an error creating the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
-				$this->add_validation_error( $error );
-				$input['mfa'] = 0;
-			} else {
-				$input['mfa'] = $rule->id;
-			}
-
-		}
-		elseif ($old_options['mfa'] != null && 0 == $input['mfa']) {
-			if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], $this->get_token(), $old_options['mfa']) ) {
-				$error = __( 'There was an error deleting the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
-				$this->add_validation_error( $error );
-				$input['mfa'] = 1;
-			}
-			$input['mfa'] = null;
-		}
-		else {
-			$input['mfa'] = $old_options['mfa'];
-		}
-		return $input;
+		$mfa_script = WP_Auth0_RulesLib::$google_MFA['script'];
+		$mfa_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $mfa_script);
+		return $this->rule_validation($old_options, $input, 'mfa', WP_Auth0_RulesLib::$google_MFA['name'], $mfa_script);
 	}
 
 	public function georule_validation( $old_options, $input ) {
-		$input['geo_rule'] = ( isset( $input['geo_rule'] ) ? $input['geo_rule'] : 0 );
-		if ($old_options['geo_rule'] == null && 1 == $input['geo_rule']) {
-			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $this->get_token(), WP_Auth0_RulesLib::$geo['name'], WP_Auth0_RulesLib::$geo['script']);
-
-			if ( $rule === false ) {
-				$error = __( 'There was an error creating the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
-				$this->add_validation_error( $error );
-				$input['geo_rule'] = 0;
-			} else {
-				$input['geo_rule'] = $rule->id;
-			}
-		}
-		elseif ($old_options['geo_rule'] != null && 0 == $input['geo_rule']) {
-			if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], $this->get_token(), $old_options['geo_rule']) ) {
-				$error = __( 'There was an error deleting the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
-				$this->add_validation_error( $error );
-			}
-			$input['geo_rule'] = null;
-		}
-		else {
-			$input['geo_rule'] = $old_options['geo_rule'];
-		}
-		return $input;
+		return $this->rule_validation($old_options, $input, 'geo_rule', WP_Auth0_RulesLib::$geo['name'], WP_Auth0_RulesLib::$geo['script']);
 	}
 
 	public function incomerule_validation( $old_options, $input ) {
-		$input['income_rule'] = ( isset( $input['income_rule'] ) ? $input['income_rule'] : 0 );
-
-		if ($old_options['income_rule'] == null && 1 == $input['income_rule']) {
-			$rule = WP_Auth0_Api_Client::create_rule($input['domain'], $this->get_token(), WP_Auth0_RulesLib::$income['name'], WP_Auth0_RulesLib::$income['script']);
-
-			if ( $rule === false ) {
-				$error = __( 'There was an error creating the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
-				$this->add_validation_error( $error );
-				$input['income_rule'] = 0;
-			} else {
-				$input['income_rule'] = $rule->id;
-			}
-		}
-		elseif ($old_options['income_rule'] != null && 0 == $input['income_rule']) {
-			if ( false === WP_Auth0_Api_Client::delete_rule($input['domain'], $this->get_token(), $old_options['income_rule']) ) {
-				$error = __( 'There was an error deleting the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
-				$this->add_validation_error( $error );
-				$input['income_rule'] = 1;
-			}
-			$input['income_rule'] = null;
-		}
-		else {
-			$input['income_rule'] = $old_options['income_rule'];
-		}
-		return $input;
+		return $this->rule_validation($old_options, $input, 'income_rule', WP_Auth0_RulesLib::$income['name'], WP_Auth0_RulesLib::$income['script']);
 	}
 
 	public function socialfacebook_validation( $old_options, $input ) {
-		$operations = new WP_Auth0_Api_Operations($this->a0_options);
-		return $operations->social_validation( $this->get_token(), $old_options, $input, 'facebook', array(
-			"public_profile" => true,
-			"email" => true,
-			"user_birthday" => true,
-			"publish_actions" => true,
-		) );
+		try {
+			$operations = new WP_Auth0_Api_Operations($this->a0_options);
+			return $operations->social_validation( $this->get_token(), $old_options, $input, 'facebook', array(
+				"public_profile" => true,
+				"email" => true,
+				"user_birthday" => true,
+				"publish_actions" => true,
+			) );
+		} catch (Exception $e) {
+			$this->add_validation_error($e->getMessage());
+		}
  	}
 
 	public function socialtwitter_validation( $old_options, $input ) {
-		$operations = new WP_Auth0_Api_Operations($this->a0_options);
-		return $operations->social_validation( $this->get_token(), $old_options, $input, 'twitter', array(
-			"profile" => true,
-		) );
+		try{
+			$operations = new WP_Auth0_Api_Operations($this->a0_options);
+			return $operations->social_validation( $this->get_token(), $old_options, $input, 'twitter', array(
+				"profile" => true,
+			) );
+		} catch (Exception $e) {
+			$this->add_validation_error($e->getMessage());
+		}
  	}
 
 	public function socialgoogle_validation( $old_options, $input ) {
-		$operations = new WP_Auth0_Api_Operations($this->a0_options);
-		return $operations->social_validation( $this->get_token(), $old_options, $input, 'google-oauth2', array(
-			"google_plus" => true,
-			"email" => true,
+		try {
+			$operations = new WP_Auth0_Api_Operations($this->a0_options);
+			return $operations->social_validation( $this->get_token(), $old_options, $input, 'google-oauth2', array(
+				"google_plus" => true,
+				"email" => true,
       		"profile" => true,
-		) );
+			) );
+		} catch (Exception $e) {
+			$this->add_validation_error($e->getMessage());
+		}
  	}
 
 	public function loginredirection_validation( $old_options, $input ) {

@@ -136,7 +136,7 @@ class WP_Auth0_Api_Operations {
 
 					if ( false === WP_Auth0_Api_Client::update_connection($domain, $app_token, $selected_connection->id, $data) ) {
 						$error = __( 'There was an error updating your social connection', WPA0_LANG );
-						$this->add_validation_error( $error );
+						throw new Exception( $error );
 
 						$input[$main_key] = 0;
 
@@ -147,7 +147,8 @@ class WP_Auth0_Api_Operations {
 					$input["{$main_key}_key"] = $selected_connection->options->client_id;
 					$input["{$main_key}_secret"] = $selected_connection->options->client_secret;
 
-					$this->add_validation_error('The connection has already setted an api key and secret and can not be overrided. Please update them from the <a href="https://manage.auth0.com/#/connections/social">Auth0 dashboard</a>');
+					$error = 'The connection has already setted an api key and secret and can not be overrided. Please update them from the <a href="https://manage.auth0.com/#/connections/social">Auth0 dashboard</a>';
+          throw new Exception( $error );
 
 					$data = array(
 						'options' => array_merge($connection_options, array(
@@ -159,7 +160,7 @@ class WP_Auth0_Api_Operations {
 
 					if ( false === WP_Auth0_Api_Client::update_connection($domain, $app_token, $selected_connection->id, $data) ) {
 						$error = __( 'There was an error updating your social connection', WPA0_LANG );
-						$this->add_validation_error( $error );
+						throw new Exception( $error );
 
 						$input[$main_key] = 0;
 
@@ -180,7 +181,7 @@ class WP_Auth0_Api_Operations {
 
 					if ( false === WP_Auth0_Api_Client::create_connection($domain, $app_token, $data) ) {
 						$error = __( 'There was an error creating your social connection', WPA0_LANG );
-						$this->add_validation_error( $error );
+						throw new Exception( $error );
 
 						$input[$main_key] = 0;
 
@@ -200,7 +201,7 @@ class WP_Auth0_Api_Operations {
 
 					if ( false === $a = WP_Auth0_Api_Client::update_connection($domain, $app_token, $selected_connection->id, $data) ) {
 						$error = __( 'There was an error disabling your social connection for this app.', WPA0_LANG );
-						$this->add_validation_error( $error );
+						throw new Exception( $error );
 						$input[$main_key] = 1;
 					}
 				}
@@ -211,9 +212,28 @@ class WP_Auth0_Api_Operations {
 		return $input;
 	}
 
+  //$input['geo_rule'] = ( isset( $input['geo_rule'] ) ? $input['geo_rule'] : 0 );
+  //$enable = ($old_options['geo_rule'] == null && 1 == $input['geo_rule'])
+  public function toggle_rule ($app_token, $rule_id, $rule_name, $rule_script) {
+    $domain = $this->a0_options->get( 'domain' );
+		if (is_null($rule_id)) {
+			$rule = WP_Auth0_Api_Client::create_rule( $domain, $app_token, $rule_name, $rule_script );
 
-  protected function add_validation_error($error) {
-    die($error);
+			if ( $rule === false ) {
+				$error = __( 'There was an error creating the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
+        throw new Exception( $error );
+			} else {
+				return $rule->id;
+			}
+		}
+		else {
+			if ( false === WP_Auth0_Api_Client::delete_rule($domain, $app_token, $rule_id) ) {
+				$error = __( 'There was an error deleting the Auth0 rule. You can do it manually from your Auth0 dashboard.', WPA0_LANG );
+        throw new Exception( $error );
+			}
+      return null;
+		}
   }
+
 
 }
