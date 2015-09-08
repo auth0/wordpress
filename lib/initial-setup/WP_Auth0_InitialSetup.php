@@ -8,6 +8,7 @@ class WP_Auth0_InitialSetup {
     protected $migration_step;
     protected $adminuser_step;
     protected $connections_step;
+    protected $rules_step;
 
     public function __construct(WP_Auth0_Options $a0_options) {
         $this->a0_options = $a0_options;
@@ -16,6 +17,7 @@ class WP_Auth0_InitialSetup {
         $this->migration_step = new WP_Auth0_InitialSetup_Migration($this->a0_options);
         $this->adminuser_step = new WP_Auth0_InitialSetup_AdminUser($this->a0_options);
         $this->connections_step = new WP_Auth0_InitialSetup_Connections($this->a0_options);
+        $this->rules_step = new WP_Auth0_InitialSetup_Rules($this->a0_options);
     }
 
     public function init() {
@@ -26,6 +28,7 @@ class WP_Auth0_InitialSetup {
         add_action( 'admin_action_wpauth0_callback_step2', array($this->migration_step, 'callback') );
         add_action( 'admin_action_wpauth0_callback_step3', array($this->adminuser_step, 'callback') );
         add_action( 'admin_action_wpauth0_callback_step4', array($this->connections_step, 'callback') );
+        add_action( 'admin_action_wpauth0_callback_step5', array($this->rules_step, 'callback') );
 
         if ( ! isset( $_REQUEST['page'] ) || 'wpa0-setup' !== $_REQUEST['page'] ) {
           $client_id = $this->a0_options->get('client_id');
@@ -97,6 +100,10 @@ class WP_Auth0_InitialSetup {
 
             case 4:
               $this->connections_step->render($step);
+              break;
+
+            case 5:
+              $this->rules_step->render($step);
               break;
           }
         }

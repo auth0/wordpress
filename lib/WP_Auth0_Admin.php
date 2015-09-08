@@ -904,7 +904,7 @@ class WP_Auth0_Admin {
 
 	public function socialfacebook_validation( $old_options, $input ) {
 		$operations = new WP_Auth0_Api_Operations($this->a0_options);
-		return $operations->social_validation( $old_options, $input, 'facebook', array(
+		return $operations->social_validation( $this->get_token(), $old_options, $input, 'facebook', array(
 			"public_profile" => true,
 			"email" => true,
 			"user_birthday" => true,
@@ -914,14 +914,14 @@ class WP_Auth0_Admin {
 
 	public function socialtwitter_validation( $old_options, $input ) {
 		$operations = new WP_Auth0_Api_Operations($this->a0_options);
-		return $operations->social_validation( $old_options, $input, 'twitter', array(
+		return $operations->social_validation( $this->get_token(), $old_options, $input, 'twitter', array(
 			"profile" => true,
 		) );
  	}
 
 	public function socialgoogle_validation( $old_options, $input ) {
 		$operations = new WP_Auth0_Api_Operations($this->a0_options);
-		return $operations->social_validation( $old_options, $input, 'google-oauth2', array(
+		return $operations->social_validation( $this->get_token(), $old_options, $input, 'google-oauth2', array(
 			"google_plus" => true,
 			"email" => true,
       		"profile" => true,

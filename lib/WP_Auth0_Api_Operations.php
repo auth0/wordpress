@@ -10,7 +10,6 @@ class WP_Auth0_Api_Operations {
   public function enable_users_migration($app_token, $migration_token) {
 
     $domain = $this->a0_options->get( 'domain' );
-    $secret = $this->a0_options->get( 'client_secret' );
     $client_id = $this->a0_options->get( 'client_id' );
 
     $connections = WP_Auth0_Api_Client::search_connection($domain, $app_token, 'auth0');
@@ -74,7 +73,11 @@ class WP_Auth0_Api_Operations {
 	 * In the case that the user disable the connection on WP, it check if there is an active connection with the client_id.
 	 * - If exists, it will remove the client_id and if there is no other client_id it will delete the connection.
 	 */
-	public function social_validation( $old_options, $input, $strategy, $connection_options ) {
+	public function social_validation( $app_token, $old_options, $input, $strategy, $connection_options ) {
+    $domain = $this->a0_options->get( 'domain' );
+    $secret = $this->a0_options->get( 'client_secret' );
+    $client_id = $this->a0_options->get( 'client_id' );
+
 		$main_key = "social_$strategy";
 
 		$input[$main_key] = ( isset( $input[$main_key] ) ? $input[$main_key]  : 0);
@@ -87,7 +90,7 @@ class WP_Auth0_Api_Operations {
 			$old_options["{$main_key}_secret"] != $input["{$main_key}_secret"]
 			) {
 
-			$connections = WP_Auth0_Api_Client::search_connection($input['domain'], $this->get_token(), $strategy);
+			$connections = WP_Auth0_Api_Client::search_connection($domain, $app_token, $strategy);
 
 			// if ( ! $connections ) {
 			// 	$error = __( 'There was an error searching your active social connections.', WPA0_LANG );
@@ -101,20 +104,20 @@ class WP_Auth0_Api_Operations {
 			$selected_connection = null;
 
 			foreach ($connections as $connection) {
-				if (in_array($input['client_id'], $connection->enabled_clients)) {
+				if (in_array($client_id, $connection->enabled_clients)) {
 					$selected_connection = $connection;
 					break;
 				} elseif ( ! $selected_connection && count($connection->enabled_clients) == 0 ) {
 					$selected_connection = $connection;
-					$selected_connection->enabled_clients[] = $input['client_id'];
+					$selected_connection->enabled_clients[] = $client_id;
 				} elseif ( $connection->name == 'facebook' ) {
 					$selected_connection = $connection;
-					$selected_connection->enabled_clients[] = $input['client_id'];
+					$selected_connection->enabled_clients[] = $client_id;
 				}
 			}
 			if ( $selected_connection === null && count($connections) === 1) {
 				$selected_connection = $connections[0];
-				$selected_connection->enabled_clients[] = $input['client_id'];
+				$selected_connection->enabled_clients[] = $client_id;
 			}
 
 			if ( $input[$main_key] ) {
@@ -129,7 +132,7 @@ class WP_Auth0_Api_Operations {
 						'enabled_clients' => $connection->enabled_clients
 					);
 
-					if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $selected_connection->id, $data) ) {
+					if ( false === WP_Auth0_Api_Client::update_connection($domain, $app_token, $selected_connection->id, $data) ) {
 						$error = __( 'There was an error updating your social connection', WPA0_LANG );
 						$this->add_validation_error( $error );
 
@@ -152,7 +155,7 @@ class WP_Auth0_Api_Operations {
 						'enabled_clients' => $connection->enabled_clients
 					);
 
-					if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $selected_connection->id, $data) ) {
+					if ( false === WP_Auth0_Api_Client::update_connection($domain, $app_token, $selected_connection->id, $data) ) {
 						$error = __( 'There was an error updating your social connection', WPA0_LANG );
 						$this->add_validation_error( $error );
 
@@ -166,14 +169,14 @@ class WP_Auth0_Api_Operations {
 					$data = array(
 						'name' => $strategy,
 						'strategy' => $strategy,
-						'enabled_clients' => array( $input['client_id'] ),
+						'enabled_clients' => array( $client_id ),
 						'options' => array_merge($connection_options, array(
 							"client_id" => $input["{$main_key}_key"],
       						"client_secret" => $input["{$main_key}_secret"],
 						) ),
 					);
 
-					if ( false === WP_Auth0_Api_Client::create_connection($input['domain'], $this->get_token(), $data) ) {
+					if ( false === WP_Auth0_Api_Client::create_connection($domain, $app_token, $data) ) {
 						$error = __( 'There was an error creating your social connection', WPA0_LANG );
 						$this->add_validation_error( $error );
 
@@ -188,12 +191,12 @@ class WP_Auth0_Api_Operations {
 				if ($selected_connection) {
 					$data['enabled_clients'] = array();
 					foreach ($selected_connection->enabled_clients as $client) {
-						if ($client != $input['client_id']) {
+						if ($client != $client_id) {
 							$data['enabled_clients'][] = $client;
 						}
 					}
 
-					if ( false === $a = WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $selected_connection->id, $data) ) {
+					if ( false === $a = WP_Auth0_Api_Client::update_connection($domain, $app_token, $selected_connection->id, $data) ) {
 						$error = __( 'There was an error disabling your social connection for this app.', WPA0_LANG );
 						$this->add_validation_error( $error );
 						$input[$main_key] = 1;
@@ -205,5 +208,10 @@ class WP_Auth0_Api_Operations {
 
 		return $input;
 	}
+
+
+  protected function add_validation_error($error) {
+    die($error);
+  }
 
 }
