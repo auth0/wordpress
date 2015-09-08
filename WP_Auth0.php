@@ -254,6 +254,7 @@ class WP_Auth0 {
 		$paths[] = $path.'lib/';
 		$paths[] = $path.'lib/exceptions/';
 		$paths[] = $path.'lib/wizard/';
+		$paths[] = $path.'lib/initial-setup/';
 		$paths[] = $path.'lib/dashboard-widgets/';
 		$paths[] = $path.'lib/twitter-api-php/';
 		$paths[] = $path.'lib/php-jwt/Exceptions/';
