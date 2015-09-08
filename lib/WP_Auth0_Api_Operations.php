@@ -122,12 +122,14 @@ class WP_Auth0_Api_Operations {
 
 			if ( $input[$main_key] ) {
 
-				if ( $selected_connection && empty($selected_connection->options->client_id) && empty($selected_connection->options->client_secret) ) {
+				if ( $selected_connection &&
+          ( empty($selected_connection->options->client_id) || $selected_connection->options->client_id === $input["{$main_key}_key"] ) &&
+          ( empty($selected_connection->options->client_secret) || $selected_connection->options->client_secret === $input["{$main_key}_secret"] ) ) {
 
 					$data = array(
 						'options' => array_merge($connection_options, array(
 							"client_id" => $input["{$main_key}_key"],
-      						"client_secret" => $input["{$main_key}_secret"],
+      				"client_secret" => $input["{$main_key}_secret"],
 						) ),
 						'enabled_clients' => $connection->enabled_clients
 					);
