@@ -53,6 +53,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
             'mfa' => null,
             'fullcontact' => null,
             'fullcontact_rule' => null,
+            'fullcontact_apikey' => null,
             'geo_rule' => null,
             'income_rule' => null,
             'link_auth0_users' => true,

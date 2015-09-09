@@ -10,13 +10,85 @@ class WP_Auth0_InitialSetup_Rules {
 
     public function render($step) {
 
+      $mfa = $this->a0_options->get('mfa');
+      $geo = $this->a0_options->get('geo_rule');
+      $income = $this->a0_options->get('income_rule');
+      $fullcontact = $this->a0_options->get('fullcontact');
+      $fullcontact_apikey = $this->a0_options->get('fullcontact_apikey');
 
       include WPA0_PLUGIN_DIR . 'templates/initial-setup/rules.php';
     }
 
     public function callback() {
-      die('rules callback');
-      exit;
+
+      $client_id = $this->a0_options->get('client_id');
+
+      $keys = array(
+        'mfa',
+        'geo_rule',
+        'income_rule',
+        'fullcontact',
+        'fullcontact_apikey',
+      );
+
+      $input = array();
+      $old_options = array();
+
+      foreach ($keys as $key) {
+        $input[$key] = $_REQUEST[$key];
+        $old_options[$key] = $this->a0_options->get($key);
+      }
+
+  		$mfa_script = WP_Auth0_RulesLib::$google_MFA['script'];
+  		$mfa_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $client_id, $mfa_script);
+  		$input = $this->rule_validation($old_options, $input, 'mfa', WP_Auth0_RulesLib::$google_MFA['name'], $mfa_script);
+
+   	  $input = $this->rule_validation($old_options, $input, 'geo_rule', WP_Auth0_RulesLib::$geo['name'], WP_Auth0_RulesLib::$geo['script']);
+
+  		$input = $this->rule_validation($old_options, $input, 'income_rule', WP_Auth0_RulesLib::$income['name'], WP_Auth0_RulesLib::$income['script']);
+
+  		$fullcontact_script = WP_Auth0_RulesLib::$fullcontact['script'];
+  		$fullcontact_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['fullcontact_apikey'], $fullcontact_script);
+      $input = $this->rule_validation($old_options, $input, 'fullcontact', WP_Auth0_RulesLib::$fullcontact['name'], $fullcontact_script);
+
+      foreach ($keys as $key) {
+        $this->a0_options->set($key, $input[$key]);
+      }
+
+      die('done');
+  	}
+
+  	public function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {
+  		$input[$key] = ( isset( $input[$key] ) ? $input[$key] : null );
+
+  		if ($input[$key] !== null && $old_options[$key] === null || $input[$key] === null && $old_options[$key] !== null) {
+  			try {
+
+  				$operations = new WP_Auth0_Api_Operations($this->a0_options);
+  				$input[$key] = $operations->toggle_rule ( $this->get_token(), (is_null($input[$key]) ? $old_options[$key] : null), $rule_name, $rule_script );
+
+  			} catch (Exception $e) {
+  				$this->add_validation_error( $e->getMessage() );
+  				$input[$key] = null;
+  			}
+  		}
+
+  		return $input;
+  	}
+
+    public function add_validation_error($error) {
+      die($error);
+    }
+
+    protected $token = null;
+    protected function get_token() {
+      if ( $this->token === null ) {
+        $user = get_currentauth0user();
+        if ($user && isset($user->access_token)) {
+          $this->token = $user->access_token;
+        }
+      }
+      return $this->token;
     }
 
   }
