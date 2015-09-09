@@ -55,7 +55,7 @@ class WP_Auth0_InitialSetup_Rules {
         $this->a0_options->set($key, $input[$key]);
       }
 
-      die('done');
+      wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=6' ) );
   	}
 
   	public function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {

@@ -9,6 +9,7 @@ class WP_Auth0_InitialSetup {
     protected $adminuser_step;
     protected $connections_step;
     protected $rules_step;
+    protected $end_step;
 
     public function __construct(WP_Auth0_Options $a0_options) {
         $this->a0_options = $a0_options;
@@ -18,6 +19,7 @@ class WP_Auth0_InitialSetup {
         $this->adminuser_step = new WP_Auth0_InitialSetup_AdminUser($this->a0_options);
         $this->connections_step = new WP_Auth0_InitialSetup_Connections($this->a0_options);
         $this->rules_step = new WP_Auth0_InitialSetup_Rules($this->a0_options);
+        $this->end_step = new WP_Auth0_InitialSetup_End($this->a0_options);
     }
 
     public function init() {
@@ -104,6 +106,10 @@ class WP_Auth0_InitialSetup {
 
             case 5:
               $this->rules_step->render($step);
+              break;
+
+            case 6:
+              $this->end_step->render($step);
               break;
           }
         }
