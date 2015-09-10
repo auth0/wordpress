@@ -79,7 +79,7 @@ class WP_Auth0_InitialSetup {
 
         $step = (isset($_REQUEST['step']) ? $_REQUEST['step'] : 1);
 
-        if (is_numeric($step) && $step >= 1 && $step <= 5) {
+        if (is_numeric($step) && $step >= 1 && $step <= 6) {
 
           $last_step = $this->a0_options->get('last_step');
 

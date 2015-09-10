@@ -90,6 +90,26 @@ class WP_Auth0_Admin {
 	}
 
 	public function init_admin() {
+		if (isset($_REQUEST['export'])) {
+			$this->export_settings();
+		} else {
+			$this->render_settings();
+		}
+	}
+
+	protected function export_settings() {
+		header('Content-Type: application/json');
+		$name = urlencode(get_bloginfo('name'));
+		header("Content-Disposition: attachment; filename=auth0_for_wordpress_settings-$name.json");
+		header('Pragma: no-cache');
+
+
+		$settings = $this->a0_options->get_options();
+		echo json_encode($settings);
+		exit;
+	}
+
+	protected function render_settings() {
 
 		/* ------------------------- BASIC ------------------------- */
 
@@ -152,6 +172,7 @@ class WP_Auth0_Admin {
 			array( 'id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges', 'function' => 'render_ip_ranges' ),
 			array( 'id' => 'wpa0_extra_conf', 'name' => 'Extra settings', 'function' => 'render_extra_conf' ),
 			array( 'id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url' ),
+			array( 'id' => 'wpa0_metrics', 'name' => 'Anonymous data', 'function' => 'render_metrics' ),
 
 		);
 
@@ -456,6 +477,17 @@ class WP_Auth0_Admin {
 			</div>
 		<?php
 	}
+	public function render_metrics() {
+		$v = absint( $this->a0_options->get( 'metrics' ) );
+		?>
+			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[metrics]" id="wpa0_metrics" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			<div class="subelement">
+				<span class="description">
+					<?php echo __( 'This plugin tracks anonymous usage data. Click to disable.', WPA0_LANG ); ?>
+				</span>
+			</div>
+		<?php
+	}
 
 	public function render_singlelogout() {
 		$v = absint( $this->a0_options->get( 'singlelogout' ) );
@@ -713,6 +745,7 @@ class WP_Auth0_Admin {
 		$input['gravatar'] = ( isset( $input['gravatar'] ) ? $input['gravatar'] : 0 );
 		$input['remember_last_login'] = ( isset( $input['remember_last_login'] ) ? $input['remember_last_login'] : 0 );
 		$input['singlelogout'] = ( isset( $input['singlelogout'] ) ? $input['singlelogout'] : 0 );
+		$input['metrics'] = ( isset( $input['metrics'] ) ? $input['metrics'] : 0 );
 		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
 		$input['auth0_app_token'] = $old_options['auth0_app_token'];
 		$input['auth0_app_token'] = $old_options['auth0_app_token'];

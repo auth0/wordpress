@@ -80,6 +80,9 @@ class WP_Auth0 {
 		$this->router = new WP_Auth0_Routes($this->a0_options);
 		$this->router->init();
 
+		$metrics = new WP_Auth0_Metrics($this->a0_options);
+		$metrics->init();
+
 		$auth0_admin = new WP_Auth0_Admin($this->a0_options, $this->router);
 		$auth0_admin->init();
 

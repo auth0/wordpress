@@ -124,6 +124,9 @@ class WP_Auth0_LoginManager {
 	public function init_auth0() {
 		global $wp_query;
 
+		// WP_Auth0_Seeder::get_me(100);
+		// exit;
+
 		if ( ! isset( $wp_query->query_vars['auth0'] ) ) {
 			return;
 		}

@@ -24,6 +24,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
     protected function defaults(){
         return array(
             'version' => 1,
+            'metrics' => 1,
             'last_step' => 1,
             'auto_login' => 0,
             'auto_login_method' => '',
