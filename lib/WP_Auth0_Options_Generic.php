@@ -10,7 +10,7 @@ class WP_Auth0_Options_Generic {
 
     public function get_options(){
         if(empty($this->_opt)){
-            $options = get_option( $this->options_name, array());
+            $options = get_site_option( $this->options_name, array());
 
             if(!is_array($options))
                 $options = $this->defaults();
@@ -35,7 +35,7 @@ class WP_Auth0_Options_Generic {
         $options[$key] = $value;
         $this->_opt = $options;
 
-        update_option( $this->options_name, $options );
+        update_site_option( $this->options_name, $options );
     }
 
     protected function defaults(){

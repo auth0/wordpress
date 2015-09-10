@@ -62,7 +62,7 @@ class WP_Auth0_DBManager {
 		foreach ( $sql as $s ) {
 			dbDelta( $s );
 		}
-		update_option( 'auth0_db_version', AUTH0_DB_VERSION );
+		update_site_option( 'auth0_db_version', AUTH0_DB_VERSION );
 
 
 		$options = WP_Auth0_Options::Instance();

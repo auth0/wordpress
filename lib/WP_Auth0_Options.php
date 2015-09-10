@@ -14,7 +14,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
     public function is_wp_registration_enabled()
     {
-        return (get_option('users_can_register', 0) == 1);
+        return (get_site_option('users_can_register', 0) == 1);
     }
 
     public function get_enabled_connections() {
