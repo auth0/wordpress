@@ -14,9 +14,12 @@ class WP_Auth0_Metrics {
 
   public function render() {
 
-    $enabled_pages = array('wpa0', 'wpa0-setup');
+    $enabled_pages = array('wpa0', 'wpa0-setup', 'users', 'wpa0-users-export');
+    $screen = get_current_screen();
 
-    if ( ! isset( $_REQUEST['page'] ) || !in_array( $_REQUEST['page'], $enabled_pages ) ) {
+    if ( (! isset( $_REQUEST['page'] ) && empty($screen) )
+          || (!in_array( $_REQUEST['page'], $enabled_pages ) && !in_array( $screen->id, $enabled_pages ) )
+    ) {
 			return;
 		}
 

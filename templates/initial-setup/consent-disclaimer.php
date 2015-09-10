@@ -33,3 +33,19 @@
 
 
 </div>
+
+<?php if($need_event_track) { ?>
+<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function() {
+		if (typeof(a0metricsLib) !== 'undefined') {
+			a0metricsLib.track('submit:settings', {
+				site_title:'<?php echo $site_title; ?>',
+				site_url:'<?php echo $site_url; ?>',
+				lock_version:'<?php echo $lock_version; ?>',
+				wordpress_url:'<?php echo $wordpress_url; ?>',
+				plugin_version:'<?php echo $plugin_version; ?>'
+			});
+		}
+	});
+</script>
+<?php } ?>

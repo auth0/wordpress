@@ -14,6 +14,23 @@ class WP_Auth0_InitialSetup_Consent {
 
   public function render($step) {
     $consent_url = $this->build_consent_url();
+
+    $need_event_track = isset($_REQUEST['activation']);
+
+    $lock_version = null;
+    $lock_url = $this->a0_options->get('cdn_url');
+    if (preg_match('/^.*lock-([\.0-9]+)(\.min)?\.js/', $lock_url, $matches)) {
+      if (isset($matches[1])) {
+        $lock_version = $matches[1];
+      }
+    }
+
+
+    $site_title = get_bloginfo('name');
+    $site_url = get_bloginfo('url');
+    $wordpress_url = get_bloginfo('wpurl');
+    $plugin_version = WPA0_VERSION;
+
     include WPA0_PLUGIN_DIR . 'templates/initial-setup/consent-disclaimer.php';
   }
 

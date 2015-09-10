@@ -30,8 +30,8 @@ class WP_Auth0_Settings_Section {
         $client_secret = $this->a0_options->get('client_secret');
         $domain = $this->a0_options->get('domain');
 
-        $show_initial_setup = ( ( ! $client_id) || ( ! $client_secret) || ( ! $domain) ) ;
-$show_initial_setup = true;
+        $show_initial_setup = true || ( ( ! $client_id) || ( ! $client_secret) || ( ! $domain) ) ;
+
         $main_menu = 'wpa0';
 
         if ( $show_initial_setup ) {

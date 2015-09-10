@@ -7,7 +7,7 @@
         </div>
     <?php } ?>
     <?php settings_errors(); ?>
-	<form action="options.php" method="post" onsubmit="return presubmit(this);">
+	<form action="options.php" method="post" onsubmit="return presubmit();">
 		<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() ); ?>
 		<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() ); ?>
 		<?php submit_button(); ?>
@@ -15,8 +15,7 @@
 </div>
 
 <script type="text/javascript">
-	function presubmit(ele) {
-		console.log(ele);
+	function presubmit() {
 		if (typeof(a0metricsLib) !== 'undefined') {
 			a0metricsLib.track('submit:settings', {});
 		}

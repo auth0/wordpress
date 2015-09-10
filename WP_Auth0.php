@@ -44,6 +44,8 @@ class WP_Auth0 {
 		register_activation_hook( WPA0_PLUGIN_FILE, array( $this, 'install' ) );
 		register_deactivation_hook( WPA0_PLUGIN_FILE, array( $this, 'uninstall' ) );
 
+		add_action( 'activated_plugin', array($this, 'on_activate_redirect') );
+
 		// Add an action to append a stylesheet for the login page.
 		add_action( 'login_enqueue_scripts', array( $this, 'render_auth0_login_css' ) );
 
@@ -112,6 +114,22 @@ class WP_Auth0 {
 
 		$edit_profile = new WP_Auth0_EditProfile($this->db_manager, $this->a0_options);
 		$edit_profile->init();
+	}
+
+	function on_activate_redirect( $plugin ) {
+		if( $plugin == plugin_basename( __FILE__ ) ) {
+			$client_id = $this->a0_options->get('client_id');
+			$client_secret = $this->a0_options->get('client_secret');
+			$domain = $this->a0_options->get('domain');
+
+			$show_initial_setup = ( ( ! $client_id) || ( ! $client_secret) || ( ! $domain) ) ;
+
+			if ($show_initial_setup) {
+					exit( wp_redirect( admin_url( 'admin.php?page=wpa0-setup&activation=1' ) ) );
+			} else {
+					exit( wp_redirect( admin_url( 'admin.php?page=wpa0' ) ) );
+			}
+		}
 	}
 
 	public static function get_plugin_dir_url() {
