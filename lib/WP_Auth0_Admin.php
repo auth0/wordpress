@@ -90,26 +90,6 @@ class WP_Auth0_Admin {
 	}
 
 	public function init_admin() {
-		if (isset($_REQUEST['export'])) {
-			$this->export_settings();
-		} else {
-			$this->render_settings();
-		}
-	}
-
-	protected function export_settings() {
-		header('Content-Type: application/json');
-		$name = urlencode(get_bloginfo('name'));
-		header("Content-Disposition: attachment; filename=auth0_for_wordpress_settings-$name.json");
-		header('Pragma: no-cache');
-
-
-		$settings = $this->a0_options->get_options();
-		echo json_encode($settings);
-		exit;
-	}
-
-	protected function render_settings() {
 
 		/* ------------------------- BASIC ------------------------- */
 
@@ -170,7 +150,6 @@ class WP_Auth0_Admin {
 			array( 'id' => 'wpa0_auto_login_method', 'name' => 'Auto Login Method', 'function' => 'render_auto_login_method' ),
 			array( 'id' => 'wpa0_ip_range_check', 'name' => 'Enable on IP Ranges', 'function' => 'render_ip_range_check' ),
 			array( 'id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges', 'function' => 'render_ip_ranges' ),
-			array( 'id' => 'wpa0_extra_conf', 'name' => 'Extra settings', 'function' => 'render_extra_conf' ),
 			array( 'id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url' ),
 			array( 'id' => 'wpa0_metrics', 'name' => 'Anonymous data', 'function' => 'render_metrics' ),
 
@@ -184,20 +163,6 @@ class WP_Auth0_Admin {
 
 		$options_name = $this->a0_options->get_options_name();
 		register_setting( $options_name, $options_name, array( $this, 'input_validator' ) );
-	}
-
-	public function render_extra_conf() {
-		$v = $this->a0_options->get( 'extra_conf' );
-	?>
-		<textarea name="<?php echo $this->a0_options->get_options_name(); ?>[extra_conf]" id="wpa0_extra_conf"><?php echo esc_attr( $v ); ?></textarea>
-		<div class="subelement">
-			<span class="description">
-				<?php echo __( 'This field is the JSon that describes the options to call Lock with. It\'ll override any other option set here. See all the posible options ', WPA0_LANG ); ?>
-				<a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization"><?php echo __( 'here', WPA0_LANG ); ?></a>
-				(IE: <code>{"disableResetAction": true }</code>)
-			</span>
-		</div>
-	<?php
 	}
 
 	public function render_remember_last_login() {

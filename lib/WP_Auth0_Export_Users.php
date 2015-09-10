@@ -2,6 +2,8 @@
 
 class WP_Auth0_Export_Users {
 
+  protected $db_manager;
+
   public function __construct(WP_Auth0_DBManager $db_manager) {
     $this->db_manager = $db_manager;
   }

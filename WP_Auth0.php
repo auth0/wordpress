@@ -106,7 +106,10 @@ class WP_Auth0 {
 		$users_exporter = new WP_Auth0_Export_Users($this->db_manager);
 		$users_exporter->init();
 
-		$settings_section = new WP_Auth0_Settings_Section($this->a0_options, $initial_setup, $users_exporter, $configure_jwt_auth, $error_log, $dashboard_preferences, $auth0_admin);
+		$import_settings = new WP_Auth0_Import_Settings($this->a0_options);
+		$import_settings->init();
+
+		$settings_section = new WP_Auth0_Settings_Section($this->a0_options, $initial_setup, $users_exporter, $configure_jwt_auth, $error_log, $dashboard_preferences, $auth0_admin, $import_settings);
 		$settings_section->init();
 
 		$this->social_amplificator = new WP_Auth0_Amplificator($this->db_manager, $this->a0_options);
