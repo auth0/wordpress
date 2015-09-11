@@ -55,9 +55,9 @@ class WP_Auth0_Dashboard_Plugins_Signups extends WP_Auth0_Dashboard_Plugins_Gene
                         columns: [
                             x_arr,
                             data_arr
-                        ]
+                        ],
+                        type: 'spline'
                     },
-                    type: 'spline',
                     axis: {
                         x: {
                             type: 'timeseries',
