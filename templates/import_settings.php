@@ -4,9 +4,9 @@
 
 	<div class="container">
 
-    <form action="options.php" method="post" onsubmit="return presubmit_import();">
+    <form action="options.php" method="post" onsubmit="return presubmit_import();" enctype="multipart/form-data">
 			<input type="hidden" name="action" value="wpauth0_import_settings" />
-
+			<input type="file" name="settings-file" />
 			<textarea name="settings-json"></textarea>
 
 			<div class="text-alone"><input type="submit" name="setup" value="Import" class="button button-primary"/></div>
