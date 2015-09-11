@@ -26,6 +26,7 @@ class WP_Auth0_Dashboard_Widgets  {
 
 		wp_enqueue_script( 'auth0-dashboard-d3', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/d3/d3.min.js' );
 		wp_enqueue_script( 'auth0-dashboard-c3-js', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/c3/c3.min.js' );
+		wp_enqueue_script( 'auth0-markerclusterer', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/markerclusterer.js' );
 
 		$users = $this->db_manager->get_auth0_users();
 

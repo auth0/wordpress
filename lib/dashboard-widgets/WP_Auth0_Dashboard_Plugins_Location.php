@@ -44,17 +44,18 @@ class WP_Auth0_Dashboard_Plugins_Location extends WP_Auth0_Dashboard_Plugins_Gen
 
                     function codeAddress(latitude, longitude) {
                         var marker = new google.maps.Marker({
-                            map: map,
                             position: new google.maps.LatLng(latitude, longitude)
                         });
                         bounds.extend(marker.position);
+                        return marker;
                     }
 
                     var data = <?php echo json_encode($data);?>;
 
-                    data.forEach(function(d){
-                        codeAddress(d.latitude, d.longitude);
+                    var markers = data.map(function(d){
+                        return codeAddress(d.latitude, d.longitude);
                     });
+                    var markerCluster = new MarkerClusterer(map, markers);
 
                     map.fitBounds(bounds);
                 }
