@@ -54,12 +54,36 @@ class WP_Auth0_Dashboard_Preferences {
 
 		) );
 
+    $this->init_option_section( 'Gender setup', array(
+
+			array( 'id' => 'wpa0_chart_age_from', 'name' => 'Age', 'function' => 'render_age_from' ),
+			array( 'id' => 'wpa0_chart_age_to', 'name' => 'Identity providers', 'function' => 'render_age_to' ),
+			array( 'id' => 'wpa0_chart_age_step', 'name' => 'Gender', 'function' => 'render_age_step' ),
+
+		) );
+
     $options_name = $this->dashboard_options->get_options_name();
     register_setting( $options_name, $options_name, array( $this, 'input_validator' ) );
   }
 
   public function render_chart_types_description() {
 
+  }
+
+  public function render_gender_setup_description() {
+    ?>
+    <table class="form-table"><tbody><tr><td>
+      <p>This is how the ages are grouped in the chart. Ie, using from 10 to 30 with a step of 5 will create the following buckets:</p>
+      <ul class="auth0">
+        <li>< 10</li>
+        <li>from 10 to 14</li>
+        <li>from 15 to 19</li>
+        <li>from 20 to 24</li>
+        <li>from 25 to 29</li>
+        <li>>= 30</li>
+      </ul>
+    </td></tr></tbody></table>
+    <?php
   }
 
   public function render_age_chart_type() {
@@ -72,6 +96,33 @@ class WP_Auth0_Dashboard_Preferences {
     &nbsp;
     <input type="radio" name="<?php echo $this->dashboard_options->get_options_name() ?>[chart_age_type]" id="wpa0_auth0_age_chart_type_bar" value="bar" <?php echo checked( $v, 'bar', false ); ?>/>
     <label for="wpa0_auth0_age_chart_type_bars"><?php echo __( 'Bars', WPA0_LANG ); ?></label>
+
+    <?php
+  }
+
+  public function render_age_from() {
+  	$v = absint($this->dashboard_options->get( 'chart_age_from' ));
+    ?>
+
+    <input type="number" name="<?php echo $this->dashboard_options->get_options_name() ?>[chart_age_from]" id="wpa0_auth0_age_from" value="<?php echo $v; ?>" />
+
+    <?php
+  }
+
+  public function render_age_to() {
+  	$v = absint($this->dashboard_options->get( 'chart_age_to' ));
+    ?>
+
+    <input type="number" name="<?php echo $this->dashboard_options->get_options_name() ?>[chart_age_to]" id="wpa0_auth0_age_to" value="<?php echo $v; ?>" />
+
+    <?php
+  }
+
+  public function render_age_step() {
+  	$v = absint($this->dashboard_options->get( 'chart_age_step' ));
+    ?>
+
+    <input type="number" name="<?php echo $this->dashboard_options->get_options_name() ?>[chart_age_step]" id="wpa0_auth0_age_step" value="<?php echo $v; ?>" />
 
     <?php
   }

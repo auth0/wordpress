@@ -10,10 +10,10 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
     protected $type;
     protected $has_data = false;
 
-    public function __construct($type) {
-        $this->type = $type;
+    public function __construct(WP_Auth0_Dashboard_Options $dashboard_options) {
+      $this->dashboard_options = $dashboard_options;
+      $this->type = $this->dashboard_options->get('chart_gender_type');
     }
-
 
     protected function getType($user) {
         $this->has_data = true;

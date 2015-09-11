@@ -5,14 +5,60 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
     protected $id = 'auth0_dashboard_widget_age';
     protected $name = 'Auth0 - User\'s Age';
     protected $type;
+    protected $buckets;
 
-    public function __construct($type) {
-        $this->type = $type;
+    public function __construct(WP_Auth0_Dashboard_Options $dashboard_options) {
+      $this->dashboard_options = $dashboard_options;
+      $this->type = $this->dashboard_options->get('chart_age_type');
+      $this->buckets = $this->get_buckets(
+        $this->dashboard_options->get('chart_age_from'),
+        $this->dashboard_options->get('chart_age_to'),
+        $this->dashboard_options->get('chart_age_step')
+      );
     }
 
     protected function getType($user) {
         $age = $user->get_age();
-        return $age ? $age : self::UNKNOWN_KEY;
+
+        if (!$age) {
+          return self::UNKNOWN_KEY;
+        }
+
+        foreach($this->buckets as $bucket) {
+          if ($age >= $bucket['from'] && $age <= $bucket['to']) {
+            return $bucket['name'];
+          }
+        }
+
+        return self::UNKNOWN_KEY;
+    }
+
+    protected function get_buckets($from, $to, $step) {
+
+      $buckets = array();
+
+      $buckets[] = array(
+        'from' => 0,
+        'to' => $from - 1,
+        'name' => $step == 1 ? ($from - 1) : ('< ' . ($from - 1)),
+      );
+
+      for ($a = $from; $a < $to; $a += $step) {
+        $buckets[] = array(
+          'from' => $a,
+          'to' => $a + $step - 1,
+          'name' => $step == 1 ? $a : ($a . '-' . ($a + $step - 1)),
+        );
+      }
+
+      $buckets[] = array(
+        'from' => $a,
+        'to' => 200,
+        'name' => $step == 1 ? $a : ('>= ' . $a),
+      );
+
+      return $buckets;
+
     }
 
     public function render() {
