@@ -438,7 +438,7 @@ class WP_Auth0_Admin {
 			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[brute_force_protection]" id="wpa0_brute_force_protection" value="1" <?php echo checked( $v, 1, false ); ?>/>
 			<div class="subelement">
 				<span class="description">
-					<?php echo __( 'Mark this if you want to enable Brute Force.', WPA0_LANG ); ?>
+					<?php echo __( 'Mark this if you want to enable Brute Force Protection.', WPA0_LANG ); ?>
 				</span>
 			</div>
 		<?php
