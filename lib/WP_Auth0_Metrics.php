@@ -18,7 +18,7 @@ class WP_Auth0_Metrics {
     $screen = get_current_screen();
 
     if ( (! isset( $_REQUEST['page'] ) && empty($screen) )
-          || (!in_array( $_REQUEST['page'], $enabled_pages ) && !in_array( $screen->id, $enabled_pages ) )
+          || (isset( $_REQUEST['page'] ) && !in_array( $_REQUEST['page'], $enabled_pages ) && !in_array( $screen->id, $enabled_pages ) )
     ) {
 			return;
 		}
