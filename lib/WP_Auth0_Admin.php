@@ -108,6 +108,8 @@ class WP_Auth0_Admin {
 
 		$this->init_option_section( $this->build_section_title( 'Features', self::FEATURES_DESCRIPTION ), 'features',array(
 
+			array( 'id' => 'wpa0_brute_force_protection', 'name' => 'Brute Force Protection', 'function' => 'render_brute_force_protection' ),
+			array( 'id' => 'wpa0_password_policy', 'name' => 'Password Policy', 'function' => 'render_password_policy' ),
 			array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)', 'function' => 'render_sso' ),
 			array( 'id' => 'wpa0_singlelogout', 'name' => 'Single Logout', 'function' => 'render_singlelogout' ),
 			array( 'id' => 'wpa0_mfa', 'name' => 'Multifactor Authentication (MFA)', 'function' => 'render_mfa' ),
@@ -430,6 +432,35 @@ class WP_Auth0_Admin {
 		<?php
 	}
 
+	public function render_brute_force_protection() {
+		$v = absint( $this->a0_options->get( 'brute_force_protection' ) );
+		?>
+			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[brute_force_protection]" id="wpa0_brute_force_protection" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			<div class="subelement">
+				<span class="description">
+					<?php echo __( 'Mark this if you want to enable Brute Force.', WPA0_LANG ); ?>
+				</span>
+			</div>
+		<?php
+	}
+
+	public function render_password_policy() {
+		$v = $this->a0_options->get( 'password_policy' );
+		?>
+			<input type="radio" name="<?php echo $this->a0_options->get_options_name(); ?>[password_policy]" id="wpa0_password_policy_none" value="" <?php echo checked( $v, null, false ); ?>/><label for="wpa0_password_policy_none">None</label>
+			<input type="radio" name="<?php echo $this->a0_options->get_options_name(); ?>[password_policy]" id="wpa0_password_policy_low" value="low" <?php echo checked( $v, 'low', false ); ?>/><label for="wpa0_password_policy_low">Low</label>
+			<input type="radio" name="<?php echo $this->a0_options->get_options_name(); ?>[password_policy]" id="wpa0_password_policy_fair" value="fair" <?php echo checked( $v, 'fair', false ); ?>/><label for="wpa0_password_policy_fair">Fair</label>
+			<input type="radio" name="<?php echo $this->a0_options->get_options_name(); ?>[password_policy]" id="wpa0_password_policy_good" value="good" <?php echo checked( $v, 'good', false ); ?>/><label for="wpa0_password_policy_good">Good</label>
+			<input type="radio" name="<?php echo $this->a0_options->get_options_name(); ?>[password_policy]" id="wpa0_password_policy_excellent" value="excellent" <?php echo checked( $v, 'excellent', false ); ?>/><label for="wpa0_password_policy_excellent">Excellent</label>
+			<div class="subelement">
+				<span class="description">
+					<?php echo __( 'For more info about the password policies check ', WPA0_LANG ); ?>
+					<a target="_blank" href="https://auth0.com/docs/password-strength"><?php echo __( 'HERE', WPA0_LANG ); ?></a>
+				</span>
+			</div>
+		<?php
+	}
+
 	public function render_sso() {
 		$v = absint( $this->a0_options->get( 'sso' ) );
 		?>
@@ -746,6 +777,39 @@ class WP_Auth0_Admin {
 		return $input;
 	}
 
+	public function security_validation( $old_options, $input ) {
+
+		$input['brute_force_protection'] = ( isset( $input['brute_force_protection'] ) ? $input['brute_force_protection'] : 0 );
+		$input['password_policy'] = ( isset( $input['password_policy'] ) && $input['password_policy'] != "" ? $input['password_policy'] : null );
+
+		if ($old_options['brute_force_protection'] != $input['brute_force_protection'] ||
+				$old_options['password_policy'] != $input['password_policy']) {
+
+			$connections = WP_Auth0_Api_Client::search_connection($input['domain'], $this->get_token(), 'auth0');
+
+			foreach ($connections as $connection) {
+
+				if ( in_array($input['client_id'], $connection->enabled_clients) ) {
+					if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $connection->id, array(
+						'options' => array(
+							'brute_force_protection' => $input['brute_force_protection'],
+							'passwordPolicy' => $input['password_policy'],
+						)
+					) ) ) {
+
+						$error = __( 'There was an error updating your Auth0 DB Connection. To do it manually, change it ', WPA0_LANG );
+						$error .= '<a href="https://manage.auth0.com/#/connections/database">HERE</a>.';
+						$this->add_validation_error( $error );
+
+					}
+				}
+
+			}
+
+		}
+		return $input;
+	}
+
 	public function migration_ws_validation( $old_options, $input ) {
 		$input['migration_ws'] = ( isset( $input['migration_ws'] ) ? $input['migration_ws'] : 0 );
 
@@ -930,6 +994,7 @@ class WP_Auth0_Admin {
 		$actions_middlewares = array(
 			'basic_validation',
 			'sso_validation',
+			'security_validation',
 			'migration_ws_validation',
 			'fullcontact_validation',
 			'mfa_validation',

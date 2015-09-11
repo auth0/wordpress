@@ -80,6 +80,9 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
             'social_google-oauth2_key' => null,
             'social_google-oauth2_secret' => null,
 
+            'password_policy' => null,
+            'brute_force_protection' => false,
+
             // 'auto_provisioning' => true,
             'default_login_redirection' => home_url(),
         );

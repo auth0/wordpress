@@ -118,6 +118,13 @@ class WP_Auth0_InitialSetup_Consent {
             $this->a0_options->set( "social_{$connection->name}_secret" , isset($connection->options->client_secret) ? $connection->options->client_secret : null );
 
         }
+
+        if ( $connection->strategy === 'auth0' && in_array($input['client_id'], $connection->enabled_clients) && isset($connection->options) ) {
+
+          $this->a0_options->set( "brute_force_protection" , isset($connection->options->brute_force_protection) ? $connection->options->brute_force_protection : false );
+          $this->a0_options->set( "password_policy" , isset($connection->options->passwordPolicy) ? $connection->options->passwordPolicy : null );
+
+				}
     }
 
     wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=2' ) );

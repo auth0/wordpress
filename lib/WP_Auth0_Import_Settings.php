@@ -52,10 +52,10 @@ class WP_Auth0_Import_Settings {
 
         if ( $movefile && !isset( $movefile['error'] ) ) {
 
-          $settings_json = stripslashes(file_get_contents($movefile['file']));
+          $settings_json = file_get_contents($movefile['file']);
           unlink($movefile['file']);
 
-          if ( !empty($settings_json)) {
+          if ( empty($settings_json)) {
             exit( wp_redirect( admin_url( 'admin.php?page=wpa0-import-settings&error=' . urlencode('The settings file is empty.') ) ) );
           }
 
@@ -87,7 +87,7 @@ class WP_Auth0_Import_Settings {
     } else {
       $settings_json = trim(stripslashes($_POST['settings-json']));
 
-      if ( !empty($settings_json)) {
+      if ( empty($settings_json)) {
         exit( wp_redirect( admin_url( 'admin.php?page=wpa0-import-settings&error=' . urlencode('Please upload the Auth0 for Wordpress setting file or copy the content.') ) ) );
       }
 
