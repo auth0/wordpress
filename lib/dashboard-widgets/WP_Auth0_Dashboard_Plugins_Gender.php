@@ -15,45 +15,15 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
       $this->type = $this->dashboard_options->get('chart_gender_type');
     }
 
-    protected function getType($user) {
-        $this->has_data = true;
-        $gender = $user->get_gender();
-        return $gender ? $gender : self::UNKNOWN_KEY;
-    }
-
     public function render() {
-        $data = $this->users;
-
-        if ( ! $this->has_data ) {
-            echo "No data available";
-            return;
-        }
-
-        $chartData = array();
-
-        if ( $this->type == 'pie' ) {
-            foreach ( $data as $key => $value ) {
-                $chartData[] = array( $key, $value );
-            }
-        } else {
-            $keys = array_keys($data);
-            $values = array_values($data);
-
-            array_unshift($keys, 'x');
-            array_unshift($values, 'Users count');
-
-            $chartData[] = $keys;
-            $chartData[] = $values;
-        }
 
         $chartSetup = array(
             'bindto' => '#auth0ChartGender',
             'data' => array(
-                'columns' => $chartData,
                 'type' => $this->type,
             ),
             'color' => array(
-              'pattern' => array('#ff4282','#3e68ef', '#CACACA','#1ABC9C','#2ECC71','#3498DB','#9B59B6','#34495E','#F1C40F','#E67E22','#E74C3C','#F39C12'),
+              'pattern' => array('#ff4282','#3e68ef', '#1ABC9C','#2ECC71','#3498DB','#9B59B6','#34495E','#F1C40F','#E67E22','#E74C3C','#F39C12'),
             ),
             'axis' => array(
                 'x' => array(
@@ -70,9 +40,52 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
         ?>
         <div id="auth0ChartGender"></div>
         <script type="text/javascript">
-            (function(){
-                var chart = c3.generate(<?php echo json_encode($chartSetup);?>);
-            })();
+
+          function a0_gender_chart(raw_data, filter_callback) {
+            var _this = this;
+            this.name = 'gender';
+
+            var setup = <?php echo json_encode($chartSetup);?>;
+            setup.data.columns = this.process_data(raw_data);
+            setup.data.onmouseover = function (d, i) { filter_callback(_this, function(e) { return e.gender == d.id; } ); },
+            setup.data.onmouseout = function (d, i) { filter_callback(_this, null); },
+            setup.data.color = function (color, d) {
+              return (d === '<?php echo WP_Auth0_Dashboard_Widgets::UNKNOWN_KEY; ?>') ? '#CACACA' : color;
+            };
+            this.chart = c3.generate(setup);
+          }
+
+          a0_gender_chart.prototype.load = function(raw_data) {
+            this.chart.load({
+              columns: this.process_data(raw_data)
+            });
+          }
+
+          a0_gender_chart.prototype.process_data = function(raw_data) {
+            var grouped_data = _.groupBy(raw_data, function(e) { return e.gender; });
+
+            <?php if($this->type === 'pie') {?>
+              var data = Object.keys(grouped_data).map(function(key) {
+                return [key, grouped_data[key].length];
+              });
+            <?php } else {?>
+              var data = [];
+              var keys = Object.keys(grouped_data);
+
+              var values = keys.map(function(key) {
+                return grouped_data[key].length;
+              });
+
+              keys.unshift('x');
+              values.unshift('Users count');
+
+              data.push(keys);
+              data.push(values);
+            <?php } ?>
+
+            return data;
+          }
+
         </script>
         <?php
     }

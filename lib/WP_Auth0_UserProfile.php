@@ -9,6 +9,21 @@ class WP_Auth0_UserProfile {
         $this->profile = unserialize($str);
     }
 
+    public function get() {
+      return array(
+        'gender' => $this->get_gender(),
+        'age' => $this->get_age(),
+        'created_at' => $this->get_created_at(),
+        'idp' => $this->get_idp(),
+        'location' => array(
+          'latitude' => $this->get_latitude(),
+          'longitude' => $this->get_longitude(),
+        ),
+        'zipcode' => $this->get_zipcode(),
+        'income' => $this->get_income(),
+      );
+    }
+
     public function get_email() {
         return isset( $this->profile->email ) ? $this->profile->email : null;
     }

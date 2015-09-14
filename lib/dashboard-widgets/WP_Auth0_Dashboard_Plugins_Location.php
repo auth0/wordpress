@@ -9,59 +9,63 @@ class WP_Auth0_Dashboard_Plugins_Location extends WP_Auth0_Dashboard_Plugins_Gen
         wp_enqueue_script( 'auth0-dashboard-gmaps-js', 'https://maps.googleapis.com/maps/api/js' );
     }
 
-    public function addUser($user) {
-        $this->users[] = array(
-            "latitude" => $user->get_latitude(),
-            "longitude" => $user->get_longitude(),
-        );
-    }
-
     public function render() {
-        $data = $this->users;
-
-        if (empty($data)) {
-            echo "No data available";
-            return;
-        }
 
         ?>
         <div id="auth0ChartLocations" style="height: 320px;"></div>
         <script type="text/javascript">
 
-            (function(){
-                function initialize() {
-                    var geocoder = new google.maps.Geocoder();
-                    var bounds = new google.maps.LatLngBounds();
+          function a0_location_chart(raw_data) {
+            var _this = this;
+            this.name = 'location';
 
-                    var map = new google.maps.Map(document.getElementById('auth0ChartLocations'), {
-                      minZoom: 1,
-                      maxZoom: 15,
-                      streetViewControl: false,
-                      mapTypeControl:false,
-                      styles:[{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#e0efef"}]},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"hue":"#1900ff"},{"color":"#c0e8e8"}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":100},{"visibility":"simplified"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"visibility":"on"},{"lightness":700}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#7dcdcd"}]}]    ,
-                      mapTypeId: google.maps.MapTypeId.ROADMAP
-                    });
+            this.bounds = new google.maps.LatLngBounds();
 
-                    function codeAddress(latitude, longitude) {
-                        var marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(latitude, longitude)
-                        });
-                        bounds.extend(marker.position);
-                        return marker;
-                    }
+            this.map = new google.maps.Map(document.getElementById('auth0ChartLocations'), {
+              minZoom: 1,
+              maxZoom: 15,
+              streetViewControl: false,
+              mapTypeControl:false,
+              styles:[{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#e0efef"}]},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"hue":"#1900ff"},{"color":"#c0e8e8"}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":100},{"visibility":"simplified"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"visibility":"on"},{"lightness":700}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#7dcdcd"}]}]    ,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
 
-                    var data = <?php echo json_encode($data);?>;
+            this.load(raw_data);
+          }
 
-                    var markers = data.map(function(d){
-                        return codeAddress(d.latitude, d.longitude);
-                    });
-                    var markerCluster = new MarkerClusterer(map, markers);
+          a0_location_chart.prototype.load = function(raw_data) {
+            if (this.markerCluster) {
+              this.markerCluster.clearMarkers();
+            }
 
-                    map.fitBounds(bounds);
-                }
+            var data = this.process_data(raw_data);
+            var _this = this;
+            function addMarker(latitude, longitude) {
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(latitude, longitude)
+                });
+                _this.bounds.extend(marker.position);
+                return marker;
+            }
 
-                google.maps.event.addDomListener(window, 'load', initialize);
-            })();
+            var markers = data.map(function(d){
+                return addMarker(d.location.latitude, d.location.longitude);
+            });
+
+            this.markerCluster = new MarkerClusterer(this.map, markers);
+
+            this.map.fitBounds(this.bounds);
+          }
+
+          a0_location_chart.prototype.process_data = function(raw_data) {
+            var grouped_data = _.groupBy(raw_data, function(e) { return e.location.latitude+"|"+e.location.longitude; });
+
+            var data = Object.keys(grouped_data).map(function(key) {
+              return grouped_data[key][0];
+            });
+
+            return data;
+          }
 
         </script>
         <?php
