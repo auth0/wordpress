@@ -54,11 +54,11 @@ class WP_Auth0_Dashboard_Preferences {
 
 		) );
 
-    $this->init_option_section( 'Gender setup', array(
+    $this->init_option_section( 'Age chart setup', array(
 
-			array( 'id' => 'wpa0_chart_age_from', 'name' => 'Age', 'function' => 'render_age_from' ),
-			array( 'id' => 'wpa0_chart_age_to', 'name' => 'Identity providers', 'function' => 'render_age_to' ),
-			array( 'id' => 'wpa0_chart_age_step', 'name' => 'Gender', 'function' => 'render_age_step' ),
+			array( 'id' => 'wpa0_chart_age_from', 'name' => 'Age buckets start', 'function' => 'render_age_from' ),
+			array( 'id' => 'wpa0_chart_age_to', 'name' => 'Age buckets end', 'function' => 'render_age_to' ),
+			array( 'id' => 'wpa0_chart_age_step', 'name' => 'Age buckets step', 'function' => 'render_age_step' ),
 
 		) );
 
@@ -70,7 +70,7 @@ class WP_Auth0_Dashboard_Preferences {
 
   }
 
-  public function render_gender_setup_description() {
+  public function render_age_chart_setup_description() {
     ?>
     <table class="form-table"><tbody><tr><td>
       <p>This is how the ages are grouped in the chart. Ie, using from 10 to 30 with a step of 5 will create the following buckets:</p>
