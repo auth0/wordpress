@@ -6,6 +6,11 @@ class WP_Auth0_InitialSetup_Consent {
   protected $client_id = 'vGzHpD0XGHAlR1JIECGbFVuCKTCECUt4';
   protected $client_secret = '8U1joJzZwVb5EBa6PS4zCsZW1RbRaz6cvxuDYxCeCzXNdAwbikqh7VrzUuBduS0r';
 
+/*
+$client_id = base64_decode('QmxjVlh0VXVmRm54cnZUTFdLRXBTNG9ET3hCZm95eFo=');
+$client_secret = base64_decode('a3JrN09COFJBWngwQ0JkcVEwdXVmV1k5WjJLdTUxV0l6Ml9qRjM3aVVSMmpQbWU5RjNUT1lBNmJUVkpseFNldQ==');
+*/
+
   protected $a0_options;
 
   public function __construct(WP_Auth0_Options $a0_options) {

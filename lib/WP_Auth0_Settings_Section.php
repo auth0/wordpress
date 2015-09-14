@@ -32,7 +32,7 @@ class WP_Auth0_Settings_Section {
     $client_secret = $this->a0_options->get('client_secret');
     $domain = $this->a0_options->get('domain');
 
-    $show_initial_setup = true || ( ( ! $client_id) || ( ! $client_secret) || ( ! $domain) ) ;
+    $show_initial_setup = ( ( ! $client_id) || ( ! $client_secret) || ( ! $domain) ) ;
 
     $main_menu = 'wpa0';
 
@@ -45,9 +45,12 @@ class WP_Auth0_Settings_Section {
 
     if ( $show_initial_setup ) {
       add_submenu_page($main_menu, __('Auth0 for WordPress - Quick Start Guide', WPA0_LANG), __('Quick Start Guide', WPA0_LANG), 'manage_options', 'wpa0-setup', array($this->initial_setup, 'render_setup_page') );
+      add_submenu_page($main_menu, __('Settings', WPA0_LANG), __('Settings', WPA0_LANG), 'manage_options', 'wpa0', array($this->auth0_admin, 'render_settings_page') );
+    } else {
+      add_submenu_page($main_menu, __('Settings', WPA0_LANG), __('Settings', WPA0_LANG), 'manage_options', 'wpa0', array($this->auth0_admin, 'render_settings_page') );
+      add_submenu_page($main_menu, __('Auth0 for WordPress - Quick Start Guide', WPA0_LANG), __('Quick Start Guide', WPA0_LANG), 'manage_options', 'wpa0-setup', array($this->initial_setup, 'render_setup_page') );
     }
-
-    add_submenu_page($main_menu, __('Settings', WPA0_LANG), __('Settings', WPA0_LANG), 'manage_options', 'wpa0', array($this->auth0_admin, 'render_settings_page') );
+    
     add_submenu_page($main_menu, __('Users export', WPA0_LANG), __('Users export', WPA0_LANG), 'manage_options', 'wpa0-users-export', array($this->users_exporter, 'render_export_users') );
     add_submenu_page($main_menu, __('Dashboard preferences', WPA0_LANG), __('Dashboard', WPA0_LANG), 'manage_options', 'wpa0-dashboard', array($this->dashboard_preferences, 'render_dashboard_preferences_page') );
     add_submenu_page($main_menu, __('Error Log', WPA0_LANG), __('Error Log', WPA0_LANG), 'manage_options', 'wpa0-errors', array($this->error_log, 'render_settings_page') );
