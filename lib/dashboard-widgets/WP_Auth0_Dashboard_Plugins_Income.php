@@ -5,103 +5,81 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
     protected $id = 'auth0_dashboard_widget_income';
     protected $name = 'Auth0 - Income';
 
-    public function addUser($user) {
-
-        if ( ! $user->get_geoip() ) return;
-
-        $postal_code = $user->get_zipcode();
-        $country_name = $user->get_country_name();
-        $country_code = $user->get_country_code();
-
-        $income = $user->get_income();
-
-        $key = "$country_name - $postal_code";
-
-        if (!isset($this->users[$key])) {
-            $this->users[$key] = array('postal_code' => $postal_code, 'country' => $country_name, 'income' => $income, 'country_code' => $country_code, 'count' => 0);
-        }
-
-        $this->users[$key]['count']++;
-        if ($income && $this->users[$key]['income'] != $income)
-        {
-            $this->users[$key]['income'] = $income;
-        }
-
-    }
-
     public function render() {
-
-        $data = $this->users;
-
-        if (empty($data)) {
-            echo "No income data available";
-            return;
-        }
-
-        $chartData = array_values($data);
-
-        $jsonData = json_encode($chartData);
         ?>
-        <div id="auth0ChartIncome"></div>
+        <div id="auth0ChartIncome">
+          <div id="tooltip"><div></div></div>
+        </div>
 
         <script type="text/javascript">
 
-        (function(){
+        function a0_income_chart(raw_data, filter_callback) {
+          var _this = this;
+          this.name = 'income';
 
-            var data = <?php echo $jsonData; ?>;
+          this.chart = new ParallelCoordinates(this.process_data(raw_data),{
+            container:"#auth0ChartIncome",
+            scale:"linear",
+            columns:["zipcode","count","income"],
+            ref:"lang_usage",
+            title_column:"zipcode",
+            scale_map:{
+              "name":"ordinal",
+              "count":"ordinal",
+              "income":"ordinal"
+            },
+            use:{
+      				"name":"count"
+      			},
+            sorting:{
+              "count":d3.descending
+            },
+            dimensions:["count","income","zipcode"],
+            column_map:{
+              "zipcode":"zipcode",
+              "income":"income",
+              "count":"count"
+            },
+            formats:{
+				          // "year":"d"
+            },
+            help:{
+              "zipcode":"<h4>Zipcode</h4>This is the users zipcode based on their IP.",
+              "income":"<h4>Income</h4>This is the Zipcode median household income based on the last US census.",
+              "count":"<h4>Count</h4>Amount of users that login in the related zipcode."
+            },
+            duration:1000
+          });
 
-            loadChart(data);
-            function loadChart(data) {
+        }
 
-                var x_arr = ['x'];
-                var zipcodes_arr = ['Users count'];
-                var incomes_arr = ['Median household income (in 1000)'];
+        a0_income_chart.prototype.load = function(raw_data) {
+          this.chart.loadData(this.process_data(raw_data));
+        }
 
-                data = data.filter(function(d){ return d.income; });
+        a0_income_chart.prototype.process_data = function(raw_data) {
+          raw_data = raw_data.filter(function(e) {return e.zipcode !== null;});
+          var grouped_data = _.groupBy(raw_data, function(e) { return e.zipcode; });
 
-                data.forEach(function(d){
-                    zipcodes_arr.push(d.count)
-                    incomes_arr.push( d.income ? d.income/1000 : 0)
-                    x_arr.push(d.country + ' - ' +d.postal_code)
-                });
+          if ( ! this.categories) {
+            this.categories = Object.keys(grouped_data);
+          }
 
-                var chart = c3.generate({
-                    bindto: '#auth0ChartIncome',
-                    data: {
-                        x:'x',
-                        columns: [
-                            x_arr,
-                            zipcodes_arr,
-                            incomes_arr
-                        ],
-                        type: 'bar',
-                        colors:{
-                            zipcodes:'#3498DB',
-                            incomes:'#2ECC71'
-                        }
-                    },
-                    bar: {
-                        width: {
-                            ratio: 0.5
-                        }
-                    },
-                    axis: {
-                        x: {
-                            type: 'category'
-                        },
-                        y:{
-                            tick:{
-                                format:function(x){
-                                    if (x == Math.floor(x)) return x;
-                                    return "";
-                                }
-                            }
-                        }
-                    }
-                });
-            }
+          var data = this.categories.map(function(key) {
+            return {
+              zipcode:key,
+              count: grouped_data[key] ? grouped_data[key].length : 0,
+              income: grouped_data[key] ? grouped_data[key][0].income : 0
+            };
+          });
 
-        })();
+          return data;
+        }
+
+
+
+
+
         </script>
 
         <?php

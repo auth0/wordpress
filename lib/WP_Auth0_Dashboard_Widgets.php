@@ -120,6 +120,9 @@ class WP_Auth0_Dashboard_Widgets  {
 			if (typeof(a0_signup_chart) !== 'undefined') {
 				charts.push(new a0_signup_chart(users_data, filter_callback));
 			}
+			if (typeof(a0_income_chart) !== 'undefined') {
+				charts.push(new a0_income_chart(users_data, filter_callback));
+			}
 		</script>
 
 		<?php
@@ -140,6 +143,8 @@ class WP_Auth0_Dashboard_Widgets  {
 		wp_enqueue_script( 'auth0-dashboard-c3-js', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/c3/c3.min.js' );
 		wp_enqueue_script( 'auth0-markerclusterer', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/markerclusterer.js' );
 		wp_enqueue_script( 'auth0-lodash', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/lodash.min.js' );
+
+		wp_enqueue_script( 'auth0-parallelcoordinates', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/parallelcoordinates.js' );
 
 
 		$widgets = array(

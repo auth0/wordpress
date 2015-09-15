@@ -38,7 +38,7 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
 
         <script type="text/javascript">
 
-          function a0_age_chart(raw_data) {
+          function a0_age_chart(raw_data, filter_callback) {
             var _this = this;
             this.name = 'age';
 
