@@ -49,8 +49,8 @@ class WP_Auth0_Dashboard_Plugins_Signups extends WP_Auth0_Dashboard_Plugins_Gene
                       }
                   }
               };
-              setup.data.onmouseover = function (d, i) { var selected_day = d.x.toISOString().substr(0,10); filter_callback(_this, function(e) { return e.created_at_day == selected_day; } ); },
-              setup.data.onmouseout = function (d, i) { filter_callback(_this, null); },
+              // setup.data.onmouseover = function (d, i) { var selected_day = d.x.toISOString().substr(0,10); filter_callback(_this, function(e) { return e.created_at_day == selected_day; } ); },
+              // setup.data.onmouseout = function (d, i) { filter_callback(_this, null); },
               this.chart = c3.generate(setup);
             }
 

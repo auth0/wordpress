@@ -85,10 +85,7 @@ function ParallelCoordinates(data,options) {
 				"stroke-width":1
 			})
 
-
 	var xscale=d3.scale.ordinal().domain(options.columns).rangePoints([0,WIDTH-(margins.left+margins.right+padding.left+padding.right)]);
-
-
 
 	var yscales={},
 		width_scales={};
@@ -440,6 +437,10 @@ function ParallelCoordinates(data,options) {
 							languages_group
 								.selectAll("g.lang[rel='"+d.key+"']")
 								.classed("highlight",$this.classed("highlight"))
+
+							if (options.onclick) {
+								options.onclick(d);
+							}
 						})
 						.on("mouseover",function(d){
 							d3.select(this).classed("hover",true)
@@ -696,11 +697,19 @@ function ParallelCoordinates(data,options) {
 							return line(d.path)
 						})
 			});
+	}
 
-
+	this.selected = function() {
+		return languages_group.selectAll("g.lang.highlight").data();
 	}
 
 	this.loadData=function(data) {
+
+			if (data.length === 0) {
+				svg.style('display', 'none');
+			} else {
+				svg.style('display', 'block');
+			}
 
 			nested_data=nestData(data);
 

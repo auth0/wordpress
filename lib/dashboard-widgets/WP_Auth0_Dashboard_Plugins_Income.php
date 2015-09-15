@@ -48,8 +48,19 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
               "count":"<h4>Count</h4>Amount of users that login in the related zipcode."
             },
             duration:1000,
-            onmouseover: function (d) { filter_callback(_this, function(e) { return e.zipcode == d.key; } ); },
-            onmouseout: function (d) { filter_callback(_this, null); }
+            onclick: function (d) {
+              _this.filter_selection = _this.chart.selected().map(function(e){
+                return parseInt(e.key);
+              });
+
+              if (_this.filter_selection.length === 0) {
+                filter_callback( _this, null, null, null );
+              } else {
+                filter_callback(_this, 'Zipcode', _this.filter_selection, function(e) { return _this.filter_selection.indexOf(e.zipcode) > -1; } );
+              }
+            },
+            // onmouseover: function (d) { filter_callback(_this, function(e) { return e.zipcode == d.key; } ); },
+            // onmouseout: function (d) { filter_callback(_this, null); }
           });
 
         }

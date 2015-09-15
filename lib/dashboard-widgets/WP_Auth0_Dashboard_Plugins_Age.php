@@ -16,7 +16,10 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
         $chartSetup = array(
             'bindto' => '#auth0ChartAge',
             'data' => array(
-                'type' => $this->type
+                'type' => $this->type,
+                'selection' => array(
+                   'enabled' => true
+                ),
             ),
             'color' => array(
               'pattern' => array('#F39C12','#2ECC71','#3498DB','#9B59B6','#34495E','#F1C40F','#E67E22','#E74C3C', '#1ABC9C'),
@@ -44,9 +47,36 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
 
             var setup = <?php echo json_encode($chartSetup);?>;
             setup.data.columns = this.process_data(raw_data);
-            setup.data.onmouseover = function (d, i) { filter_callback(_this, function(e) { return e.agebucket == d.id; } ); },
-            setup.data.onmouseout = function (d, i) { filter_callback(_this, null); },
+
+            setup.data.onclick = function (d, i) {
+              var selection = this.selected();
+
+              _this.filter_selection = selection.map(function(e){
+                return e.id;
+              });
+
+              if (selection.length === 0) {
+                filter_callback( _this, null, null, null );
+              } else {
+                filter_callback(_this, 'Age', _this.filter_selection, function(e) { return _this.filter_selection.indexOf(e.agebucket) > -1; } );
+              }
+
+              _this.chart.flush();
+            };
+
             setup.data.color = function (color, d) {
+              var bucket;
+
+              if (typeof(d) === 'string') {
+                bucket = d;
+              } else {
+                bucket = d.id;
+              }
+
+              if (_this.filter_selection && _this.filter_selection.length > 0 && _this.filter_selection.indexOf(bucket) === -1) {
+                return '#DDDDDD';
+              }
+
               return (d === '<?php echo WP_Auth0_Dashboard_Widgets::UNKNOWN_KEY; ?>') ? '#CACACA' : color;
             };
             this.chart = c3.generate(setup);

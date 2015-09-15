@@ -88,18 +88,35 @@ class WP_Auth0_Dashboard_Widgets  {
 		<script type="text/javascript">
 			var users_data = <?php echo json_encode($usersData); ?>;
 			var charts = [];
-
-			function filter_callback(chart, callback) {
+			var filters = {};
+			function filter_callback(chart, label, data, callback) {
 
 				if (callback === null) {
-					var data = users_data;
+					delete filters[chart.name];
 				} else {
-					var data = users_data.filter(callback);
+					filters[chart.name] = callback;
 				}
 
+				var filter_keys = Object.keys(filters);
+				var data;
+
+				if (filter_keys.length === 0) {
+					data = users_data;
+				} else {
+					data = users_data.filter(function(e) {
+						for (var a = 0; a < filter_keys.length; a++) {
+							if (!filters[filter_keys[a]](e)) {
+								return false;
+							}
+						}
+						return true;
+					});
+				}
+
+
 				charts.forEach(function(c){
-					if (c.name !== chart.name) {
-						c.load(data);
+					if (filter_keys.indexOf(c.name) === -1) {
+							c.load(data);
 					}
 				});
 

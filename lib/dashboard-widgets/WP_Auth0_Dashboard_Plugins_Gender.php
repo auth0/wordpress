@@ -21,6 +21,9 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
             'bindto' => '#auth0ChartGender',
             'data' => array(
                 'type' => $this->type,
+                'selection' => array(
+                   'enabled' => true
+                ),
             ),
             'color' => array(
               'pattern' => array('#ff4282','#3e68ef', '#1ABC9C','#2ECC71','#3498DB','#9B59B6','#34495E','#F1C40F','#E67E22','#E74C3C','#F39C12'),
@@ -47,9 +50,35 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
 
             var setup = <?php echo json_encode($chartSetup);?>;
             setup.data.columns = this.process_data(raw_data);
-            setup.data.onmouseover = function (d, i) { filter_callback(_this, function(e) { return e.gender == d.id; } ); },
-            setup.data.onmouseout = function (d, i) { filter_callback(_this, null); },
+
+            setup.data.onclick = function (d, i) {
+              var selection = this.selected();
+              _this.filter_selection = selection.map(function(e){
+                return e.id;
+              });
+
+              if (selection.length === 0) {
+                filter_callback( _this, null, null, null );
+              } else {
+                filter_callback(_this, 'Gender', _this.filter_selection, function(e) { return _this.filter_selection.indexOf(e.gender) > -1; } );
+              }
+
+              _this.chart.flush();
+            };
+
             setup.data.color = function (color, d) {
+              var gender;
+
+              if (typeof(d) === 'string') {
+                gender = d;
+              } else {
+                gender = d.id;
+              }
+
+              if (_this.filter_selection && _this.filter_selection.length > 0 && _this.filter_selection.indexOf(gender) === -1) {
+                return '#DDDDDD';
+              }
+
               return (d === '<?php echo WP_Auth0_Dashboard_Widgets::UNKNOWN_KEY; ?>') ? '#CACACA' : color;
             };
             this.chart = c3.generate(setup);

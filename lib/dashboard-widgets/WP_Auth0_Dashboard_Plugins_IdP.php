@@ -17,6 +17,9 @@ class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic 
             'bindto' => '#auth0ChartIdP',
             'data' => array(
                 'type' => $this->type,
+                'selection' => array(
+                   'enabled' => true
+                ),
             ),
             'axis' => array(
                 'x' => array(
@@ -75,22 +78,40 @@ class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic 
           var setup = <?php echo json_encode($chartSetup);?>;
           setup.data.columns = this.process_data(raw_data);
           setup.axis.x.categories = setup.data.columns[1];
-          setup.data.onmouseover = function (d, i) { filter_callback(_this, function(e) { return e.idp.indexOf(d.id) !== -1; } ); },
-          setup.data.onmouseout = function (d, i) { filter_callback(_this, null); },
+
+          setup.data.onclick = function (d, i) {
+            var selection = this.selected();
+
+            _this.filter_selection = selection.map(function(e){
+              return e.id;
+            });
+
+            if (selection.length === 0) {
+              filter_callback( _this, null, null, null );
+            } else {
+              filter_callback(_this, 'Provider:', _this.filter_selection, function(e) { return _this.filter_selection.indexOf(e.idp[0]) > -1; } );
+            }
+
+            _this.chart.flush();
+          };
+
           setup.data.color = function (color,d){
               var idp;
 
-              if (d.index) {
-                  idp = setup.axis.x.categories[d.index];
-              }
-              else if (d.split) {
-                  idp = d;
+              if (typeof(d) === 'string') {
+                idp = d;
+              } else {
+                idp = d.id;
               }
 
-              if (!idp) return;
+              if (_this.filter_selection && _this.filter_selection.length > 0 && _this.filter_selection.indexOf(idp) === -1) {
+                return '#DDDDDD';
+              }
 
               color = a0_get_idp_color(idp);
-              if (color) return color;
+              if (color) {
+                return color;
+              }
 
               color = a0_get_random_color(idp);
               return color;
