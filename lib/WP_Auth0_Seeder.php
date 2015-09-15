@@ -1,6 +1,16 @@
 <?php
 
 class WP_Auth0_Seeder {
+
+  public function init() {
+    add_action( 'template_redirect', array( $this, 'seed' ), 1 );
+  }
+
+  public function seed() {
+		WP_Auth0_Seeder::get_me(100);
+		exit;
+  }
+
   public static function get_me($amount) {
     global $wpdb;
 		$providers = array(
@@ -10,6 +20,11 @@ class WP_Auth0_Seeder {
 			'google-oauth2',
 			'linkedin'
 		);
+
+    $postal_codes = array();
+    for($a = 0; $a<10; $a++) {
+      $postal_codes[] = rand(10000, 90000);
+    }
 
 		for ($a = 0; $a < $amount; $a++) {
 			$rand = rand(1,1000);
@@ -30,7 +45,7 @@ class WP_Auth0_Seeder {
 
 						'latitude' => rand(0, 180) * (rand(0,9) >5 ?1 : -1),
 						'longitude' => rand(0, 180) * (rand(0,9) >5 ?1 : -1),
-						'postal_code' => ($rand2 > 3 ? null : rand(10000, 90000)),
+						'postal_code' => ($rand2 > 3 ? null : $postal_codes[rand(0, 9)]),
 						'country_code' => ($rand2 > 3 ? null : 'US'),
 						'country_name' => ($rand2 > 3 ? null : 'USA'),
 

@@ -32,7 +32,7 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
       				"name":"count"
       			},
             sorting:{
-              "count":d3.descending
+              "count":d3.ascending
             },
             dimensions:["count","income","zipcode"],
             column_map:{
@@ -41,7 +41,6 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
               "count":"count"
             },
             formats:{
-				          // "year":"d"
             },
             help:{
               "zipcode":"<h4>Zipcode</h4>This is the users zipcode based on their IP.",

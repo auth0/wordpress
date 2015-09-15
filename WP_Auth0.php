@@ -73,6 +73,9 @@ class WP_Auth0 {
 		$initial_setup = new WP_Auth0_InitialSetup($this->a0_options);
 		$initial_setup->init();
 
+		// $seeder = new WP_Auth0_Seeder($this->a0_options);
+		// $seeder->init();
+
 		$login_manager = new WP_Auth0_LoginManager($this->a0_options);
 		$login_manager->init();
 
