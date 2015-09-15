@@ -22,7 +22,7 @@ function ParallelCoordinates(data,options) {
 	var bounding_box = d3.select(options.container).node().getBoundingClientRect();
 
 	var WIDTH=Math.round(bounding_box.width*(bounding_box.width<=960?1:0.8));
-		HEIGHT=Math.min(Math.max(Math.round(bounding_box.height-150),420),600);
+		HEIGHT=Math.min(Math.max(Math.round(bounding_box.height-150),420),600)*2;
 
 	var margins={
 		left:0,
@@ -942,6 +942,8 @@ function ParallelCoordinates(data,options) {
 
 					var x=xscale(options.title_column),
 						y=yscales[options.title_column].range()[0];
+
+					if (!y) return;
 
 					return "translate("+x+","+y+")";
 
