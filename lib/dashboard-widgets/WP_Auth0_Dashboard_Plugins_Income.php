@@ -47,7 +47,9 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
               "income":"<h4>Income</h4>This is the Zipcode median household income based on the last US census.",
               "count":"<h4>Count</h4>Amount of users that login in the related zipcode."
             },
-            duration:1000
+            duration:1000,
+            onmouseover: function (d) { filter_callback(_this, function(e) { return e.zipcode == d.key; } ); },
+            onmouseout: function (d) { filter_callback(_this, null); }
           });
 
         }

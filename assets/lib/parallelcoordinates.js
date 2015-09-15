@@ -32,7 +32,7 @@ function ParallelCoordinates(data,options) {
 	};
 
 	var padding={
-		left:60,
+		left:70,
 		right:30,
 		top:20,
 		bottom:0
@@ -446,11 +446,19 @@ function ParallelCoordinates(data,options) {
 							languages_group
 								.selectAll("g.lang[rel='"+d.key+"']")
 								.classed("hover",true)
+
+							if (options.onmouseover) {
+								options.onmouseover(d);
+							}
 						})
 						.on("mouseout",function(d){
 							svg.selectAll("g.hover,g.year")
 								.classed("hover",false)
 								.classed("year",false);
+
+								if (options.onmouseout) {
+									options.onmouseout(d);
+								}
 						})
 
 	var language=languages_group.selectAll("g.lang")
