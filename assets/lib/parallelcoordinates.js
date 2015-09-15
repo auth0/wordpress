@@ -25,14 +25,14 @@ function ParallelCoordinates(data,options) {
 		HEIGHT=Math.min(Math.max(Math.round(bounding_box.height-150),420),600);
 
 	var margins={
-		left:20,
+		left:0,
 		right:30,
 		top:30,
 		bottom:30
 	};
 
 	var padding={
-		left:70,
+		left:60,
 		right:30,
 		top:20,
 		bottom:0

@@ -82,9 +82,7 @@
 #auth0ChartIncome svg #languages g .lang-label {
 	cursor: pointer;
 }
-#auth0ChartIncome svg #languages g.new .lang-label text {
-	fill:#339933;
-}
+
 #auth0ChartIncome svg #languages g.hover .lang-label text,
 #auth0ChartIncome svg #languages g.highlight .lang-label text,
 #auth0ChartIncome svg #languages g.year .lang-label text {

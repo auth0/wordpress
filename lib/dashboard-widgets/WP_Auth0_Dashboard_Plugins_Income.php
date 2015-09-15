@@ -24,7 +24,7 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
             ref:"lang_usage",
             title_column:"zipcode",
             scale_map:{
-              "name":"ordinal",
+              "zipcode":"ordinal",
               "count":"ordinal",
               "income":"ordinal"
             },
@@ -61,11 +61,7 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
           raw_data = raw_data.filter(function(e) {return e.zipcode !== null;});
           var grouped_data = _.groupBy(raw_data, function(e) { return e.zipcode; });
 
-          if ( ! this.categories) {
-            this.categories = Object.keys(grouped_data);
-          }
-
-          var data = this.categories.map(function(key) {
+          var data = Object.keys(grouped_data).map(function(key) {
             return {
               zipcode:key,
               count: grouped_data[key] ? grouped_data[key].length : 0,
