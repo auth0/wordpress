@@ -61,16 +61,20 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
           a0_age_chart.prototype.process_data = function(raw_data) {
             var grouped_data = _.groupBy(raw_data, function(e) { return e.agebucket; });
 
+            if ( ! this.categories) {
+              this.categories = Object.keys(grouped_data);
+            }
+
           <?php if($this->type === 'pie') {?>
-            var data = Object.keys(grouped_data).map(function(key) {
-              return [key, grouped_data[key].length];
+            var data = this.categories.map(function(key) {
+              return [key, (grouped_data[key] ? grouped_data[key].length : 0)];
             });
           <?php } else {?>
             var data = [];
-            var keys = Object.keys(grouped_data);
+            var keys = this.categories;
 
             var values = keys.map(function(key) {
-              return grouped_data[key].length;
+              return (grouped_data[key] ? grouped_data[key].length : 0);
             });
 
             keys.unshift('x');

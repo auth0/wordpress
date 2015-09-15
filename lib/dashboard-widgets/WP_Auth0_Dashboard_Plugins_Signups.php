@@ -21,58 +21,70 @@ class WP_Auth0_Dashboard_Plugins_Signups extends WP_Auth0_Dashboard_Plugins_Gene
 
     public function render() {
 
-        $data = $this->users;
-        ksort($data);
-        if (empty($data)) {
-            echo "No data available";
-            return;
-        }
-
-        $chartData = array();
-
-        foreach ($data as $key => $value) {
-            $chartData[] = array($key, $value);
-        }
-
         ?>
         <div id="auth0ChartSignups"></div>
         <script type="text/javascript">
-            (function(){
-                var signups = <?php echo json_encode($chartData); ?>;
+            function a0_signup_chart(raw_data) {
+              var _this = this;
+              this.name = 'signups';
 
-                var x_arr = ['x'];
-                var data_arr = ['Signups'];
+              var setup = {
+                  bindto: '#auth0ChartSignups',
+                  data: {
+                      x: 'x',
+                      columns: this.process_data(raw_data),
+                      type: 'spline'
+                  },
+                  axis: {
+                      x: {
+                          type: 'timeseries',
+                          tick: {
+                              format: '%Y-%m-%d'
+                          }
+                      },
+                      y:{
+                          tick:{
+                              format:function(x){return (x == Math.floor(x)) ? x: "";}
+                          }
+                      }
+                  }
+              };
+              setup.data.onmouseover = function (d, i) { var selected_day = d.x.toISOString().substr(0,10); filter_callback(_this, function(e) { return e.created_at_day == selected_day; } ); },
+              setup.data.onmouseout = function (d, i) { filter_callback(_this, null); },
+              this.chart = c3.generate(setup);
+            }
 
-                signups.forEach(function(d){
-                    x_arr.push(d[0]);
-                    data_arr.push(d[1]);
-                });
+            a0_signup_chart.prototype.load = function(raw_data) {
+              this.chart.load({
+                columns: this.process_data(raw_data)
+              });
+            }
 
-                var chart = c3.generate({
-                    bindto: '#auth0ChartSignups',
-                    data: {
-                        x: 'x',
-                        columns: [
-                            x_arr,
-                            data_arr
-                        ],
-                        type: 'spline'
-                    },
-                    axis: {
-                        x: {
-                            type: 'timeseries',
-                            tick: {
-                                format: '%Y-%m-%d'
-                            }
-                        },
-                        y:{
-                            tick:{
-                                format:function(x){return (x == Math.floor(x)) ? x: "";}
-                            }
-                        }
-                    }
-                });
-            })();
+            a0_signup_chart.prototype.process_data = function(raw_data) {
+              var limitDate = new Date();
+              limitDate.setMonth(limitDate.getMonth() - 1);
+              raw_data = raw_data.filter(function(e){
+                e.created_at_day_obj = new Date(e.created_at_day);
+                return e.created_at_day_obj>limitDate;
+              })
+              var grouped_data = _.groupBy(raw_data, function(e) { return e.created_at_day; });
+
+              var data = [];
+              var keys = Object.keys(grouped_data);
+
+              var values = keys.map(function(key) {
+                return grouped_data[key].length;
+              });
+
+              keys.unshift('x');
+              values.unshift('Signups');
+
+              data.push(keys);
+              data.push(values);
+
+              return data;
+            }
+
         </script>
         <?php
 

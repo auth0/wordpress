@@ -23,7 +23,7 @@ class WP_Auth0_Seeder {
 				'nickname' => 'dummy'.$rand,
 				'user_id' => rand(0,100000 ),
 				'age' => $age[rand(0,5)],
-				'created_at' => strtotime('-'. rand(1,60) . ' days'),
+				'created_at' => date('Y-m-d\TH:i:s\Z', strtotime('-'. rand(1,60) . ' days')),
 				'gender' => $gender[rand(0,1)],
 				'user_metadata' => (object)array(
 					'geoip' => (object)array(

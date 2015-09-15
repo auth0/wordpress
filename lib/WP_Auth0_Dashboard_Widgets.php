@@ -70,7 +70,7 @@ class WP_Auth0_Dashboard_Widgets  {
 		foreach ($users as $user) {
 			$userObj = new WP_Auth0_UserProfile($user->auth0_obj);
 			$userData = $userObj->get();
-
+			$userData['created_at_day'] = date('Y-m-d',strtotime($userData['created_at']));
 			if ( ! $userData['age'] ) {
 				$userData['age'] = self::UNKNOWN_KEY;
 			} else {
@@ -116,6 +116,9 @@ class WP_Auth0_Dashboard_Widgets  {
 			}
 			if (typeof(a0_location_chart) !== 'undefined') {
 				charts.push(new a0_location_chart(users_data));
+			}
+			if (typeof(a0_signup_chart) !== 'undefined') {
+				charts.push(new a0_signup_chart(users_data, filter_callback));
 			}
 		</script>
 
