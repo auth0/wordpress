@@ -67,7 +67,7 @@
 	fill:#333;
 }
 #auth0ChartIncome svg #languages path {
-	stroke:#A06535;
+	stroke:rgb(31, 119, 180);
 	stroke-opacity:0.2;
 	stroke-width:1;
 	fill:none;
@@ -90,7 +90,7 @@
 	fill:#fff;
 }
 #auth0ChartIncome svg #languages .lang-label rect {
-	fill:#A06535;
+	fill:rgb(31, 119, 180);
 	fill-opacity:0;
 }
 #auth0ChartIncome svg #languages g.hover .lang-label rect,
@@ -118,7 +118,7 @@
 }
 #auth0ChartIncome svg #labels g.label path.label {
 	fill:#fff;
-	stroke:#A06535;
+	stroke:rgb(31, 119, 180);
 	fill-opacity:0.8;
 	stroke-opacity:0.8;
 	display: none;
@@ -151,7 +151,7 @@
 #auth0ChartIncome svg #languages g.highlight g.connection.year path,
 #auth0ChartIncome svg #languages g.hover g.connection path,
 #auth0ChartIncome svg #languages g.year g.connection path {
-	stroke:#A06535;
+	stroke:rgb(31, 119, 180);
 	stroke-opacity:0.8;
 	stroke-width:3;
 }
@@ -170,7 +170,7 @@
 	fill-opacity:1;
 }
 #auth0ChartIncome svg #languages .marker circle.hover {
-	fill:#A06535;
+	fill:rgb(31, 119, 180);
 	fill-opacity:0.2;
 }
 #auth0ChartIncome svg #languages .marker.ordinal circle {
@@ -189,7 +189,7 @@
 #auth0ChartIncome svg #languages .marker rect {
 	shape-rendering: crispEdges;
 	stroke-width:1;
-	stroke:#A06535;
+	stroke:rgb(31, 119, 180);
 	stroke-opacity:0;
 	fill-opacity:0;
 }

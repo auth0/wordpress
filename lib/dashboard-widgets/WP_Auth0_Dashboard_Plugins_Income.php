@@ -26,7 +26,7 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
             scale_map:{
               "zipcode":"ordinal",
               "count":"ordinal",
-              "income":"ordinal"
+              "income":"linear"
             },
             use:{
       				"name":"count"

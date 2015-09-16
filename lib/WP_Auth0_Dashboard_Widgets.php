@@ -25,7 +25,7 @@ class WP_Auth0_Dashboard_Widgets  {
 		if ($screen->id !== 'dashboard') {
 			return;
 		}
-		
+
 		global $current_user ;
     $user_id = $current_user->ID;
 

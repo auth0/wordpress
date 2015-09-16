@@ -80,7 +80,7 @@ function ParallelCoordinates(data,options) {
 				y2:3
 			})
 			.style({
-				stroke:"#A06535",
+				stroke:"rgb(31, 119, 180)",
 				"stroke-opacity":1,
 				"stroke-width":1
 			})
