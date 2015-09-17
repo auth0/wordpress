@@ -1,3 +1,5 @@
+![](https://raw.githubusercontent.com/auth0/wp-auth0/master/banner-1544x500.png)
+
 Wordpress Plugin for Auth0
 ====
 
@@ -39,7 +41,7 @@ The plugin provides an action to get notified each time a user logs in or is cre
 
 To hook to this action, you will need to do the following:
 ```
-    add_action( 'auth0_user_login', 'auth0UserLoginAction', 0,5 ); 
+    add_action( 'auth0_user_login', 'auth0UserLoginAction', 0,5 );
 
     function auth0UserLoginAction($user_id, $user_profile, $is_new, $id_token, $access_token) {
         ...
