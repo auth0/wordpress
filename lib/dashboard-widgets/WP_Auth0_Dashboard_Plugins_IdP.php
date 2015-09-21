@@ -81,13 +81,18 @@ class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic 
 
           var setup = <?php echo json_encode($chartSetup);?>;
           setup.data.columns = this.process_data(raw_data);
-          // setup.axis.x.categories = setup.data.columns[1];
 
           setup.data.onclick = function (d, i) {
             var selection = this.selected();
 
             _this.filter_selection = selection.map(function(e){
-              return e.id;
+
+              <?php if($this->type === 'pie') {?>
+                return e.id;
+              <?php } else {?>
+                return _this.categories[e.index];
+              <?php } ?>
+
             });
 
             if (selection.length === 0) {

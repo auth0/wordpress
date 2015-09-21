@@ -52,7 +52,13 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
               var selection = this.selected();
 
               _this.filter_selection = selection.map(function(e){
-                return e.id;
+
+                <?php if($this->type === 'pie') {?>
+                  return e.id;
+                <?php } else {?>
+                  return _this.categories[e.index];
+                <?php } ?>
+
               });
 
               if (selection.length === 0) {
@@ -79,7 +85,7 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
 
               return (d === '<?php echo WP_Auth0_Dashboard_Widgets::UNKNOWN_KEY; ?>') ? '#CACACA' : color;
             };
-            console.log(JSON.stringify(setup));
+
             this.chart = c3.generate(setup);
           }
 

@@ -54,7 +54,13 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
             setup.data.onclick = function (d, i) {
               var selection = this.selected();
               _this.filter_selection = selection.map(function(e){
-                return e.id;
+
+                <?php if($this->type === 'pie') {?>
+                  return e.id;
+                <?php } else {?>
+                  return _this.categories[e.index];
+                <?php } ?>
+
               });
 
               if (selection.length === 0) {
