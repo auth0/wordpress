@@ -99,8 +99,6 @@ class WP_Auth0_Dashboard_Widgets  {
 			$userData = $userObj->get();
 			$userData['gender'] = empty($userData['gender']) ? self::UNKNOWN_KEY : $userData['gender'];
 			$userData['income'] = empty($userData['income']) ? 0 : $userData['income'];
-
-			$userData['income'] = empty($userData['income']) ? 0 : $userData['income'];
 			$userData['created_at_day'] = date('Y-m-d',strtotime($userData['created_at']));
 			if ( ! $userData['age'] ) {
 				$userData['age'] = self::UNKNOWN_KEY;
