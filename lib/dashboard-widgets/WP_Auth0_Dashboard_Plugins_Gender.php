@@ -81,6 +81,7 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
 
               return (d === '<?php echo WP_Auth0_Dashboard_Widgets::UNKNOWN_KEY; ?>') ? '#CACACA' : color;
             };
+
             this.chart = c3.generate(setup);
           }
 
@@ -97,15 +98,17 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
               this.categories = Object.keys(grouped_data);
             }
 
+            var keys = _.clone(this.categories);
+            keys = _.sortBy(keys);
+
             <?php if($this->type === 'pie') {?>
-              var data = this.categories.map(function(key) {
+              var data = keys.map(function(key) {
                 return [key, (grouped_data[key] ? grouped_data[key].length : 0)];
               });
             <?php } else {?>
               var data = [];
-              var keys = this.categories;
 
-              var values = this.categories.map(function(key) {
+              var values = keys.map(function(key) {
                 return (grouped_data[key] ? grouped_data[key].length : 0);
               });
 

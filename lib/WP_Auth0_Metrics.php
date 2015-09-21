@@ -23,6 +23,8 @@ class WP_Auth0_Metrics {
 			return;
 		}
 
+    return;
+
     if ($this->a0_options->get('metrics') == 1) {
     ?>
       <script src="//cdn.auth0.com/js/m/metrics-1.min.js"></script>

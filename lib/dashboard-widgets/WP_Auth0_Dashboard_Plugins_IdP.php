@@ -29,6 +29,10 @@ class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic 
 
         );
 
+        if ( $this->type == 'bar' ) {
+            $chartSetup['data']['x'] = 'x';
+        }
+
 
         ?>
         <div id="auth0ChartIdP"></div>
@@ -77,7 +81,7 @@ class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic 
 
           var setup = <?php echo json_encode($chartSetup);?>;
           setup.data.columns = this.process_data(raw_data);
-          setup.axis.x.categories = setup.data.columns[1];
+          // setup.axis.x.categories = setup.data.columns[1];
 
           setup.data.onclick = function (d, i) {
             var selection = this.selected();
@@ -108,14 +112,15 @@ class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic 
                 return '#DDDDDD';
               }
 
-              color = a0_get_idp_color(idp);
-              if (color) {
-                return color;
+              new_color = a0_get_idp_color(idp);
+              if (new_color) {
+                return new_color;
               }
 
-              color = a0_get_random_color(idp);
-              return color;
+              new_color = a0_get_random_color(idp);
+              return new_color || color;
           };
+
           this.chart = c3.generate(setup);
         }
 
@@ -132,15 +137,17 @@ class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic 
             this.categories = Object.keys(grouped_data);
           }
 
+          var keys = _.clone(this.categories);
+          keys = _.sortBy(keys);
+
         <?php if($this->type === 'pie') {?>
-          var data = this.categories.map(function(key) {
+          var data = keys.map(function(key) {
             return [key, (grouped_data[key] ? grouped_data[key].length : 0)];
           });
         <?php } else {?>
           var data = [];
-          var keys = this.categories;
 
-          var values = this.categories.map(function(key) {
+          var values = keys.map(function(key) {
             return (grouped_data[key] ? grouped_data[key].length : 0);
           });
 
