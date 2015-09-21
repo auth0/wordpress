@@ -2,14 +2,7 @@
 
 class WP_Auth0_InitialSetup_Consent {
 
-  protected $domain = 'login0.myauth0.com';
-  protected $client_id = 'vGzHpD0XGHAlR1JIECGbFVuCKTCECUt4';
-  protected $client_secret = '8U1joJzZwVb5EBa6PS4zCsZW1RbRaz6cvxuDYxCeCzXNdAwbikqh7VrzUuBduS0r';
-
-/*
-$client_id = base64_decode('QmxjVlh0VXVmRm54cnZUTFdLRXBTNG9ET3hCZm95eFo=');
-$client_secret = base64_decode('a3JrN09COFJBWngwQ0JkcVEwdXVmV1k5WjJLdTUxV0l6Ml9qRjM3aVVSMmpQbWU5RjNUT1lBNmJUVkpseFNldQ==');
-*/
+  protected $domain = 'auth0.auth0.com';
 
   protected $a0_options;
 
@@ -140,6 +133,8 @@ $client_secret = base64_decode('a3JrN09COFJBWngwQ0JkcVEwdXVmV1k5WjJLdTUxV0l6Ml9q
   public function build_consent_url() {
     $callback_url = urlencode( admin_url( 'admin.php?page=wpa0-setup&callback=1' ) );
 
+    $client_id = urlencode(get_bloginfo('wpurl'));
+
     $scope = urlencode( implode( ' ', array(
         'read:connections',
         'create:connections',
@@ -147,7 +142,7 @@ $client_secret = base64_decode('a3JrN09COFJBWngwQ0JkcVEwdXVmV1k5WjJLdTUxV0l6Ml9q
         'create:clients'
     ) ) );
 
-    $url = "https://{$this->domain}/authorize?client_id={$this->client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}";
+    $url = "https://{$this->domain}/i/oauth2/authorize?client_id={$client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}";
 
     return $url;
   }

@@ -19,7 +19,7 @@ class WP_Auth0_Routes {
 		add_rewrite_tag( '%auth0_error%', '([^&]+)' );
 
 		add_rewrite_rule( '^auth0', 'index.php?auth0=1', 'top' );
-		add_rewrite_rule( '^oauth2-config?', 'index.php?a0_action=oauth2-config', 'bottom' );
+		add_rewrite_rule( '^.well-known/oauth2-client-configuration?', 'index.php?a0_action=oauth2-config', 'bottom' );
 
     if ( $force_ws || $this->a0_options->get('migration_ws') ) {
       add_rewrite_rule( '^migration-ws-login?', 'index.php?a0_action=migration-ws-login', 'top' );
@@ -178,12 +178,13 @@ class WP_Auth0_Routes {
   }
   protected function oauth2_config() {
 
-      $callback_url = admin_url( 'admin.php?page=wpa0-setup&step=2' );
+      $callback_url = admin_url( 'admin.php?page=wpa0-setup&callback=1' );
 
       echo json_encode(array(
-          'redirect_uris' => array(
-              $callback_url
-          )
+        'client_name' => get_bloginfo('name'),
+        'redirect_uris' => array(
+            $callback_url
+        )
       ));
       exit;
   }
