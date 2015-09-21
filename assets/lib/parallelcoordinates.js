@@ -152,8 +152,8 @@ function ParallelCoordinates(data,options) {
 							.rangePoints([HEIGHT-(margins.top+margins.bottom+padding.top+padding.bottom),0]);
 
 				} else {
-					if(extents[d][0]===0) {
-						extents[d][0]=0.01;
+					if(extents[d][0]===0 && extents[d][1]===0) {
+						extents[d][1] = 1;
 					}
 
 					scales[d]=d3.scale[options.scale_map[d]?options.scale_map[d]:scale_type]().domain(extents[d]).range([HEIGHT-(margins.top+margins.bottom+padding.top+padding.bottom),0]);
@@ -320,6 +320,7 @@ function ParallelCoordinates(data,options) {
 					.attr("transform",function(d){
 						var x=0,
 							y=HEIGHT-(margins.bottom+margins.top+padding.bottom+5);
+
 						return "translate("+x+","+y+")";
 					})
 
@@ -978,13 +979,12 @@ function ParallelCoordinates(data,options) {
 				.transition()
 				.duration(duration || options.duration)
 				.attr("transform",function(d){
-
 					var use=options.use[options.title_column] || options.title_column;
 					var x=xscale(options.title_column),
 						y=yscales[options.title_column](d.values[use]);
-					y=yscales[use](d.values[use]);
-					return "translate("+x+","+y+")";
+						y=yscales[use](d.values[use]);
 
+					return "translate("+x+","+y+")";
 				});
 	}
 }
