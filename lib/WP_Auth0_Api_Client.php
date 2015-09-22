@@ -162,8 +162,9 @@ class WP_Auth0_Api_Client {
 			'body' => json_encode(array(
 				'name' => $name,
 				'callbacks' => array(
-					site_url('/index.php?auth0=1'),
-					site_url('/wp-login.php')
+					site_url( '/index.php?auth0=1'),
+					site_url( '/wp-login.php'),
+					admin_url( '/admin.php?page=wpa0-setup&step=3&auth0=1' )
 				),
 				"allowed_origins"=>array(
 					site_url('/wp-login.php')

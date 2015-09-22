@@ -148,6 +148,8 @@ class WP_Auth0 {
 	public function  a0_register_query_vars( $qvars ) {
 		$qvars[] = 'error_description';
 		$qvars[] = 'a0_action';
+		$qvars[] = 'auth0';
+		$qvars[] = 'code';
 		return $qvars;
 	}
 

@@ -15,7 +15,7 @@
       var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
       lock.show({
         container: 'a0-lock-wrapper',
-				callbackURL: '<?php echo site_url( '/index.php?auth0=1' ); ?>',
+				callbackURL: '<?php echo admin_url( '/admin.php?page=wpa0-setup&step=3&auth0=1' ); ?>',
 				responseType: 'code',
 				authParams: {
 						scope: "openid update:clients update:connections create:connections read:connections create:rules delete:rules update:users name email nickname email_verified identities",

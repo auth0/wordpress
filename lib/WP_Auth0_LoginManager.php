@@ -127,11 +127,11 @@ class WP_Auth0_LoginManager {
 		// WP_Auth0_Seeder::get_me(100);
 		// exit;
 
-		if ( ! isset( $wp_query->query_vars['auth0'] ) ) {
+		if ( $this->query_vars('auth0') === null ) {
 			return;
 		}
 
-		if ( $wp_query->query_vars['auth0'] === 'implicit' ) {
+		if ( $this->query_vars('auth0') === 'implicit' ) {
 			$this->implicit_login();
 		} else {
 			$this->redirect_login();
@@ -141,29 +141,29 @@ class WP_Auth0_LoginManager {
 	public function redirect_login() {
 		global $wp_query;
 
-		if ( '1' !== $wp_query->query_vars['auth0']) {
+		if ( $this->query_vars('auth0') === null ) {
 			return;
 		}
 
-		if ( isset( $wp_query->query_vars['error_description'] ) && trim( $wp_query->query_vars['error_description']) !== '' ) {
+		if ( $this->query_vars('error_description') !== null && $this->query_vars('error_description') !== '' ) {
 			$msg = __( 'There was a problem with your log in:', WPA0_LANG );
-			$msg .= ' '.$wp_query->query_vars['error_description'];
+			$msg .= ' '.$this->query_vars('error_description');
 			$msg .= '<br/><br/>';
 			$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', WPA0_LANG ) . '</a>';
 			wp_die( $msg );
 		}
 
-		if ( isset( $wp_query->query_vars['error'] ) && trim( $wp_query->query_vars['error'] ) !== '' ) {
+		if ( $this->query_vars('error') !== null && trim( $this->query_vars('error') ) !== '' ) {
 			$msg = __( 'There was a problem with your log in:', WPA0_LANG );
-			$msg .= ' '.$wp_query->query_vars['error'];
+			$msg .= ' '.$this->query_vars('error');
 			$msg .= '<br/><br/>';
 			$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', WPA0_LANG ) . '</a>';
 			wp_die( $msg );
 		}
 
-		$code = $wp_query->query_vars['code'];
+		$code = $this->query_vars('code');
+		$state = $this->query_vars('state');
 
-		$state = (isset($wp_query->query_vars['state']) ? $wp_query->query_vars['state'] : null);
 		$stateFromGet = json_decode( stripcslashes( $state ) );
 
 		$domain = $this->a0_options->get( 'domain' );
@@ -346,7 +346,6 @@ class WP_Auth0_LoginManager {
 			return true;
 
 		} else {
-
 			try {
 				$creator = new WP_Auth0_UserCreator($this->a0_options);
 				$user_id = $creator->create( $userinfo, $id_token, $access_token, $this->default_role );
@@ -354,7 +353,8 @@ class WP_Auth0_LoginManager {
 				wp_set_auth_cookie( $user_id );
 
 				do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token );
-			} catch ( WP_Auth0_CouldNotCreateUserException $e ) {
+			}
+			catch ( WP_Auth0_CouldNotCreateUserException $e ) {
 				$msg = __( 'Error: Could not create user.', WPA0_LANG );
 				$msg = ' ' . $e->getMessage();
 				$msg .= '<br/><br/>';
@@ -459,6 +459,13 @@ class WP_Auth0_LoginManager {
 		}
 		return false;
 
+	}
+
+	protected function query_vars($key) {
+		global $wp_query;
+		if (isset($wp_query->query_vars[$key])) return $wp_query->query_vars[$key];
+		if (isset($_REQUEST[$key])) return $_REQUEST[$key];
+		return null;
 	}
 
 }

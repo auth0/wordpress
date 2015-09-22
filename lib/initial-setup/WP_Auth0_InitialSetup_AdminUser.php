@@ -6,6 +6,8 @@ class WP_Auth0_InitialSetup_AdminUser {
 
       public function __construct(WP_Auth0_Options $a0_options) {
           $this->a0_options = $a0_options;
+
+          add_action( 'init', array( $this, 'callback' ), 1 );
       }
 
       public function render($step) {
@@ -16,9 +18,19 @@ class WP_Auth0_InitialSetup_AdminUser {
       }
 
       public function callback() {
+
+        if (!isset($_REQUEST['page']) || $_REQUEST['page'] != 'wpa0-setup') {
+          return;
+        }
+
+        if (!isset($_REQUEST['auth0'])) {
+          return;
+        }
+
         wp_logout();
+        
         $login_manager = new WP_Auth0_LoginManager($this->a0_options, 'administrator');
-        $login_manager->implicit_login();
+        $login_manager->redirect_login();
       }
 
     }
