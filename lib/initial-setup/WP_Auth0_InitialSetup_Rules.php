@@ -35,7 +35,9 @@ class WP_Auth0_InitialSetup_Rules {
       $old_options = array();
 
       foreach ($keys as $key) {
-        $input[$key] = $_REQUEST[$key];
+        if (isset($_REQUEST[$key])) {
+            $input[$key] = $_REQUEST[$key];
+        }
         $old_options[$key] = $this->a0_options->get($key);
       }
 
@@ -51,9 +53,7 @@ class WP_Auth0_InitialSetup_Rules {
   		$fullcontact_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['fullcontact_apikey'], $fullcontact_script);
       $input = $this->rule_validation($old_options, $input, 'fullcontact', WP_Auth0_RulesLib::$fullcontact['name'], $fullcontact_script);
 
-      foreach ($keys as $key) {
-        $this->a0_options->set($key, $input[$key]);
-      }
+      $this->a0_options->set('fullcontact_apikey', $input['fullcontact_apikey']);
 
       wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=6' ) );
   	}
@@ -61,11 +61,13 @@ class WP_Auth0_InitialSetup_Rules {
   	public function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {
   		$input[$key] = ( isset( $input[$key] ) ? $input[$key] : null );
 
-  		if ($input[$key] !== null && $old_options[$key] === null || $input[$key] === null && $old_options[$key] !== null) {
+  		if ((!empty($input[$key]) &&  empty($old_options[$key])) || (empty($input[$key]) && !empty($old_options[$key]))) {
   			try {
 
   				$operations = new WP_Auth0_Api_Operations($this->a0_options);
   				$input[$key] = $operations->toggle_rule ( $this->get_token(), (is_null($input[$key]) ? $old_options[$key] : null), $rule_name, $rule_script );
+
+          $this->a0_options->set($key, $input[$key]);
 
   			} catch (Exception $e) {
   				$this->add_validation_error( $e->getMessage() );
@@ -77,7 +79,10 @@ class WP_Auth0_InitialSetup_Rules {
   	}
 
     public function add_validation_error($error) {
-      die($error);
+
+      wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=5&error=1' ) );
+      exit;
+
     }
 
     protected $token = null;

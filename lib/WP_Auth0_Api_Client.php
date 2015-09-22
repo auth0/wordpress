@@ -90,9 +90,7 @@ class WP_Auth0_Api_Client {
 		$endpoint = "https://$domain/";
 
 		$body['client_id'] = $client_id;
-		if ($client_secret) {
-			$body['client_secret'] = $client_secret;
-		}
+		$body['client_secret'] = is_null($client_secret) ? '' : $client_secret;
 		$body['grant_type'] = $grantType;
 
 		$headers = self::get_info_headers();
