@@ -68,9 +68,11 @@ class WP_Auth0_InitialSetup_Connections {
           $old_input["social_{$provider_name}_key"] = $this->a0_options->get( "social_{$provider_name}_key" );
           $old_input["social_{$provider_name}_secret"] = $this->a0_options->get( "social_{$provider_name}_secret" );
 
-          $input["social_{$provider_name}"] = $_REQUEST["social_{$provider_name}"];
-          $input["social_{$provider_name}_key"] = $_REQUEST["social_{$provider_name}_key"];
-          $input["social_{$provider_name}_secret"] = $_REQUEST["social_{$provider_name}_secret"];
+          if (isset($_REQUEST["social_{$provider_name}"])) {
+            $input["social_{$provider_name}"] = $_REQUEST["social_{$provider_name}"];
+            $input["social_{$provider_name}_key"] = $_REQUEST["social_{$provider_name}_key"];
+            $input["social_{$provider_name}_secret"] = $_REQUEST["social_{$provider_name}_secret"];
+          }
 
           try {
             $input = $operations->social_validation($this->get_token(), $old_input, $input, $provider_name, $provider['options'] );
