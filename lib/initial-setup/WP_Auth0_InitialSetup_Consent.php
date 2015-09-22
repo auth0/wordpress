@@ -23,7 +23,6 @@ class WP_Auth0_InitialSetup_Consent {
       }
     }
 
-
     $site_title = get_bloginfo('name');
     $site_url = get_bloginfo('url');
     $wordpress_url = get_bloginfo('wpurl');
@@ -60,7 +59,9 @@ class WP_Auth0_InitialSetup_Consent {
     $code = $_REQUEST['code'];
     $callback_url = urlencode( admin_url( 'admin.php?page=wpa0-setup&step=2' ) );
 
-    $response = WP_Auth0_Api_Client::get_token( $this->domain, $this->client_id, $this->client_secret, 'authorization_code', array(
+    $client_id = get_bloginfo('wpurl');
+
+    $response = WP_Auth0_Api_Client::get_token( $this->domain, $client_id, null, 'authorization_code', array(
             'redirect_uri' => home_url(),
             'code' => $code,
         ) );

@@ -17,18 +17,18 @@ class WP_Auth0_Routes {
 		add_rewrite_tag( '%code%', '([^&]+)' );
 		add_rewrite_tag( '%state%', '([^&]+)' );
 		add_rewrite_tag( '%auth0_error%', '([^&]+)' );
+		add_rewrite_tag( '%a0_action%', '([^&]+)' );
 
 		add_rewrite_rule( '^auth0', 'index.php?auth0=1', 'top' );
-		add_rewrite_rule( '^.well-known/oauth2-client-configuration?', 'index.php?a0_action=oauth2-config', 'bottom' );
+		add_rewrite_rule( '^\.well-known/oauth2-client-configuration', 'index.php?a0_action=oauth2-config', 'top' );
 
     if ( $force_ws || $this->a0_options->get('migration_ws') ) {
-      add_rewrite_rule( '^migration-ws-login?', 'index.php?a0_action=migration-ws-login', 'top' );
-      add_rewrite_rule( '^migration-ws-get-user?', 'index.php?a0_action=migration-ws-get-user', 'top' );
+      add_rewrite_rule( '^migration-ws-login', 'index.php?a0_action=migration-ws-login', 'top' );
+      add_rewrite_rule( '^migration-ws-get-user', 'index.php?a0_action=migration-ws-get-user', 'top' );
     }
 	}
 
   public function custom_requests ( $wp ) {
-
     $page = null;
 
     if (isset($wp->query_vars['a0_action'])) {

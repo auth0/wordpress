@@ -124,6 +124,9 @@ class WP_Auth0 {
 
 	function on_activate_redirect( $plugin ) {
 		if( $plugin == plugin_basename( __FILE__ ) ) {
+			$this->router->setup_rewrites();
+			flush_rewrite_rules();
+
 			$client_id = $this->a0_options->get('client_id');
 			$client_secret = $this->a0_options->get('client_secret');
 			$domain = $this->a0_options->get('domain');
