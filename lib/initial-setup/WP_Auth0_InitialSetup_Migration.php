@@ -37,6 +37,9 @@ class WP_Auth0_InitialSetup_Migration {
         $operations = new WP_Auth0_Api_Operations($this->a0_options);
         $migration_connection_id = $operations->enable_users_migration($app_token, $migration_token);
         $this->a0_options->set( 'migration_connection_id', $migration_connection_id );
+      } else {
+        wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=6&error=' . urlencode('There was an error setting up your custom db.') ) );
+        exit;
       }
 
       wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=3' ) );

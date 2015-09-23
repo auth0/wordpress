@@ -89,6 +89,7 @@ class WP_Auth0_InitialSetup_Connections {
       }
 
       public function add_validation_error($error) {
-        die($error);
+        wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=6&error=' . urlencode('There was an error setting up your connections.') ) );
+        exit;
       }
 }

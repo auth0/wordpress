@@ -30,3 +30,9 @@ ul.auth0 {
   background-color: #ae3610;
   color: #fff;
 }
+
+div.error {
+  margin: 25px 20px 0 2px;
+  line-height: 19px;
+  padding: 11px 15px;
+}

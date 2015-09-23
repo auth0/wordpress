@@ -66,8 +66,6 @@ class WP_Auth0_Api_Client {
 		return true;
 	}
 
-//TODO ADD THIS TO ALL REQUESTS + ADD CHECK FOR TELEMETRY OPTION IN SETTING
-//CHECK HOW TO SHOW ERROR IN INITIAL SETUP
 	public static function get_info_headers() {
 		global $wp_version;
 
