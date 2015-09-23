@@ -6,7 +6,8 @@ class WP_Auth0_Api_Client {
 
 		$endpoint = "https://$domain/";
 
-		$headers = array( 'content-type' => 'application/x-www-form-urlencoded' );
+		$headers = self::get_info_headers();
+		$headers['content-type'] = 'application/x-www-form-urlencoded';
 		$body = array(
 			'client_id' => $client_id,
 			'username' => $username,
@@ -65,8 +66,16 @@ class WP_Auth0_Api_Client {
 		return true;
 	}
 
+//TODO ADD THIS TO ALL REQUESTS + ADD CHECK FOR TELEMETRY OPTION IN SETTING
+//CHECK HOW TO SHOW ERROR IN INITIAL SETUP
 	public static function get_info_headers() {
 		global $wp_version;
+
+		$a0_options = WP_Auth0_Options::Instance();
+
+		if ($a0_options->get('metrics') != 1) {
+			return array();
+		}
 
 		return array(
 			'Auth0-Client' => base64_encode( wp_json_encode( array(
