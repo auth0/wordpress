@@ -27,9 +27,9 @@ class WP_Auth0_InitialSetup_AdminUser {
           return;
         }
 
-        wp_logout();
-        
-        $login_manager = new WP_Auth0_LoginManager($this->a0_options, 'administrator');
+        // wp_logout();
+
+        $login_manager = new WP_Auth0_LoginManager($this->a0_options, 'administrator', true);
         $login_manager->redirect_login();
       }
 

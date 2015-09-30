@@ -4,10 +4,13 @@ class WP_Auth0_LoginManager {
 
 	protected $a0_options;
 	protected $default_role;
+	protected $ignore_unverified_email;
 
-	public function __construct($a0_options = null, $default_role = null) {
+	public function __construct($a0_options = null, $default_role = null, $ignore_unverified_email = false) {
 
 		$this->default_role = $default_role;
+		$this->ignore_unverified_email = $ignore_unverified_email;
+
 		if ($a0_options instanceof WP_Auth0_Options) {
 				$this->a0_options = $a0_options;
 		} else {
@@ -312,8 +315,7 @@ class WP_Auth0_LoginManager {
 		// notify the user he cant login until he does so.
 		$requires_verified_email = $this->a0_options->get( 'requires_verified_email' );
 
-
-		if ( 1 == $requires_verified_email ) {
+		if ( ! $this->ignore_unverified_email &&  1 == $requires_verified_email ) {
 			if ( empty( $userinfo->email ) ) {
 				$msg = __( 'This account does not have an email associated. Please login with a different provider.', WPA0_LANG );
 				$msg .= '<br/><br/>';
@@ -339,7 +341,9 @@ class WP_Auth0_LoginManager {
 
 			$this->_update_auth0_object( $userinfo, $id_token, $access_token );
 
-			wp_set_auth_cookie( $user->ID );
+			wp_set_current_user( $user->ID, $user->user_login );
+	    wp_set_auth_cookie( $user->ID );
+	    do_action( 'wp_login', $user->user_login );
 
 			do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token );
 
@@ -348,9 +352,14 @@ class WP_Auth0_LoginManager {
 		} else {
 			try {
 				$creator = new WP_Auth0_UserCreator($this->a0_options);
-				$user_id = $creator->create( $userinfo, $id_token, $access_token, $this->default_role );
+				$user_id = $creator->create( $userinfo, $id_token, $access_token, $this->default_role, $this->ignore_unverified_email );
 
-				wp_set_auth_cookie( $user_id );
+				$user = get_user_by( 'id', $user_id ); 
+
+				wp_set_current_user( $user->ID, $user->user_login );
+		    wp_set_auth_cookie( $user->ID );
+		    do_action( 'wp_login', $user->user_login );
+
 
 				do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token );
 			}
@@ -366,6 +375,7 @@ class WP_Auth0_LoginManager {
 				$msg .= '<a href="' . site_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
 				wp_die( $msg );
 			} catch ( WP_Auth0_EmailNotVerifiedException $e ) {
+				echo $e;exit;
 				$this->dieWithVerifyEmail( $e->userinfo, $e->id_token );
 			}
 			// catch ( Exception $e ) {
