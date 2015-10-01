@@ -104,6 +104,11 @@ class WP_Auth0_LoginManager {
 
 		if ( $auto_login && ( ! isset( $_GET['action'] ) || 'logout' !== $_GET['action'] ) && ! isset( $_GET['wle'] ) ) {
 
+			if (strtolower($_SERVER['REQUEST_METHOD']) !== 'get') {
+				return;
+			}
+
+
 			$stateObj = array( 'interim' => false, 'uuid' => uniqid() );
 			if ( isset( $_GET['redirect_to'] ) ) {
 				$stateObj['redirect_to'] = $_GET['redirect_to'];
