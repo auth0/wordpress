@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wordpress Auth0 Integration
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 1.3.5
+ * Version: 1.3.6
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -197,6 +197,10 @@ class WP_Auth0 {
         $auto_login = absint(WP_Auth0_Options::get( 'auto_login' ));
 
         if ($auto_login && $_GET["action"] != "logout" && !isset($_GET['wle'])) {
+
+        	if (strtolower($_SERVER['REQUEST_METHOD']) !== 'get') {
+						return;
+					}
 
             $stateObj = array("interim" => false, "uuid" =>uniqid());
             if (isset($_GET['redirect_to'])) {
