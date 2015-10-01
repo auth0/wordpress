@@ -58,13 +58,9 @@ class WP_Auth0_EditProfile {
     }
 
     $current_user = wp_get_current_user();
-    $app_token = $this->get_token();
+    $app_token = $this->a0_options->get( 'auth0_app_token' );;
 
     if (!$app_token) {
-      return;
-    }
-
-    if ( ! WP_Auth0_Api_Client::validate_user_token($app_token) ) {
       return;
     }
 
@@ -135,11 +131,6 @@ class WP_Auth0_EditProfile {
         }
       }
     }
-  }
-
-  protected function get_token() {
-    $user = get_currentauth0user();
-    return ($user && isset($user->access_token) ? $user->access_token : null);
   }
 
 }

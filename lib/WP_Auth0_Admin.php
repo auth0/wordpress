@@ -47,8 +47,8 @@ class WP_Auth0_Admin {
 	}
 
 	protected function validate_required_api_scopes() {
-		$app_token = $this->get_token();
-		if ( ! WP_Auth0_Api_Client::validate_user_token($app_token) ) {
+		$app_token = $this->a0_options->get( 'auth0_app_token' );
+		if ( ! $app_token ) {
 			add_action( 'admin_notices', array( $this, 'cant_connect_to_auth0' ) );
 		}
 	}
@@ -766,7 +766,7 @@ class WP_Auth0_Admin {
 	public function sso_validation( $old_options, $input ) {
 		$input['sso'] = ( isset( $input['sso'] ) ? $input['sso'] : 0 );
 		if ($old_options['sso'] != $input['sso'] && 1 == $input['sso']) {
-			if ( false === WP_Auth0_Api_Client::update_client($input['domain'], $this->get_token(), $input['client_id'],$input['sso'] == 1) ) {
+			if ( false === WP_Auth0_Api_Client::update_client($input['domain'], $this->a0_options->get( 'auth0_app_token' ), $input['client_id'],$input['sso'] == 1) ) {
 
 				$error = __( 'There was an error updating your Auth0 App to enable SSO. To do it manually, turn it on ', WPA0_LANG );
 				$error .= '<a href="https://auth0.com/docs/sso/single-sign-on#1">HERE</a>.';
@@ -785,12 +785,12 @@ class WP_Auth0_Admin {
 		if ($old_options['brute_force_protection'] != $input['brute_force_protection'] ||
 				$old_options['password_policy'] != $input['password_policy']) {
 
-			$connections = WP_Auth0_Api_Client::search_connection($input['domain'], $this->get_token(), 'auth0');
+			$connections = WP_Auth0_Api_Client::search_connection($input['domain'], $this->a0_options->get( 'auth0_app_token' ), 'auth0');
 
 			foreach ($connections as $connection) {
 
 				if ( in_array($input['client_id'], $connection->enabled_clients) ) {
-					if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $connection->id, array(
+					if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $this->a0_options->get( 'auth0_app_token' ), $connection->id, array(
 						'options' => array(
 							'brute_force_protection' => $input['brute_force_protection'],
 							'passwordPolicy' => $input['password_policy'],
@@ -822,7 +822,7 @@ class WP_Auth0_Admin {
 				$input['migration_token_id'] = $token_id;
 
 				$operations = new WP_Auth0_Api_Operations($this->a0_options);
-				$response = $operations->enable_users_migration($this->get_token(), $input['migration_token']);
+				$response = $operations->enable_users_migration($this->a0_options->get( 'auth0_app_token' ), $input['migration_token']);
 
 				if ($response === false) {
 					$error = __( 'There was an error enabling your custom database. Check how to do it manually ', WPA0_LANG );
@@ -834,7 +834,7 @@ class WP_Auth0_Admin {
 				$input['migration_token'] = null;
 				$input['migration_token_id'] = null;
 
-				$response = WP_Auth0_Api_Client::update_connection($input['domain'], $this->get_token(), $old_options['migration_connection_id'], array(
+				$response = WP_Auth0_Api_Client::update_connection($input['domain'], $this->a0_options->get( 'auth0_app_token' ), $old_options['migration_connection_id'], array(
 					'options' => array(
 						'enabledDatabaseCustomization' => false,
 						'import_mode' => false
@@ -867,7 +867,7 @@ class WP_Auth0_Admin {
 			try {
 
 				$operations = new WP_Auth0_Api_Operations($this->a0_options);
-				$input[$key] = $operations->toggle_rule ( $this->get_token(), (is_null($input[$key]) ? $old_options[$key] : null), $rule_name, $rule_script );
+				$input[$key] = $operations->toggle_rule ( $this->a0_options->get( 'auth0_app_token' ), (is_null($input[$key]) ? $old_options[$key] : null), $rule_name, $rule_script );
 
 			} catch (Exception $e) {
 				$this->add_validation_error( $e->getMessage() );
@@ -895,7 +895,7 @@ class WP_Auth0_Admin {
 	public function socialfacebook_validation( $old_options, $input ) {
 		try {
 			$operations = new WP_Auth0_Api_Operations($this->a0_options);
-			return $operations->social_validation( $this->get_token(), $old_options, $input, 'facebook', array(
+			return $operations->social_validation( $this->a0_options->get( 'auth0_app_token' ), $old_options, $input, 'facebook', array(
 				"public_profile" => true,
 				"email" => true,
 				"user_birthday" => true,
@@ -909,7 +909,7 @@ class WP_Auth0_Admin {
 	public function socialtwitter_validation( $old_options, $input ) {
 		try{
 			$operations = new WP_Auth0_Api_Operations($this->a0_options);
-			return $operations->social_validation( $this->get_token(), $old_options, $input, 'twitter', array(
+			return $operations->social_validation( $this->a0_options->get( 'auth0_app_token' ), $old_options, $input, 'twitter', array(
 				"profile" => true,
 			) );
 		} catch (Exception $e) {
@@ -920,7 +920,7 @@ class WP_Auth0_Admin {
 	public function socialgoogle_validation( $old_options, $input ) {
 		try {
 			$operations = new WP_Auth0_Api_Operations($this->a0_options);
-			return $operations->social_validation( $this->get_token(), $old_options, $input, 'google-oauth2', array(
+			return $operations->social_validation( $this->a0_options->get( 'auth0_app_token' ), $old_options, $input, 'google-oauth2', array(
 				"google_plus" => true,
 				"email" => true,
       		"profile" => true,
@@ -1018,14 +1018,5 @@ class WP_Auth0_Admin {
 		return "<span class=\"title\">$title</span><span class=\"description\" title=\"$description\">$description</span>";
 	}
 
-	protected $token = null;
-	protected function get_token() {
-		if ( $this->token === null ) {
-			$user = get_currentauth0user();
-			if ($user && isset($user->access_token)) {
-				$this->token = $user->access_token;
-			}
-		}
-		return $this->token;
-	}
+
 }

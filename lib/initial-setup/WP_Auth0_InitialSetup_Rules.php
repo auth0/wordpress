@@ -65,7 +65,7 @@ class WP_Auth0_InitialSetup_Rules {
   			try {
 
   				$operations = new WP_Auth0_Api_Operations($this->a0_options);
-  				$input[$key] = $operations->toggle_rule ( $this->get_token(), (is_null($input[$key]) ? $old_options[$key] : null), $rule_name, $rule_script );
+  				$input[$key] = $operations->toggle_rule ( $this->a0_options->get( 'auth0_app_token' ), (is_null($input[$key]) ? $old_options[$key] : null), $rule_name, $rule_script );
 
           $this->a0_options->set($key, $input[$key]);
 
@@ -83,17 +83,6 @@ class WP_Auth0_InitialSetup_Rules {
       wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=6&error=' . urlencode('There was an error setting up your rules.') ) );
       exit;
 
-    }
-
-    protected $token = null;
-    protected function get_token() {
-      if ( $this->token === null ) {
-        $user = get_currentauth0user();
-        if ($user && isset($user->access_token)) {
-          $this->token = $user->access_token;
-        }
-      }
-      return $this->token;
     }
 
   }

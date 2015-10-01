@@ -200,6 +200,34 @@ class WP_Auth0_Api_Client {
 		return json_decode($response['body']);
 	}
 
+	public static function search_clients($domain, $app_token) {
+		$endpoint = "https://$domain/api/v2/clients";
+
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+
+		$response =  wp_remote_get( $endpoint  , array(
+			'headers' => $headers,
+		) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::search_clients', $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] != 200 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::search_clients', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		if ( $response['response']['code'] >= 300 ) return false;
+
+		return json_decode($response['body']);
+	}
+
 	public static function update_client($domain, $app_token, $client_id, $sso) {
 
 		$endpoint = "https://$domain/api/v2/clients/$client_id";

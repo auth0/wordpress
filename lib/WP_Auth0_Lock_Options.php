@@ -140,7 +140,7 @@ class WP_Auth0_Lock_Options {
     public function get_sso_options() {
         $options = $this->get_lock_options();
 
-        $options["scope"] = "openid update:clients update:connections create:connections read:connections create:rules delete:rules update:users";
+        $options["scope"] = "openid";
 
         if( $this->get_auth0_implicit_workflow() ) {
             $options["callbackOnLocationHash"] = true;
@@ -177,7 +177,7 @@ class WP_Auth0_Lock_Options {
             "authParams"    => array("state" => $state),
         );
 
-        $extraOptions["authParams"]["scope"] = "openid update:clients update:connections create:connections read:connections create:rules delete:rules update:users";
+        $extraOptions["authParams"]["scope"] = "openid";
 
         if( $this->get_auth0_implicit_workflow() ) {
             $extraOptions["authParams"]["scope"] .= "name email nickname email_verified identities";

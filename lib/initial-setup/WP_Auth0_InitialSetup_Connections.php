@@ -44,17 +44,6 @@ class WP_Auth0_InitialSetup_Connections {
         );
       }
 
-      protected $token = null;
-    	protected function get_token() {
-    		if ( $this->token === null ) {
-    			$user = get_currentauth0user();
-    			if ($user && isset($user->access_token)) {
-    				$this->token = $user->access_token;
-    			}
-    		}
-    		return $this->token;
-    	}
-
       public function callback() {
         $input = array();
         $old_input = array();
@@ -75,7 +64,7 @@ class WP_Auth0_InitialSetup_Connections {
           }
 
           try {
-            $input = $operations->social_validation($this->get_token(), $old_input, $input, $provider_name, $provider['options'] );
+            $input = $operations->social_validation($this->a0_options->get( 'auth0_app_token' ), $old_input, $input, $provider_name, $provider['options'] );
           } catch (Exception $e) {
             die($e->getMessage());
           }
