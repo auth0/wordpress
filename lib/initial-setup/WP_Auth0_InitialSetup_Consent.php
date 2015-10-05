@@ -85,11 +85,11 @@ class WP_Auth0_InitialSetup_Consent {
 
     $app_domain = $this->parse_token_domain($access_token);
 
-    $app_token = $this->generate_app_token($app_domain, $access_token);
+    // $app_token = $this->generate_app_token($app_domain, $access_token);
 
-    if ($app_token === null) {
-        return false;
-    }
+    // if ($app_token === null) {
+    //     return false;
+    // }
 
     $this->a0_options->set( 'auth0_app_token', $app_token );
     $this->a0_options->set( 'domain', $app_domain );
@@ -196,7 +196,7 @@ class WP_Auth0_InitialSetup_Consent {
         // 'create:clients'
     ) ) );
 
-    $url = "https://{$this->domain}/i/oauth2/authorize?client_id={$client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}";
+    $url = "https://{$this->domain}/i/oauth2/authorize?client_id={$client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}&expiration=9999999999";
 
     return $url;
   }
