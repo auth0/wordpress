@@ -10,14 +10,13 @@ class WP_Auth0_InitialSetup_Migration {
 
     public function render($step) {
       $migration_ws = $this->a0_options->get('migration_ws');
-      $token = $this->a0_options->get('migration_token');
-      $token_id = $this->a0_options->get('migration_token_id');
 
-      if (empty($token) || empty($token_id)) {
-        $secret = $this->a0_options->get( 'client_secret' );
-        $token_id = uniqid();
-        $token = JWT::encode(array('scope' => 'migration_ws', 'jti' => $token_id), JWT::urlsafeB64Decode( $secret ));
-      }
+      $secret = $this->a0_options->get( 'client_secret' );
+      $token_id = uniqid();
+      $token = JWT::encode(array('scope' => 'migration_ws', 'jti' => $token_id), JWT::urlsafeB64Decode( $secret ));
+
+      $this->a0_options->set('migration_token', $token);
+      $this->a0_options->set('migration_token_id', $token_id);
 
       include WPA0_PLUGIN_DIR . 'templates/initial-setup/data-migration.php';
     }
@@ -28,10 +27,8 @@ class WP_Auth0_InitialSetup_Migration {
       $migration_token_id = (isset($_REQUEST['migration_token_id']) ? $_REQUEST['migration_token_id'] : null);
 
       $app_token = $this->a0_options->get( 'auth0_app_token' );
-
-      $this->a0_options->set('migration_ws', $migration_ws);
-      $this->a0_options->set('migration_token', $migration_token);
-      $this->a0_options->set('migration_token_id', $migration_token_id);
+      $migration_token = $this->a0_options->get( 'migration_token' );
+      $migration_token_id = $this->a0_options->get( 'migration_token_id' );
 
       if ($migration_ws) {
         $operations = new WP_Auth0_Api_Operations($this->a0_options);

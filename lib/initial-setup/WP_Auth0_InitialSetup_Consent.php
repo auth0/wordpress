@@ -84,7 +84,7 @@ class WP_Auth0_InitialSetup_Consent {
 
     $app_domain = $this->parse_token_domain($access_token);
 
-    $this->a0_options->set( 'auth0_app_token', $app_token );
+    $this->a0_options->set( 'auth0_app_token', $access_token );
     $this->a0_options->set( 'domain', $app_domain );
 
     return true;

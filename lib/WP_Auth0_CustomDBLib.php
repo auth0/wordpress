@@ -10,20 +10,26 @@ class WP_Auth0_CustomDBLib {
       headers:{"Authorization":"Bearer {THE_WS_TOKEN}"}
     }, function(error, response, body){
 
-      if (!error && response.statusCode === 200) {
+      if ( response.statusCode === 200) {
         var info = JSON.parse(body);
+        
+        if (info.error) {
+          callback(new Error(info.error), null);
+        } else {
+          var profile = {
+            user_id:     info.data.ID,
+            nickname:    info.data.display_name,
+            email:       info.data.user_email,
+            name:        info.data.user_nicename,
+          };
 
-        var profile = {
-          user_id:     info.data.ID,
-          nickname:    info.data.display_name,
-          email:       info.data.user_email,
-          name:        info.data.user_nicename,
-        };
-
-        callback(null, profile);
+          callback(null, profile);
+        }
+        
       } else {
         callback(error || new Error("Error"), null);
       }
+
     });
 }
 ';
@@ -40,7 +46,9 @@ class WP_Auth0_CustomDBLib {
       if (!error && response.statusCode === 200) {
         var info = JSON.parse(body);
 
-        if (info) {
+        if (info.error) { 
+          callback(null);
+        } else {
           var profile = {
             user_id:     info.data.ID,
             nickname:    info.data.display_name,
@@ -49,9 +57,7 @@ class WP_Auth0_CustomDBLib {
           };
 
           callback(null, profile);
-        } else {
-          callback(null);
-        }
+        } 
 
       } else {
         callback(error || new Error("Error"));
