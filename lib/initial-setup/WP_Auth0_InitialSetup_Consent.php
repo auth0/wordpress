@@ -85,61 +85,12 @@ class WP_Auth0_InitialSetup_Consent {
 
     $app_domain = $this->parse_token_domain($access_token);
 
-    // $app_token = $this->generate_app_token($app_domain, $access_token);
-
-    // if ($app_token === null) {
-    //     return false;
-    // }
-
     $this->a0_options->set( 'auth0_app_token', $app_token );
     $this->a0_options->set( 'domain', $app_domain );
 
     return true;
   }
 
-  protected function generate_app_token($app_domain, $access_token) {
-
-    $clients = WP_Auth0_Api_Client::search_clients($app_domain, $access_token);
-
-    $token = null;
-
-    foreach ($clients as $client) {
-
-      if ($client->global) {
-
-        $token = JWT::encode(array(
-          'aud' => $client->client_id,
-          'scope' => 'create:clients update:clients update:connections create:connections read:connections create:rules delete:rules update:users',
-          // array(
-
-          //   'clients' => array(
-          //     'actions' => array('update', 'create')
-          //   ), 
-
-          //   'connections' => array(
-          //     'actions' => array('update', 'create', 'read')
-          //   ), 
-
-          //   'rules' => array(
-          //     'actions' => array('delete', 'create')
-          //   ), 
-
-          //   'users' => array(
-          //     'actions' => array('update')
-          //   )
-
-          // ), 
-          'jti' => uniqid('',true)
-        ), JWT::urlsafeB64Decode( $client->client_secret ));
-
-
-      }
-
-    }
-
-    return $token;
-
-  }
 
   public function consent_callback($name) {
 
@@ -188,12 +139,14 @@ class WP_Auth0_InitialSetup_Consent {
     $client_id = urlencode(get_bloginfo('wpurl'));
 
     $scope = urlencode( implode( ' ', array(
-        'read:clients',
-        'read:client_keys',
-        // 'read:connections',
-        // 'create:connections',
-        // 'update:connections',
-        // 'create:clients'
+      'create:clients',
+      'update:clients',
+      'update:connections',
+      'create:connections',
+      'read:connections',
+      'create:rules',
+      'delete:rules',
+      'update:users',
     ) ) );
 
     $url = "https://{$this->domain}/i/oauth2/authorize?client_id={$client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}&expiration=9999999999";
