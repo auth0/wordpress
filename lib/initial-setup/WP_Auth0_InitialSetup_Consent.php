@@ -2,8 +2,7 @@
 
 class WP_Auth0_InitialSetup_Consent {
 
-  // protected $domain = 'auth0.auth0.com';
-  protected $domain = 'login0.myauth0.com';
+  protected $domain = 'auth0.auth0.com';
 
   protected $a0_options;
 
