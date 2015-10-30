@@ -30,7 +30,8 @@ DualDimentionBars.prototype.setOptions = function(options) {
     labelsTitle: options.labelsTitle,
     yAxisTitle: options.yAxisTitle,
     xAxisTitle: options.xAxisTitle,
-    internalMargin: options.internalMargin || 15
+    internalMargin: options.internalMargin || 15,
+    onClick: options.onClick
   }
 
   this.options.innerWidth = this.options.width - ( this.options.padding * 2 );
@@ -146,6 +147,10 @@ DualDimentionBars.prototype.render = function() {
                     e.selected = (e.id === d.id) ? !e.selected : e.selected;
                     return e;
                   });
+
+                  if (_this.options.onClick) {
+                    _this.options.onClick( _this.data.filter( function(e) { return e.selected; } ) );
+                  }
                   _this.render();
                 })
                 .on('mouseover', function(d){

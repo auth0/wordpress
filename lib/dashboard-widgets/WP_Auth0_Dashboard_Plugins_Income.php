@@ -25,7 +25,23 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
             yAxisWidth: 70,
             labelsTitle: "ZipCode",
             yAxisTitle: "Income",
-            xAxisTitle: "# Users"
+            xAxisTitle: "# Users",
+
+            onClick: function (selection) {
+
+              _this.filter_selection = selection.map(function(e){
+                return e.id;
+              });
+
+              if (selection.length === 0) {
+                filter_callback( _this, null, null, null );
+              } else {
+                filter_callback(_this, 'Income', _this.filter_selection, function(e) { if (!e.zipcode) return false; return _this.filter_selection.indexOf(e.zipcode.toString()) > -1; } );
+              }
+
+              // _this.chart.flush();
+            }
+
           });
           // this.chart.debug();
         }
