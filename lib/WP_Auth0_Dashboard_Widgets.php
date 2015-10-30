@@ -191,6 +191,7 @@ class WP_Auth0_Dashboard_Widgets  {
 		wp_enqueue_script( 'auth0-lodash', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/lodash.min.js' );
 
 		wp_enqueue_script( 'auth0-parallelcoordinates', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/parallelcoordinates.js' );
+		wp_enqueue_script( 'auth0-dualdimentionbars', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/dualdimentionbars.js' );
 
 
 		$widgets = array(

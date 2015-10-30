@@ -50,7 +50,9 @@ class WP_Auth0_Dashboard_Plugins_Location extends WP_Auth0_Dashboard_Plugins_Gen
             }
 
             var markers = data.map(function(d){
+              if (d.location.latitude && d.location.longitude) {
                 return addMarker(d.location.latitude, d.location.longitude);
+              }
             });
 
             this.markerCluster = new MarkerClusterer(this.map, markers);

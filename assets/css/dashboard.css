@@ -9,20 +9,27 @@
     width: 100%;
 }
 
-
-
-//------------------------------------------------------------------------------
-
-#auth0ChartIncome {
-	width:80%;
-	min-width: 960px;
-	margin:0 auto;
-	min-height:400px;
-	position: relative;
+#auth0ChartIncome .axis path {
+	fill:none;
+	stroke-width:1px;
+	stroke:#CACACA;
 }
-#auth0ChartIncome h4 {
-  color:#FFFFFF;
+#auth0ChartIncome .column-line {
+	stroke: #CACACA;
+	stroke-width:1;
 }
+#auth0ChartIncome .bar.selected,
+#auth0ChartIncome .label.selected {
+	fill:red;
+}
+#auth0ChartIncome .bar.hover,
+#auth0ChartIncome .label.hover {
+	fill:green;
+}
+
+/*------------------------------------------------------------------------------*/
+
+/*
 #auth0ChartIncome div#tooltip {
 	position: absolute;
 	font-size:11px;
@@ -238,3 +245,4 @@
 #auth0ChartIncome svg #columns g.axis g.tick.end text {
 	text-anchor:end;
 }
+*/

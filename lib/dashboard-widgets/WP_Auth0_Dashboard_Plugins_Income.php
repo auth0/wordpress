@@ -8,7 +8,6 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
     public function render() {
         ?>
         <div id="auth0ChartIncome">
-          <div id="tooltip"><div></div></div>
         </div>
 
         <script type="text/javascript">
@@ -17,52 +16,18 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
           var _this = this;
           this.name = 'income';
 
-          this.chart = new ParallelCoordinates(this.process_data(raw_data),{
+          this.chart = new DualDimentionBars(this.process_data(raw_data),{
             container:"#auth0ChartIncome",
-            scale:"linear",
-            columns:["zipcode","count","income"],
-            ref:"lang_usage",
-            title_column:"zipcode",
-            scale_map:{
-              "zipcode":"ordinal",
-              "count":"ordinal",
-              "income":"linear"
-            },
-            use:{
-      				"name":"count"
-      			},
-            sorting:{
-              "count":d3.ascending
-            },
-            dimensions:["count","income","zipcode"],
-            column_map:{
-              "zipcode":"zipcode",
-              "income":"income",
-              "count":"count"
-            },
-            formats:{
-            },
-            help:{
-              "zipcode":"<h4>Zipcode</h4>This is the users zipcode based on their IP.",
-              "income":"<h4>Income</h4>This is the Zipcode median household income based on the last US census.",
-              "count":"<h4>Count</h4>Amount of users that login in the related zipcode."
-            },
-            duration:1000,
-            onclick: function (d) {
-              _this.filter_selection = _this.chart.selected().map(function(e){
-
-                return parseInt(e.key);
-
-              });
-
-              if (_this.filter_selection.length === 0) {
-                filter_callback( _this, null, null, null );
-              } else {
-                filter_callback(_this, 'Zipcode', _this.filter_selection, function(e) { return _this.filter_selection.indexOf(e.zipcode) > -1; } );
-              }
-            },
+            width: jQuery('#auth0ChartIncome').width(),
+            height:400,
+            barHeight: 5,
+            labelsWidth:150,
+            yAxisWidth: 70,
+            labelsTitle: "ZipCode",
+            yAxisTitle: "Income",
+            xAxisTitle: "# Users"
           });
-
+          // this.chart.debug();
         }
 
         a0_income_chart.prototype.load = function(raw_data) {
@@ -70,23 +35,20 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
         }
 
         a0_income_chart.prototype.process_data = function(raw_data) {
-          raw_data = raw_data.filter(function(e) {return e.zipcode !== null;});
+          raw_data = raw_data.filter(function(e) {return e.zipcode !== null && e.income !== null && e.income != 0;});
           var grouped_data = _.groupBy(raw_data, function(e) { return e.zipcode; });
 
           var data = Object.keys(grouped_data).map(function(key) {
             return {
-              zipcode:key,
-              count: grouped_data[key] ? grouped_data[key].length : 0,
-              income: grouped_data[key] ? grouped_data[key][0].income : 0
+              id:key,
+              label:key,
+              x: grouped_data[key] ? grouped_data[key].length : 0,
+              y: grouped_data[key] ? grouped_data[key][0].income : 0
             };
           });
 
           return data;
         }
-
-
-
-
 
         </script>
 
