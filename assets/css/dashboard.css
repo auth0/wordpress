@@ -18,10 +18,12 @@
 	stroke: #CACACA;
 	stroke-width:1;
 }
+#auth0ChartIncome .tick.selected,
 #auth0ChartIncome .bar.selected,
 #auth0ChartIncome .label.selected {
 	fill:red;
 }
+#auth0ChartIncome .tick.hover,
 #auth0ChartIncome .bar.hover,
 #auth0ChartIncome .label.hover {
 	fill:green;

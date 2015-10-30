@@ -184,7 +184,9 @@ DualDimentionBars.prototype.render = function() {
               .attr("height", function(d) { return _this.options.barHeight ? _this.options.barHeight : _this.y.rangeBand(); })
               .attr("width", function(d) { return _this.x(d.x); });
 
-  // this.yAxisEl.selectAll('.tick').classed('selected', function(d) { console.log(d); return d.selected; });
+  this.yAxisEl.selectAll('.tick')
+              .classed('selected', function(d, i) { return _this.data[i].selected; })
+              .classed('hover', function(d, i) { return _this.data[i].hover; });
 
   //UDPATE THE LABELS
   this.labelSelection = this.labels.selectAll('text.label')
