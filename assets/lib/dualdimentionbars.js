@@ -81,7 +81,10 @@ DualDimentionBars.prototype.init = function() {
 
   this.xAxis = d3.svg.axis()
               .scale(this.x)
-              .orient("bottom");
+              .orient("bottom")
+              .tickFormat(function(e) {
+                return (Math.floor(e) === e ? e : null);
+              });
 
   this.yAxisEl = this.svgContent.append("g")
               .attr("class", "y axis")
