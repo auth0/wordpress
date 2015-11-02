@@ -319,6 +319,7 @@ class WP_Auth0_LoginManager {
 		// If the userinfo has no email or an unverified email, and in the options we require a verified email
 		// notify the user he cant login until he does so.
 		$requires_verified_email = $this->a0_options->get( 'requires_verified_email' );
+		$remember_users_session = $this->a0_options->get( 'remember_users_session' );
 
 		if ( ! $this->ignore_unverified_email &&  1 == $requires_verified_email ) {
 			if ( empty( $userinfo->email ) ) {
@@ -347,7 +348,7 @@ class WP_Auth0_LoginManager {
 			$this->_update_auth0_object( $userinfo, $id_token, $access_token );
 
 			wp_set_current_user( $user->ID, $user->user_login );
-	    wp_set_auth_cookie( $user->ID );
+	    wp_set_auth_cookie( $user->ID, $remember_users_session );
 	    do_action( 'wp_login', $user->user_login );
 
 			do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token );
@@ -362,7 +363,7 @@ class WP_Auth0_LoginManager {
 				$user = get_user_by( 'id', $user_id ); 
 
 				wp_set_current_user( $user->ID, $user->user_login );
-		    wp_set_auth_cookie( $user->ID );
+		    wp_set_auth_cookie( $user->ID, $remember_users_session );
 		    do_action( 'wp_login', $user->user_login );
 
 

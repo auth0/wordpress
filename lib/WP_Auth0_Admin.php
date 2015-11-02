@@ -143,6 +143,7 @@ class WP_Auth0_Admin {
 
 		$advancedOptions = array(
 
+			array( 'id' => 'wpa0_remember_users_session', 'name' => 'Remember users session', 'function' => 'render_remember_users_session' ),
 			array( 'id' => 'wpa0_link_auth0_users', 'name' => 'Link users with same email', 'function' => 'render_link_auth0_users' ),
 			array( 'id' => 'wpa0_migration_ws', 'name' => 'Users Migration', 'function' => 'render_migration_ws' ),
 			array( 'id' => 'wpa0_auth0_implicit_workflow', 'name' => 'Auth0 Implicit flow', 'function' => 'render_auth0_implicit_workflow' ),
@@ -276,6 +277,17 @@ class WP_Auth0_Admin {
 			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[link_auth0_users]" id="wpa0_link_auth0_users" value="1" <?php echo checked( $v, 1, false ); ?>/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'To enable the link of accounts with the same email. It will only occur if the email was verified before.', WPA0_LANG ); ?></span>
+			</div>
+		<?php
+	}
+
+	public function render_remember_users_session() {
+		$v = $this->a0_options->get( 'remember_users_session' );
+
+		?>
+			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[remember_users_session]" id="wpa0_remember_users_session" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'Users session by default lives for two days. Enabling this setting will make the sessions live longer.', WPA0_LANG ); ?></span>
 			</div>
 		<?php
 	}
@@ -734,6 +746,7 @@ class WP_Auth0_Admin {
 		$input['requires_verified_email'] = ( isset( $input['requires_verified_email'] ) ? $input['requires_verified_email'] : 0 );
 		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] ) ? $input['wordpress_login_enabled'] : 0 );
 		$input['link_auth0_users'] = ( isset( $input['link_auth0_users'] ) ? $input['link_auth0_users'] : 0 );
+		$input['remember_users_session'] = ( isset( $input['remember_users_session'] ) ? $input['remember_users_session'] : 0 ) == 1;
 		$input['jwt_auth_integration'] = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
 		$input['allow_signup'] = ( isset( $input['allow_signup'] ) ? $input['allow_signup'] : 0 );
 		$input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
