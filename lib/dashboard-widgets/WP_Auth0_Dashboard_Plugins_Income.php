@@ -38,12 +38,17 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
               } else {
                 filter_callback(_this, 'Income', _this.filter_selection, function(e) { if (!e.zipcode) return false; return _this.filter_selection.indexOf(e.zipcode.toString()) > -1; } );
               }
-
-              // _this.chart.flush();
             }
 
           });
           // this.chart.debug();
+
+          jQuery(window).resize(function(){
+            _this.chart.resize({
+              width: jQuery('#auth0ChartIncome').width()
+            });
+
+          });
         }
 
         a0_income_chart.prototype.load = function(raw_data) {

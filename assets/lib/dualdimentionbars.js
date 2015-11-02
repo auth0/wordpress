@@ -6,6 +6,8 @@ function DualDimentionBars( data, options ) {
   
   this.init();
 
+  this.setSizes();
+
   this.loadData(data);
 }
 
@@ -13,7 +15,7 @@ DualDimentionBars.prototype.loadData = function(data) {
   
   this.data = data;
   this.render();
-
+  
 }
 
 DualDimentionBars.prototype.setOptions = function(options) {
@@ -33,7 +35,6 @@ DualDimentionBars.prototype.setOptions = function(options) {
     internalMargin: options.internalMargin || 15,
     onClick: options.onClick
   }
-
   this.options.innerWidth = this.options.width - ( this.options.padding * 2 );
   this.options.innerHeight = this.options.height - ( this.options.padding * 2 );
 
@@ -43,16 +44,16 @@ DualDimentionBars.prototype.init = function() {
 
   var options = this.options;
 
-  this.svg = this.container.append('svg')
-                  .attr("width", options.width)
-                  .attr("height", options.height);
+  this.selectedItems = [];
+
+  this.svg = this.container.append('svg');
   
   this.svgContent = this.svg.append('g')
                       .attr("transform", "translate(" + [ options.padding , options.padding ] + ")");
 
   // SET UP SCALES
-  this.x = d3.scale.linear().range([0,options.innerWidth - options.internalMargin - options.yAxisWidth - options.labelsWidth - 25]);
-  this.y = d3.scale.ordinal().rangeBands([options.innerHeight - (options.rowWidth), 0]);
+  this.x = d3.scale.linear();
+  this.y = d3.scale.ordinal();
 
   //LABELS COL WRAPPER
   this.labels = this.svgContent.append("g")
@@ -67,11 +68,7 @@ DualDimentionBars.prototype.init = function() {
               .attr("x", options.labelsWidth / 2 )
               .text(function(d){return options.labelsTitle});
 
-  this.svg.append('line')
-            .attr('x1', options.labelsWidth + options.padding)
-            .attr('x2', options.labelsWidth + options.padding)
-            .attr('y1', options.padding - 10)
-            .attr('y2', options.innerHeight + options.padding + 10)
+  this.columnLine = this.svg.append('line')
             .classed('column-line', true);
 
   //SET UP AXIS
@@ -126,6 +123,39 @@ DualDimentionBars.prototype.init = function() {
   this.options = options;
 }
 
+DualDimentionBars.prototype.resize = function(newOptions) { 
+  var _this = this;
+
+  Object.keys(newOptions).forEach(function(key) {
+    _this.options[key] = newOptions[key];
+  })
+
+  this.options.innerWidth = this.options.width - ( this.options.padding * 2 );
+  this.options.innerHeight = this.options.height - ( this.options.padding * 2 );
+
+  this.setSizes();
+  this.render();
+
+}
+
+DualDimentionBars.prototype.setSizes = function() {
+
+  var options = this.options;  
+
+  this.svg.attr("width", options.width)
+          .attr("height", options.height);    
+console.log('x range', [0,options.innerWidth - options.internalMargin - options.yAxisWidth - options.labelsWidth - 25]);
+  this.x.range([0,options.innerWidth - options.internalMargin - options.yAxisWidth - options.labelsWidth - 25]);
+  this.y.rangeBands([options.innerHeight - (options.rowWidth), 0]);
+
+  this.columnLine = this.svg
+            .attr('x1', options.labelsWidth + options.padding)
+            .attr('x2', options.labelsWidth + options.padding)
+            .attr('y1', options.padding - 10)
+            .attr('y2', options.innerHeight + options.padding + 10);
+
+}
+
 DualDimentionBars.prototype.render = function() {
   var _this = this;
 
@@ -136,6 +166,7 @@ DualDimentionBars.prototype.render = function() {
   this.yAxisEl.call(this.yAxis);
   this.xAxisEl.call(this.xAxis);
 
+  this.bars.classed('with-selection', (_this.selectedItems.length !== 0) );
 
   //UPDATE THE CHART
   this.barSelection = this.bars.selectAll('rect.bar')
@@ -155,8 +186,10 @@ DualDimentionBars.prototype.render = function() {
                     return e;
                   });
 
+                  _this.selectedItems = _this.data.filter( function(e) { return e.selected; } );
+
                   if (_this.options.onClick) {
-                    _this.options.onClick( _this.data.filter( function(e) { return e.selected; } ) );
+                    _this.options.onClick( _this.selectedItems );
                   }
                   _this.render();
                 })

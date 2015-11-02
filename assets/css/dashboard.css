@@ -18,8 +18,11 @@
 	stroke: #CACACA;
 	stroke-width:1;
 }
+#auth0ChartIncome .with-selection .bar {
+	fill: #CACACA;
+}
 #auth0ChartIncome .tick.selected,
-#auth0ChartIncome .bar.selected,
+#auth0ChartIncome .with-selection .bar.selected,
 #auth0ChartIncome .label.selected {
 	fill:red;
 }
