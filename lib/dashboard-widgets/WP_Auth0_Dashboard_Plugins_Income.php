@@ -16,16 +16,19 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
           var _this = this;
           this.name = 'income';
 
+          var width = jQuery('#auth0ChartIncome').width();
+
           this.chart = new DualDimentionBars(this.process_data(raw_data),{
             container:"#auth0ChartIncome",
-            width: jQuery('#auth0ChartIncome').width(),
-            height:400,
+            width: width,
+            height:315,
             barHeight: 5,
-            labelsWidth:150,
-            yAxisWidth: 70,
+            labelsWidth: width * 0.2,
+            yAxisWidth: width * 0.15,
             labelsTitle: "ZipCode",
             yAxisTitle: "Income",
             xAxisTitle: "# Users",
+            colorsPattern: ['#F39C12','#2ECC71','#3498DB','#9B59B6','#34495E','#F1C40F','#E67E22','#E74C3C', '#1ABC9C'],
 
             onClick: function (selection) {
 
@@ -44,8 +47,11 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
           // this.chart.debug();
 
           jQuery(window).resize(function(){
+            var width = jQuery('#auth0ChartIncome').width();
             _this.chart.resize({
-              width: jQuery('#auth0ChartIncome').width()
+              width: width,
+              labelsWidth: width * 0.3,
+              yAxisWidth: width * 0.15,
             });
 
           });

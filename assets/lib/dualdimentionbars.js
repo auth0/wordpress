@@ -19,7 +19,7 @@ DualDimentionBars.prototype.loadData = function(data) {
 }
 
 DualDimentionBars.prototype.setOptions = function(options) {
-
+  var _this = this;
   this.options = {
     container: options.container,
     width: options.width,
@@ -38,6 +38,23 @@ DualDimentionBars.prototype.setOptions = function(options) {
   this.options.innerWidth = this.options.width - ( this.options.padding * 2 );
   this.options.innerHeight = this.options.height - ( this.options.padding * 2 );
 
+  if (options.colorsPattern) {
+    this.options.lastColor = 0;
+    this.options.colorsPattern = options.colorsPattern;
+    this.options.getColor = function() {
+
+      var length = _this.options.colorsPattern.length;
+      var color = _this.options.colorsPattern[_this.options.lastColor % length];
+
+      color = d3.rgb(color).darker(parseInt(_this.options.lastColor / length));
+
+      _this.options.lastColor ++;
+
+      return color;
+
+    }
+  }
+
 }
 
 DualDimentionBars.prototype.init = function() {
@@ -49,27 +66,33 @@ DualDimentionBars.prototype.init = function() {
   this.svg = this.container.append('svg');
   
   this.svgContent = this.svg.append('g')
-                      .attr("transform", "translate(" + [ options.padding , options.padding ] + ")");
+              .attr("transform", "translate(" + [ options.padding , options.padding ] + ")");
 
   // SET UP SCALES
-  this.x = d3.scale.linear();
-  this.y = d3.scale.ordinal();
+  this.x = d3.scale.linear()
+              .range([0,options.innerWidth - options.internalMargin - options.yAxisWidth - options.labelsWidth - 25]);
+  
+  this.y = d3.scale.ordinal()
+              .rangeBands([options.innerHeight - (options.rowWidth), 0]);
 
   //LABELS COL WRAPPER
   this.labels = this.svgContent.append("g")
               .attr("class", "labels")
               .attr("transform", "translate(" + [ 0 , 0 ] + ")");
 
-  this.labels.append('text')
+  this.labelsTitle = this.labels.append('text')
               .classed('title', true)
               .attr("text-anchor", "middle")
               .attr("dy", '.32em')
               .attr("y", 0)
-              .attr("x", options.labelsWidth / 2 )
               .text(function(d){return options.labelsTitle});
 
   this.columnLine = this.svg.append('line')
-            .classed('column-line', true);
+              .classed('column-line', true)
+              .attr('x1', options.labelsWidth + options.padding)
+              .attr('x2', options.labelsWidth + options.padding)
+              .attr('y1', options.padding - 10)
+              .attr('y2', options.innerHeight + options.padding + 10);;
 
   //SET UP AXIS
   this.yAxis = d3.svg.axis()
@@ -85,40 +108,36 @@ DualDimentionBars.prototype.init = function() {
 
   this.yAxisEl = this.svgContent.append("g")
               .attr("class", "y axis")
-              .attr("transform", "translate(" + [ options.yAxisWidth + options.labelsWidth  , 16 ] + ")")
               .call(this.yAxis);
 
   this.xAxisEl = this.svgContent.append("g")
-              .attr("transform", "translate(" + [ options.yAxisWidth + options.labelsWidth , options.innerHeight + 16 - (options.rowWidth) ] + ")")
               .attr("class", "x axis")
               .call(this.xAxis);
 
-  this.xAxisEl.append('g')
-                .classed('title', true)
-                .attr('transform', 'translate(' + [ options.innerWidth - options.internalMargin - options.yAxisWidth - options.labelsWidth - 25 , 0 ] + ')')
-                  .append('text')
-                      .classed('title', true)
-                      .attr("dy", '.71em')
-                      .attr("y", 9)
-                      .attr("x", options.internalMargin)
-                      .text(function(d){return options.xAxisTitle});
+  this.xAxisTitleWrapper = this.xAxisEl.append('g')
+              .classed('title', true);
+  this.xAxisTitleWrapper.append('text')
+              .classed('title', true)
+              .attr("dy", '.71em')
+              .attr("y", 9)
+              .attr("x", options.internalMargin)
+              .text(function(d){return options.xAxisTitle});
 
-  this.yAxisEl.append('g')
-                .classed('title', true)
-                .attr('transform', 'translate(' + [ 0 , -16 ] + ')')
-                  .append('text')
-                      .classed('title', true)
-                      .attr("text-anchor", "end")
-                      .attr("dy", '.32em')
-                      .attr("y", 0)
-                      .attr("x", -9)
-                      .text(function(d){return options.yAxisTitle});
+  this.yAxisTitleWrapper = this.yAxisEl.append('g')
+              .classed('title', true);
+  
+  this.yAxisTitleWrapper.append('text')
+              .classed('title', true)
+              .attr("text-anchor", "end")
+              .attr("dy", '.32em')
+              .attr("y", 0)
+              .attr("x", -9)
+              .text(function(d){return options.yAxisTitle});
 
 
   //BARS CHART WRAPPER
   this.bars = this.svgContent.append("g")
-              .attr("class", "bars")
-              .attr("transform", "translate(" + [ options.yAxisWidth + options.labelsWidth , 16 ] + ")");
+              .attr("class", "bars");
 
   this.options = options;
 }
@@ -143,16 +162,26 @@ DualDimentionBars.prototype.setSizes = function() {
   var options = this.options;  
 
   this.svg.attr("width", options.width)
-          .attr("height", options.height);    
-console.log('x range', [0,options.innerWidth - options.internalMargin - options.yAxisWidth - options.labelsWidth - 25]);
+              .attr("height", options.height);  
+
+  this.yAxisEl.attr("transform", "translate(" + [ options.yAxisWidth + options.labelsWidth  , 16 ] + ")");
+  this.yAxisTitleWrapper.attr('transform', 'translate(' + [ 0 , -16 ] + ')');  
+
+  this.xAxisEl.attr("transform", "translate(" + [ options.yAxisWidth + options.labelsWidth , options.innerHeight + 16 - (options.rowWidth) ] + ")");
+  this.xAxisTitleWrapper.attr('transform', 'translate(' + [ options.innerWidth - options.internalMargin - options.yAxisWidth - options.labelsWidth - 25 , 0 ] + ')');
+
+  this.bars.attr("transform", "translate(" + [ options.yAxisWidth + options.labelsWidth , 16 ] + ")");
+
+  this.labelsTitle.attr("x", options.labelsWidth / 2 );
+
   this.x.range([0,options.innerWidth - options.internalMargin - options.yAxisWidth - options.labelsWidth - 25]);
   this.y.rangeBands([options.innerHeight - (options.rowWidth), 0]);
 
-  this.columnLine = this.svg
-            .attr('x1', options.labelsWidth + options.padding)
-            .attr('x2', options.labelsWidth + options.padding)
-            .attr('y1', options.padding - 10)
-            .attr('y2', options.innerHeight + options.padding + 10);
+  this.columnLine
+              .attr('x1', options.labelsWidth + options.padding)
+              .attr('x2', options.labelsWidth + options.padding)
+              .attr('y1', options.padding - 10)
+              .attr('y2', options.innerHeight + options.padding + 10);
 
 }
 
@@ -179,6 +208,7 @@ DualDimentionBars.prototype.render = function() {
                 .attr("x", function(d) { return 0; })
                 .attr("height", function(d) { return _this.options.barHeight ? _this.options.barHeight : _this.y.rangeBand(); })
                 .attr("width", function(d) { return 0; })
+                .style("fill", function(d) { return _this.options.getColor ? _this.options.getColor() : null })
                 .on('click', function(d) {
                   _this.data.forEach(function(e){
                     e.selected = (e.selected || false);
@@ -194,6 +224,7 @@ DualDimentionBars.prototype.render = function() {
                   _this.render();
                 })
                 .on('mouseover', function(d){
+                  _this.bars.classed('hovered', true);
                   _this.data.forEach(function(e){
                     e.hover = (e.id === d.id) ? true : false;
                     return e;
@@ -201,6 +232,7 @@ DualDimentionBars.prototype.render = function() {
                   _this.render();
                 })
                 .on('mouseout', function(d){
+                  _this.bars.classed('hovered', false);
                   _this.data.forEach(function(e){
                     e.hover = false;
                     return e;
@@ -251,83 +283,83 @@ DualDimentionBars.prototype.debug = function() {
   var options = this.options; 
 
   this.svg.append('line')
-            .attr('x1', options.width / 2)
-            .attr('x2', options.width / 2)
-            .attr('y1', options.padding)
-            .attr('y2', options.innerHeight + options.padding)
-            .style('stroke','rgb(255,128,128)')
-            .style('stroke-width',1);
+              .attr('x1', options.width / 2)
+              .attr('x2', options.width / 2)
+              .attr('y1', options.padding)
+              .attr('y2', options.innerHeight + options.padding)
+              .style('stroke','rgb(255,128,128)')
+              .style('stroke-width',1);
 
   this.svg.append('line')
-            .attr('x1', options.padding)
-            .attr('x2', options.innerWidth + options.padding)
-            .attr('y1', options.height / 2)
-            .attr('y2', options.height / 2)
-            .style('stroke','rgb(255,128,128)')
-            .style('stroke-width',1);
+              .attr('x1', options.padding)
+              .attr('x2', options.innerWidth + options.padding)
+              .attr('y1', options.height / 2)
+              .attr('y2', options.height / 2)
+              .style('stroke','rgb(255,128,128)')
+              .style('stroke-width',1);
 
   this.svg.append('line')
-            .attr('x1', options.padding)
-            .attr('x2', options.padding)
-            .attr('y1', 0)
-            .attr('y2', options.height)
-            .style('stroke','rgb(255,0,0)')
-            .style('stroke-width',1);
+              .attr('x1', options.padding)
+              .attr('x2', options.padding)
+              .attr('y1', 0)
+              .attr('y2', options.height)
+              .style('stroke','rgb(255,0,0)')
+              .style('stroke-width',1);
 
   this.svg.append('line')
-            .attr('x1', options.labelsWidth + options.padding)
-            .attr('x2', options.labelsWidth + options.padding)
-            .attr('y1', 0)
-            .attr('y2', options.height)
-            .style('stroke','rgb(255,0,0)')
-            .style('stroke-width',1);
+              .attr('x1', options.labelsWidth + options.padding)
+              .attr('x2', options.labelsWidth + options.padding)
+              .attr('y1', 0)
+              .attr('y2', options.height)
+              .style('stroke','rgb(255,0,0)')
+              .style('stroke-width',1);
 
 
   this.svg.append('line')
-            .attr('x1', options.labelsWidth + options.yAxisWidth + options.padding)
-            .attr('x2', options.labelsWidth + options.yAxisWidth + options.padding)
-            .attr('y1', 0)
-            .attr('y2', options.height)
-            .style('stroke','rgb(255,0,0)')
-            .style('stroke-width',1);
+              .attr('x1', options.labelsWidth + options.yAxisWidth + options.padding)
+              .attr('x2', options.labelsWidth + options.yAxisWidth + options.padding)
+              .attr('y1', 0)
+              .attr('y2', options.height)
+              .style('stroke','rgb(255,0,0)')
+              .style('stroke-width',1);
 
   this.svg.append('line')
-            .attr('x1', options.width - options.padding)
-            .attr('x2', options.width - options.padding)
-            .attr('y1', 0)
-            .attr('y2', options.height)
-            .style('stroke','rgb(255,0,0)')
-            .style('stroke-width',1);
+              .attr('x1', options.width - options.padding)
+              .attr('x2', options.width - options.padding)
+              .attr('y1', 0)
+              .attr('y2', options.height)
+              .style('stroke','rgb(255,0,0)')
+              .style('stroke-width',1);
 
   this.svg.append('line')
-            .attr('x1', options.width - 25 - options.padding - options.internalMargin)
-            .attr('x2', options.width - 25 - options.padding - options.internalMargin)
-            .attr('y1', 0)
-            .attr('y2', options.height)
-            .style('stroke','rgb(255,0,0)')
-            .style('stroke-width',1);
+              .attr('x1', options.width - 25 - options.padding - options.internalMargin)
+              .attr('x2', options.width - 25 - options.padding - options.internalMargin)
+              .attr('y1', 0)
+              .attr('y2', options.height)
+              .style('stroke','rgb(255,0,0)')
+              .style('stroke-width',1);
 
   this.svg.append('line')
-            .attr('x1', 0)
-            .attr('x2', options.width)
-            .attr('y1', options.padding)
-            .attr('y2', options.padding)
-            .style('stroke','rgb(255,0,0)')
-            .style('stroke-width',1);
+              .attr('x1', 0)
+              .attr('x2', options.width)
+              .attr('y1', options.padding)
+              .attr('y2', options.padding)
+              .style('stroke','rgb(255,0,0)')
+              .style('stroke-width',1);
 
   this.svg.append('line')
-            .attr('x1', 0)
-            .attr('x2', options.width)
-            .attr('y1', options.height - options.padding)
-            .attr('y2', options.height - options.padding)
-            .style('stroke','rgb(255,0,0)')
-            .style('stroke-width',1);
+              .attr('x1', 0)
+              .attr('x2', options.width)
+              .attr('y1', options.height - options.padding)
+              .attr('y2', options.height - options.padding)
+              .style('stroke','rgb(255,0,0)')
+              .style('stroke-width',1);
 
   this.svg.append('line')
-            .attr('x1', 0)
-            .attr('x2', options.width)
-            .attr('y1', options.height - options.rowWidth - options.padding)
-            .attr('y2', options.height - options.rowWidth - options.padding)
-            .style('stroke','rgb(255,0,0)')
-            .style('stroke-width',1); 
+              .attr('x1', 0)
+              .attr('x2', options.width)
+              .attr('y1', options.height - options.rowWidth - options.padding)
+              .attr('y2', options.height - options.rowWidth - options.padding)
+              .style('stroke','rgb(255,0,0)')
+              .style('stroke-width',1); 
 }

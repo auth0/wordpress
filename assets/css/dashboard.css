@@ -18,18 +18,20 @@
 	stroke: #CACACA;
 	stroke-width:1;
 }
-#auth0ChartIncome .with-selection .bar {
+#auth0ChartIncome .with-selection .bar:not(.selected) {
 	fill: #CACACA;
 }
+#auth0ChartIncome .hovered .bar {
+	opacity: 0.4;
+}
 #auth0ChartIncome .tick.selected,
-#auth0ChartIncome .with-selection .bar.selected,
 #auth0ChartIncome .label.selected {
-	fill:red;
+	font-weight: bold;
 }
 #auth0ChartIncome .tick.hover,
-#auth0ChartIncome .bar.hover,
+#auth0ChartIncome .hovered .bar.hover,
 #auth0ChartIncome .label.hover {
-	fill:green;
+	opacity: 1;
 }
 
 /*------------------------------------------------------------------------------*/
