@@ -144,6 +144,10 @@ DualDimentionBars.prototype.render = function() {
   this.barSelection.enter()
               .append('rect')
                 .classed('bar', true)
+                .attr("y", function(d) { return 0; })
+                .attr("x", function(d) { return 0; })
+                .attr("height", function(d) { return _this.options.barHeight ? _this.options.barHeight : _this.y.rangeBand(); })
+                .attr("width", function(d) { return 0; })
                 .on('click', function(d) {
                   _this.data.forEach(function(e){
                     e.selected = (e.selected || false);
@@ -179,10 +183,11 @@ DualDimentionBars.prototype.render = function() {
   this.barSelection
               .classed('selected', function(d) { return d.selected; })
               .classed('hover', function(d) { return d.hover; })
-              .attr("y", function(d) { return _this.y(d.y) + barPositionDelta; })
-              .attr("x", function(d) { return 0; })
-              .attr("height", function(d) { return _this.options.barHeight ? _this.options.barHeight : _this.y.rangeBand(); })
-              .attr("width", function(d) { return _this.x(d.x); });
+              .transition()
+                .attr("y", function(d) { return _this.y(d.y) + barPositionDelta; })
+                .attr("x", function(d) { return 0; })
+                .attr("height", function(d) { return _this.options.barHeight ? _this.options.barHeight : _this.y.rangeBand(); })
+                .attr("width", function(d) { return _this.x(d.x); });
 
   this.yAxisEl.selectAll('.tick')
               .classed('selected', function(d, i) { return _this.data[i].selected; })
