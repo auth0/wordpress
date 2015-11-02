@@ -53,7 +53,7 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
 
               _this.filter_selection = selection.map(function(e){
 
-                <?php if($this->type === 'pie') {?>
+                <?php if($this->type === 'pie' || $this->type === 'donut') {?>
                   return e.id;
                 <?php } else {?>
                   return _this.categories[e.index];
@@ -105,7 +105,7 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
             var keys = _.clone(this.categories);
             keys = _.sortBy(keys);
 
-          <?php if($this->type === 'pie') {?>
+          <?php if($this->type === 'pie' || $this->type === 'donut') {?>
             var data = keys.map(function(key) {
               return [key, (grouped_data[key] ? grouped_data[key].length : 0)];
             });

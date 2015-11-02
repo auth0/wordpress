@@ -18,9 +18,9 @@ class WP_Auth0_Dashboard_Options  extends WP_Auth0_Options_Generic {
 
     protected function defaults(){
         return array(
-            'chart_idp_type' => 'pie',
-            'chart_gender_type' => 'pie',
-            'chart_age_type' => 'pie',
+            'chart_idp_type' => 'donut',
+            'chart_gender_type' => 'donut',
+            'chart_age_type' => 'donut',
 
             'chart_age_from' => '10',
             'chart_age_to' => '70',
