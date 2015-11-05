@@ -4,6 +4,9 @@ class WP_Auth0_InitialSetup {
 
     protected $a0_options;
 
+    protected $connection_profile;
+    protected $enterprise_connection_step;
+
     protected $consent_step;
     protected $migration_step;
     protected $adminuser_step;
@@ -13,6 +16,9 @@ class WP_Auth0_InitialSetup {
 
     public function __construct(WP_Auth0_Options $a0_options) {
         $this->a0_options = $a0_options;
+
+        $this->connection_profile = new WP_Auth0_InitialSetup_ConnectionProfile($this->a0_options);
+        $this->enterprise_connection_step = new WP_Auth0_InitialSetup_EnterpriseConnection($this->a0_options);
 
         $this->consent_step = new WP_Auth0_InitialSetup_Consent($this->a0_options);
         $this->migration_step = new WP_Auth0_InitialSetup_Migration($this->a0_options);
@@ -27,10 +33,9 @@ class WP_Auth0_InitialSetup {
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
         add_action( 'init', array( $this, 'init_setup' ), 1 );
 
-        add_action( 'admin_action_wpauth0_callback_step2', array($this->migration_step, 'callback') );
-        add_action( 'admin_action_wpauth0_callback_step3', array($this->adminuser_step, 'callback') );
-        add_action( 'admin_action_wpauth0_callback_step4', array($this->connections_step, 'callback') );
-        add_action( 'admin_action_wpauth0_callback_step5', array($this->rules_step, 'callback') );
+        add_action( 'admin_action_wpauth0_callback_step2', array($this->connection_profile, 'callback') );
+        add_action( 'admin_action_wpauth0_callback_step3', array($this->connections_step, 'callback') );
+        add_action( 'admin_action_wpauth0_callback_step5', array($this->adminuser_step, 'callback') );
 
 
 
@@ -108,19 +113,19 @@ class WP_Auth0_InitialSetup {
               break;
 
             case 2:
-              $this->migration_step->render($step);
+              $this->connection_profile->render($step);
               break;
 
             case 3:
-              $this->adminuser_step->render($step);
-              break;
-
-            case 4:
               $this->connections_step->render($step);
               break;
 
+            case 4:
+              $this->enterprise_connection_step->render($step);
+              break;
+
             case 5:
-              $this->rules_step->render($step);
+              $this->adminuser_step->render($step);
               break;
 
             case 6:
