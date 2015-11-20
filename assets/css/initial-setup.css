@@ -6,6 +6,13 @@
   left: -20px;
   width: calc(100% + 20px);
 }
+.a0-header {
+  text-align: center;
+}
+.a0-header img {
+  height: 55px;
+  margin: 50px auto;
+}
 .a0-button {
   border-radius: 3px;
   border: none;
@@ -44,19 +51,19 @@
   background-color: #f2f5f8;
   padding-top: 120px;
   padding-bottom: 120px;
+  height: 0;
 }
 .a0-steps .progress {
   border-top: 4px solid #dcdfe1;
-  margin: 0 40px;
+  margin: auto;
+  float: none;
 }
-.a0-steps .step {
+.a0-steps .steps {
   position: relative;
-  top: -30px;
-  width: 100px;
-  float: left;
+  top: -27px;
   text-align: center;
 }
-.a0-steps .step span {
+.a0-steps .steps span {
   display: inline-block;
   width: 50px;
   height: 50px;
@@ -68,14 +75,14 @@
   font-weight: bold;
   font-size: 15px;
 }
-.a0-steps .step p {
+.a0-steps .steps p {
   display: none;
   color: #575c60;
   font-weight: bold;
 }
-.a0-steps .step.active span {
+.a0-steps .steps .active span {
   background-color: #eb5424;
 }
-.a0-steps .step.active p {
-  display: inline-block;
+.a0-steps .steps .active p {
+  display: block;
 }

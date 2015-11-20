@@ -1,7 +1,11 @@
-<div class="wrap">
+<div class="a0-wrap">
 
-	<?php screen_icon(); ?>
-	<h2><?php _e("Auth0 for WordPress - Quick Start Guide (step $step)", WPA0_LANG); ?></h2>
+
+	<?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'); ?>
+
+	<h2><?php _e("Step 2: Set up end-user logins", WPA0_LANG); ?></h2>
+
+	<p><?php _e("If your WordPress site's visitors already have social network accounts, they can access your site with their existing credentials, or they can set up a username/password combination safeguarded by Auth0's password complexity policies and brute force protection.", WPA0_LANG); ?></p>
 
 	<form action="options.php" method="POST">
 

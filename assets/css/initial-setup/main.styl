@@ -9,6 +9,14 @@
   width:calc(100% + 20px);
 }
 
+.a0-header {
+  text-align:center;
+  img {
+    height:55px;
+    margin: 50px auto;
+  }
+}
+
 .a0-button {
 
   border-radius: 3px;
@@ -56,17 +64,17 @@
   background-color:#F2F5F8;
   padding-top:120px;
   padding-bottom:120px;
+  height: 0;
 
   .progress {
     border-top:4px solid stepBG;
-    margin:0 40px;
+    margin: auto;
+    float: none;
   }
   
-  .step {
+  .steps {
     position:relative;
-    top:-30px;
-    width:100px;
-    float:left;
+    top:-27px;
     text-align: center;
     
     span {
@@ -88,12 +96,12 @@
       font-weight:bold;
     }
     
-    &.active span{
+    .active span{
       background-color:activeStepBG;
     }
     
-    &.active p{
-      display:inline-block;
+    .active p{
+      display:block;
     }
 
   }
