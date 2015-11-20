@@ -1,38 +1,37 @@
-ul.auth0 {
-    padding-left: 20px;
-    list-style: disc;
+#wpwrap {
+  background-color: #fff;
 }
-
-
-.auth0-btn-container {
-    padding-top: 20px;
-    text-align: center;
-}
-.auth0-btn {
-  margin-bottom: 6px;
-  padding: 10px 30px;
-  background-color: #eb5424;
-  text-decoration: none;
-  color: #fff;
-  border-color: transparent;
-  font-size: 15px/30px sans-serif;;
+.a0-button {
   border-radius: 3px;
-  display: inline-block;
+  border: none;
+  line-height: 45px;
+  min-width: 150px;
   text-transform: uppercase;
-
-  -webkit-transition: background-color .2s ease;
-  -moz-transition: background-color .2s ease;
-  -ms-transition: background-color .2s ease;
-  -o-transition: background-color .2s ease;
-  transition: background-color .2s ease;
+  text-decoration: none;
+  font-size: 12px;
+  display: inline-block;
+  text-align: center;
 }
-.auth0-btn:hover {
-  background-color: #ae3610;
+.a0-button.primary {
+  color: #fff;
+  background-color: #e63c11;
+}
+.a0-button.primary:hover {
   color: #fff;
 }
-
-div.error {
-  margin: 25px 20px 0 2px;
-  line-height: 19px;
-  padding: 11px 15px;
+.a0-button.secondary {
+  font-weight: bold;
+  color: #2483ae;
+  background-color: transparent;
+  text-decoration: underline;
+}
+.a0-button.secondary:hover {
+  color: #2483ae;
+}
+.a0-message {
+  padding: 30px 30px 30px 85px;
+}
+.a0-message.a0-notice {
+  background-color: #d0e8f4;
+  color: #32759a;
 }

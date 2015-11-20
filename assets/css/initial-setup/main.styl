@@ -1,0 +1,46 @@
+@import 'partials/_colors';
+
+#wpwrap {
+  background-color: bgColor;
+}
+
+.a0-button {
+
+  border-radius: 3px;
+  border: none;
+  line-height: 45px;
+  min-width: 150px;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 12px;
+  display: inline-block;
+  text-align: center;
+
+  &.primary {
+    color: buttonPrimaryText;
+    background-color: buttonPrimaryBG;
+    
+    &:hover {
+      color: buttonPrimaryText;
+    }
+  }
+  &.secondary {
+    font-weight:bold;
+    color: buttonSecondaryText;
+    background-color: buttonSecondaryBG;
+    text-decoration: underline;
+    
+    &:hover {
+      color: buttonSecondaryText;
+    }
+  }
+}
+
+.a0-message {
+  padding: 30px 30px 30px 85px;
+  
+  &.a0-notice {
+    background-color: noticeBG;
+    color:noticeText;
+  }
+}
