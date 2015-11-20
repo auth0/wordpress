@@ -1,4 +1,4 @@
-<div class="wrap">
+<div class="a0-wrap">
 
 	<img src="http://cdn.auth0.com/styleguide/latest/img/badge.png" />
 

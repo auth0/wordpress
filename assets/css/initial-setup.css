@@ -1,6 +1,11 @@
 #wpwrap {
   background-color: #fff;
 }
+.a0-wrap {
+  position: relative;
+  left: -20px;
+  width: calc(100% + 20px);
+}
 .a0-button {
   border-radius: 3px;
   border: none;
@@ -14,19 +19,19 @@
 }
 .a0-button.primary {
   color: #fff;
-  background-color: #e63c11;
+  background-color: #eb5424;
 }
 .a0-button.primary:hover {
   color: #fff;
 }
 .a0-button.secondary {
   font-weight: bold;
-  color: #2483ae;
+  color: #32759a;
   background-color: transparent;
   text-decoration: underline;
 }
 .a0-button.secondary:hover {
-  color: #2483ae;
+  color: #32759a;
 }
 .a0-message {
   padding: 30px 30px 30px 85px;
@@ -34,4 +39,43 @@
 .a0-message.a0-notice {
   background-color: #d0e8f4;
   color: #32759a;
+}
+.a0-steps {
+  background-color: #f2f5f8;
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
+.a0-steps .progress {
+  border-top: 4px solid #dcdfe1;
+  margin: 0 40px;
+}
+.a0-steps .step {
+  position: relative;
+  top: -30px;
+  width: 100px;
+  float: left;
+  text-align: center;
+}
+.a0-steps .step span {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border-radius: 30px;
+  line-height: 50px;
+  text-align: center;
+  background-color: #dcdfe1;
+  color: #fff;
+  font-weight: bold;
+  font-size: 15px;
+}
+.a0-steps .step p {
+  display: none;
+  color: #575c60;
+  font-weight: bold;
+}
+.a0-steps .step.active span {
+  background-color: #eb5424;
+}
+.a0-steps .step.active p {
+  display: inline-block;
 }

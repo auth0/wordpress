@@ -3,6 +3,11 @@
 #wpwrap {
   background-color: bgColor;
 }
+.a0-wrap {
+  position:relative;
+  left:-20px;
+  width:calc(100% + 20px);
+}
 
 .a0-button {
 
@@ -24,6 +29,7 @@
       color: buttonPrimaryText;
     }
   }
+  
   &.secondary {
     font-weight:bold;
     color: buttonSecondaryText;
@@ -43,4 +49,53 @@
     background-color: noticeBG;
     color:noticeText;
   }
+}
+
+
+.a0-steps {
+  background-color:#F2F5F8;
+  padding-top:120px;
+  padding-bottom:120px;
+
+  .progress {
+    border-top:4px solid stepBG;
+    margin:0 40px;
+  }
+  
+  .step {
+    position:relative;
+    top:-30px;
+    width:100px;
+    float:left;
+    text-align: center;
+    
+    span {
+      display:inline-block;
+      width:50px;
+      height:50px;
+      border-radius:30px;
+      line-height: 50px;
+      text-align: center;
+      background-color:stepBG;
+      color:stepText;
+      font-weight:bold;
+      font-size:15px;
+    }
+    
+    p {
+      display:none;
+      color:stepDescriptionText;
+      font-weight:bold;
+    }
+    
+    &.active span{
+      background-color:activeStepBG;
+    }
+    
+    &.active p{
+      display:inline-block;
+    }
+
+  }
+
 }
