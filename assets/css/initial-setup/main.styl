@@ -1,12 +1,26 @@
+@import 'partials/_fonts';
 @import 'partials/_colors';
 
 #wpwrap {
   background-color: bgColor;
 }
-.a0-wrap {
-  position:relative;
-  left:-20px;
-  width:calc(100% + 20px);
+.a0-wrap {  
+  font-family:'avenir roman';
+  margin-left:-20px;
+
+  color:text;
+  h1,h2,p {
+    color:text;
+  }
+  
+  p {
+    font-size: 17px;
+    color:softText;
+  }
+  
+  .a0-buttons {
+    margin: 20px 0;
+  }
 }
 
 .a0-header {
@@ -25,7 +39,7 @@
   min-width: 150px;
   text-transform: uppercase;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 13px;
   display: inline-block;
   text-align: center;
 
@@ -49,16 +63,6 @@
     }
   }
 }
-
-.a0-message {
-  padding: 30px 30px 30px 85px;
-  
-  &.a0-notice {
-    background-color: noticeBG;
-    color:noticeText;
-  }
-}
-
 
 .a0-steps {
   background-color:#F2F5F8;
@@ -106,4 +110,40 @@
 
   }
 
+}
+
+.consent-disclaimer {
+  .logo {
+    width: 100px;
+    margin: 20px 0;
+  }
+}
+
+p.a0-message {
+  padding: 30px 30px 30px 85px;
+  font-size: 13px;
+  border-radius: 3px;
+
+  &.a0-notice {
+    background-color: noticeBG;
+    color:noticeText;
+  }
+}
+
+.a0-profiles {
+  .profile {
+    background-color: profileBG;
+    border-radius: 3px;
+    padding:25px;
+    
+    .a0-buttons {
+      text-align:center;
+    }
+  }
+}
+.a0-container {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
 }

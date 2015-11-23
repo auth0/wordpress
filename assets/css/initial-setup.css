@@ -1,10 +1,29 @@
+@font-face {
+  font-family: 'avenir roman';
+  src: url("https://cdn.auth0.com/fonts/avenir/avenir-roman.eot");
+  src: url("https://cdn.auth0.com/fonts/avenir/avenir-roman.eot?#iefix") format('embedded-opentype'), url("https://cdn.auth0.com/fonts/avenir/avenir-roman.woff") format('woff'), url("https://cdn.auth0.com/fonts/avenir/avenir-roman.ttf") format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
 #wpwrap {
   background-color: #fff;
 }
 .a0-wrap {
-  position: relative;
-  left: -20px;
-  width: calc(100% + 20px);
+  font-family: 'avenir roman';
+  margin-left: -20px;
+  color: #4a535c;
+}
+.a0-wrap h1,
+.a0-wrap h2,
+.a0-wrap p {
+  color: #4a535c;
+}
+.a0-wrap p {
+  font-size: 17px;
+  color: #9da1a9;
+}
+.a0-wrap .a0-buttons {
+  margin: 20px 0;
 }
 .a0-header {
   text-align: center;
@@ -20,7 +39,7 @@
   min-width: 150px;
   text-transform: uppercase;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 13px;
   display: inline-block;
   text-align: center;
 }
@@ -38,13 +57,6 @@
   text-decoration: underline;
 }
 .a0-button.secondary:hover {
-  color: #32759a;
-}
-.a0-message {
-  padding: 30px 30px 30px 85px;
-}
-.a0-message.a0-notice {
-  background-color: #d0e8f4;
   color: #32759a;
 }
 .a0-steps {
@@ -85,4 +97,31 @@
 }
 .a0-steps .steps .active p {
   display: block;
+}
+.consent-disclaimer .logo {
+  width: 100px;
+  margin: 20px 0;
+}
+p.a0-message {
+  padding: 30px 30px 30px 85px;
+  font-size: 13px;
+  border-radius: 3px;
+}
+p.a0-message.a0-notice {
+  background-color: #d0e8f4;
+  color: #32759a;
+}
+.a0-profiles .profile {
+  background-color: #f2f5f8;
+  border-radius: 3px;
+  padding: 25px;
+}
+.a0-profiles .profile .a0-buttons {
+  text-align: center;
+}
+.a0-container {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
 }
