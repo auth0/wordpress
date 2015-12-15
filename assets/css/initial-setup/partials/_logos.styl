@@ -1,10 +1,10 @@
-@font-face {
-  font-family: 'avenir roman';
-  src: url("https://cdn.auth0.com/fonts/avenir/avenir-roman.eot");
-  src: url("https://cdn.auth0.com/fonts/avenir/avenir-roman.eot?#iefix") format('embedded-opentype'), url("https://cdn.auth0.com/fonts/avenir/avenir-roman.woff") format('woff'), url("https://cdn.auth0.com/fonts/avenir/avenir-roman.ttf") format('truetype');
-  font-weight: 300;
-  font-style: normal;
-}
+/**
+ * Logo.
+ *
+ * *.logo[data-logo][data-color]
+ *   *
+ */
+
 .logo {
   margin: 0; /* reset */
   position: relative;
@@ -12,6 +12,7 @@
   vertical-align: middle; /* not baseline, so we align up _and_ down */
   height: 1em; /* keep height constant regardless of innards */
 }
+
 .logo > * {
   position: absolute;
   top: 0;
@@ -24,916 +25,1329 @@
   background-position: center center;
   background-size: contain;
 }
+
+/**
+ * Google logo.
+ */
+
 .logo[data-logo="Google"] {
   width: 2.881786019275345em;
 }
+
 .logo[data-logo="Google"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-google/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Google"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-google/images/logo-black.svg");
 }
+
 .logo[data-logo="Google"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-google/images/logo-white.svg");
 }
+
+/**
+ * Amazon logo.
+ */
+
 .logo[data-logo="Amazon"] {
-  width: 3.474842767295597em;
+  width: 3.4748427672955975em;
 }
+
 .logo[data-logo="Amazon"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-amazon/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Amazon"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-amazon/images/logo-black.svg");
 }
+
 .logo[data-logo="Amazon"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-amazon/images/logo-white.svg");
 }
+
+/**
+ * Exact logo.
+ */
+
 .logo[data-logo="Exact"] {
-  width: 1.91304347826087em;
+  width: 1.9130434782608696em;
 }
+
 .logo[data-logo="Exact"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-exact/images/logo.svg");
   margin: 0 0 0 0;
 }
+
+/**
+ * Facebook logo.
+ */
+
 .logo[data-logo="Facebook"] {
-  width: 2.658227848101266em;
+  width: 2.6582278481012658em;
 }
+
 .logo[data-logo="Facebook"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-facebook/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Facebook"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-facebook/images/logo-black.svg");
 }
+
 .logo[data-logo="Facebook"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-facebook/images/logo-white.svg");
 }
+
+/**
+ * LinkedIn logo.
+ */
+
 .logo[data-logo="LinkedIn"] {
   width: 4.125em;
 }
+
 .logo[data-logo="LinkedIn"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-linkedin/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="LinkedIn"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-linkedin/images/logo-black.svg");
 }
+
 .logo[data-logo="LinkedIn"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-linkedin/images/logo-white.svg");
 }
+
+/**
+ * GitHub
+ */
+
 .logo[data-logo="GitHub"] {
   width: 2.816222222em;
-/* (6.67/1.8) * (1-.12-.12) - 0 */
+  /* (6.67/1.8) * (1-.12-.12) - 0 */
 }
+
 .logo[data-logo="GitHub"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-github/images/logo.svg");
-  margin: 0.12em 0 0.12em 0;
+  margin: .12em 0 .12em 0;
 }
+
 .logo[data-logo="GitHub"].monochromatic > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-github/images/logo-monochromatic.svg");
 }
+
+
+/**
+ * PayPal logo.
+ */
+
 .logo[data-logo="PayPal"] {
   width: 3.764705882352941em;
 }
+
 .logo[data-logo="PayPal"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-paypal/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="PayPal"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-paypal/images/logo-black.svg");
 }
+
 .logo[data-logo="PayPal"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-paypal/images/logo-white.svg");
 }
+
+/**
+ * Twitter logo.
+ */
+
 .logo[data-logo="Twitter"] {
-  width: 1.228699551569507em;
+  width: 1.2286995515695067em;
 }
+
 .logo[data-logo="Twitter"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-twitter/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Twitter"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-twitter/images/logo-black.svg");
 }
+
 .logo[data-logo="Twitter"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-twitter/images/logo-white.svg");
 }
+
+/**
+ * Twilio logo.
+ */
+
 .logo[data-logo="Twilio SMS"] {
-  width: 2.702702702702703em;
+  width: 2.7027027027027026em;
 }
+
 .logo[data-logo="Twilio SMS"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-twilio-sms/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Twilio SMS"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-twilio-sms/images/logo-black.svg");
 }
+
 .logo[data-logo="Twilio SMS"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-twilio-sms/images/logo-white.svg");
 }
+
+
+/**
+ * vk logo.
+ */
+
 .logo[data-logo="vk"] {
   width: 1em;
 }
+
 .logo[data-logo="vk"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-vkontakte/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="vk"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-vkontakte/images/logo-black.svg");
 }
+
 .logo[data-logo="vk"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-vkontakte/images/logo-white.svg");
 }
+
+/**
+ * Yandex Metrica
+ */
+
 .logo[data-logo="Yandex Metrica"] {
   width: 2.409756098em;
-/* (130/51.25) * (1-.05) - 0 */
+  /* (130/51.25) * (1-.05) - 0 */
 }
+
 .logo[data-logo="Yandex Metrica"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-yandex-metrica/images/logo.svg");
-  margin: 0 0 0.05em;
+  margin: 0 0 .05em;
 }
+
 .logo[data-logo="Yandex Metrica"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-yandex-metrica/images/logo-black.svg");
 }
+
 .logo[data-logo="Yandex Metrica"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-yandex-metrica/images/logo-white.svg");
 }
+
+
+/**
+ * Yahoo logo.
+ */
+
 .logo[data-logo="Yahoo"] {
   width: 4.291845493562231em;
 }
+
 .logo[data-logo="Yahoo"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-yahoo/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Yahoo"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-yahoo/images/logo-black.svg");
 }
+
 .logo[data-logo="Yahoo"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-yahoo/images/logo-white.svg");
 }
+
+/**
+ * 37signals logo.
+ */
+
 .logo[data-logo="37signals"] {
   width: 3.658536585365854em;
 }
+
 .logo[data-logo="37signals"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-37signals/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="37signals"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-37signals/images/logo-black.svg");
 }
+
 .logo[data-logo="37signals"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-37signals/images/logo-white.svg");
 }
+
+/**
+ * Fitbit logo.
+ */
+
 .logo[data-logo="Fitbit"] {
   width: 2.4em;
 }
+
 .logo[data-logo="Fitbit"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-fitbit/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Fitbit"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-fitbit/images/logo-black.svg");
 }
+
 .logo[data-logo="Fitbit"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-fitbit/images/logo-white.svg");
 }
+
+/**
+ * Baidu logo.
+ */
+
 .logo[data-logo="Baidu"] {
-  width: 2.924050632911392em;
+  width: 2.9240506329113924em;
 }
+
 .logo[data-logo="Baidu"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-baidu/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Baidu"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-baidu/images/logo-black.svg");
 }
+
 .logo[data-logo="Baidu"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-baidu/images/logo-white.svg");
 }
+
+/**
+ * RenRen logo.
+ */
+
 .logo[data-logo="RenRen"] {
   width: 4.976608187134503em;
 }
+
 .logo[data-logo="RenRen"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-renren/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="RenRen"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-renren/images/logo-black.svg");
 }
+
 .logo[data-logo="RenRen"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-renren/images/logo-white.svg");
 }
+
+/**
+ * Weibo logo.
+ */
+
 .logo[data-logo="Weibo"] {
-  width: 3.263636363636364em;
+  width: 3.2636363636363637em;
 }
+
 .logo[data-logo="Weibo"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-weibo/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Weibo"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-weibo/images/logo-black.svg");
 }
+
 .logo[data-logo="Weibo"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-weibo/images/logo-white.svg");
 }
+
+/**
+ * Aol logo.
+ */
+
 .logo[data-logo="Aol"] {
   width: 2.5em;
 }
+
 .logo[data-logo="Aol"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-aol/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Aol"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-aol/images/logo-black.svg");
 }
+
 .logo[data-logo="Aol"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-aol/images/logo-white.svg");
 }
+
+/**
+ * Shopify logo.
+ */
+
 .logo[data-logo="Shopify"] {
-  width: 3.508571428571428em;
+  width: 3.5085714285714285em;
 }
+
 .logo[data-logo="Shopify"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-shopify/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Shopify"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-shopify/images/logo-black.svg");
 }
+
 .logo[data-logo="Shopify"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-shopify/images/logo-white.svg");
 }
+
+/**
+ * WordPress logo.
+ */
+
 .logo[data-logo="WordPress"] {
-  width: 1.612836438923396em;
+  width: 1.6128364389233956em;
 }
+
 .logo[data-logo="WordPress"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-wordpress/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="WordPress"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-wordpress/images/logo-black.svg");
 }
+
 .logo[data-logo="WordPress"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-wordpress/images/logo-white.svg");
 }
+
+/**
+ * dwolla logo.
+ */
+
 .logo[data-logo="dwolla"] {
-  width: 1.612836438923396em;
+  width: 1.6128364389233956em;
 }
+
 .logo[data-logo="dwolla"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-dwolla/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="dwolla"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-dwolla/images/logo-black.svg");
 }
+
 .logo[data-logo="dwolla"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-dwolla/images/logo-white.svg");
 }
+
+
+/**
+ * miiCard logo.
+ */
+
 .logo[data-logo="miiCard"] {
   width: 2.953846153846154em;
 }
+
 .logo[data-logo="miiCard"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-miicard/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="miiCard"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-miicard/images/logo-black.svg");
 }
+
 .logo[data-logo="miiCard"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-miicard/images/logo-white.svg");
 }
+
+/**
+ * Yammer logo.
+ */
+
 .logo[data-logo="Yammer"] {
   width: 4.682539682539683em;
 }
+
 .logo[data-logo="Yammer"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-yammer/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Yammer"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-yammer/images/logo-black.svg");
 }
+
 .logo[data-logo="Yammer"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-yammer/images/logo-white.svg");
 }
+
+/**
+ * Soundcloud logo.
+ */
+
 .logo[data-logo="Soundcloud"] {
-  width: 0.707091103456468em;
+  width: 0.7070911034564675em;
 }
+
 .logo[data-logo="Soundcloud"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-soundcloud/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Soundcloud"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-soundcloud/images/logo-black.svg");
 }
+
 .logo[data-logo="Soundcloud"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-soundcloud/images/logo-white.svg");
 }
+
+/**
+ * Instagram logo.
+ */
+
 .logo[data-logo="Instagram"] {
-  width: 3.520710059171598em;
+  width: 3.5207100591715976em;
 }
+
 .logo[data-logo="Instagram"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-instagram/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Instagram"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-instagram/images/logo-black.svg");
 }
+
 .logo[data-logo="Instagram"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-instagram/images/logo-white.svg");
 }
+
+/**
+ * The City logo.
+ */
+
 .logo[data-logo="The City"] {
   width: 2.108433734939759em;
 }
+
 .logo[data-logo="The City"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-the-city/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="The City"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-the-city/images/logo-black.svg");
 }
+
 .logo[data-logo="The City"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-the-city/images/logo-white.svg");
 }
+
+/**
+ * The City Sandbox logo.
+ */
+
 .logo[data-logo="The City Sandbox"] {
-  width: 1.764912280701754em;
+  width: 1.7649122807017543em;
 }
+
 .logo[data-logo="The City Sandbox"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-the-city-sandbox/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="The City Sandbox"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-the-city-sandbox/images/logo-black.svg");
 }
+
 .logo[data-logo="The City Sandbox"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-the-city-sandbox/images/logo-white.svg");
 }
+
+/**
+ * Planning Center logo.
+ */
+
 .logo[data-logo="Planning Center"] {
-  width: 3.534883720930233em;
+  width: 3.5348837209302326em;
 }
+
 .logo[data-logo="Planning Center"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-planning-center/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Planning Center"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-planning-center/images/logo-black.svg");
 }
+
 .logo[data-logo="Planning Center"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-planning-center/images/logo-white.svg");
 }
+
+/**
+ * Evernote logo.
+ */
+
 .logo[data-logo="Evernote"] {
   width: 4.027538726333907em;
 }
+
 .logo[data-logo="Evernote"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-evernote/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Evernote"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-evernote/images/logo-black.svg");
 }
+
 .logo[data-logo="Evernote"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-evernote/images/logo-white.svg");
 }
+
+/**
+ * Evernote Sandbox logo.
+ */
+
 .logo[data-logo="Evernote Sandbox"] {
   width: 0;
 }
+
 .logo[data-logo="Evernote Sandbox"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-evernote-sandbox/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Evernote Sandbox"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-evernote-sandbox/images/logo-black.svg");
 }
+
 .logo[data-logo="Evernote Sandbox"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-evernote-sandbox/images/logo-white.svg");
 }
+
+
+/**
+ * AWS logo.
+ */
+
 .logo[data-logo="AWS"] {
   width: 2.500000052083334em;
 }
+
 .logo[data-logo="AWS"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-aws/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="AWS"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-aws/images/logo-black.svg");
 }
+
 .logo[data-logo="AWS"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-aws/images/logo-white.svg");
 }
+
+/**
+ * Zoom logo.
+ */
+
 .logo[data-logo="Zoom"] {
   width: 4.4em;
 }
+
 .logo[data-logo="Zoom"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-zoom/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Zoom"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-zoom/images/logo-black.svg");
 }
+
 .logo[data-logo="Zoom"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-zoom/images/logo-white.svg");
 }
+
+/**
+ * Zendesk logo.
+ */
+
 .logo[data-logo="Zendesk"] {
   width: 4.105536680697535em;
 }
+
 .logo[data-logo="Zendesk"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-zendesk/images/logo.svg");
-  margin: -0.1em 0 0.15em 0;
+  margin: -.1em 0 .15em 0;
 }
+
 .logo[data-logo="Zendesk"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-zendesk/images/logo-black.svg");
 }
+
 .logo[data-logo="Zendesk"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-zendesk/images/logo-white.svg");
 }
+
+/**
+ * Firebase logo.
+ */
+
 .logo[data-logo="Firebase"] {
   width: 5.070904645476773em;
 }
+
 .logo[data-logo="Firebase"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-firebase/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Firebase"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-firebase/images/logo-black.svg");
 }
+
 .logo[data-logo="Firebase"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-firebase/images/logo-white.svg");
 }
+
+/**
+ * Box logo.
+ */
+
 .logo[data-logo="Box"] {
-  width: 1.812389380530973em;
+  width: 1.8123893805309734em;
 }
+
 .logo[data-logo="Box"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-box/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Box"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-box/images/logo-black.svg");
 }
+
 .logo[data-logo="Box"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-box/images/logo-white.svg");
 }
+
+/**
+ * CloudBees logo.
+ */
+
 .logo[data-logo="CloudBees"] {
   width: 2.348314606741573em;
 }
+
 .logo[data-logo="CloudBees"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-cloudbees/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="CloudBees"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-cloudbees/images/logo-black.svg");
 }
+
 .logo[data-logo="CloudBees"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-cloudbees/images/logo-white.svg");
 }
+
+/**
+ * Concur logo.
+ */
+
 .logo[data-logo="Concur"] {
-  width: 3.333333333333333em;
+  width: 3.3333333333333335em;
 }
+
 .logo[data-logo="Concur"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-concur/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Concur"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-concur/images/logo-black.svg");
 }
+
 .logo[data-logo="Concur"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-concur/images/logo-white.svg");
 }
+
+/**
+ * Dropbox logo.
+ */
+
 .logo[data-logo="Dropbox"] {
   width: 3.760525191199658em;
 }
+
 .logo[data-logo="Dropbox"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-dropbox/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Dropbox"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-dropbox/images/logo-black.svg");
 }
+
 .logo[data-logo="Dropbox"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-dropbox/images/logo-white.svg");
 }
+
+/**
+ * Salesforce
+ */
+
 .logo[data-logo="Salesforce"] {
   width: 3.764142954em;
-/* (170.95/59.04) * (1+.1+.2) - 0 */
+  /* (170.95/59.04) * (1+.1+.2) - 0 */
 }
+
 .logo[data-logo="Salesforce"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-salesforce/images/logo.svg");
-  margin: -0.1em 0 -0.2em 0;
+  margin: -.1em 0 -.2em 0;
 }
+
 .logo[data-logo="Salesforce"].monochromatic > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-salesforce/images/logo-monochromatic.svg");
 }
+
+
+/**
+ * Salesforce
+ */
+
 .logo[data-logo="SalesforceAPI"] {
   width: 3.764142954em;
-/* (170.95/59.04) * (1+.1+.2) - 0 */
+  /* (170.95/59.04) * (1+.1+.2) - 0 */
 }
+
 .logo[data-logo="SalesforceAPI"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-salesforce-api/images/logo.svg");
-  margin: -0.1em 0 -0.2em 0;
+  margin: -.1em 0 -.2em 0;
 }
+
 .logo[data-logo="SalesforceAPI"].monochromatic > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-salesforce-api/images/logo-monochromatic.svg");
 }
+
+
+/**
+ * Salesforce
+ */
+
 .logo[data-logo="SalesforceSandbox"] {
   width: 3.764142954em;
-/* (170.95/59.04) * (1+.1+.2) - 0 */
+  /* (170.95/59.04) * (1+.1+.2) - 0 */
 }
+
 .logo[data-logo="SalesforceSandbox"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-salesforce-sandbox/images/logo.svg");
-  margin: -0.1em 0 -0.2em 0;
+  margin: -.1em 0 -.2em 0;
 }
+
 .logo[data-logo="SalesforceSandbox"].monochromatic > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-salesforce-sandbox/images/logo-monochromatic.svg");
 }
+
+
+/**
+ * Salesforce
+ */
+
 .logo[data-logo="SalesforceCommunity"] {
   width: 3.764142954em;
-/* (170.95/59.04) * (1+.1+.2) - 0 */
+  /* (170.95/59.04) * (1+.1+.2) - 0 */
 }
+
 .logo[data-logo="SalesforceCommunity"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-salesforce-community/images/logo.svg");
-  margin: -0.1em 0 -0.2em 0;
+  margin: -.1em 0 -.2em 0;
 }
+
 .logo[data-logo="SalesforceCommunity"].monochromatic > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-salesforce-community/images/logo-monochromatic.svg");
 }
+
+
+/**
+ * SAP logo.
+ */
+
 .logo[data-logo="SAP"] {
   width: 2.016260162601626em;
 }
+
 .logo[data-logo="SAP"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-sap/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="SAP"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-sap/images/logo-black.svg");
 }
+
 .logo[data-logo="SAP"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-sap/images/logo-white.svg");
 }
+
+/**
+ * Microsoft Sharepoint logo.
+ */
+
 .logo[data-logo="Sharepoint"] {
   width: 3.146788990825688em;
 }
+
 .logo[data-logo="Sharepoint"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-sharepoint/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Sharepoint"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-sharepoint/images/logo-black.svg");
 }
+
 .logo[data-logo="Sharepoint"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-sharepoint/images/logo-white.svg");
 }
+
+
+/**
+ * Slack logo.
+ */
+
 .logo[data-logo="Slack"] {
   width: 3.325em;
 }
+
 .logo[data-logo="Slack"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-slack/images/logo.svg");
   margin: 0 0 0 0;
 }
+
+/**
+ * SpringCM logo.
+ */
+
 .logo[data-logo="SpringCM"] {
   width: 4.409090909090909em;
 }
+
 .logo[data-logo="SpringCM"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-springcm/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="SpringCM"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-springcm/images/logo-black.svg");
 }
+
 .logo[data-logo="SpringCM"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-springcm/images/logo-white.svg");
 }
+
+/**
+ * Egnyte logo.
+ */
+
 .logo[data-logo="Egnyte"] {
-  width: 3.095975232198143em;
+  width: 3.0959752321981426em;
 }
+
 .logo[data-logo="Egnyte"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-egnyte/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Egnyte"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-egnyte/images/logo-black.svg");
 }
+
 .logo[data-logo="Egnyte"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-egnyte/images/logo-white.svg");
 }
+
+/**
+ * New Relic logo.
+ */
+
 .logo[data-logo="NewRelic"] {
   width: 5.522388059701493em;
 }
+
 .logo[data-logo="NewRelic"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-new-relic/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="NewRelic"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-new-relic/images/logo-black.svg");
 }
+
 .logo[data-logo="NewRelic"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-new-relic/images/logo-white.svg");
 }
+
+
+/**
+ * Adobe EchoSign logo.
+ */
+
 .logo[data-logo="AdobeEchoSign"] {
   width: 2.605769230769231em;
 }
+
 .logo[data-logo="AdobeEchoSign"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-adobe-echosign/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="AdobeEchoSign"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-adobe-echosign/images/logo-black.svg");
 }
+
 .logo[data-logo="AdobeEchoSign"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-adobe-echosign/images/logo-white.svg");
 }
+
+
+/**
+ * Windows Server Active Directory logo.
+ */
+
 .logo[data-logo="Windows Server Active Directory RMS"] {
   width: 3.707317073170732em;
 }
+
 .logo[data-logo="Windows Server Active Directory RMS"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-windows-server-active-directory-rms/images/logo.svg");
   margin: 0 0 0 0;
 }
+
+/**
+ * Windows Azure Mobile Services logo.
+ */
+
 .logo[data-logo="Windows Azure Mobile Services"] {
   width: 4.061538461538461em;
 }
+
 .logo[data-logo="Windows Azure Mobile Services"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-windows-azure-mobile-service/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Windows Azure Mobile Services"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-windows-azure-mobile-service/images/logo-black.svg");
 }
+
 .logo[data-logo="Windows Azure Mobile Services"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-windows-azure-mobile-service/images/logo-white.svg");
 }
+
+/**
+ * Windows Azure Service Bus logo.
+ */
+
 .logo[data-logo="Windows Azure Service Bus"] {
   width: 5.017543859649122em;
 }
+
 .logo[data-logo="Windows Azure Service Bus"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-windows-azure-service-bus/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Windows Azure Service Bus"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-windows-azure-service-bus/images/logo-black.svg");
 }
+
 .logo[data-logo="Windows Azure Service Bus"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-windows-azure-service-bus/images/logo-white.svg");
 }
+
+/**
+ * Azure Blob Storage logo.
+ */
+
 .logo[data-logo="Azure Blob Storage"] {
   width: 4.304761904761905em;
 }
+
 .logo[data-logo="Azure Blob Storage"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-azure-blob-storage/images/logo.svg");
   margin: 0 0 0 0;
 }
+
+/**
+ * Microsoft Dynamics CRM logo.
+ */
+
 .logo[data-logo="MicrosoftDynamicsCRM"] {
   width: 4.306413301662708em;
 }
+
 .logo[data-logo="MicrosoftDynamicsCRM"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-microsoft-dynamics-crm/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="MicrosoftDynamicsCRM"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-microsoft-dynamics-crm/images/logo-black.svg");
 }
+
 .logo[data-logo="MicrosoftDynamicsCRM"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-microsoft-dynamics-crm/images/logo-white.svg");
 }
+
+
+/**
+ * Windows LiveID logo.
+ */
+
 .logo[data-logo="Windows LiveID"] {
   width: 3.764705882352941em;
 }
+
 .logo[data-logo="Windows LiveID"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-windows-liveid/images/logo.png");
   margin: 0 0 0 0;
 }
+
+/**
+ * SAML2 Web App logo.
+ */
+
 .logo[data-logo="SAML2 Web App"] {
   width: 3.474006116207951em;
 }
+
 .logo[data-logo="SAML2 Web App"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-saml2-web-app/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="SAML2 Web App"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-saml2-web-app/images/logo-black.svg");
 }
+
 .logo[data-logo="SAML2 Web App"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-saml2-web-app/images/logo-white.svg");
 }
+
+/**
+ * WS-Fed Web App logo.
+ */
+
 .logo[data-logo="WS-Fed Web App"] {
   width: 0;
 }
+
 .logo[data-logo="WS-Fed Web App"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-ws-fed-web-app/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="WS-Fed Web App"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-ws-fed-web-app/images/logo-black.svg");
 }
+
 .logo[data-logo="WS-Fed Web App"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-ws-fed-web-app/images/logo-white.svg");
 }
+
+
+/**
+ * Touch ID logo.
+ */
+
 .logo[data-logo="Touch ID"] {
   width: 2.910891089108911em;
 }
+
 .logo[data-logo="Touch ID"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-touchid/images/logo.svg");
   margin: 0 0 0 0;
 }
+
+/**
+ * Microsoft Office 365 logo.
+ */
+
 .logo[data-logo="Office365"] {
   width: 2.885869565217391em;
 }
+
 .logo[data-logo="Office365"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-office-365/images/logo.svg");
   margin: 0 0 0 0;
 }
+
 .logo[data-logo="Office365"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-office-365/images/logo-black.svg");
 }
+
 .logo[data-logo="Office365"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-office-365/images/logo-white.svg");
 }
+
+
+/**
+ * Amazon Web Services logo.
+ */
+
 .logo[data-logo="Amazon Web Services"] {
   width: 2.500000052083334em;
 }
+
 .logo[data-logo="Amazon Web Services"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-amazon-ws/images/logo.svg");
   margin: 0 0 0 0;
 }
+
+/**
+ * Sendgrid logo.
+ */
+
 .logo[data-logo="Sendgrid"] {
   width: 3.931216931216931em;
 }
+
 .logo[data-logo="Sendgrid"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-sendgrid/images/logo.svg");
   margin: 0 0 0 0;
 }
+
+/**
+ * Mandrill logo.
+ */
+
 .logo[data-logo="Mandrill"] {
   width: 5.313746499799988em;
 }
+
 .logo[data-logo="Mandrill"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-mandrill/images/logo.svg");
   margin: 0;
 }
+
 .logo[data-logo="Mandrill"][data-color="black"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-mandrill/images/logo-black.svg");
 }
+
 .logo[data-logo="Mandrill"][data-color="white"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo-mandrill/images/logo-white.svg");
 }
+
+/**
+ * Layer logo.
+ */
+
 .logo[data-logo="Layer"] {
-  width: 3.538461538461538em;
+  width: 3.5384615384615383em;
 }
+
 .logo[data-logo="Layer"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-layer/images/logo.svg");
   margin: 0 0 0 0;
 }
+
+/**
+ * Duo logo.
+ */
+
 .logo[data-logo="Duo"] {
   width: 3.108695652173913em;
 }
+
 .logo[data-logo="Duo"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-duo/images/logo.svg");
   margin: 0 0 0 0;
 }
+
+/**
+ * Passwordless Email logo.
+ */
+
 .logo[data-logo="Passwordless Email"] {
   width: 2.284090909090909em;
 }
+
 .logo[data-logo="Passwordless Email"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-passwordless-email/images/logo.svg");
   margin: 0 0 0 0;
 }
-.logo[data-logo="Passwordless SMS"] {
-  width: 1.680851063829787em;
+
+/*.logo[data-logo="Passwordless Email"][data-color="black"] > * {
+  background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-passwordless-email/images/logo-black.svg");
 }
+
+.logo[data-logo="Passwordless Email"][data-color="white"] > * {
+  background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-passwordless-email/images/logo-white.svg");
+}
+*/
+
+/**
+ * Passwordless SMS logo.
+ */
+
+.logo[data-logo="Passwordless SMS"] {
+  width: 1.6808510638297873em;
+}
+
 .logo[data-logo="Passwordless SMS"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-passwordless-sms/images/logo.svg");
   margin: 0 0 0 0;
 }
+
+/**
+ * Passwordless Email logo.
+ */
+
 .logo[data-logo="Passwordless TouchID"] {
-  width: 2.173913043478261em;
+  width: 2.1739130434782608em;
 }
+
 .logo[data-logo="Passwordless TouchID"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-passwordless-touchid/images/logo.svg");
   margin: 0 0 0 0;
 }
+
+/**
+ * Google Authenticator logo.
+ */
+
 .logo[data-logo="Google Authenticator"] {
   width: 5.509433962264151em;
 }
+
 .logo[data-logo="Google Authenticator"] > * {
   background-image: url("//cdn.auth0.com/manage/v0.3.1065/logos/build/logo2-google-authenticator/images/logo.svg");
   margin: 0 0 0 0;
-}
-#wpwrap {
-  background-color: #fff;
-}
-.a0-wrap {
-  font-family: 'avenir roman';
-  margin-left: -20px;
-  color: #4a535c;
-}
-.a0-wrap h1,
-.a0-wrap h2,
-.a0-wrap p {
-  color: #4a535c;
-}
-.a0-wrap p {
-  font-size: 17px;
-  color: #9da1a9;
-}
-.a0-wrap .a0-buttons {
-  margin: 20px 0;
-}
-.a0-header {
-  text-align: center;
-}
-.a0-header img {
-  height: 55px;
-  margin: 50px auto;
-}
-.a0-button {
-  border-radius: 3px;
-  border: none;
-  line-height: 45px;
-  min-width: 150px;
-  text-transform: uppercase;
-  text-decoration: none;
-  font-size: 13px;
-  display: inline-block;
-  text-align: center;
-}
-.a0-button.primary {
-  color: #fff;
-  background-color: #eb5424;
-}
-.a0-button.primary:hover {
-  color: #fff;
-}
-.a0-button.secondary {
-  font-weight: bold;
-  color: #32759a;
-  background-color: transparent;
-  text-decoration: underline;
-}
-.a0-button.secondary:hover {
-  color: #32759a;
-}
-.a0-steps {
-  background-color: #f2f5f8;
-  padding-top: 120px;
-  padding-bottom: 120px;
-  height: 0;
-}
-.a0-steps .progress {
-  border-top: 4px solid #dcdfe1;
-  margin: auto;
-  float: none;
-}
-.a0-steps .steps {
-  position: relative;
-  top: -27px;
-  text-align: center;
-}
-.a0-steps .steps span {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  border-radius: 30px;
-  line-height: 50px;
-  text-align: center;
-  background-color: #dcdfe1;
-  color: #fff;
-  font-weight: bold;
-  font-size: 15px;
-}
-.a0-steps .steps p {
-  display: none;
-  color: #575c60;
-  font-weight: bold;
-}
-.a0-steps .steps .active span {
-  background-color: #eb5424;
-}
-.a0-steps .steps .active p {
-  display: block;
-}
-.consent-disclaimer .logo {
-  width: 100px;
-  margin: 20px 0;
-}
-p.a0-message {
-  padding: 30px 30px 30px 85px;
-  font-size: 13px;
-  border-radius: 3px;
-}
-p.a0-message.a0-notice {
-  background-color: #d0e8f4;
-  color: #32759a;
-}
-.a0-profiles .profile {
-  background-color: #f2f5f8;
-  border-radius: 3px;
-  padding: 25px;
-}
-.a0-profiles .profile .a0-buttons {
-  text-align: center;
-}
-.connection {
-  border: 1px #d0d2d3 solid;
-  float: left;
-  width: 50%;
-}
-.connection img {
-  width: 100px;
 }

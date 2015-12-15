@@ -2,7 +2,7 @@
 
   <img src="http://cdn.auth0.com/styleguide/latest/img/logo-blue.png" />
 
-  <div class="a0-container a0-steps">  
+  <div class="container-fluid a0-steps">  
     <div class="row"><div class="progress col-md-9"></div></div>
 
     <div class="steps row">

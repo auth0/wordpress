@@ -1,5 +1,5 @@
 <div class="a0-wrap consent-disclaimer">
-	<div class="a0-container">
+	<div class="container-fluid">
 		<img class="logo" src="http://cdn.auth0.com/styleguide/latest/img/badge.png" />
 
 		<h1><?php _e('Get started with Auth0 for WordPress', WPA0_LANG); ?></h1>

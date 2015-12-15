@@ -2,7 +2,7 @@
 
   <?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'); ?>
 
-  <div class="a0-container">
+  <div class="container-fluid">
     <h1><?php _e("Step 1: Choose your account type", WPA0_LANG); ?></h1>
 
     <p><?php _e("Users can log in witih their own credentials - social like Google or Facebook, or name/password -  or use their employee credentials through an enterprise connection. Use either or both, and you'll increase your WordPress site's security and gather data about your visitors.", WPA0_LANG); ?></p>
