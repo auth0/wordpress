@@ -185,6 +185,22 @@ We added a new field called "Extra settings" that allows you to add a json objec
 
 Have in mind that all the "Extra settings" that we allow to set up in the plugin settings page will be overrided (For more information about it: https://github.com/auth0/widget).
 
+## Contributing
+
+### How to build the initial setup assets?
+
+You need to install the stylus tool and run this command (inside /assets/css):
+
+```
+$ stylus -c -o initial-setup.css initial-setup/main.styl
+```
+
+To watch and auto-compile it while working:
+
+```
+$ stylus -w -o initial-setup.css initial-setup/main.styl
+```
+
 ## Screenshots
 
 ![](https://raw.githubusercontent.com/auth0/wp-auth0/master/screenshot-1.png)

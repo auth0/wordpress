@@ -821,12 +821,12 @@
 .a0-wrap {
   font-family: 'avenir roman';
   margin-left: -20px;
-  color: #4a535c;
+  color: #5b666f;
 }
 .a0-wrap h1,
 .a0-wrap h2,
 .a0-wrap p {
-  color: #4a535c;
+  color: #5b666f;
 }
 .a0-wrap p {
   font-size: 17px;
@@ -835,8 +835,12 @@
 .a0-wrap .a0-buttons {
   margin: 20px 0;
 }
+.a0-wrap form {
+  margin: 0;
+}
 .a0-header {
   text-align: center;
+  border-bottom: 1px solid #f2f5f8;
 }
 .a0-header img {
   height: 55px;
@@ -916,17 +920,32 @@ p.a0-message {
   padding: 30px 30px 30px 85px;
   font-size: 13px;
   border-radius: 3px;
+  position: relative;
 }
 p.a0-message.a0-notice {
   background-color: #d0e8f4;
   color: #32759a;
 }
+p.a0-message.a0-tip {
+  background-color: #e4e6e8;
+}
+p.a0-message img {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+}
 .a0-profiles .profile {
   background-color: #f2f5f8;
   border-radius: 3px;
   padding: 25px;
+  text-align: center;
 }
-.a0-profiles .profile .a0-buttons {
+.a0-profiles .profile img {
+  width: 140px;
+  height: 140px;
+  border-radius: 70px;
+}
+.modal-footer {
   text-align: center;
 }
 .connection {

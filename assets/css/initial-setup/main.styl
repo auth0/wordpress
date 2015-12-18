@@ -22,10 +22,15 @@
   .a0-buttons {
     margin: 20px 0;
   }
+  
+  form {
+    margin:0;
+  }
 }
 
 .a0-header {
   text-align:center;
+  border-bottom:1px solid #F2F5F8;
   img {
     height:55px;
     margin: 50px auto;
@@ -124,10 +129,21 @@ p.a0-message {
   padding: 30px 30px 30px 85px;
   font-size: 13px;
   border-radius: 3px;
+  position:relative;
 
   &.a0-notice {
     background-color: noticeBG;
     color:noticeText;
+  }
+  
+  &.a0-tip {
+    background-color: tipBG;
+  }
+  
+  img {
+    position:absolute;
+    left:20px;
+    top:20px;
   }
 }
 
@@ -136,11 +152,18 @@ p.a0-message {
     background-color: profileBG;
     border-radius: 3px;
     padding:25px;
-    
-    .a0-buttons {
-      text-align:center;
+    text-align: center;
+      
+    img {
+      width: 140px;
+      height: 140px;
+      border-radius:70px;
     }
   }
+}
+
+.modal-footer {
+  text-align:center;
 }
 
 .connection {
