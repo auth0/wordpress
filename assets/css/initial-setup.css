@@ -1021,6 +1021,22 @@ p.a0-message img {
 }
 .connections {
   margin-top: 30px;
+  height: 600px;
+  overflow-y: scroll;
+  padding: 0;
+}
+.connections::-webkit-scrollbar {
+  width: 14px;
+}
+.connections::-webkit-scrollbar-track {
+  background: #f3f3f3;
+  border-radius: 8px;
+  border: 3px solid #fff;
+}
+.connections::-webkit-scrollbar-thumb {
+  border: 3px solid #fff;
+  border-radius: 8px;
+  background: #d9d9de;
 }
 .connection {
   border: 1px #d0d2d3 solid;
@@ -1108,11 +1124,12 @@ p.a0-message img {
 .a0-db-connection .a0-switch {
   float: right;
   display: block;
-  margin: 60px 0 0 30px;
+  margin: 40px 0 0 30px;
 }
 .lock {
   padding-top: 30px;
 }
 .lock #a0-lock {
-  float: right;
+  margin: auto;
+  width: 300px;
 }

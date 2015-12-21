@@ -53,14 +53,27 @@ var clientID = 'KNuydwEqwGsPNpxdAhACmOWDUmBEZsLn';
 
 var lock = new Auth0Lock(clientID, domain);
 
+lock.once('shown', function() {
+  showLock();
+});
+
+lock.once('signin ready', function() {
+	jQuery('.connections').height( jQuery('#a0-lock').height() );
+});
+
+lock.once('signin success', function() {
+  showLock();
+});
+
 function showLock() {
 	lock.show({
 		container: 'lock-container',
+		socialBigButtons: true,
 		popup:false,
 		rememberLastLogin:false,
 		sso:false
 	},function (err, profile, token) {
-		console.log(err, profile, token);
+		showLock();
 	});
 }
 
