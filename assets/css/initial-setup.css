@@ -828,6 +828,10 @@
 .a0-wrap p {
   color: #5b666f;
 }
+.a0-wrap h3 {
+  background: transparent;
+  padding: 0;
+}
 .a0-wrap h1 {
   font-size: 32px;
 }
@@ -899,6 +903,10 @@
 }
 .a0-button.secondary:hover {
   color: #32759a;
+}
+.a0-separator {
+  border-bottom: 1px solid #f2f5f8;
+  margin: 30px 0;
 }
 .a0-steps {
   background-color: #f2f5f8;
@@ -1011,11 +1019,100 @@ p.a0-message img {
 .modal-footer {
   text-align: center;
 }
+.connections {
+  margin-top: 30px;
+}
 .connection {
   border: 1px #d0d2d3 solid;
   float: left;
   width: 50%;
+  border-top: none;
+  background-color: #f7f7f7;
 }
-.connection img {
+.connection:nth-child(even) {
+  border-left: none;
+}
+.connection:nth-child(1),
+.connection:nth-child(2) {
+  border-top: 1px #d0d2d3 solid;
+}
+.connection .a0-switch {
+  float: right;
+  position: relative;
+  top: 35px;
+  right: 15px;
+}
+.connection .logo {
   width: 100px;
+  height: 70px;
+  margin: 15px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.connection .logo .logo-child {
+  width: 100px;
+  height: 70px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+}
+.connection .logo[data-logo="SAP"] .logo-child {
+  background-size: 80%;
+}
+.connection .logo[data-logo="Twitter"] .logo-child {
+  background-size: 60%;
+}
+.connection .logo[data-logo="Box"] .logo-child {
+  background-size: 70%;
+  transform: translateX(-10%);
+}
+.connection .logo[data-logo="vk"] .logo-child {
+  background-size: 55%;
+  transform: translateX(-27%);
+}
+.a0-switch {
+  display: inline-block;
+}
+.a0-switch input {
+  display: none;
+}
+.a0-switch label {
+  position: relative;
+  display: block;
+  width: 50px;
+  height: 30px;
+  border-radius: 15px;
+  background-color: #a9a9a9;
+}
+.a0-switch input:checked + label {
+  background-color: #45db5e;
+}
+.a0-switch label::before {
+  position: absolute;
+  content: " ";
+  width: 26px;
+  height: 26px;
+  border-radius: 13px;
+  top: 2px;
+  left: 2px;
+  background-color: #fff;
+  box-shadow: 0 0 1px 0 rgba(0,0,0,0.25), 0px 4px 11px 0 rgba(0,0,0,0.08), -1px 3px 3px 0 rgba(0,0,0,0.14);
+  transition: left 300ms cubic-bezier(0.42, 0.8, 0.58, 1.2);
+}
+.a0-switch input:checked + label::before {
+  left: 22px;
+}
+.a0-db-connection .a0-step-text {
+  margin: 30px 0;
+}
+.a0-db-connection .a0-switch {
+  float: right;
+  display: block;
+  margin: 60px 0 0 30px;
+}
+.lock {
+  padding-top: 30px;
+}
+.lock #a0-lock {
+  float: right;
 }

@@ -14,6 +14,11 @@
     color:text;
   }
   
+  h3 {
+    background: transparent;
+    padding: 0;
+  }
+  
   h1 {
     font-size: 32px;
   }
@@ -104,6 +109,11 @@
       color: buttonSecondaryText;
     }
   }
+}
+
+.a0-separator {
+  border-bottom:1px solid #F2F5F8;
+  margin:30px 0;
 }
 
 .a0-steps {
@@ -243,12 +253,126 @@ p.a0-message {
   text-align:center;
 }
 
+.connections {
+  margin-top:30px;
+}
 .connection {
   border: 1px #d0d2d3 solid;
   float:left;
   width:50%;
+  border-top:none;
+  background-color:#F7F7F7;
   
-  img {
+  &:nth-child(even) {
+    border-left:none;
+  }
+  &:nth-child(1),
+  &:nth-child(2) {
+    border-top:1px #d0d2d3 solid;
+  }
+  
+  .a0-switch {
+    float:right;
+    position: relative;
+    top: 35px;
+    right: 15px;
+  }
+  
+  .logo {
     width:100px;
+    height:70px;
+    margin: 15px;
+    padding-right: 15px;
+    padding-left: 15px;
+      
+    .logo-child {
+      width:100px;
+      height:70px;
+      
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: contain;
+    }
+    
+    &[data-logo="SAP"] {
+      .logo-child {
+        background-size: 80%;
+      }
+    }
+        
+    &[data-logo="Twitter"] {
+      .logo-child {
+        background-size: 60%;
+      }
+    }
+          
+    &[data-logo="Box"] {
+      .logo-child {
+        background-size: 70%;
+        transform: translateX(-10%);
+      }
+    }
+        
+    &[data-logo="vk"] {
+      .logo-child {
+        background-size: 55%;
+        transform: translateX(-27%);
+      }
+    }
+  }
+}
+
+.a0-switch {
+  display:inline-block;
+  
+  input {
+    display:none
+  }
+  label {
+    position:relative;
+    display:block;
+    width:50px;
+    height:30px;
+    border-radius:15px;
+    background-color:#A9A9A9;
+  }
+  input:checked + label {
+    background-color:#45DB5E;
+  }
+  label::before {
+    position:absolute;
+    content:" ";
+    width:26px;
+    height:26px;
+    border-radius:13px;
+    top:2px;
+    left:2px;
+    background-color:#FFFFFF;
+    box-shadow: 0 0 1px 0 rgba(0,0,0,0.25),0px 4px 11px 0 rgba(0,0,0,0.08),-1px 3px 3px 0 rgba(0,0,0,0.14);
+    
+    transition: left 300ms cubic-bezier(0.42,0.8,0.58,1.2);
+  }
+  input:checked + label::before {
+    left: 22px;
+  }
+}
+
+.a0-db-connection {
+  
+  .a0-step-text {
+    margin: 30px 0;
+  }
+
+  .a0-switch {
+    float: right;
+    display: block;
+    margin: 60px 0 0 30px;
+  }
+}
+
+.lock {
+  padding-top:30px;
+  #a0-lock {
+    float:right;
   }
 }
