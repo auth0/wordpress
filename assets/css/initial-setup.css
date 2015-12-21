@@ -838,6 +838,16 @@
 .a0-wrap form {
   margin: 0;
 }
+.a0-wrap .container-fluid {
+  padding-top: 50px;
+  max-width: 1000px;
+}
+.a0-wrap .modal-dialog {
+  margin: 100px auto;
+}
+.a0-step-text {
+  margin: 40px 0;
+}
 .a0-header {
   text-align: center;
   border-bottom: 1px solid #f2f5f8;
@@ -917,10 +927,13 @@
   margin: 20px 0;
 }
 p.a0-message {
-  padding: 30px 30px 30px 85px;
-  font-size: 13px;
+  line-height: 38px;
+  font-size: 12px;
   border-radius: 3px;
   position: relative;
+  text-align: center;
+  font-style: italic;
+  color: #5b666f;
 }
 p.a0-message.a0-notice {
   background-color: #d0e8f4;
@@ -929,21 +942,51 @@ p.a0-message.a0-notice {
 p.a0-message.a0-tip {
   background-color: #e4e6e8;
 }
+p.a0-message.a0-tip a {
+  color: #5b666f;
+}
+p.a0-message b {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+p.a0-message a {
+  text-decoration: underline;
+}
 p.a0-message img {
   position: absolute;
   left: 20px;
   top: 20px;
+}
+.a0-profiles {
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+.a0-profiles .col {
+  padding-left: 25px;
+}
+.a0-profiles .col:first-of-type {
+  padding-left: 15px;
+  padding-right: 25px;
 }
 .a0-profiles .profile {
   background-color: #f2f5f8;
   border-radius: 3px;
   padding: 25px;
   text-align: center;
+  margin-bottom: 20px;
+}
+.a0-profiles .profile h2 {
+  font-size: 22px;
+}
+.a0-profiles .profile p {
+  font-size: 13px;
+  margin: 20px 10px;
+  height: 85px;
 }
 .a0-profiles .profile img {
-  width: 140px;
-  height: 140px;
-  border-radius: 70px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
 }
 .modal-footer {
   text-align: center;

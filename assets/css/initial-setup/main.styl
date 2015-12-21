@@ -26,6 +26,19 @@
   form {
     margin:0;
   }
+  
+  .container-fluid {
+    padding-top: 50px;
+    max-width:1000px;
+  }
+  
+  .modal-dialog {
+    margin: 100px auto;
+  }
+}
+
+.a0-step-text {
+  margin:40px 0;
 }
 
 .a0-header {
@@ -126,10 +139,13 @@
 }
 
 p.a0-message {
-  padding: 30px 30px 30px 85px;
-  font-size: 13px;
+  line-height: 38px;
+  font-size: 12px;
   border-radius: 3px;
-  position:relative;
+  position: relative;
+  text-align: center;
+  font-style: italic;
+  color:text;
 
   &.a0-notice {
     background-color: noticeBG;
@@ -138,6 +154,19 @@ p.a0-message {
   
   &.a0-tip {
     background-color: tipBG;
+    
+    a {
+      color:text;
+    }
+  }
+  
+  b {
+    font-weight:bold;
+    text-transform:uppercase;
+  }
+  
+  a {
+    text-decoration:underline;
   }
   
   img {
@@ -148,16 +177,38 @@ p.a0-message {
 }
 
 .a0-profiles {
+  margin-top: 50px;
+  margin-bottom: 30px;
+
+  .col {
+    padding-left: 25px;
+  }
+  .col:first-of-type {
+    padding-left: 15px;
+    padding-right: 25px;
+  }
+  
   .profile {
     background-color: profileBG;
     border-radius: 3px;
     padding:25px;
     text-align: center;
+    margin-bottom:20px;
+    
+    h2 {
+      font-size: 22px;
+    }
+    
+    p {
+      font-size: 13px;
+      margin: 20px 10px;
+      height: 85px;
+    }
       
     img {
-      width: 140px;
-      height: 140px;
-      border-radius:70px;
+      width: 100px;
+      height: 100px;
+      border-radius:50px;
     }
   }
 }
