@@ -828,6 +828,9 @@
 .a0-wrap p {
   color: #5b666f;
 }
+.a0-wrap h1 {
+  font-size: 32px;
+}
 .a0-wrap p {
   font-size: 17px;
   color: #9da1a9;
@@ -845,6 +848,20 @@
 .a0-wrap .modal-dialog {
   margin: 100px auto;
 }
+.a0-wrap .modal-body {
+  padding: 30px;
+  font-size: 16px;
+}
+.a0-wrap .modal-header h4 {
+  text-align: center;
+  font-weight: bold;
+}
+.a0-wrap .modal-header .close {
+  margin-top: 2px;
+}
+.a0-wrap .modal-footer {
+  padding: 25px;
+}
 .a0-step-text {
   margin: 40px 0;
 }
@@ -854,7 +871,7 @@
 }
 .a0-header img {
   height: 55px;
-  margin: 50px auto;
+  margin: 30px auto;
 }
 .a0-button {
   border-radius: 3px;
@@ -931,9 +948,8 @@ p.a0-message {
   font-size: 12px;
   border-radius: 3px;
   position: relative;
-  text-align: center;
-  font-style: italic;
   color: #5b666f;
+  padding-left: 20px;
 }
 p.a0-message.a0-notice {
   background-color: #d0e8f4;
@@ -979,9 +995,9 @@ p.a0-message img {
   font-size: 22px;
 }
 .a0-profiles .profile p {
-  font-size: 13px;
+  font-size: 14px;
   margin: 20px 10px;
-  height: 85px;
+  height: 105px;
 }
 .a0-profiles .profile img {
   width: 100px;
