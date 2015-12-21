@@ -1,12 +1,13 @@
 <div class="a0-wrap">
 
 	<?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'); ?>
+	<?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/steps.php'); ?>
 
 	<div class="container-fluid">
 
 		<h1><?php _e("Step 2: Set up end-user logins", WPA0_LANG); ?></h1>
 
-		<p><?php _e("If your WordPress site's visitors already have social network accounts, they can access your site with their existing credentials, or they can set up a username/password combination safeguarded by Auth0's password complexity policies and brute force protection.", WPA0_LANG); ?></p>
+		<p class="a0-step-text"><?php _e("If your WordPress site's visitors already have social network accounts, they can access your site with their existing credentials, or they can set up a username/password combination safeguarded by Auth0's password complexity policies and brute force protection.", WPA0_LANG); ?></p>
 
 
 		<div class="row">

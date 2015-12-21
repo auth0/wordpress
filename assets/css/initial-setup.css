@@ -906,7 +906,7 @@
   padding-bottom: 120px;
   height: 0;
 }
-.a0-steps .progress {
+.a0-steps .a0-progress {
   border-top: 4px solid #dcdfe1;
   margin: auto;
   float: none;
@@ -932,6 +932,10 @@
   display: none;
   color: #575c60;
   font-weight: bold;
+  padding-top: 10px;
+  font-size: 15px;
+  width: 105px;
+  margin: auto;
 }
 .a0-steps .steps .active span {
   background-color: #eb5424;

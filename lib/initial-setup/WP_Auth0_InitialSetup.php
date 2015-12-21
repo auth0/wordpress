@@ -100,6 +100,7 @@ class WP_Auth0_InitialSetup {
     public function render_setup_page() {
 
         $step = (isset($_REQUEST['step']) ? $_REQUEST['step'] : 1);
+        $profile = (isset($_REQUEST['profile']) ? $_REQUEST['profile'] : null);
 
         if (is_numeric($step) && $step >= 1 && $step <= 6) {
 
@@ -110,16 +111,16 @@ class WP_Auth0_InitialSetup {
           }
 
           switch ($step) {
-            // case 1:
-            //   $this->consent_step->render($step);
-            //   break;
-
             case 1:
               $this->connection_profile->render($step);
               break;
 
-            case 3:
-              $this->connections_step->render($step);
+            case 2:
+              if ($profile == "social") {
+                $this->connections_step->render($step);
+              } elseif ($profile == "enterprise") {
+                // $this->connections_step->render($step);
+              }
               break;
 
             case 4:

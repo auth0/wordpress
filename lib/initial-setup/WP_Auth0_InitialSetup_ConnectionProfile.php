@@ -3,6 +3,7 @@
 class WP_Auth0_InitialSetup_ConnectionProfile {
 
   protected $a0_options;
+  protected $domain = 'auth0.auth0.com';
 
   public function __construct(WP_Auth0_Options $a0_options) {
       $this->a0_options = $a0_options;
@@ -17,21 +18,34 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
 
     $type = null;
 
-    if (isset($_POST['type'])) {
-      $type = strtolower( $_POST['type'] );
+    if (isset($_POST['profile-type'])) {
+      $type = strtolower( $_POST['profile-type'] );
     } 
 
-    switch ($type) {
-      case 'social':
-        wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=3' ) );
-        exit;
-      case 'enterprise':
-        wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=4' ) );
-        exit;
-      default:
-        wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=2' ) );
-        exit;
-    }
+    $consent_url = $this->build_consent_url($type);
+    die($consent_url);
+    exit();
     
+  }
+
+  public function build_consent_url($type) {
+    $callback_url = urlencode( admin_url( 'admin.php?page=wpa0-setup&callback=1' ) );
+
+    $client_id = urlencode(get_bloginfo('wpurl'));
+
+    $scope = urlencode( implode( ' ', array(
+      'create:clients',
+      'update:clients',
+      'update:connections',
+      'create:connections',
+      'read:connections',
+      'create:rules',
+      'delete:rules',
+      'update:users',
+    ) ) );
+
+    $url = "https://{$this->domain}/i/oauth2/authorize?client_id={$client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}&expiration=9999999999&state={$type}";
+
+    return $url;
   }
 } 
