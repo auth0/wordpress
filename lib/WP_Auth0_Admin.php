@@ -98,7 +98,7 @@ class WP_Auth0_Admin {
 			array( 'id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain' ),
 			array( 'id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id' ),
 			array( 'id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret' ),
-			// array( 'id' => 'wpa0_auth0_app_token', 'name' => 'App token', 'function' => 'render_auth0_app_token' ), //we are not going to show the token
+			array( 'id' => 'wpa0_auth0_app_token', 'name' => 'App token', 'function' => 'render_auth0_app_token' ), //we are not going to show the token
 			array( 'id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login' ),
 			array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
 
@@ -757,7 +757,6 @@ class WP_Auth0_Admin {
 		$input['metrics'] = ( isset( $input['metrics'] ) ? $input['metrics'] : 0 );
 		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
 		$input['auth0_app_token'] = $old_options['auth0_app_token'];
-		$input['auth0_app_token'] = $old_options['auth0_app_token'];
 
 		if ( trim( $input['dict'] ) !== '' ) {
 			if ( strpos( $input['dict'], '{' ) !== false && json_decode( $input['dict'] ) === null ) {
@@ -766,12 +765,12 @@ class WP_Auth0_Admin {
 			}
 		}
 
-		if ( trim( $input['extra_conf'] ) !== '' ) {
-			if ( json_decode( $input['extra_conf'] ) === null ) {
-				$error = __( 'The Extra settings parameter should be a valid json object.', WPA0_LANG );
-				$this->add_validation_error( $error );
-			}
-		}
+		// if ( trim( $input['extra_conf'] ) !== '' ) {
+		// 	if ( json_decode( $input['extra_conf'] ) === null ) {
+		// 		$error = __( 'The Extra settings parameter should be a valid json object.', WPA0_LANG );
+		// 		$this->add_validation_error( $error );
+		// 	}
+		// }
 
 		return $input;
 	}

@@ -46,12 +46,7 @@
 <script src="http://cdn.auth0.com/js/lock-8.min.js"></script>
 <script type="text/javascript">
 
-var domain = 'wptest.auth0.com';
-
-var clientID = 'KNuydwEqwGsPNpxdAhACmOWDUmBEZsLn'; 
-
-
-var lock = new Auth0Lock(clientID, domain);
+var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
 
 lock.once('shown', function() {
   showLock();
@@ -83,16 +78,30 @@ document.addEventListener("DOMContentLoaded", function() {
 	
 	var q = async.queue(function (task, callback) {
 
-    console.log('enable ' + task.connection);
+		var data = {
+			action: 'a0_initial_setup_set_connection',
+			connection: task.connection,
+			enabled: task.enabled
+		};
+		console.log('ajax', data);
+		jQuery.post(ajaxurl, data, function(response) {
 
-    callback();
+			console.log('response', response);
+			
+			callback();
+		});
+
 	}, 1);
 
 	jQuery('.a0-switch input').click(function(e) {
-		q.push({connection: e.target.value});
+		q.push({
+			connection: e.target.value,
+			enabled: e.target.checked
+		});
 	});
 
 	q.drain = function() {
+		console.log('show lock');
 	  showLock()
 	}
 

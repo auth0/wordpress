@@ -105,20 +105,25 @@ class WP_Auth0_InitialSetup_Consent {
     $enabled_connections = $this->a0_options->get_enabled_connections();
 
     foreach ($connections as $connection) {
-        if ( in_array( $connection->name, $enabled_connections ) ) {
-
+        // if ( in_array( $connection->name, $enabled_connections ) ) {
+        if ( isset($connection->options->client_id) ) {
             $this->a0_options->set( "social_{$connection->name}" , 1 );
             $this->a0_options->set( "social_{$connection->name}_key" , isset($connection->options->client_id) ? $connection->options->client_id : null );
             $this->a0_options->set( "social_{$connection->name}_secret" , isset($connection->options->client_secret) ? $connection->options->client_secret : null );
 
+            $connection->enabled_clients[] = $response['client_id'];
+
+            WP_Auth0_Api_Client::update_connection($domain, $app_token, $connection->name, array('enabled_clients' => $connection->enabled_clients));
         }
 
-        if ( $connection->strategy === 'auth0' && in_array($input['client_id'], $connection->enabled_clients) && isset($connection->options) ) {
+        // }
 
-          $this->a0_options->set( "brute_force_protection" , isset($connection->options->brute_force_protection) ? $connection->options->brute_force_protection : false );
-          $this->a0_options->set( "password_policy" , isset($connection->options->passwordPolicy) ? $connection->options->passwordPolicy : null );
+    //     if ( $connection->strategy === 'auth0' && in_array($input['client_id'], $connection->enabled_clients) && isset($connection->options) ) {
 
-				}
+    //       $this->a0_options->set( "brute_force_protection" , isset($connection->options->brute_force_protection) ? $connection->options->brute_force_protection : false );
+    //       $this->a0_options->set( "password_policy" , isset($connection->options->passwordPolicy) ? $connection->options->passwordPolicy : null );
+
+				// }
     }
 
     wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=2&profile=' . $this->state ) );

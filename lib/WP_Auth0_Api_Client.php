@@ -170,17 +170,11 @@ class WP_Auth0_Api_Client {
 				'name' => $name,
 				'callbacks' => array(
 					site_url( '/index.php?auth0=1'),
-					site_url( '/wp-login.php'),
-					admin_url( '/admin.php?page=wpa0-setup&step=3&auth0=1' )
+					site_url( '/wp-login.php')
 				),
 				"allowed_origins"=>array(
-					site_url('/wp-login.php')
-				),
-				"resource_servers" => array(
-					array(
-						"identifier" => "https://$domain/api/v2/",
-  			    "scopes" => self::get_required_scopes()
-					)
+					site_url('/wp-login.php'),
+					admin_url('/admin.php?page=wpa0-setup&step=2&profile=social')
 				)
 			))
 		) );

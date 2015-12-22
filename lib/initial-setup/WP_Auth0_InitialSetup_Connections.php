@@ -56,6 +56,8 @@ class WP_Auth0_InitialSetup_Connections {
 
       public function __construct(WP_Auth0_Options $a0_options) {
           $this->a0_options = $a0_options;
+
+          add_action( 'wp_ajax_a0_initial_setup_set_connection', array($this, 'update_connection') );
       }
 
       public function render($step) {
@@ -66,6 +68,9 @@ class WP_Auth0_InitialSetup_Connections {
         foreach ($this->providers as $provider) {
           $social_connections[] = $this->get_social_connection($provider['provider'], $provider['name'], $provider['icon']);
         }
+
+        $client_id = $this->a0_options->get('client_id');
+        $domain = $this->a0_options->get('domain');
 
         include WPA0_PLUGIN_DIR . 'templates/initial-setup/connections.php';
       }
@@ -79,6 +84,46 @@ class WP_Auth0_InitialSetup_Connections {
           'key' => $this->a0_options->get( "social_{$provider}_key" ),
       		'secret' => $this->a0_options->get( "social_{$provider}_secret" ),
         );
+      }
+
+      protected function get_provider($provider_name) {
+        foreach ($this->providers as $provider) {
+          if ($provider['provider'] === $provider_name) {
+            return $provider;
+          }
+        }
+      }
+
+      public function update_connection() {
+        
+        $input = array();
+        $old_input = array();
+
+        $operations = new WP_Auth0_Api_Operations($this->a0_options);
+
+        $provider_name = $_POST["connection"];
+
+        $provider = $this->get_provider($provider_name);
+
+        $old_input["social_{$provider_name}"] = $this->a0_options->get( "social_{$provider_name}" );
+        $old_input["social_{$provider_name}_key"] = $this->a0_options->get( "social_{$provider_name}_key" );
+        $old_input["social_{$provider_name}_secret"] = $this->a0_options->get( "social_{$provider_name}_secret" );
+
+        $input["social_{$provider_name}"] = ($_POST["enabled"] === "true");
+        $input["social_{$provider_name}_key"] = $this->a0_options->get( "social_{$provider_name}_key" );
+        $input["social_{$provider_name}_secret"] = $this->a0_options->get( "social_{$provider_name}_secret" );
+
+        try {
+          $input = $operations->social_validation($this->a0_options->get( 'auth0_app_token' ), $old_input, $input, $provider_name, $provider['options'] );
+        } catch (Exception $e) {
+          die($e->getMessage());
+        }
+
+        foreach ($input as $key => $value) {
+          $this->a0_options->set( $key, $value );
+        }
+
+        exit;
       }
 
       public function callback() {
