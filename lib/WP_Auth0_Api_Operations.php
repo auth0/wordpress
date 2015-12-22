@@ -123,18 +123,22 @@ class WP_Auth0_Api_Operations {
 			if ( $input[$main_key] ) {
 
 				if ( $selected_connection &&
-          ( empty($selected_connection->options->client_id) || $selected_connection->options->client_id === $input["{$main_key}_key"] ) &&
-          ( empty($selected_connection->options->client_secret) || $selected_connection->options->client_secret === $input["{$main_key}_secret"] ) ) {
+          ( empty($selected_connection->options->client_id) || (empty($input["{$main_key}_key"]) && empty($old_input["{$main_key}_key"])) || $selected_connection->options->client_id === $input["{$main_key}_key"] ) &&
+          ( empty($selected_connection->options->client_secret) || (empty($input["{$main_key}_secret"]) && empty($old_input["{$main_key}_secret"])) || $selected_connection->options->client_secret === $input["{$main_key}_secret"] ) ) {
 
-					$data = array(
-						'options' => array_merge($connection_options, array(
-							"client_id" => $input["{$main_key}_key"],
-      				"client_secret" => $input["{$main_key}_secret"],
-						) ),
-						'enabled_clients' => $connection->enabled_clients
-					);
+          $data = array(
+            'options' => $connection_options,
+            'enabled_clients' => $connection->enabled_clients
+          );
 
-					if ( false === WP_Auth0_Api_Client::update_connection($domain, $app_token, $selected_connection->id, $data) ) {
+          if ( !empty($input["{$main_key}_key"]) && !empty($input["{$main_key}_secret"]) ) {
+            $data['options']['client_id'] = $input["{$main_key}_key"];
+            $data['options']['client_secret'] = $input["{$main_key}_secret"];
+          }
+
+          $response = WP_Auth0_Api_Client::update_connection($domain, $app_token, $selected_connection->id, $data);
+
+					if ( false === $response ) {
 						$error = __( 'There was an error updating your social connection', WPA0_LANG );
 						throw new Exception( $error );
 
@@ -142,7 +146,8 @@ class WP_Auth0_Api_Operations {
 
 						return $input;
 					}
-				} elseif ( $selected_connection && !empty($selected_connection->options->client_id) && !empty($selected_connection->options->client_secret) ) {
+				} elseif ( $selected_connection && !empty($selected_connection->options->client_id) && !empty($selected_connection->options->client_secret) 
+            && !empty($input["{$main_key}_key"]) && !empty($input["{$main_key}_secret"]) ) {
 
 					$input["{$main_key}_key"] = $selected_connection->options->client_id;
 					$input["{$main_key}_secret"] = $selected_connection->options->client_secret;
@@ -158,7 +163,9 @@ class WP_Auth0_Api_Operations {
 						'enabled_clients' => $connection->enabled_clients
 					);
 
-					if ( false === WP_Auth0_Api_Client::update_connection($domain, $app_token, $selected_connection->id, $data) ) {
+          $response = WP_Auth0_Api_Client::update_connection($domain, $app_token, $selected_connection->id, $data);
+
+					if ( false === $response ) {
 						$error = __( 'There was an error updating your social connection', WPA0_LANG );
 						throw new Exception( $error );
 

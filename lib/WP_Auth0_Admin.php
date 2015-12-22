@@ -756,7 +756,8 @@ class WP_Auth0_Admin {
 		$input['singlelogout'] = ( isset( $input['singlelogout'] ) ? $input['singlelogout'] : 0 );
 		$input['metrics'] = ( isset( $input['metrics'] ) ? $input['metrics'] : 0 );
 		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
-		$input['auth0_app_token'] = $old_options['auth0_app_token'];
+		// $input['auth0_app_token'] = $old_options['auth0_app_token'];
+		$input['auth0_app_token'] = $input['auth0_app_token'];
 
 		if ( trim( $input['dict'] ) !== '' ) {
 			if ( strpos( $input['dict'], '{' ) !== false && json_decode( $input['dict'] ) === null ) {

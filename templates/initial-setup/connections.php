@@ -53,12 +53,16 @@ lock.once('shown', function() {
 });
 
 lock.once('signin ready', function() {
-	jQuery('.connections').height( jQuery('#a0-lock').height() );
+	updateConnectionsSize();
 });
 
 lock.once('signin success', function() {
   showLock();
 });
+
+function updateConnectionsSize() {
+	jQuery('.connections').height( jQuery('#a0-lock').height() );
+}
 
 function showLock() {
 	lock.show({
@@ -83,27 +87,42 @@ document.addEventListener("DOMContentLoaded", function() {
 			connection: task.connection,
 			enabled: task.enabled
 		};
-		console.log('ajax', data);
-		jQuery.post(ajaxurl, data, function(response) {
 
-			console.log('response', response);
-			
+		showLock()
+  	updateConnectionsSize();
+
+		jQuery.post(ajaxurl, data, function(response) {
 			callback();
 		});
 
 	}, 1);
 
 	jQuery('.a0-switch input').click(function(e) {
-		q.push({
+
+		var data = {
 			connection: e.target.value,
 			enabled: e.target.checked
-		});
+		};
+
+		if (data.enabled) {
+			lock.options.$client.strategies.push({"name":data.connection,"connections":[{"name":data.connection}]});
+		} else {
+			for (var a = 0; a < lock.options.$client.strategies.length; a++){
+				if (lock.options.$client.strategies[a].name === data.connection) {
+					lock.options.$client.strategies.splice(a,1); 
+					break;
+				}
+			}
+		}
+
+		q.push(data);
+		
 	});
 
-	q.drain = function() {
-		console.log('show lock');
-	  showLock()
-	}
+	// q.drain = function() {
+	// 	console.log('show lock');
+
+	// }
 
 });
 </script>
