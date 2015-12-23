@@ -5,7 +5,7 @@
 
 	<div class="container-fluid">
 
-		<h1><?php _e("Step 2: Set up end-user logins", WPA0_LANG); ?></h1>
+		<h1><?php _e("Configure your social connections", WPA0_LANG); ?></h1>
 
 		<p class="a0-step-text"><?php _e("If your WordPress site's visitors already have social network accounts, they can access your site with their existing credentials, or they can set up a username/password combination safeguarded by Auth0's password complexity policies and brute force protection.", WPA0_LANG); ?></p>
 
@@ -41,6 +41,11 @@
 			</div>
 			<div class="lock col-md-5" id="lock-container"></div>
 		</div>
+
+		<div class="a0-buttons">
+			<a href="<?php echo admin_url('admin.php?page=wpa0-setup&step=3&profile=social'); ?>" class="a0-button primary">Next</a>
+    </div>
+
 	</div>
 </div>
 <script src="http://cdn.auth0.com/js/lock-8.min.js"></script>
@@ -116,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 		q.push(data);
-		
+
 	});
 
 	// q.drain = function() {

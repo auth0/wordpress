@@ -1133,3 +1133,20 @@ p.a0-message img {
   margin: auto;
   width: 300px;
 }
+.a0-admin-creation input[type=text],
+.a0-admin-creation input[type=password] {
+  width: 100%;
+  border: 2px solid #9c9d9e;
+  height: 40px;
+  line-height: 40px;
+}
+.a0-admin-creation input[type=text]#admin-email,
+.a0-admin-creation input[type=password]#admin-email {
+  border-radius: 3px 3px 0 0;
+  background-color: #e4e6e6;
+}
+.a0-admin-creation input[type=text]#admin-password,
+.a0-admin-creation input[type=password]#admin-password {
+  border-top: none;
+  border-radius: 0 0 3px 3px;
+}

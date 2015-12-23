@@ -123,13 +123,19 @@ class WP_Auth0_InitialSetup {
               }
               break;
 
+            case 3:
+              if ($profile == "social") {
+                $this->adminuser_step->render($step);
+              } elseif ($profile == "enterprise") {
+                // $this->connections_step->render($step);
+              }
+              break;
+
             case 4:
               $this->enterprise_connection_step->render($step);
               break;
 
-            case 5:
-              $this->adminuser_step->render($step);
-              break;
+            
 
             case 6:
               $this->end_step->render($step);

@@ -43,10 +43,8 @@ class WP_Auth0_InitialSetup_Connections {
         array( "provider" => 'yammer', "name" => 'Yammer', "icon" => 'Yammer' ),
         array( "provider" => 'soundcloud', "name" => 'soundcloud', "icon" => 'Soundcloud' ),
         array( "provider" => 'instagram', "name" => 'instagram', "icon" => 'Instagram' ),
-        // array( "provider" => 'bitly', "name" => 'bitly', "icon" => 'Bitly' ),
         array( "provider" => 'evernote', "name" => 'evernote', "icon" => 'Evernote' ),
         array( "provider" => 'evernote-sandbox', "name" => 'evernote-sandbox', "icon" => 'Evernote' ),
-        // array( "provider" => 'flickr', "name" => 'flickr', "icon" => 'Flickr' ),
         array( "provider" => 'thecity', "name" => 'thecity', "icon" => 'The City' ),
         array( "provider" => 'thecity-sandbox', "name" => 'thecity-sandbox', "icon" => 'The City Sandbox' ),
         array( "provider" => 'planningcenter', "name" => 'planningcenter', "icon" => 'Planning Center' ),
@@ -95,13 +93,26 @@ class WP_Auth0_InitialSetup_Connections {
       }
 
       public function update_connection() {
+
+        $provider_name = $_POST["connection"];
+
+        if ($provider_name == 'db') {
+          $this->toggle_db();
+        } else {
+          $this->toggle_social($provider_name);
+        }
+      }
+
+      protected function toggle_db() { 
+
+      }
+
+      protected function toggle_social($provider_name) {
         
         $input = array();
         $old_input = array();
 
         $operations = new WP_Auth0_Api_Operations($this->a0_options);
-
-        $provider_name = $_POST["connection"];
 
         $provider = $this->get_provider($provider_name);
 

@@ -1,30 +1,22 @@
-<div class="wrap">
+<div class="a0-wrap">
 
-	<?php screen_icon(); ?>
-	<h2><?php _e("Auth0 for WordPress - Quick Start Guide (step $step)", WPA0_LANG); ?></h2>
+	<?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'); ?>
+  <?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/steps.php'); ?>
 
+  <div class="container-fluid">
 
-	<p>We should explain here why we need this and what will happen. This will log authenticate it against auth0, and will create the user as admin in this wordpress instance. We need this to call later to the server with a token with the required scopes.</p>
+    <h1><?php _e("Choose your password", WPA0_LANG); ?></h1>
 
-	<div id="a0-lock-wrapper">
+    <p class="a0-step-text"><?php _e("Last step: Auth0 will migrate your own account from the WordPress user database to Auth0. You can choose to use the same password as you currently use, or pick a new one. Either way, Auth0 will link your existing account and its administrative role with the new account in Auth0. Type the password you wish to use for this account below.", WPA0_LANG); ?></p>
+
+    <div class="row">
+      <div class="a0-admin-creation col-md-4">
+        <input type="text" id="admin-email" value="<?php echo $current_user->user_email; ?>" disabled />
+        <input type="password" id="admin-password" name="admin-password" placeholder="Password" value="" />
+      </div>
+    </div>
+
+  
 
   </div>
-
-  <script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function() {
-      var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
-      lock.show({
-        container: 'a0-lock-wrapper',
-				callbackURL: '<?php echo admin_url( '/admin.php?page=wpa0-setup&step=3&auth0=1' ); ?>',
-				responseType: 'code',
-				authParams: {
-						scope: "openid update:clients update:connections create:connections read:connections create:rules delete:rules update:users name email nickname email_verified identities",
-						state: '<?php echo json_encode(array(
-							'redirect_to' => admin_url( 'admin.php?page=wpa0-setup&step=4' )
-						)); ?>'
-				}
-      });
-    });
-  </script>
-
 </div>

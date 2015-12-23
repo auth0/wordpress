@@ -14,6 +14,7 @@ class WP_Auth0_InitialSetup_AdminUser {
         wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
         $client_id = $this->a0_options->get( 'client_id' );
         $domain = $this->a0_options->get( 'domain' );
+        $current_user = wp_get_current_user();
         include WPA0_PLUGIN_DIR . 'templates/initial-setup/admin-creation.php';
       }
 
