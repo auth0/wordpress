@@ -90,6 +90,12 @@
   display: inline-block;
   text-align: center;
   padding: 0 30px;
+  
+  &.link {
+    text-transform: none;
+    text-decoration: underline;
+    outline:none;
+  }
 
   &.primary {
     color: buttonPrimaryText;
@@ -254,6 +260,39 @@ p.a0-message {
   text-align:center;
 }
 
+.enterprise-connections {
+  margin-top:30px;
+  padding:0;
+  
+  .connection {
+    background-color:stepBG;
+    text-align: center;
+    border-radius:3px;
+    padding:20px;
+    margin-bottom:30px;
+    
+    .title-wrapper {
+      height:50px;
+    }
+    h4 {
+      line-height: 24px;
+      font-size: 17px;
+    }
+    
+    .logo {
+      width:100px;
+      height:100px;
+      border-radius:50px;
+      background-size: 55% !important;
+      margin: 0 auto 20px;
+    }
+    
+    a {
+      color:text;
+    }
+  }
+}
+
 .connections {
   margin-top:30px;
   height:600px;
@@ -275,68 +314,69 @@ p.a0-message {
     border-radius: 8px;
     background: #D9D9DE;
   }
-}
-.connection {
-  border: 1px #d0d2d3 solid;
-  float:left;
-  width:50%;
-  border-top:none;
-  background-color:#F7F7F7;
   
-  &:nth-child(even) {
-    border-left:none;
-  }
-  &:nth-child(1),
-  &:nth-child(2) {
-    border-top:1px #d0d2d3 solid;
-  }
-  
-  .a0-switch {
-    float:right;
-    position: relative;
-    top: 35px;
-    right: 15px;
-  }
-  
-  .logo {
-    width:100px;
-    height:70px;
-    margin: 15px;
-    padding-right: 15px;
-    padding-left: 15px;
-      
-    .logo-child {
-      width:100px;
-      height:70px;
-      
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-size: contain;
+  .connection {
+    border: 1px #d0d2d3 solid;
+    float:left;
+    width:50%;
+    border-top:none;
+    background-color:#F7F7F7;
+    
+    &:nth-child(even) {
+      border-left:none;
+    }
+    &:nth-child(1),
+    &:nth-child(2) {
+      border-top:1px #d0d2d3 solid;
     }
     
-    &[data-logo="SAP"] {
-      .logo-child {
-        background-size: 80%;
-      }
+    .a0-switch {
+      float:right;
+      position: relative;
+      top: 35px;
+      right: 15px;
     }
+    
+    .logo {
+      width:100px;
+      height:70px;
+      margin: 15px;
+      padding-right: 15px;
+      padding-left: 15px;
         
-    &[data-logo="Twitter"] {
       .logo-child {
-        background-size: 60%;
+        width:100px;
+        height:70px;
+        
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: contain;
       }
-    }
+      
+      &[data-logo="SAP"] {
+        .logo-child {
+          background-size: 80%;
+        }
+      }
           
-    &[data-logo="Box"] {
-      .logo-child {
-        background-size: 70%;
-        transform: translateX(-10%);
+      &[data-logo="Twitter"] {
+        .logo-child {
+          background-size: 60%;
+        }
       }
-    }
-        
-    &[data-logo="vk"] {
-      .logo-child {
-        background-size: 55%;
-        transform: translateX(-27%);
+            
+      &[data-logo="Box"] {
+        .logo-child {
+          background-size: 70%;
+          transform: translateX(-10%);
+        }
+      }
+          
+      &[data-logo="vk"] {
+        .logo-child {
+          background-size: 55%;
+          transform: translateX(-27%);
+        }
       }
     }
   }

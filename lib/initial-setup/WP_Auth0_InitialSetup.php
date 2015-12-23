@@ -118,7 +118,7 @@ class WP_Auth0_InitialSetup {
               if ($profile == "social") {
                 $this->connections_step->render($step);
               } elseif ($profile == "enterprise") {
-                // $this->connections_step->render($step);
+                $this->enterprise_connection_step->render($step);
               }
               break;
 
@@ -131,11 +131,7 @@ class WP_Auth0_InitialSetup {
               break;
 
             case 4:
-              if ($profile == "social") {
-                $this->end_step->render($step);
-              } elseif ($profile == "enterprise") {
-                // $this->connections_step->render($step);
-              }
+              $this->end_step->render($step);
               break;
           }
         }
