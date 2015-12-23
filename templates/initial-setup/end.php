@@ -3,7 +3,7 @@
   <?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'); ?>
 
   <div class="a0-final-step">
-    
+    <img src="<?php echo WPA0_PLUGIN_URL; ?>/assets/img/initial-setup/done.png">
     <h1><?php _e("Done! You finished this Quick Start", WPA0_LANG); ?></h1>
   </div>
 
