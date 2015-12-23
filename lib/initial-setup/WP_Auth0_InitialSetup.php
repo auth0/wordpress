@@ -33,9 +33,8 @@ class WP_Auth0_InitialSetup {
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
         add_action( 'init', array( $this, 'init_setup' ), 1 );
 
-        add_action( 'admin_action_wpauth0_callback_step2', array($this->connection_profile, 'callback') );
-        add_action( 'admin_action_wpauth0_callback_step3', array($this->connections_step, 'callback') );
-        add_action( 'admin_action_wpauth0_callback_step5', array($this->adminuser_step, 'callback') );
+        add_action( 'admin_action_wpauth0_callback_step1', array($this->connection_profile, 'callback') );
+        add_action( 'admin_action_wpauth0_callback_step3_social', array($this->adminuser_step, 'callback') );
 
 
 
@@ -132,13 +131,11 @@ class WP_Auth0_InitialSetup {
               break;
 
             case 4:
-              $this->enterprise_connection_step->render($step);
-              break;
-
-            
-
-            case 6:
-              $this->end_step->render($step);
+              if ($profile == "social") {
+                $this->end_step->render($step);
+              } elseif ($profile == "enterprise") {
+                // $this->connections_step->render($step);
+              }
               break;
           }
         }

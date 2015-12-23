@@ -887,6 +887,7 @@
   font-size: 13px;
   display: inline-block;
   text-align: center;
+  padding: 0 30px;
 }
 .a0-button.primary {
   color: #fff;
@@ -1137,8 +1138,9 @@ p.a0-message img {
 .a0-admin-creation input[type=password] {
   width: 100%;
   border: 2px solid #9c9d9e;
-  height: 40px;
+  height: 50px;
   line-height: 40px;
+  padding: 10px;
 }
 .a0-admin-creation input[type=text]#admin-email,
 .a0-admin-creation input[type=password]#admin-email {
@@ -1149,4 +1151,9 @@ p.a0-message img {
 .a0-admin-creation input[type=password]#admin-password {
   border-top: none;
   border-radius: 0 0 3px 3px;
+}
+.a0-final-step {
+  background-color: #f2f5f8;
+  text-align: center;
+  padding: 30px 0;
 }

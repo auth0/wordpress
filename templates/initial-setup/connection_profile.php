@@ -10,7 +10,7 @@
     <div class="a0-profiles row">
       <form action="options.php" method="POST">
 
-        <input type="hidden" name="action" value="wpauth0_callback_step2" />
+        <input type="hidden" name="action" value="wpauth0_callback_step1" />
 
         <div class="col col-sm-offset-1 col-sm-5">
           <div class="profile">

@@ -6,8 +6,6 @@ class WP_Auth0_InitialSetup_AdminUser {
 
       public function __construct(WP_Auth0_Options $a0_options) {
           $this->a0_options = $a0_options;
-
-          add_action( 'init', array( $this, 'callback' ), 1 );
       }
 
       public function render($step) {
@@ -28,10 +26,19 @@ class WP_Auth0_InitialSetup_AdminUser {
           return;
         }
 
-        // wp_logout();
+        $current_user = wp_get_current_user();
 
-        $login_manager = new WP_Auth0_LoginManager($this->a0_options, 'administrator', true);
-        $login_manager->redirect_login();
+        $domain = $this->a0_options->get('domain');
+        $jwt = $this->a0_options->get( 'auth0_app_token' );
+
+        $data = array(
+          'email' => $current_user->user_email,
+          'password' => $_POST['admin-password'],
+          'connection' => '',
+          'email_verified' => true
+        );
+
+        WP_Auth0_Api_Client::create_user($domain, $jwt, $data);
       }
 
     }
