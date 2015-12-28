@@ -46,6 +46,7 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
       'create:rules',
       'delete:rules',
       'update:users',
+      'create:users',
     ) ) );
 
     $url = "https://{$this->domain}/i/oauth2/authorize?client_id={$client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}&expiration=9999999999&state={$type}";

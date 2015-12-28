@@ -18,27 +18,23 @@ class WP_Auth0_InitialSetup_AdminUser {
 
       public function callback() {
 
-        if (!isset($_REQUEST['page']) || $_REQUEST['page'] != 'wpa0-setup') {
-          return;
-        }
-
-        if (!isset($_REQUEST['auth0'])) {
-          return;
-        }
-
         $current_user = wp_get_current_user();
 
+        $db_connection_name = $this->a0_options->get( "db_connection_name" );
         $domain = $this->a0_options->get('domain');
         $jwt = $this->a0_options->get( 'auth0_app_token' );
 
         $data = array(
           'email' => $current_user->user_email,
           'password' => $_POST['admin-password'],
-          'connection' => '',
+          'connection' => $db_connection_name,
           'email_verified' => true
         );
 
-        WP_Auth0_Api_Client::create_user($domain, $jwt, $data);
+        $admin_user = WP_Auth0_Api_Client::create_user($domain, $jwt, $data);
+
+        wp_redirect(admin_url( "admin.php?page=wpa0-setup&step=4&state=social" ));
+        exit;
       }
 
     }

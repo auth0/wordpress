@@ -70,8 +70,8 @@ class WP_Auth0_InitialSetup_Connections {
         $client_id = $this->a0_options->get('client_id');
         $domain = $this->a0_options->get('domain');
 
-        $db_connection_name = 'DB-' . str_replace(' ', '-', get_bloginfo('name'));
         $db_connection_enabled = $this->a0_options->get( "db_connection_enabled" );
+        $db_connection_name = $this->a0_options->get( "db_connection_name" );
 
         include WPA0_PLUGIN_DIR . 'templates/initial-setup/connections.php';
       }

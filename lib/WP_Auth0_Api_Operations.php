@@ -27,8 +27,12 @@ class WP_Auth0_Api_Operations {
     $get_user_script = str_replace('{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$get_user_script);
     $get_user_script = str_replace('{THE_WS_URL}', get_site_url() . '/migration-ws-get-user', $get_user_script);
 
+    $db_connection_name = 'DB-' . str_replace(' ', '-', get_bloginfo('name'));
+
+    $this->a0_options->set( "db_connection_name", $db_connection_name );
+
     $response = WP_Auth0_Api_Client::create_connection($domain, $app_token, array(
-      'name' => 'DB-' . str_replace(' ', '-', get_bloginfo('name')),
+      'name' => $db_connection_name,
       'strategy' => 'auth0',
       'enabled_clients' => array(
         $client_id

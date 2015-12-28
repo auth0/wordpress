@@ -33,13 +33,18 @@ class WP_Auth0_UserCreator {
 // a user to join with. The isDatabase is because we don't want to allow database
 // user creation if there is an existing one with no verified email
 
-        if (isset($userinfo->email) && (($ignore_unverified_email || (isset($userinfo->email_verified) && $userinfo->email_verified)) || $isDatabaseUser)) { //TODO: check this
+        if (isset($userinfo->email) 
+            && ( ( $ignore_unverified_email || (isset($userinfo->email_verified) && $userinfo->email_verified) ) 
+                || !$isDatabaseUser
+            )
+        ) { //TODO: check this
             $joinUser = get_user_by( 'email', $userinfo->email );
         }
 
 // $auto_provisioning = WP_Auth0_Options::get('auto_provisioning');
 // $allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled() || $auto_provisioning;
         $allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled();
+
         $user_id = null;
 
         if (!is_null($joinUser) && $joinUser instanceof WP_User) {
@@ -49,31 +54,11 @@ class WP_Auth0_UserCreator {
 
             if ($ignore_unverified_email || $userinfo->email_verified) {
                 $user_id = $joinUser->ID;
-
-                $link_auth0_users = $this->a0_options->get('link_auth0_users');
-
-                if ($access_token && $link_auth0_users && $userinfo->email_verified) {
-
-                    $domain = $this->a0_options->get('domain');
-                    $a0_main_users = $this->db_manager->get_auth0_users(array((string)$user_id));
-
-                    if ( ! empty($a0_main_users) ) {
-
-                        $a0_main_user_row = $a0_main_users[0];
-                        $a0_main_user = unserialize( $a0_main_user_row->auth0_obj );
-
-                        $connection_id = $this->look_for_connection_id($domain, $access_token, $userinfo->identities[0]->connection, $userinfo->identities[0]->provider);
-
-                        $link_response = WP_Auth0_Api_Client::link_users($domain, $access_token, $a0_main_user->user_id, $userinfo->identities[0]->user_id, $userinfo->identities[0]->provider, $connection_id);
-
-                    }
-                }
             } else {
-                var_dump($ignore_unverified_email || $userinfo->email_verified);exit;
                 throw new WP_Auth0_EmailNotVerifiedException($userinfo, $token);
             }
-        }
-        if ($allow_signup && is_null($user_id)) {
+
+        } elseif ($allow_signup) {
 
 // If we are here, we need to create the user
             $user_id = WP_Auth0_Users::create_user($userinfo, $role);
@@ -96,7 +81,6 @@ class WP_Auth0_UserCreator {
         self::insertAuth0User($userinfo, $user_id, $token, $access_token);
 
         return $user_id;
-
     }
 
     public function insertAuth0User($userinfo, $user_id, $id_token, $access_token) {

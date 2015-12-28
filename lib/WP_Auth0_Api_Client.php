@@ -144,7 +144,7 @@ class WP_Auth0_Api_Client {
 
 	public static function create_user($domain, $jwt, $data) {
 
-		$endpoint = "https://$domain/api/v2/users/";
+		$endpoint = "https://$domain/api/v2/users";
 
 		$headers = self::get_info_headers();
 

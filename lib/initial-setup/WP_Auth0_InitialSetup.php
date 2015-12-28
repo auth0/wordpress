@@ -8,10 +8,8 @@ class WP_Auth0_InitialSetup {
     protected $enterprise_connection_step;
 
     protected $consent_step;
-    protected $migration_step;
     protected $adminuser_step;
     protected $connections_step;
-    protected $rules_step;
     protected $end_step;
 
     public function __construct(WP_Auth0_Options $a0_options) {
@@ -19,12 +17,9 @@ class WP_Auth0_InitialSetup {
 
         $this->connection_profile = new WP_Auth0_InitialSetup_ConnectionProfile($this->a0_options);
         $this->enterprise_connection_step = new WP_Auth0_InitialSetup_EnterpriseConnection($this->a0_options);
-
         $this->consent_step = new WP_Auth0_InitialSetup_Consent($this->a0_options);
-        $this->migration_step = new WP_Auth0_InitialSetup_Migration($this->a0_options);
         $this->adminuser_step = new WP_Auth0_InitialSetup_AdminUser($this->a0_options);
         $this->connections_step = new WP_Auth0_InitialSetup_Connections($this->a0_options);
-        $this->rules_step = new WP_Auth0_InitialSetup_Rules($this->a0_options);
         $this->end_step = new WP_Auth0_InitialSetup_End($this->a0_options);
     }
 
@@ -35,8 +30,6 @@ class WP_Auth0_InitialSetup {
 
         add_action( 'admin_action_wpauth0_callback_step1', array($this->connection_profile, 'callback') );
         add_action( 'admin_action_wpauth0_callback_step3_social', array($this->adminuser_step, 'callback') );
-
-
 
         if ( isset( $_REQUEST['page'] ) && 'wpa0-setup' === $_REQUEST['page'] ) {
           if (isset($_REQUEST['error'])) {

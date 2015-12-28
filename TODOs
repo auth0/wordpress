@@ -1,3 +1,4 @@
 remove brute_force_protection
 remove comment and hardcode in consent token exchange
 db migration can only be disabled in settings, add copy explaining it and remove it when disabled
+change account linking to rule (already disabled in user creation)
