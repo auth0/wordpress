@@ -7,11 +7,19 @@
 }
 .a0-wrap {  
   font-family:'avenir roman';
-  margin-left:-20px;
+  margin-left:-10px;
+  
+  @media (min-width: 768px) {
+    margin-left:-20px;
+  }
 
   color:text;
   h1,h2,p {
     color:text;
+  }
+  
+  h1, .h1, h2, .h2, h3, .h3 {
+    margin-top: 0;
   }
   
   h3 {
@@ -66,7 +74,7 @@
 }
 
 .a0-step-text {
-  margin:40px 0;
+  margin:30px 0;
 }
 
 .a0-header {
@@ -223,12 +231,14 @@ p.a0-message {
   margin-top: 50px;
   margin-bottom: 30px;
 
-  .col {
-    padding-left: 25px;
-  }
-  .col:first-of-type {
-    padding-left: 15px;
-    padding-right: 25px;
+  @media (min-width: 768px) {
+    .col {
+      padding-left: 25px;
+    }
+    .col:first-of-type {
+      padding-left: 15px;
+      padding-right: 25px;
+    }
   }
   
   .profile {
@@ -419,14 +429,17 @@ p.a0-message {
 
 .a0-db-connection {
   
+  padding-right: 90px;
+  position: relative;
+  
   .a0-step-text {
     margin: 30px 0;
   }
 
   .a0-switch {
-    float: right;
-    display: block;
-    margin: 40px 0 0 30px;
+    position: absolute;
+    right: 20px;
+    top: 60px;
   }
 }
 

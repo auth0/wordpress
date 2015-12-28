@@ -820,13 +820,26 @@
 }
 .a0-wrap {
   font-family: 'avenir roman';
-  margin-left: -20px;
+  margin-left: -10px;
   color: #5b666f;
+}
+@media (min-width: 768px) {
+  .a0-wrap {
+    margin-left: -20px;
+  }
 }
 .a0-wrap h1,
 .a0-wrap h2,
 .a0-wrap p {
   color: #5b666f;
+}
+.a0-wrap h1,
+.a0-wrap .h1,
+.a0-wrap h2,
+.a0-wrap .h2,
+.a0-wrap h3,
+.a0-wrap .h3 {
+  margin-top: 0;
 }
 .a0-wrap h3 {
   background: transparent;
@@ -867,7 +880,7 @@
   padding: 25px;
 }
 .a0-step-text {
-  margin: 40px 0;
+  margin: 30px 0;
 }
 .a0-header {
   text-align: center;
@@ -995,12 +1008,14 @@ p.a0-message img {
   margin-top: 50px;
   margin-bottom: 30px;
 }
-.a0-profiles .col {
-  padding-left: 25px;
-}
-.a0-profiles .col:first-of-type {
-  padding-left: 15px;
-  padding-right: 25px;
+@media (min-width: 768px) {
+  .a0-profiles .col {
+    padding-left: 25px;
+  }
+  .a0-profiles .col:first-of-type {
+    padding-left: 15px;
+    padding-right: 25px;
+  }
 }
 .a0-profiles .profile {
   background-color: #f2f5f8;
@@ -1152,13 +1167,17 @@ p.a0-message img {
 .a0-switch input:checked + label::before {
   left: 22px;
 }
+.a0-db-connection {
+  padding-right: 90px;
+  position: relative;
+}
 .a0-db-connection .a0-step-text {
   margin: 30px 0;
 }
 .a0-db-connection .a0-switch {
-  float: right;
-  display: block;
-  margin: 40px 0 0 30px;
+  position: absolute;
+  right: 20px;
+  top: 60px;
 }
 .lock {
   padding-top: 30px;
