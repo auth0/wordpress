@@ -108,7 +108,6 @@ class WP_Auth0_Admin {
 
 		$this->init_option_section( $this->build_section_title( 'Features', self::FEATURES_DESCRIPTION ), 'features',array(
 
-			array( 'id' => 'wpa0_brute_force_protection', 'name' => 'Brute Force Protection', 'function' => 'render_brute_force_protection' ),
 			array( 'id' => 'wpa0_password_policy', 'name' => 'Password Policy', 'function' => 'render_password_policy' ),
 			array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)', 'function' => 'render_sso' ),
 			array( 'id' => 'wpa0_singlelogout', 'name' => 'Single Logout', 'function' => 'render_singlelogout' ),
@@ -440,18 +439,6 @@ class WP_Auth0_Admin {
 			<input type="text" name="<?php echo $this->a0_options->get_options_name(); ?>[cdn_url]" id="wpa0_cdn_url" value="<?php echo esc_attr( $v ); ?>"/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'Point this to the latest widget available in the CDN', WPA0_LANG ); ?></span>
-			</div>
-		<?php
-	}
-
-	public function render_brute_force_protection() {
-		$v = absint( $this->a0_options->get( 'brute_force_protection' ) );
-		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[brute_force_protection]" id="wpa0_brute_force_protection" value="1" <?php echo checked( $v, 1, false ); ?>/>
-			<div class="subelement">
-				<span class="description">
-					<?php echo __( 'Mark this if you want to enable Brute Force Protection.', WPA0_LANG ); ?>
-				</span>
 			</div>
 		<?php
 	}
@@ -792,11 +779,9 @@ class WP_Auth0_Admin {
 
 	public function security_validation( $old_options, $input ) {
 
-		$input['brute_force_protection'] = ( isset( $input['brute_force_protection'] ) ? $input['brute_force_protection'] : 0 );
 		$input['password_policy'] = ( isset( $input['password_policy'] ) && $input['password_policy'] != "" ? $input['password_policy'] : null );
 
-		if ($old_options['brute_force_protection'] != $input['brute_force_protection'] ||
-				$old_options['password_policy'] != $input['password_policy']) {
+		if ($old_options['password_policy'] != $input['password_policy']) {
 
 			$connections = WP_Auth0_Api_Client::search_connection($input['domain'], $this->a0_options->get( 'auth0_app_token' ), 'auth0');
 
@@ -805,7 +790,6 @@ class WP_Auth0_Admin {
 				if ( in_array($input['client_id'], $connection->enabled_clients) ) {
 					if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $this->a0_options->get( 'auth0_app_token' ), $connection->id, array(
 						'options' => array(
-							'brute_force_protection' => $input['brute_force_protection'],
 							'passwordPolicy' => $input['password_policy'],
 						)
 					) ) ) {
