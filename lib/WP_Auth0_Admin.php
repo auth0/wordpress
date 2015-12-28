@@ -295,15 +295,24 @@ class WP_Auth0_Admin {
 		$v = $this->a0_options->get( 'migration_ws' );
 		$token = $this->a0_options->get( 'migration_token' );
 
+		if ($v) {
 		?>
 			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[migration_ws]" id="wpa0_auth0_migration_ws" value="1" <?php echo checked( $v, 1, false ); ?>/>
 			<div class="subelement">
-				<span class="description"><?php echo __( 'Mark this to expose a WS in order to easy the users migration process.', WPA0_LANG ); ?></span>
-			<?php if( ! empty($token) ) {?>
-				<span class="description"><?php echo __( 'Security token:', WPA0_LANG ); ?><code><?php echo $token; ?></code></span>
-			<?php } ?>
+				<span class="description"><?php echo __( 'Users migration is enabled. If you disable this setting, it can not be automatically enabled again, it needs to be done manually in the Auth0 dashboard.', WPA0_LANG ); ?></span>
+				<br><span class="description"><?php echo __( 'Security token:', WPA0_LANG ); ?><code><?php echo $token; ?></code></span>
 			</div>
 		<?php
+		} else {
+		?>
+			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[migration_ws]" id="wpa0_auth0_migration_ws" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			<div class="subelement">
+				<span class="description"><?php echo __( 'Users migration is disabled. Enabling it will expose the migration webservices but the connection need to be updated manually on the Auth0 dashboard.', WPA0_LANG ); ?></span>
+			</div>
+		<?php
+		}
+
+		
 	}
 
 	public function render_dict() {
@@ -818,8 +827,9 @@ class WP_Auth0_Admin {
 				$input['migration_token'] = JWT::encode(array('scope' => 'migration_ws', 'jti' => $token_id), JWT::urlsafeB64Decode( $secret ));
 				$input['migration_token_id'] = $token_id;
 
-				$operations = new WP_Auth0_Api_Operations($this->a0_options);
-				$response = $operations->enable_users_migration($this->a0_options->get( 'auth0_app_token' ), $input['migration_token']);
+				// avoid creating a new connection, it needs to be done manually
+				// $operations = new WP_Auth0_Api_Operations($this->a0_options);
+				// $response = $operations->enable_users_migration($this->a0_options->get( 'auth0_app_token' ), $input['migration_token']);
 
 				if ($response === false) {
 					$error = __( 'There was an error enabling your custom database. Check how to do it manually ', WPA0_LANG );

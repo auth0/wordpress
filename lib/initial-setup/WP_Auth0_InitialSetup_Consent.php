@@ -124,13 +124,7 @@ class WP_Auth0_InitialSetup_Consent {
 
         if ( $connection->strategy === 'auth0' ) {
 
-          $enabled_clients = array();
-
-          foreach ($connection->enabled_clients as $cid) {
-            if ($cid !== $client_response->client_id) {
-              $enabled_clients[] = $cid;
-            }
-          }
+          $enabled_clients = array_diff($connection->enabled_clients, array($client_response->client_id));
 
           WP_Auth0_Api_Client::update_connection($domain, $app_token, $connection->id, array('enabled_clients' => $enabled_clients));
 				}
