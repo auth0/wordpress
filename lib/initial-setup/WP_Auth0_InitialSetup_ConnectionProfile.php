@@ -22,8 +22,12 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
       $type = strtolower( $_POST['profile-type'] );
     } 
 
-    $consent_url = $this->build_consent_url($type);
-    die($consent_url);
+    // TODO: uncomment and unhardcode
+    // $consent_url = $this->build_consent_url($type);
+
+    $consent_url = admin_url( "admin.php?page=wpa0-setup&callback=1&state={$type}" );//"http://vagrantpress.dev/wp-admin/admin.php?page=wpa0-setup&step=2&profile=$type";
+
+    wp_redirect($consent_url);
     exit();
     
   }

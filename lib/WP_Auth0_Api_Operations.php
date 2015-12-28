@@ -47,9 +47,11 @@ class WP_Auth0_Api_Operations {
 
       return false;
 
-    } elseif($db_connection !== null) {
+    }
 
-      $migration_connection_id = $response->id;
+    $migration_connection_id = $response->id;
+
+    if($db_connection !== null) {
 
       $enabled_clients = array_diff($db_connection->enabled_clients, array($client_id));
 

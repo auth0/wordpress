@@ -410,6 +410,34 @@ class WP_Auth0_Api_Client {
 		return json_decode($response['body']);
 	}
 
+	public static function get_connection($domain, $app_token, $id) {
+		$endpoint = "https://$domain/api/v2/connections/$id";
+		
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+
+		$response =  wp_remote_get( $endpoint  , array(
+			'headers' => $headers,
+		) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::get_connection', $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] != 200 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::get_connection', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		if ( $response['response']['code'] >= 300 ) return false;
+
+		return json_decode($response['body']);
+	}
+
 	public static function get_current_user($domain, $app_token) {
 		list($head,$payload,$signature) = explode('.',$app_token);
 		$decoded = json_decode( JWT::urlsafeB64Decode($payload) );

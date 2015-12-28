@@ -14,7 +14,7 @@
 		<div class="a0-db-connection">
 			<h3><?php _e("Database Connections", WPA0_LANG); ?></h3>
 			<div class="a0-switch">
-				<input type="checkbox" name="dbconnection" id="db-connection-check" value="db" />
+				<input type="checkbox" name="dbconnection" id="db-connection-check" value="auth0" <?php echo checked( $db_connection_enabled, 1, false ); ?> />
 				<label for="db-connection-check"></label>
 			</div>
 			<p class="a0-step-text"><?php _e("Select this option to let users choose their own name/password. If a user already has an account on your site, Auth0 will log them in with their existing credentials and then migrate them to a new account behind the scenes - no need to change passwords.", WPA0_LANG); ?></p>

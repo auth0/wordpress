@@ -70,6 +70,9 @@ class WP_Auth0_InitialSetup_Connections {
         $client_id = $this->a0_options->get('client_id');
         $domain = $this->a0_options->get('domain');
 
+        $db_connection_name = 'DB-' . str_replace(' ', '-', get_bloginfo('name'));
+        $db_connection_enabled = $this->a0_options->get( "db_connection_enabled" );
+
         include WPA0_PLUGIN_DIR . 'templates/initial-setup/connections.php';
       }
 
@@ -96,7 +99,7 @@ class WP_Auth0_InitialSetup_Connections {
 
         $provider_name = $_POST["connection"];
 
-        if ($provider_name == 'db') {
+        if ($provider_name == 'auth0') {
           $this->toggle_db();
         } else {
           $this->toggle_social($provider_name);
@@ -105,6 +108,31 @@ class WP_Auth0_InitialSetup_Connections {
 
       protected function toggle_db() { 
 
+        $domain = $this->a0_options->get( "domain" );
+        $app_token = $this->a0_options->get( "auth0_app_token" );
+        $connection_id = $this->a0_options->get( "db_connection_id" );
+        $client_id = $this->a0_options->get( "client_id" );
+
+        $connection = WP_Auth0_Api_Client::get_connection($domain, $app_token, $connection_id);
+
+        $enabled_clients = array();
+
+        if ($_POST["enabled"] === "true") {
+          $enabled_clients = $connection->enabled_clients;
+          $enabled_clients[] = $client_id;
+        } else {
+          foreach ($connection->enabled_clients as $cid) {
+            if ($cid !== $client_id) {
+              $enabled_clients[] = $cid;
+            }
+          }
+        }
+
+        WP_Auth0_Api_Client::update_connection($domain, $app_token, $connection_id, array('enabled_clients' => $enabled_clients));
+
+        $this->a0_options->set( "db_connection_enabled" , $_POST["enabled"] === "true" ? 1 : 0 );
+
+        exit;
       }
 
       protected function toggle_social($provider_name) {
