@@ -70,17 +70,13 @@ class WP_Auth0_InitialSetup_Consent {
   }
 
   public function store_token_domain() {
-    // TODO: uncomment and unhardcode
-    // $access_token = $this->exchange_code();
+    $access_token = $this->exchange_code();
 
-    // if ($access_token === null) {
-    //     return false;
-    // }
+    if ($access_token === null) {
+        return false;
+    }
 
-    // $app_domain = $this->parse_token_domain($access_token);
-
-    $access_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJqY05ZOHd4YVoxWnVRYjhldlJJSGgzYkt3V0dWdEdqZyIsInNjb3BlcyI6eyJjb25uZWN0aW9ucyI6eyJhY3Rpb25zIjpbInJlYWQiLCJjcmVhdGUiLCJ1cGRhdGUiXX0sImNsaWVudHMiOnsiYWN0aW9ucyI6WyJjcmVhdGUiLCJ1cGRhdGUiXX0sInJ1bGVzIjp7ImFjdGlvbnMiOlsiY3JlYXRlIiwiZGVsZXRlIl19LCJ1c2VycyI6eyJhY3Rpb25zIjpbImNyZWF0ZSIsInVwZGF0ZSJdfX0sImlhdCI6MTQ1MTMxMDc4MSwianRpIjoiYWFhNTE5NmJjMmQyMThiYzc1YWQyZmFjN2ViOWQ3YmYifQ.GBWjB4k1ClU2Hs_-QZhnToivgG22NcYkVi0MZULMzo8';
-    $app_domain = 'wptest.auth0.com';
+    $app_domain = $this->parse_token_domain($access_token);
 
     $this->a0_options->set( 'auth0_app_token', $access_token );
     $this->a0_options->set( 'domain', $app_domain );
