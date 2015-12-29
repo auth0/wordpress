@@ -879,6 +879,11 @@
 .a0-wrap .modal-footer {
   padding: 25px;
 }
+.a0-wrap .bg-danger {
+  padding: 17px;
+  font-size: 15px;
+  margin: 30px 0;
+}
 .a0-step-text {
   margin: 30px 0;
 }
