@@ -17,7 +17,11 @@
         <div class="connection">
           <div class="logo" style="background:#fff url('<?php echo WPA0_PLUGIN_URL; ?>/assets/img/initial-setup/enterprise-connections/<?php echo $provider['icon']; ?>.png') no-repeat center center;"></div>
           <h4 class="title-wrapper"><?php echo $provider['name']; ?></h4>
-          <a href:"void()"><?php _e("READ MORE", WPA0_LANG); ?></a>
+          <?php if ($provider['url'] !== null) { ?>
+          <a href:"<?php echo $provider['url']; ?>" target="_blank"><?php _e("READ MORE", WPA0_LANG); ?></a>
+          <?php } else { ?>
+          <span>&nbsp;</span>
+          <?php } ?>
         </div>
       </div>
     <?php } ?>

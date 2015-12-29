@@ -1072,6 +1072,7 @@ p.a0-message img {
 }
 .enterprise-connections .connection a {
   color: #5b666f;
+  cursor: pointer;
 }
 .connections {
   margin-top: 30px;
