@@ -35,7 +35,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
             'icon_url' => '',
             'ip_range_check' => 0,
             'ip_ranges' => '',
-            'cdn_url' => '//cdn.auth0.com/js/lock-7.min.js',
+            'cdn_url' => '//cdn.auth0.com/js/lock-8.min.js',
             'requires_verified_email' => true,
             'wordpress_login_enabled' => true,
             'dict' => '',
