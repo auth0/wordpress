@@ -313,24 +313,27 @@ p.a0-message {
 
 .connections {
   margin-top:30px;
-  height:600px;
-  overflow-y:scroll;
-  padding:0;
   
-  &::-webkit-scrollbar {
-    width: 14px;
-  }
+  @media (min-width: 768px) { 
+    height:600px;
+    overflow-y:scroll;
+    padding:0;
+    
+    &::-webkit-scrollbar {
+      width: 14px;
+    }
 
-  &::-webkit-scrollbar-track {
-    background: #F3F3F3;
-    border-radius: 8px;
-    border: 3px solid white;
-  }
+    &::-webkit-scrollbar-track {
+      background: #F3F3F3;
+      border-radius: 8px;
+      border: 3px solid white;
+    }
 
-  &::-webkit-scrollbar-thumb {
-    border: 3px solid white;
-    border-radius: 8px;
-    background: #D9D9DE;
+    &::-webkit-scrollbar-thumb {
+      border: 3px solid white;
+      border-radius: 8px;
+      background: #D9D9DE;
+    }
   }
   
   .connection {
