@@ -1041,6 +1041,7 @@ p.a0-message img {
   width: 100px;
   height: 100px;
   border-radius: 50px;
+  margin-bottom: 20px;
 }
 .modal-footer {
   text-align: center;

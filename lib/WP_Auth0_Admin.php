@@ -741,7 +741,6 @@ class WP_Auth0_Admin {
 		$input['icon_url'] = esc_url( $input['icon_url'], array( 'http', 'https' ) );
 		$input['requires_verified_email'] = ( isset( $input['requires_verified_email'] ) ? $input['requires_verified_email'] : 0 );
 		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] ) ? $input['wordpress_login_enabled'] : 0 );
-		$input['link_auth0_users'] = ( isset( $input['link_auth0_users'] ) ? $input['link_auth0_users'] : 0 );
 		$input['remember_users_session'] = ( isset( $input['remember_users_session'] ) ? $input['remember_users_session'] : 0 ) == 1;
 		$input['jwt_auth_integration'] = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
 		$input['allow_signup'] = ( isset( $input['allow_signup'] ) ? $input['allow_signup'] : 0 );
@@ -891,6 +890,13 @@ class WP_Auth0_Admin {
 		return $this->rule_validation($old_options, $input, 'mfa', WP_Auth0_RulesLib::$google_MFA['name'], $mfa_script);
 	}
 
+	public function link_accounts_validation( $old_options, $input ) {
+		$link_script = WP_Auth0_RulesLib::$link_accounts['script'];
+		$link_script = str_replace('REPLACE_WITH_YOUR_DOMAIN', $input['domain'], $link_script);
+		$link_script = str_replace('REPLACE_WITH_YOUR_API_TOKEN', $input['auth0_app_token'], $link_script);
+		return $this->rule_validation($old_options, $input, 'link_auth0_users', WP_Auth0_RulesLib::$link_accounts['name'], $link_script);
+	}
+
 	public function georule_validation( $old_options, $input ) {
 		return $this->rule_validation($old_options, $input, 'geo_rule', WP_Auth0_RulesLib::$geo['name'], WP_Auth0_RulesLib::$geo['script']);
 	}
@@ -1005,6 +1011,7 @@ class WP_Auth0_Admin {
 			'migration_ws_validation',
 			'fullcontact_validation',
 			'mfa_validation',
+			'link_accounts_validation',
 			'georule_validation',
 			'incomerule_validation',
 			'loginredirection_validation',

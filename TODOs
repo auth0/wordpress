@@ -1,1 +1,2 @@
-change account linking to rule (already disabled in user creation)
+troubleshotting:
+disable migration if wordpress is not exposed or migration ws are not accesibles by auth0

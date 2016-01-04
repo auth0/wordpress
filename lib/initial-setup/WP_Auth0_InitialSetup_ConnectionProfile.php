@@ -36,11 +36,15 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
     $scope = urlencode( implode( ' ', array(
       'create:clients',
       'update:clients',
+      
       'update:connections',
       'create:connections',
       'read:connections',
+
       'create:rules',
       'delete:rules',
+
+      'read:users',
       'update:users',
       'create:users',
     ) ) );
