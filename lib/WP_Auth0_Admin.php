@@ -164,7 +164,10 @@ class WP_Auth0_Admin {
 		$this->init_option_section( 'Advanced', 'advanced', $advancedOptions );
 
 		$options_name = $this->a0_options->get_options_name();
-		register_setting( $options_name, $options_name, array( $this, 'input_validator' ) );
+		register_setting( $options_name . '_basic', $options_name, array( $this, 'input_validator' ) );
+		register_setting( $options_name . '_features', $options_name, array( $this, 'input_validator' ) );
+		register_setting( $options_name . '_appearance', $options_name, array( $this, 'input_validator' ) );
+		register_setting( $options_name . '_advanced', $options_name, array( $this, 'input_validator' ) );
 	}
 
 	public function render_remember_last_login() {
@@ -989,6 +992,7 @@ class WP_Auth0_Admin {
 	}
 
 	public function input_validator( $input ){
+
 		$old_options = $this->a0_options->get_options();
 
 		$actions_middlewares = array(
