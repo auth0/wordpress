@@ -1,4 +1,4 @@
-<div class="a0-wrap">
+<div class="a0-wrap settings">
 
 	<?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'); ?>
 
@@ -12,14 +12,47 @@
 	    <?php } ?>
 	    <?php settings_errors(); ?>
 		<form action="options.php" method="post" onsubmit="return presubmit();">
-			<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() ); ?>
-			<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() ); ?>
-			<?php submit_button(); ?>
+
+			<ul class="nav nav-tabs" role="tablist">
+		    <li role="presentation"><a href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Basic</a></li>
+		    <li role="presentation" class="active"><a href="#features" aria-controls="features" role="tab" data-toggle="tab">Features</a></li>
+		    <li role="presentation"><a href="#appearance" aria-controls="appearance" role="tab" data-toggle="tab">Appearance</a></li>
+		    <li role="presentation"><a href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab">Advanced</a></li>
+		  </ul>
+
+		  <div class="tab-content">
+		    <div role="tabpanel" class="tab-pane" id="basic">
+		    	<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_basic' ); ?>
+					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_basic' ); ?>
+		    </div>
+		    <div role="tabpanel" class="tab-pane active" id="features">
+		    	<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_features' ); ?>
+					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_features' ); ?>
+		    </div>
+		    <div role="tabpanel" class="tab-pane" id="appearance">
+		    	<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_appearance' ); ?>
+					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_appearance' ); ?>
+		    </div>
+		    <div role="tabpanel" class="tab-pane" id="advanced">
+		    	<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_advanced' ); ?>
+					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_advanced' ); ?>
+		    </div>
+		  </div>
+
+			<div class="a0-buttons">			    
+				<input type="submit" name="submit" id="submit" class="a0-button primary" value="Save Changes" />
+			</div>
 		</form>
 	</div>
 </div>
 
 <script type="text/javascript">
+
+	jQuery('.nav-tabs a').click(function (e) {
+	  e.preventDefault()
+	  jQuery(this).tab('show')
+	})
+
 	function presubmit() {
 		if (typeof(a0metricsLib) !== 'undefined') {
 			a0metricsLib.track('submit:settings', {

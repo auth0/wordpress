@@ -36,7 +36,6 @@ class WP_Auth0_Admin {
 		$this->validate_required_api_scopes();
 
 		wp_enqueue_media();
-		wp_enqueue_script( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/js/admin.js', array( 'jquery' ) );
 		wp_enqueue_style( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/css/bootstrap.min.css' );
     wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/js/bootstrap.min.js' );
 		wp_enqueue_style( 'wpa0_admin_initial_settup', WPA0_PLUGIN_URL . 'assets/css/initial-setup.css' );
@@ -70,7 +69,7 @@ class WP_Auth0_Admin {
 	}
 
 	protected function init_option_section($sectionName, $id, $settings) {
-		$options_name = $this->a0_options->get_options_name();
+		$options_name = $this->a0_options->get_options_name() . '_' . strtolower($id);
 
 		add_settings_section(
 			"wp_auth0_{$id}_settings_section",
@@ -95,12 +94,12 @@ class WP_Auth0_Admin {
 
 		/* ------------------------- BASIC ------------------------- */
 
-		$this->init_option_section( $this->build_section_title( 'Basic', self::BASIC_DESCRIPTION ), 'basic', array(
+		$this->init_option_section( 'Basic', 'basic', array(
 
 			array( 'id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain' ),
 			array( 'id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id' ),
 			array( 'id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret' ),
-			array( 'id' => 'wpa0_auth0_app_token', 'name' => 'App token', 'function' => 'render_auth0_app_token' ), //we are not going to show the token
+			//array( 'id' => 'wpa0_auth0_app_token', 'name' => 'App token', 'function' => 'render_auth0_app_token' ), //we are not going to show the token
 			array( 'id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login' ),
 			array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
 
@@ -108,7 +107,7 @@ class WP_Auth0_Admin {
 
 		/* ------------------------- Features ------------------------- */
 
-		$this->init_option_section( $this->build_section_title( 'Features', self::FEATURES_DESCRIPTION ), 'features',array(
+		$this->init_option_section( 'Features', 'features',array(
 
 			array( 'id' => 'wpa0_password_policy', 'name' => 'Password Policy', 'function' => 'render_password_policy' ),
 			array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)', 'function' => 'render_sso' ),
@@ -120,13 +119,12 @@ class WP_Auth0_Admin {
 			array( 'id' => 'wpa0_social_facebook', 'name' => 'Login with Facebook', 'function' => 'render_social_facebook' ),
 			array( 'id' => 'wpa0_social_twitter', 'name' => 'Login with Twitter', 'function' => 'render_social_twitter' ),
 			array( 'id' => 'wpa0_social_google_oauth2', 'name' => 'Login with Google +', 'function' => 'render_social_google_oauth2' ),
-			array( 'id' => 'wpa0_social_other', 'name' => '', 'function' => 'render_social_other' ),
 
 		) );
 
 		/* ------------------------- Appearance ------------------------- */
 
-		$this->init_option_section( $this->build_section_title( 'Appearance', self::APPEARANCE_DESCRIPTION ), 'appearance', array(
+		$this->init_option_section( 'Appearance', 'appearance', array(
 
 			array( 'id' => 'wpa0_form_title', 'name' => 'Form Title', 'function' => 'render_form_title' ),
 			array( 'id' => 'wpa0_social_big_buttons', 'name' => 'Show big social buttons', 'function' => 'render_social_big_buttons' ),
@@ -163,7 +161,7 @@ class WP_Auth0_Admin {
 			$advancedOptions[] = array( 'id' => 'wpa0_jwt_auth_integration', 'name' => 'Enable JWT Auth integration', 'function' => 'render_jwt_auth_integration' );
 		}
 
-		$this->init_option_section( $this->build_section_title( 'Advanced', self::ADVANCED_DESCRIPTION ), 'advanced', $advancedOptions );
+		$this->init_option_section( 'Advanced', 'advanced', $advancedOptions );
 
 		$options_name = $this->a0_options->get_options_name();
 		register_setting( $options_name, $options_name, array( $this, 'input_validator' ) );
@@ -171,8 +169,9 @@ class WP_Auth0_Admin {
 
 	public function render_remember_last_login() {
 		$v = absint( $this->a0_options->get( 'remember_last_login' ) );
+
+		echo $this->render_a0_switch("wpa0_remember_last_login", "remember_last_login", 1, 1 == $v);
 	?>
-		<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[remember_last_login]" id="wpa0_remember_last_login" value="1" <?php echo checked( $v, 1, false ); ?> />
 		<div class="subelement">
 			<span class="description">
 				<?php echo __( 'Request for SSO data and enable "Last time you signed in with[...]" message.', WPA0_LANG ); ?>
@@ -184,8 +183,9 @@ class WP_Auth0_Admin {
 
 	public function render_jwt_auth_integration() {
 		$v = absint( $this->a0_options->get( 'jwt_auth_integration' ) );
+
+		echo $this->render_a0_switch("wpa0_jwt_auth_integration", "jwt_auth_integration", 1, 1 == $v);
 	?>
-		<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[jwt_auth_integration]" id="wpa0_jwt_auth_integration" value="1" <?php echo checked( $v, 1, false ); ?>/>
 		<div class="subelement">
 			<span class="description"><?php echo __( 'This will enable the JWT Auth\'s Users Repository override.', WPA0_LANG ); ?></span>
 		</div>
@@ -234,7 +234,7 @@ class WP_Auth0_Admin {
 	public function render_client_secret() {
 		$v = $this->a0_options->get( 'client_secret' );
 		?>
-			<input type="text" autocomplete="off" name="<?php echo $this->a0_options->get_options_name(); ?>[client_secret]" id="wpa0_client_secret" value="<?php echo esc_attr( $v ); ?>"/>
+			<input type="password" autocomplete="off" name="<?php echo $this->a0_options->get_options_name(); ?>[client_secret]" id="wpa0_client_secret" value="<?php echo esc_attr( $v ); ?>"/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'Application secret, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG ); ?></span>
 			</div>
@@ -274,8 +274,8 @@ class WP_Auth0_Admin {
 	public function render_link_auth0_users() {
 		$v = $this->a0_options->get( 'link_auth0_users' );
 
+		echo $this->render_a0_switch("wpa0_link_auth0_users", "link_auth0_users", 1, ! empty($v));
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[link_auth0_users]" id="wpa0_link_auth0_users" value="1" <?php echo (empty($v) ? '' : 'checked'); ?>/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'To enable the link of accounts with the same email. It will only occur if the email was verified before.', WPA0_LANG ); ?></span>
 			</div>
@@ -285,8 +285,9 @@ class WP_Auth0_Admin {
 	public function render_remember_users_session() {
 		$v = $this->a0_options->get( 'remember_users_session' );
 
+		echo $this->render_a0_switch("wpa0_remember_users_session", "remember_users_session", 1, 1 == $v);
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[remember_users_session]" id="wpa0_remember_users_session" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			
 			<div class="subelement">
 				<span class="description"><?php echo __( 'Users session by default lives for two days. Enabling this setting will make the sessions live longer.', WPA0_LANG ); ?></span>
 			</div>
@@ -297,9 +298,10 @@ class WP_Auth0_Admin {
 		$v = $this->a0_options->get( 'migration_ws' );
 		$token = $this->a0_options->get( 'migration_token' );
 
+		echo $this->render_a0_switch("wpa0_auth0_migration_ws", "migration_ws", 1, 1 == $v);
+
 		if ($v) {
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[migration_ws]" id="wpa0_auth0_migration_ws" value="1" <?php echo checked( $v, 1, false ); ?>/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'Users migration is enabled. If you disable this setting, it can not be automatically enabled again, it needs to be done manually in the Auth0 dashboard.', WPA0_LANG ); ?></span>
 				<br><span class="description"><?php echo __( 'Security token:', WPA0_LANG ); ?><code><?php echo $token; ?></code></span>
@@ -307,7 +309,6 @@ class WP_Auth0_Admin {
 		<?php
 		} else {
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[migration_ws]" id="wpa0_auth0_migration_ws" value="1" <?php echo checked( $v, 1, false ); ?>/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'Users migration is disabled. Enabling it will expose the migration webservices but the connection need to be updated manually on the Auth0 dashboard.', WPA0_LANG ); ?></span>
 			</div>
@@ -369,8 +370,10 @@ class WP_Auth0_Admin {
 
 	public function render_auth0_implicit_workflow() {
 		$v = absint( $this->a0_options->get( 'auth0_implicit_workflow' ) );
+
+		echo $this->render_a0_switch("wpa0_auth0_implicit_workflow", "auth0_implicit_workflow", 1, 1 == $v);
 		?>
-		<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[auth0_implicit_workflow]" id="wpa0_auth0_implicit_workflow" value="1" <?php echo checked( $v, 1, false ); ?>/>
+
 		<div class="subelement">
 			<span class="description"><?php echo __( 'Mark this to change the login workflow to allow the plugin work when the server does not have internet access)', WPA0_LANG ); ?></span>
 		</div>
@@ -379,8 +382,10 @@ class WP_Auth0_Admin {
 
 	public function render_auto_login() {
 		$v = absint( $this->a0_options->get( 'auto_login' ) );
+
+		echo $this->render_a0_switch("wpa0_auto_login", "auto_login", 1, 1 == $v);
 		?>
-		<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[auto_login]" id="wpa0_auto_login" value="1" <?php echo checked( $v, 1, false ); ?>/>
+		
 		<div class="subelement">
 			<span class="description"><?php echo __( 'Mark this to avoid the login page (you will have to select a single login provider)', WPA0_LANG ); ?></span>
 		</div>
@@ -399,9 +404,8 @@ class WP_Auth0_Admin {
 
 	public function render_ip_range_check() {
 		$v = absint( $this->a0_options->get( 'ip_range_check' ) );
-		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[ip_range_check]" id="wpa0_ip_range_check" value="1" <?php echo checked( $v, 1, false ); ?>/>
-		<?php
+
+		echo $this->render_a0_switch("wpa0_ip_range_check", "ip_range_check", 1, 1 == $v);
 	}
 
 	public function render_ip_ranges() {
@@ -416,15 +420,16 @@ class WP_Auth0_Admin {
 
 	public function render_social_big_buttons() {
 		$v = absint( $this->a0_options->get( 'social_big_buttons' ) );
-		?>
-		<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[social_big_buttons]" id="wpa0_social_big_buttons" value="1" <?php echo checked( $v, 1, false ); ?>/>
-		<?php
+
+		echo $this->render_a0_switch("wpa0_social_big_buttons", "social_big_buttons", 1, 1 == $v);
 	}
 
 	public function render_gravatar() {
 		$v = absint( $this->a0_options->get( 'gravatar' ) );
-		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[gravatar]" id="wpa0_gravatar" value="1" <?php echo checked( $v, 1, false ); ?>/>
+
+		echo $this->render_a0_switch("wpa0_gravatar", "gravatar", 1, 1 == $v);
+		?>	
+			
 			<div class="subelement">
 				<span class="description">
 					<?php echo __( 'Read more about the gravatar integration ', WPA0_LANG ); ?>
@@ -473,8 +478,10 @@ class WP_Auth0_Admin {
 
 	public function render_sso() {
 		$v = absint( $this->a0_options->get( 'sso' ) );
+
+		echo $this->render_a0_switch("wpa0_sso", "sso", 1, 1 == $v);
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[sso]" id="wpa0_sso" value="1" <?php echo checked( $v, 1, false ); ?>/>
+
 			<div class="subelement">
 				<span class="description">
 					<?php echo __( 'Mark this if you want to enable SSO. More info ', WPA0_LANG ); ?>
@@ -485,8 +492,10 @@ class WP_Auth0_Admin {
 	}
 	public function render_metrics() {
 		$v = absint( $this->a0_options->get( 'metrics' ) );
+
+		echo $this->render_a0_switch("wpa0_metrics", "metrics", 1, 1 == $v);
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[metrics]" id="wpa0_metrics" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			
 			<div class="subelement">
 				<span class="description">
 					<?php echo __( 'This plugin tracks anonymous usage data. Click to disable.', WPA0_LANG ); ?>
@@ -497,8 +506,10 @@ class WP_Auth0_Admin {
 
 	public function render_singlelogout() {
 		$v = absint( $this->a0_options->get( 'singlelogout' ) );
+
+		echo $this->render_a0_switch("wpa0_singlelogout", "singlelogout", 1, 1 == $v);
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[singlelogout]" id="wpa0_singlelogout" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			
 			<div class="subelement">
 				<span class="description">
 					<?php echo __( 'Mark this if you want to enable Single Logout. More info ', WPA0_LANG ); ?>
@@ -510,8 +521,10 @@ class WP_Auth0_Admin {
 
 	public function render_mfa() {
 		$v = $this->a0_options->get( 'mfa' );
+
+		echo $this->render_a0_switch("wpa0_mfa", "mfa", 1, !empty($v));
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[mfa]" id="wpa0_mfa" value="1" <?php echo (empty($v) ? '' : 'checked'); ?>/>
+			
 			<div class="subelement">
 				<span class="description">
 					<?php echo __( 'Mark this if you want to enable multifactor authentication with Google Authenticator. More info ', WPA0_LANG ); ?>
@@ -525,8 +538,10 @@ class WP_Auth0_Admin {
 
 	public function render_geo() {
 		$v = $this->a0_options->get( 'geo_rule' );
+
+		echo $this->render_a0_switch("wpa0_geo_rule", "geo_rule", 1, !empty($v));
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[geo_rule]" id="wpa0_geo_rule" value="1" <?php echo (is_null($v) ? '' : 'checked'); ?>/>
+			
 			<div class="subelement">
 				<span class="description">
 					<?php echo __( 'Mark this if you want to store geo location information based on your users IP in the user_metadata', WPA0_LANG );?>
@@ -537,8 +552,9 @@ class WP_Auth0_Admin {
 
 	public function render_income() {
 		$v = $this->a0_options->get( 'income_rule' );
+
+		echo $this->render_a0_switch("wpa0_income_rule", "income_rule", 1, !empty($v));
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[income_rule]" id="wpa0_income_rule" value="1" <?php echo (is_null($v) ? '' : 'checked'); ?>/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'Mark this if you want to store income data based on the zipcode (calculated using the users IP).', WPA0_LANG ); ?></span>
 			</div>
@@ -551,8 +567,10 @@ class WP_Auth0_Admin {
 	public function render_fullcontact() {
 		$v = $this->a0_options->get( 'fullcontact' );
 		$apikey = $this->a0_options->get( 'fullcontact_apikey' );
+
+		echo $this->render_a0_switch("wpa0_fullcontact", "fullcontact", 1, !empty($v));
+
 		?>
-			<input type="checkbox" id="wpa0_fullcontact" name="<?php echo $this->a0_options->get_options_name(); ?>[fullcontact]" value="1" <?php echo (empty($v) ? '' : 'checked'); ?> />
 
 			<div class="subelement fullcontact <?php echo (empty($v) ? 'hidden' : ''); ?>">
 				<label for="wpa0_fullcontact_key" id="wpa0_fullcontact_key_label">Enter your FullContact api key:</label>
@@ -571,79 +589,28 @@ class WP_Auth0_Admin {
 
 	public function render_social_facebook() {
 		$social_facebook = $this->a0_options->get( 'social_facebook' );
-		$social_facebook_key = $this->a0_options->get( 'social_facebook_key' );
-		$social_facebook_secret = $this->a0_options->get( 'social_facebook_secret' );
-		?>
-			<input type="checkbox" class="wpa0_social_checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[social_facebook]" id="wpa0_social_facebook" value="1" <?php echo checked( $social_facebook, 1, false ); ?>/>
-			<div class="subelement social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
-				<label for="wpa0_social_facebook_key" id="wpa0_social_facebook_key_label">Api key:</label>
-				<input type="text" id="wpa0_social_facebook_key" name="<?php echo $this->a0_options->get_options_name(); ?>[social_facebook_key]" value="<?php echo $social_facebook_key; ?>" />
-			</div>
-			<div class="subelement social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
-				<label for="wpa0_social_facebook_secret" id="wpa0_social_facebook_secret_label">Api secret:</label>
-				<input type="text" id="wpa0_social_facebook_secret" name="<?php echo $this->a0_options->get_options_name(); ?>[social_facebook_secret]" value="<?php echo $social_facebook_secret; ?>" />
-			</div>
-			<div class="subelement social_facebook <?php echo ($social_facebook ? '' : 'hidden'); ?>">
-				<span class="description"><?php echo __( 'If you leave your keys empty Auth0 will use its own keys, but we recommend to use your own app. It will you customize the data you want to receive (ie, birthdate for the dashboard age chart).', WPA0_LANG ); ?></span>
-			</div>
-		<?php
+
+		echo $this->render_a0_switch("wpa0_social_checkbox", "social_facebook", 1, 1 == $social_facebook);
+
 	}
 
 	public function render_social_twitter() {
 		$social_twitter = $this->a0_options->get( 'social_twitter' );
-		$social_twitter_key = $this->a0_options->get( 'social_twitter_key' );
-		$social_twitter_secret = $this->a0_options->get( 'social_twitter_secret' );
-		?>
-			<input type="checkbox" class="wpa0_social_checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[social_twitter]" id="wpa0_social_twitter" value="1" <?php echo checked( $social_twitter, 1, false ); ?>/>
-			<div class="subelement social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
-				<label for="wpa0_social_twitter_key" id="wpa0_social_twitter_key_label">Api key:</label>
-				<input type="text" id="wpa0_social_twitter_key" name="<?php echo $this->a0_options->get_options_name(); ?>[social_twitter_key]" value="<?php echo $social_twitter_key; ?>" />
-			</div>
-			<div class="subelement social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
-				<label for="wpa0_social_twitter_secret" id="wpa0_social_twitter_secret_label">Api secret:</label>
-				<input type="text" id="wpa0_social_twitter_secret" name="<?php echo $this->a0_options->get_options_name(); ?>[social_twitter_secret]" value="<?php echo $social_twitter_secret; ?>" />
-			</div>
-			<div class="subelement social_twitter <?php echo ($social_twitter ? '' : 'hidden'); ?>">
-				<span class="description"><?php echo __( 'If you leave your keys empty Auth0 will use its own keys, but we recommend to use your own app. It will you customize the data you want to receive (ie, birthdate for the dashboard age chart).', WPA0_LANG ); ?></span>
-			</div>
-		<?php
+
+		echo $this->render_a0_switch("wpa0_social_twitter", "social_twitter", 1, 1 == $social_twitter);
 	}
 
 	public function render_social_google_oauth2() {
 		$social_google_oauth2 = $this->a0_options->get( 'social_google-oauth2' );
-		$social_google_oauth2_key = $this->a0_options->get( 'social_google-oauth2_key' );
-		$social_google_oauth2_secret = $this->a0_options->get( 'social_google-oauth2_secret' );
-		?>
-			<input type="checkbox" class="wpa0_social_checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[social_google-oauth2]" id="wpa0_social_google_oauth2" value="1" <?php echo checked( $social_google_oauth2, 1, false ); ?>/>
-			<div class="subelement social_google_oauth2 <?php echo ($social_google_oauth2 ? '' : 'hidden'); ?>">
-				<label for="wpa0_social_google_oauth2_key" id="wpa0_social_google_oauth2_key_label">Api key:</label>
-				<input type="text" id="wpa0_social_google_oauth2_key" name="<?php echo $this->a0_options->get_options_name(); ?>[social_google-oauth2_key]" value="<?php echo $social_google_oauth2_key; ?>" />
-			</div>
-			<div class="subelement social_google_oauth2 <?php echo ($social_google_oauth2 ? '' : 'hidden'); ?>">
-				<label for="wpa0_social_google_oauth2_secret" id="wpa0_social_google_oauth2_secret_label">Api secret:</label>
-				<input type="text" id="wpa0_social_google_oauth2_secret" name="<?php echo $this->a0_options->get_options_name(); ?>[social_google-oauth2_secret]" value="<?php echo $social_google_oauth2_secret; ?>" />
-			</div>
-			<div class="subelement social_google_oauth2 <?php echo ($social_google_oauth2 ? '' : 'hidden'); ?>">
-				<span class="description"><?php echo __( 'If you leave your keys empty Auth0 will use its own keys, but we recommend to use your own app. It will you customize the data you want to receive (ie, birthdate for the dashboard age chart).', WPA0_LANG ); ?></span>
-			</div>
-		<?php
-	}
 
-	public function render_social_other() {
-		?>
-			<div class="subelement">
-				<span class="description">
-					<?php echo __( 'Auth0 supports more than 30 different social connections (like Github, LinkedIn, Fitbit and more), enterprise connections (like google apps, ADFS, office 365 and more) and also custom Oauth2 connections. You can enable and configure them using the ', WPA0_LANG ); ?>
-					<a href="https://manage.auth0.com/#/connections/social" target="_blank">Auth0 dashboard</a>
-				</span>
-			</div>
-		<?php
+		echo $this->render_a0_switch("wpa0_social_google_oauth2", "social_google-oauth2", 1, 1 == $social_google_oauth2);
 	}
 
 	public function render_verified_email() {
 		$v = absint( $this->a0_options->get( 'requires_verified_email' ) );
+
+		echo $this->render_a0_switch("wpa0_verified_email", "requires_verified_email", 1, 1 == $v);
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[requires_verified_email]" id="wpa0_verified_email" value="1" <?php echo checked( $v, 1, false ); ?>/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'Mark this if you require the user to have a verified email to login', WPA0_LANG ); ?></span>
 			</div>
@@ -700,8 +667,9 @@ class WP_Auth0_Admin {
 
 	public function render_allow_wordpress_login () {
 		$v = absint( $this->a0_options->get( 'wordpress_login_enabled' ) );
+
+		echo $this->render_a0_switch("wpa0_wp_login_enabled", "wordpress_login_enabled", 1, 1 == $v);
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[wordpress_login_enabled]" id="wpa0_wp_login_enabled" value="1" <?php echo checked( $v, 1, false ); ?>/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'Mark this if you want to enable the regular WordPress login', WPA0_LANG ); ?></span>
 			</div>
@@ -709,19 +677,35 @@ class WP_Auth0_Admin {
 	}
 
 	public function render_basic_description() {
+		?>
 
+		<p class=\"a0-step-text\"><?php echo self::BASIC_DESCRIPTION; ?></p>
+
+		<?php
 	}
 
 	public function render_appearance_description() {
+		?>
 
+		<p class=\"a0-step-text\"><?php echo self::APPEARANCE_DESCRIPTION; ?></p>
+
+		<?php
 	}
 
 	public function render_features_description() {
+		?>
 
+		<p class=\"a0-step-text\"><?php echo self::FEATURES_DESCRIPTION; ?></p>
+
+		<?php
 	}
 
 	public function render_advanced_description() {
+		?>
 
+		<p class=\"a0-step-text\"><?php echo self::ADVANCED_DESCRIPTION; ?></p>
+
+		<?php
 	}
 
 	public function render_settings_page() {
@@ -753,8 +737,7 @@ class WP_Auth0_Admin {
 		$input['singlelogout'] = ( isset( $input['singlelogout'] ) ? $input['singlelogout'] : 0 );
 		$input['metrics'] = ( isset( $input['metrics'] ) ? $input['metrics'] : 0 );
 		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
-		// $input['auth0_app_token'] = $old_options['auth0_app_token'];
-		$input['auth0_app_token'] = $input['auth0_app_token'];
+		$input['auth0_app_token'] = isset($input['auth0_app_token']) ? $input['auth0_app_token'] : $old_options['auth0_app_token'];
 
 		if ( trim( $input['dict'] ) !== '' ) {
 			if ( strpos( $input['dict'], '{' ) !== false && json_decode( $input['dict'] ) === null ) {
@@ -1033,7 +1016,21 @@ class WP_Auth0_Admin {
 	}
 
 	protected function build_section_title($title, $description) {
-		return "<span class=\"title\">$title</span><span class=\"description\" title=\"$description\">$description</span>";
+		return "
+			<h3>$title</h3>
+			<p class=\"a0-step-text\">$description</p>
+		";
+	}
+
+	protected function render_a0_switch($id, $name, $value, $checked) {
+		?>
+
+		<div class="a0-switch">
+			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[<?php echo $name; ?>]" id="<?php echo $id; ?>" value="<?php echo $value; ?>" <?php echo checked( $checked ); ?>/>
+			<label for="<?php echo $id; ?>"></label>
+		</div>
+
+		<?php
 	}
 
 
