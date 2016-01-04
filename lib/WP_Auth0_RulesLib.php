@@ -7,6 +7,13 @@ class WP_Auth0_RulesLib {
       'name' => 'Accont-Linking-Do-Not-Rename',
       'script' => "
 function (user, context, callback) {
+
+  var CLIENTS_WITH_MFA = ['REPLACE_WITH_YOUR_CLIENT_ID'];
+  // run only for the specified clients
+  if (CLIENTS_WITH_MFA.indexOf(context.clientID) === -1) {
+    return callback(null, user, context);
+  }
+
   // Check if email is verified, we shouldn't automatically
   // merge accounts if this is not the case.
   if (!user.email_verified) {
@@ -58,8 +65,7 @@ function (user, context, callback) {
     }
   });
 }"
-
-    ),
+    );
 
     public static $google_MFA = array(
         'name' => 'Multifactor-Google-Authenticator-Do-Not-Rename',

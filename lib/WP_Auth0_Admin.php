@@ -273,7 +273,7 @@ class WP_Auth0_Admin {
 		$v = $this->a0_options->get( 'link_auth0_users' );
 
 		?>
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[link_auth0_users]" id="wpa0_link_auth0_users" value="1" <?php echo checked( $v, 1, false ); ?>/>
+			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[link_auth0_users]" id="wpa0_link_auth0_users" value="1" <?php echo (empty($v) ? '' : 'checked'); ?>/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'To enable the link of accounts with the same email. It will only occur if the email was verified before.', WPA0_LANG ); ?></span>
 			</div>
@@ -869,6 +869,7 @@ class WP_Auth0_Admin {
 	public function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {
 		$input[$key] = ( isset( $input[$key] ) ? $input[$key] : null );
 
+
 		if ($input[$key] !== null && $old_options[$key] === null || $input[$key] === null && $old_options[$key] !== null) {
 			try {
 
@@ -892,6 +893,7 @@ class WP_Auth0_Admin {
 
 	public function link_accounts_validation( $old_options, $input ) {
 		$link_script = WP_Auth0_RulesLib::$link_accounts['script'];
+		$link_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $link_script);
 		$link_script = str_replace('REPLACE_WITH_YOUR_DOMAIN', $input['domain'], $link_script);
 		$link_script = str_replace('REPLACE_WITH_YOUR_API_TOKEN', $input['auth0_app_token'], $link_script);
 		return $this->rule_validation($old_options, $input, 'link_auth0_users', WP_Auth0_RulesLib::$link_accounts['name'], $link_script);
