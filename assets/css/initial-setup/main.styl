@@ -92,7 +92,7 @@
   }
 }
 
-.a0-button {
+.a0-button, #wpa0_choose_icon {
 
   border-radius: 3px;
   border: none;
@@ -130,6 +130,12 @@
       color: buttonSecondaryText;
     }
   }
+}
+
+#wpa0_choose_icon {
+  height:42px;
+  color: buttonPrimaryText;
+  background-color: buttonPrimaryBG;
 }
 
 .a0-separator {
@@ -490,5 +496,40 @@ p.a0-message {
   img {
     width: 100px;
     margin-bottom: 10px;
+  }
+}
+
+.settings {
+  h3 {
+    margin: 30px 0 10px;
+  }
+  
+  .nav-tabs {
+    margin: 30px 0; 
+    
+    a {
+      color:#5b666f;
+      box-shadow: none;
+    }
+  }
+  
+  .a0-step-text {
+    margin: 0 0 30px;
+  }
+  
+  .form-table th, .form-wrap label {
+    color:#5b666f;
+  }
+  
+  input[type=text],input[type=password], textarea {
+    border:1px solid adminFormBorder;
+    line-height: 40px;
+    padding: 0 10px;
+    border-radius: 3px 3px 3px 3px;
+    width: 70%;
+  }
+  
+  .subelement {
+    padding:15px 0;
   }
 }
