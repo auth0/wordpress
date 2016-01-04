@@ -13,7 +13,7 @@
 
     <div class="row enterprise-connections">
     <?php foreach($providers as $provider) { ?>
-      <div class="col-md-3 col-sm-4 col-cs-6">
+      <div class="col-md-3 col-sm-4 col-xs-6">
         <div class="connection">
           <div class="logo" style="background:#fff url('<?php echo WPA0_PLUGIN_URL; ?>/assets/img/initial-setup/enterprise-connections/<?php echo $provider['icon']; ?>.png') no-repeat center center;"></div>
           <h4 class="title-wrapper"><?php echo $provider['name']; ?></h4>

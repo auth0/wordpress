@@ -24,7 +24,7 @@
     <form action="options.php" method="POST">
 
       <div class="row">
-        <div class="a0-admin-creation col-md-4">
+        <div class="a0-admin-creation col-sm-4 col-xs-10">
           <input type="text" id="admin-email" value="<?php echo $current_user->user_email; ?>" disabled />
           <input type="password" id="admin-password" name="admin-password" placeholder="Password" value="" />
         </div>

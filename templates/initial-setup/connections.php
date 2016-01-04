@@ -25,7 +25,7 @@
 		<h3><?php _e("Social Connections", WPA0_LANG); ?></h3>
 
 		<div class="row">
-			<div class="connections col-md-7">
+			<div class="connections col-sm-7">
 				<?php foreach($social_connections as $social_connection) { ?>
 					<div class="connection">
 						<div class="logo" data-logo="<?php echo $social_connection['icon']; ?>">
@@ -39,7 +39,7 @@
 					</div>
 				<?php } ?>
 			</div>
-			<div class="lock col-md-5" id="lock-container"></div>
+			<div class="lock col-sm-5 hidden-xs" id="lock-container"></div>
 		</div>
 
 		<div class="a0-buttons">
@@ -64,10 +64,6 @@ lock.once('signin ready', function() {
 lock.once('signin success', function() {
   showLock();
 });
-
-function updateConnectionsSize() {
-	jQuery('.connections').height( jQuery('#a0-lock').height() );
-}
 
 function showLock() {
 	lock.show({
