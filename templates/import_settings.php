@@ -1,27 +1,31 @@
-<div class="wrap">
-	<?php screen_icon(); ?>
-	<h2><?php _e('Import/Export Settings', WPA0_LANG); ?></h2>
+<div class="a0-wrap">
 
-	<div class="container">
+  <?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'); ?>
 
-    <form action="options.php" method="post" onsubmit="return presubmit_import();" enctype="multipart/form-data">
-			<p>Import settings</p>
-			<input type="hidden" name="action" value="wpauth0_import_settings" />
-			<div>Upload a file:<input type="file" name="settings-file" /></div>
-			<div>or copy the json<textarea name="settings-json"></textarea></div>
+  <div class="container-fluid">
+  	<h2><?php _e('Import/Export Settings', WPA0_LANG); ?></h2>
 
-			<div class="text-alone"><input type="submit" name="setup" value="Import" class="button button-primary"/></div>
-		</form>
+  	<div class="container">
 
-		<br>
-		<br>
+      <form action="options.php" method="post" onsubmit="return presubmit_import();" enctype="multipart/form-data">
+  			<p>Import settings</p>
+  			<input type="hidden" name="action" value="wpauth0_import_settings" />
+  			<div>Upload a file:<input type="file" name="settings-file" /></div>
+  			<div>or copy the json<textarea name="settings-json"></textarea></div>
 
-    <form action="options.php" method="post" onsubmit="return presubmit_export();">
-			<p>Export settings</p>
-			<input type="hidden" name="action" value="wpauth0_export_settings" />
-			<div class="text-alone"><input type="submit" name="setup" value="Export" class="button button-primary"/></div>
-		</form>
-	</div>
+  			<div class="text-alone"><input type="submit" name="setup" value="Import" class="button button-primary"/></div>
+  		</form>
+
+  		<br>
+  		<br>
+
+      <form action="options.php" method="post" onsubmit="return presubmit_export();">
+  			<p>Export settings</p>
+  			<input type="hidden" name="action" value="wpauth0_export_settings" />
+  			<div class="text-alone"><input type="submit" name="setup" value="Export" class="button button-primary"/></div>
+  		</form>
+  	</div>
+  </div>
 </div>
 
 

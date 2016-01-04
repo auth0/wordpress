@@ -1,40 +1,44 @@
-<div class="wrap">
-    <?php screen_icon(); ?>
-    <h2><?php _e('Auth0 Error Log', WPA0_LANG); ?></h2>
+<div class="a0-wrap">
 
-    <table class="a0-table widefat">
-        <thead>
+    <?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'); ?>
+
+    <div class="container-fluid">
+        <h1><?php _e('Auth0 Error Log', WPA0_LANG); ?></h1>
+
+        <table class="a0-table widefat">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Section</th>
+                    <th>Error code</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+        <?php
+            if (empty($data))
+            {
+                ?>
+                <tr>
+                    <td class="message" colspan="4">No errors.</td>
+                </tr>
+            <?php
+            }
+
+            foreach ($data as $item)
+            {
+        ?>
             <tr>
-                <th>Date</th>
-                <th>Section</th>
-                <th>Error code</th>
-                <th>Message</th>
-            </tr>
-        </thead>
-        <tbody>
-    <?php
-        if (empty($data))
-        {
-            ?>
-            <tr>
-                <td class="message" colspan="4">No errors.</td>
+                <td><?php echo date('m/d/Y H:i:s', strtotime($item->date)); ?></td>
+                <td><?php echo $item->section; ?></td>
+                <td><?php echo (empty($item->code) ? '-' : $item->code); ?></td>
+                <td><?php echo strip_tags($item->message); ?></td>
             </tr>
         <?php
-        }
+            }
+        ?>
 
-        foreach ($data as $item)
-        {
-    ?>
-        <tr>
-            <td><?php echo date('m/d/Y H:i:s', strtotime($item->date)); ?></td>
-            <td><?php echo $item->section; ?></td>
-            <td><?php echo (empty($item->code) ? '-' : $item->code); ?></td>
-            <td><?php echo strip_tags($item->message); ?></td>
-        </tr>
-    <?php
-        }
-    ?>
-
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>
