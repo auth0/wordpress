@@ -30,6 +30,8 @@
 
       </div>
 
+      <div class="a0-separator hidden-sm hidden-md hidden-lg"></div>
+
       <div class="col-sm-6">
 
         <form action="options.php" method="post" onsubmit="return presubmit_export();">

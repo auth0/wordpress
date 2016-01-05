@@ -10,6 +10,8 @@ class WP_Auth0_Admin {
 	protected $a0_options;
 	protected $router;
 
+	protected $sections = array();
+
 	public function __construct(WP_Auth0_Options $a0_options, WP_Auth0_Routes $router) {
 		$this->a0_options = $a0_options;
 		$this->router = $router;
@@ -94,20 +96,23 @@ class WP_Auth0_Admin {
 
 		/* ------------------------- BASIC ------------------------- */
 
-		$this->init_option_section( 'Basic', 'basic', array(
+		$this->sections['basic'] = new WP_Auth0_Admin_Basic($this->a0_options);
+		$this->sections['basic']->init();
 
-			array( 'id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain' ),
-			array( 'id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id' ),
-			array( 'id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret' ),
-			//array( 'id' => 'wpa0_auth0_app_token', 'name' => 'App token', 'function' => 'render_auth0_app_token' ), //we are not going to show the token
-			array( 'id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login' ),
-			array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
+		// $this->init_option_section( '', 'basic', array(
 
-		) );
+		// 	array( 'id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain' ),
+		// 	array( 'id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id' ),
+		// 	array( 'id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret' ),
+		// 	//array( 'id' => 'wpa0_auth0_app_token', 'name' => 'App token', 'function' => 'render_auth0_app_token' ), //we are not going to show the token
+		// 	array( 'id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login' ),
+		// 	array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
+
+		// ) );
 
 		/* ------------------------- Features ------------------------- */
 
-		$this->init_option_section( 'Features', 'features',array(
+		$this->init_option_section( '', 'features',array(
 
 			array( 'id' => 'wpa0_password_policy', 'name' => 'Password Policy', 'function' => 'render_password_policy' ),
 			array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)', 'function' => 'render_sso' ),
@@ -124,7 +129,7 @@ class WP_Auth0_Admin {
 
 		/* ------------------------- Appearance ------------------------- */
 
-		$this->init_option_section( 'Appearance', 'appearance', array(
+		$this->init_option_section( '', 'appearance', array(
 
 			array( 'id' => 'wpa0_form_title', 'name' => 'Form Title', 'function' => 'render_form_title' ),
 			array( 'id' => 'wpa0_social_big_buttons', 'name' => 'Show big social buttons', 'function' => 'render_social_big_buttons' ),
@@ -161,7 +166,7 @@ class WP_Auth0_Admin {
 			$advancedOptions[] = array( 'id' => 'wpa0_jwt_auth_integration', 'name' => 'Enable JWT Auth integration', 'function' => 'render_jwt_auth_integration' );
 		}
 
-		$this->init_option_section( 'Advanced', 'advanced', $advancedOptions );
+		$this->init_option_section( '', 'advanced', $advancedOptions );
 
 		$options_name = $this->a0_options->get_options_name();
 		register_setting( $options_name . '_basic', $options_name, array( $this, 'input_validator' ) );
@@ -725,14 +730,11 @@ class WP_Auth0_Admin {
 	}
 
 	public function basic_validation( $old_options, $input ) {
-		$input['client_id'] = sanitize_text_field( $input['client_id'] );
 		$input['form_title'] = sanitize_text_field( $input['form_title'] );
 		$input['icon_url'] = esc_url( $input['icon_url'], array( 'http', 'https' ) );
 		$input['requires_verified_email'] = ( isset( $input['requires_verified_email'] ) ? $input['requires_verified_email'] : 0 );
-		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] ) ? $input['wordpress_login_enabled'] : 0 );
 		$input['remember_users_session'] = ( isset( $input['remember_users_session'] ) ? $input['remember_users_session'] : 0 ) == 1;
 		$input['jwt_auth_integration'] = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
-		$input['allow_signup'] = ( isset( $input['allow_signup'] ) ? $input['allow_signup'] : 0 );
 		$input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
 		$input['social_big_buttons'] = ( isset( $input['social_big_buttons'] ) ? $input['social_big_buttons'] : 0 );
 		$input['gravatar'] = ( isset( $input['gravatar'] ) ? $input['gravatar'] : 0 );
@@ -740,7 +742,6 @@ class WP_Auth0_Admin {
 		$input['singlelogout'] = ( isset( $input['singlelogout'] ) ? $input['singlelogout'] : 0 );
 		$input['metrics'] = ( isset( $input['metrics'] ) ? $input['metrics'] : 0 );
 		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
-		$input['auth0_app_token'] = isset($input['auth0_app_token']) ? $input['auth0_app_token'] : $old_options['auth0_app_token'];
 
 		if ( trim( $input['dict'] ) !== '' ) {
 			if ( strpos( $input['dict'], '{' ) !== false && json_decode( $input['dict'] ) === null ) {
@@ -957,40 +958,6 @@ class WP_Auth0_Admin {
 		return $input;
 	}
 
-	public function basicdata_validation( $old_options, $input ) {
-		$error = '';
-		$completeBasicData = true;
-		if ( empty( $input['domain'] ) ) {
-			$error = __( 'You need to specify domain', WPA0_LANG );
-			$this->add_validation_error( $error );
-			$completeBasicData = false;
-		}
-
-		if ( empty( $input['client_id'] ) ) {
-			$error = __( 'You need to specify a client id', WPA0_LANG );
-			$this->add_validation_error( $error );
-			$completeBasicData = false;
-		}
-		if ( empty( $input['client_secret'] ) ) {
-			$error = __( 'You need to specify a client secret', WPA0_LANG );
-			$this->add_validation_error( $error );
-			$completeBasicData = false;
-		}
-
-		if ( $completeBasicData ) {
-			$response = WP_Auth0_Api_Client::get_token( $input['domain'], $input['client_id'], $input['client_secret'] );
-
-			if ( $response instanceof WP_Error ) {
-				$error = $response->get_error_message();
-				$this->add_validation_error( $error );
-			} elseif ( 200 !== (int) $response['response']['code'] ) {
-				$error = __( 'The client id or secret is not valid.', WPA0_LANG );
-				$this->add_validation_error( $error );
-			}
-		}
-		return $input;
-	}
-
 	public function input_validator( $input ){
 
 		$old_options = $this->a0_options->get_options();
@@ -1006,7 +973,6 @@ class WP_Auth0_Admin {
 			'georule_validation',
 			'incomerule_validation',
 			'loginredirection_validation',
-			'basicdata_validation',
 			'socialfacebook_validation',
 			'socialtwitter_validation',
 			'socialgoogle_validation',
