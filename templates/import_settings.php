@@ -3,29 +3,50 @@
   <?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'); ?>
 
   <div class="container-fluid">
-  	<h2><?php _e('Import/Export Settings', WPA0_LANG); ?></h2>
 
-  	<div class="container">
+  	<h1><?php _e('Import/Export Settings', WPA0_LANG); ?></h1>
 
-      <form action="options.php" method="post" onsubmit="return presubmit_import();" enctype="multipart/form-data">
-  			<p>Import settings</p>
-  			<input type="hidden" name="action" value="wpauth0_import_settings" />
-  			<div>Upload a file:<input type="file" name="settings-file" /></div>
-  			<div>or copy the json<textarea name="settings-json"></textarea></div>
+    <div class="row">
+  	 
+      <div class="col-sm-6">
 
-  			<div class="text-alone"><input type="submit" name="setup" value="Import" class="button button-primary"/></div>
-  		</form>
+        <form action="options.php" method="post" onsubmit="return presubmit_import();" enctype="multipart/form-data">
+          <input type="hidden" name="action" value="wpauth0_import_settings" />
+    			
+          <h2>Import settings</h2>
+    			
+          <div>Upload a file:</div>
+          <div><input type="file" name="settings-file" /></div>
+          <div>or copy the json</div>
+    			<div><textarea name="settings-json"></textarea></div>
 
-  		<br>
-  		<br>
+          <div class="a0-buttons">          
+            <input type="submit" name="setup" class="a0-button primary" value="Import" />
+          </div>
 
-      <form action="options.php" method="post" onsubmit="return presubmit_export();">
-  			<p>Export settings</p>
-  			<input type="hidden" name="action" value="wpauth0_export_settings" />
-  			<div class="text-alone"><input type="submit" name="setup" value="Export" class="button button-primary"/></div>
-  		</form>
+    		</form>
+
+      </div>
+
+      <div class="col-sm-6">
+
+        <form action="options.php" method="post" onsubmit="return presubmit_export();">
+          <input type="hidden" name="action" value="wpauth0_export_settings" />
+
+    			<h2>Export settings</h2>
+
+          <div class="a0-buttons">          
+            <input type="submit" name="setup" class="a0-button primary" value="Export" />
+          </div>
+
+    		</form>
+
+      </div>
+
   	</div>
+
   </div>
+
 </div>
 
 

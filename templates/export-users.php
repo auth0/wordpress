@@ -6,14 +6,15 @@
 
 		<h1><?php _e('Export Auth0 Users', WPA0_LANG); ?></h1>
 
-		<div class="container">
-		    <form action="options.php" method="post" onsubmit="return presubmit();">
-				<input type="hidden" name="action" value="wpauth0_export_users" />
-				<p>This action will export all your WordPress users that has an Auth0 account.</p>
-				<p>Do you want to continue?</p>
-				<div class="text-alone"><input type="submit" name="setup" value="Yes" class="button button-primary"/></div>
-			</form>
-		</div>
+   	<form action="options.php" method="post" onsubmit="return presubmit();">
+			<input type="hidden" name="action" value="wpauth0_export_users" />
+			<p class="a0-step-text">This action will export all your WordPress users that has an Auth0 account.<br/>Do you want to continue?</p>
+
+			<div class="a0-buttons">			    
+				<input type="submit" name="submit" id="submit" class="a0-button primary" value="Yes" />
+			</div>
+		</form>
+
 	</div>
 </div>
 
