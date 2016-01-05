@@ -142,16 +142,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
     <?php
   }
 
-
-  protected function add_validation_error( $error ) {
-    add_settings_error(
-      $this->a0_options->get_options_name(),
-      $this->a0_options->get_options_name(),
-      $error,
-      'error'
-    );
-  }
-
   public function basic_validation( $old_options, $input ) {
     $input['client_id'] = sanitize_text_field( $input['client_id'] );
     $input['client_secret'] = sanitize_text_field( $input['client_secret'] );

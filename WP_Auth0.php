@@ -284,6 +284,7 @@ class WP_Auth0 {
 		$exts = array( '.php', '.class.php' );
 
 		$paths[] = $path.'lib/';
+		$paths[] = $path.'lib/admin/';
 		$paths[] = $path.'lib/exceptions/';
 		$paths[] = $path.'lib/wizard/';
 		$paths[] = $path.'lib/initial-setup/';

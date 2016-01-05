@@ -43,6 +43,35 @@ class WP_Auth0_Admin_Generic {
     return $input;
   }
 
+  protected function add_validation_error( $error ) {
+    add_settings_error(
+      $this->a0_options->get_options_name(),
+      $this->a0_options->get_options_name(),
+      $error,
+      'error'
+    );
+  }
+
+  protected function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {
+    $input[$key] = ( isset( $input[$key] ) ? $input[$key] : null );
+
+
+    if ($input[$key] !== null && $old_options[$key] === null || $input[$key] === null && $old_options[$key] !== null) {
+      try {
+
+        $operations = new WP_Auth0_Api_Operations($this->a0_options);
+        $input[$key] = $operations->toggle_rule ( $this->a0_options->get( 'auth0_app_token' ), (is_null($input[$key]) ? $old_options[$key] : null), $rule_name, $rule_script );
+
+      } catch (Exception $e) {
+        $this->add_validation_error( $e->getMessage() );
+        $input[$key] = null;
+      }
+    }
+
+    return $input;
+  }
+
+
   protected function render_a0_switch($id, $name, $value, $checked) {
     ?>
 
