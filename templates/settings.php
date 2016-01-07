@@ -16,6 +16,7 @@
 			<ul class="nav nav-tabs" role="tablist">
 		    <li role="presentation"><a href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Basic</a></li>
 		    <li role="presentation" class="active"><a href="#features" aria-controls="features" role="tab" data-toggle="tab">Features</a></li>
+		    <li role="presentation"><a href="#connections" aria-controls="connections" role="tab" data-toggle="tab">Connections</a></li>
 		    <li role="presentation"><a href="#appearance" aria-controls="appearance" role="tab" data-toggle="tab">Appearance</a></li>
 		    <li role="presentation"><a href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab">Advanced</a></li>
 		    <li role="presentation"><a href="#dashboard" aria-controls="dashboard" role="tab" data-toggle="tab">Dashboard</a></li>
@@ -29,6 +30,24 @@
 		    <div role="tabpanel" class="tab-pane active" id="features">
 		    	<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_features' ); ?>
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_features' ); ?>
+		    </div>
+		    <div role="tabpanel" class="tab-pane" id="connections">
+
+		    	<div class="connections row">
+					  <?php foreach($social_connections as $social_connection) { ?>
+					    <div class="connection col-sm-4 col-xs-6">
+					      <div class="logo" data-logo="<?php echo $social_connection['icon']; ?>">
+					        <span class="logo-child"></span>
+					      </div>
+
+					      <div class="a0-switch">
+					        <input type="checkbox" name="social_<?php echo $social_connection['provider']; ?>" id="wpa0_social_<?php echo $social_connection['provider']; ?>" value="<?php echo $social_connection['provider']; ?>" <?php echo checked( $social_connection['status'], 1, false ); ?>/>
+					        <label for="wpa0_social_<?php echo $social_connection['provider']; ?>"></label>
+					      </div>
+					    </div>
+					  <?php } ?>
+					</div>
+
 		    </div>
 		    <div role="tabpanel" class="tab-pane" id="appearance">
 		    	<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_appearance' ); ?>
@@ -84,4 +103,34 @@
 		}
 		return true;
 	}
+
+	document.addEventListener("DOMContentLoaded", function() {
+		
+		var q = async.queue(function (task, callback) {
+
+			var data = {
+				action: 'a0_initial_setup_set_connection',
+				connection: task.connection,
+				enabled: task.enabled
+			};
+
+			jQuery.post(ajaxurl, data, function(response) {
+				callback();
+			});
+
+		}, 1);
+
+		jQuery('.a0-switch input').click(function(e) {
+
+			var data = {
+				connection: e.target.value,
+				enabled: e.target.checked
+			};
+
+			q.push(data);
+
+		});
+
+	});
 </script>
+

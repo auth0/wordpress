@@ -149,7 +149,7 @@ class WP_Auth0_InitialSetup_Connections {
         $input["social_{$provider_name}_secret"] = $this->a0_options->get( "social_{$provider_name}_secret" );
 
         try {
-          $input = $operations->social_validation($this->a0_options->get( 'auth0_app_token' ), $old_input, $input, $provider_name, $provider['options'] );
+          $input = $operations->social_validation($this->a0_options->get( 'auth0_app_token' ), $old_input, $input, $provider_name, isset($provider['options']) ? $provider['options'] : null );
         } catch (Exception $e) {
           die($e->getMessage());
         }

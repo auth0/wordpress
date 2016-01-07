@@ -126,6 +126,10 @@ class WP_Auth0_Api_Operations {
 				$selected_connection->enabled_clients[] = $client_id;
 			}
 
+      if (empty($connection_options)) {
+        $connection_options = array();
+      }
+      
 			if ( $input[$main_key] ) {
 
 				if ( $selected_connection &&

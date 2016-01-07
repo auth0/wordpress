@@ -25,19 +25,21 @@
 		<h3><?php _e("Social Connections", WPA0_LANG); ?></h3>
 
 		<div class="row">
-			<div class="connections col-sm-7">
-				<?php foreach($social_connections as $social_connection) { ?>
-					<div class="connection">
-						<div class="logo" data-logo="<?php echo $social_connection['icon']; ?>">
-							<span class="logo-child"></span>
-						</div>
+			<div class="connections-wrapper col-sm-7">
+				<div class="connections row">
+					<?php foreach($social_connections as $social_connection) { ?>
+						<div class="connection col-xs-6">
+							<div class="logo" data-logo="<?php echo $social_connection['icon']; ?>">
+								<span class="logo-child"></span>
+							</div>
 
-						<div class="a0-switch">
-							<input type="checkbox" name="social_<?php echo $social_connection['provider']; ?>" id="wpa0_social_<?php echo $social_connection['provider']; ?>" value="<?php echo $social_connection['provider']; ?>" <?php echo checked( $social_connection['status'], 1, false ); ?>/>
-							<label for="wpa0_social_<?php echo $social_connection['provider']; ?>"></label>
+							<div class="a0-switch">
+								<input type="checkbox" name="social_<?php echo $social_connection['provider']; ?>" id="wpa0_social_<?php echo $social_connection['provider']; ?>" value="<?php echo $social_connection['provider']; ?>" <?php echo checked( $social_connection['status'], 1, false ); ?>/>
+								<label for="wpa0_social_<?php echo $social_connection['provider']; ?>"></label>
+							</div>
 						</div>
-					</div>
-				<?php } ?>
+					<?php } ?>
+				</div>
 			</div>
 			<div class="lock col-sm-5 hidden-xs" id="lock-container"></div>
 		</div>

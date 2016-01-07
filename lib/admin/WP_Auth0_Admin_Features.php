@@ -28,10 +28,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_fullcontact', 'name' => 'FullContact integration', 'function' => 'render_fullcontact' ),
       array( 'id' => 'wpa0_geo', 'name' => 'Store geolocation', 'function' => 'render_geo' ),
       array( 'id' => 'wpa0_income', 'name' => 'Store zipcode income', 'function' => 'render_income' ),
-      array( 'id' => 'wpa0_social_facebook', 'name' => 'Login with Facebook', 'function' => 'render_social_facebook' ),
-      array( 'id' => 'wpa0_social_twitter', 'name' => 'Login with Twitter', 'function' => 'render_social_twitter' ),
-      array( 'id' => 'wpa0_social_google_oauth2', 'name' => 'Login with Google +', 'function' => 'render_social_google_oauth2' ),
-
+      
     ) );
 
     $options_name = $this->options->get_options_name();
@@ -153,26 +150,6 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
     <?php
   }
 
-  public function render_social_facebook() {
-    $social_facebook = $this->options->get( 'social_facebook' );
-
-    echo $this->render_a0_switch("wpa0_social_checkbox", "social_facebook", 1, 1 == $social_facebook);
-
-  }
-
-  public function render_social_twitter() {
-    $social_twitter = $this->options->get( 'social_twitter' );
-
-    echo $this->render_a0_switch("wpa0_social_twitter", "social_twitter", 1, 1 == $social_twitter);
-  }
-
-  public function render_social_google_oauth2() {
-    $social_google_oauth2 = $this->options->get( 'social_google-oauth2' );
-
-    echo $this->render_a0_switch("wpa0_social_google_oauth2", "social_google-oauth2", 1, 1 == $social_google_oauth2);
-  }
-
-
   public function render_features_description() {
     ?>
 
@@ -251,44 +228,5 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function incomerule_validation( $old_options, $input ) {
     return $this->rule_validation($old_options, $input, 'income_rule', WP_Auth0_RulesLib::$income['name'], WP_Auth0_RulesLib::$income['script']);
   }
-
-  public function socialfacebook_validation( $old_options, $input ) {
-    try {
-      $operations = new WP_Auth0_Api_Operations($this->options);
-      return $operations->social_validation( $this->options->get( 'auth0_app_token' ), $old_options, $input, 'facebook', array(
-        "public_profile" => true,
-        "email" => true,
-        "user_birthday" => true,
-        "publish_actions" => true,
-      ) );
-    } catch (Exception $e) {
-      $this->add_validation_error($e->getMessage());
-    }
-  }
-
-  public function socialtwitter_validation( $old_options, $input ) {
-    try{
-      $operations = new WP_Auth0_Api_Operations($this->options);
-      return $operations->social_validation( $this->options->get( 'auth0_app_token' ), $old_options, $input, 'twitter', array(
-        "profile" => true,
-      ) );
-    } catch (Exception $e) {
-      $this->add_validation_error($e->getMessage());
-    }
-  }
-
-  public function socialgoogle_validation( $old_options, $input ) {
-    try {
-      $operations = new WP_Auth0_Api_Operations($this->options);
-      return $operations->social_validation( $this->options->get( 'auth0_app_token' ), $old_options, $input, 'google-oauth2', array(
-        "google_plus" => true,
-        "email" => true,
-          "profile" => true,
-      ) );
-    } catch (Exception $e) {
-      $this->add_validation_error($e->getMessage());
-    }
-  }
-
 
 }

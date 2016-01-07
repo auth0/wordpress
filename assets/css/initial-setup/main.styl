@@ -318,8 +318,9 @@ p.a0-message {
   }
 }
 
-.connections {
+.connections-wrapper {
   margin-top:30px;
+  padding: 0 15px;
   
   @media (min-width: 768px) { 
     height:600px;
@@ -342,21 +343,19 @@ p.a0-message {
       background: #D9D9DE;
     }
   }
+}
+.connections {
+  border-top: 1px #d0d2d3 solid;
+  border-left: 1px #d0d2d3 solid;
   
   .connection {
-    border: 1px #d0d2d3 solid;
     float:left;
-    width:50%;
+    // width:50%;
     border-top:none;
     background-color:#F7F7F7;
     
-    &:nth-child(even) {
-      border-left:none;
-    }
-    &:nth-child(1),
-    &:nth-child(2) {
-      border-top:1px #d0d2d3 solid;
-    }
+    border-right: 1px #d0d2d3 solid;
+    border-bottom: 1px #d0d2d3 solid;
     
     .a0-switch {
       float:right;
@@ -378,7 +377,8 @@ p.a0-message {
         
         background-repeat: no-repeat;
         background-position: center center;
-        background-size: contain;
+        // background-size: contain;
+        background-size: 80%;
       }
       
       &[data-logo="SAP"] {
@@ -403,7 +403,6 @@ p.a0-message {
       &[data-logo="vk"] {
         .logo-child {
           background-size: 55%;
-          transform: translateX(-27%);
         }
       }
     }
@@ -590,6 +589,10 @@ p.a0-message {
     padding: 10px 0;
     margin-right: 40px;
     font-size: 15px;
+    
+    @media (max-width: 768px) {
+      margin-right: 10px;
+    }
   }
   .nav>li>a:hover, .nav>li>a:focus {
     text-decoration: none;

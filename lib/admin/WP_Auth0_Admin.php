@@ -6,6 +6,54 @@ class WP_Auth0_Admin {
 	protected $dashboard_options;
 	protected $router;
 
+	protected $providers = array(
+    array('provider' => 'facebook', 'name' => 'Facebook', "icon" => 'Facebook', 'options' => array(
+			"public_profile" => true,
+			"email" => true,
+			"user_birthday" => true,
+			"publish_actions" => true,
+		)),
+    array('provider' => 'twitter', 'name' => 'Twitter', "icon" => 'Twitter', 'options' => array(
+			"profile" => true,
+		)),
+    array('provider' => 'google-oauth2', 'name' => 'Google +', "icon" => 'Google', 'options' => array(
+			"google_plus" => true,
+			"email" => true,
+      "profile" => true,
+		)),
+    array( "provider" => 'windowslive', "name" => 'Microsoft Accounts', "icon" => 'Windows LiveID' ),
+    array( "provider" => 'yahoo', "name" => 'Yahoo', "icon" => 'Yahoo' ),
+    array( "provider" => 'aol', "name" => 'AOL', "icon" => 'Aol' ),
+    array( "provider" => 'linkedin', "name" => 'Linkedin', "icon" => 'LinkedIn' ),
+    array( "provider" => 'paypal', "name" => 'Paypal', "icon" => 'PayPal' ),
+    array( "provider" => 'github', "name" => 'GitHub', "icon" => 'GitHub' ),
+    array( "provider" => 'amazon', "name" => 'Amazon', "icon" => 'Amazon' ),
+    array( "provider" => 'vkontakte', "name" => 'vkontakte', "icon" => 'vk' ),
+    array( "provider" => 'yandex', "name" => 'yandex', "icon" => 'Yandex Metrica' ),
+    array( "provider" => 'thirtysevensignals', "name" => 'thirtysevensignals', "icon" => '37signals' ),
+    array( "provider" => 'box', "name" => 'box', "icon" => 'Box' ),
+    array( "provider" => 'salesforce', "name" => 'salesforce', "icon" => 'Salesforce' ),
+    array( "provider" => 'salesforce-sandbox', "name" => 'salesforce-sandbox', "icon" => 'SalesforceSandbox' ),
+    array( "provider" => 'salesforce-community', "name" => 'salesforce-community', "icon" => 'SalesforceCommunity' ),
+    array( "provider" => 'fitbit', "name" => 'Fitbit', "icon" => 'Fitbit' ),
+    array( "provider" => 'baidu', "name" => '百度 (Baidu)', "icon" => 'Baidu' ),
+    array( "provider" => 'renren', "name" => '人人 (RenRen)', "icon" => 'RenRen' ),
+    array( "provider" => 'weibo', "name" => '新浪微 (Weibo)', "icon" => 'Weibo' ),
+    array( "provider" => 'shopify', "name" => 'Shopify', "icon" => 'Shopify' ),
+    array( "provider" => 'dwolla', "name" => 'Dwolla', "icon" => 'dwolla' ),
+    array( "provider" => 'miicard', "name" => 'miiCard', "icon" => 'miiCard' ),
+    array( "provider" => 'wordpress', "name" => 'wordpress', "icon" => 'WordPress' ),
+    array( "provider" => 'yammer', "name" => 'Yammer', "icon" => 'Yammer' ),
+    array( "provider" => 'soundcloud', "name" => 'soundcloud', "icon" => 'Soundcloud' ),
+    array( "provider" => 'instagram', "name" => 'instagram', "icon" => 'Instagram' ),
+    array( "provider" => 'evernote', "name" => 'evernote', "icon" => 'Evernote' ),
+    array( "provider" => 'evernote-sandbox', "name" => 'evernote-sandbox', "icon" => 'Evernote' ),
+    array( "provider" => 'thecity', "name" => 'thecity', "icon" => 'The City' ),
+    array( "provider" => 'thecity-sandbox', "name" => 'thecity-sandbox', "icon" => 'The City Sandbox' ),
+    array( "provider" => 'planningcenter', "name" => 'planningcenter', "icon" => 'Planning Center' ),
+    array( "provider" => 'exact', "name" => 'exact', "icon" => 'Exact' ),
+  );
+
 	protected $sections = array();
 
 	public function __construct(WP_Auth0_Options $a0_options, WP_Auth0_Dashboard_Options $dashboard_options, WP_Auth0_Routes $router) {
@@ -35,6 +83,7 @@ class WP_Auth0_Admin {
 		$this->validate_required_api_scopes();
 
 		wp_enqueue_media();
+		wp_enqueue_script( 'wpa0_async', WPA0_PLUGIN_URL . 'assets/lib/async.min.js' );
 		wp_enqueue_style( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/css/bootstrap.min.css' );
     wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/js/bootstrap.min.js' );
 		wp_enqueue_style( 'wpa0_admin_initial_settup', WPA0_PLUGIN_URL . 'assets/css/initial-setup.css' );
@@ -67,28 +116,6 @@ class WP_Auth0_Admin {
 		<?php
 	}
 
-	protected function init_option_section($sectionName, $id, $settings) {
-		$options_name = $this->a0_options->get_options_name() . '_' . strtolower($id);
-
-		add_settings_section(
-			"wp_auth0_{$id}_settings_section",
-			__( $sectionName, WPA0_LANG ),
-			array( $this, "render_{$id}_description" ),
-			$options_name
-		);
-
-		foreach ( $settings as $setting ) {
-			add_settings_field(
-				$setting['id'],
-				__( $setting['name'], WPA0_LANG ),
-				array( $this, $setting['function'] ),
-				$options_name,
-				"wp_auth0_{$id}_settings_section",
-				array( 'label_for' => $setting['id'] )
-			);
-		}
-	}
-
 	public function init_admin() {
 
 		/* ------------------------- BASIC ------------------------- */
@@ -118,9 +145,6 @@ class WP_Auth0_Admin {
 		
 	}
 
-
-	
-
 	public function create_account_message() {
 		?>
 		<div id="message" class="updated">
@@ -135,29 +159,24 @@ class WP_Auth0_Admin {
 		<?php
 	}
 
-	
-
-	
-
-	
+	protected function get_social_connection($provider, $name, $icon) {
+    return array(
+      'name' => $name,
+      'provider' => $provider,
+      'icon' => $icon,
+      'status' => $this->a0_options->get( "social_{$provider}" ),
+      'key' => $this->a0_options->get( "social_{$provider}_key" ),
+  		'secret' => $this->a0_options->get( "social_{$provider}_secret" ),
+    );
+  }
 
 	public function render_settings_page() {
+		$social_connections = array();
+
+    foreach ($this->providers as $provider) {
+      $social_connections[] = $this->get_social_connection($provider['provider'], $provider['name'], $provider['icon']);
+    }
+
 		include WPA0_PLUGIN_DIR . 'templates/settings.php';
 	}
-
-	
-
-
-	protected function render_a0_switch($id, $name, $value, $checked) {
-		?>
-
-		<div class="a0-switch">
-			<input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[<?php echo $name; ?>]" id="<?php echo $id; ?>" value="<?php echo $value; ?>" <?php echo checked( $checked ); ?>/>
-			<label for="<?php echo $id; ?>"></label>
-		</div>
-
-		<?php
-	}
-
-
 }
