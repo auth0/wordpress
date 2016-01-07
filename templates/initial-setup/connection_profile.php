@@ -12,7 +12,7 @@
 
         <input type="hidden" name="action" value="wpauth0_callback_step1" />
 
-        <div class="col col-sm-offset-1 col-sm-5">
+        <div class="col col-sm-6">
           <div class="profile">
             <img src="<?php echo WPA0_PLUGIN_URL; ?>/assets/img/initial-setup/simple-end-users-login.svg">
 
@@ -26,7 +26,7 @@
           </div>
         </div>
 
-        <div class="col col-sm-5">
+        <div class="col col-sm-6">
           <div class="profile">
             <img src="<?php echo WPA0_PLUGIN_URL; ?>/assets/img/initial-setup/effortless-employee-access.svg">
 

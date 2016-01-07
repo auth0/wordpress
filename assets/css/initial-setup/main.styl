@@ -38,6 +38,10 @@
   
   .a0-buttons {
     margin: 20px 0;
+    
+    &.extra-space {
+      margin-top:50px;
+    }
   }
   
   form {
@@ -46,7 +50,7 @@
   
   .container-fluid {
     padding-top: 50px;
-    max-width:1000px;
+    max-width:750px;
   }
   
   .modal-dialog {
@@ -245,11 +249,8 @@ p.a0-message {
 
   @media (min-width: 768px) {
     .col {
-      padding-left: 25px;
-    }
-    .col:first-of-type {
-      padding-left: 15px;
-      padding-right: 25px;
+      padding-left: 10px;
+      padding-right: 10px;
     }
   }
   
@@ -489,13 +490,49 @@ p.a0-message {
 }
 
 .a0-final-step {
-  background-color:#F2F5F8; 
   text-align:center;
-  padding: 30px 0;
   
-  img {
-    width: 100px;
-    margin-bottom: 10px;
+  h1 {
+    margin-bottom: 0px;
+    margin-top: 30px;
+  }
+  
+  @-webkit-keyframes fill {
+    100% {
+      box-shadow: inset 0px 0px 0px 45px #7ac142;
+    }
+  }
+  @keyframes fill {
+    100% {
+      box-shadow: inset 0px 0px 0px 45px #7ac142;
+    }
+  }
+  
+  .checkmark {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 2;
+    stroke: #fff;
+    stroke-miterlimit: 10;
+    margin: 0 auto;
+    box-shadow: inset 0 0 0 #7ac142;
+    -webkit-animation: fill 0.4s ease-in-out 0.7s forwards, scale 0.3s ease-in-out 1.1s both;
+    animation: fill 0.4s ease-in-out 0.7s forwards, scale 0.3s ease-in-out 1.1s both;
+
+    .checkmark__check {
+      transform-origin: 50% 50%;
+    }
+    .checkmark__circle {
+      stroke-dasharray: 166;
+      stroke-dashoffset: 166;
+      stroke-width: 2;
+      stroke-miterlimit: 10;
+      stroke: #7ac142;
+      -webkit-animation: stroke 0.6s 0.4s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+      animation: stroke 0.6s 0.4s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
   }
 }
 
