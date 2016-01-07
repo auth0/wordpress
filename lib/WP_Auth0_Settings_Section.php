@@ -7,17 +7,15 @@ class WP_Auth0_Settings_Section {
   protected $users_exporter;
   protected $configure_jwt_auth;
   protected $error_log;
-  protected $dashboard_preferences;
   protected $auth0_admin;
   protected $import_settings;
 
-  public function __construct(WP_Auth0_Options $a0_options, WP_Auth0_InitialSetup $initial_setup, WP_Auth0_Export_Users $users_exporter, WP_Auth0_Configure_JWTAUTH $configure_jwt_auth, WP_Auth0_ErrorLog $error_log, WP_Auth0_Dashboard_Preferences $dashboard_preferences, WP_Auth0_Admin $auth0_admin, WP_Auth0_Import_Settings $import_settings) {
+  public function __construct(WP_Auth0_Options $a0_options, WP_Auth0_InitialSetup $initial_setup, WP_Auth0_Export_Users $users_exporter, WP_Auth0_Configure_JWTAUTH $configure_jwt_auth, WP_Auth0_ErrorLog $error_log, WP_Auth0_Admin $auth0_admin, WP_Auth0_Import_Settings $import_settings) {
     $this->a0_options = $a0_options;
     $this->initial_setup = $initial_setup;
     $this->users_exporter = $users_exporter;
     $this->configure_jwt_auth = $configure_jwt_auth;
     $this->error_log = $error_log;
-    $this->dashboard_preferences = $dashboard_preferences;
     $this->auth0_admin = $auth0_admin;
     $this->import_settings = $import_settings;
   }
@@ -52,7 +50,6 @@ class WP_Auth0_Settings_Section {
     }
     
     add_submenu_page($main_menu, __('Users export', WPA0_LANG), __('Users export', WPA0_LANG), 'manage_options', 'wpa0-users-export', array($this->users_exporter, 'render_export_users') );
-    add_submenu_page($main_menu, __('Dashboard preferences', WPA0_LANG), __('Dashboard', WPA0_LANG), 'manage_options', 'wpa0-dashboard', array($this->dashboard_preferences, 'render_dashboard_preferences_page') );
     add_submenu_page($main_menu, __('Error Log', WPA0_LANG), __('Error Log', WPA0_LANG), 'manage_options', 'wpa0-errors', array($this->error_log, 'render_settings_page') );
     add_submenu_page($main_menu, __('Import-Export settings', WPA0_LANG), __('Import-Export settings', WPA0_LANG), 'manage_options', 'wpa0-import-settings', array($this->import_settings, 'render_import_settings_page') );
 

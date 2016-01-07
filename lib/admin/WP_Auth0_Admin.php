@@ -3,12 +3,14 @@
 class WP_Auth0_Admin {
 
 	protected $a0_options;
+	protected $dashboard_options;
 	protected $router;
 
 	protected $sections = array();
 
-	public function __construct(WP_Auth0_Options $a0_options, WP_Auth0_Routes $router) {
+	public function __construct(WP_Auth0_Options $a0_options, WP_Auth0_Dashboard_Options $dashboard_options, WP_Auth0_Routes $router) {
 		$this->a0_options = $a0_options;
+		$this->dashboard_options = $dashboard_options;
 		$this->router = $router;
 	}
 
@@ -108,6 +110,11 @@ class WP_Auth0_Admin {
 
 		$this->sections['advanced'] = new WP_Auth0_Admin_Advanced($this->a0_options);
 		$this->sections['advanced']->init();
+
+		/* ------------------------- DASHBOARD ------------------------- */
+
+		$this->sections['dashboard'] = new WP_Auth0_Admin_Dashboard($this->dashboard_options);
+		$this->sections['dashboard']->init();
 		
 	}
 

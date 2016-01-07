@@ -18,6 +18,7 @@
 		    <li role="presentation" class="active"><a href="#features" aria-controls="features" role="tab" data-toggle="tab">Features</a></li>
 		    <li role="presentation"><a href="#appearance" aria-controls="appearance" role="tab" data-toggle="tab">Appearance</a></li>
 		    <li role="presentation"><a href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab">Advanced</a></li>
+		    <li role="presentation"><a href="#dashboard" aria-controls="dashboard" role="tab" data-toggle="tab">Dashboard</a></li>
 		  </ul>
 
 		  <div class="tab-content">
@@ -36,6 +37,10 @@
 		    <div role="tabpanel" class="tab-pane" id="advanced">
 		    	<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_advanced' ); ?>
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_advanced' ); ?>
+		    </div>
+		    <div role="tabpanel" class="tab-pane" id="dashboard">
+		    	<?php settings_fields( WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '_dashboard' ); ?>
+					<?php do_settings_sections( WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '_dashboard'); ?>
 		    </div>
 		  </div>
 

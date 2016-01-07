@@ -36,12 +36,12 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
     $this->init_option_section( '', 'advanced', $advancedOptions );
 
-    $options_name = $this->a0_options->get_options_name();
+    $options_name = $this->options->get_options_name();
     register_setting( $options_name . '_advanced', $options_name, array( $this, 'input_validator' ) );
   }
 
   public function render_jwt_auth_integration() {
-    $v = absint( $this->a0_options->get( 'jwt_auth_integration' ) );
+    $v = absint( $this->options->get( 'jwt_auth_integration' ) );
 
     echo $this->render_a0_switch("wpa0_jwt_auth_integration", "jwt_auth_integration", 1, 1 == $v);
   ?>
@@ -52,9 +52,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_default_login_redirection() {
-    $v = $this->a0_options->get( 'default_login_redirection' );
+    $v = $this->options->get( 'default_login_redirection' );
     ?>
-      <input type="text" name="<?php echo $this->a0_options->get_options_name(); ?>[default_login_redirection]" id="wpa0_default_login_redirection" value="<?php echo esc_attr( $v ); ?>"/>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[default_login_redirection]" id="wpa0_default_login_redirection" value="<?php echo esc_attr( $v ); ?>"/>
       <div class="subelement">
         <span class="description"><?php echo __( 'This is the URL that all users will be redirected by default after login', WPA0_LANG ); ?></span>
       </div>
@@ -62,7 +62,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_link_auth0_users() {
-    $v = $this->a0_options->get( 'link_auth0_users' );
+    $v = $this->options->get( 'link_auth0_users' );
 
     echo $this->render_a0_switch("wpa0_link_auth0_users", "link_auth0_users", 1, ! empty($v));
     ?>
@@ -73,7 +73,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_remember_users_session() {
-    $v = $this->a0_options->get( 'remember_users_session' );
+    $v = $this->options->get( 'remember_users_session' );
 
     echo $this->render_a0_switch("wpa0_remember_users_session", "remember_users_session", 1, 1 == $v);
     ?>
@@ -85,8 +85,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_migration_ws() {
-    $v = $this->a0_options->get( 'migration_ws' );
-    $token = $this->a0_options->get( 'migration_token' );
+    $v = $this->options->get( 'migration_ws' );
+    $token = $this->options->get( 'migration_token' );
 
     echo $this->render_a0_switch("wpa0_auth0_migration_ws", "migration_ws", 1, 1 == $v);
 
@@ -108,7 +108,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_auth0_implicit_workflow() {
-    $v = absint( $this->a0_options->get( 'auth0_implicit_workflow' ) );
+    $v = absint( $this->options->get( 'auth0_implicit_workflow' ) );
 
     echo $this->render_a0_switch("wpa0_auth0_implicit_workflow", "auth0_implicit_workflow", 1, 1 == $v);
     ?>
@@ -120,7 +120,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_auto_login() {
-    $v = absint( $this->a0_options->get( 'auto_login' ) );
+    $v = absint( $this->options->get( 'auto_login' ) );
 
     echo $this->render_a0_switch("wpa0_auto_login", "auto_login", 1, 1 == $v);
     ?>
@@ -132,9 +132,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_auto_login_method() {
-    $v = $this->a0_options->get( 'auto_login_method' );
+    $v = $this->options->get( 'auto_login_method' );
     ?>
-    <input type="text" name="<?php echo $this->a0_options->get_options_name(); ?>[auto_login_method]" id="wpa0_auto_login_method" value="<?php echo esc_attr( $v ); ?>"/>
+    <input type="text" name="<?php echo $this->options->get_options_name(); ?>[auto_login_method]" id="wpa0_auto_login_method" value="<?php echo esc_attr( $v ); ?>"/>
     <div class="subelement">
       <span class="description"><?php echo __( 'To find the method name, log into Auth0 Dashboard, and navigate to: Connection -> [Connection Type] (eg. Social or Enterprise). Click the "down arrow" to expand the wanted method, and use the value in the "Name"-field. Example: google-oauth2', WPA0_LANG ); ?></span>
     </div>
@@ -142,15 +142,15 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_ip_range_check() {
-    $v = absint( $this->a0_options->get( 'ip_range_check' ) );
+    $v = absint( $this->options->get( 'ip_range_check' ) );
 
     echo $this->render_a0_switch("wpa0_ip_range_check", "ip_range_check", 1, 1 == $v);
   }
 
   public function render_ip_ranges() {
-    $v = $this->a0_options->get( 'ip_ranges' );
+    $v = $this->options->get( 'ip_ranges' );
     ?>
-    <textarea cols="25" name="<?php echo $this->a0_options->get_options_name(); ?>[ip_ranges]" id="wpa0_ip_ranges"><?php echo esc_textarea( $v ); ?></textarea>
+    <textarea cols="25" name="<?php echo $this->options->get_options_name(); ?>[ip_ranges]" id="wpa0_ip_ranges"><?php echo esc_textarea( $v ); ?></textarea>
     <div class="subelement">
       <span class="description"><?php echo __( 'Only one range per line! Range format should be as: <code>xx.xx.xx.xx - yy.yy.yy.yy</code> (spaces will be trimmed)', WPA0_LANG ); ?></span>
     </div>
@@ -158,9 +158,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_cdn_url() {
-    $v = $this->a0_options->get( 'cdn_url' );
+    $v = $this->options->get( 'cdn_url' );
     ?>
-      <input type="text" name="<?php echo $this->a0_options->get_options_name(); ?>[cdn_url]" id="wpa0_cdn_url" value="<?php echo esc_attr( $v ); ?>"/>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[cdn_url]" id="wpa0_cdn_url" value="<?php echo esc_attr( $v ); ?>"/>
       <div class="subelement">
         <span class="description"><?php echo __( 'Point this to the latest widget available in the CDN', WPA0_LANG ); ?></span>
       </div>
@@ -168,7 +168,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
   
   public function render_metrics() {
-    $v = absint( $this->a0_options->get( 'metrics' ) );
+    $v = absint( $this->options->get( 'metrics' ) );
 
     echo $this->render_a0_switch("wpa0_metrics", "metrics", 1, 1 == $v);
     ?>
@@ -182,7 +182,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_verified_email() {
-    $v = absint( $this->a0_options->get( 'requires_verified_email' ) );
+    $v = absint( $this->options->get( 'requires_verified_email' ) );
 
     echo $this->render_a0_switch("wpa0_verified_email", "requires_verified_email", 1, 1 == $v);
     ?>
@@ -217,14 +217,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     if ( $old_options['migration_ws'] != $input['migration_ws'] ) {
 
       if ( 1 == $input['migration_ws'] ) {
-        $secret = $this->a0_options->get( 'client_secret' );
+        $secret = $this->options->get( 'client_secret' );
         $token_id = uniqid();
         $input['migration_token'] = JWT::encode(array('scope' => 'migration_ws', 'jti' => $token_id), JWT::urlsafeB64Decode( $secret ));
         $input['migration_token_id'] = $token_id;
 
         // avoid creating a new connection, it needs to be done manually
-        // $operations = new WP_Auth0_Api_Operations($this->a0_options);
-        // $response = $operations->enable_users_migration($this->a0_options->get( 'auth0_app_token' ), $input['migration_token']);
+        // $operations = new WP_Auth0_Api_Operations($this->options);
+        // $response = $operations->enable_users_migration($this->options->get( 'auth0_app_token' ), $input['migration_token']);
 
         if ($response === false) {
           $error = __( 'There was an error enabling your custom database. Check how to do it manually ', WPA0_LANG );
@@ -236,7 +236,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
         $input['migration_token'] = null;
         $input['migration_token_id'] = null;
 
-        $response = WP_Auth0_Api_Client::update_connection($input['domain'], $this->a0_options->get( 'auth0_app_token' ), $old_options['migration_connection_id'], array(
+        $response = WP_Auth0_Api_Client::update_connection($input['domain'], $this->options->get( 'auth0_app_token' ), $old_options['migration_connection_id'], array(
           'options' => array(
             'enabledDatabaseCustomization' => false,
             'import_mode' => false
@@ -258,9 +258,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
   public function link_accounts_validation( $old_options, $input ) {
     $link_script = WP_Auth0_RulesLib::$link_accounts['script'];
-    $link_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $this->a0_options->get( 'client_id' ), $link_script);
-    $link_script = str_replace('REPLACE_WITH_YOUR_DOMAIN', $this->a0_options->get( 'domain' ), $link_script);
-    $link_script = str_replace('REPLACE_WITH_YOUR_API_TOKEN', $this->a0_options->get( 'auth0_app_token' ), $link_script);
+    $link_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $this->options->get( 'client_id' ), $link_script);
+    $link_script = str_replace('REPLACE_WITH_YOUR_DOMAIN', $this->options->get( 'domain' ), $link_script);
+    $link_script = str_replace('REPLACE_WITH_YOUR_API_TOKEN', $this->options->get( 'auth0_app_token' ), $link_script);
     return $this->rule_validation($old_options, $input, 'link_auth0_users', WP_Auth0_RulesLib::$link_accounts['name'], $link_script);
   }
 

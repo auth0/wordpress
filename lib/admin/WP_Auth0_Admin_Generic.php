@@ -2,16 +2,16 @@
 
 class WP_Auth0_Admin_Generic {
 
-  protected $a0_options;
+  protected $options;
 
   protected $actions_middlewares = array();
 
-  public function __construct(WP_Auth0_Options $a0_options) {
-    $this->a0_options = $a0_options;
+  public function __construct(WP_Auth0_Options_Generic $options) {
+    $this->options = $options;
   }
 
   protected function init_option_section($sectionName, $id, $settings) {
-    $options_name = $this->a0_options->get_options_name() . '_' . strtolower($id);
+    $options_name = $this->options->get_options_name() . '_' . strtolower($id);
 
     add_settings_section(
       "wp_auth0_{$id}_settings_section",
@@ -34,7 +34,7 @@ class WP_Auth0_Admin_Generic {
 
   public function input_validator( $input ){
 
-    $old_options = $this->a0_options->get_options();
+    $old_options = $this->options->get_options();
 
     foreach ($this->actions_middlewares as $action) {
       $input = $this->$action($old_options, $input);
@@ -45,8 +45,8 @@ class WP_Auth0_Admin_Generic {
 
   protected function add_validation_error( $error ) {
     add_settings_error(
-      $this->a0_options->get_options_name(),
-      $this->a0_options->get_options_name(),
+      $this->options->get_options_name(),
+      $this->options->get_options_name(),
       $error,
       'error'
     );
@@ -59,8 +59,8 @@ class WP_Auth0_Admin_Generic {
     if ($input[$key] !== null && $old_options[$key] === null || $input[$key] === null && $old_options[$key] !== null) {
       try {
 
-        $operations = new WP_Auth0_Api_Operations($this->a0_options);
-        $input[$key] = $operations->toggle_rule ( $this->a0_options->get( 'auth0_app_token' ), (is_null($input[$key]) ? $old_options[$key] : null), $rule_name, $rule_script );
+        $operations = new WP_Auth0_Api_Operations($this->options);
+        $input[$key] = $operations->toggle_rule ( $this->options->get( 'auth0_app_token' ), (is_null($input[$key]) ? $old_options[$key] : null), $rule_name, $rule_script );
 
       } catch (Exception $e) {
         $this->add_validation_error( $e->getMessage() );
@@ -76,7 +76,7 @@ class WP_Auth0_Admin_Generic {
     ?>
 
     <div class="a0-switch">
-      <input type="checkbox" name="<?php echo $this->a0_options->get_options_name(); ?>[<?php echo $name; ?>]" id="<?php echo $id; ?>" value="<?php echo $value; ?>" <?php echo checked( $checked ); ?>/>
+      <input type="checkbox" name="<?php echo $this->options->get_options_name(); ?>[<?php echo $name; ?>]" id="<?php echo $id; ?>" value="<?php echo $value; ?>" <?php echo checked( $checked ); ?>/>
       <label for="<?php echo $id; ?>"></label>
     </div>
 

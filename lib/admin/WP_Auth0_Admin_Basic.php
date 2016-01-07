@@ -24,15 +24,15 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
     ) );
 
-    $options_name = $this->a0_options->get_options_name();
+    $options_name = $this->options->get_options_name();
     register_setting( $options_name . '_basic', $options_name, array( $this, 'input_validator' ) );
   }
 
 
   public function render_client_id() {
-    $v = $this->a0_options->get( 'client_id' );
+    $v = $this->options->get( 'client_id' );
     ?>
-      <input type="text" name="<?php echo $this->a0_options->get_options_name(); ?>[client_id]" id="wpa0_client_id" value="<?php echo esc_attr( $v ); ?>"/>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[client_id]" id="wpa0_client_id" value="<?php echo esc_attr( $v ); ?>"/>
       <div class="subelement">
         <span class="description"><?php echo __( 'Application ID, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG ); ?></span>
       </div>
@@ -40,9 +40,9 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   }
 
   public function render_auth0_app_token() {
-    $v = $this->a0_options->get( 'auth0_app_token' );
+    $v = $this->options->get( 'auth0_app_token' );
     ?>
-      <input type="text" name="<?php echo $this->a0_options->get_options_name(); ?>[auth0_app_token]" id="wpa0_auth0_app_token" value="<?php echo esc_attr( $v ); ?>"/>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[auth0_app_token]" id="wpa0_auth0_app_token" value="<?php echo esc_attr( $v ); ?>"/>
       <div class="subelement">
         <span class="description">
           <?php echo __( 'The token should be generated via the ', WPA0_LANG ); ?>
@@ -55,9 +55,9 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   }
 
   public function render_client_secret() {
-    $v = $this->a0_options->get( 'client_secret' );
+    $v = $this->options->get( 'client_secret' );
     ?>
-      <input type="text" autocomplete="off" name="<?php echo $this->a0_options->get_options_name(); ?>[client_secret]" id="wpa0_client_secret" value="<?php echo esc_attr( $v ); ?>"/>
+      <input type="text" autocomplete="off" name="<?php echo $this->options->get_options_name(); ?>[client_secret]" id="wpa0_client_secret" value="<?php echo esc_attr( $v ); ?>"/>
       <div class="subelement">
         <span class="description"><?php echo __( 'Application secret, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG ); ?></span>
       </div>
@@ -65,9 +65,9 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   }
 
   public function render_domain() {
-    $v = $this->a0_options->get( 'domain' );
+    $v = $this->options->get( 'domain' );
     ?>
-      <input type="text" name="<?php echo $this->a0_options->get_options_name(); ?>[domain]" id="wpa0_domain" value="<?php echo esc_attr( $v ); ?>"/>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[domain]" id="wpa0_domain" value="<?php echo esc_attr( $v ); ?>"/>
       <div class="subelement">
         <span class="description"><?php echo __( 'Your Auth0 domain, you can see it in the dashboard. Example: foo.auth0.com', WPA0_LANG ); ?></span>
       </div>
@@ -84,7 +84,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   }
 
   public function render_allow_signup_regular_multisite() {
-    $allow_signup = $this->a0_options->is_wp_registration_enabled();
+    $allow_signup = $this->options->is_wp_registration_enabled();
     ?>
       <span class="description">
         <?php echo __( 'Signup will be', WPA0_LANG ); ?>
@@ -104,7 +104,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   }
 
   public function render_allow_signup_regular() {
-    $allow_signup = $this->a0_options->is_wp_registration_enabled();
+    $allow_signup = $this->options->is_wp_registration_enabled();
     ?>
       <span class="description">
         <?php echo __( 'Signup will be', WPA0_LANG ); ?>
@@ -124,7 +124,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   }
 
   public function render_allow_wordpress_login () {
-    $v = absint( $this->a0_options->get( 'wordpress_login_enabled' ) );
+    $v = absint( $this->options->get( 'wordpress_login_enabled' ) );
 
     echo $this->render_a0_switch("wpa0_wp_login_enabled", "wordpress_login_enabled", 1, 1 == $v);
     ?>

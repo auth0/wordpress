@@ -24,12 +24,12 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
     ) );
 
-    $options_name = $this->a0_options->get_options_name();
+    $options_name = $this->options->get_options_name();
     register_setting( $options_name . '_appearance', $options_name, array( $this, 'input_validator' ) );
   }
 
   public function render_remember_last_login() {
-    $v = absint( $this->a0_options->get( 'remember_last_login' ) );
+    $v = absint( $this->options->get( 'remember_last_login' ) );
 
     echo $this->render_a0_switch("wpa0_remember_last_login", "remember_last_login", 1, 1 == $v);
   ?>
@@ -43,9 +43,9 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
   }
 
   public function render_form_title() {
-    $v = $this->a0_options->get( 'form_title' );
+    $v = $this->options->get( 'form_title' );
     ?>
-      <input type="text" name="<?php echo $this->a0_options->get_options_name(); ?>[form_title]" id="wpa0_form_title" value="<?php echo esc_attr( $v ); ?>"/>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[form_title]" id="wpa0_form_title" value="<?php echo esc_attr( $v ); ?>"/>
       <div class="subelement">
         <span class="description"><?php echo __( 'This is the title for the login widget', WPA0_LANG ); ?></span>
       </div>
@@ -53,9 +53,9 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
   }
 
   public function render_dict() {
-    $v = $this->a0_options->get( 'dict' );
+    $v = $this->options->get( 'dict' );
     ?>
-      <textarea name="<?php echo $this->a0_options->get_options_name(); ?>[dict]" id="wpa0_dict"><?php echo esc_attr( $v ); ?></textarea>
+      <textarea name="<?php echo $this->options->get_options_name(); ?>[dict]" id="wpa0_dict"><?php echo esc_attr( $v ); ?></textarea>
       <div class="subelement">
         <span class="description"><?php echo __( 'This is the widget\'s dict param.', WPA0_LANG ); ?><a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#4"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
       </div>
@@ -63,9 +63,9 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
   }
 
   public function render_custom_css() {
-    $v = $this->a0_options->get( 'custom_css' );
+    $v = $this->options->get( 'custom_css' );
     ?>
-      <textarea name="<?php echo $this->a0_options->get_options_name(); ?>[custom_css]" id="wpa0_custom_css"><?php echo esc_attr( $v ); ?></textarea>
+      <textarea name="<?php echo $this->options->get_options_name(); ?>[custom_css]" id="wpa0_custom_css"><?php echo esc_attr( $v ); ?></textarea>
       <div class="subelement">
         <span class="description"><?php echo __( 'This should be a valid CSS to customize the Auth0 login widget. ', WPA0_LANG ); ?><a target="_blank" href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
       </div>
@@ -73,9 +73,9 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
   }
 
   public function render_custom_js() {
-    $v = $this->a0_options->get( 'custom_js' );
+    $v = $this->options->get( 'custom_js' );
     ?>
-      <textarea name="<?php echo $this->a0_options->get_options_name(); ?>[custom_js]" id="wpa0_custom_js"><?php echo esc_attr( $v ); ?></textarea>
+      <textarea name="<?php echo $this->options->get_options_name(); ?>[custom_js]" id="wpa0_custom_js"><?php echo esc_attr( $v ); ?></textarea>
       <div class="subelement">
         <span class="description"><?php echo __( 'This should be a valid JS to customize the Auth0 login widget to, for example, add custom buttons. ', WPA0_LANG ); ?><a target="_blank" href="https://auth0.com/docs/hrd#3"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
       </div>
@@ -83,12 +83,12 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
   }
 
   public function render_username_style() {
-    $v = $this->a0_options->get( 'username_style' );
+    $v = $this->options->get( 'username_style' );
     ?>
-      <input type="radio" name="<?php echo $this->a0_options->get_options_name(); ?>[username_style]" id="wpa0_username_style_email" value="email" <?php echo (esc_attr( $v ) == 'email' ? 'checked="true"' : '' ); ?> />
+      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[username_style]" id="wpa0_username_style_email" value="email" <?php echo (esc_attr( $v ) == 'email' ? 'checked="true"' : '' ); ?> />
       <label for="wpa0_username_style_email"><?php echo __( 'Email', WPA0_LANG ); ?></label>
 
-      <input type="radio" name="<?php echo $this->a0_options->get_options_name(); ?>[username_style]" id="wpa0_username_style_username" value="username" <?php echo (esc_attr( $v ) == 'username' ? 'checked="true"' : '' ); ?> />
+      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[username_style]" id="wpa0_username_style_username" value="username" <?php echo (esc_attr( $v ) == 'username' ? 'checked="true"' : '' ); ?> />
       <label for="wpa0_username_style_username"><?php echo __( 'Username', WPA0_LANG ); ?></label>
 
       <div class="subelement">
@@ -101,13 +101,13 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
   }
 
   public function render_social_big_buttons() {
-    $v = absint( $this->a0_options->get( 'social_big_buttons' ) );
+    $v = absint( $this->options->get( 'social_big_buttons' ) );
 
     echo $this->render_a0_switch("wpa0_social_big_buttons", "social_big_buttons", 1, 1 == $v);
   }
 
   public function render_gravatar() {
-    $v = absint( $this->a0_options->get( 'gravatar' ) );
+    $v = absint( $this->options->get( 'gravatar' ) );
 
     echo $this->render_a0_switch("wpa0_gravatar", "gravatar", 1, 1 == $v);
     ?>  
@@ -121,9 +121,9 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
   }
 
   public function render_icon_url() {
-    $v = $this->a0_options->get( 'icon_url' );
+    $v = $this->options->get( 'icon_url' );
     ?>
-      <input type="text" name="<?php echo $this->a0_options->get_options_name(); ?>[icon_url]" id="wpa0_icon_url" value="<?php echo esc_attr( $v ); ?>"/>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[icon_url]" id="wpa0_icon_url" value="<?php echo esc_attr( $v ); ?>"/>
       <a target="_blank" href="javascript:void(0);" id="wpa0_choose_icon" class="button-secondary"><?php echo __( 'Choose Icon', WPA0_LANG ); ?></a>
       <div class="subelement">
         <span class="description"><?php echo __( 'The icon should be 32x32 pixels!', WPA0_LANG ); ?></span>
