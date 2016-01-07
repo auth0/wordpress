@@ -88,8 +88,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
       <input type="radio" name="<?php echo $this->a0_options->get_options_name(); ?>[username_style]" id="wpa0_username_style_email" value="email" <?php echo (esc_attr( $v ) == 'email' ? 'checked="true"' : '' ); ?> />
       <label for="wpa0_username_style_email"><?php echo __( 'Email', WPA0_LANG ); ?></label>
 
-      &nbsp;
-
       <input type="radio" name="<?php echo $this->a0_options->get_options_name(); ?>[username_style]" id="wpa0_username_style_username" value="username" <?php echo (esc_attr( $v ) == 'username' ? 'checked="true"' : '' ); ?> />
       <label for="wpa0_username_style_username"><?php echo __( 'Username', WPA0_LANG ); ?></label>
 

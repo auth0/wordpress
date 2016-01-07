@@ -554,17 +554,21 @@ p.a0-message {
   .a0-step-text {
     margin: 0 0 30px;
   }
+  .top-margin {
+    margin-top: 30px;
+  }
   
   .form-table th, .form-wrap label {
     color:#5b666f;
   }
   
   input[type=text],input[type=password], textarea {
-    border:1px solid adminFormBorder;
+    border:1px solid settingsInputBorder;
     line-height: 40px;
     padding: 0 10px;
     border-radius: 3px 3px 3px 3px;
-    width: 70%;
+    width: 100%;
+    color:text;
   }
   
   #wpa0_icon_url {
@@ -573,7 +577,7 @@ p.a0-message {
   }
   
   .subelement {
-    padding:15px 0;
+    padding:5px 0;
   }
   
   .link {
@@ -581,8 +585,38 @@ p.a0-message {
     text-decoration: underline;
     cursor: pointer;
   }
+  
+  .nav>li>a {    
+    padding: 10px 0;
+    margin-right: 40px;
+    font-size: 15px;
+  }
+  .nav>li>a:hover, .nav>li>a:focus {
+    text-decoration: none;
+    background-color: #fff;
+    border-color: transparent transparent #ddd;
+  }
+
+  .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+    color: #33B6E3;
+    border-color:transparent transparent #33B6E3;
+  }
+  
+  .form-wrap p, p.description, p.help, span.description {
+    font-style: normal;
+    color: softText;
+  }
+  
+  .form-table th, .form-wrap label {
+    color: text;
+  }
+  
+  label {
+    margin-right: 10px;
+  }
 }
 
 .a0-table {
-  margin-top:30px;
+  margin:30px;
+  width: initial;
 }

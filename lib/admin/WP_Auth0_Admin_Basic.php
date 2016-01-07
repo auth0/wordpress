@@ -87,17 +87,17 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
     $allow_signup = $this->a0_options->is_wp_registration_enabled();
     ?>
       <span class="description">
-        <?php echo __( 'Signup will be ', WPA0_LANG ); ?>
+        <?php echo __( 'Signup will be', WPA0_LANG ); ?>
 
         <?php if ( ! $allow_signup ) { ?>
           <b><?php echo __( 'disabled', WPA0_LANG ); ?></b>
-          <?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', WPA0_LANG ); ?><br>
+          <?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', WPA0_LANG ); ?>
         <?php } else { ?>
           <b><?php echo __( 'enabled', WPA0_LANG ); ?></b>
-          <?php echo __( ' because it is enabled by the setting "Allow new registrations" nn the Network Admin.', WPA0_LANG ); ?><br>
+          <?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', WPA0_LANG ); ?>
         <?php } ?>
 
-        <?php echo __( 'You can manage this setting on Network Admin > Settings > Network Settings > Allow new registrations (you need to set it up to <b>User accounts may be registered</b> or <b>Both sites and user accounts can be registered</b> depending on your preferences).', WPA0_LANG ); ?>
+        <?php echo __( 'You can manage this setting on <code>Network Admin > Settings > Network Settings > Allow new registrations</code> (you need to set it up to <b>User accounts may be registered</b> or <b>Both sites and user accounts can be registered</b> depending on your preferences).', WPA0_LANG ); ?>
       </span>
 
     <?php
@@ -107,17 +107,17 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
     $allow_signup = $this->a0_options->is_wp_registration_enabled();
     ?>
       <span class="description">
-        <?php echo __( 'Signup will be ', WPA0_LANG ); ?>
+        <?php echo __( 'Signup will be', WPA0_LANG ); ?>
 
         <?php if ( ! $allow_signup ) { ?>
           <b><?php echo __( 'disabled', WPA0_LANG ); ?></b>
-          <?php echo __( ' because you have turned on the setting " Anyone can register" off WordPress', WPA0_LANG ); ?><br>
+          <?php echo __( ' because it is enabled by the setting "Anyone can register" in the WordPress General Settings.', WPA0_LANG ); ?>
         <?php } else { ?>
           <b><?php echo __( 'enabled', WPA0_LANG ); ?></b>
-          <?php echo __( ' because you have turned on the setting " Anyone can register" on WordPress', WPA0_LANG ); ?><br>
+          <?php echo __( ' because it is enabled by the setting "Anyone can register" in the WordPress General Settings.', WPA0_LANG ); ?>
         <?php } ?>
 
-        <?php echo __( 'You can manage this setting on Settings > General > Membership, Anyone can register', WPA0_LANG ); ?>
+        <?php echo __( 'You can manage this setting on <code>Settings > General > Membership</code>, Anyone can register', WPA0_LANG ); ?>
       </span>
 
     <?php

@@ -5,48 +5,52 @@
   <div class="container-fluid">
 
     <div class="row">
-  	 
-      <div class="col-sm-6">
 
-        <form action="options.php" method="post" onsubmit="return presubmit_import();" enctype="multipart/form-data">
-          <input type="hidden" name="action" value="wpauth0_import_settings" />
-    			
-          <h1><?php _e('Import Settings', WPA0_LANG); ?></h1>
-    			
-          <div id="upload-file">
-            <p class="a0-step-text">Please upload the exported json file or <span class="link upload-toggle">paste the entire json</span>.</p>
-            <input type="file" name="settings-file" />
-          </div>
-    			<div id="paste-json" style="display:none;">
-            <p class="a0-step-text">Please paste the exported json file or <span class="link upload-toggle">upload the exported file</span>.</p>
-            <textarea name="settings-json"></textarea>
-          </div>
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#import" aria-controls="import" role="tab" data-toggle="tab">Import Settings</a></li>
+        <li role="presentation"><a href="#export" aria-controls="export" role="tab" data-toggle="tab">Export Settings</a></li>
+      </ul>
 
-          <div class="a0-buttons">          
-            <input type="submit" name="setup" class="a0-button primary" value="Import" />
-          </div>
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="import">
+          
+          <form action="options.php" method="post" onsubmit="return presubmit_import();" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="wpauth0_import_settings" />
+            
+            <h1><?php _e('Import Settings', WPA0_LANG); ?></h1>
+            
+            <div id="upload-file">
+              <p class="a0-step-text top-margin">Please upload the exported json file or <span class="link upload-toggle">paste the entire json</span>.</p>
+              <div class="a0-step-text top-margin"><input type="file" name="settings-file" /></div>
+            </div>
+            <div id="paste-json" style="display:none;">
+              <p class="a0-step-text top-margin">Please paste the exported json file or <span class="link upload-toggle">upload the exported file</span>.</p>
+              <div class="a0-step-text top-margin"><textarea name="settings-json"></textarea></div>
+            </div>
 
-    		</form>
+            <div class="a0-buttons">          
+              <input type="submit" name="setup" class="a0-button primary" value="Import" />
+            </div>
 
-      </div>
+          </form>
 
-      <div class="a0-separator hidden-sm hidden-md hidden-lg"></div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="export">
+          
+          <form action="options.php" method="post" onsubmit="return presubmit_export();">
+            <input type="hidden" name="action" value="wpauth0_export_settings" />
 
-      <div class="col-sm-6">
+            <h1><?php _e('Export Settings', WPA0_LANG); ?></h1>
 
-        <form action="options.php" method="post" onsubmit="return presubmit_export();">
-          <input type="hidden" name="action" value="wpauth0_export_settings" />
+            <p class="a0-step-text top-margin">Download the entire plugin configuration.</p>
 
-          <h1><?php _e('Export Settings', WPA0_LANG); ?></h1>
+            <div class="a0-buttons">          
+              <input type="submit" name="setup" class="a0-button primary" value="Export" />
+            </div>
 
-          <p class="a0-step-text">Download the entire plugin configuration.</p>
+          </form>
 
-          <div class="a0-buttons">          
-            <input type="submit" name="setup" class="a0-button primary" value="Export" />
-          </div>
-
-    		</form>
-
+        </div>
       </div>
 
   	</div>
@@ -63,6 +67,12 @@
     jQuery('#paste-json').toggle();
 
   });
+
+  jQuery('.nav-tabs a').click(function (e) {
+    e.preventDefault()
+    jQuery(this).tab('show')
+  })
+
   function presubmit_import() {
     if (typeof(a0metricsLib) !== 'undefined') {
       a0metricsLib.track('import:settings', {});
