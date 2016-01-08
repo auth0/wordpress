@@ -138,7 +138,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
     protected static function current_page_url() {
 
-        return site_url($_SERVER["REQUEST_URI"]);
+        return home_url($_SERVER["REQUEST_URI"]);
     }
 
 }

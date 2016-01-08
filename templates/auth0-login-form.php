@@ -60,7 +60,7 @@ $options = json_encode($lock_options->get_lock_options());
             callback = function(err,profile, token) {
 
                 if (!err) {
-                    post('<?php echo site_url('/index.php?auth0=implicit'); ?>', {
+                    post('<?php echo home_url('/index.php?auth0=implicit'); ?>', {
                         token:token,
                         state:<?php echo json_encode($lock_options->get_state_obj()); ?>
                     }, 'POST');

@@ -11,11 +11,11 @@ class WP_Auth0_Lock_Options {
     }
 
     public function get_code_callback_url() {
-        return site_url('/index.php?auth0=1');
+        return home_url('/index.php?auth0=1');
     }
 
     public function get_implicit_callback_url() {
-        return site_url('/wp-login.php');
+        return home_url('/wp-login.php');
     }
 
     public function get_sso() {
@@ -156,7 +156,7 @@ class WP_Auth0_Lock_Options {
         //     ! isset( $options["authParams"]["state"] ) ||
         //     ! isset( $options["authParams"]["state"]["redirect_to"] )
         // ) {
-        //     $options["authParams"]["state"]["redirect_to"] = site_url($_SERVER["REQUEST_URI"]);
+        //     $options["authParams"]["state"]["redirect_to"] = home_url($_SERVER["REQUEST_URI"]);
         // }
 
         return $options;

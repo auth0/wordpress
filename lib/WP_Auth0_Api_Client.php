@@ -199,11 +199,11 @@ class WP_Auth0_Api_Client {
 			'body' => json_encode(array(
 				'name' => $name,
 				'callbacks' => array(
-					site_url( '/index.php?auth0=1'),
-					site_url( '/wp-login.php')
+					home_url( '/index.php?auth0=1'),
+					home_url( '/wp-login.php')
 				),
 				"allowed_origins"=>array(
-					site_url('/wp-login.php'),
+					home_url('/wp-login.php'),
 					admin_url('/admin.php?page=wpa0-setup&step=2&profile=social')
 				)
 			))

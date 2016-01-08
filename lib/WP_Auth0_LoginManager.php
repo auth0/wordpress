@@ -119,7 +119,7 @@ class WP_Auth0_LoginManager {
 			$login_url = "https://". $this->a0_options->get( 'domain' ) .
 						 "/authorize?response_type=code&scope=openid%20profile".
 						 "&client_id=".$this->a0_options->get( 'client_id' ) .
-						 "&redirect_uri=".site_url( '/index.php?auth0=1' ) .
+						 "&redirect_uri=".home_url( '/index.php?auth0=1' ) .
 						 "&state=".urlencode( $state ).
 						 "&connection=".$this->a0_options->get( 'auto_login_method' ).
 						 "&auth0Client=" . WP_Auth0_Api_Client::get_info_headers();
@@ -325,7 +325,7 @@ class WP_Auth0_LoginManager {
 			if ( empty( $userinfo->email ) ) {
 				$msg = __( 'This account does not have an email associated. Please login with a different provider.', WPA0_LANG );
 				$msg .= '<br/><br/>';
-				$msg .= '<a href="' . site_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
+				$msg .= '<a href="' . home_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
 
 				wp_die( $msg );
 			}
@@ -373,12 +373,12 @@ class WP_Auth0_LoginManager {
 				$msg = __( 'Error: Could not create user.', WPA0_LANG );
 				$msg = ' ' . $e->getMessage();
 				$msg .= '<br/><br/>';
-				$msg .= '<a href="' . site_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
+				$msg .= '<a href="' . home_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
 				wp_die( $msg );
 			} catch ( WP_Auth0_RegistrationNotEnabledException $e ) {
 				$msg = __( 'Error: Could not create user. The registration process is not available.', WPA0_LANG );
 				$msg .= '<br/><br/>';
-				$msg .= '<a href="' . site_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
+				$msg .= '<a href="' . home_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
 				wp_die( $msg );
 			} catch ( WP_Auth0_EmailNotVerifiedException $e ) {
 				echo $e;exit;
