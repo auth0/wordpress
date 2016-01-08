@@ -18,7 +18,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain' ),
       array( 'id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id' ),
       array( 'id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret' ),
-      // array( 'id' => 'wpa0_auth0_app_token', 'name' => 'App token', 'function' => 'render_auth0_app_token' ), //we are not going to show the token
+      array( 'id' => 'wpa0_auth0_app_token', 'name' => 'App token', 'function' => 'render_auth0_app_token' ), //we are not going to show the token
       array( 'id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login' ),
       array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
 
@@ -40,24 +40,22 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   }
 
   public function render_auth0_app_token() {
-    $v = $this->options->get( 'auth0_app_token' );
     ?>
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[auth0_app_token]" id="wpa0_auth0_app_token" value="<?php echo esc_attr( $v ); ?>"/>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[auth0_app_token]" id="wpa0_auth0_app_token" autocomplete="off" />
       <div class="subelement">
         <span class="description">
           <?php echo __( 'The token should be generated via the ', WPA0_LANG ); ?>
           <a href="https://auth0.com/docs/api/v2" target="_blank"><?php echo __( 'token generator', WPA0_LANG ); ?></a>
           <?php echo __( ' with the following scopes:', WPA0_LANG ); ?>
-          <code>create:clients</code> <?php echo __( 'and', WPA0_LANG ); ?> <code>read:connection</code>.
+          <code> 'create:clients', 'update:clients', 'update:connections', 'create:connections', 'read:connections', 'create:rules', 'delete:rules', 'read:users', 'update:users' and 'create:users'</code>.
         </span>
       </div>
     <?php
   }
 
   public function render_client_secret() {
-    $v = $this->options->get( 'client_secret' );
     ?>
-      <input type="text" autocomplete="off" name="<?php echo $this->options->get_options_name(); ?>[client_secret]" id="wpa0_client_secret" value="<?php echo esc_attr( $v ); ?>"/>
+      <input type="text" autocomplete="off" name="<?php echo $this->options->get_options_name(); ?>[client_secret]" id="wpa0_client_secret"/>
       <div class="subelement">
         <span class="description"><?php echo __( 'Application secret, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG ); ?></span>
       </div>
@@ -144,9 +142,11 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
   public function basic_validation( $old_options, $input ) {
     $input['client_id'] = sanitize_text_field( $input['client_id'] );
-    $input['client_secret'] = sanitize_text_field( $input['client_secret'] );
     $input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] ) ? $input['wordpress_login_enabled'] : 0 );
     $input['allow_signup'] = ( isset( $input['allow_signup'] ) ? $input['allow_signup'] : 0 );
+
+    // Only replace the secret or token if a new value was set. If not, we will keep the last one entered.
+    $input['client_secret'] = (isset($input['client_secret']) ? $input['client_secret'] : $old_options['client_secret']);
     $input['auth0_app_token'] = (isset($input['auth0_app_token']) ? $input['auth0_app_token'] : $old_options['auth0_app_token']);
 
     return $input;

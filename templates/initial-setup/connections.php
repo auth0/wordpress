@@ -59,10 +59,6 @@ lock.once('shown', function() {
   showLock();
 });
 
-lock.once('signin ready', function() {
-	updateConnectionsSize();
-});
-
 lock.once('signin success', function() {
   showLock();
 });
@@ -92,7 +88,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		};
 
 		showLock()
-  	updateConnectionsSize();
 
 		jQuery.post(ajaxurl, data, function(response) {
 			callback();

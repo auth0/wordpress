@@ -22,9 +22,18 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
       $type = strtolower( $_POST['profile-type'] );
     } 
 
-    $consent_url = $this->build_consent_url($type);
+    if (isset($_REQUEST['apitoken']) && !empty($_REQUEST['apitoken'])) {
 
-    wp_redirect($consent_url);
+      $token = $_REQUEST['apitoken'];
+      $domain = $_REQUEST['domain'];
+
+      $consent_callback = new WP_Auth0_InitialSetup_Consent($this->a0_options);
+      $consent_callback->callback_with_token($domain, $token, $type);
+
+    } else {
+      $consent_url = $this->build_consent_url($type);
+      wp_redirect($consent_url);
+    }
     exit();
   }
 

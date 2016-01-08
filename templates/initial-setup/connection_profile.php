@@ -42,17 +42,46 @@
 
         <input type="hidden" value="" name="profile-type" id="profile-type"/>
 
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="connectionSelectedModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Important</h4>
+                <h4 class="modal-title" id="connectionSelectedModalLabel">Important</h4>
               </div>
               <div class="modal-body">
                 <p><?php _e('This wizard gets you started with the Auth0 for WordPress plug-in. You\'ll be transferred to Auth0 and can login or sign-up. Then you\'ll authorize the plug-in and configure identity providers, whether social or enterprise connections.', WPA0_LANG); ?></p>
                 <p><?php _e('Finally, you\'ll migrate your own WordPress administrator account to Auth0, ready to configure the plug-in through the WordPress dashboard.', WPA0_LANG); ?></p>
                 <p><b><?php echo _e('This plug-in replaces the standard WordPress login screen. The experience is improved of course, but different.  By default, there is a link to the regular WordPress login screen should you need it.'); ?></b></p>
+                <p class="text-center"><span class="a0-button link" id="manuallySetToken">This website is not accesible from internet</span></p>
+              </div>
+              <div class="modal-footer">
+                <input type="submit" class="a0-button primary" value="Continue"/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="enterTokenModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="enterTokenModalModalLabel">Important</h4>
+              </div>
+              <div class="modal-body">
+                <p>
+                  <?php _e('To complete the plugin\'s initial setup, you will need to manually create an api token on the', WPA0_LANG); ?>
+                  <a href="https://auth0.com/docs/api/v2" target="_blank"><?php echo __( 'token generator', WPA0_LANG ); ?></a>
+                  <?php echo __( ' with the following scopes ', WPA0_LANG ); ?>
+                  <code>create and update clients</code>, <code>update, create and read connections</code>, <code>create and delete rules</code> and <code>read, update and create users</code>,
+                   and paste it here:
+                </p>
+                <input type="text" name="apitoken" />
+                <p>
+                  Also, enter your account subdomain:
+                </p>
+                <input type="text" name="domain" placeholder="youraccount.auth0.com" />
               </div>
               <div class="modal-footer">
                 <input type="submit" class="a0-button primary" value="Continue"/>
@@ -80,7 +109,13 @@
   jQuery('.profile .a0-button').click(function(e){
     e.preventDefault();
     jQuery('#profile-type').val(jQuery(this).val());
-    jQuery('#myModal').modal();
+    jQuery('#connectionSelectedModal').modal();
+    return false;
+  });
+  jQuery('#manuallySetToken').click(function(e){
+    e.preventDefault();
+    jQuery('#enterTokenModal').modal();
+    jQuery('#connectionSelectedModal').modal('hide');
     return false;
   });
 </script>

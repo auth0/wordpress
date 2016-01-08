@@ -14,29 +14,42 @@ class WP_Auth0_InitialSetup_Consent {
   public function render($step) {
   }
 
-  public function callback() {
-    $sucess = $this->store_token_domain();
+  public function callback_with_token($domain, $access_token, $type) { 
 
-    if ( ! $sucess) {
-      wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=cant_exchange_token' ) );
-      exit;
-    }
+    $this->a0_options->set( 'auth0_app_token', $access_token );
+    $this->a0_options->set( 'domain', $domain );
 
-    if ( ! isset($_REQUEST['state']) ) {
-      wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=missing_state' ) );
-      exit;
-    }
-
-    $this->state = $_REQUEST['state'];
-    $this->a0_options->set( "account_profile" , $this->state );
+    $this->state = $type;
 
     if ( ! in_array($this->state, array('social', 'enterprise') ) ) {
       wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=invalid_state' ) );
       exit;
     }
 
+    $this->a0_options->set( "account_profile" , $this->state );
+
     $name = get_bloginfo('name');
     $this->consent_callback($name);
+
+  }
+
+  public function callback() {
+
+    $access_token = $this->exchange_code();
+
+    if ($access_token === null) {
+      wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=cant_exchange_token' ) );
+      exit;
+    }
+
+    $app_domain = $this->parse_token_domain($access_token);
+
+    if ( ! isset($_REQUEST['state']) ) {
+      wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=missing_state' ) );
+      exit;
+    }
+
+    $this->callback_with_token($app_domain, $access_token, $_REQUEST['state']);
   }
 
   protected function parse_token_domain($token) {
@@ -68,22 +81,6 @@ class WP_Auth0_InitialSetup_Consent {
 
     return $obj->access_token;
   }
-
-  public function store_token_domain() {
-    $access_token = $this->exchange_code();
-
-    if ($access_token === null) {
-        return false;
-    }
-
-    $app_domain = $this->parse_token_domain($access_token);
-
-    $this->a0_options->set( 'auth0_app_token', $access_token );
-    $this->a0_options->set( 'domain', $app_domain );
-
-    return true;
-  }
-
 
   public function consent_callback($name) {
 

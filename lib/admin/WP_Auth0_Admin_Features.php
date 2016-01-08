@@ -12,9 +12,6 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
     'incomerule_validation',
     'fullcontact_validation',
     'mfa_validation',
-    'socialfacebook_validation',
-    'socialtwitter_validation',
-    'socialgoogle_validation',
   );
 
   public function init() {
