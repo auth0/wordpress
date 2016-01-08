@@ -41,7 +41,16 @@
 					<?php } ?>
 				</div>
 			</div>
-			<div class="lock col-sm-5 hidden-xs" id="lock-container"></div>
+			<div class="lock col-sm-5 hidden-xs">
+				<div class="loading">				
+					<div class="vcenter-wrapper">
+						<div class="centrix">
+							<div class="a0-spinner-css"></div>
+			      </div>
+		      </div>
+				</div>
+				<div id="lock-container"></div>
+			</div>
 		</div>
 
 		<div class="a0-buttons">
@@ -113,14 +122,20 @@ document.addEventListener("DOMContentLoaded", function() {
 			}
 		}
 
+		jQuery('.lock').addClass('loading');
+		window.onbeforeunload = confirmExit;
 		q.push(data);
 
 	});
 
-	// q.drain = function() {
-	// 	console.log('show lock');
-
-	// }
+	q.drain = function() {
+		jQuery('.lock').removeClass('loading');
+		window.onbeforeunload = null;
+	}
 
 });
+
+function confirmExit() {
+    return "There are some pending actions. if you leave the page now, some connection will not be updated.";
+}
 </script>

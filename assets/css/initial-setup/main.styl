@@ -462,6 +462,61 @@ p.a0-message {
 
 .lock {
   padding-top:30px;
+  position:relative;
+  
+  .loading {
+    position:absolute;
+    top:30px;
+    bottom:0;
+    background: rgba(0,0,0,0.7);
+    z-index:9999;
+    margin:auto;
+    width:300px;
+    border-radius: 3px;
+    display:none;
+    
+    .vcenter-wrapper {
+      display: table;
+      height: 100%;
+      margin: auto;
+    }
+    
+    .centrix {
+      display: table-cell;
+      vertical-align: middle;
+    }
+    
+    .a0-spinner-css{
+      font-size: 10px;
+      position: relative;
+      text-indent: -9999em;
+      border-top: 2px solid rgba(255,255,255,0.5);
+      border-right: 2px solid rgba(255,255,255,0.5);
+      border-bottom: 2px solid rgba(255,255,255,0.5);
+      border-left: 2px solid rgba(255,255,255,1);
+      -webkit-animation: loaderAnim .8s infinite linear;
+      animation: loaderAnim .8s infinite linear;
+      -webkit-border-radius: 50%;
+      border-radius: 50%;
+      background-clip: padding-box;
+      width: 40px;
+      height: 40px;
+    }
+
+  }
+  
+  &.loading .loading {
+    display:block;
+  }
+  &.loading #a0-lock {
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -o-filter: blur(5px);
+    -ms-filter: blur(5px);
+    filter: blur(5px);
+    overflow:hidden;
+  }
+
   #a0-lock {
     margin:auto;
     width:300px;
@@ -623,3 +678,4 @@ p.a0-message {
   margin:30px;
   width: initial;
 }
+
