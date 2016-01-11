@@ -217,7 +217,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     if ( $old_options['migration_ws'] != $input['migration_ws'] ) {
 
       if ( 1 == $input['migration_ws'] ) {
-        $secret = $this->options->get( 'client_secret' );
+        $secret = $input['client_secret'];
         $token_id = uniqid();
         $input['migration_token'] = JWT::encode(array('scope' => 'migration_ws', 'jti' => $token_id), JWT::urlsafeB64Decode( $secret ));
         $input['migration_token_id'] = $token_id;
@@ -236,7 +236,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
         $input['migration_token'] = null;
         $input['migration_token_id'] = null;
 
-        $response = WP_Auth0_Api_Client::update_connection($input['domain'], $this->options->get( 'auth0_app_token' ), $old_options['migration_connection_id'], array(
+        $response = WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $old_options['migration_connection_id'], array(
           'options' => array(
             'enabledDatabaseCustomization' => false,
             'import_mode' => false
@@ -258,9 +258,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
   public function link_accounts_validation( $old_options, $input ) {
     $link_script = WP_Auth0_RulesLib::$link_accounts['script'];
-    $link_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $this->options->get( 'client_id' ), $link_script);
-    $link_script = str_replace('REPLACE_WITH_YOUR_DOMAIN', $this->options->get( 'domain' ), $link_script);
-    $link_script = str_replace('REPLACE_WITH_YOUR_API_TOKEN', $this->options->get( 'auth0_app_token' ), $link_script);
+    $link_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $link_script);
+    $link_script = str_replace('REPLACE_WITH_YOUR_DOMAIN', $input['domain'], $link_script);
+    $link_script = str_replace('REPLACE_WITH_YOUR_API_TOKEN', $input['auth0_app_token'], $link_script);
     return $this->rule_validation($old_options, $input, 'link_auth0_users', WP_Auth0_RulesLib::$link_accounts['name'], $link_script);
   }
 

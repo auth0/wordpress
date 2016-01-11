@@ -27,9 +27,6 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_income', 'name' => 'Store zipcode income', 'function' => 'render_income' ),
       
     ) );
-
-    $options_name = $this->options->get_options_name();
-    register_setting( $options_name . '_features', $options_name, array( $this, 'input_validator' ) );
   }
 
   public function render_password_policy() {
@@ -164,7 +161,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function sso_validation( $old_options, $input ) {
     $input['sso'] = ( isset( $input['sso'] ) ? $input['sso'] : 0 );
     if ($old_options['sso'] != $input['sso'] && 1 == $input['sso']) {
-      if ( false === WP_Auth0_Api_Client::update_client($input['domain'], $this->options->get( 'auth0_app_token' ), $input['client_id'],$input['sso'] == 1) ) {
+      if ( false === WP_Auth0_Api_Client::update_client($input['domain'], $input['auth0_app_token'], $input['client_id'],$input['sso'] == 1) ) {
 
         $error = __( 'There was an error updating your Auth0 App to enable SSO. To do it manually, turn it on ', WPA0_LANG );
         $error .= '<a href="https://auth0.com/docs/sso/single-sign-on#1">HERE</a>.';
@@ -181,12 +178,12 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
     if ($old_options['password_policy'] != $input['password_policy']) {
 
-      $connections = WP_Auth0_Api_Client::search_connection($input['domain'], $this->options->get( 'auth0_app_token' ), 'auth0');
+      $connections = WP_Auth0_Api_Client::search_connection($input['domain'], $input['auth0_app_token'], 'auth0');
 
       foreach ($connections as $connection) {
 
         if ( in_array($input['client_id'], $connection->enabled_clients) ) {
-          if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $this->options->get( 'auth0_app_token' ), $connection->id, array(
+          if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $connection->id, array(
             'options' => array(
               'passwordPolicy' => $input['password_policy'],
             )

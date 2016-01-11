@@ -22,9 +22,6 @@ class WP_Auth0_Admin_Dashboard extends WP_Auth0_Admin_Generic {
 
     ) );
 
-    $options_name = $this->options->get_options_name();
-    register_setting( $options_name . '_dashboard', $options_name, array( $this, 'input_validator' ) );
-
   }
 
   public function render_dashboard_description() {

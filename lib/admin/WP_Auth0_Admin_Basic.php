@@ -1,3 +1,5 @@
+
+
 <?php
 
 class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
@@ -23,9 +25,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
 
     ) );
-
-    $options_name = $this->options->get_options_name();
-    register_setting( $options_name . '_basic', $options_name, array( $this, 'input_validator' ) );
   }
 
 
@@ -146,8 +145,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
     $input['allow_signup'] = ( isset( $input['allow_signup'] ) ? $input['allow_signup'] : 0 );
 
     // Only replace the secret or token if a new value was set. If not, we will keep the last one entered.
-    $input['client_secret'] = (isset($input['client_secret']) ? $input['client_secret'] : $old_options['client_secret']);
-    $input['auth0_app_token'] = (isset($input['auth0_app_token']) ? $input['auth0_app_token'] : $old_options['auth0_app_token']);
+    $input['client_secret'] = (!empty($input['client_secret']) ? $input['client_secret'] : $old_options['client_secret']);
+    $input['auth0_app_token'] = (!empty($input['auth0_app_token']) ? $input['auth0_app_token'] : $old_options['auth0_app_token']);
 
     return $input;
   }
@@ -166,7 +165,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
       $this->add_validation_error( $error );
       $completeBasicData = false;
     }
-    if ( empty( $input['client_secret'] ) ) {
+    if ( empty( $input['client_secret'] ) && empty( $old_options['client_secret'] ) ) {
       $error = __( 'You need to specify a client secret', WPA0_LANG );
       $this->add_validation_error( $error );
       $completeBasicData = false;

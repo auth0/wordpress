@@ -12,6 +12,7 @@
 	    <?php } ?>
 	    <?php settings_errors(); ?>
 		<form action="options.php" method="post" onsubmit="return presubmit();">
+			<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_basic' ); ?>
 
 			<ul class="nav nav-tabs" role="tablist">
 		    <li role="presentation"><a href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Basic</a></li>
@@ -24,15 +25,12 @@
 
 		  <div class="tab-content">
 		    <div role="tabpanel" class="tab-pane" id="basic">
-		    	<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_basic' ); ?>
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_basic' ); ?>
 		    </div>
 		    <div role="tabpanel" class="tab-pane active" id="features">
-		    	<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_features' ); ?>
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_features' ); ?>
 		    </div>
 		    <div role="tabpanel" class="tab-pane" id="connections">
-
 		    	<div class="connections row">
 					  <?php foreach($social_connections as $social_connection) { ?>
 					    <div class="connection col-sm-4 col-xs-6">
@@ -47,18 +45,14 @@
 					    </div>
 					  <?php } ?>
 					</div>
-
 		    </div>
 		    <div role="tabpanel" class="tab-pane" id="appearance">
-		    	<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_appearance' ); ?>
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_appearance' ); ?>
 		    </div>
 		    <div role="tabpanel" class="tab-pane" id="advanced">
-		    	<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_advanced' ); ?>
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_advanced' ); ?>
 		    </div>
 		    <div role="tabpanel" class="tab-pane" id="dashboard">
-		    	<?php settings_fields( WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '_dashboard' ); ?>
 					<?php do_settings_sections( WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '_dashboard'); ?>
 		    </div>
 		  </div>
@@ -120,7 +114,7 @@
 
 		}, 1);
 
-		jQuery('.a0-switch input').click(function(e) {
+		jQuery('.connection .a0-switch input').click(function(e) {
 
 			var data = {
 				connection: e.target.value,

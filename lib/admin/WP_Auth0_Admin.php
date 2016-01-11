@@ -142,8 +142,24 @@ class WP_Auth0_Admin {
 
 		$this->sections['dashboard'] = new WP_Auth0_Admin_Dashboard($this->dashboard_options);
 		$this->sections['dashboard']->init();
+
+    register_setting($this->a0_options->get_options_name() . '_basic', $this->a0_options->get_options_name(), array($this, 'input_validator'));
+    register_setting($this->dashboard_options->get_options_name(), $this->dashboard_options->get_options_name(), array($this->sections['dashboard'], 'input_validator'));
 		
 	}
+
+  public function input_validator($input) {
+
+    $old_options = $this->a0_options->get_options();
+
+    foreach ($this->sections as $name => $section) {
+      if ($name !== 'dashboard') {
+        $input = $section->input_validator($input, $old_options);
+      }
+    }    
+
+    return $input;
+  }
 
 	public function create_account_message() {
 		?>

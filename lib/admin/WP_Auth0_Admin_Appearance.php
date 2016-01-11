@@ -23,9 +23,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict' ),
 
     ) );
-
-    $options_name = $this->options->get_options_name();
-    register_setting( $options_name . '_appearance', $options_name, array( $this, 'input_validator' ) );
   }
 
   public function render_remember_last_login() {
