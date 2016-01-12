@@ -6,6 +6,7 @@ class WP_Auth0_InitialSetup_Consent {
 
   protected $a0_options;
   protected $state;
+  protected $hasInternetConnection = true;
 
   public function __construct(WP_Auth0_Options $a0_options) {
       $this->a0_options = $a0_options;
@@ -14,10 +15,12 @@ class WP_Auth0_InitialSetup_Consent {
   public function render($step) {
   }
 
-  public function callback_with_token($domain, $access_token, $type) { 
+  public function callback_with_token($domain, $access_token, $type, $hasInternetConnection = true) { 
 
     $this->a0_options->set( 'auth0_app_token', $access_token );
     $this->a0_options->set( 'domain', $domain );
+
+    $this->hasInternetConnection = $hasInternetConnection;
 
     $this->state = $type;
 
@@ -119,11 +122,11 @@ class WP_Auth0_InitialSetup_Consent {
     $migration_token_id = $token_id;
 
     $operations = new WP_Auth0_Api_Operations($this->a0_options);
-    $response = $operations->enable_users_migration($this->a0_options->get( 'auth0_app_token' ), $migration_token);
+    $response = $operations->create_wordpress_connection($this->a0_options->get( 'auth0_app_token' ), $this->hasInternetConnection, $migration_token);
 
     $this->a0_options->set( "db_connection_id" , $response );
     $this->a0_options->set( "db_connection_enabled" , 1 );
-    $this->a0_options->set( "migration_ws" , 1 );
+    $this->a0_options->set( "migration_ws" , $this->hasInternetConnection ? 1 : 0 );
     $this->a0_options->set( "migration_token" , $migration_token );
     $this->a0_options->set( "migration_token_id" , $migration_token_id );
     $this->a0_options->set( "password_policy" , null );

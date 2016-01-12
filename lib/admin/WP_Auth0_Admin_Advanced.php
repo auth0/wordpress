@@ -226,10 +226,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
         $input['migration_token'] = JWT::encode(array('scope' => 'migration_ws', 'jti' => $token_id), JWT::urlsafeB64Decode( $secret ));
         $input['migration_token_id'] = $token_id;
 
-        // avoid creating a new connection, it needs to be done manually
-        // $operations = new WP_Auth0_Api_Operations($this->options);
-        // $response = $operations->enable_users_migration($this->options->get( 'auth0_app_token' ), $input['migration_token']);
-
         if ($response === false) {
           $error = __( 'There was an error enabling your custom database. Check how to do it manually ', WPA0_LANG );
           $error .= '<a href="https://manage.auth0.com/#/connections/database">HERE</a>.';

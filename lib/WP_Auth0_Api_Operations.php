@@ -7,45 +7,41 @@ class WP_Auth0_Api_Operations {
     $this->a0_options = $a0_options;
   }
 
-  public function enable_users_migration($app_token, $migration_token) {
+  public function create_wordpress_connection($app_token, $migration_enabled, $migration_token = null) {
 
     $domain = $this->a0_options->get( 'domain' );
     $client_id = $this->a0_options->get( 'client_id' );
-
-    $connections = WP_Auth0_Api_Client::search_connection($domain, $app_token, 'auth0');
-    $db_connection = null;
-
-    foreach($connections as $connection) {
-        if (in_array($client_id, $connection->enabled_clients)) {
-          $db_connection = $connection;
-        }
-    }
-
-    $login_script = str_replace('{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$login_script);
-    $login_script = str_replace('{THE_WS_URL}', get_home_url() . '/migration-ws-login', $login_script);
-
-    $get_user_script = str_replace('{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$get_user_script);
-    $get_user_script = str_replace('{THE_WS_URL}', get_home_url() . '/migration-ws-get-user', $get_user_script);
-
     $db_connection_name = 'DB-' . str_replace(' ', '-', get_bloginfo('name'));
 
-    $this->a0_options->set( "db_connection_name", $db_connection_name );
-
-    $response = WP_Auth0_Api_Client::create_connection($domain, $app_token, array(
+    $body = array(
       'name' => $db_connection_name,
       'strategy' => 'auth0',
       'enabled_clients' => array(
         $client_id
-      ),
-      'options' => array(
+      ));
+
+    if ($migration_enabled) {
+
+      $body['options'] = array(
         'enabledDatabaseCustomization' => true,
         'import_mode' => true,
         'customScripts' => array(
           'login' => $login_script,
           'get_user' => $get_user_script
         )
-      )
-    ));
+      );
+
+      $login_script = str_replace('{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$login_script);
+      $login_script = str_replace('{THE_WS_URL}', get_home_url() . '/migration-ws-login', $login_script);
+
+      $get_user_script = str_replace('{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$get_user_script);
+      $get_user_script = str_replace('{THE_WS_URL}', get_home_url() . '/migration-ws-get-user', $get_user_script);
+
+    }
+
+    $this->a0_options->set( "db_connection_name", $db_connection_name );
+
+    $response = WP_Auth0_Api_Client::create_connection($domain, $app_token, $body);
 
     if ($response === false) {
 
@@ -53,16 +49,21 @@ class WP_Auth0_Api_Operations {
 
     }
 
+    $connections = WP_Auth0_Api_Client::search_connection($domain, $app_token, 'auth0');
+    $db_connection = null;
+
     $migration_connection_id = $response->id;
 
-    if($db_connection !== null) {
+    foreach($connections as $connection) {
+        if ($migration_connection_id != $connection->id && in_array($client_id, $connection->enabled_clients)) {
+          $db_connection = $connection;
 
-      $enabled_clients = array_diff($db_connection->enabled_clients, array($client_id));
+          $enabled_clients = array_diff($db_connection->enabled_clients, array($client_id));
 
-      WP_Auth0_Api_Client::update_connection($domain, $app_token,$db_connection->id, array(
-        'enabled_clients' => array_values($enabled_clients)
-      ));
-
+          WP_Auth0_Api_Client::update_connection($domain, $app_token,$db_connection->id, array(
+            'enabled_clients' => array_values($enabled_clients)
+          ));
+        }
     }
 
     return $migration_connection_id;
