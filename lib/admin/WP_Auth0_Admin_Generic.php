@@ -56,8 +56,13 @@ class WP_Auth0_Admin_Generic {
   protected function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {
     $input[$key] = ( isset( $input[$key] ) ? $input[$key] : null );
 
+    if (($input[$key] !== null && $old_options[$key] === null) || ($input[$key] === null && $old_options[$key] !== null)) {
 
-    if ($input[$key] !== null && $old_options[$key] === null || $input[$key] === null && $old_options[$key] !== null) {
+      // var_dump($key,
+      //   $input[$key],
+      //   $old_options[$key],
+      //   (($input[$key] !== null && $old_options[$key] === null) || ($input[$key] === null && $old_options[$key] !== null)));exit;
+
       try {
 
         $operations = new WP_Auth0_Api_Operations($this->options);

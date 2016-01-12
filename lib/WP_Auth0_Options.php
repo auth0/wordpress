@@ -72,7 +72,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
             'fullcontact_apikey' => null,
             'geo_rule' => null,
             'income_rule' => null,
-            'link_auth0_users' => false,
+            'link_auth0_users' => null,
             'remember_users_session' => false,
 
             'migration_ws' => false,

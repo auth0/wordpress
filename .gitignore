@@ -1,4 +1,5 @@
 .idea
 .DS_Store
+/account_cleanup/vendor/
 /vendor/
 /rules/

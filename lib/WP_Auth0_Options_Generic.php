@@ -38,6 +38,11 @@ class WP_Auth0_Options_Generic {
         update_site_option( $this->options_name, $options );
     }
 
+    public function save() {
+        $options = $this->get_options();
+        update_site_option( $this->options_name, $options );
+    }
+
     protected function defaults(){
         return array();
     }

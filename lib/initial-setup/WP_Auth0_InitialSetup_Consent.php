@@ -128,10 +128,6 @@ class WP_Auth0_InitialSetup_Consent {
     $this->a0_options->set( "migration_token_id" , $migration_token_id );
     $this->a0_options->set( "password_policy" , null );
 
-    $old_options = $this->a0_options->get_options();
-    var_dump($old_options);
-    exit;
-
     wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=2&profile=' . $this->state ) );
     exit();
 

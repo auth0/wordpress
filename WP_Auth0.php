@@ -117,6 +117,9 @@ class WP_Auth0 {
 
 		$edit_profile = new WP_Auth0_EditProfile($this->db_manager, $this->a0_options);
 		$edit_profile->init();
+
+		// $old_options = $this->a0_options->get_options();
+		// var_dump($old_options);exit;
 	}
 
 	function on_activate_redirect( $plugin ) {
@@ -267,6 +270,7 @@ class WP_Auth0 {
 	public function install() {
 		$this->db_manager->install_db();
 		$this->router->setup_rewrites();
+		$this->a0_options->save();
 
 		flush_rewrite_rules();
 	}
