@@ -11,6 +11,13 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     'loginredirection_validation',
   );
 
+  protected $router;
+  
+  public function __construct(WP_Auth0_Options_Generic $options, WP_Auth0_Routes $router) {
+    parent::__construct($options);
+    $this->router = $router;
+  }
+
   public function init() {
 
     $advancedOptions = array(
@@ -236,7 +243,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
         $input['migration_token'] = null;
         $input['migration_token_id'] = null;
 
-        $response = WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $old_options['migration_connection_id'], array(
+        $response = WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $old_options['db_connection_id'], array(
           'options' => array(
             'enabledDatabaseCustomization' => false,
             'import_mode' => false

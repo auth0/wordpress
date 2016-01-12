@@ -125,6 +125,14 @@
 
 		});
 
+		jQuery('#wpa0_fullcontact').click(function() {
+			if (this.checked) {
+				jQuery('.subelement.fullcontact').removeClass('hidden');
+			} else {
+				jQuery('.subelement.fullcontact').addClass('hidden');
+			}
+		});
+
 	});
 </script>
 

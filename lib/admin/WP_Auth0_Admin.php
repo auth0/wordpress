@@ -135,7 +135,7 @@ class WP_Auth0_Admin {
 
 		/* ------------------------- ADVANCED ------------------------- */
 
-		$this->sections['advanced'] = new WP_Auth0_Admin_Advanced($this->a0_options);
+		$this->sections['advanced'] = new WP_Auth0_Admin_Advanced($this->a0_options, $this->router);
 		$this->sections['advanced']->init();
 
 		/* ------------------------- DASHBOARD ------------------------- */
