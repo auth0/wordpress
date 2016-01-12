@@ -32,6 +32,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_auto_login_method', 'name' => 'Auto Login Method', 'function' => 'render_auto_login_method' ),
       array( 'id' => 'wpa0_ip_range_check', 'name' => 'Enable on IP Ranges', 'function' => 'render_ip_range_check' ),
       array( 'id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges', 'function' => 'render_ip_ranges' ),
+      array( 'id' => 'wpa0_extra_conf', 'name' => 'Extra settings', 'function' => 'render_extra_conf' ),
       array( 'id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url' ),
       array( 'id' => 'wpa0_metrics', 'name' => 'Anonymous data', 'function' => 'render_metrics' ),
 
@@ -62,6 +63,21 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       <div class="subelement">
         <span class="description"><?php echo __( 'This is the URL that all users will be redirected by default after login', WPA0_LANG ); ?></span>
       </div>
+    <?php
+  }
+
+  public function render_extra_conf() {
+    $v = $this->options->get( 'extra_conf' );
+    ?>
+
+    <textarea name="<?php echo $this->options->get_options_name(); ?>[extra_conf]" id="wpa0_extra_conf"><?php echo esc_attr( $v ); ?></textarea>
+    <div class="subelement">
+      <span class="description">
+        <?php echo __('This field is the Json that describes the options to call Lock with. It\'ll override any other option set here. See all the posible options ', WPA0_LANG); ?>
+        <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization"><?php echo __('here', WPA0_LANG); ?></a>
+        <?php echo __('(For example: {"disableResetAction": true }) ', WPA0_LANG); ?>
+      </span>
+    </div>
     <?php
   }
 
@@ -211,6 +227,15 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
     $input['metrics'] = ( isset( $input['metrics'] ) ? $input['metrics'] : 0 );
     $input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
+
+    if (trim($input["extra_conf"]) != '')
+    {
+      if (json_decode($input["extra_conf"]) === null)
+      {
+        $error = __("The Extra settings parameter should be a valid json object", WPA0_LANG);
+        self::add_validation_error($error);
+      }
+    }
 
     return $input;
   }
