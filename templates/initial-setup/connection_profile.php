@@ -71,17 +71,21 @@
               </div>
               <div class="modal-body">
                 <p>
-                  <?php _e('To complete the plugin\'s initial setup, you will need to manually create an api token on the', WPA0_LANG); ?>
+                  <?php _e('To complete the plugin\'s initial setup, you will need to enter your account subdomain:', WPA0_LANG); ?>
+                </p>
+                <input type="text" name="domain" placeholder="youraccount.auth0.com" />
+                <br><br>
+                <p>
+                  <?php _e('And manually create an api token on the', WPA0_LANG); ?>
                   <a href="https://auth0.com/docs/api/v2" target="_blank"><?php echo __( 'token generator', WPA0_LANG ); ?></a>
-                  <?php echo __( ' with the following scopes ', WPA0_LANG ); ?>
-                  <code>create and update clients</code>, <code>update, create and read connections</code>, <code>create and delete rules</code> and <code>read, update and create users</code>,
-                   and paste it here:
+                  <?php _e(' and paste it here:', WPA0_LANG); ?>
                 </p>
                 <input type="text" name="apitoken" />
                 <p>
-                  Also, enter your account subdomain:
+                  <small>
+                    Scopes required: <code>create and update clients</code>, <code>update, create and read connections</code>, <code>create and delete rules</code> and <code>read, update and create users</code>.
+                  </small>
                 </p>
-                <input type="text" name="domain" placeholder="youraccount.auth0.com" />
               </div>
               <div class="modal-footer">
                 <input type="submit" class="a0-button primary" value="Continue"/>
