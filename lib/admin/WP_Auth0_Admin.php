@@ -3,7 +3,6 @@
 class WP_Auth0_Admin {
 
 	protected $a0_options;
-	protected $dashboard_options;
 	protected $router;
 
 	protected $providers = array(
@@ -56,9 +55,8 @@ class WP_Auth0_Admin {
 
 	protected $sections = array();
 
-	public function __construct(WP_Auth0_Options $a0_options, WP_Auth0_Dashboard_Options $dashboard_options, WP_Auth0_Routes $router) {
+	public function __construct(WP_Auth0_Options $a0_options, WP_Auth0_Routes $router) {
 		$this->a0_options = $a0_options;
-		$this->dashboard_options = $dashboard_options;
 		$this->router = $router;
 	}
 
@@ -140,11 +138,10 @@ class WP_Auth0_Admin {
 
 		/* ------------------------- DASHBOARD ------------------------- */
 
-		$this->sections['dashboard'] = new WP_Auth0_Admin_Dashboard($this->dashboard_options);
+		$this->sections['dashboard'] = new WP_Auth0_Admin_Dashboard($this->a0_options);
 		$this->sections['dashboard']->init();
 
     register_setting($this->a0_options->get_options_name() . '_basic', $this->a0_options->get_options_name(), array($this, 'input_validator'));
-    register_setting($this->dashboard_options->get_options_name(), $this->dashboard_options->get_options_name(), array($this->sections['dashboard'], 'input_validator'));
 		
 	}
 
@@ -155,9 +152,7 @@ class WP_Auth0_Admin {
     $input['connections'] = $old_options['connections'];
 
     foreach ($this->sections as $name => $section) {
-      if ($name !== 'dashboard') {
-        $input = $section->input_validator($input, $old_options);
-      }
+      $input = $section->input_validator($input, $old_options);
     }    
 
     return $input;

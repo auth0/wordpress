@@ -21,7 +21,6 @@ class WP_Auth0 {
 
 	protected $db_manager;
 	protected $a0_options;
-	protected $dashboard_options;
 	protected $social_amplificator;
 	protected $router;
 
@@ -33,7 +32,6 @@ class WP_Auth0 {
 		$ip_checker->init();
 
 		$this->a0_options = WP_Auth0_Options::Instance();
-		$this->dashboard_options = WP_Auth0_Dashboard_Options::Instance();
 
 		$this->db_manager = new WP_Auth0_DBManager();
 		$this->db_manager->init();
@@ -88,7 +86,7 @@ class WP_Auth0 {
 		$metrics = new WP_Auth0_Metrics($this->a0_options);
 		$metrics->init();
 
-		$auth0_admin = new WP_Auth0_Admin($this->a0_options, $this->dashboard_options, $this->router);
+		$auth0_admin = new WP_Auth0_Admin($this->a0_options, $this->router);
 		$auth0_admin->init();
 
 		$error_log = new WP_Auth0_ErrorLog();
@@ -97,7 +95,7 @@ class WP_Auth0 {
 		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH($this->a0_options);
 		$configure_jwt_auth->init();
 
-		$dashboard_widgets = new WP_Auth0_Dashboard_Widgets($this->dashboard_options, $this->db_manager);
+		$dashboard_widgets = new WP_Auth0_Dashboard_Widgets($this->a0_options, $this->db_manager);
 		$dashboard_widgets->init();
 
 		$woocommerce_override = new WP_Auth0_WooCommerceOverrides($this);

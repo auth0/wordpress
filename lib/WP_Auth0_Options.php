@@ -88,6 +88,16 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
             // 'auto_provisioning' => true,
             'default_login_redirection' => home_url(),
+
+
+            //DASHBOARD
+            'chart_idp_type' => 'donut',
+            'chart_gender_type' => 'donut',
+            'chart_age_type' => 'donut',
+
+            'chart_age_from' => '10',
+            'chart_age_to' => '70',
+            'chart_age_step' => '5',
         );
     }
 }

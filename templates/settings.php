@@ -53,7 +53,7 @@
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_advanced' ); ?>
 		    </div>
 		    <div role="tabpanel" class="tab-pane" id="dashboard">
-					<?php do_settings_sections( WP_Auth0_Dashboard_Options::Instance()->get_options_name() . '_dashboard'); ?>
+					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_dashboard'); ?>
 		    </div>
 		  </div>
 

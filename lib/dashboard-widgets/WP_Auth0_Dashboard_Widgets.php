@@ -3,13 +3,13 @@
 class WP_Auth0_Dashboard_Widgets  {
 
 	protected $db_manager;
-	protected $dashboard_options;
+	protected $a0_options;
 
 	const UNKNOWN_KEY = 'unknown';
 
-	public function __construct(WP_Auth0_Dashboard_Options $dashboard_options, WP_Auth0_DBManager $db_manager) {
+	public function __construct(WP_Auth0_Options $a0_options, WP_Auth0_DBManager $db_manager) {
 		$this->db_manager = $db_manager;
-		$this->dashboard_options = $dashboard_options;
+		$this->a0_options = $a0_options;
 	}
 
 	public function init() {
@@ -87,9 +87,9 @@ class WP_Auth0_Dashboard_Widgets  {
 		$users = $this->db_manager->get_auth0_users();
 
 		$this->buckets = $this->get_buckets(
-			$this->dashboard_options->get('chart_age_from'),
-			$this->dashboard_options->get('chart_age_to'),
-			$this->dashboard_options->get('chart_age_step')
+			$this->a0_options->get('chart_age_from'),
+			$this->a0_options->get('chart_age_to'),
+			$this->a0_options->get('chart_age_step')
 		);
 
 		$usersData = array();
@@ -195,9 +195,9 @@ class WP_Auth0_Dashboard_Widgets  {
 
 
 		$widgets = array(
-			new WP_Auth0_Dashboard_Plugins_Age($this->dashboard_options),
-			new WP_Auth0_Dashboard_Plugins_Gender($this->dashboard_options),
-			new WP_Auth0_Dashboard_Plugins_IdP($this->dashboard_options),
+			new WP_Auth0_Dashboard_Plugins_Age($this->a0_options),
+			new WP_Auth0_Dashboard_Plugins_Gender($this->a0_options),
+			new WP_Auth0_Dashboard_Plugins_IdP($this->a0_options),
 			new WP_Auth0_Dashboard_Plugins_Location(),
 			new WP_Auth0_Dashboard_Plugins_Income(),
 			new WP_Auth0_Dashboard_Plugins_Signups(),
