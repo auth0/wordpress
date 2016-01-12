@@ -152,6 +152,8 @@ class WP_Auth0_Admin {
 
     $old_options = $this->a0_options->get_options();
 
+    $input['connections'] = $old_options['connections'];
+
     foreach ($this->sections as $name => $section) {
       if ($name !== 'dashboard') {
         $input = $section->input_validator($input, $old_options);
@@ -180,9 +182,9 @@ class WP_Auth0_Admin {
       'name' => $name,
       'provider' => $provider,
       'icon' => $icon,
-      'status' => $this->a0_options->get( "social_{$provider}" ),
-      'key' => $this->a0_options->get( "social_{$provider}_key" ),
-  		'secret' => $this->a0_options->get( "social_{$provider}_secret" ),
+      'status' => $this->a0_options->get_connection( "social_{$provider}" ),
+      'key' => $this->a0_options->get_connection( "social_{$provider}_key" ),
+  		'secret' => $this->a0_options->get_connection( "social_{$provider}_secret" ),
     );
   }
 

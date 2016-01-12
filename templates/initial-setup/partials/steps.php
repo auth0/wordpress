@@ -1,5 +1,5 @@
 <div class="a0-steps">  
-  <div class="row"><div class="a0-progress col-md-offset-3 col-md-3"></div></div>
+  <div class="row"><div class="a0-progress col-xs-offset-2 col-xs-4 col-sm-offset-3 col-sm-3"></div></div>
 
   <div class="steps row">
     

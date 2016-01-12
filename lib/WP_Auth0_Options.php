@@ -21,6 +21,21 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
         return array('facebook','twitter','google-oauth2');
     }
 
+    public function set_connection( $key, $value ){
+        $options = $this->get_options();
+        $options['connections'][$key] = $value;
+
+        $this->set('connections', $options['connections']);
+    }
+
+    public function get_connection( $key, $default = null ){
+        $options = $this->get_options();
+
+        if(!isset($options['connections'][$key]))
+            return apply_filters( 'wp_auth0_get_option', $default, $key );
+        return apply_filters( 'wp_auth0_get_option', $options['connections'][$key], $key );
+    }
+
     protected function defaults(){
         return array(
             'version' => 1,
@@ -67,19 +82,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
             'amplificator_title' => '',
             'amplificator_subtitle' => '',
 
-            'social_facebook' => 0,
-            'social_facebook_key' => null,
-            'social_facebook_secret' => null,
-            'social_facebook_message' => '',
-
-            'social_twitter' => 0,
-            'social_twitter_key' => null,
-            'social_twitter_secret' => null,
-            'social_twitter_message' => '',
-
-            'social_google-oauth2' => 0,
-            'social_google-oauth2_key' => null,
-            'social_google-oauth2_secret' => null,
+            'connections' => array(),
 
             'password_policy' => null,
 

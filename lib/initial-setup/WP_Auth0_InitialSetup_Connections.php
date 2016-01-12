@@ -81,9 +81,9 @@ class WP_Auth0_InitialSetup_Connections {
           'name' => $name,
           'provider' => $provider,
           'icon' => $icon,
-          'status' => $this->a0_options->get( "social_{$provider}" ),
-          'key' => $this->a0_options->get( "social_{$provider}_key" ),
-      		'secret' => $this->a0_options->get( "social_{$provider}_secret" ),
+          'status' => $this->a0_options->get_connection( "social_{$provider}" ),
+          'key' => $this->a0_options->get_connection( "social_{$provider}_key" ),
+      		'secret' => $this->a0_options->get_connection( "social_{$provider}_secret" ),
         );
       }
 
@@ -140,13 +140,13 @@ class WP_Auth0_InitialSetup_Connections {
 
         $provider = $this->get_provider($provider_name);
 
-        $old_input["social_{$provider_name}"] = $this->a0_options->get( "social_{$provider_name}" );
-        $old_input["social_{$provider_name}_key"] = $this->a0_options->get( "social_{$provider_name}_key" );
-        $old_input["social_{$provider_name}_secret"] = $this->a0_options->get( "social_{$provider_name}_secret" );
+        $old_input["social_{$provider_name}"] = $this->a0_options->get_connection( "social_{$provider_name}" );
+        $old_input["social_{$provider_name}_key"] = $this->a0_options->get_connection( "social_{$provider_name}_key" );
+        $old_input["social_{$provider_name}_secret"] = $this->a0_options->get_connection( "social_{$provider_name}_secret" );
 
         $input["social_{$provider_name}"] = ($_POST["enabled"] === "true");
-        $input["social_{$provider_name}_key"] = $this->a0_options->get( "social_{$provider_name}_key" );
-        $input["social_{$provider_name}_secret"] = $this->a0_options->get( "social_{$provider_name}_secret" );
+        $input["social_{$provider_name}_key"] = $this->a0_options->get_connection( "social_{$provider_name}_key" );
+        $input["social_{$provider_name}_secret"] = $this->a0_options->get_connection( "social_{$provider_name}_secret" );
 
         try {
           $input = $operations->social_validation($this->a0_options->get( 'auth0_app_token' ), $old_input, $input, $provider_name, isset($provider['options']) ? $provider['options'] : null );
@@ -155,7 +155,7 @@ class WP_Auth0_InitialSetup_Connections {
         }
 
         foreach ($input as $key => $value) {
-          $this->a0_options->set( $key, $value );
+          $this->a0_options->set_connection( $key, $value );
         }
 
         exit;
@@ -170,9 +170,9 @@ class WP_Auth0_InitialSetup_Connections {
         foreach ($this->providers as $provider) {
           $provider_name = $provider['provider'];
 
-          $old_input["social_{$provider_name}"] = $this->a0_options->get( "social_{$provider_name}" );
-          $old_input["social_{$provider_name}_key"] = $this->a0_options->get( "social_{$provider_name}_key" );
-          $old_input["social_{$provider_name}_secret"] = $this->a0_options->get( "social_{$provider_name}_secret" );
+          $old_input["social_{$provider_name}"] = $this->a0_options->get_connection( "social_{$provider_name}" );
+          $old_input["social_{$provider_name}_key"] = $this->a0_options->get_connection( "social_{$provider_name}_key" );
+          $old_input["social_{$provider_name}_secret"] = $this->a0_options->get_connection( "social_{$provider_name}_secret" );
 
           if (isset($_REQUEST["social_{$provider_name}"])) {
             $input["social_{$provider_name}"] = $_REQUEST["social_{$provider_name}"];
@@ -188,7 +188,7 @@ class WP_Auth0_InitialSetup_Connections {
         }
 
         foreach ($input as $key => $value) {
-          $this->a0_options->set( $key, $value );
+          $this->a0_options->set_connection( $key, $value );
         }
 
         wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=5' ) );
