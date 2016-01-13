@@ -55,6 +55,7 @@ class WP_Auth0_CustomDBLib {
             nickname:    info.data.display_name,
             email:       info.data.user_email,
             name:        info.data.user_nicename,
+            email_verified: true
           };
 
           callback(null, profile);
