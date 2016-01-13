@@ -5,6 +5,8 @@ class WP_Auth0_CustomDBLib {
   public static $login_script = '
   function login (email, password, callback) {
 
+    var request = require("request");
+
     request.post("{THE_WS_URL}", {
       form:{username:email, password:password},
       headers:{"Authorization":"Bearer {THE_WS_TOKEN}"}
@@ -39,6 +41,8 @@ class WP_Auth0_CustomDBLib {
   public static $get_user_script = '
   function getByEmail (email, callback) {
 
+    var request = require("request");
+    
     request.post("{THE_WS_URL}", {
       form:{username:email},
       headers:{"Authorization":"Bearer {THE_WS_TOKEN}"}

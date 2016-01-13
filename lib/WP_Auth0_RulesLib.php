@@ -20,6 +20,9 @@ function (user, context, callback) {
     return callback(null, user, context);
   }
 
+  var request = require('request');
+  var async = require('async');
+
   var userApiUrl = 'https://REPLACE_WITH_YOUR_DOMAIN/api/v2/users';
   request({
    url: userApiUrl,
@@ -116,6 +119,8 @@ function (user, context, callback) {
     return callback(null, user, context);
   }
 
+  var request = require('request');
+
   request({
     url: 'https://api.fullcontact.com/v2/person.json',
     qs: {
@@ -156,6 +161,8 @@ function (user, context, callback) {
     } else {
         setIncomeData(global.incomeData, user, geoip, context, callback);
     }
+
+    var request = require('request');
 
     function retrieveIncomeData(user, geoip, context, callback) {
         request({
