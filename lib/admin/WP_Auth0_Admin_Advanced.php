@@ -114,7 +114,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     ?>
       <div class="subelement">
         <span class="description"><?php echo __( 'Users migration is enabled. If you disable this setting, it can not be automatically enabled again, it needs to be done manually in the Auth0 dashboard.', WPA0_LANG ); ?></span>
-        <br><span class="description"><?php echo __( 'Security token:', WPA0_LANG ); ?><code><?php echo $token; ?></code></span>
+        <br>
+        <span class="description"><?php echo __( 'Security token:', WPA0_LANG ); ?></span>
+        <textarea class="code" disabled><?php echo $token; ?></textarea>
       </div>
     <?php
     } else {
@@ -277,6 +279,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
       $this->router->setup_rewrites($input['migration_ws'] == 1);
       flush_rewrite_rules();
+    } else {
+      $input['migration_token'] = $old_options['migration_token'];
+      $input['migration_token_id'] = $old_options['migration_token_id'];
     }
     return $input;
   }
