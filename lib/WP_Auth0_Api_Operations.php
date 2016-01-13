@@ -30,6 +30,7 @@ class WP_Auth0_Api_Operations {
 
       $body['options'] = array(
         'enabledDatabaseCustomization' => true,
+        "requires_username" => true,
         'import_mode' => true,
         'customScripts' => array(
           'login' => $login_script,
