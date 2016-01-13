@@ -22,6 +22,12 @@ class WP_Auth0_Api_Operations {
 
     if ($migration_enabled) {
 
+      $login_script = str_replace('{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$login_script);
+      $login_script = str_replace('{THE_WS_URL}', get_home_url() . '/migration-ws-login', $login_script);
+
+      $get_user_script = str_replace('{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$get_user_script);
+      $get_user_script = str_replace('{THE_WS_URL}', get_home_url() . '/migration-ws-get-user', $get_user_script);
+
       $body['options'] = array(
         'enabledDatabaseCustomization' => true,
         'import_mode' => true,
@@ -30,12 +36,6 @@ class WP_Auth0_Api_Operations {
           'get_user' => $get_user_script
         )
       );
-
-      $login_script = str_replace('{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$login_script);
-      $login_script = str_replace('{THE_WS_URL}', get_home_url() . '/migration-ws-login', $login_script);
-
-      $get_user_script = str_replace('{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$get_user_script);
-      $get_user_script = str_replace('{THE_WS_URL}', get_home_url() . '/migration-ws-get-user', $get_user_script);
 
     }
 
