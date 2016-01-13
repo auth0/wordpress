@@ -78,6 +78,9 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
             'migration_ws' => false,
             'migration_token' => null,
             'migration_token_id' => null,
+            'migration_ips_filter' => false,
+            'migration_ips' => null,
+            'valid_proxy_ip' => null,
 
             'amplificator_title' => '',
             'amplificator_subtitle' => '',

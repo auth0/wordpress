@@ -22,6 +22,17 @@ class WP_Auth0_Api_Operations {
 
     if ($migration_enabled) {
 
+      $ipCheck = new WP_Auth0_Ip_Check();
+      $ips = $ipCheck->get_ips_by_domain($domain);
+
+      if ($ips) {
+        $this->a0_options->set('migration_ips', $ips);
+        $this->a0_options->set('migration_ips_filter', true);
+      } else {
+        $this->a0_options->set('migration_ips', null);
+        $this->a0_options->set('migration_ips_filter', false);
+      }
+
       $login_script = str_replace('{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$login_script);
       $login_script = str_replace('{THE_WS_URL}', get_home_url() . '/migration-ws-login', $login_script);
 

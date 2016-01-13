@@ -1,5 +1,82 @@
 <?php
 class WP_Auth0_Ip_Check {
+
+	protected $valid_webtask_ips = array(
+		'us' => '138.91.154.99,54.221.228.15,54.183.64.135,54.67.77.38,54.67.15.170,54.183.204.205,54.173.21.107,54.85.173.28',
+		'eu' => '52.28.56.226,52.28.45.240,52.16.224.164,52.16.193.66',
+		'au' => '52.64.84.177,52.64.111.197',
+	);
+
+	protected $a0_options;
+
+	public function __construct(WP_Auth0_Options $a0_options = null) {
+		$this->a0_options = $a0_options;
+	}
+
+	public function get_ips_by_domain($domain) {
+		if (strpos($domain, 'au.auth0.com') !== false) {
+			return $this->valid_webtask_ips['au'];
+		}
+		elseif (strpos($domain, 'eu.auth0.com') !== false) {
+			return $this->valid_webtask_ips['eu'];	
+		}
+		elseif (strpos($domain, 'auth0.com') !== false) {
+			return $this->valid_webtask_ips['us'];
+		}
+		return null;
+	}
+
+	protected function get_request_ip() {
+		$valid_proxy_ip = $this->a0_options->get('valid_proxy_ip');
+
+		if ($valid_proxy_ip) {
+			if ($_SERVER['REMOTE_ADDR'] == $valid_proxy_ip) {
+				return $_SERVER['HTTP_X_FORWARDED_FOR'];
+			}
+		} else {
+			return $_SERVER['REMOTE_ADDR'];
+		}
+
+		return null;
+	}
+
+	protected function process_ip_list($ip_list) {
+		$raw = explode( ",", $ip_list );
+
+		$ranges = array();
+		foreach ( $raw as $r ) {
+			$d = explode( '-', $r );
+
+			if ( count( $d ) < 2 ) {
+				$ranges[] = array(
+					'from' => trim( $d[0] ),
+					'to' => trim( $d[0] ),
+				);
+			} else {
+				$ranges[] = array(
+					'from' => trim( $d[0] ),
+					'to' => trim( $d[1] ),
+				);
+			}
+		}
+		return $ranges;
+	}	
+	public function connection_is_valid($valid_ips) {
+		$ip = $this->get_request_ip();
+		$valid_ip_ranges = $this->process_ip_list($valid_ips);
+
+		foreach ( $valid_ip_ranges as $range ) {
+			$in_range = $this->in_range( $ip, $range );
+			if ( $in_range ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+// LEGACY
 	public function init() {
 		if ( ! WP_Auth0_Options::Instance()->get( 'ip_range_check' ) || is_admin() ) {
 			return;
@@ -49,13 +126,16 @@ class WP_Auth0_Ip_Check {
 			$d = explode( '-', $r );
 
 			if ( count( $d ) < 2 ) {
-				continue;
+				$ranges[] = array(
+					'from' => trim( $d[0] ),
+					'to' => trim( $d[0] ),
+				);
+			} else {
+				$ranges[] = array(
+					'from' => trim( $d[0] ),
+					'to' => trim( $d[1] ),
+				);
 			}
-
-			$ranges[] = array(
-				'from' => trim( $d[0] ),
-				'to' => trim( $d[1] ),
-			);
 		}
 
 		return $ranges;

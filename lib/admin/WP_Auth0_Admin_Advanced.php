@@ -25,6 +25,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_remember_users_session', 'name' => 'Remember users session', 'function' => 'render_remember_users_session' ),
       array( 'id' => 'wpa0_link_auth0_users', 'name' => 'Link users with same email', 'function' => 'render_link_auth0_users' ),
       array( 'id' => 'wpa0_migration_ws', 'name' => 'Users Migration', 'function' => 'render_migration_ws' ),
+      array( 'id' => 'wpa0_migration_ws_ips_filter', 'name' => 'Migration IPs whitelist', 'function' => 'render_migration_ws_ips_filter' ),
       array( 'id' => 'wpa0_auth0_implicit_workflow', 'name' => 'Auth0 Implicit flow', 'function' => 'render_auth0_implicit_workflow' ),
       array( 'id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL', 'function' => 'render_default_login_redirection' ),
       array( 'id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email' ),
@@ -32,6 +33,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_auto_login_method', 'name' => 'Auto Login Method', 'function' => 'render_auto_login_method' ),
       array( 'id' => 'wpa0_ip_range_check', 'name' => 'Enable on IP Ranges', 'function' => 'render_ip_range_check' ),
       array( 'id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges', 'function' => 'render_ip_ranges' ),
+      array( 'id' => 'wpa0_valid_proxy_ip', 'name' => 'Valid Proxy IP', 'function' => 'render_valid_proxy_ip' ),
       array( 'id' => 'wpa0_extra_conf', 'name' => 'Extra settings', 'function' => 'render_extra_conf' ),
       array( 'id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url' ),
       array( 'id' => 'wpa0_metrics', 'name' => 'Anonymous data', 'function' => 'render_metrics' ),
@@ -129,6 +131,21 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
   }
 
+  public function render_migration_ws_ips_filter() {
+    $v = $this->options->get( 'migration_ips_filter' );
+    $list = $this->options->get( 'migration_ips' );
+
+    echo $this->render_a0_switch("wpa0_auth0_migration_ips_filter", "migration_ips_filter", 1, 1 == $v);
+
+    ?>
+      <div class="subelement">
+        <textarea name="migration_ips_filter"><?php echo $list; ?></textarea>
+        <span class="description"><?php echo __( 'Only requests from this IPs will be allowed to the migration WS.', WPA0_LANG ); ?></span>
+      </div>
+    <?php
+
+  }
+
   public function render_auth0_implicit_workflow() {
     $v = absint( $this->options->get( 'auth0_implicit_workflow' ) );
 
@@ -175,6 +192,16 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     <textarea cols="25" name="<?php echo $this->options->get_options_name(); ?>[ip_ranges]" id="wpa0_ip_ranges"><?php echo esc_textarea( $v ); ?></textarea>
     <div class="subelement">
       <span class="description"><?php echo __( 'Only one range per line! Range format should be as: <code>xx.xx.xx.xx - yy.yy.yy.yy</code> (spaces will be trimmed)', WPA0_LANG ); ?></span>
+    </div>
+    <?php
+  }
+
+  public function render_valid_proxy_ip() {
+    $v = $this->options->get( 'valid_proxy_ip' );
+    ?>
+    <input type="text" name="<?php echo $this->options->get_options_name(); ?>[valid_proxy_ip]" id="wpa0_valid_proxy_ip" value="<?php echo esc_attr( $v ); ?>"/>
+    <div class="subelement">
+      <span class="description"><?php echo __( 'If you are using a load balancer or a proxy, you will need to whitelist its ip in order to enable ip checks for logins or migration webservices.', WPA0_LANG ); ?></span>
     </div>
     <?php
   }
@@ -229,6 +256,11 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
     $input['metrics'] = ( isset( $input['metrics'] ) ? $input['metrics'] : 0 );
     $input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
+
+    $input['migration_ips_filter'] =  ( isset( $input['migration_ips_filter'] ) ? $input['migration_ips_filter'] : 0 );
+    $input['migration_ips'] = sanitize_text_field($old_options['migration_ips']);
+
+    $input['valid_proxy_ip'] = ( isset( $input['valid_proxy_ip'] ) ? $input['valid_proxy_ip'] : null );
 
     if (trim($input["extra_conf"]) != '')
     {

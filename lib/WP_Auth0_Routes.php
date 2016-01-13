@@ -67,6 +67,11 @@ class WP_Auth0_Routes {
 
     if ( $this->a0_options->get('migration_ws') == 0 ) return;
 
+    if ($this->a0_options->get('migration_ips_filter')){
+      $ipCheck = new WP_Auth0_Ip_Check($this->a0_options);
+      if (!$ipCheck->connection_is_valid($this->a0_options->get('migration_ips'))) return;
+    }
+
     $authorization = $this->getAuthorizationHeader();
     $authorization = trim(str_replace('Bearer ', '', $authorization));
 
@@ -76,43 +81,43 @@ class WP_Auth0_Routes {
     $user = null;
 
     try {
-        if (empty($authorization)) {
-            throw new Exception('Unauthorized');
+      if (empty($authorization)) {
+        throw new Exception('Unauthorized');
+      }
+
+      $token = JWT::decode($authorization, JWT::urlsafeB64Decode( $secret ), array('HS256'));
+
+      if ($token->jti != $token_id) {
+        throw new Exception('Invalid token id');
+      }
+
+      if (!isset($_POST['username'])) {
+        throw new Exception('username is required');
+      }
+
+      if (!isset($_POST['password'])) {
+        throw new Exception('password is required');
+      }
+
+      $username = $_POST['username'];
+      $password = $_POST['password'];
+
+      $user = wp_authenticate($username, $password);
+
+      if ($user instanceof WP_Error) {
+        WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws_login',$user );
+        $user = array('error' => 'invalid credentials');
+      } else {
+        if ($user instanceof WP_User) {
+          unset($user->data->user_pass);
         }
 
-        $token = JWT::decode($authorization, JWT::urlsafeB64Decode( $secret ), array('HS256'));
-
-        if ($token->jti != $token_id) {
-            throw new Exception('Invalid token id');
-        }
-
-        if (!isset($_POST['username'])) {
-          throw new Exception('username is required');
-        }
-
-        if (!isset($_POST['password'])) {
-          throw new Exception('password is required');
-        }
-
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-
-        $user = wp_authenticate($username, $password);
-
-        if ($user instanceof WP_Error) {
-          WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws_login',$user );
-          $user = array('error' => 'invalid credentials');
-        } else {
-          if ($user instanceof WP_User) {
-            unset($user->data->user_pass);
-          }
-
-          $user = apply_filters( 'auth0_migration_ws_authenticated', $user );
-        }
+        $user = apply_filters( 'auth0_migration_ws_authenticated', $user );
+      }
     }
     catch(Exception $e) {
-        WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws_login', $e );
-        $user = array('error' => $e->getMessage());
+      WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws_login', $e );
+      $user = array('error' => $e->getMessage());
     }
 
     echo json_encode($user);
@@ -123,6 +128,11 @@ class WP_Auth0_Routes {
 
     if ( $this->a0_options->get('migration_ws') == 0 ) return;
 
+    if ($this->a0_options->get('migration_ips_filter')){
+      $ipCheck = new WP_Auth0_Ip_Check($this->a0_options);
+      if (!$ipCheck->connection_is_valid($this->a0_options->get('migration_ips'))) return;
+    }
+
     $authorization = $this->getAuthorizationHeader();
     $authorization = trim(str_replace('Bearer ', '', $authorization));
 
@@ -132,44 +142,44 @@ class WP_Auth0_Routes {
     $user = null;
 
     try {
-        if (empty($authorization)) {
-            throw new Exception('Unauthorized');
-        }
+      if (empty($authorization)) {
+        throw new Exception('Unauthorized');
+      }
 
-        $token = JWT::decode($authorization, JWT::urlsafeB64Decode( $secret ), array('HS256'));
+      $token = JWT::decode($authorization, JWT::urlsafeB64Decode( $secret ), array('HS256'));
 
-        if ($token->jti != $token_id) {
-            throw new Exception('Invalid token id');
-        }
+      if ($token->jti != $token_id) {
+        throw new Exception('Invalid token id');
+      }
 
-        if (!isset($_POST['username'])) {
-          throw new Exception('username is required');
-        }
+      if (!isset($_POST['username'])) {
+        throw new Exception('username is required');
+      }
 
-        $username = $_POST['username'];
+      $username = $_POST['username'];
 
-        $user = get_user_by('email', $username);
+      $user = get_user_by('email', $username);
 
-        if (!$user) {
-          $user = get_user_by('slug', $username);
-        }
+      if (!$user) {
+        $user = get_user_by('slug', $username);
+      }
 
-        if ($user instanceof WP_Error) {
-          WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws_get_user',$user );
+      if ($user instanceof WP_Error) {
+        WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws_get_user',$user );
+        $user = array('error' => 'invalid credentials');
+      } else {
+
+        if (! $user instanceof WP_User) {
           $user = array('error' => 'invalid credentials');
         } else {
-
-          if (! $user instanceof WP_User) {
-            $user = array('error' => 'invalid credentials');
-          } else {
-            unset($user->data->user_pass);
-            $user = apply_filters( 'auth0_migration_ws_authenticated', $user );
-          }
+          unset($user->data->user_pass);
+          $user = apply_filters( 'auth0_migration_ws_authenticated', $user );
         }
+      }
     }
     catch(Exception $e) {
-        WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws_get_user', $e );
-        $user = array('error' => $e->getMessage());
+      WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws_get_user', $e );
+      $user = array('error' => $e->getMessage());
     }
 
     echo json_encode($user);
