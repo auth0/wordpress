@@ -4,7 +4,7 @@
 
   <div class="container-fluid a0-final-step">
 
-    <svg width="90px" height="90px" viewBox="0 0 52 52" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="checkmark"> <circle cx="26" cy="26" r="25" fill="none" class="checkmark__circle"></circle> <path fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" class="checkmark__check"></path> </svg>
+    <svg width="90" height="90" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg" class="checkmark"><circle cx="26" cy="26" r="25" fill="none" class="checkmark__circle"/><path fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" class="checkmark__check"/></svg>
 
     <h1><?php _e("Done! You finished this Quick Start", WPA0_LANG); ?></h1>
 
