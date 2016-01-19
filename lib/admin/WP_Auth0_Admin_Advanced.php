@@ -24,6 +24,13 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
       array( 'id' => 'wpa0_remember_users_session', 'name' => 'Remember users session', 'function' => 'render_remember_users_session' ),
       array( 'id' => 'wpa0_link_auth0_users', 'name' => 'Link users with same email', 'function' => 'render_link_auth0_users' ),
+      
+      array( 'id' => 'wpa0_social_twitter_key', 'name' => 'Twitter consumer key', 'function' => 'render_social_twitter_key' ),
+      array( 'id' => 'wpa0_social_twitter_secret', 'name' => 'Twitter consumer secret', 'function' => 'render_social_twitter_secret' ),
+      
+      array( 'id' => 'wpa0_social_facebook_key', 'name' => 'Facebook app key', 'function' => 'render_social_facebook_key' ),
+      array( 'id' => 'wpa0_social_facebook_secret', 'name' => 'Facebook app secret', 'function' => 'render_social_facebook_secret' ),
+      
       array( 'id' => 'wpa0_migration_ws', 'name' => 'Users Migration', 'function' => 'render_migration_ws' ),
       array( 'id' => 'wpa0_migration_ws_ips_filter', 'name' => 'Migration IPs whitelist', 'function' => 'render_migration_ws_ips_filter' ),
       array( 'id' => 'wpa0_auth0_implicit_workflow', 'name' => 'Auth0 Implicit flow', 'function' => 'render_auth0_implicit_workflow' ),
@@ -196,6 +203,32 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     <?php
   }
 
+  public function render_social_twitter_key() {
+    $v = $this->options->get_connection( 'social_twitter_key' );
+    ?>
+    <input type="text" name="<?php echo $this->options->get_options_name(); ?>[social_twitter_key]" id="wpa0_social_twitter_key" value="<?php echo esc_attr( $v ); ?>"/>
+    <?php
+  }
+  public function render_social_twitter_secret() {
+    $v = $this->options->get_connection( 'social_twitter_secret' );
+    ?>
+    <input type="text" name="<?php echo $this->options->get_options_name(); ?>[social_twitter_secret]" id="wpa0_social_twitter_secret" value="<?php echo esc_attr( $v ); ?>"/>
+    <?php
+  }
+
+  public function render_social_facebook_key() {
+    $v = $this->options->get_connection( 'social_facebook_key' );
+    ?>
+    <input type="text" name="<?php echo $this->options->get_options_name(); ?>[social_facebook_key]" id="wpa0_social_facebook_key" value="<?php echo esc_attr( $v ); ?>"/>
+    <?php
+  }
+  public function render_social_facebook_secret() {
+    $v = $this->options->get_connection( 'social_facebook_secret' );
+    ?>
+    <input type="text" name="<?php echo $this->options->get_options_name(); ?>[social_facebook_secret]" id="wpa0_social_facebook_secret" value="<?php echo esc_attr( $v ); ?>"/>
+    <?php
+  }
+
   public function render_valid_proxy_ip() {
     $v = $this->options->get( 'valid_proxy_ip' );
     ?>
@@ -256,6 +289,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
     $input['metrics'] = ( isset( $input['metrics'] ) ? $input['metrics'] : 0 );
     $input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
+    $input['connections']['social_twitter_key'] = esc_url_raw( $input['social_twitter_key'] );
+    $input['connections']['social_twitter_secret'] = esc_url_raw( $input['social_twitter_secret'] );
+    $input['connections']['social_facebook_key'] = esc_url_raw( $input['social_facebook_key'] );
+    $input['connections']['social_facebook_secret'] = esc_url_raw( $input['social_facebook_secret'] );
 
     $input['migration_ips_filter'] =  ( isset( $input['migration_ips_filter'] ) ? $input['migration_ips_filter'] : 0 );
     $input['migration_ips'] = sanitize_text_field($old_options['migration_ips']);
