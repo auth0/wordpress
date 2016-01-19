@@ -20,7 +20,7 @@ class WP_Auth0_CustomDBLib {
         } else {
           var profile = {
             user_id:     info.data.ID,
-            nickname:    info.data.display_name,
+            username:    info.data.display_name,
             email_verified: true,
             email:       info.data.user_email,
             name:        info.data.user_nicename
@@ -56,7 +56,7 @@ class WP_Auth0_CustomDBLib {
         } else {
           var profile = {
             user_id:     info.data.ID,
-            nickname:    info.data.display_name,
+            username:    info.data.display_name,
             email:       info.data.user_email,
             name:        info.data.user_nicename,
             email_verified: true
