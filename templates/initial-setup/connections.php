@@ -1,7 +1,12 @@
 <div class="a0-wrap">
 
-	<?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'); ?>
-	<?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/steps.php'); ?>
+	<?php 
+	require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php');
+	
+	if (!$migration_ws_enabled) {
+		require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/steps.php'); 
+	}
+	?>
 
 	<div class="container-fluid">
 
@@ -54,7 +59,7 @@
 		</div>
 
 		<div class="a0-buttons">
-			<a href="<?php echo admin_url('admin.php?page=wpa0-setup&step=3&profile=social'); ?>" class="a0-button primary">Next</a>
+			<a href="<?php echo admin_url("admin.php?page=wpa0-setup&step={$next_step}&profile=social"); ?>" class="a0-button primary">Next</a>
     </div>
 
 	</div>

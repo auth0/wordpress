@@ -126,7 +126,7 @@ class WP_Auth0_InitialSetup_Consent {
 
     $this->a0_options->set( "db_connection_id" , $response );
     $this->a0_options->set( "db_connection_enabled" , 1 );
-    $this->a0_options->set( "migration_ws" , $this->hasInternetConnection ? 1 : 0 );
+    $this->a0_options->set( "migration_ws" , $this->hasInternetConnection );
     $this->a0_options->set( "migration_token" , $migration_token );
     $this->a0_options->set( "migration_token_id" , $migration_token_id );
     $this->a0_options->set( "password_policy" , null );

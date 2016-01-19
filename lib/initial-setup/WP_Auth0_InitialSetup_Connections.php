@@ -72,6 +72,8 @@ class WP_Auth0_InitialSetup_Connections {
 
         $db_connection_enabled = $this->a0_options->get( "db_connection_enabled" );
         $db_connection_name = $this->a0_options->get( "db_connection_name" );
+        $migration_ws_enabled = $this->a0_options->get( "migration_ws" );
+        $next_step = $migration_ws_enabled ? 4 : 3;
 
         include WPA0_PLUGIN_DIR . 'templates/initial-setup/connections.php';
       }
