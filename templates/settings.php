@@ -31,7 +31,10 @@
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_features' ); ?>
 		    </div>
 		    <div role="tabpanel" class="tab-pane" id="connections">
-		    	<div class="loading" style="display:none;">Updating the connections settings</div>
+		    	<div class="loading" style="display:none;">
+		    		<div class="a0-spinner-css"></div>
+		    		<span>Updating the connections settings</span>
+		    	</div>
 		    	<div class="connections row">
 					  <?php foreach($social_connections as $social_connection) { ?>
 					    <div class="connection col-sm-4 col-xs-6">

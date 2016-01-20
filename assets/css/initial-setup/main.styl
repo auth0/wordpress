@@ -11,9 +11,18 @@
   
   #connections .loading {
     margin: 0 -15px 30px;
-    background: #F7F7F7;
+    background: #F8EDB5;
+    color:#A78E11;
     text-align:center;
     line-height: 41px;
+    
+    .a0-spinner-css {
+      width:25px;
+      height:25px;
+      position: relative;
+      top: 7px;
+      margin-right:10px;
+    }
   }
   
   @media (min-width: 768px) {
@@ -504,6 +513,66 @@ p.a0-message {
   }
 }
 
+@-webkit-keyframes loaderAnim {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loaderAnim {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@-moz-keyframes loaderAnim {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.a0-spinner-css{
+  display:inline-block;
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 2px solid rgba(0,0,0,0.3);
+  border-right: 2px solid rgba(0,0,0,0.3);
+  border-bottom: 2px solid rgba(0,0,0,0.3);
+  border-left: 2px solid rgba(0,0,0,0.9);
+  -webkit-animation: loaderAnim .8s infinite linear;
+  animation: loaderAnim .8s infinite linear;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  background-clip: padding-box;
+  width: 40px;
+  height: 40px;
+}
+
 .lock {
   padding-top:30px;
   position:relative;
@@ -528,23 +597,6 @@ p.a0-message {
       display: table-cell;
       vertical-align: middle;
     }
-    
-    .a0-spinner-css{
-      font-size: 10px;
-      position: relative;
-      text-indent: -9999em;
-      border-top: 2px solid rgba(0,0,0,0.3);
-      border-right: 2px solid rgba(0,0,0,0.3);
-      border-bottom: 2px solid rgba(0,0,0,0.3);
-      border-left: 2px solid rgba(0,0,0,0.9);
-      -webkit-animation: loaderAnim .8s infinite linear;
-      animation: loaderAnim .8s infinite linear;
-      -webkit-border-radius: 50%;
-      border-radius: 50%;
-      background-clip: padding-box;
-      width: 40px;
-      height: 40px;
-    }
 
   }
   
@@ -553,11 +605,6 @@ p.a0-message {
   }
   &.loading {
     #a0-lock {
-      // -webkit-filter: blur(5px);
-      // -moz-filter: blur(5px);
-      // -o-filter: blur(5px);
-      // -ms-filter: blur(5px);
-      // filter: blur(5px);
       overflow:hidden;
     }
   }
@@ -641,7 +688,7 @@ p.a0-message {
   }
   
   .nav-tabs {
-    margin: 30px 0; 
+    margin: 30px -15px; 
     
     a {
       color:#5b666f;
