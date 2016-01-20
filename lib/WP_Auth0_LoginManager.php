@@ -64,7 +64,8 @@ class WP_Auth0_LoginManager {
 			$cdn = $this->a0_options->get('cdn_url');
 			$client_id = $this->a0_options->get('client_id');
 			$domain = $this->a0_options->get('domain');
-
+			$logout_url = wp_logout_url(get_permalink());
+			
 			wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
 			include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
 		}

@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
   var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
   lock.$auth0.getSSOData(function(err, data) {
       if (!err && !data.sso) {
-          window.location = '<?php echo wp_logout_url(get_permalink()); ?>';
+          window.location = '<?php echo html_entity_decode($logout_url); ?>';
       }
   });
 });
