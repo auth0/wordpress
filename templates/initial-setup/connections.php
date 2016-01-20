@@ -9,26 +9,28 @@
 	?>
 
 	<div class="container-fluid">
+		<div class="row">
 
-		<h1><?php _e("Configure your social connections", WPA0_LANG); ?></h1>
+			<h1><?php _e("Configure your social connections", WPA0_LANG); ?></h1>
 
-		<p class="a0-step-text"><?php _e("If your WordPress site's visitors already have social network accounts, they can access your site with their existing credentials, or they can set up a username/password combination safeguarded by Auth0's password complexity policies and brute force protection.", WPA0_LANG); ?></p>
+			<p class="a0-step-text"><?php _e("If your WordPress site's visitors already have social network accounts, they can access your site with their existing credentials, or they can set up a username/password combination safeguarded by Auth0's password complexity policies and brute force protection.", WPA0_LANG); ?></p>
 
-		<div class="a0-separator"></div>
+			<div class="a0-separator"></div>
 
-		<div class="a0-db-connection">
-			<h3><?php _e("Database Connections", WPA0_LANG); ?></h3>
-			<div class="a0-switch">
-				<input type="checkbox" name="dbconnection" id="db-connection-check" value="auth0" <?php echo checked( $db_connection_enabled, 1, false ); ?> />
-				<label for="db-connection-check"></label>
+			<div class="a0-db-connection">
+				<h3><?php _e("Database Connections", WPA0_LANG); ?></h3>
+				<div class="a0-switch">
+					<input type="checkbox" name="dbconnection" id="db-connection-check" value="auth0" <?php echo checked( $db_connection_enabled, 1, false ); ?> />
+					<label for="db-connection-check"></label>
+				</div>
+				<p class="a0-step-text"><?php _e("Select this option to let users choose their own name/password. If a user already has an account on your site, Auth0 will log them in with their existing credentials and then migrate them to a new account behind the scenes - no need to change passwords.", WPA0_LANG); ?></p>
 			</div>
-			<p class="a0-step-text"><?php _e("Select this option to let users choose their own name/password. If a user already has an account on your site, Auth0 will log them in with their existing credentials and then migrate them to a new account behind the scenes - no need to change passwords.", WPA0_LANG); ?></p>
+
+			<div class="a0-separator"></div>
+
+			<h3><?php _e("Social Connections", WPA0_LANG); ?></h3>
+
 		</div>
-
-		<div class="a0-separator"></div>
-
-		<h3><?php _e("Social Connections", WPA0_LANG); ?></h3>
-
 		<div class="row">
 			<div class="connections-wrapper col-sm-7">
 				<div class="connections row">
@@ -58,8 +60,10 @@
 			</div>
 		</div>
 
-		<div class="a0-buttons">
-			<a href="<?php echo admin_url("admin.php?page=wpa0-setup&step={$next_step}&profile=social"); ?>" class="a0-button primary">Next</a>
+		<div class="row">
+			<div class="a0-buttons">
+				<a href="<?php echo admin_url("admin.php?page=wpa0-setup&step={$next_step}&profile=social"); ?>" class="a0-button primary">Next</a>
+	    </div>
     </div>
 
 	</div>

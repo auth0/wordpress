@@ -4,17 +4,16 @@
 
 	<div class="container-fluid">
 
-		<h1><?php _e('Auth0 Settings', WPA0_LANG); ?></h1>
+		<div class="row">
+			<h1><?php _e('Auth0 Settings', WPA0_LANG); ?></h1>
 	    <?php if( count(get_settings_errors()) == 0 && isset($_GET['settings-updated']) ) { ?>
 	        <div id="message" class="updated">
 	            <p><strong><?php _e('Settings saved.') ?></strong></p>
 	        </div>
 	    <?php } ?>
 	    <?php settings_errors(); ?>
-		<form action="options.php" method="post" onsubmit="return presubmit();">
-			<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_basic' ); ?>
 
-			<ul class="nav nav-tabs" role="tablist">
+	    <ul class="nav nav-tabs" role="tablist">
 		    <li role="presentation"><a href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Basic</a></li>
 		    <li role="presentation" class="active"><a href="#features" aria-controls="features" role="tab" data-toggle="tab">Features</a></li>
 		    <li role="presentation"><a href="#connections" aria-controls="connections" role="tab" data-toggle="tab">Connections</a></li>
@@ -22,12 +21,15 @@
 		    <li role="presentation"><a href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab">Advanced</a></li>
 		    <li role="presentation"><a href="#dashboard" aria-controls="dashboard" role="tab" data-toggle="tab">Dashboard</a></li>
 		  </ul>
+		</div>
+		<form action="options.php" method="post" onsubmit="return presubmit();">
+			<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_basic' ); ?>
 
 		  <div class="tab-content">
-		    <div role="tabpanel" class="tab-pane" id="basic">
+		    <div role="tabpanel" class="tab-pane row" id="basic">
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_basic' ); ?>
 		    </div>
-		    <div role="tabpanel" class="tab-pane active" id="features">
+		    <div role="tabpanel" class="tab-pane row active" id="features">
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_features' ); ?>
 		    </div>
 		    <div role="tabpanel" class="tab-pane" id="connections">
@@ -50,19 +52,21 @@
 					  <?php } ?>
 					</div>
 		    </div>
-		    <div role="tabpanel" class="tab-pane" id="appearance">
+		    <div role="tabpanel" class="tab-pane row" id="appearance">
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_appearance' ); ?>
 		    </div>
-		    <div role="tabpanel" class="tab-pane" id="advanced">
+		    <div role="tabpanel" class="tab-pane row" id="advanced">
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_advanced' ); ?>
 		    </div>
-		    <div role="tabpanel" class="tab-pane" id="dashboard">
+		    <div role="tabpanel" class="tab-pane row" id="dashboard">
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_dashboard'); ?>
 		    </div>
 		  </div>
 
-			<div class="a0-buttons">			    
-				<input type="submit" name="submit" id="submit" class="a0-button primary" value="Save Changes" />
+			<div class="row">			    
+				<div class="a0-buttons">			    
+					<input type="submit" name="submit" id="submit" class="a0-button primary" value="Save Changes" />
+				</div>
 			</div>
 		</form>
 	</div>
