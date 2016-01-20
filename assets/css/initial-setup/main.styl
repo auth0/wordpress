@@ -9,12 +9,21 @@
   font-family:'avenir roman';
   margin-left:-10px;
   
+  a, .link {
+    color:aText;
+  }
+  
+  .modal-body.no-padding-bottom {
+    padding-bottom:0;
+  }
+  
   #connections .loading {
     margin: 0 -15px 30px;
-    background: #F8EDB5;
-    color:#A78E11;
+    background: loadingBG;
+    color:loadingText;
     text-align:center;
     line-height: 41px;
+    border-radius: 3px;
     
     .a0-spinner-css {
       width:25px;
@@ -22,6 +31,11 @@
       position: relative;
       top: 7px;
       margin-right:10px;
+      
+      border-top-color: rgba(loadingText,.3);
+      border-right-color: rgba(loadingText,.3);
+      border-bottom-color: rgba(loadingText,.3);
+      border-left-color: rgba(loadingText,.9);
     }
   }
   
@@ -127,18 +141,18 @@
     p {
       font-size: 14px;
       text-align: left;
-      color: rgba(0,0,0,0.5);
+      color: text;
     }
   }
 }
 
 .a0-step-text {
-  margin:30px 0;
+  margin:30px 0 0;
 }
 
 .a0-header {
   text-align:center;
-  border-bottom:1px solid #F2F5F8;
+  border-bottom:1px solid separatorBorder;
   img {
     height:55px;
     margin: 30px auto;
@@ -167,6 +181,8 @@
     text-transform: none;
     text-decoration: underline;
     cursor:pointer;
+    min-width:0;
+    padding: 0 10px;
   }
 
   &.primary {
@@ -197,7 +213,7 @@
 }
 
 .a0-separator {
-  border-bottom:1px solid #F2F5F8;
+  border-bottom:1px solid separatorBorder;
   margin:30px 0;
 }
 
@@ -343,7 +359,7 @@ p.a0-message {
   padding:0;
   
   .connection {
-    background-color:stepBG;
+    background-color:enterpriseBG;
     text-align: center;
     border-radius:3px;
     padding:20px;
@@ -616,10 +632,12 @@ p.a0-message {
 }
 
 .a0-admin-creation {
+  
+  margin-top:20px;
 
   input[type=text], input[type=password] {
     width:100%;
-    border:2px solid adminFormBorder;
+    border:1px solid adminFormBorder;
     height: 50px;
     line-height: 40px;
     padding: 10px;
@@ -691,7 +709,7 @@ p.a0-message {
     margin: 30px 0; 
     
     a {
-      color:#5b666f;
+      color:navbarText;
       box-shadow: none;
       font-size: 17px;
     }
@@ -703,9 +721,10 @@ p.a0-message {
   .top-margin {
     margin-top: 30px;
   }
+
   
-  .form-table th, .form-wrap label {
-    color:#5b666f;
+  .form-table th, .form-table label, .form-wrap label {
+    color:formFieldsText;
   }
   
   input[type=text],input[type=password], textarea {
@@ -756,11 +775,7 @@ p.a0-message {
     font-style: normal;
     color: softText;
   }
-  
-  .form-table th, .form-wrap label {
-    color: text;
-  }
-  
+
   label {
     margin-right: 10px;
   }
