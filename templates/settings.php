@@ -31,6 +31,7 @@
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_features' ); ?>
 		    </div>
 		    <div role="tabpanel" class="tab-pane" id="connections">
+		    	<div class="loading" style="display:none;">Updating the connections settings</div>
 		    	<div class="connections row">
 					  <?php foreach($social_connections as $social_connection) { ?>
 					    <div class="connection col-sm-4 col-xs-6">
@@ -114,6 +115,11 @@
 
 		}, 1);
 
+		q.drain = function() {
+			window.onbeforeunload = null;
+			jQuery('#connections .loading').fadeOut();
+		}
+
 		jQuery('.connection .a0-switch input').click(function(e) {
 
 			var data = {
@@ -122,6 +128,8 @@
 			};
 
 			q.push(data);
+			jQuery('#connections .loading').fadeIn();
+			window.onbeforeunload = confirmExit;
 
 		});
 
@@ -134,5 +142,9 @@
 		});
 
 	});
+
+	function confirmExit() {
+    return "There are some pending actions. if you leave the page now, some connection will not be updated.";
+	}
 </script>
 
