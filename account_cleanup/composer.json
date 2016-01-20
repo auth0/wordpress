@@ -7,6 +7,6 @@
         }
     ],
     "require": {
-        "auth0/auth0-php": "^2.1"
+        "auth0/auth0-php": "^3.0"
     }
 }

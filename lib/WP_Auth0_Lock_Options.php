@@ -71,14 +71,17 @@ class WP_Auth0_Lock_Options {
         return $name;
     }
 
-    public function get_state_obj() {
+    public function get_state_obj($redirect_to = null) {
         if (isset($_GET['interim-login']) && $_GET['interim-login'] == 1) {
             $interim_login = true;
         } else {
             $interim_login = false;
         }
         $stateObj = array("interim" => $interim_login, "uuid" =>uniqid());
-        if (isset($_GET['redirect_to'])) {
+        if (!empty($redirect_to)) {
+            $stateObj["redirect_to"] = addslashes($redirect_to);
+        }
+        elseif (isset($_GET['redirect_to'])) {
           $stateObj["redirect_to"] = addslashes($_GET['redirect_to']);
         }
 
@@ -150,14 +153,8 @@ class WP_Auth0_Lock_Options {
             $options["callbackOnLocationHash"] = false;
             $options["callbackURL"] = $this->get_code_callback_url();
         }
-
-        // if (
-        //     ! isset( $options["authParams"] ) ||
-        //     ! isset( $options["authParams"]["state"] ) ||
-        //     ! isset( $options["authParams"]["state"]["redirect_to"] )
-        // ) {
-        //     $options["authParams"]["state"]["redirect_to"] = home_url($_SERVER["REQUEST_URI"]);
-        // }
+        unset($options["authParams"]);
+        $options["state"] = $this->get_state_obj(home_url($_SERVER["REQUEST_URI"]));
 
         return $options;
 

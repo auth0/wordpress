@@ -6,21 +6,24 @@ $config = json_decode(file_get_contents('config.json'));
 
 echo "START \n";
 
-$connections = \Auth0\SDK\API\ApiConnections::getAll($config->domain, $config->api_token, 'auth0');
+$auth0Api = new \Auth0\SDK\Auth0Api($config->api_token, $config->domain);
+
+
+$connections = $auth0Api->connections->getAll('auth0');
 
 foreach ($connections as $connection) {
   if ($connection['name'] === 'DB-THETESTBLOG') {
     echo "- DELETED CONNECTION \n";
-    \Auth0\SDK\API\ApiConnections::delete($config->domain, $config->api_token, $connection['id']);
+    $auth0Api->connections->delete($connection['id']);
   } 
 }
 
-$clients = \Auth0\SDK\API\ApiClients::getAll($config->domain, $config->api_token);
+$clients = $auth0Api->clients->getAll();
 
 foreach ($clients as $client) {
   if ($client['name'] === 'THETESTBLOG') {
     echo "- DELETED CLIENT \n";
-    \Auth0\SDK\API\ApiClients::delete($config->domain, $config->api_token, $client['client_id']);
+    $auth0Api->clients->delete($client['client_id']);
   } 
 }
 

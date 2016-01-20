@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "afdd96a2db5a475ef974e9c823172371",
-    "content-hash": "fa2b4314d2575887a8ef16430e3ea9c2",
+    "hash": "f1c973bfbc6de7d51227dc24a153ff31",
+    "content-hash": "6dedc1a242aab323716c3bdc6f513bb8",
     "packages": [
         {
             "name": "adoy/oauth2",
@@ -49,16 +49,16 @@
         },
         {
             "name": "auth0/auth0-php",
-            "version": "2.1.1",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auth0/auth0-PHP.git",
-                "reference": "a0037cc15b378cdcb7d7648b796d180fad78a555"
+                "reference": "6bbf9f40278145d84e068bc6c125c98928b48797"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auth0/auth0-PHP/zipball/a0037cc15b378cdcb7d7648b796d180fad78a555",
-                "reference": "a0037cc15b378cdcb7d7648b796d180fad78a555",
+                "url": "https://api.github.com/repos/auth0/auth0-PHP/zipball/6bbf9f40278145d84e068bc6c125c98928b48797",
+                "reference": "6bbf9f40278145d84e068bc6c125c98928b48797",
                 "shasum": ""
             },
             "require": {
@@ -69,6 +69,8 @@
                 "php": ">=5.4.0"
             },
             "require-dev": {
+                "codeclimate/php-test-reporter": "^0.2.0",
+                "josegonzalez/dotenv": "^2.0",
                 "phpunit/phpunit": "4.6.*"
             },
             "type": "library",
@@ -89,7 +91,7 @@
                 }
             ],
             "description": "Auth0 PHP SDK.",
-            "time": "2015-11-29 19:24:38"
+            "time": "2016-01-18 20:50:10"
         },
         {
             "name": "firebase/php-jwt",
