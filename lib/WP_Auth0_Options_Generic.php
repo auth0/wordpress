@@ -30,7 +30,7 @@ class WP_Auth0_Options_Generic {
         return apply_filters( 'wp_auth0_get_option', $options[$key], $key );
     }
 
-    public function set( $key, $value ){
+    public function set( $key, $value ){ 
         $options = $this->get_options();
         $options[$key] = $value;
         $this->_opt = $options;

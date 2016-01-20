@@ -21,7 +21,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
         return array('facebook','twitter','google-oauth2');
     }
 
-    public function set_connection( $key, $value ){
+    public function set_connection( $key, $value ){ 
         $options = $this->get_options();
         $options['connections'][$key] = $value;
 
