@@ -130,7 +130,7 @@ function (user, context, callback) {
   }, function (e,r,b) {
     if(e) return callback(e);
 
-    if(r.statusCode===200){
+    if(r.statusCode===200) {
       user.user_metadata = user.user_metadata || {};
       user.user_metadata.fullContactInfo = JSON.parse(b);
 
@@ -141,6 +141,8 @@ function (user, context, callback) {
         .catch(function(err){
           callback(err);
         });
+    } else {
+      callback(null, user, context);
     }
   });
 }"
@@ -173,8 +175,9 @@ function (user, context, callback) {
                 var incomeData = JSON.parse(b);
                 global.incomeData = incomeData;
                 setIncomeData(incomeData,user,context, callback);
+            } else {
+              callback(null, user, context);
             }
-            callback(null, user, context);
         });
     }
 
@@ -188,6 +191,8 @@ function (user, context, callback) {
                 .catch(function(err){
                     callback(err);
                 });
+        } else {
+          callback(null, user, context);
         }
     }
 }"
