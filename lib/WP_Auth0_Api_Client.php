@@ -130,6 +130,23 @@ class WP_Auth0_Api_Client {
 
 	}
 
+	public static function search_users($domain, $jwt, $q = "", $page = 0, $per_page = 100, $include_totals = false, $sort = "user_id:1") {
+
+		$include_totals = $include_totals ? 'true' : 'false';
+		
+		$endpoint = "https://$domain/api/v2/users?include_totals=$include_totals&per_page=$per_page&page=$page&sort=$sort&q=$q&search_engine=v2";
+
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $jwt";
+
+		$response = wp_remote_get( $endpoint  , array(
+			'headers' => $headers,
+		) );
+
+		return json_decode($response['body']);
+	}
+
 	public static function get_user($domain, $jwt, $user_id) {
 		$endpoint = "https://$domain/api/v2/users/" . urlencode( $user_id );
 

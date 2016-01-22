@@ -42,8 +42,6 @@ class WP_Auth0_DBManager {
 					auth0_id VARCHAR(100) NOT NULL,
 					wp_id INT(11)  NOT NULL,
 					auth0_obj TEXT,
-					id_token TEXT,
-					access_token TEXT,
 					last_update DATETIME,
 					PRIMARY KEY  (auth0_id)
 				);";
@@ -118,7 +116,7 @@ class WP_Auth0_DBManager {
 
 		$result = $this->get_currentauth0user();
 		if ($result) {
-			$currentauth0_user = unserialize( $result->auth0_obj );
+			$currentauth0_user = WP_Auth0_Serializer::unserialize( $result->auth0_obj );
 		}
 
 		return $currentauth0_user;
@@ -162,7 +160,7 @@ class WP_Auth0_DBManager {
             }
 
             foreach ($results as $value) {
-                $userData[] = unserialize($value->auth0_obj);
+                $userData[] = WP_Auth0_Serializer::unserialize($value->auth0_obj);
             }
 
         }

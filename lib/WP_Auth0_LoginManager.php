@@ -338,7 +338,7 @@ class WP_Auth0_LoginManager {
 		}
 
 		// See if there is a user in the auth0_user table with the user info client id
-		$user = $this->_find_auth0_user( $userinfo->user_id );
+		$user = WP_Auth0_Users::find_auth0_user( $userinfo->user_id );
 
 		if ( ! is_null( $user ) ) {
 			// User exists! Log in
@@ -346,7 +346,7 @@ class WP_Auth0_LoginManager {
 				$user_id = wp_update_user( array( 'ID' => $user->data->ID, 'user_email' => $userinfo->email ) );
 			}
 
-			$this->_update_auth0_object( $userinfo, $id_token, $access_token );
+			WP_Auth0_Users::update_auth0_object($userinfo);
 
 			wp_set_current_user( $user->ID, $user->user_login );
 	    wp_set_auth_cookie( $user->ID, $remember_users_session );
@@ -391,42 +391,6 @@ class WP_Auth0_LoginManager {
 
 			return true;
 		}
-	}
-
-	private function _find_auth0_user( $id ) {
-		global $wpdb;
-		$sql = 'SELECT u.*
-				FROM ' . $wpdb->auth0_user .' a
-				JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id
-				WHERE a.auth0_id = %s';
-		$userRow = $wpdb->get_row( $wpdb->prepare( $sql, $id ) );
-
-		if ( is_null( $userRow ) ) {
-			return null;
-		} elseif ( $userRow instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user',$userRow );
-			return null;
-		}
-		$user = new WP_User();
-		$user->init( $userRow );
-		return $user;
-	}
-
-	private function _update_auth0_object($userinfo, $id_token, $access_token) {
-		global $wpdb;
-
-		$wpdb->update(
-			$wpdb->auth0_user,
-			array(
-				'auth0_obj' => serialize($userinfo),
-				'id_token' => $id_token,
-				'access_token' => $access_token,
-				'last_update' =>  date( 'c' ),
-			),
-			array( 'auth0_id' => $userinfo->user_id ),
-			array( '%s' ),
-			array( '%s' )
-		);
 	}
 
 	private function dieWithVerifyEmail($userinfo, $id_token) {

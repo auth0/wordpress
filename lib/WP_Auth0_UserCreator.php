@@ -78,21 +78,19 @@ class WP_Auth0_UserCreator {
 
 // If we are here we should have a valid $user_id with a new user or an existing one
 // log him in, and update the auth0_user table
-        self::insertAuth0User($userinfo, $user_id, $token, $access_token);
+        self::insertAuth0User($userinfo, $user_id);
 
         return $user_id;
     }
 
-    public function insertAuth0User($userinfo, $user_id, $id_token, $access_token) {
+    public function insertAuth0User($userinfo, $user_id) {
         global $wpdb;
         $wpdb->insert(
             $wpdb->auth0_user,
             array(
                 'auth0_id' => $userinfo->user_id,
                 'wp_id' => $user_id,
-                'auth0_obj' => serialize($userinfo),
-                'id_token' => $id_token,
-                'access_token' => $access_token,
+                'auth0_obj' => WP_Auth0_Serializer::serialize($userinfo),
                 'last_update' =>  date( 'c' ),
                 ),
             array(
@@ -106,16 +104,5 @@ class WP_Auth0_UserCreator {
             );
     }
 
-    protected function look_for_connection_id($domain, $access_token, $connection_name, $provider) {
-
-        $connections = WP_Auth0_Api_Client::search_connection($domain, $access_token, $provider);
-        foreach ($connections as $connection) {
-            if ($connection->name === $connection_name) {
-                return $connection->id;
-            }
-        }
-        return null;
-
-    }
 
 }

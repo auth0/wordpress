@@ -2,11 +2,13 @@
 
 class WP_Auth0_UserProfile {
 
+    protected $raw;
     protected $profile;
     protected $geoip;
 
     public function __construct($str) {
-        $this->profile = unserialize($str);
+        $this->raw = $str;
+        $this->profile = WP_Auth0_Serializer::unserialize($str);
     }
 
     public function get() {
@@ -70,6 +72,7 @@ class WP_Auth0_UserProfile {
     }
 
     public function get_geoip() {
+
         if ($this->geoip) return $this->geoip;
 
         if (isset($this->profile->app_metadata) && isset($this->profile->app_metadata->geoip)) {
@@ -84,7 +87,6 @@ class WP_Auth0_UserProfile {
 
     public function get_latitude() {
         $geoip = $this->get_geoip();
-
         if ( ! $geoip ) return null;
         if ( ! isset( $geoip->latitude ) ) return null;
 
@@ -119,6 +121,9 @@ class WP_Auth0_UserProfile {
     }
 
     public function get_idp() {
+
+        if (!isset($this->profile->identities)) return array();
+
         $idPs = array();
         foreach ($this->profile->identities as $identity) {
 

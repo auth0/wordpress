@@ -66,9 +66,7 @@ class WP_Auth0_Seeder {
 					array(
 							'auth0_id' => $userinfo->user_id,
 							'wp_id' => $user_id,
-							'auth0_obj' => serialize($userinfo),
-							'id_token' => '',
-							'access_token' => '',
+							'auth0_obj' => WP_Auth0_Serializer::serialize($userinfo),
 							'last_update' =>  date( 'c' ),
 					),
 					array(

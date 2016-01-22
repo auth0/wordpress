@@ -40,6 +40,7 @@ class WP_Auth0_Dashboard_Plugins_Location extends WP_Auth0_Dashboard_Plugins_Gen
             }
 
             var data = this.process_data(raw_data);
+
             var _this = this;
             function addMarker(latitude, longitude) {
                 var marker = new google.maps.Marker({
@@ -49,10 +50,10 @@ class WP_Auth0_Dashboard_Plugins_Location extends WP_Auth0_Dashboard_Plugins_Gen
                 return marker;
             }
 
-            var markers = data.map(function(d){
-              if (d.location.latitude && d.location.longitude) {
-                return addMarker(d.location.latitude, d.location.longitude);
-              }
+            var markers = data.filter(function(d){
+              return (d.location.latitude && d.location.longitude);
+            }).map(function(d){
+              return addMarker(d.location.latitude, d.location.longitude);
             });
 
             this.markerCluster = new MarkerClusterer(this.map, markers);

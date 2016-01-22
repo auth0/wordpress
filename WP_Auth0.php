@@ -72,7 +72,10 @@ class WP_Auth0 {
 		$initial_setup->init();
 
 		// $seeder = new WP_Auth0_Seeder($this->a0_options);
-		// $seeder->init();
+		// $seeder->init();		
+
+		// $importer = new WP_Auth0_ImportUser($this->a0_options);
+		// $importer->init();
 
 		$login_manager = new WP_Auth0_LoginManager($this->a0_options);
 		$login_manager->init();
