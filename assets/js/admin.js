@@ -1,20 +1,4 @@
 jQuery(document).ready(function($) {
-    jQuery( "form h3" )
-        .prepend(' <span class="icon">+</span><span class="icon" style="display:none">-</span>')
-        .click(function(){
-            jQuery(this).next().toggle();
-            jQuery(this).find('.icon').toggle();
-        }).next().hide();
-
-    jQuery(jQuery( "form h3" )[1]).click();
-    jQuery("#wpa0_fullcontact").click(function(){
-        jQuery(".subelement.fullcontact").toggle().removeClass('hidden');
-    });
-
-    jQuery(".wpa0_social_checkbox").click(function(){
-        jQuery(this).parent().find(".subelement").toggle(this.checked).removeClass('hidden');
-    });
-
     //uploading files variable
     var media_frame;
     $(document).on('click', '#wpa0_choose_icon', function(event) {
