@@ -36,7 +36,9 @@ class WP_Auth0_Users {
 		}
 		
 		$username = "";
-		if (isset($userinfo->nickname)) {
+		if (isset($userinfo->username)) {
+			$username = $userinfo->username;
+		}elseif (isset($userinfo->nickname)) {
 			$username = $userinfo->nickname;
 		}
 		if (empty($username)) {

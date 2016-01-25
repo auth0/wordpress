@@ -37,6 +37,9 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   }
 
   public function render_auth0_app_token() {
+
+    $scopes = WP_Auth0_Api_Client::GetConsentScopestoShow();
+
     ?>
       <input type="text" name="<?php echo $this->options->get_options_name(); ?>[auth0_app_token]" id="wpa0_auth0_app_token" autocomplete="off" />
       <div class="subelement">
@@ -44,7 +47,17 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
           <?php echo __( 'The token should be generated via the ', WPA0_LANG ); ?>
           <a href="https://auth0.com/docs/api/v2" target="_blank"><?php echo __( 'token generator', WPA0_LANG ); ?></a>
           <?php echo __( ' with the following scopes:', WPA0_LANG ); ?>
-          <code> 'create:clients', 'update:clients', 'update:connections', 'create:connections', 'read:connections', 'create:rules', 'delete:rules', 'read:users', 'update:users' and 'create:users'</code>.
+          
+          <?php $a = 0; foreach($scopes as $resource => $actions) { $a++;?>
+            <code><?php echo $actions ?> <?php echo $resource ?></code> 
+            <?php 
+              if ($a < count($scopes) - 1) {
+                echo ", "; 
+              } else if ($a === count($scopes) - 1) {
+                echo " and ";
+              }
+            ?>
+          <?php } ?>.
         </span>
       </div>
     <?php

@@ -83,7 +83,17 @@
                 <input type="text" name="apitoken" />
                 <p>
                   <small>
-                    Scopes required: <code>create and update clients</code>, <code>update, create and read connections</code>, <code>create and delete rules</code> and <code>read, update and create users</code>.
+                    Scopes required: 
+                    <?php $a = 0; foreach($scopes as $resource => $actions) { $a++;?>
+                      <code><?php echo $actions ?> <?php echo $resource ?></code>
+                      <?php 
+                        if ($a < count($scopes) - 1) {
+                          echo ", "; 
+                        } else if ($a === count($scopes) - 1) {
+                          echo " and ";
+                        }
+                      ?>
+                    <?php } ?>.
                   </small>
                 </p>
               </div>

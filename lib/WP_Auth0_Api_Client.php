@@ -588,4 +588,50 @@ class WP_Auth0_Api_Client {
 
 		return json_decode($response['body']);
 	}
+
+	public static function ConsentRequiredScopes() {
+		return array(
+      'create:clients',
+      'update:clients',
+      
+      'update:connections',
+      'create:connections',
+      'read:connections',
+
+      'create:rules',
+      'delete:rules',
+
+      'read:users',
+      'update:users',
+      'create:users',
+    );
+	}
+
+	public static function GetConsentScopestoShow() {
+		$scopes = self::ConsentRequiredScopes();
+		$grouped = array();
+		$processed = array();
+
+		foreach ($scopes as $scope) {
+			list($action, $resource) = explode(":", $scope);
+			$grouped[$resource][] = $action;
+		}
+		foreach ($grouped as $resource => $actions) {
+			$str = "";
+
+			for($a = 0; $a < count($actions); $a++) {
+				if ($a > 0) {
+					if ($a === count($actions) - 1) {
+						$str .= ' and ';
+					}	else {
+						$str .= ', ';
+					}
+				}
+				$str .= $actions[$a];
+			}
+
+			$processed[$resource] = $str;
+		}
+		return $processed;
+	} 
 }
