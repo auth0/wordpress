@@ -217,8 +217,6 @@ $ stylus -w -o initial-setup.css initial-setup/main.styl
 
 ![](https://raw.githubusercontent.com/auth0/wp-auth0/master/screenshot-7.png)
 
-![](https://raw.githubusercontent.com/auth0/wp-auth0/master/screenshot-8.png)
-
 ## Issue Reporting
 
 If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
