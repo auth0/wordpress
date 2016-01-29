@@ -223,7 +223,6 @@ If you have found a bug or if you have a feature request, please report them at 
 
 ## Author
 
-* [LaunchPeople](http://launchpeople.dk/)
 * [Auth0](auth0.com)
 
 ## License
