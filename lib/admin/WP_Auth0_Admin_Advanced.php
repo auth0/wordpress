@@ -108,7 +108,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     ?>
       
       <div class="subelement">
-        <span class="description"><?php echo __( 'Users session by default lives for two days. Enabling this setting will make the sessions live longer.', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'Users session by default lives for two days. Enabling this setting will make the sessions be kept for 14 days.', WPA0_LANG ); ?></span>
       </div>
     <?php
   }
