@@ -70,7 +70,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     ?>
       <input type="text" name="<?php echo $this->options->get_options_name(); ?>[default_login_redirection]" id="wpa0_default_login_redirection" value="<?php echo esc_attr( $v ); ?>"/>
       <div class="subelement">
-        <span class="description"><?php echo __( 'This is the URL that all users will be redirected by default after login', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'This is the URL that all users will be redirected to by default after login.', WPA0_LANG ); ?></span>
       </div>
     <?php
   }
