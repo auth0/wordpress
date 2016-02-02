@@ -138,7 +138,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
         <span class="description">
           <?php echo __( 'Mark this if you want to hydrate your users profile with the data provided by FullContact. A valid api key is requiere.', WPA0_LANG ); ?>
           <?php echo __( 'More info ', WPA0_LANG ); ?>
-          <a href="https://auth0.com/docs/scenarios/fullcontact"><?php echo __( 'HERE', WPA0_LANG );?></a>
+          <a target="_blank" href="https://auth0.com/docs/scenarios/mixpanel-fullcontact-salesforce#2-augment-user-profile-with-fullcontact-"><?php echo __( 'HERE', WPA0_LANG );?></a>
         </span>
       </div>
     <?php
