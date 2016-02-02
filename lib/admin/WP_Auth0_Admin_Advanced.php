@@ -131,7 +131,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     } else {
     ?>
       <div class="subelement">
-        <span class="description"><?php echo __( 'Users migration is disabled. Enabling it will expose the migration webservices but the connection need to be updated manually on the Auth0 dashboard.', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'Users migration is disabled. Enabling it will expose the migration webservices but the connection needs to be updated manually on the Auth0 dashboard. More info about the migration process ', WPA0_LANG ); ?><a target="_blank" href="https://auth0.com/docs/connections/database/migrating">HERE</a>.</span>
       </div>
     <?php
     }
