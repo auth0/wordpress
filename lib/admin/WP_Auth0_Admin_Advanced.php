@@ -96,7 +96,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     echo $this->render_a0_switch("wpa0_link_auth0_users", "link_auth0_users", 1, ! empty($v));
     ?>
       <div class="subelement">
-        <span class="description"><?php echo __( 'To enable the link of accounts with the same email. It will only occur if the email was verified before.', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'Links accounts with the same e-mail address. It will only occur if both e-mails are previously verified.', WPA0_LANG ); ?></span>
       </div>
     <?php
   }
