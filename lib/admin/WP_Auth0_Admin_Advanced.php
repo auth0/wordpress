@@ -160,7 +160,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     ?>
 
     <div class="subelement">
-      <span class="description"><?php echo __( 'Mark this to change the login workflow to allow the plugin work when the server does not have internet access)', WPA0_LANG ); ?></span>
+      <span class="description"><?php echo __( 'Activate this option to change the login workflow and allow the plugin to work when the server doesn\'t have internet access.', WPA0_LANG ); ?></span>
     </div>
     <?php
   }
