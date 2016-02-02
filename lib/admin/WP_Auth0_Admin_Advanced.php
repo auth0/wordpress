@@ -82,7 +82,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     <textarea name="<?php echo $this->options->get_options_name(); ?>[extra_conf]" id="wpa0_extra_conf"><?php echo esc_attr( $v ); ?></textarea>
     <div class="subelement">
       <span class="description">
-        <?php echo __('This field is the Json that describes the options to call Lock with. It\'ll override any other option set here. See all the posible options ', WPA0_LANG); ?>
+        <?php echo __('This field is the Json that describes the options to call Lock with. It\'ll override any other option set here. See all the possible options ', WPA0_LANG); ?>
         <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization"><?php echo __('here', WPA0_LANG); ?></a>
         <?php echo __('(For example: {"disableResetAction": true }) ', WPA0_LANG); ?>
       </span>
