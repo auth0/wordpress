@@ -39,9 +39,10 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   public function render_auth0_app_token() {
 
     $scopes = WP_Auth0_Api_Client::GetConsentScopestoShow();
+    $v = $this->options->get( 'auth0_app_token' );
 
     ?>
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[auth0_app_token]" id="wpa0_auth0_app_token" autocomplete="off" />
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[auth0_app_token]" id="wpa0_auth0_app_token" autocomplete="off" <?php if (!empty($v)) {?>placeholder="Not visible"<?php } ?> />
       <div class="subelement">
         <span class="description">
           <?php echo __( 'The token should be generated via the ', WPA0_LANG ); ?>
@@ -64,8 +65,9 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   }
 
   public function render_client_secret() {
+    $v = $this->options->get( 'client_secret' );
     ?>
-      <input type="text" autocomplete="off" name="<?php echo $this->options->get_options_name(); ?>[client_secret]" id="wpa0_client_secret"/>
+      <input type="text" autocomplete="off" name="<?php echo $this->options->get_options_name(); ?>[client_secret]" id="wpa0_client_secret"  <?php if (!empty($v)) {?>placeholder="Not visible"<?php } ?> />
       <div class="subelement">
         <span class="description"><?php echo __( 'Application secret, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG ); ?></span>
       </div>
@@ -75,7 +77,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   public function render_domain() {
     $v = $this->options->get( 'domain' );
     ?>
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[domain]" id="wpa0_domain" value="<?php echo esc_attr( $v ); ?>"/>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[domain]" id="wpa0_domain" value="<?php echo esc_attr( $v ); ?>" />
       <div class="subelement">
         <span class="description"><?php echo __( 'Your Auth0 domain, you can see it in the dashboard. Example: foo.auth0.com', WPA0_LANG ); ?></span>
       </div>
