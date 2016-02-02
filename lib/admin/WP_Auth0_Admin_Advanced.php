@@ -234,7 +234,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     ?>
     <input type="text" name="<?php echo $this->options->get_options_name(); ?>[valid_proxy_ip]" id="wpa0_valid_proxy_ip" value="<?php echo esc_attr( $v ); ?>"/>
     <div class="subelement">
-      <span class="description"><?php echo __( 'If you are using a load balancer or a proxy, you will need to whitelist its ip in order to enable ip checks for logins or migration webservices.', WPA0_LANG ); ?></span>
+      <span class="description"><?php echo __( ' If you are using a load balancer or a proxy, you will need to whitelist its IP in order to enable IP checks for logins or migration webservices.', WPA0_LANG ); ?></span>
     </div>
     <?php
   }
