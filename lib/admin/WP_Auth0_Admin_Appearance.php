@@ -112,7 +112,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
       <div class="subelement">
         <span class="description">
           <?php echo __( 'Read more about the gravatar integration ', WPA0_LANG ); ?>
-          <a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#gravatar-boolean"><?php echo __( 'HERE', WPA0_LANG ); ?></a></span>
+          <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#gravatar-boolean-"><?php echo __( 'HERE', WPA0_LANG ); ?></a></span>
       </div>
     <?php
   }
