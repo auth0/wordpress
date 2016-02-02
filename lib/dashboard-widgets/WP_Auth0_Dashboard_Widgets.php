@@ -31,7 +31,7 @@ class WP_Auth0_Dashboard_Widgets  {
 
 		if ( ! get_user_meta($user_id, 'a0_ignore_widgets_explanation') ) {
 	        echo '<div class="updated"><p>';
-	        printf(__('Auth0 tip: You can filter the data clicking on the charts. Click again to clear the selection.  | <a href="%1$s">Hide</a>'), '?a0_ignore_widgets_explanation=0');
+	        printf(__('Auth0 tip: You can filter the data by clicking on the charts. Click again to clear the selection.  | <a href="%1$s">Hide</a>'), '?a0_ignore_widgets_explanation=0');
 	        echo "</p></div>";
 		}
 	}
