@@ -198,7 +198,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     ?>
     <textarea cols="25" name="<?php echo $this->options->get_options_name(); ?>[ip_ranges]" id="wpa0_ip_ranges"><?php echo esc_textarea( $v ); ?></textarea>
     <div class="subelement">
-      <span class="description"><?php echo __( 'Only one range per line! Range format should be as: <code>xx.xx.xx.xx - yy.yy.yy.yy</code> (spaces will be trimmed)', WPA0_LANG ); ?></span>
+      <span class="description"><?php echo __( 'Only one range per line! Range format should be as follows: <code>xx.xx.xx.xx - yy.yy.yy.yy</code> (spaces will be trimmed)', WPA0_LANG ); ?></span>
     </div>
     <?php
   }
