@@ -37,6 +37,12 @@
 		    		<div class="a0-spinner-css"></div>
 		    		<span>Updating the connections settings</span>
 		    	</div>
+
+		    	<p class="a0-message a0-tip row">
+      			<b>Pro Tip:</b>
+      			To set your own app keys and settings for the social connections, access the <a target="_blank" href="https://manage.auth0.com/#/connections/social">Auth0 Dashboard</a>. 
+       		</p>
+
 		    	<div class="connections row">
 					  <?php foreach($social_connections as $social_connection) { ?>
 					    <div class="connection col-sm-4 col-xs-6">
