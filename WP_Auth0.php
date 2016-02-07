@@ -793,7 +793,7 @@ function get_currentauth0userinfo() {
         $result = $wpdb->get_row($wpdb->prepare($sql, $current_user->ID));
         if (is_null($result) || $result instanceof WP_Error ) {
 
-            self::insertAuth0Error('get_currentauth0userinfo',$result);
+            WP_Auth0::insertAuth0Error('get_currentauth0userinfo',$result);
 
             return null;
         }
