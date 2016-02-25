@@ -94,6 +94,7 @@ class WP_Auth0_Users {
 				FROM ' . $wpdb->auth0_user .' a
 				JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id
 				WHERE a.auth0_id = %s';
+
 		$userRow = $wpdb->get_row( $wpdb->prepare( $sql, $id ) );
 
 		if ( is_null( $userRow ) ) {

@@ -153,6 +153,21 @@
 				jQuery('.subelement.fullcontact').addClass('hidden');
 			}
 		});
+		jQuery('#wpa0_passwordless_enabled').click(function() {
+			if (this.checked) {
+				jQuery('#wpa0_cdn_url').hide();
+				jQuery('#wpa0_passwordless_cdn_url').show();
+				jQuery('#wpa0_passwordless_method_social').parent().parent().show();
+			} else {
+				jQuery('#wpa0_passwordless_method_social').parent().parent().hide();
+				jQuery('#wpa0_passwordless_cdn_url').hide();
+				jQuery('#wpa0_cdn_url').show();
+			}
+		});
+
+		if (jQuery('#wpa0_passwordless_enabled:checked').length === 0) {
+			jQuery('#wpa0_passwordless_method_social').parent().parent().hide();
+		}
 
 	});
 

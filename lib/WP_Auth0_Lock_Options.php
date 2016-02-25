@@ -10,6 +10,22 @@ class WP_Auth0_Lock_Options {
         $this->extended_settings = $extended_settings;
     }
 
+    public function get_lock_classname() {
+        if ($this->_get_boolean( $this->wp_options->get('passwordless_enabled') ) ) {
+            return 'Auth0LockPasswordless';
+        } else {
+            return 'Auth0Lock';
+        }
+    }
+
+    public function get_lock_show_method() {
+        if ($this->_get_boolean( $this->wp_options->get('passwordless_enabled') ) ) {
+            return $this->wp_options->get('passwordless_method');
+        } else {
+            return 'show';
+        }
+    }
+
     public function get_code_callback_url() {
         return home_url('/index.php?auth0=1');
     }
@@ -131,8 +147,11 @@ class WP_Auth0_Lock_Options {
 			$options_obj['sso'] = $this->_get_boolean( $settings['sso'] );
 		}
 		if ( $this->_is_valid( $settings, 'icon_url' ) ) {
-			$options_obj['icon'] = $settings['icon_url'];
-		}
+            $options_obj['icon'] = $settings['icon_url'];
+        }
+        if ( $this->_is_valid( $settings, 'lock_connections' ) ) {
+            $options_obj['connections'] = explode(",", $settings['lock_connections']);
+        }
 		if ( isset( $settings['extra_conf'] ) && trim( $settings['extra_conf'] ) !== '' ) {
 			$extra_conf_arr = json_decode( $settings['extra_conf'], true );
 			$options_obj = array_merge( $extra_conf_arr, $options_obj );

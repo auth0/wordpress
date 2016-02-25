@@ -358,6 +358,7 @@ class WP_Auth0_LoginManager {
 
 		} else {
 			try {
+
 				$creator = new WP_Auth0_UserCreator($this->a0_options);
 				$user_id = $creator->create( $userinfo, $id_token, $access_token, $this->default_role, $this->ignore_unverified_email );
 

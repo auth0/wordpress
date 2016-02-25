@@ -22,6 +22,13 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
     $advancedOptions = array(
 
+      array( 'id' => 'wpa0_passwordless_enabled', 'name' => 'Use passwordless login', 'function' => 'render_passwordless_enabled' ),
+      array( 'id' => 'wpa0_passwordless_method', 'name' => 'Use passwordless login', 'function' => 'render_passwordless_method' ),
+
+      array( 'id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url' ),
+
+      array( 'id' => 'wpa0_connections', 'name' => 'Connections', 'function' => 'render_connections' ),
+
       array( 'id' => 'wpa0_remember_users_session', 'name' => 'Remember users session', 'function' => 'render_remember_users_session' ),
       array( 'id' => 'wpa0_link_auth0_users', 'name' => 'Link users with same email', 'function' => 'render_link_auth0_users' ),
       
@@ -42,7 +49,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges', 'function' => 'render_ip_ranges' ),
       array( 'id' => 'wpa0_valid_proxy_ip', 'name' => 'Valid Proxy IP', 'function' => 'render_valid_proxy_ip' ),
       array( 'id' => 'wpa0_extra_conf', 'name' => 'Extra settings', 'function' => 'render_extra_conf' ),
-      array( 'id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url' ),
       array( 'id' => 'wpa0_metrics', 'name' => 'Anonymous data', 'function' => 'render_metrics' ),
 
     );
@@ -52,6 +58,41 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     }
 
     $this->init_option_section( '', 'advanced', $advancedOptions );
+  }
+
+  public function render_passwordless_method() {
+    $v = $this->options->get( 'passwordless_method' );
+    ?>
+      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social" value="social" <?php echo checked( $v, 'social', false ); ?>/><label for="wpa0_passwordless_method_social">Social</label>
+
+      <br>
+
+      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_sms" value="sms" <?php echo checked( $v, 'sms', false ); ?>/><label for="wpa0_passwordless_method_sms">SMS</label>
+
+      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social_sms" value="socialOrSms" <?php echo checked( $v, 'socialOrSms', false ); ?>/><label for="wpa0_passwordless_method_social_sms">Social or SMS</label>
+
+      <br>
+
+      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_magiclink" value="magiclink" <?php echo checked( $v, 'magiclink', false ); ?>/><label for="wpa0_passwordless_method_magiclink">Magin Link</label>
+
+      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social_magiclink" value="socialOrMagiclink" <?php echo checked( $v, 'socialOrMagiclink', false ); ?>/><label for="wpa0_passwordless_method_social_magiclink">Social or Magin Link</label>
+
+      <br>
+
+      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_emailcode" value="emailcode" <?php echo checked( $v, 'emailcode', false ); ?>/><label for="wpa0_passwordless_method_emailcode">Email Code</label>
+
+      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social_emailcode" value="socialOrEmailcode" <?php echo checked( $v, 'socialOrEmailcode', false ); ?>/><label for="wpa0_passwordless_method_social_emailcode">Social or Email Code</label>
+
+      
+
+
+      <div class="subelement">
+        <span class="description">
+          <?php echo __( 'For more info about the password policies check ', WPA0_LANG ); ?>
+          <a target="_blank" href="https://auth0.com/docs/password-strength"><?php echo __( 'HERE', WPA0_LANG ); ?></a>
+        </span>
+      </div>
+    <?php
   }
 
   public function render_jwt_auth_integration() {
@@ -97,6 +138,18 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     ?>
       <div class="subelement">
         <span class="description"><?php echo __( 'Links accounts with the same e-mail address. It will only occur if both e-mails are previously verified.', WPA0_LANG ); ?></span>
+      </div>
+    <?php
+  }
+
+  public function render_passwordless_enabled() {
+    $v = $this->options->get( 'passwordless_enabled' );
+
+    echo $this->render_a0_switch("wpa0_passwordless_enabled", "passwordless_enabled", 1, 1 == $v);
+    ?>
+      
+      <div class="subelement">
+        <span class="description"><?php echo __( 'This option will replace the login widget by Lock Passwordles (Username and password login will not be enabled).', WPA0_LANG ); ?></span>
       </div>
     <?php
   }
@@ -240,11 +293,27 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_cdn_url() {
-    $v = $this->options->get( 'cdn_url' );
+    $passwordless_enabled = $this->options->get( 'passwordless_enabled' );
+    $cdn_url = $this->options->get( 'cdn_url');
+    $passwordless_cdn_url = $this->options->get( 'passwordless_cdn_url' );
     ?>
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[cdn_url]" id="wpa0_cdn_url" value="<?php echo esc_attr( $v ); ?>"/>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[cdn_url]" id="wpa0_cdn_url" value="<?php echo esc_attr( $cdn_url ); ?>" style="<?php echo $passwordless_enabled ? 'display:none' : '' ?>"/>
+
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[wpa0_passwordless_cdn_url]" id="wpa0_passwordless_cdn_url" value="<?php echo esc_attr( $passwordless_cdn_url ); ?>" style="<?php echo $passwordless_enabled ? '' : 'display:none' ?>"/>
+
       <div class="subelement">
         <span class="description"><?php echo __( 'Point this to the latest widget available in the CDN', WPA0_LANG ); ?></span>
+      </div>
+    <?php
+  }
+
+  public function render_connections() {
+    $v = $this->options->get( 'lock_connections' );
+    ?>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[lock_connections]" id="wpa0_connections" value="<?php echo esc_attr( $v ); ?>" />
+
+      <div class="subelement">
+        <span class="description"><?php echo __( 'This is used to select which connections should lock show. It is ignored when empty and is mandatory for passwordless with social mode.', WPA0_LANG ); ?></span>
       </div>
     <?php
   }
@@ -285,6 +354,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function basic_validation( $old_options, $input ) {
     $input['requires_verified_email'] = ( isset( $input['requires_verified_email'] ) ? $input['requires_verified_email'] : 0 );
     $input['remember_users_session'] = ( isset( $input['remember_users_session'] ) ? $input['remember_users_session'] : 0 ) == 1;
+    $input['passwordless_enabled'] = ( isset( $input['passwordless_enabled'] ) ? $input['passwordless_enabled'] : 0 ) == 1;
     $input['jwt_auth_integration'] = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
     $input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
     $input['metrics'] = ( isset( $input['metrics'] ) ? $input['metrics'] : 0 );
@@ -298,6 +368,13 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $input['migration_ips'] = sanitize_text_field($old_options['migration_ips']);
 
     $input['valid_proxy_ip'] = ( isset( $input['valid_proxy_ip'] ) ? $input['valid_proxy_ip'] : null );
+
+    $input['lock_connections'] = trim($input['lock_connections']);
+
+    if (empty($input['lock_connections']) && strpos(strtolower($input['passwordless_method']), 'social') !== false) {
+      $error = __("Please complete the list of connections to be used by Lock in social mode.", WPA0_LANG);
+      self::add_validation_error($error);
+    } 
 
     if (trim($input["extra_conf"]) != '')
     {

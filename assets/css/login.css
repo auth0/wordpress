@@ -26,6 +26,43 @@ body.a0-widget-open>* {
 .auth0-login{
     margin-bottom: 20px;
 }
+.login form.auth0-lock-widget {
+    padding:0;
+    overflow: visible;
+}
+
+.login form.auth0-lock-widget input[type=text], 
+.login form.auth0-lock-widget input[type=search], 
+.login form.auth0-lock-widget input[type=radio], 
+.login form.auth0-lock-widget input[type=tel], 
+.login form.auth0-lock-widget input[type=time], 
+.login form.auth0-lock-widget input[type=url], 
+.login form.auth0-lock-widget input[type=week], 
+.login form.auth0-lock-widget input[type=password], 
+.login form.auth0-lock-widget input[type=checkbox], 
+.login form.auth0-lock-widget input[type=color], 
+.login form.auth0-lock-widget input[type=date], 
+.login form.auth0-lock-widget input[type=datetime], 
+.login form.auth0-lock-widget input[type=datetime-local], 
+.login form.auth0-lock-widget input[type=email], 
+.login form.auth0-lock-widget input[type=month], 
+.login form.auth0-lock-widget input[type=number], 
+.login form.auth0-lock-widget select, 
+.login form.auth0-lock-widget textarea {
+    margin: 0 !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.auth0-lock.auth0-lock.auth0-lock-opened-in-frame .auth0-lock-badge-bottom { 
+    -webkit-transform: translateY(300%) scale(1) !important;
+    transform: translateY(300%) scale(1) !important;
+}
+
+.auth0-lock.auth0-lock.auth0-lock-opened-in-frame .auth0-lock-badge-bottom svg #Lock{ 
+    fill-opacity: 0.4;
+    fill: #bbb;
+}
 
 #loginform,
 #login #nav,

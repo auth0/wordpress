@@ -47,7 +47,7 @@ class WP_Auth0_UserCreator {
 
         $user_id = null;
 
-        if (!is_null($joinUser) && $joinUser instanceof WP_User) {
+        if (!is_null($joinUser) && $joinUser instanceof WP_User) { 
 // If we are here, we have a potential join user
 // Don't allow creation or assignation of user if the email is not verified, that would
 // be hijacking
@@ -59,7 +59,6 @@ class WP_Auth0_UserCreator {
             }
 
         } elseif ($allow_signup) {
-
 // If we are here, we need to create the user
             $user_id = WP_Auth0_Users::create_user($userinfo, $role);
 

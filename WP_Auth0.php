@@ -213,8 +213,13 @@ class WP_Auth0 {
 
 	public function shortcode( $atts ) {
 		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
 
+		if ( WP_Auth0_Options::Instance()->get('passwordless_enabled') ) {
+			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('passwordless_cdn_url'), 'jquery' ); 
+		} else {
+			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );	
+		}
+		
 		ob_start();
 		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
 		renderAuth0Form( false, $atts );
@@ -248,7 +253,12 @@ class WP_Auth0 {
 		}
 
 		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
+
+		if ( WP_Auth0_Options::Instance()->get('passwordless_enabled') ) {
+			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('passwordless_cdn_url'), 'jquery' ); 
+		} else {
+			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );	
+		}
 
 		ob_start();
 		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';

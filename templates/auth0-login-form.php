@@ -102,7 +102,7 @@ $options = json_encode($lock_options->get_lock_options());
             function a0ShowLoginModal() {
                 var options = <?php echo json_encode($lock_options->get_lock_options()); ?>;
 
-                lock.show(options, callback);
+                lock.<?php echo $lock_options->get_lock_show_method(); ?>(options);
             }
 
             function getHashParams() {
@@ -132,13 +132,12 @@ $options = json_encode($lock_options->get_lock_options());
             function a0ShowLoginModal() {
                 var options = <?php echo $options; ?>;
 
-                lock.show(options, '<?php echo $lock_options->get_code_callback_url(); ?>');
+                lock.<?php echo $lock_options->get_lock_show_method(); ?>(options);
             }
 
         <?php } ?>
 
-
-        var lock = new Auth0Lock('<?php echo $lock_options->get_client_id(); ?>', '<?php echo $lock_options->get_domain(); ?>');
+        var lock = new <?php echo $lock_options->get_lock_classname(); ?>('<?php echo $lock_options->get_client_id(); ?>', '<?php echo $lock_options->get_domain(); ?>');
 
         <?php if( ! empty( $custom_js )) { ?>
 
