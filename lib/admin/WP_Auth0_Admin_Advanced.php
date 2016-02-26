@@ -371,7 +371,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
     $input['lock_connections'] = trim($input['lock_connections']);
 
-    if (empty($input['lock_connections']) && strpos(strtolower($input['passwordless_method']), 'social') !== false) {
+    if ($input['passwordless_enabled'] && empty($input['lock_connections']) && strpos(strtolower($input['passwordless_method']), 'social') !== false) {
       $error = __("Please complete the list of connections to be used by Lock in social mode.", WPA0_LANG);
       self::add_validation_error($error);
     } 
