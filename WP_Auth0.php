@@ -219,6 +219,10 @@ class WP_Auth0 {
 		} else {
 			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );	
 		}
+
+		if (!isset($atts['redirect_to'])) {
+			$atts['redirect_to'] = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+		}
 		
 		ob_start();
 		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';

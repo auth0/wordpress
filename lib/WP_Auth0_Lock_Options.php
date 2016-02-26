@@ -184,7 +184,11 @@ class WP_Auth0_Lock_Options {
         if (isset($extended_settings['show_as_modal'])) unset($extended_settings['show_as_modal']);
         if (isset($extended_settings['modal_trigger_name'])) unset($extended_settings['modal_trigger_name']);
 
-        $state = $this->get_state_obj();
+        $redirect_to = null;
+        if (isset($this->extended_settings['redirect_to'])) {
+            $redirect_to = $this->extended_settings['redirect_to'];
+        }
+        $state = $this->get_state_obj($redirect_to);
 
         $options_obj = $this->build_settings($this->wp_options->get_options());
         $extended_settings = $this->build_settings($extended_settings);

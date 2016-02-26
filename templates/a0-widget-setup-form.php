@@ -12,6 +12,7 @@ $extra_conf = isset($instance[ 'extra_conf' ]) ? $instance[ 'extra_conf' ] : '';
 $remember_last_login = isset($instance[ 'remember_last_login' ]) ? $instance[ 'remember_last_login' ] : '';
 $custom_css = isset($instance[ 'custom_css' ]) ? $instance[ 'custom_css' ] : '';
 $custom_js = isset($instance[ 'custom_js' ]) ? $instance[ 'custom_js' ] : '';
+$redirect_to = isset($instance[ 'redirect_to' ]) ? $instance[ 'redirect_to' ] : '';
 
 ?>
 
@@ -28,6 +29,12 @@ $custom_js = isset($instance[ 'custom_js' ]) ? $instance[ 'custom_js' ] : '';
     <input class="widefat" id="<?php echo $this->get_field_id( 'form_title' ); ?>"
            name="<?php echo $this->get_field_name( 'form_title' ); ?>"
            type="text" value="<?php echo esc_attr( $form_title ); ?>" />
+</p>
+<p>
+    <label for="<?php echo $this->get_field_id( 'redirect_to' ); ?>"><?php _e( 'Redirect after login:' ); ?></label>
+    <input class="widefat" id="<?php echo $this->get_field_id( 'redirect_to' ); ?>"
+           name="<?php echo $this->get_field_name( 'redirect_to' ); ?>"
+           type="text" value="<?php echo esc_attr( $redirect_to ); ?>" />
 </p>
 <p>
     <label><?php _e( 'Show big social buttons:' ); ?></label>
