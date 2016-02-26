@@ -73,9 +73,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
       <br>
 
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_magiclink" value="magiclink" <?php echo checked( $v, 'magiclink', false ); ?>/><label for="wpa0_passwordless_method_magiclink">Magin Link</label>
+      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_magiclink" value="magiclink" <?php echo checked( $v, 'magiclink', false ); ?>/><label for="wpa0_passwordless_method_magiclink">Magic Link</label>
 
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social_magiclink" value="socialOrMagiclink" <?php echo checked( $v, 'socialOrMagiclink', false ); ?>/><label for="wpa0_passwordless_method_social_magiclink">Social or Magin Link</label>
+      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social_magiclink" value="socialOrMagiclink" <?php echo checked( $v, 'socialOrMagiclink', false ); ?>/><label for="wpa0_passwordless_method_social_magiclink">Social or Magic Link</label>
 
       <br>
 
