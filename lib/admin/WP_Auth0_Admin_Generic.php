@@ -58,11 +58,6 @@ class WP_Auth0_Admin_Generic {
 
     if (($input[$key] !== null && $old_options[$key] === null) || ($input[$key] === null && $old_options[$key] !== null)) {
 
-      // var_dump($key,
-      //   $input[$key],
-      //   $old_options[$key],
-      //   (($input[$key] !== null && $old_options[$key] === null) || ($input[$key] === null && $old_options[$key] !== null)));exit;
-
       try {
 
         $operations = new WP_Auth0_Api_Operations($this->options);
