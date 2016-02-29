@@ -90,25 +90,34 @@ class WP_Auth0_InitialSetup_Consent {
     $app_token = $this->a0_options->get( 'auth0_app_token' );
     $domain = $this->a0_options->get( 'domain' );
 
-    $client_response = WP_Auth0_Api_Client::create_client($domain, $app_token, $name);
+    $client_id = trim($this->a0_options->get( 'client_id' ));
+    $ignore_connection_creation = false;
 
-    if ($client_response === false) {
-        wp_redirect( admin_url( 'admin.php?page=wpa0&error=cant_create_client' ) );
-        exit;
+    if (empty($client_id)) {
+      $ignore_connection_creation = true;
+
+      $client_response = WP_Auth0_Api_Client::create_client($domain, $app_token, $name);
+
+      if ($client_response === false) {
+          wp_redirect( admin_url( 'admin.php?page=wpa0&error=cant_create_client' ) );
+          exit;
+      }
+
+      $this->a0_options->set( 'client_id', $client_response->client_id );
+      $this->a0_options->set( 'client_secret', $client_response->client_secret );
+
+      $client_id = $client_response->client_id;
     }
-
-    $this->a0_options->set( 'client_id', $client_response->client_id );
-    $this->a0_options->set( 'client_secret', $client_response->client_secret );
 
     $connections = WP_Auth0_Api_Client::search_connection($domain, $app_token);
 
     foreach ($connections as $connection) {
 
-      if ( in_array( $client_response->client_id, $connection->enabled_clients ) ) {
-        if ( $connection->strategy === 'auth0' ) {
-          $enabled_clients = array_diff($connection->enabled_clients, array($client_response->client_id));
+      if ( in_array( $client_id, $connection->enabled_clients ) ) {
+        if ( $connection->strategy === 'auth0' && $ignore_connection_creation) {
+          $enabled_clients = array_diff($connection->enabled_clients, array($client_id));
           WP_Auth0_Api_Client::update_connection($domain, $app_token, $connection->id, array('enabled_clients' => array_values($enabled_clients)));
-				} else {
+				} elseif ($connection->strategy !== 'auth0') {
           $this->a0_options->set_connection( "social_{$connection->name}" , 1 );
           $this->a0_options->set_connection( "social_{$connection->name}_key" , isset($connection->options->client_id) ? $connection->options->client_id : null );
           $this->a0_options->set_connection( "social_{$connection->name}_secret" , isset($connection->options->client_secret) ? $connection->options->client_secret : null );
@@ -116,20 +125,23 @@ class WP_Auth0_InitialSetup_Consent {
       }
     }
 
-    $secret = $this->a0_options->get( 'client_secret' );
-    $token_id = uniqid();
-    $migration_token = JWT::encode(array('scope' => 'migration_ws', 'jti' => $token_id), JWT::urlsafeB64Decode( $secret ));
-    $migration_token_id = $token_id;
+    if ($ignore_connection_creation) {
+      $secret = $this->a0_options->get( 'client_secret' );
+      $token_id = uniqid();
+      $migration_token = JWT::encode(array('scope' => 'migration_ws', 'jti' => $token_id), JWT::urlsafeB64Decode( $secret ));
+      $migration_token_id = $token_id;
 
-    $operations = new WP_Auth0_Api_Operations($this->a0_options);
-    $response = $operations->create_wordpress_connection($this->a0_options->get( 'auth0_app_token' ), $this->hasInternetConnection, $migration_token);
+      $operations = new WP_Auth0_Api_Operations($this->a0_options);
+      $response = $operations->create_wordpress_connection($this->a0_options->get( 'auth0_app_token' ), $this->hasInternetConnection, $migration_token);
 
-    $this->a0_options->set( "db_connection_id" , $response );
-    $this->a0_options->set( "db_connection_enabled" , $response ? 1 : 0 );
-    $this->a0_options->set( "migration_ws" , $this->hasInternetConnection );
-    $this->a0_options->set( "migration_token" , $migration_token );
-    $this->a0_options->set( "migration_token_id" , $migration_token_id );
-    $this->a0_options->set( "password_policy" , null );
+      $this->a0_options->set( "db_connection_id" , $response );
+      $this->a0_options->set( "db_connection_enabled" , $response ? 1 : 0 );
+      $this->a0_options->set( "migration_ws" , $this->hasInternetConnection );
+      $this->a0_options->set( "migration_token" , $migration_token );
+      $this->a0_options->set( "migration_token_id" , $migration_token_id );
+      $this->a0_options->set( "password_policy" , null );
+    }
+    
 
     wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=2&profile=' . $this->state ) );
     exit();
