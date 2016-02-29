@@ -32,6 +32,8 @@ When it is enabled, the token is returned in the login callback and then sent ba
 
 ## Integrating with the plugin
 
+### User login action
+
 The plugin provides an action to get notified each time a user logs in or is created in WordPress. This action is called `auth0_user_login` and receives 5 params:
 1. $user_id (int): the id of the user logged in
 2. $user_profile (stdClass): the Auth0 profile of the user
@@ -48,6 +50,17 @@ To hook to this action, you will need to do the following:
     }
 ```
 
+### Render verify email page
+
+This filter is called when a user with an unverified email logs in, and the `Requires verified email` setting is enabled.
+
+To hook to this filter, you will need to do the following:
+```
+    add_filter( 'auth0_verify_email_page', 'render_verify_email_page', 1, 3 );
+    function render_verify_email_page($html, $userinfo, $id_token) {
+        return "You need to verify your email to log in.";
+    }   
+```
 ## API authentication
 
 The last version of the plugin provides the ability integrate with **wp-jwt-auth** plugin to authenticate api calls via a HTTP Authorization Header.

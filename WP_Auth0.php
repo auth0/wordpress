@@ -50,6 +50,8 @@ class WP_Auth0 {
 		// Add a hook to add Auth0 code on the login page.
 		add_filter( 'login_message', array( $this, 'render_form' ) );
 
+		add_filter( 'auth0_verify_email_page', array( $this, 'render_verify_email_page' ), 0, 3 );
+
 		// Add hook to handle when a user is deleted.
 		add_action( 'delete_user', array( $this, 'delete_user' ) );
 
@@ -247,6 +249,18 @@ class WP_Auth0 {
 	?>
 		<link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' />
 	<?php
+	}
+
+	public function render_verify_email_page($html, $userinfo, $id_token) {
+		ob_start();
+		$domain = $this->a0_options->get( 'domain' );
+		$token = $id_token;
+		$email = $userinfo->email;
+		$connection = $userinfo->identities[0]->connection;
+		$userId = $userinfo->user_id;
+		include WPA0_PLUGIN_DIR . 'templates/verify-email.php';
+
+		return ob_get_clean();
 	}
 
 	public function render_form( $html ) {
