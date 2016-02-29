@@ -403,16 +403,6 @@ class WP_Auth0_LoginManager {
 	private function dieWithVerifyEmail($userinfo, $id_token) {
 		
 		$html = apply_filters( 'auth0_verify_email_page' , '', $userinfo, $id_token );
-
-		// ob_start();
-		// $domain = $this->a0_options->get( 'domain' );
-		// $token = $id_token;
-		// $email = $userinfo->email;
-		// $connection = $userinfo->identities[0]->connection;
-		// $userId = $userinfo->user_id;
-		// include WPA0_PLUGIN_DIR . 'templates/verify-email.php';
-
-		// $html = ob_get_clean();
 		wp_die( $html );
 	}
 
