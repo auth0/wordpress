@@ -359,17 +359,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
     $input['metrics'] = ( isset( $input['metrics'] ) ? $input['metrics'] : 0 );
     $input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
-
-    if (isset($input['connections'])) {
-
-      if (isset($input['connections']['social_twitter_key'])) $input['connections']['social_twitter_key'] = sanitize_text_field( $input['connections']['social_twitter_key'] );
-
-      if (isset($input['connections']['social_twitter_secret'])) $input['connections']['social_twitter_secret'] = sanitize_text_field( $input['connections']['social_twitter_secret'] );
-
-      if (isset($input['connections']['social_facebook_key'])) $input['connections']['social_facebook_key'] = sanitize_text_field( $input['connections']['social_facebook_key'] );
-
-      if (isset($input['connections']['social_facebook_secret'])) $input['connections']['social_facebook_secret'] = sanitize_text_field( $input['connections']['social_facebook_secret'] );
-    }
+    $input['connections']['social_twitter_key'] = sanitize_text_field( $input['connections']['social_twitter_key'] );
+    $input['connections']['social_twitter_secret'] = sanitize_text_field( $input['connections']['social_twitter_secret'] );
+    $input['connections']['social_facebook_key'] = sanitize_text_field( $input['connections']['social_facebook_key'] );
+    $input['connections']['social_facebook_secret'] = sanitize_text_field( $input['connections']['social_facebook_secret'] );
 
     $input['migration_ips_filter'] =  ( isset( $input['migration_ips_filter'] ) ? $input['migration_ips_filter'] : 0 );
     $input['migration_ips'] = sanitize_text_field($old_options['migration_ips']);
@@ -406,11 +399,11 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
         $input['migration_token'] = JWT::encode(array('scope' => 'migration_ws', 'jti' => $token_id), JWT::urlsafeB64Decode( $secret ));
         $input['migration_token_id'] = $token_id;
 
-        // if ($response === false) {
-          $error = __( 'Migration webservices are enabled, please update the connection manually. More info ', WPA0_LANG );
+        if ($response === false) {
+          $error = __( 'There was an error enabling your custom database. Check how to do it manually ', WPA0_LANG );
           $error .= '<a href="https://manage.auth0.com/#/connections/database">HERE</a>.';
           $this->add_validation_error( $error );
-        // }
+        }
 
       } else {
         $input['migration_token'] = null;
@@ -423,7 +416,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
           )
         ));
 
-        if ($response === null) {
+        if ($response === false) {
           $error = __( 'There was an error disabling your custom database. Check how to do it manually ', WPA0_LANG );
           $error .= '<a href="https://manage.auth0.com/#/connections/database">HERE</a>.';
           $this->add_validation_error( $error );
