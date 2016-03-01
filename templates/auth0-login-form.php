@@ -1,145 +1,70 @@
 <?php
-$client_id = WP_Auth0_Options::get('client_id');
 
-if (trim($client_id) == "") return;
+$lock_options = new WP_Auth0_Lock_Options($specialSettings);
 
-$wordpress_login_enabled = WP_Auth0_Options::get('wordpress_login_enabled') == 1;
-$auth0_implicit_workflow = WP_Auth0_Options::get('auth0_implicit_workflow') == 1;
-
-$domain = WP_Auth0_Options::get('domain');
-$cdn = WP_Auth0_Options::get('cdn_url');
-
-$allow_signup = WP_Auth0_Options::is_wp_registration_enabled();
-
-$extra_css = apply_filters( 'auth0_login_css', '');
-$showAsModal = (isset($specialSettings['show_as_modal']) && $specialSettings['show_as_modal'] == 1);
-$modalTriggerName = 'Login';
-if (isset($specialSettings['modal_trigger_name']) && $specialSettings['modal_trigger_name'] != '')
-{
-    $modalTriggerName = $specialSettings['modal_trigger_name'];
+if ( ! $lock_options->can_show() ) {
+?>
+    <p><?php _e('Auth0 Integration has not yet been set up! Please visit your Wordpress Auth0 settings and fill in the required settings.', WPA0_LANG); ?></p>
+<?php
+    return;
 }
 
-if (isset($specialSettings['show_as_modal'])) unset($specialSettings['show_as_modal']);
-if (isset($specialSettings['modal_trigger_namemodal_trigger_name'])) unset($specialSettings['modal_trigger_name']);
+$extra_css = trim(apply_filters( 'auth0_login_css', ''));
+$extra_css .= trim($lock_options->get_custom_css());
 
-$form_desc = WP_Auth0_Options::get('form_desc');
-if (isset($_GET['interim-login']) && $_GET['interim-login'] == 1) {
-    $interim_login = true;
-} else {
-    $interim_login = false;
-}
+$custom_js = trim($lock_options->get_custom_js());
 
-// Get title for login widget
 if (empty($title)) {
     $title = "Sign In";
 }
 
-$stateObj = array("interim" => $interim_login, "uuid" =>uniqid());
-if (isset($_GET['redirect_to'])) {
-    $stateObj["redirect_to"] = addslashes($_GET['redirect_to']);
-}
+$options = json_encode($lock_options->get_lock_options());
 
-$state = json_encode($stateObj);
-
-
-$options_obj = WP_Auth0::buildSettings(WP_Auth0_Options::get_options());
-
-$sso = $options_obj['sso'];
-
-$extraOptions = array(
-    "authParams"    => array("state" => $state),
-);
-$callbackURL = site_url('/index.php?auth0=1');
-if(!$auth0_implicit_workflow) {
-    $extraOptions["callbackURL"] = $callbackURL;
-}
-else {
-    $extraOptions["authParams"]["scope"] = "openid name email nickname email_verified identities";
-
-    if ($sso) {
-        $extraOptions["callbackOnLocationHash"] = true;
-        $extraOptions["callbackURL"] = site_url('/wp-login.php');
-    }
-}
-
-$options_obj = array_merge( $extraOptions, $options_obj  );
-
-if (isset($specialSettings)){
-    $options_obj = array_merge( $options_obj , $specialSettings );
-}
-
-if (!$showAsModal){
-    $options_obj['container'] = 'auth0-login-form';
-}
-
-if (!$allow_signup) {
-    $options_obj['disableSignupAction'] = true;
-}
-$custom_js = null;
-$custom_css = null;
-if(isset($options_obj['custom_js'])) {
-  $custom_js = $options_obj['custom_js'];
-}
-if(isset($options_obj['custom_css'])) {
-  $custom_css = $options_obj['custom_css'];
-}
-
-unset ($options_obj['custom_js']);
-unset ($options_obj['custom_css']);
-
-$options = json_encode($options_obj);
-
-if(empty($client_id) || empty($domain)){ ?>
-
-    <p><?php _e('Auth0 Integration has not yet been set up! Please visit your Wordpress Auth0 settings and fill in the required settings.', WPA0_LANG); ?></p>
-
-<?php } else { ?>
-
-    <?php if($custom_css) { ?>
-
-        <style type="text/css">
-            <?php echo $custom_css;?>
-        </style>
-
-    <?php } ?>
-
+?>
 
     <div id="form-signin-wrapper" class="auth0-login">
         <?php include 'error-msg.php'; ?>
         <div class="form-signin">
 
-            <?php if ($showAsModal) { ?>
-
-                <button id="a0LoginButton" onclick="a0ShowLoginModal();" ><?php echo $modalTriggerName; ?></button>
-
+            <?php if ($lock_options->show_as_modal()) { ?>
+                <button id="a0LoginButton" ><?php echo $lock_options->modal_button_name(); ?></button>
             <?php } else { ?>
-                <div id="auth0-login-form">
-                </div>
+                <div id="auth0-login-form"></div>
             <?php } ?>
-            <?php if ($wordpress_login_enabled && $canShowLegacyLogin) { ?>
+
+
+            <?php if ($lock_options->get_wordpress_login_enabled() && $canShowLegacyLogin) { ?>
                 <div id="extra-options">
                     <a href="?wle">Login with WordPress username</a>
                 </div>
             <?php } ?>
+
         </div>
     </div>
+
     <?php if (!empty($extra_css)) { ?>
         <style type="text/css">
             <?php echo $extra_css; ?>
         </style>
     <?php } ?>
-    <script id="auth0" src="<?php echo $cdn ?>"></script>
+
     <script type="text/javascript">
+    var ignore_sso = false;
+    document.addEventListener("DOMContentLoaded", function() {
+
         var callback = null;
 
-        <?php if ($auth0_implicit_workflow) { ?>
+
+        <?php if ( $lock_options->get_auth0_implicit_workflow() ) { ?>
 
             callback = function(err,profile, token) {
 
-                post('<?php echo site_url('/index.php?auth0=implicit'); ?>', {
-                    token:token,
-                    state:<?php echo $state; ?>
-                }, 'POST');
+                if (!err) {
+                    post('<?php echo home_url('/index.php?auth0=implicit'); ?>', {
+                        token:token,
+                        state:<?php echo json_encode($lock_options->get_state_obj()); ?>
+                    }, 'POST');
+                }
 
             };
 
@@ -157,7 +82,14 @@ if(empty($client_id) || empty($domain)){ ?>
                         var hiddenField = document.createElement("input");
                         hiddenField.setAttribute("type", "hidden");
                         hiddenField.setAttribute("name", key);
-                        hiddenField.setAttribute("value", params[key]);
+
+                        var value = params[key];
+
+                        if (typeof(value) === 'object') {
+                            value = JSON.stringify(value);
+                        }
+
+                        hiddenField.setAttribute("value", value);
 
                         form.appendChild(hiddenField);
                      }
@@ -168,79 +100,58 @@ if(empty($client_id) || empty($domain)){ ?>
             }
 
             function a0ShowLoginModal() {
-                var options = <?php echo $options; ?>;
+                var options = <?php echo json_encode($lock_options->get_lock_options()); ?>;
 
-                lock.show(options, callback);
+                lock.<?php echo $lock_options->get_lock_show_method(); ?>(options);
             }
 
-            <?php if ($sso) { ?>
+            function getHashParams() {
 
-                function getHashParams() {
+                var hashParams = {};
+                var e,
+                    a = /\+/g,  // Regex for replacing addition symbol with a space
+                    r = /([^&;=]+)=?([^&;]*)/g,
+                    d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
+                    q = window.location.hash.substring(1);
 
-                    var hashParams = {};
-                    var e,
-                        a = /\+/g,  // Regex for replacing addition symbol with a space
-                        r = /([^&;=]+)=?([^&;]*)/g,
-                        d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
-                        q = window.location.hash.substring(1);
+                while (e = r.exec(q))
+                   hashParams[d(e[1])] = d(e[2]);
 
-                    while (e = r.exec(q))
-                       hashParams[d(e[1])] = d(e[2]);
+                return hashParams;
+            }
 
-                    return hashParams;
-                }
+            var hashParams = getHashParams();
+            if (hashParams && hashParams.id_token) {
+                ignore_sso = true;
+                callback(null,null, hashParams.id_token);
 
-                var hashParams = getHashParams();
-                if (hashParams && hashParams.id_token) {
-
-                    callback(null,null, hashParams.id_token);
-
-                }
-
-            <?php } ?>
+            }
 
         <?php } else { ?>
 
             function a0ShowLoginModal() {
                 var options = <?php echo $options; ?>;
 
-                lock.show(options, '<?php echo $callbackURL; ?>');
+                lock.<?php echo $lock_options->get_lock_show_method(); ?>(options);
             }
 
         <?php } ?>
 
+        var lock = new <?php echo $lock_options->get_lock_classname(); ?>('<?php echo $lock_options->get_client_id(); ?>', '<?php echo $lock_options->get_domain(); ?>');
 
-        var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
-
-        <?php if($custom_js) { ?>
+        <?php if( ! empty( $custom_js )) { ?>
 
             <?php echo $custom_js;?>
 
         <?php } ?>
 
-    <?php if ($sso) { ?>
-
-
-        lock.$auth0.getSSOData(function(err, data) {
-            if (!err && data.sso) {
-                lock.$auth0.signin(<?php echo $options; ?>);
-            } else {
-
-            <?php if (!$showAsModal) { ?>
-                a0ShowLoginModal();
-            <?php } ?>
-
-            }
-        });
-
-    <?php } else { ?>
-        <?php if (!$showAsModal) { ?>
+        <?php if ( ! $lock_options->show_as_modal() ) { ?>
             a0ShowLoginModal();
+        <?php } else { ?>
+
+            jQuery('#a0LoginButton').click(a0ShowLoginModal);
+
         <?php } ?>
-    <?php } ?>
 
-
+    });
     </script>
-<?php
-}
-?>

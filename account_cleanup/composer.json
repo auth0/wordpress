@@ -1,0 +1,12 @@
+{
+    "name": "germanlena/account_cleanup",
+    "authors": [
+        {
+            "name": "German Lena",
+            "email": "german.lena@gmail.com"
+        }
+    ],
+    "require": {
+        "auth0/auth0-php": "^3.0"
+    }
+}

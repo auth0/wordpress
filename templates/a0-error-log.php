@@ -1,6 +1,8 @@
-<div class="wrap">
-    <?php screen_icon(); ?>
-    <h2><?php _e('Auth0 Error Log', WPA0_LANG); ?></h2>
+<div class="a0-wrap">
+
+    <?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'); ?>
+
+    <div class="a0-table"><h1><?php _e('Auth0 Error Log', WPA0_LANG); ?></h1></div>
 
     <table class="a0-table widefat">
         <thead>
@@ -28,8 +30,8 @@
         <tr>
             <td><?php echo date('m/d/Y H:i:s', strtotime($item->date)); ?></td>
             <td><?php echo $item->section; ?></td>
-            <td><?php echo $item->code; ?></td>
-            <td><?php echo $item->message; ?></td>
+            <td><?php echo (empty($item->code) ? '-' : $item->code); ?></td>
+            <td><?php echo strip_tags($item->message); ?></td>
         </tr>
     <?php
         }
@@ -37,4 +39,5 @@
 
         </tbody>
     </table>
+
 </div>

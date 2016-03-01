@@ -1,3 +1,5 @@
+![](https://raw.githubusercontent.com/auth0/wp-auth0/master/banner-1544x500.png)
+
 Wordpress Plugin for Auth0
 ====
 
@@ -30,6 +32,8 @@ When it is enabled, the token is returned in the login callback and then sent ba
 
 ## Integrating with the plugin
 
+### User login action
+
 The plugin provides an action to get notified each time a user logs in or is created in WordPress. This action is called `auth0_user_login` and receives 5 params:
 1. $user_id (int): the id of the user logged in
 2. $user_profile (stdClass): the Auth0 profile of the user
@@ -39,13 +43,24 @@ The plugin provides an action to get notified each time a user logs in or is cre
 
 To hook to this action, you will need to do the following:
 ```
-    add_action( 'auth0_user_login', 'auth0UserLoginAction', 0,5 ); 
+    add_action( 'auth0_user_login', 'auth0UserLoginAction', 0,5 );
 
     function auth0UserLoginAction($user_id, $user_profile, $is_new, $id_token, $access_token) {
         ...
     }
 ```
 
+### Render verify email page
+
+This filter is called when a user with an unverified email logs in, and the `Requires verified email` setting is enabled.
+
+To hook to this filter, you will need to do the following:
+```
+    add_filter( 'auth0_verify_email_page', 'render_verify_email_page', 1, 3 );
+    function render_verify_email_page($html, $userinfo, $id_token) {
+        return "You need to verify your email to log in.";
+    }   
+```
 ## API authentication
 
 The last version of the plugin provides the ability integrate with **wp-jwt-auth** plugin to authenticate api calls via a HTTP Authorization Header.
@@ -183,6 +198,22 @@ We added a new field called "Extra settings" that allows you to add a json objec
 
 Have in mind that all the "Extra settings" that we allow to set up in the plugin settings page will be overrided (For more information about it: https://github.com/auth0/widget).
 
+## Contributing
+
+### How to build the initial setup assets?
+
+You need to install the stylus tool and run this command (inside /assets/css):
+
+```
+$ stylus -c -o initial-setup.css initial-setup/main.styl
+```
+
+To watch and auto-compile it while working:
+
+```
+$ stylus -w -o initial-setup.css initial-setup/main.styl
+```
+
 ## Screenshots
 
 ![](https://raw.githubusercontent.com/auth0/wp-auth0/master/screenshot-1.png)
@@ -199,15 +230,12 @@ Have in mind that all the "Extra settings" that we allow to set up in the plugin
 
 ![](https://raw.githubusercontent.com/auth0/wp-auth0/master/screenshot-7.png)
 
-![](https://raw.githubusercontent.com/auth0/wp-auth0/master/screenshot-8.png)
-
 ## Issue Reporting
 
 If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
 ## Author
 
-* [LaunchPeople](http://launchpeople.dk/)
 * [Auth0](auth0.com)
 
 ## License
