@@ -62,7 +62,7 @@
 
 		<div class="row">
 			<div class="a0-buttons">
-				<a href="<?php echo admin_url("admin.php?page=wpa0-setup&step={$next_step}&profile=social"); ?>" class="a0-button primary">Next</a>
+				<a onclick="onNext()" href="<?php echo admin_url("admin.php?page=wpa0-setup&step={$next_step}&profile=social"); ?>" class="a0-button primary">Next</a>
 	    </div>
     </div>
 
@@ -70,6 +70,18 @@
 </div>
 <script src="http://cdn.auth0.com/js/lock-8.min.js"></script>
 <script type="text/javascript">
+
+document.addEventListener("DOMContentLoaded", function() {
+  metricsTrack('initial-setup:step2:open');
+});
+
+function onNext() {
+	metricsTrack('initial-setup:step2:next');
+}
+
+function onToggleConnection(connection, enabled) {
+	metricsTrack('initial-setup:step2:' + connection + ':' + (enabled ? "on" :"off"));
+}
 
 var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
 
@@ -104,6 +116,8 @@ document.addEventListener("DOMContentLoaded", function() {
 			connection: task.connection,
 			enabled: task.enabled
 		};
+
+		onToggleConnection(task.connection, task.enabled);
 
 		showLock()
 

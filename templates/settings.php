@@ -80,39 +80,47 @@
 
 <script type="text/javascript">
 
-	jQuery('.nav-tabs a').click(function (e) {
-	  e.preventDefault()
-	  jQuery(this).tab('show')
-	})
-
 	function presubmit() {
-		if (typeof(a0metricsLib) !== 'undefined') {
-			a0metricsLib.track('submit:settings', {
-				wp_login_enabled: jQuery('#wpa0_wp_login_enabled').val(),
-				sso: jQuery('#wpa0_sso').val(),
-				singlelogout: jQuery('#wpa0_singlelogout').val(),
-				form_title: jQuery('#wpa0_form_title').val(),
-				social_big_buttons: jQuery('#wpa0_social_big_buttons').val(),
-				gravatar: jQuery('#wpa0_gravatar').val(),
-				custom_css: (jQuery('#wpa0_custom_css').val() !== ""),
-				custom_js: (jQuery('#wpa0_custom_js').val() !== ""),
-				username_style: jQuery('input[name=wp_auth0_settings\\[username_style\\]]:checked').val(),
-				remember_last_login: jQuery('#wpa0_remember_last_login').val(),
-				link_auth0_users: jQuery('#wpa0_link_auth0_users').val(),
-				migration_ws: jQuery('#wpa0_auth0_migration_ws').val(),
-				dict_setted: (jQuery('#wpa0_dict').val() !== false),
-				implicit_workflow: jQuery('#wpa0_auth0_implicit_workflow').val(),
-				auto_login: jQuery('#wpa0_auto_login').val(),
-				auto_login_method: jQuery('#wpa0_auto_login_method').val(),
-				ip_range_check: jQuery('#wpa0_ip_range_check').val(),
-				has_extra_settings: jQuery('#wpa0_extra_conf').val(),
-				cdn_url: jQuery('#wpa0_cdn_url').val()
-			});
-		}
+		metricsTrack('settings:save');
 		return true;
 	}
 
+	function onToggleConnection(connection, enabled) {
+	  metricsTrack('settings:'+connection+':'+(enabled ? 'on' : 'off'));
+	}
+
 	document.addEventListener("DOMContentLoaded", function() {
+
+		jQuery('.nav-tabs a').click(function (e) {
+		  e.preventDefault()
+		  jQuery(this).tab('show')
+		})
+
+		jQuery('input[type=checkbox]').change(function(){
+			var matches = /\[([a-zA-Z0-9_-].*)\]/.exec(this.name);
+			if (matches[1]) {
+				metricsTrack('settings:'+matches[1]+':'+(this.checked ? 'on' : 'off'));
+			}
+		});
+		jQuery('input[type=radio]').change(function(){
+			var matches = /\[([a-zA-Z0-9_-].*)\]/.exec(this.name);
+			if (matches[1]) {
+				metricsTrack('settings:'+matches[1], this.value);
+			}
+		});
+		jQuery('#wpa0_passwordless_cdn_url,#wpa0_cdn_url,#wpa0_connections').focusout(function(){
+			var matches = /\[([a-zA-Z0-9_-].*)\]/.exec(this.name);
+			if (matches[1]) {
+				metricsTrack('settings:'+matches[1], this.value);
+			}
+		});
+
+		jQuery('#wpa0_social_twitter_key,#wpa0_social_twitter_secret,#wpa0_social_facebook_key,#wpa0_social_facebook_secret').focusout(function(){
+			var matches = /\[([a-zA-Z0-9_-].*)\]/.exec(this.name);
+			if (matches[1]) {
+				metricsTrack('settings:'+matches[1]+":"+(this.value === "" ? 'off' : 'on'));
+			}
+		});
 		
 		var q = async.queue(function (task, callback) {
 
@@ -121,6 +129,8 @@
 				connection: task.connection,
 				enabled: task.enabled
 			};
+
+			onToggleConnection(task.connection, task.enabled);
 
 			jQuery.post(ajaxurl, data, function(response) {
 				callback();

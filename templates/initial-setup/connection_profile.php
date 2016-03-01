@@ -8,7 +8,7 @@
       <p class="a0-step-text"><?php _e("Users can log in within their own credentials - social like Google or Facebook, or name/password -  or use their employee credentials through an enterprise connection. Use either or both, and you'll increase your WordPress site's security and gather data about your visitors.", WPA0_LANG); ?></p>
     </div>
     <div class="a0-profiles row">
-      <form action="options.php" method="POST">
+      <form action="options.php" method="POST" id="profile-form">
 
         <input type="hidden" name="action" value="wpauth0_callback_step1" />
 
@@ -56,7 +56,8 @@
                 <p class="text-center"><span class="a0-button link" id="manuallySetToken">This website is not accesible from internet</span></p>
               </div>
               <div class="modal-footer">
-                <input type="submit" class="a0-button primary" value="Continue"/>
+                <!-- <input type="submit" class="a0-button primary" value="Continue"/> -->
+                <a class="a0-button primary submit" href="#">Continue</a>
               </div>
             </div>
           </div>
@@ -119,6 +120,18 @@
 
 
 <script type="text/javascript">
+  var with_token = false;
+
+  document.addEventListener("DOMContentLoaded", function() {
+    metricsTrack('initial-setup:step1:open');
+  });
+
+  jQuery('.a0-button.submit').click(function(e){
+    e.preventDefault();
+    metricsTrack('initial-setup:step1:' + jQuery('#profile-type').val() + ":" + (with_token ? 'token' : 'consent'), function() {
+      jQuery('#profile-form').submit();
+    } );
+  });
   
   jQuery('.profile .a0-button').click(function(e){
     e.preventDefault();
@@ -128,6 +141,7 @@
   });
   jQuery('#manuallySetToken').click(function(e){
     e.preventDefault();
+    with_token = true;
     jQuery('#enterTokenModal').modal();
     jQuery('#connectionSelectedModal').modal('hide');
     return false;

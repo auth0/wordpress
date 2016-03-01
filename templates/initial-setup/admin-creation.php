@@ -22,7 +22,7 @@
       <?php } ?>
 
 
-      <form action="options.php" method="POST">
+      <form action="options.php" method="POST" onsubmit="onNext()">
 
         <div class="row">
           <div class="a0-admin-creation col-sm-6 col-xs-10">
@@ -34,7 +34,7 @@
         <div class="a0-buttons">
           <input type="hidden" name="action" value="wpauth0_callback_step3_social" />
           <input type="submit" class="a0-button primary" value="Submit" />
-          <a href="<?php echo admin_url('admin.php?page=wpa0-setup&step=4&profile=social'); ?>"class="a0-button link"><?php _e("Skip this step", WPA0_LANG); ?></a>
+          <a onclick="onSkip()" href="<?php echo admin_url('admin.php?page=wpa0-setup&step=4&profile=social'); ?>"class="a0-button link"><?php _e("Skip this step", WPA0_LANG); ?></a>
         </div>
 
       </form>
@@ -42,3 +42,20 @@
     </div>
   </div>
 </div>
+<script type="text/javascript">
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  metricsTrack('initial-setup:step3:open');
+
+});
+
+function onNext() {
+  metricsTrack('initial-setup:step3:create-admin');
+}
+
+function onSkip() {
+  metricsTrack('initial-setup:step3:skip');
+}
+
+</script>
