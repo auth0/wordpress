@@ -21,9 +21,7 @@
 
 <script type="text/javascript">
 	function presubmit() {
-		if (typeof(a0metricsLib) !== 'undefined') {
-			a0metricsLib.track('bulk_export:users', {});
-		}
+		metricsTrack('bulk_export:users');
 		return true;
 	}
 </script>

@@ -74,15 +74,11 @@
   })
 
   function presubmit_import() {
-    if (typeof(a0metricsLib) !== 'undefined') {
-      a0metricsLib.track('import:settings', {});
-    }
+    metricsTrack('import:settings');
     return true;
   }
   function presubmit_export() {
-    if (typeof(a0metricsLib) !== 'undefined') {
-      a0metricsLib.track('export:settings', {});
-    }
+    metricsTrack('settings:settings');
     return true;
   }
 </script>

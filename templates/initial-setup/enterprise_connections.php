@@ -40,24 +40,20 @@
 
 document.addEventListener("DOMContentLoaded", function() {
 
-  if (typeof(a0metricsLib) !== 'undefined') {
-    a0metricsLib.track('open:initial-setup', {
-      step:3
-    });
-  }
+  metricsTrack('initial-setup:step2:open');
 
 });
 
 function onClick(connection) {
-  metricsTrack('initial-setup:step4:view:' + connection);
+  metricsTrack('initial-setup:step2:view:' + connection);
 }
 
 function next() {
-  metricsTrack('initial-setup:step4:next');
+  metricsTrack('initial-setup:step2:next');
 }
 
 function gotodashboard() {
-  metricsTrack('initial-setup:step4:dashboard');
+  metricsTrack('initial-setup:step2:dashboard');
 }
 
 </script>
