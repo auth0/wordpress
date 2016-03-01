@@ -45,10 +45,11 @@ Before you start, **make sure the admin user has a valid email that you own**, r
 
 1. The new login page on Wordpress
 2. The admin to configure the plugin
-3. Auth0 dashboard to create a new Application
-4. Enable or disable social plugins from the Auth0 dashboard
-5. This is what happens if you are in the admin and your session expires
-6. Configure enterprise Connections
+3. The new plugin quick setup
+4. Manage your social connections from the plugin
+5. Get info about the supported enterprise connections
+6. Set up the Auth0 widgets
+7. Your home page with the login widget enabled
 
 == Technical Notes ==
 
