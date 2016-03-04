@@ -649,6 +649,8 @@ class WP_Auth0_Api_Client {
 		foreach ($grouped as $resource => $actions) {
 			$str = "";
 
+			sort($actions);
+
 			for($a = 0; $a < count($actions); $a++) {
 				if ($a > 0) {
 					if ($a === count($actions) - 1) {
