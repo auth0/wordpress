@@ -552,6 +552,36 @@ class WP_Auth0_Api_Client {
 		return json_decode($response['body']);
 	}
 
+	public static function change_password($domain, $payload) {
+		$endpoint = "https://$domain/dbconnections/change_password";
+
+		$headers = self::get_info_headers();
+
+		$headers['content-type'] = "application/json";
+
+		$response = wp_remote_post( $endpoint  , array(
+			'method' => 'POST',
+			'headers' => $headers,
+			'body' => json_encode($payload)
+		) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::change_password', $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] != 200 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::change_password', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		if ( $response['response']['code'] >= 300 ) return false;
+
+		return json_decode($response['body']);
+	}
+
 	public static function link_users($domain, $app_token, $main_user_id, $user_id, $provider, $connection_id = null) {
 		$endpoint = "https://$domain/api/v2/users/$main_user_id/identities";
 

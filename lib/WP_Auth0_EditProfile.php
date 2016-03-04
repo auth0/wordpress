@@ -15,10 +15,101 @@ class WP_Auth0_EditProfile {
 
     add_action( 'personal_options_update', array( $this, 'override_email_update' ), 1 );
 
+    add_action( 'show_user_profile', array( $this, 'show_change_password' ));
+    add_action( 'personal_options_update', array( $this, 'update_change_password' ) );
+    add_filter( 'user_profile_update_errors', array( $this, 'validate_new_password' ), 10, 3);
+
     if ( $pagenow == 'profile.php' ) {
       add_action( 'admin_footer', array( $this, 'disable_email_field' ) );
     }
   }
+
+
+  public function validate_new_password($errors, $update, $user){
+    $auth0_password = $_POST['auth0_password'];
+    $auth0_repeat_password = $_POST['auth0_repeat_password'];
+
+    if (empty($auth0_password)) {
+      $errors->add( 'auth0_password', __('<strong>ERROR</strong>: The password can not be empty'), array( 'form-field' => 'auth0_password' ) );
+    }
+    if ($auth0_password != $auth0_repeat_password) {
+      $errors->add( 'auth0_password', __('<strong>ERROR</strong>: The password does not match'), array( 'form-field' => 'auth0_password' ) );
+    }
+  }
+
+
+  public function update_change_password() { 
+    $user_profiles = $this->db_manager->get_current_user_profiles();
+
+    if (empty($user_profiles)) return;
+
+    $auth0_password = $_POST['auth0_password'];
+    $auth0_repeat_password = $_POST['auth0_repeat_password'];
+
+    if (empty($auth0_password) || $auth0_password == $auth0_repeat_password) {
+      $domain = $this->a0_options->get('domain');
+      $client_id = $this->a0_options->get('client_id');
+
+      $user_profile = $user_profiles[0];
+      $connection = null;
+      $email = null;
+
+      foreach ($user_profile->identities as $identity) {
+        if ($identity->provider === 'auth0') {
+          $connection = $identity->connection;
+          $email = $identity->email;
+        }
+      }
+
+      WP_Auth0_Api_Client::change_password($domain, array(
+        'client_id' => $client_id,
+        'email' => $user_profile->email,
+        'password' => $auth0_password,
+        'connection' => $connection
+      ));
+    }
+  }
+
+  public function show_change_password() { 
+    $user_profiles = $this->db_manager->get_current_user_profiles();
+
+    if (empty($user_profiles)) return;
+
+    $user_profile = $user_profiles[0];
+    $connection = null;
+
+    foreach ($user_profile->identities as $identity) {
+      if ($identity->provider === 'auth0') {
+        $connection = $identity->connection;
+      }
+    }
+
+    if ($connection === null) return;
+  ?>
+    <script>
+      jQuery('.wp-pwd').parent().parent().hide();
+    </script>
+    <table class="form-table">
+    <tr>
+      <th>
+        <label for="auth0_password"><?php _e('New Password'); ?></label>
+      </th>
+      <td>
+        <input type="password" name="auth0_password" id="auth0_password" value="" class="regular-text" />
+      </td>
+    </tr>
+     <tr>
+      <th>
+        <label for="auth0_repeat_password"><?php _e('Repeat Password'); ?></label>
+      </th>
+      <td>
+        <input type="password" name="auth0_repeat_password" id="auth0_repeat_password" value="" class="regular-text" />
+      </td>
+    </tr>
+
+    </table>
+  <?php
+  }  
 
   public function disable_email_field() {
 
