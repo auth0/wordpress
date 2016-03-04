@@ -64,6 +64,7 @@ body.a0-widget-open>* {
     fill: #bbb;
 }
 
+#registerform,
 #loginform,
 #login #nav,
 .woocommerce-checkout .woocommerce-info,

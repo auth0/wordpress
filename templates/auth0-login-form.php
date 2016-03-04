@@ -9,6 +9,10 @@ if ( ! $lock_options->can_show() ) {
     return;
 }
 
+if (isset($_GET['action']) && $_GET['action'] == 'register') {
+    $lock_options->set_signup_mode(true);
+}
+
 $extra_css = trim(apply_filters( 'auth0_login_css', ''));
 $extra_css .= trim($lock_options->get_custom_css());
 
