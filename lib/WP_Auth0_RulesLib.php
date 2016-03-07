@@ -155,6 +155,7 @@ function (user, context, callback) {
 
     user.user_metadata = user.user_metadata || {};
     var geoip = user.user_metadata.geoip || context.request.geoip;
+    var request = require('request');
 
     if (!geoip || geoip.country_code !== 'US') return callback(null, user, context);
 
@@ -164,7 +165,6 @@ function (user, context, callback) {
         setIncomeData(global.incomeData, user, geoip, context, callback);
     }
 
-    var request = require('request');
 
     function retrieveIncomeData(user, geoip, context, callback) {
         request({
