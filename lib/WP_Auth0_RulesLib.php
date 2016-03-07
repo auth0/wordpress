@@ -95,6 +95,13 @@ function (user, context, callback) {
         'name' => 'Store-Geo-Location-Do-Not-Rename',
         'script' => "
 function (user, context, callback) {
+
+  var CLIENTS_WITH_MFA = ['REPLACE_WITH_YOUR_CLIENT_ID'];
+  // run only for the specified clients
+  if (CLIENTS_WITH_MFA.indexOf(context.clientID) === -1) {
+    return callback(null, user, context);
+  }
+
   user.user_metadata = user.user_metadata || {};
   user.user_metadata.geoip = context.request.geoip;
   auth0.users.updateUserMetadata(user.user_id, user.user_metadata)
@@ -112,7 +119,13 @@ function (user, context, callback) {
         'script' => "
 function (user, context, callback) {
 
-  var fullContactAPIKey = 'REPLACE_WITH_YOUR_CLIENT_ID';
+  var CLIENTS_WITH_MFA = ['REPLACE_WITH_YOUR_CLIENT_ID'];
+  // run only for the specified clients
+  if (CLIENTS_WITH_MFA.indexOf(context.clientID) === -1) {
+    return callback(null, user, context);
+  }
+
+  var fullContactAPIKey = 'REPLACE_WITH_YOUR_FULLCONTACT_API_KEY';
 
   if(!user.email) {
     //the profile doesn't have email so we can't query fullcontact api.
@@ -152,6 +165,12 @@ function (user, context, callback) {
         'name' => 'Enrich-profile-with-Zipcode-Income-Do-Not-Rename',
         'script' => "
 function (user, context, callback) {
+
+    var CLIENTS_WITH_MFA = ['REPLACE_WITH_YOUR_CLIENT_ID'];
+    // run only for the specified clients
+    if (CLIENTS_WITH_MFA.indexOf(context.clientID) === -1) {
+      return callback(null, user, context);
+    }
 
     user.user_metadata = user.user_metadata || {};
     var geoip = user.user_metadata.geoip || context.request.geoip;

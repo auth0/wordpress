@@ -440,7 +440,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $link_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $link_script);
     $link_script = str_replace('REPLACE_WITH_YOUR_DOMAIN', $input['domain'], $link_script);
     $link_script = str_replace('REPLACE_WITH_YOUR_API_TOKEN', $input['auth0_app_token'], $link_script);
-    return $this->rule_validation($old_options, $input, 'link_auth0_users', WP_Auth0_RulesLib::$link_accounts['name'], $link_script);
+    return $this->rule_validation($old_options, $input, 'link_auth0_users', WP_Auth0_RulesLib::$link_accounts['name'] . '-' . get_bloginfo('name'), $link_script);
   }
 
   public function loginredirection_validation( $old_options, $input ) {
