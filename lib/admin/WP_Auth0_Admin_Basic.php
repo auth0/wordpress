@@ -165,6 +165,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   }
 
   public function basicdata_validation( $old_options, $input ) {
+
     $error = '';
     $completeBasicData = true;
     if ( empty( $input['domain'] ) ) {

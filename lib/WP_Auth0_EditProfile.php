@@ -15,15 +15,19 @@ class WP_Auth0_EditProfile {
 
     add_action( 'personal_options_update', array( $this, 'override_email_update' ), 1 );
 
+    add_action( 'edit_user_profile', array( $this, 'show_delete_mfa' ));
+    add_action( 'show_user_profile', array( $this, 'show_delete_mfa' ));
+
+    add_action( 'wp_ajax_auth0_delete_mfa', array( $this, 'delete_mfa' ) );
+
     add_action( 'show_user_profile', array( $this, 'show_change_password' ));
     add_action( 'personal_options_update', array( $this, 'update_change_password' ) );
     add_filter( 'user_profile_update_errors', array( $this, 'validate_new_password' ), 10, 3);
 
-    if ( $pagenow == 'profile.php' ) {
+    if ( $pagenow == 'profile.php' || $pagenow == 'user-edit.php' ) {
       add_action( 'admin_footer', array( $this, 'disable_email_field' ) );
     }
   }
-
 
   public function validate_new_password($errors, $update, $user){
     $auth0_password = $_POST['auth0_password'];
@@ -68,6 +72,61 @@ class WP_Auth0_EditProfile {
         'connection' => $connection
       ));
     }
+  }
+
+  public function delete_mfa() { 
+    if ( ! is_admin() ) return;
+
+    $user_id = $_POST["user_id"];
+
+    $users = $this->db_manager->get_auth0_users(array($user_id));
+    if (empty($users)) return;
+
+    $user_id = $users[0]->auth0_id;
+
+    $provider = 'google-authenticator';
+    $domain = $this->a0_options->get('domain');
+    $app_token = $this->a0_options->get('auth0_app_token');
+
+    WP_Auth0_Api_Client::delete_user_mfa($domain, $app_token, $user_id, $provider);
+  }
+
+  public function show_delete_mfa() {
+    if ( ! is_admin() ) return;
+    if ( ! $this->a0_options->get('mfa') ) return;
+
+    ?>
+    <table class="form-table">
+    <tr>
+      <th>
+        <label><?php _e('Delete MFA Provider'); ?></label>
+      </th>
+      <td>
+        <input type="button" onclick="DeleteMFA(event);" name="auth0_delete_mfa" id="auth0_delete_mfa" value="Delete MFA" class="button button-secondary" />
+      </td>
+    </tr>
+    </table>
+    <script>
+    function DeleteMFA(event) {
+      event.preventDefault();
+
+      var data = {
+        'action': 'auth0_delete_mfa',
+        'user_id': '<?php echo $_GET['user_id']; ?>'
+      };
+
+      jQuery('#auth0_delete_mfa').attr('disabled', 'true');
+
+      jQuery.post('<?php echo admin_url( 'admin-ajax.php' ); ?>', data, function(response) {
+
+        jQuery('#auth0_delete_mfa').val('Done!').attr('disabled', 'true');
+
+      }, 'json');
+
+    }
+  </script>
+
+  <?php
   }
 
   public function show_change_password() { 
