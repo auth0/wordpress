@@ -1,11 +1,27 @@
 # Change Log
 
+## [2.1.0](https://github.com/auth0/wp-auth0/tree/2.1.0) (2016-03-08)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/2.0.0...2.1.0)
+
+**Closed issues:**
+
+- sso is loosing `redirect\_to` [\#150](https://github.com/auth0/wp-auth0/issues/150)
+- Google Authenticator integration problems [\#148](https://github.com/auth0/wp-auth0/issues/148)
+- Zipcode-Income throws an error [\#147](https://github.com/auth0/wp-auth0/issues/147)
+- Errors in configuring plugin, with no clear path to fixing them... [\#145](https://github.com/auth0/wp-auth0/issues/145)
+- Typo [\#144](https://github.com/auth0/wp-auth0/issues/144)
+- Register [\#142](https://github.com/auth0/wp-auth0/issues/142)
+- Change password [\#141](https://github.com/auth0/wp-auth0/issues/141)
+- word order for App token required scopes very confusing [\#140](https://github.com/auth0/wp-auth0/issues/140)
+- Bad Link - Enterprise - Google Apps [\#136](https://github.com/auth0/wp-auth0/issues/136)
+- SSO state and lock exception. [\#109](https://github.com/auth0/wp-auth0/issues/109)
+
+**Merged pull requests:**
+
+- V2.1 [\#151](https://github.com/auth0/wp-auth0/pull/151) ([glena](https://github.com/glena))
+
 ## [2.0.0](https://github.com/auth0/wp-auth0/tree/2.0.0) (2016-03-01)
-[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.3.1...2.0.0)
-
-**Implemented enhancements:**
-
-- Upgrade to API V2 [\#60](https://github.com/auth0/wp-auth0/issues/60)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.3.6...2.0.0)
 
 **Closed issues:**
 
@@ -39,6 +55,26 @@
 - Not redirecting to admin path after SSO login [\#106](https://github.com/auth0/wp-auth0/issues/106)
 - Install\_db being called all the time... [\#104](https://github.com/auth0/wp-auth0/issues/104)
 - Review design for setup pages [\#102](https://github.com/auth0/wp-auth0/issues/102)
+- Refresh of settings page changes view - always opens "Features" [\#101](https://github.com/auth0/wp-auth0/issues/101)
+- Add redirect param to auth0 shortcode config [\#92](https://github.com/auth0/wp-auth0/issues/92)
+- Show widget in signup mode [\#91](https://github.com/auth0/wp-auth0/issues/91)
+- Consent flow TODOs [\#88](https://github.com/auth0/wp-auth0/issues/88)
+- enhance the could not create user error [\#12](https://github.com/auth0/wp-auth0/issues/12)
+
+**Merged pull requests:**
+
+- Update LICENSE [\#112](https://github.com/auth0/wp-auth0/pull/112) ([aguerere](https://github.com/aguerere))
+- v2.0 [\#86](https://github.com/auth0/wp-auth0/pull/86) ([glena](https://github.com/glena))
+
+## [1.3.6](https://github.com/auth0/wp-auth0/tree/1.3.6) (2015-10-01)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/1.3.1...1.3.6)
+
+**Implemented enhancements:**
+
+- Upgrade to API V2 [\#60](https://github.com/auth0/wp-auth0/issues/60)
+
+**Closed issues:**
+
 - Custom Registration Fields [\#100](https://github.com/auth0/wp-auth0/issues/100)
 - Quick setup informational banner confusing [\#99](https://github.com/auth0/wp-auth0/issues/99)
 - "This user does not have enough scopes..." error is confusing. [\#98](https://github.com/auth0/wp-auth0/issues/98)
@@ -46,11 +82,8 @@
 - Update wording for quickstart [\#96](https://github.com/auth0/wp-auth0/issues/96)
 - Change name of plugin in WP dashboard to "Auth0 for WordPress" [\#95](https://github.com/auth0/wp-auth0/issues/95)
 - Doesn't Seem that Lock Config Accepts "dict" parameter [\#93](https://github.com/auth0/wp-auth0/issues/93)
-- Add redirect param to auth0 shortcode config [\#92](https://github.com/auth0/wp-auth0/issues/92)
-- Show widget in signup mode [\#91](https://github.com/auth0/wp-auth0/issues/91)
 - Update user data on edit profile [\#90](https://github.com/auth0/wp-auth0/issues/90)
 - Signup enabled issue with multisite [\#89](https://github.com/auth0/wp-auth0/issues/89)
-- Consent flow TODOs [\#88](https://github.com/auth0/wp-auth0/issues/88)
 - Add option to migrate users with custom data [\#85](https://github.com/auth0/wp-auth0/issues/85)
 - upcoming [\#84](https://github.com/auth0/wp-auth0/issues/84)
 - Auto redirect on preview post pages [\#83](https://github.com/auth0/wp-auth0/issues/83)
@@ -59,12 +92,9 @@
 - Allow loading / saving Shipping Addresses used by WooCommerce in Auth0 Profile [\#76](https://github.com/auth0/wp-auth0/issues/76)
 - add\_menu\_page/admin\_menu conflicts with other plugins.  [\#37](https://github.com/auth0/wp-auth0/issues/37)
 - Session\_start warnings [\#31](https://github.com/auth0/wp-auth0/issues/31)
-- enhance the could not create user error [\#12](https://github.com/auth0/wp-auth0/issues/12)
 
 **Merged pull requests:**
 
-- Update LICENSE [\#112](https://github.com/auth0/wp-auth0/pull/112) ([aguerere](https://github.com/aguerere))
-- v2.0 [\#86](https://github.com/auth0/wp-auth0/pull/86) ([glena](https://github.com/glena))
 - fix [\#82](https://github.com/auth0/wp-auth0/pull/82) ([glena](https://github.com/glena))
 - Added access token to the login action + Merged PR \#79 [\#81](https://github.com/auth0/wp-auth0/pull/81) ([glena](https://github.com/glena))
 
