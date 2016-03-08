@@ -521,6 +521,35 @@ class WP_Auth0_Api_Client {
 		return json_decode($response['body']);
 	}
 
+	public static function delete_user_mfa($domain, $app_token, $user_id, $provider) {
+
+		$endpoint = "https://$domain/api/v2/users/$user_id/multifactor/$provider";
+
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+		$headers['content-type'] = "application/json";
+
+		$response = wp_remote_post( $endpoint  , array(
+			'method' => 'DELETE',
+			'headers' => $headers
+		) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::delete_user_mfa', $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] != 204 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::delete_user_mfa', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		return json_decode($response['body']);
+	}
+
 	public static function update_user($domain, $app_token, $id, $payload) {
 		$endpoint = "https://$domain/api/v2/users/$id";
 
@@ -543,6 +572,36 @@ class WP_Auth0_Api_Client {
 
 		if ( $response['response']['code'] != 200 ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::update_users', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		if ( $response['response']['code'] >= 300 ) return false;
+
+		return json_decode($response['body']);
+	}
+
+	public static function change_password($domain, $payload) {
+		$endpoint = "https://$domain/dbconnections/change_password";
+
+		$headers = self::get_info_headers();
+
+		$headers['content-type'] = "application/json";
+
+		$response = wp_remote_post( $endpoint  , array(
+			'method' => 'POST',
+			'headers' => $headers,
+			'body' => json_encode($payload)
+		) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::change_password', $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] != 200 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::change_password', $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -618,6 +677,8 @@ class WP_Auth0_Api_Client {
 		}
 		foreach ($grouped as $resource => $actions) {
 			$str = "";
+
+			sort($actions);
 
 			for($a = 0; $a < count($actions); $a++) {
 				if ($a > 0) {

@@ -5,6 +5,8 @@ class WP_Auth0_Lock_Options {
     protected $wp_options;
     protected $extended_settings;
 
+    protected $signup_mode = false;
+
     public function __construct($extended_settings = array()) {
         $this->wp_options = WP_Auth0_Options::Instance();
         $this->extended_settings = $extended_settings;
@@ -68,6 +70,10 @@ class WP_Auth0_Lock_Options {
 
     public function get_auth0_implicit_workflow() {
         return $this->_get_boolean( $this->wp_options->get('auth0_implicit_workflow') );
+    }
+
+    public function set_signup_mode($enabled) {
+        $this->signup_mode = $enabled;
     }
 
     public function is_registration_enabled() {
@@ -152,9 +158,12 @@ class WP_Auth0_Lock_Options {
         if ( $this->_is_valid( $settings, 'lock_connections' ) ) {
             $options_obj['connections'] = explode(",", $settings['lock_connections']);
         }
-		if ( isset( $settings['extra_conf'] ) && trim( $settings['extra_conf'] ) !== '' ) {
-			$extra_conf_arr = json_decode( $settings['extra_conf'], true );
-			$options_obj = array_merge( $extra_conf_arr, $options_obj );
+        if ( isset( $settings['extra_conf'] ) && trim( $settings['extra_conf'] ) !== '' ) {
+            $extra_conf_arr = json_decode( $settings['extra_conf'], true );
+            $options_obj = array_merge( $extra_conf_arr, $options_obj );
+        }
+		if ( $this->signup_mode ) {
+            $options_obj["mode"] = "signup";
 		}
 		return $options_obj;
 	}
@@ -172,8 +181,17 @@ class WP_Auth0_Lock_Options {
             $options["callbackOnLocationHash"] = false;
             $options["callbackURL"] = $this->get_code_callback_url();
         }
+
+        $redirect_to = null; 
+
+        if (isset($_GET['redirect_to'])){
+            $redirect_to = $_GET['redirect_to'];
+        } else {
+            $redirect_to = home_url($_SERVER["REQUEST_URI"]);
+        }
+
         unset($options["authParams"]);
-        $options["state"] = $this->get_state_obj(home_url($_SERVER["REQUEST_URI"]));
+        $options["state"] = $this->get_state_obj($redirect_to);
 
         return $options;
 

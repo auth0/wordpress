@@ -48,10 +48,9 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
           <?php echo __( 'The token should be generated via the ', WPA0_LANG ); ?>
           <a href="https://auth0.com/docs/api/v2" target="_blank"><?php echo __( 'token generator', WPA0_LANG ); ?></a>
           <?php echo __( ' with the following scopes:', WPA0_LANG ); ?>
-          
+          <i>
           <?php $a = 0; foreach($scopes as $resource => $actions) { $a++;?>
-            <code><?php echo $actions ?> <?php echo $resource ?></code> 
-            <?php 
+            <b><?php echo $resource ?></b> (<?php echo $actions ?>)<?php 
               if ($a < count($scopes) - 1) {
                 echo ", "; 
               } else if ($a === count($scopes) - 1) {
@@ -59,6 +58,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
               }
             ?>
           <?php } ?>.
+          </i>
         </span>
       </div>
     <?php
@@ -94,7 +94,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   }
 
   public function render_allow_signup_regular_multisite() {
-    $allow_signup = $this->options->is_wp_registration_enabled();
+    $allow_signup = $this->options->is_wp_registration_enabled(); 
     ?>
       <span class="description">
         <?php echo __( 'Signup will be', WPA0_LANG ); ?>
@@ -165,6 +165,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   }
 
   public function basicdata_validation( $old_options, $input ) {
+
     $error = '';
     $completeBasicData = true;
     if ( empty( $input['domain'] ) ) {

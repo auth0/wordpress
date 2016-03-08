@@ -88,6 +88,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
           <a target="_blank" href="https://auth0.com/docs/mfa"><?php echo __( 'HERE', WPA0_LANG ); ?></a>.
           <?php echo __( 'You can enable other MFA providers from the ', WPA0_LANG ); ?>
           <a target="_blank" href="https://manage.auth0.com/#/multifactor"><?php echo __( 'Auth0 dashboard', WPA0_LANG ); ?></a>.
+          <?php echo __( 'You can reset your users MFA provider data, by going to the user and clicking on "Delete MFA Provider" button.', WPA0_LANG ); ?>
         </span>
       </div>
     <?php
@@ -136,7 +137,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'Mark this if you want to hydrate your users profile with the data provided by FullContact. A valid api key is requiere.', WPA0_LANG ); ?>
+          <?php echo __( 'Mark this if you want to enrich your users\' profiles with the data provided by FullContact. A valid api key is require.', WPA0_LANG ); ?>
           <?php echo __( 'More info ', WPA0_LANG ); ?>
           <a target="_blank" href="https://auth0.com/docs/scenarios/mixpanel-fullcontact-salesforce#2-augment-user-profile-with-fullcontact-"><?php echo __( 'HERE', WPA0_LANG );?></a>
         </span>
@@ -204,23 +205,28 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
   public function fullcontact_validation( $old_options, $input ) {
     $fullcontact_script = WP_Auth0_RulesLib::$fullcontact['script'];
-    $fullcontact_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['fullcontact_apikey'], $fullcontact_script);
-    return $this->rule_validation($old_options, $input, 'fullcontact', WP_Auth0_RulesLib::$fullcontact['name'], $fullcontact_script);
+    $fullcontact_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $fullcontact_script);
+    $fullcontact_script = str_replace('REPLACE_WITH_YOUR_FULLCONTACT_API_KEY', $input['fullcontact_apikey'], $fullcontact_script);
+    return $this->rule_validation($old_options, $input, 'fullcontact', WP_Auth0_RulesLib::$fullcontact['name']. '-' . get_bloginfo('name'), $fullcontact_script);
   }
 
   public function mfa_validation( $old_options, $input ) {
     $mfa_script = WP_Auth0_RulesLib::$google_MFA['script'];
     $mfa_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $mfa_script);
-    return $this->rule_validation($old_options, $input, 'mfa', WP_Auth0_RulesLib::$google_MFA['name'], $mfa_script);
+    return $this->rule_validation($old_options, $input, 'mfa', WP_Auth0_RulesLib::$google_MFA['name'] . '-' . get_bloginfo('name'), $mfa_script);
   }
 
 
   public function georule_validation( $old_options, $input ) {
-    return $this->rule_validation($old_options, $input, 'geo_rule', WP_Auth0_RulesLib::$geo['name'], WP_Auth0_RulesLib::$geo['script']);
+    $geo_script = WP_Auth0_RulesLib::$geo['script'];
+    $geo_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $geo_script);
+    return $this->rule_validation($old_options, $input, 'geo_rule', WP_Auth0_RulesLib::$geo['name'] . '-' . get_bloginfo('name'), $geo_script);
   }
 
   public function incomerule_validation( $old_options, $input ) {
-    return $this->rule_validation($old_options, $input, 'income_rule', WP_Auth0_RulesLib::$income['name'], WP_Auth0_RulesLib::$income['script']);
+    $income_script = WP_Auth0_RulesLib::$income['script'];
+    $income_script = str_replace('REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $income_script);
+    return $this->rule_validation($old_options, $input, 'income_rule', WP_Auth0_RulesLib::$income['name'] . '-' . get_bloginfo('name'), $income_script);
   }
 
 }

@@ -15,10 +15,164 @@ class WP_Auth0_EditProfile {
 
     add_action( 'personal_options_update', array( $this, 'override_email_update' ), 1 );
 
-    if ( $pagenow == 'profile.php' ) {
+    add_action( 'edit_user_profile', array( $this, 'show_delete_mfa' ));
+    add_action( 'show_user_profile', array( $this, 'show_delete_mfa' ));
+
+    add_action( 'wp_ajax_auth0_delete_mfa', array( $this, 'delete_mfa' ) );
+
+    add_action( 'show_user_profile', array( $this, 'show_change_password' ));
+    add_action( 'personal_options_update', array( $this, 'update_change_password' ) );
+    add_filter( 'user_profile_update_errors', array( $this, 'validate_new_password' ), 10, 3);
+
+    if ( $pagenow == 'profile.php' || $pagenow == 'user-edit.php' ) {
       add_action( 'admin_footer', array( $this, 'disable_email_field' ) );
     }
   }
+
+  public function validate_new_password($errors, $update, $user){
+    $auth0_password = $_POST['auth0_password'];
+    $auth0_repeat_password = $_POST['auth0_repeat_password'];
+
+    if (empty($auth0_password)) {
+      $errors->add( 'auth0_password', __('<strong>ERROR</strong>: The password can not be empty'), array( 'form-field' => 'auth0_password' ) );
+    }
+    if ($auth0_password != $auth0_repeat_password) {
+      $errors->add( 'auth0_password', __('<strong>ERROR</strong>: The password does not match'), array( 'form-field' => 'auth0_password' ) );
+    }
+  }
+
+
+  public function update_change_password() { 
+    $user_profiles = $this->db_manager->get_current_user_profiles();
+
+    if (empty($user_profiles)) return;
+
+    $auth0_password = $_POST['auth0_password'];
+    $auth0_repeat_password = $_POST['auth0_repeat_password'];
+
+    if (empty($auth0_password) || $auth0_password == $auth0_repeat_password) {
+      $domain = $this->a0_options->get('domain');
+      $client_id = $this->a0_options->get('client_id');
+
+      $user_profile = $user_profiles[0];
+      $connection = null;
+      $email = null;
+
+      foreach ($user_profile->identities as $identity) {
+        if ($identity->provider === 'auth0') {
+          $connection = $identity->connection;
+          if (isset($identity->email)) {
+            $email = $identity->email;
+          } else {
+            $email = $user_profile->email;
+          }
+        }
+      }
+
+      WP_Auth0_Api_Client::change_password($domain, array(
+        'client_id' => $client_id,
+        'email' => $user_profile->email,
+        'password' => $auth0_password,
+        'connection' => $connection
+      ));
+    }
+  }
+
+  public function delete_mfa() { 
+    if ( ! is_admin() ) return;
+
+    $user_id = $_POST["user_id"];
+
+    $users = $this->db_manager->get_auth0_users(array($user_id));
+    if (empty($users)) return;
+
+    $user_id = $users[0]->auth0_id;
+
+    $provider = 'google-authenticator';
+    $domain = $this->a0_options->get('domain');
+    $app_token = $this->a0_options->get('auth0_app_token');
+
+    WP_Auth0_Api_Client::delete_user_mfa($domain, $app_token, $user_id, $provider);
+  }
+
+  public function show_delete_mfa() {
+    if ( ! is_admin() ) return;
+    if ( ! $this->a0_options->get('mfa') ) return;
+
+    ?>
+    <table class="form-table">
+    <tr>
+      <th>
+        <label><?php _e('Delete MFA Provider'); ?></label>
+      </th>
+      <td>
+        <input type="button" onclick="DeleteMFA(event);" name="auth0_delete_mfa" id="auth0_delete_mfa" value="Delete MFA" class="button button-secondary" />
+      </td>
+    </tr>
+    </table>
+    <script>
+    function DeleteMFA(event) {
+      event.preventDefault();
+
+      var data = {
+        'action': 'auth0_delete_mfa',
+        'user_id': '<?php echo $_GET['user_id']; ?>'
+      };
+
+      jQuery('#auth0_delete_mfa').attr('disabled', 'true');
+
+      jQuery.post('<?php echo admin_url( 'admin-ajax.php' ); ?>', data, function(response) {
+
+        jQuery('#auth0_delete_mfa').val('Done!').attr('disabled', 'true');
+
+      }, 'json');
+
+    }
+  </script>
+
+  <?php
+  }
+
+  public function show_change_password() { 
+    $user_profiles = $this->db_manager->get_current_user_profiles();
+
+    if (empty($user_profiles)) return;
+
+    $user_profile = $user_profiles[0];
+    $connection = null;
+
+    foreach ($user_profile->identities as $identity) {
+      if ($identity->provider === 'auth0') {
+        $connection = $identity->connection;
+      }
+    }
+
+    if ($connection === null) return;
+  ?>
+    <script>
+      jQuery('.wp-pwd').parent().parent().hide();
+    </script>
+    <table class="form-table">
+    <tr>
+      <th>
+        <label for="auth0_password"><?php _e('New Password'); ?></label>
+      </th>
+      <td>
+        <input type="password" name="auth0_password" id="auth0_password" value="" class="regular-text" />
+      </td>
+    </tr>
+     <tr>
+      <th>
+        <label for="auth0_repeat_password"><?php _e('Repeat Password'); ?></label>
+      </th>
+      <td>
+        <input type="password" name="auth0_repeat_password" id="auth0_repeat_password" value="" class="regular-text" />
+      </td>
+    </tr>
+
+    </table>
+  <?php
+  }  
 
   public function disable_email_field() {
 
