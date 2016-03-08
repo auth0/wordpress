@@ -61,7 +61,11 @@ class WP_Auth0_EditProfile {
       foreach ($user_profile->identities as $identity) {
         if ($identity->provider === 'auth0') {
           $connection = $identity->connection;
-          $email = $identity->email;
+          if (isset($identity->email)) {
+            $email = $identity->email;
+          } else {
+            $email = $user_profile->email;
+          }
         }
       }
 

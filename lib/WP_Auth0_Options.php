@@ -13,7 +13,10 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
     protected $options_name = 'wp_auth0_settings';
 
     public function is_wp_registration_enabled()
-    {
+    { 
+        if (is_multisite()) {
+            return users_can_register_signup_filter();
+        }
         return (get_site_option('users_can_register', 0) == 1);
     }
 

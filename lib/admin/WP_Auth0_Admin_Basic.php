@@ -94,7 +94,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
   }
 
   public function render_allow_signup_regular_multisite() {
-    $allow_signup = $this->options->is_wp_registration_enabled();
+    $allow_signup = $this->options->is_wp_registration_enabled(); 
     ?>
       <span class="description">
         <?php echo __( 'Signup will be', WPA0_LANG ); ?>
