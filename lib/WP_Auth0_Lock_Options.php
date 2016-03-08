@@ -181,8 +181,17 @@ class WP_Auth0_Lock_Options {
             $options["callbackOnLocationHash"] = false;
             $options["callbackURL"] = $this->get_code_callback_url();
         }
+
+        $redirect_to = null; 
+
+        if (isset($_GET['redirect_to'])){
+            $redirect_to = $_GET['redirect_to'];
+        } else {
+            $redirect_to = home_url($_SERVER["REQUEST_URI"]);
+        }
+
         unset($options["authParams"]);
-        $options["state"] = $this->get_state_obj(home_url($_SERVER["REQUEST_URI"]));
+        $options["state"] = $this->get_state_obj($redirect_to);
 
         return $options;
 
