@@ -55,8 +55,12 @@ class WP_Auth0_InitialSetup {
     		}
 
         if ( isset( $_REQUEST['error'] ) && 'rejected' == $_REQUEST['error'] ) {
-    			add_action( 'admin_notices', array( $this, 'rejected_message' ) );
-    		}
+          add_action( 'admin_notices', array( $this, 'rejected_message' ) );
+        }
+
+        if ( isset( $_REQUEST['error'] ) && 'access_denied' == $_REQUEST['error'] ) {
+          add_action( 'admin_notices', array( $this, 'access_denied' ) );
+        }
 
     }
 
@@ -162,11 +166,25 @@ class WP_Auth0_InitialSetup {
 
     public function rejected_message() {
       $domain = $this->a0_options->get( 'domain' );
+      ?>
+      <div id="message" class="error">
+        <p>
+          <strong>
+            <?php echo __( 'The required scoped were rejected.', WPA0_LANG ); ?>
+          </strong>
+        </p>
+      </div>
+      <?php
+    }
+    public function access_denied() {
+      $domain = $this->a0_options->get( 'domain' );
   		?>
   		<div id="message" class="error">
   			<p>
   				<strong>
-  					<?php echo __( 'The required scoped were rejected.', WPA0_LANG ); ?>
+  					<?php echo __( 'An error has occurred signing you up. Please access to ', WPA0_LANG ); ?> 
+            <a href="https://manage.auth0.com">https://manage.auth0.com</a>
+            <?php echo __( ' and create a new account before retrying.', WPA0_LANG ); ?>
   				</strong>
   			</p>
   		</div>
@@ -178,8 +196,13 @@ class WP_Auth0_InitialSetup {
         return;
       }
 
-      if ( isset($_REQUEST['error']) ) {
+      if ( isset( $_REQUEST['error'] ) && 'rejected' == $_REQUEST['error'] ) {
         wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=rejected' ) );
+        exit;
+      }
+
+      if ( isset( $_REQUEST['error'] ) && 'access_denied' == $_REQUEST['error'] ) {
+        wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=access_denied' ) );
         exit;
       }
 
