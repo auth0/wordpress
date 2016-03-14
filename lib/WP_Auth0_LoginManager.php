@@ -330,7 +330,7 @@ class WP_Auth0_LoginManager {
 
 		if ( ! $this->ignore_unverified_email &&  1 == $requires_verified_email ) {
 			if ( empty( $userinfo->email ) ) {
-				$msg = __( 'This account does not have an email associated. Please login with a different provider.', WPA0_LANG );
+				$msg = __( 'This account does not have an email associated, as required by your site administrator.”', WPA0_LANG );
 				$msg .= '<br/><br/>';
 				$msg .= '<a href="' . home_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
 
@@ -384,7 +384,7 @@ class WP_Auth0_LoginManager {
 				$msg .= '<a href="' . home_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
 				wp_die( $msg );
 			} catch ( WP_Auth0_RegistrationNotEnabledException $e ) {
-				$msg = __( 'Error: Could not create user. The registration process is not available.', WPA0_LANG );
+				$msg = __( 'Error: Could not create user. The registration process is not available. Please contact your site’s administrator.', WPA0_LANG );
 				$msg .= '<br/><br/>';
 				$msg .= '<a href="' . home_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
 				wp_die( $msg );

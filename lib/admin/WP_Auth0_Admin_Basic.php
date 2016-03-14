@@ -6,7 +6,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
   protected $actions_middlewares = array(
     'basic_validation',
-    'basicdata_validation',
   );
 
   public function init() {
@@ -161,10 +160,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
     $input['client_secret'] = (!empty($input['client_secret']) ? $input['client_secret'] : $old_options['client_secret']);
     $input['auth0_app_token'] = (!empty($input['auth0_app_token']) ? $input['auth0_app_token'] : $old_options['auth0_app_token']);
 
-    return $input;
-  }
-
-  public function basicdata_validation( $old_options, $input ) {
 
     $error = '';
     $completeBasicData = true;

@@ -60,6 +60,9 @@ class WP_Auth0_Routes {
       elseif (isset($_SERVER["Authorization"])){
           $authorization = $_SERVER["Authorization"];
       }
+      elseif (isset($_SERVER["HTTP_AUTHORIZATION"])){
+          $authorization = $_SERVER["HTTP_AUTHORIZATION"];
+      }
       return $authorization;
   }
 
@@ -82,7 +85,7 @@ class WP_Auth0_Routes {
 
     try {
       if (empty($authorization)) {
-        throw new Exception('Unauthorized');
+        throw new Exception('Unauthorized: missing authorization header');
       }
 
       $token = JWT::decode($authorization, JWT::urlsafeB64Decode( $secret ), array('HS256'));
@@ -143,7 +146,7 @@ class WP_Auth0_Routes {
 
     try {
       if (empty($authorization)) {
-        throw new Exception('Unauthorized');
+        throw new Exception('Unauthorized: missing authorization header');
       }
 
       $token = JWT::decode($authorization, JWT::urlsafeB64Decode( $secret ), array('HS256'));

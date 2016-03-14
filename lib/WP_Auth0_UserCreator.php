@@ -1,4 +1,4 @@
-<?php
+Please contact your site’s administrator.<?php
 
 class WP_Auth0_UserCreator {
 
@@ -67,7 +67,7 @@ class WP_Auth0_UserCreator {
             if( is_wp_error($user_id) ) {
                 throw new WP_Auth0_CouldNotCreateUserException($user_id->get_error_message());
             }elseif($user_id == -2){
-                throw new WP_Auth0_CouldNotCreateUserException('Could not create user. The registration process were rejected. Please verify that your account is whitelisted for this system.');
+                throw new WP_Auth0_CouldNotCreateUserException('Could not create user. The registration process were rejected. Please verify that your account is whitelisted for this system. Please contact your site’s administrator.');
             }elseif ($user_id <0){
                 throw new WP_Auth0_CouldNotCreateUserException();
             }

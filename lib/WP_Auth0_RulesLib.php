@@ -8,9 +8,9 @@ class WP_Auth0_RulesLib {
       'script' => "
 function (user, context, callback) {
 
-  var CLIENTS_WITH_MFA = ['REPLACE_WITH_YOUR_CLIENT_ID'];
+  var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
   // run only for the specified clients
-  if (CLIENTS_WITH_MFA.indexOf(context.clientID) === -1) {
+  if (CLIENTS_ENABLED.indexOf(context.clientID) === -1) {
     return callback(null, user, context);
   }
 
@@ -74,9 +74,9 @@ function (user, context, callback) {
         'name' => 'Multifactor-Google-Authenticator-Do-Not-Rename',
         'script' => "
 function (user, context, callback) {
-  var CLIENTS_WITH_MFA = ['REPLACE_WITH_YOUR_CLIENT_ID'];
+  var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
   // run only for the specified clients
-  if (CLIENTS_WITH_MFA.indexOf(context.clientID) !== -1) {
+  if (CLIENTS_ENABLED.indexOf(context.clientID) !== -1) {
     // uncomment the following if clause in case you want to request a second factor only from user's that have user_metadata.use_mfa === true
     // if (user.user_metadata && user.user_metadata.use_mfa){
       context.multifactor = {
@@ -96,9 +96,9 @@ function (user, context, callback) {
         'script' => "
 function (user, context, callback) {
 
-  var CLIENTS_WITH_MFA = ['REPLACE_WITH_YOUR_CLIENT_ID'];
+  var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
   // run only for the specified clients
-  if (CLIENTS_WITH_MFA.indexOf(context.clientID) === -1) {
+  if (CLIENTS_ENABLED.indexOf(context.clientID) === -1) {
     return callback(null, user, context);
   }
 
@@ -119,9 +119,9 @@ function (user, context, callback) {
         'script' => "
 function (user, context, callback) {
 
-  var CLIENTS_WITH_MFA = ['REPLACE_WITH_YOUR_CLIENT_ID'];
+  var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
   // run only for the specified clients
-  if (CLIENTS_WITH_MFA.indexOf(context.clientID) === -1) {
+  if (CLIENTS_ENABLED.indexOf(context.clientID) === -1) {
     return callback(null, user, context);
   }
 
@@ -166,9 +166,9 @@ function (user, context, callback) {
         'script' => "
 function (user, context, callback) {
 
-    var CLIENTS_WITH_MFA = ['REPLACE_WITH_YOUR_CLIENT_ID'];
+    var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
     // run only for the specified clients
-    if (CLIENTS_WITH_MFA.indexOf(context.clientID) === -1) {
+    if (CLIENTS_ENABLED.indexOf(context.clientID) === -1) {
       return callback(null, user, context);
     }
 
@@ -193,7 +193,7 @@ function (user, context, callback) {
             if(r.statusCode===200){
                 var incomeData = JSON.parse(b);
                 global.incomeData = incomeData;
-                setIncomeData(incomeData,user,context, callback);
+                setIncomeData(incomeData,user, geoip,context, callback);
             } else {
               callback(null, user, context);
             }
