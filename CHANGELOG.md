@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.1.2](https://github.com/auth0/wp-auth0/tree/2.1.2) (2016-03-15)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/2.1.1...2.1.2)
+
+## [2.1.1](https://github.com/auth0/wp-auth0/tree/2.1.1) (2016-03-11)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/2.1.0...2.1.1)
+
 ## [2.1.0](https://github.com/auth0/wp-auth0/tree/2.1.0) (2016-03-08)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/2.0.0...2.1.0)
 
