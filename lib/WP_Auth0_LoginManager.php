@@ -51,7 +51,7 @@ class WP_Auth0_LoginManager {
 		}
 	}
 	public function auth0_singlelogout_footer($previous_html) {
-
+		
 		echo $previous_html;
 
 		if (!is_user_logged_in()) {
@@ -60,15 +60,31 @@ class WP_Auth0_LoginManager {
 
 		$singlelogout = $this->a0_options->get('singlelogout');
 
-		if ( $singlelogout ) {
-			$cdn = $this->a0_options->get('cdn_url');
-			$client_id = $this->a0_options->get('client_id');
-			$domain = $this->a0_options->get('domain');
-			$logout_url = wp_logout_url(get_permalink());
-			
-			wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
-			include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
+		if ( ! $singlelogout ) { 
+			return;
 		}
+
+		$db_manager = new WP_Auth0_DBManager();
+
+		$profiles = $db_manager->get_current_user_profiles();
+
+		if ( empty($profiles) ) { 
+			return;
+		}
+
+		$ids = array();
+
+		foreach($profiles as $profile) {
+			$ids[] = $profile->user_id;
+		}
+
+		$cdn = $this->a0_options->get('cdn_url');
+		$client_id = $this->a0_options->get('client_id');
+		$domain = $this->a0_options->get('domain');
+		$logout_url = wp_logout_url(get_permalink());
+		
+		wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
+		include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
 	}
 
 	public function logout() {
