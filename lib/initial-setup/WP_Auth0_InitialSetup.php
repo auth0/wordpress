@@ -182,9 +182,9 @@ class WP_Auth0_InitialSetup {
   		<div id="message" class="error">
   			<p>
   				<strong>
-  					<?php echo __( 'An error has occurred signing you up. Please access to ', WPA0_LANG ); ?> 
+  					<?php echo __( 'There was an error creating your Auth0 account. Please access ', WPA0_LANG ); ?> 
             <a href="https://manage.auth0.com">https://manage.auth0.com</a>
-            <?php echo __( ' and create a new account before retrying.', WPA0_LANG ); ?>
+            <?php echo __( ', signup and try again.', WPA0_LANG ); ?>
   				</strong>
   			</p>
   		</div>
