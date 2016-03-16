@@ -210,8 +210,7 @@ class WP_Auth0_Api_Client {
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type'] = "application/json";
 
-		$logout_url = explode('?', wp_logout_url());
-		$logout_url = $logout_url[0];
+		$logout_url = home_url();
 
 		$response = wp_remote_post( $endpoint  , array(
 			'method' => 'POST',

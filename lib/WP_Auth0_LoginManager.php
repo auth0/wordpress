@@ -81,7 +81,7 @@ class WP_Auth0_LoginManager {
 		$cdn = $this->a0_options->get('cdn_url');
 		$client_id = $this->a0_options->get('client_id');
 		$domain = $this->a0_options->get('domain');
-		$logout_url = wp_logout_url(get_permalink());
+		$logout_url = wp_logout_url(get_permalink()) . '&SLO=1';
 		
 		wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
 		include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
@@ -91,15 +91,17 @@ class WP_Auth0_LoginManager {
 		$this->end_session();
 
 		$sso = $this->a0_options->get( 'sso' );
+		$slo = $this->a0_options->get( 'singlelogout' );
 		$auto_login = absint( $this->a0_options->get( 'auto_login' ) );
 
-		if ( isset( $_REQUEST['redirect_to'] ) ) {
+		if ($slo && isset($_REQUEST['SLO'])) {
 			$redirect_to = $_REQUEST['redirect_to'];
-		} else {
-			$redirect_to = home_url();
+			wp_redirect($redirect_to);
+			die();
 		}
 
 		if ( $sso ) {
+			$redirect_to = home_url();
 			wp_redirect( 'https://' . $this->a0_options->get( 'domain' ) . '/v2/logout?returnTo=' . urlencode( $redirect_to ) . '&auth0Client=' . WP_Auth0_Api_Client::get_info_headers() );
 			die();
 		}
