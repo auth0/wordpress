@@ -112,7 +112,7 @@ class WP_Auth0_InitialSetup_Consent {
 
     $db_connection_name = 'DB-' . str_replace(' ', '-', get_bloginfo('name'));
     $connection_exists = false;
-    $connection_pwd_policy = false;
+    $connection_pwd_policy = null;
 
     $connections = WP_Auth0_Api_Client::search_connection($domain, $app_token);
 
