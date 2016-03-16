@@ -283,6 +283,11 @@ p.a0-message {
   position: relative;
   color:text;
   padding-left:20px;
+  
+  &.multiline {
+    line-height: 25px;
+    padding:10px 20px;
+  }
 
   &.a0-notice {
     background-color: noticeBG;
@@ -295,6 +300,10 @@ p.a0-message {
     a {
       color:text;
     }
+  }
+  &.a0-warning {
+    background: #f8edb5;
+    color: #a78e11;
   }
   
   b {
@@ -310,6 +319,18 @@ p.a0-message {
     position:absolute;
     left:20px;
     top:20px;
+  }
+}
+
+.modal-content {
+  .a0-message {
+    margin:20px 0;
+  }
+  
+  .link {
+    line-height: 25px;
+    margin-bottom: 20px;
+    cursor:pointer;
   }
 }
 
@@ -789,3 +810,6 @@ p.a0-message {
   width: initial;
 }
 
+#manuallySetToken {
+  margin-right:15px;
+}

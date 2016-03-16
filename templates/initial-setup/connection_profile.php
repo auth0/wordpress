@@ -51,14 +51,19 @@
               </div>
               <div class="modal-body no-padding-bottom">
                 <p><?php _e('This wizard gets you started with the Auth0 for WordPress plug-in. You\'ll be transferred to Auth0 and can login or sign-up. Then you\'ll authorize the plug-in and configure identity providers, whether social or enterprise connections.', WPA0_LANG); ?></p>
-                <p><?php _e('Finally, you\'ll migrate your own WordPress administrator account to Auth0, ready to configure the plug-in through the WordPress dashboard.', WPA0_LANG); ?></p>
-                <p><b><?php _e('This plug-in replaces the standard WordPress login screen. The experience is improved of course, but different.  By default, there is a link to the regular WordPress login screen should you need it.', WPA0_LANG); ?></b>b></p>
-                <p><b><?php _e('Note: For this plugin to work, your server/host needs an inbound connection from auth0.com. This is necessary as Auth0 needs to fetch some information as it pertains to your API token.', WPA0_LANG); ?></b>b></p>
-                <p class="text-center"><span class="a0-button link" id="manuallySetToken">This website is not accesible from the internet and requires manual intervention for Auth0 to set the token on your behalf.</span></p>
+                <p><b><?php _e('This plug-in replaces the standard WordPress login screen. The experience is improved of course, but different.  By default, there is a link to the regular WordPress login screen should you need it.', WPA0_LANG); ?></b></p>
+
+                <p class="a0-message a0-warning multiline">
+
+                  <b>Note:</b>
+                  <?php _e('For this plugin to work, your server/host needs an inbound connection from auth0.com, as Auth0 needs to fetch some information to complete the process. If this website is not accesible from the internet, it will require manual intervention to configure the api token.', WPA0_LANG); ?>
+
+                </p>
+
               </div>
               <div class="modal-footer">
-                <!-- <input type="submit" class="a0-button primary" value="Continue"/> -->
-                <a class="a0-button primary submit" href="#">Continue</a>
+                <a class="a0-button primary" href="#" id="manuallySetToken">Manual Setup (no Internet access)</a>
+                <a class="a0-button primary submit" href="#">Automatic setup</a>
               </div>
             </div>
           </div>

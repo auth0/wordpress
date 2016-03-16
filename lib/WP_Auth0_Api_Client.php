@@ -210,6 +210,8 @@ class WP_Auth0_Api_Client {
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type'] = "application/json";
 
+		$logout_url = home_url();
+
 		$response = wp_remote_post( $endpoint  , array(
 			'method' => 'POST',
 			'headers' => $headers,
@@ -222,7 +224,10 @@ class WP_Auth0_Api_Client {
 				"allowed_origins"=>array(
 					home_url('/wp-login.php'),
 					admin_url('/admin.php?page=wpa0-setup&step=2&profile=social')
-				)
+				),
+				"allowed_logout_urls" => array(
+					$logout_url
+				),
 			))
 		) );
 
