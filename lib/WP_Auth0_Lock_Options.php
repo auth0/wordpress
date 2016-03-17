@@ -81,7 +81,7 @@ class WP_Auth0_Lock_Options {
     }
 
     public function show_as_modal() {
-        return (isset($this->extended_settings['show_as_modal']) && $this->extended_settings['show_as_modal'] == 1);
+        return (isset($this->extended_settings['show_as_modal']) && $this->extended_settings['show_as_modal']);
     }
 
     public function modal_button_name() {
