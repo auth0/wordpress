@@ -348,7 +348,7 @@ class WP_Auth0_LoginManager {
 
 		if ( ! $this->ignore_unverified_email &&  1 == $requires_verified_email ) {
 			if ( empty( $userinfo->email ) ) {
-				$msg = __( 'This account does not have an email associated, as required by your site administrator.”', WPA0_LANG );
+				$msg = __( 'This account does not have an email associated, as required by your site administrator.', WPA0_LANG );
 				$msg .= '<br/><br/>';
 				$msg .= '<a href="' . home_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
 

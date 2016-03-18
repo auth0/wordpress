@@ -57,7 +57,7 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 			$instance['modal_trigger_name'] = isset( $instance['modal_trigger_name'] ) ? $instance['modal_trigger_name'] : 'Login';
 			
 			if (!isset($instance['redirect_to'])) {
-				$instance['redirect_to'] = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+				$instance['redirect_to'] = home_url($_SERVER["REQUEST_URI"]);
 			}
 
 			require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';

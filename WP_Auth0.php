@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Auth0 for WordPress
  * Description: Implements the Auth0 Single Sign On solution into Wordpress
- * Version: 2.1.3
+ * Version: 2.1.4
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,7 +12,7 @@ define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'WPA0_LANG', 'wp-auth0' );
 define( 'AUTH0_DB_VERSION', 4 );
-define( 'WPA0_VERSION', '2.1.3' );
+define( 'WPA0_VERSION', '2.1.4' );
 
 /**
  * Main plugin class
@@ -223,7 +223,7 @@ class WP_Auth0 {
 		}
 
 		if (!isset($atts['redirect_to'])) {
-			$atts['redirect_to'] = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+			$atts['redirect_to'] = home_url($_SERVER["REQUEST_URI"]);
 		}
 		
 		ob_start();

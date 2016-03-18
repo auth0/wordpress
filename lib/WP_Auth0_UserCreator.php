@@ -1,4 +1,4 @@
-Please contact your site’s administrator.<?php
+<?php
 
 class WP_Auth0_UserCreator {
 
