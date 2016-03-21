@@ -138,7 +138,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
     echo $this->render_a0_switch("wpa0_wp_login_enabled", "wordpress_login_enabled", 1, 1 == $v);
     ?>
       <div class="subelement">
-        <span class="description"><?php echo __( 'Mark this if you want to enable the regular WordPress login', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'Enable to allow existing and new WordPress logins to work. If this site already had users before you installed Auth0, and you want them to still be able to use those logins, enable this.', WPA0_LANG ); ?></span>
       </div>
     <?php
   }
