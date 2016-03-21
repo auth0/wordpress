@@ -16,9 +16,9 @@
           <div class="profile">
             <img src="<?php echo WPA0_PLUGIN_URL; ?>/assets/img/initial-setup/simple-end-users-login.svg">
 
-            <h2><?php _e("Simple end-user logins", WPA0_LANG); ?></h2>
+            <h2><?php _e("Social Login", WPA0_LANG); ?></h2>
 
-            <p><?php _e("With this option, your users can log in with popular social accounts like Google or Facebook, or choose their own username and password.", WPA0_LANG); ?></p>
+            <p><?php _e("Let your users login with their social accounts. For example; Google, Facebook, Twitter and many more along with traditional username and password. Don't worry - if you have existing users they will still be able to login.", WPA0_LANG); ?></p>
             
             <div class="a0-buttons">
               <input type="submit" value="Social" name="type" class="a0-button primary"/>
@@ -30,9 +30,9 @@
           <div class="profile">
             <img src="<?php echo WPA0_PLUGIN_URL; ?>/assets/img/initial-setup/effortless-employee-access.svg">
 
-            <h2><?php _e("Effortless employee access", WPA0_LANG); ?></h2>
+            <h2><?php _e("Enterprise Login", WPA0_LANG); ?></h2>
 
-            <p><?php _e("Let users log in with their work credentials by connecting your WordPress instance with your enterprise directory through Auth0. Auth0 will create a user record for each such user in a private database.", WPA0_LANG); ?></p>
+            <p><?php _e("Secure this WordPress instance with your organizations login system so that users can login with their work account information. For example, you can connect to your existing ActiveDirectory infrastructure.", WPA0_LANG); ?></p>
 
             <div class="a0-buttons">
               <input type="submit" value="Enterprise" name="type" class="a0-button primary"/>
