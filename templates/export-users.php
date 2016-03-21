@@ -8,10 +8,10 @@
 
    	<form action="options.php" method="post" onsubmit="return presubmit();">
 			<input type="hidden" name="action" value="wpauth0_export_users" />
-			<p class="a0-step-text">This action will export all your WordPress users that have logged in using Auth0.<br/>Do you want to continue?</p>
+			<p class="a0-step-text">Download all your user information in a CSV file for manual processing. The CSV will contain the users who logged in to this WordPress instance using Auth0.</p>
 
 			<div class="a0-buttons">			    
-				<input type="submit" name="submit" id="submit" class="a0-button primary" value="Yes" />
+				<input type="submit" name="submit" id="submit" class="a0-button primary" value="Download CSV" />
 			</div>
 		</form>
 
