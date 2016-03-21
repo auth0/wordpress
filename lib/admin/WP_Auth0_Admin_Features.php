@@ -83,8 +83,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
       
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'Mark this if you want to enable multifactor authentication with Google Authenticator. More info ', WPA0_LANG ); ?>
-          <a target="_blank" href="https://auth0.com/docs/mfa"><?php echo __( 'HERE', WPA0_LANG ); ?></a>.
+          <?php echo __( 'Mark this if you want to enable multifactor authentication with Google Authenticator. For more information, see ', WPA0_LANG ); ?>
+          <a target="_blank" href="https://auth0.com/docs/mfa"><?php echo __( 'our help page on MFA', WPA0_LANG ); ?></a>.
           <?php echo __( 'You can enable other MFA providers from the ', WPA0_LANG ); ?>
           <a target="_blank" href="https://manage.auth0.com/#/multifactor"><?php echo __( 'Auth0 dashboard', WPA0_LANG ); ?></a>.
           <?php echo __( 'You can reset your users MFA provider data, by going to the user and clicking on "Delete MFA Provider" button.', WPA0_LANG ); ?>
