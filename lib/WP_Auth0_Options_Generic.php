@@ -42,6 +42,9 @@ class WP_Auth0_Options_Generic {
         $options = $this->get_options();
         update_option( $this->options_name, $options );
     }
+    public function delete() {
+        delete_option( $this->options_name );
+    }
 
     protected function defaults(){
         return array();

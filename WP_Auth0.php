@@ -40,7 +40,9 @@ class WP_Auth0 {
 
 		// Add hooks for install uninstall and update.
 		register_activation_hook( WPA0_PLUGIN_FILE, array( $this, 'install' ) );
-		register_deactivation_hook( WPA0_PLUGIN_FILE, array( $this, 'uninstall' ) );
+		register_deactivation_hook( WPA0_PLUGIN_FILE, array( $this, 'deactivate' ) );
+		register_uninstall_hook(WPA0_PLUGIN_FILE, array('WP_Auth0', 'uninstall'));
+
 
 		add_action( 'activated_plugin', array($this, 'on_activate_redirect') );
 
@@ -304,8 +306,12 @@ class WP_Auth0 {
 		flush_rewrite_rules();
 	}
 
-	public function uninstall() {
+	public function deactivate() {
 		flush_rewrite_rules();
+	}
+	public static function uninstall() {
+		$a0_options = WP_Auth0_Options::Instance();
+		$a0_options->delete();
 	}
 
 	private function autoloader( $class ) {
