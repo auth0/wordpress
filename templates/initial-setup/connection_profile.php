@@ -87,7 +87,7 @@
                   <a href="https://auth0.com/docs/api/v2" target="_blank"><?php echo __( 'token generator', WPA0_LANG ); ?></a>
                   <?php _e(' and paste it here:', WPA0_LANG); ?>
                 </p>
-                <input type="text" name="apitoken" />
+                <input type="text" name="apitoken" autocomplete="off" />
                 <p>
                   <small>
                     Scopes required: 

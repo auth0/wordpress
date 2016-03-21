@@ -39,8 +39,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
       <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[password_policy]" id="wpa0_password_policy_excellent" value="excellent" <?php echo checked( $v, 'excellent', false ); ?>/><label for="wpa0_password_policy_excellent">Excellent</label>
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'For more info about the password policies check ', WPA0_LANG ); ?>
-          <a target="_blank" href="https://auth0.com/docs/password-strength"><?php echo __( 'HERE', WPA0_LANG ); ?></a>
+          <?php echo __( 'The difficulty of the user password where \'none\' requires a single character, \'low\' requires six characters and so on. For more details see our', WPA0_LANG ); ?> <a target="_blank" href="https://auth0.com/docs/password-strength"><?php echo __( 'help page', WPA0_LANG ); ?></a> <?php echo __( 'on password difficulty.', WPA0_LANG ); ?>
         </span>
       </div>
     <?php

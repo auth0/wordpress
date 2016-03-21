@@ -94,7 +94,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
             'connections' => array(),
 
-            'password_policy' => null,
+            'password_policy' => 'fair',
 
             // 'auto_provisioning' => true,
             'default_login_redirection' => home_url(),
