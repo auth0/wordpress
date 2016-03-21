@@ -54,11 +54,6 @@ body.a0-widget-open>* {
     box-shadow: none !important;
 }
 
-.auth0-lock.auth0-lock.auth0-lock-opened-in-frame .auth0-lock-badge-bottom { 
-    -webkit-transform: translateY(300%) scale(1) !important;
-    transform: translateY(300%) scale(1) !important;
-}
-
 .auth0-lock.auth0-lock.auth0-lock-opened-in-frame .auth0-lock-badge-bottom svg #Lock{ 
     fill-opacity: 0.4;
     fill: #bbb;
@@ -79,4 +74,8 @@ body.a0-widget-open>* {
 
 .woocommerce-account #extra-options {
     padding:0;
+}
+
+.a0-free-subscription {
+    margin-bottom: 50px;
 }
