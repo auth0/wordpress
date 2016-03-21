@@ -53,8 +53,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'Mark this if you want to enable SSO. More info ', WPA0_LANG ); ?>
-          <a target="_blank" href="https://auth0.com/docs/sso/single-sign-on"><?php echo __( 'HERE', WPA0_LANG ); ?></a>
+          <?php echo __( 'Single Sign On (SSO) allows users to signing once to multiple services. For more details, see our ', WPA0_LANG ); ?>
+          <a target="_blank" href="https://auth0.com/docs/sso/single-sign-on"><?php echo __( 'help page on SSO', WPA0_LANG ); ?></a>.
         </span>
       </div>
     <?php
@@ -68,8 +68,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
       
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'Mark this if you want to enable Single Logout. More info ', WPA0_LANG ); ?>
-          <a target="_blank" href="https://auth0.com/docs/sso/single-sign-on"><?php echo __( 'HERE', WPA0_LANG ); ?></a>
+          <?php echo __( 'Single Logout is the opposite of the above SSO, it logs users out of everything at once. For more details, see our', WPA0_LANG ); ?>
+          <a target="_blank" href="https://auth0.com/docs/sso/single-sign-on"><?php echo __( 'help page on SSO', WPA0_LANG ); ?></a>.
         </span>
       </div>
     <?php
