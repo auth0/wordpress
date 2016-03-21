@@ -51,7 +51,7 @@
               </div>
               <div class="modal-body no-padding-bottom">
                 <p><?php _e('This wizard gets you started with the Auth0 for WordPress plug-in. You\'ll be transferred to Auth0 and can login or sign-up. Then you\'ll authorize the plug-in and configure identity providers, whether social or enterprise connections.', WPA0_LANG); ?></p>
-                <p><b><?php _e('This plug-in replaces the standard WordPress login screen. The experience is improved of course, but different.  By default, there is a link to the regular WordPress login screen should you need it.', WPA0_LANG); ?></b></p>
+                <p><b><?php _e('This plug-in replaces the standard WordPress login screen, but don\'t worry, you can still use your existing WordPress login. Auth0 adds many features to make login easier and better for your users but the old system will still be there too.', WPA0_LANG); ?></b></p>
 
                 <p class="a0-message a0-warning multiline">
 
