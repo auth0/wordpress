@@ -4,8 +4,12 @@
 
 	<div class="container-fluid">
 
+		<p class="row a0-message a0-warning manage">
+			For your Auth0 dashboard with more settings click <a href="https://manage.auth0.com">here</a>.
+		</p>
+
 		<div class="row">
-			<h1><?php _e('Auth0 Settings', WPA0_LANG); ?></h1>
+			<h1><?php _e('Auth0 WordPress Plugin Settings', WPA0_LANG); ?></h1>
 	    <?php if( count(get_settings_errors()) == 0 && isset($_GET['settings-updated']) ) { ?>
 	        <div id="message" class="updated">
 	            <p><strong><?php _e('Settings saved.') ?></strong></p>
