@@ -20,6 +20,10 @@ class WP_Auth0_Lock_Options {
         }
     }
 
+    public function isPasswordlessEnable() {
+        return $this->_get_boolean( $this->wp_options->get('passwordless_enabled') );
+    }
+
     public function get_lock_show_method() {
         if ($this->_get_boolean( $this->wp_options->get('passwordless_enabled') ) ) {
             return $this->wp_options->get('passwordless_method');

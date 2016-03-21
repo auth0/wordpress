@@ -13,7 +13,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'register') {
     $lock_options->set_signup_mode(true);
 }
 
-$extra_css = trim(apply_filters( 'auth0_login_css', ''));
+$extra_css = '';
+
+if ($lock_options->isPasswordlessEnable()) {
+    $extra_css = '.auth0-lock {margin-bottom: 50px;}';
+}
+
+$extra_css .= trim(apply_filters( 'auth0_login_css', ''));
 $extra_css .= trim($lock_options->get_custom_css());
 
 $custom_js = trim($lock_options->get_custom_js());
