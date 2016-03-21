@@ -30,7 +30,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
     ?>
       <input type="text" name="<?php echo $this->options->get_options_name(); ?>[client_id]" id="wpa0_client_id" value="<?php echo esc_attr( $v ); ?>"/>
       <div class="subelement">
-        <span class="description"><?php echo __( 'Application ID, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'Application ID, copy from your application\'s settings in the', WPA0_LANG ); ?> <a href="https://manage.auth0.com/#/applications" target="_blank">Auth0 dashboard</a>.</span>
       </div>
     <?php
   }
@@ -68,7 +68,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
     ?>
       <input type="text" autocomplete="off" name="<?php echo $this->options->get_options_name(); ?>[client_secret]" id="wpa0_client_secret"  <?php if (!empty($v)) {?>placeholder="Not visible"<?php } ?> />
       <div class="subelement">
-        <span class="description"><?php echo __( 'Application secret, copy from your application\'s settings in the Auth0 dashboard', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'Application secret, copy from your application\'s settings in the', WPA0_LANG ); ?> <a href="https://manage.auth0.com/#/applications" target="_blank">Auth0 dashboard</a>.</span>
       </div>
     <?php
   }
@@ -78,7 +78,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
     ?>
       <input type="text" name="<?php echo $this->options->get_options_name(); ?>[domain]" id="wpa0_domain" value="<?php echo esc_attr( $v ); ?>" />
       <div class="subelement">
-        <span class="description"><?php echo __( 'Your Auth0 domain, you can see it in the dashboard. Example: foo.auth0.com', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'Your Auth0 domain, you can see it in the', WPA0_LANG ); ?> <a href="https://manage.auth0.com/#/applications" target="_blank">Auth0 dashboard</a><?php echo __( '. Example: foo.auth0.com', WPA0_LANG ); ?></span>
       </div>
     <?php
   }
