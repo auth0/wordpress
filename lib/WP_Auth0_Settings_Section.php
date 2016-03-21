@@ -49,7 +49,7 @@ class WP_Auth0_Settings_Section {
       add_submenu_page($main_menu, __('Auth0 for WordPress - Setup Wizard', WPA0_LANG), __('Setup Wizard', WPA0_LANG), 'manage_options', 'wpa0-setup', array($this->initial_setup, 'render_setup_page') );
     }
     
-    add_submenu_page($main_menu, __('Users export', WPA0_LANG), __('Users export', WPA0_LANG), 'manage_options', 'wpa0-users-export', array($this->users_exporter, 'render_export_users') );
+    add_submenu_page($main_menu, __('Export Users Data', WPA0_LANG), __('Export Users Data', WPA0_LANG), 'manage_options', 'wpa0-users-export', array($this->users_exporter, 'render_export_users') );
     add_submenu_page($main_menu, __('Error Log', WPA0_LANG), __('Error Log', WPA0_LANG), 'manage_options', 'wpa0-errors', array($this->error_log, 'render_settings_page') );
     add_submenu_page($main_menu, __('Import-Export settings', WPA0_LANG), __('Import-Export settings', WPA0_LANG), 'manage_options', 'wpa0-import-settings', array($this->import_settings, 'render_import_settings_page') );
 
