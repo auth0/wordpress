@@ -147,14 +147,13 @@ class WP_Auth0_InitialSetup_Consent {
         $migration_token_id = $token_id;
 
         $operations = new WP_Auth0_Api_Operations($this->a0_options);
-        $response = $operations->create_wordpress_connection($this->a0_options->get( 'auth0_app_token' ), $this->hasInternetConnection, $migration_token);
+        $response = $operations->create_wordpress_connection($this->a0_options->get( 'auth0_app_token' ), $this->hasInternetConnection, $this->a0_options->get( 'password_policy' ), $migration_token);
 
         $this->a0_options->set( "migration_ws" , $this->hasInternetConnection );
         $this->a0_options->set( "migration_token" , $migration_token );
         $this->a0_options->set( "migration_token_id" , $migration_token_id );
         $this->a0_options->set( "db_connection_enabled" , $response ? 1 : 0 );
         $this->a0_options->set( "db_connection_id" , $response );
-        $this->a0_options->set( "password_policy" , null );
 
       } else {
 

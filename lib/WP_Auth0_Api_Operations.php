@@ -7,7 +7,7 @@ class WP_Auth0_Api_Operations {
     $this->a0_options = $a0_options;
   }
 
-  public function create_wordpress_connection($app_token, $migration_enabled, $migration_token = null) {
+  public function create_wordpress_connection($app_token, $migration_enabled, $password_policy = '', $migration_token = null) {
 
     $domain = $this->a0_options->get( 'domain' );
     $client_id = $this->a0_options->get( 'client_id' );
@@ -16,6 +16,9 @@ class WP_Auth0_Api_Operations {
     $body = array(
       'name' => $db_connection_name,
       'strategy' => 'auth0',
+      'options' => array(
+        'passwordPolicy' => $password_policy,
+      ),
       'enabled_clients' => array(
         $client_id
       ));
