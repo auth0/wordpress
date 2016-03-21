@@ -2,7 +2,7 @@
 
 class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
-  const BASIC_DESCRIPTION = 'Basic settings related to auth0 credentials and basic WordPress integration.';
+  const BASIC_DESCRIPTION = 'Basic settings related to Auth0 credentials and basic WordPress integration.';
 
   protected $actions_middlewares = array(
     'basic_validation',
