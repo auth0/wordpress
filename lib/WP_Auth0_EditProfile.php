@@ -53,6 +53,7 @@ class WP_Auth0_EditProfile {
     if (empty($auth0_password) || $auth0_password == $auth0_repeat_password) {
       $domain = $this->a0_options->get('domain');
       $client_id = $this->a0_options->get('client_id');
+      $api_token = $this->a0_options->get('auth0_app_token');
 
       $user_profile = $user_profiles[0];
       $connection = null;
@@ -69,12 +70,18 @@ class WP_Auth0_EditProfile {
         }
       }
 
-      WP_Auth0_Api_Client::change_password($domain, array(
-        'client_id' => $client_id,
-        'email' => $user_profile->email,
-        'password' => $auth0_password,
-        'connection' => $connection
-      ));
+      if ($api_token) {
+        WP_Auth0_Api_Client::update_user($domain, $api_token, $user_profile->user_id, array(
+          'password' => $auth0_password,
+          'connection' => $connection
+        ));
+      } else {
+        WP_Auth0_Api_Client::change_password($domain, array(
+          'client_id' => $client_id,
+          'email' => $user_profile->email,
+          'connection' => $connection
+        ));
+      }
     }
   }
 
