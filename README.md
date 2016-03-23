@@ -83,6 +83,15 @@ This JWT should match with a registered user in your WP instalation.
 
 You can use this feature with API's provided by plugins like **WP REST API (WP API)**.
 
+## Fedback webtask creation
+
+```
+wt create --name wp-auth0-slack \
+    --secret SLACK_WEBHOOK_URL=... \
+    --secret SLACK_CHANNEL_NAME=... \
+    --output url slack-notifier.js 
+```
+
 ## Technical Notes
 
 **IMPORTANT**: By using this plugin you are delegating the site authentication to Auth0. That means that you won't be using the  **WordPress** database to authenticate users anymore and the default WP login box won't show anymore. However, we can still associate your existing users by merging them by email. This section explains how.
