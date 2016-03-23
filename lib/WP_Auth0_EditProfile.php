@@ -30,8 +30,8 @@ class WP_Auth0_EditProfile {
   }
 
   public function validate_new_password($errors, $update, $user){
-    $auth0_password = $_POST['auth0_password'];
-    $auth0_repeat_password = $_POST['auth0_repeat_password'];
+    $auth0_password = isset($_POST['auth0_password']) ? $_POST['auth0_password'] : null;
+    $auth0_repeat_password = isset($_POST['auth0_repeat_password']) ? $_POST['auth0_repeat_password'] : null;
 
     if ($auth0_password != $auth0_repeat_password) {
       $errors->add( 'auth0_password', __('<strong>ERROR</strong>: The password does not match'), array( 'form-field' => 'auth0_password' ) );
@@ -44,8 +44,8 @@ class WP_Auth0_EditProfile {
 
     if (empty($user_profiles)) return;
 
-    $auth0_password = $_POST['auth0_password'];
-    $auth0_repeat_password = $_POST['auth0_repeat_password'];
+    $auth0_password = isset($_POST['auth0_password']) ? $_POST['auth0_password'] : null;
+    $auth0_repeat_password = isset($_POST['auth0_repeat_password']) ? $_POST['auth0_repeat_password'] : null;
 
     if (!empty($auth0_password) && $auth0_password == $auth0_repeat_password) {
       $domain = $this->a0_options->get('domain');
@@ -197,8 +197,15 @@ class WP_Auth0_EditProfile {
         <script>
           jQuery(document).ready( function($) {
             if ( $('input[name=email]').length ) {
-              $('input[name=email]').attr("disabled", "disabled");
-              $('<span class="description">You can\'t change your email here if you logged in using a social connection.</span>').insertAfter($('input[name=email]'));
+              var emailElement = $('input[name=email]');
+              var newEmailElement = emailElement.clone();
+              newEmailElement.attr("disabled", "disabled")
+                            .attr("name", "disabled_name")
+                            .attr("id", "disabled_name")
+                              .insertAfter(emailElement);
+              emailElement.attr("type", "hidden");
+
+              $('<span class="description">You can\'t change your email here if you logged in using a social connection.</span>').insertAfter(newEmailElement);
             }
           });
         </script>
@@ -234,7 +241,7 @@ class WP_Auth0_EditProfile {
 
     $user_profile = $user_profiles[0];
 
-    if ( $current_user->user_email != $_POST['email'] ) {
+    if ( isset($_POST['email']) && $current_user->user_email != $_POST['email'] ) {
 
       $connection = null;
 
