@@ -19,12 +19,13 @@
 	    <?php settings_errors(); ?>
 
 	    <ul class="nav nav-tabs" role="tablist">
-		    <li role="presentation"><a href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Basic</a></li>
-		    <li role="presentation" class="active"><a href="#features" aria-controls="features" role="tab" data-toggle="tab">Features</a></li>
-		    <li role="presentation"><a href="#connections" aria-controls="connections" role="tab" data-toggle="tab">Connections</a></li>
-		    <li role="presentation"><a href="#appearance" aria-controls="appearance" role="tab" data-toggle="tab">Appearance</a></li>
-		    <li role="presentation"><a href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab">Advanced</a></li>
-		    <li role="presentation"><a href="#dashboard" aria-controls="dashboard" role="tab" data-toggle="tab">Dashboard</a></li>
+		    <li role="presentation"><a id="tab-basic" href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Basic</a></li>
+		    <li role="presentation"><a id="tab-features" href="#features" aria-controls="features" role="tab" data-toggle="tab">Features</a></li>
+		    <li role="presentation"><a id="tab-connections" href="#connections" aria-controls="connections" role="tab" data-toggle="tab">Connections</a></li>
+		    <li role="presentation"><a id="tab-appearance" href="#appearance" aria-controls="appearance" role="tab" data-toggle="tab">Appearance</a></li>
+		    <li role="presentation"><a id="tab-advanced" href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab">Advanced</a></li>
+		    <li role="presentation"><a id="tab-dashboard" href="#dashboard" aria-controls="dashboard" role="tab" data-toggle="tab">Dashboard</a></li>
+		    <li role="presentation"><a id="tab-help" href="#help" aria-controls="help" role="tab" data-toggle="tab">Help</a></li>
 		  </ul>
 		</div>
 		<form action="options.php" method="post" onsubmit="return presubmit();">
@@ -72,6 +73,25 @@
 		    <div role="tabpanel" class="tab-pane row" id="dashboard">
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_dashboard'); ?>
 		    </div>
+		    <div role="tabpanel" class="tab-pane row" id="help">
+
+					<p>Thank you for installing the <a href="https://auth0.com/wordpress">Auth0 WordPress Plugin</a>.</p>
+
+					<p>This plugin allows you to connect your WP instance to many login solutions. If you have many users commenting or buying products from you, then our social connectors will help. They will let users log in using things like Twitter, Google or Facebook. We also support many enterprise login systems like Active Directory.</p>
+
+					<p>Auth0 is a powerful solution and besides the options you see here on your WordPress instance, there are many more things you can do on your <a href="https://manage.auth0.com">Auth0 dashboard</a>. The dashboard allows you to enable more authentication providers and activate advanced features like running javascript snippets on a login event to do things like record activity or send an email. But don't worry, if you just want to enable social logins for your site, you can safely stay within the options here.</p>
+
+					<p>If you're having any issues - please contact us. We have a variety of channels to help you:<p>
+
+					<ul class="list">
+						<li>We have a lot of documentation at <a href="https://auth0.com/docs">our help website</a></li>
+						<li>Our <a href="https://ask.auth0.com">forums</a> where you can look the discussion threads or open a new one asking for help.</li>
+						<li>Our <a href="https://support.auth0.com">support center</a> to open a support ticket.</li>
+						<li>For more information on Auth0, see <a href="https://auth0.com/blog">our blog</a></li>
+					</ul>
+
+
+		    </div>
 		  </div>
 
 			<div class="row">			    
@@ -95,11 +115,9 @@
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
+		var tab = (window.location.hash || 'features').replace('#','');
 
-		jQuery('.nav-tabs a').click(function (e) {
-		  e.preventDefault()
-		  jQuery(this).tab('show')
-		})
+		jQuery('#tab-'+tab).tab('show');
 
 		jQuery('input[type=checkbox]').change(function(){
 			var matches = /\[([a-zA-Z0-9_-].*)\]/.exec(this.name);
