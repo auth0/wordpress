@@ -33,9 +33,6 @@ class WP_Auth0_EditProfile {
     $auth0_password = $_POST['auth0_password'];
     $auth0_repeat_password = $_POST['auth0_repeat_password'];
 
-    if (empty($auth0_password)) {
-      $errors->add( 'auth0_password', __('<strong>ERROR</strong>: The password can not be empty'), array( 'form-field' => 'auth0_password' ) );
-    }
     if ($auth0_password != $auth0_repeat_password) {
       $errors->add( 'auth0_password', __('<strong>ERROR</strong>: The password does not match'), array( 'form-field' => 'auth0_password' ) );
     }
