@@ -47,7 +47,7 @@ class WP_Auth0_EditProfile {
     $auth0_password = $_POST['auth0_password'];
     $auth0_repeat_password = $_POST['auth0_repeat_password'];
 
-    if (empty($auth0_password) || $auth0_password == $auth0_repeat_password) {
+    if (!empty($auth0_password) && $auth0_password == $auth0_repeat_password) {
       $domain = $this->a0_options->get('domain');
       $client_id = $this->a0_options->get('client_id');
       $api_token = $this->a0_options->get('auth0_app_token');
