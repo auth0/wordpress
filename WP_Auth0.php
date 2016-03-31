@@ -350,7 +350,7 @@ if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 
 		$result = get_currentauth0user();
 		if ($result) {
-			$currentauth0_user = unserialize( $result->auth0_obj );
+			$currentauth0_user = WP_Auth0_Serializer::unserialize( $result->auth0_obj );
 		}
 
 		return $currentauth0_user;
