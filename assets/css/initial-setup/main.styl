@@ -835,3 +835,70 @@ p.a0-message {
 #manuallySetToken {
   margin-right:15px;
 }
+
+.a0-feedback {
+  background-color: profileBG;
+  padding:50px;   
+  margin-top: 50px;
+  border-radius: 3px;
+  
+  h2 {
+    font-size:18px;
+    margin-bottom:20px;
+    &.message {
+      margin:0;
+    }
+  }
+    
+  input.feedback_calification {
+    display:none; 
+  }
+
+  input:checked + .feedback-face {
+    opacity:1;
+  }
+  
+  .a0-buttons {
+    margin:20px 0 0;
+    
+    .a0-button{ 
+      min-width: auto;
+      cursor:pointer;
+    }
+  }
+  
+  textarea {
+    padding:10px;
+    height:90px;
+  }
+  
+  .feedback-face {
+    width:40px;
+    height:40px;
+    display:inline-block;
+    background-size:contain;
+    opacity:0.4;
+    margin-right:30px;
+    cursor:pointer;
+
+    &:hover {
+      opacity:0.7;
+    }
+
+    &.calification-1 {
+      background-image: url('../img/rates/01.svg');
+    }
+    &.calification-2 {
+      background-image: url('../img/rates/02.svg');
+    }
+    &.calification-3 {
+      background-image: url('../img/rates/03.svg');
+    }
+    &.calification-4 {
+      background-image: url('../img/rates/04.svg');
+    }
+    &.calification-5 {
+      background-image: url('../img/rates/05.svg');
+    }
+  }
+}

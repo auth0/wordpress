@@ -90,6 +90,42 @@
 						<li>For more information on Auth0, see <a href="https://auth0.com/blog">our blog</a></li>
 					</ul>
 
+					<div class="a0-feedback">
+						<div>
+
+							<h2>Please give us your feedback, how is the Auth0 WP plugin working for you?</h2>
+
+							<div>
+								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_1" value="1" />
+								<label for="feedback_calification_1" class="feedback-face calification-1"></label>
+
+								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_2" value="2" />
+								<label for="feedback_calification_2" class="feedback-face calification-2"></label>
+
+								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_3" value="3" />
+								<label for="feedback_calification_3" class="feedback-face calification-3"></label>
+
+								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_4" value="4" />
+								<label for="feedback_calification_4" class="feedback-face calification-4"></label>
+
+								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_5" value="5" />
+								<label for="feedback_calification_5" class="feedback-face calification-5"></label>
+							</div>
+						</div>
+
+						<div class="a0-separator"></div>
+
+						<div>
+							<h2>What one thing would you change?</h2>
+							<textarea id="feedback_text" placeholder="Please feel free to be as brief or detailed as you like"></textarea>
+						</div>
+
+						<div>
+							<div class="a0-buttons">			    
+								<span class="a0-button primary" onclick="send_feedback()">Send!</span>
+							</div>
+						</div>
+					</div>
 
 		    </div>
 		  </div>
@@ -117,7 +153,13 @@
 	document.addEventListener("DOMContentLoaded", function() {
 		var tab = (window.location.hash || 'features').replace('#','');
 
+		checkTab(tab);
+
 		jQuery('#tab-'+tab).tab('show');
+
+		jQuery('.nav-tabs a').click(function (e) {
+			checkTab(jQuery(this).attr('aria-controls'));
+		})
 
 		jQuery('input[type=checkbox]').change(function(){
 			var matches = /\[([a-zA-Z0-9_-].*)\]/.exec(this.name);
@@ -206,6 +248,26 @@
 
 	function confirmExit() {
     return "There are some pending actions. if you leave the page now, some connection will not be updated.";
+	}
+
+	function send_feedback() {
+		var url = 'https://sandbox.it.auth0.com/api/run/wptest/wp-auth0-slack?webtask_no_cache=1';
+		var data = {
+			"score": jQuery('.feedback_calification:checked').val(),
+			"account": '<?php echo $tenant; ?>',
+			"feedback": jQuery('#feedback_text').val()
+		};
+		jQuery.post(url, data, function(response) {
+			jQuery('.a0-feedback').html('<h2 class="message">Done! Thank you for your feedback.</h2>')
+		});
+	}
+
+	function checkTab(tab) {
+		if (tab == 'help') {
+			jQuery('#submit').hide();
+		} else {
+			jQuery('#submit').show();
+		}
 	}
 </script>
 

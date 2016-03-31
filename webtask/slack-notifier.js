@@ -23,23 +23,24 @@ module.exports = function(ctx, cb) {
     var score = params.score;
     var account = params.account;
     var feedback = params.feedback;
-    var message =  util.format('Feedback from `%s` score %d: ```%s```', account, score, feedback);
 
     var emoji = '';
 
-    if (score >= 0 && score <= 2) {
+    if (score == 1) {
       emoji = ':broken_heart:';
-    } else if (score >= 3 && score <= 5) {
+    } else if (score >= 2 && score <= 3) {
       emoji = ':yellow_heart:';
-    } else if (score >= 6 && score <= 8) {
+    } else if (score == 4) {
       emoji = ':blue_heart:';
-    } else if (score >= 9 && score <= 10) {
+    } else if (score == 5) {
       emoji = ':heart:';
     }
-console.log(emoji);
+
+    var message =  util.format( emoji + ' Feedback from `%s` score %d: ```%s```', account, score, feedback);
+
     slack.send({
       channel: SLACK_CHANNEL_NAME,
-      icon_emoji: emoji,
+      icon_emoji: ':robot_face:',
       text: message,
       unfurl_links: 0,
       username: 'wp-a0-feedback'

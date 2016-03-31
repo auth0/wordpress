@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.6.1 (26313) - http://www.bohemiancoding.com/sketch -->
+    <title>02</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="02" transform="translate(2.000000, 2.000000)">
+            <circle id="Oval-5" stroke="#9B9B9B" stroke-width="3" fill="#E9E9E9" cx="30" cy="30" r="30"></circle>
+            <circle id="Oval-6" fill="#9B9B9B" cx="16.5" cy="25.5" r="3.5"></circle>
+            <circle id="Oval-6" fill="#9B9B9B" cx="43.5" cy="25.5" r="3.5"></circle>
+            <rect id="Rectangle-11" stroke="#9B9B9B" fill="#9B9B9B" x="25" y="39" width="10" height="3" rx="2"></rect>
+        </g>
+    </g>
+</svg>
