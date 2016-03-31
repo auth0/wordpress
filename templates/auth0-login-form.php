@@ -65,7 +65,7 @@ $options = json_encode($lock_options->get_lock_options());
             }
 </style>
             <div id="attributionBadge">
-                <a href="https://auth0.com/" rel="nofollow" target="_blank">
+                <a href="https://auth0.com/?utm_source=wp-plugin&utm_campaign=powered-by-auth0&utm_medium=widget" rel="nofollow" target="_blank">
                 Login powered by <span class="logo">Auth0</span>
                 </a>
             </div>
@@ -192,9 +192,9 @@ document.addEventListener("DOMContentLoaded", function() {
     <?php } ?>
 
     lock.on('ready', function(){
-        // if ( lock.options['$client'].subscription === 'free' ) {
+        if ( lock.options['$client'].subscription === 'free' ) {
             jQuery('#attributionBadge').fadeIn();
-        // }
+        }
     });
 
 });
