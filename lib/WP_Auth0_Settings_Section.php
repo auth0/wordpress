@@ -26,6 +26,11 @@ class WP_Auth0_Settings_Section {
 
   public function init_menu() {
 
+    if (isset($_REQUEST['page']) && $_REQUEST['page'] === 'wpa0-help') {
+      wp_redirect( admin_url( 'admin.php?page=wpa0#help' ), 301 );
+      exit;
+    }
+
     $client_id = $this->a0_options->get('client_id');
     $client_secret = $this->a0_options->get('client_secret');
     $domain = $this->a0_options->get('domain');
@@ -46,6 +51,9 @@ class WP_Auth0_Settings_Section {
       add_submenu_page($main_menu, __('Settings', WPA0_LANG), __('Settings', WPA0_LANG), 'manage_options', 'wpa0', array($this->auth0_admin, 'render_settings_page') );
     } else {
       add_submenu_page($main_menu, __('Settings', WPA0_LANG), __('Settings', WPA0_LANG), 'manage_options', 'wpa0', array($this->auth0_admin, 'render_settings_page') );
+
+      add_submenu_page($main_menu, __('Help', WPA0_LANG), __('Help', WPA0_LANG), 'manage_options', 'wpa0-help', array($this, 'redirect_to_help') );
+
       add_submenu_page($main_menu, __('Auth0 for WordPress - Setup Wizard', WPA0_LANG), __('Setup Wizard', WPA0_LANG), 'manage_options', 'wpa0-setup', array($this->initial_setup, 'render_setup_page') );
     }
     
@@ -56,5 +64,9 @@ class WP_Auth0_Settings_Section {
     if (WP_Auth0_Configure_JWTAUTH::is_jwt_auth_enabled()) {
       add_submenu_page($main_menu, __('JWT Auth integration', WPA0_LANG), __('JWT Auth integration', WPA0_LANG), 'manage_options', 'wpa0-jwt-auth', array($this->configure_jwt_auth, 'render_settings_page') );
     }
+  }
+
+  public function redirect_to_help() { 
+    
   }
 }

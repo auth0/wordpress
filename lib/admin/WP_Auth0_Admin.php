@@ -191,6 +191,21 @@ class WP_Auth0_Admin {
       $social_connections[] = $this->get_social_connection($provider['provider'], $provider['name'], $provider['icon']);
     }
 
+    $domain = $this->a0_options->get('domain');
+    $parts = explode('.', $domain);
+
+    $tenant = $parts[0];
+
+    if (strpos($domain, 'au.auth0.com') !== false) {
+      $tenant .= '@au';
+    }
+    elseif (strpos($domain, 'eu.auth0.com') !== false) {
+      $tenant .= '@eu';
+    }
+    elseif (strpos($domain, 'auth0.com') !== false) {
+      $tenant .= '@us';
+    }
+
 		include WPA0_PLUGIN_DIR . 'templates/settings.php';
 	}
 }

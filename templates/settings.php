@@ -19,12 +19,13 @@
 	    <?php settings_errors(); ?>
 
 	    <ul class="nav nav-tabs" role="tablist">
-		    <li role="presentation"><a href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Basic</a></li>
-		    <li role="presentation" class="active"><a href="#features" aria-controls="features" role="tab" data-toggle="tab">Features</a></li>
-		    <li role="presentation"><a href="#connections" aria-controls="connections" role="tab" data-toggle="tab">Connections</a></li>
-		    <li role="presentation"><a href="#appearance" aria-controls="appearance" role="tab" data-toggle="tab">Appearance</a></li>
-		    <li role="presentation"><a href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab">Advanced</a></li>
-		    <li role="presentation"><a href="#dashboard" aria-controls="dashboard" role="tab" data-toggle="tab">Dashboard</a></li>
+		    <li role="presentation"><a id="tab-basic" href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Basic</a></li>
+		    <li role="presentation"><a id="tab-features" href="#features" aria-controls="features" role="tab" data-toggle="tab">Features</a></li>
+		    <li role="presentation"><a id="tab-connections" href="#connections" aria-controls="connections" role="tab" data-toggle="tab">Connections</a></li>
+		    <li role="presentation"><a id="tab-appearance" href="#appearance" aria-controls="appearance" role="tab" data-toggle="tab">Appearance</a></li>
+		    <li role="presentation"><a id="tab-advanced" href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab">Advanced</a></li>
+		    <li role="presentation"><a id="tab-dashboard" href="#dashboard" aria-controls="dashboard" role="tab" data-toggle="tab">Dashboard</a></li>
+		    <li role="presentation"><a id="tab-help" href="#help" aria-controls="help" role="tab" data-toggle="tab">Help</a></li>
 		  </ul>
 		</div>
 		<form action="options.php" method="post" onsubmit="return presubmit();">
@@ -72,6 +73,61 @@
 		    <div role="tabpanel" class="tab-pane row" id="dashboard">
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_dashboard'); ?>
 		    </div>
+		    <div role="tabpanel" class="tab-pane row" id="help">
+
+					<p>Thank you for installing the <a href="https://auth0.com/wordpress">Auth0 WordPress Plugin</a>.</p>
+
+					<p>This plugin allows you to connect your WP instance to many login solutions. If you have many users commenting or buying products from you, then our social connectors will help. They will let users log in using things like Twitter, Google or Facebook. We also support many enterprise login systems like Active Directory.</p>
+
+					<p>Auth0 is a powerful solution and besides the options you see here on your WordPress instance, there are many more things you can do on your <a href="https://manage.auth0.com">Auth0 dashboard</a>. The dashboard allows you to enable more authentication providers and activate advanced features like running javascript snippets on a login event to do things like record activity or send an email. But don't worry, if you just want to enable social logins for your site, you can safely stay within the options here.</p>
+
+					<p>If you're having any issues - please contact us. We have a variety of channels to help you:<p>
+
+					<ul class="list">
+						<li>We have a lot of documentation at <a href="https://auth0.com/docs">our help website</a></li>
+						<li>Our <a href="https://ask.auth0.com">forums</a> where you can look the discussion threads or open a new one asking for help.</li>
+						<li>Our <a href="https://support.auth0.com">support center</a> to open a support ticket.</li>
+						<li>For more information on Auth0, see <a href="https://auth0.com/blog">our blog</a></li>
+					</ul>
+
+					<div class="a0-feedback">
+						<div>
+
+							<h2>Please give us your feedback, how is the Auth0 WP plugin working for you?</h2>
+
+							<div>
+								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_1" value="1" />
+								<label for="feedback_calification_1" class="feedback-face calification-1"></label>
+
+								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_2" value="2" />
+								<label for="feedback_calification_2" class="feedback-face calification-2"></label>
+
+								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_3" value="3" />
+								<label for="feedback_calification_3" class="feedback-face calification-3"></label>
+
+								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_4" value="4" />
+								<label for="feedback_calification_4" class="feedback-face calification-4"></label>
+
+								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_5" value="5" />
+								<label for="feedback_calification_5" class="feedback-face calification-5"></label>
+							</div>
+						</div>
+
+						<div class="a0-separator"></div>
+
+						<div>
+							<h2>What one thing would you change?</h2>
+							<textarea id="feedback_text" placeholder="Please feel free to be as brief or detailed as you like"></textarea>
+						</div>
+
+						<div>
+							<div class="a0-buttons">			    
+								<span class="a0-button primary" onclick="send_feedback()">Send!</span>
+							</div>
+						</div>
+					</div>
+
+		    </div>
 		  </div>
 
 			<div class="row">			    
@@ -95,10 +151,14 @@
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
+		var tab = (window.location.hash || 'features').replace('#','');
+
+		checkTab(tab);
+
+		jQuery('#tab-'+tab).tab('show');
 
 		jQuery('.nav-tabs a').click(function (e) {
-		  e.preventDefault()
-		  jQuery(this).tab('show')
+			checkTab(jQuery(this).attr('aria-controls'));
 		})
 
 		jQuery('input[type=checkbox]').change(function(){
@@ -188,6 +248,26 @@
 
 	function confirmExit() {
     return "There are some pending actions. if you leave the page now, some connection will not be updated.";
+	}
+
+	function send_feedback() {
+		var url = 'https://sandbox.it.auth0.com/api/run/wptest/wp-auth0-slack?webtask_no_cache=1';
+		var data = {
+			"score": jQuery('.feedback_calification:checked').val(),
+			"account": '<?php echo $tenant; ?>',
+			"feedback": jQuery('#feedback_text').val()
+		};
+		jQuery.post(url, data, function(response) {
+			jQuery('.a0-feedback').html('<h2 class="message">Done! Thank you for your feedback.</h2>')
+		});
+	}
+
+	function checkTab(tab) {
+		if (tab == 'help') {
+			jQuery('#submit').hide();
+		} else {
+			jQuery('#submit').show();
+		}
 	}
 </script>
 

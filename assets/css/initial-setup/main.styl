@@ -70,6 +70,16 @@
     color:softText;
   }
   
+  ul.list {
+    font-size: 17px;
+    color:softText;
+    
+    li {
+      list-style-type: disc;
+      margin-left: 25px;
+    }
+  }
+  
   textarea.code {
     font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
     font-size: 12px;
@@ -176,6 +186,7 @@
   display: inline-block;
   text-align: center;
   padding: 0 30px;
+  transition: background-color 0.2s ease;
   
   &:focus {
     box-shadow: none;
@@ -208,6 +219,18 @@
     &:hover {
       color: buttonSecondaryText;
     }
+  }
+  
+  &.default {
+    
+    background: #fff;
+    color: rgba(0,0,0,0.86);
+    border-color: #d0d2d3;
+
+    &:hover {
+      background: #d0d2d3;
+    }
+
   }
 }
 
@@ -281,13 +304,17 @@
   }
 }
 
-p.a0-message {
-  line-height: 38px;
+.a0-message {
+  line-height: 24px;
   font-size: 12px;
   border-radius: 3px;
   position: relative;
   color:text;
-  padding-left:20px;
+  padding: 15px;
+  
+  &.a0-step-text {
+    font-size: 14px;
+  }
   
   &.multiline {
     line-height: 25px;
@@ -307,8 +334,12 @@ p.a0-message {
     }
   }
   &.a0-warning {
-    background: #f8edb5;
-    color: #a78e11;
+    background: #fff7c9;
+    color: #786600;
+    a {
+      color: #786600;
+      font-decoration:underline;
+    }
   }
   
   b {
@@ -324,6 +355,15 @@ p.a0-message {
     position:absolute;
     left:20px;
     top:20px;
+  }
+  
+  .a0-button {
+    border: 0;
+    margin: -4px;
+    margin-left: 10px;
+    font-size: 12px;
+    line-height: 12px;
+    padding: 10px 15px;
   }
 }
 
@@ -752,7 +792,9 @@ p.a0-message {
   .top-margin {
     margin-top: 30px;
   }
-
+  .no-bottom-margin {
+    margin-bottom: 0;
+  }
   
   .form-table th, .form-table label, .form-wrap label {
     color:formFieldsText;
@@ -822,4 +864,75 @@ p.a0-message {
 
 #manuallySetToken {
   margin-right:15px;
+}
+
+.a0-feedback {
+  background-color: profileBG;
+  padding:30px;   
+  margin-top: 30px;
+  border-radius: 3px;
+  
+  h2 {
+    font-size:18px;
+    margin-bottom:15px;
+    &.message {
+      margin:0;
+    }
+  }
+  
+  .a0-separator {
+    margin:20px 0;
+  }
+    
+  input.feedback_calification {
+    display:none; 
+  }
+
+  input:checked + .feedback-face {
+    opacity:1;
+  }
+  
+  .a0-buttons {
+    margin:15px 0 0;
+    
+    .a0-button{ 
+      min-width: auto;
+      cursor:pointer;
+    }
+  }
+  
+  textarea {
+    padding:10px;
+    height:90px;
+  }
+  
+  .feedback-face {
+    width:40px;
+    height:40px;
+    display:inline-block;
+    background-size:contain;
+    opacity:0.4;
+    margin-right:30px;
+    cursor:pointer;
+
+    &:hover {
+      opacity:0.7;
+    }
+
+    &.calification-1 {
+      background-image: url('../img/rates/01.svg');
+    }
+    &.calification-2 {
+      background-image: url('../img/rates/02.svg');
+    }
+    &.calification-3 {
+      background-image: url('../img/rates/03.svg');
+    }
+    &.calification-4 {
+      background-image: url('../img/rates/04.svg');
+    }
+    &.calification-5 {
+      background-image: url('../img/rates/05.svg');
+    }
+  }
 }

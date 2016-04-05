@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.6.1 (26313) - http://www.bohemiancoding.com/sketch -->
+    <title>03</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="03" transform="translate(2.000000, 2.000000)">
+            <circle id="Oval-5" stroke="#64B507" stroke-width="3" fill="#B1EA6F" cx="30" cy="30" r="30"></circle>
+            <circle id="Oval-6" fill="#64B507" cx="16.5" cy="25.5" r="3.5"></circle>
+            <circle id="Oval-6" fill="#64B507" cx="43.5" cy="25.5" r="3.5"></circle>
+            <path d="M20,40.5 C20,39.6715729 20.6004133,38.7138705 21.3551781,38.3744317 C21.3551781,38.3744317 25.9607835,36.0158851 30.0775223,36.0158851 C34.1942611,36.0158851 38.6446689,38.3598325 38.6446689,38.3598325 C39.3931976,38.7133872 40,39.6657972 40,40.5 L40,40.5 C40,41.3284271 39.3941954,41.7068851 38.6429677,41.3637772 C38.6429677,41.3637772 34.0970635,39 30.0775223,39 C26.057981,39 21.3562918,41.3783981 21.3562918,41.3783981 C20.6072325,41.7216993 20,41.3342028 20,40.5 L20,40.5 Z" id="Rectangle-11" stroke="#64B507" fill="#64B507" transform="translate(30.000000, 38.759597) rotate(-180.000000) translate(-30.000000, -38.759597) "></path>
+        </g>
+    </g>
+</svg>

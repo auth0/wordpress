@@ -5,6 +5,10 @@
   <div class="container-fluid">
 
     <div class="row">
+      <h1><?php _e('Import and Export Settings', WPA0_LANG); ?></h1>
+      <p class="a0-step-text top-margin no-bottom-margin">You can import and export your Auth0 WordPress plugin settings here. This allows you to either backup the data, or to move your settings to a new WordPress instance.</p>
+    </div>
+    <div class="row">
 
       <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#import" aria-controls="import" role="tab" data-toggle="tab">Import Settings</a></li>
@@ -16,8 +20,6 @@
           
           <form action="options.php" method="post" onsubmit="return presubmit_import();" enctype="multipart/form-data">
             <input type="hidden" name="action" value="wpauth0_import_settings" />
-            
-            <h1><?php _e('Import Settings', WPA0_LANG); ?></h1>
             
             <div id="upload-file">
               <p class="a0-step-text top-margin">Please upload the exported json file or <span class="link upload-toggle">paste the entire json</span>.</p>
@@ -39,8 +41,6 @@
           
           <form action="options.php" method="post" onsubmit="return presubmit_export();">
             <input type="hidden" name="action" value="wpauth0_export_settings" />
-
-            <h1><?php _e('Export Settings', WPA0_LANG); ?></h1>
 
             <p class="a0-step-text top-margin">Download the entire plugin configuration.</p>
 
