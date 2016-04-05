@@ -11,10 +11,10 @@
 			<a href=""  class="a0-button secondary"><?php echo _e('Skip the wizard'); ?></a>
 		</div>
 
-		<p class="a0-message a0-notice">
+		<div class="a0-message a0-notice">
 			<b><?php echo _e('IMPORTANT'); ?>:</b>
 			<?php echo _e('This plug-in replaces the standard WordPress login screen. The experience is improved of course, but different.  By default, there is a link to the regular WordPress login screen should you need it.'); ?>
-		</p>
+		</div>
 
 	</div>
 </div>
