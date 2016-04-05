@@ -10,7 +10,7 @@
     <div class="row">
       <div class="a0-step-text a0-message a0-warning">
 
-        <b>Warning:</b>
+        <b>Important:</b>
         <?php _e('To continue you need an Auth0 account, don\'t have one yet? Click ', WPA0_LANG); ?>
         <a href="https://auth0.com" about="_blank"><?php _e('here', WPA0_LANG); ?></a>
 
