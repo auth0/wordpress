@@ -11,10 +11,9 @@
       <div class="a0-step-text a0-message a0-warning">
 
         <b>Important:</b>
-        <?php _e('To continue you need an Auth0 account, don\'t have one yet? Click ', WPA0_LANG); ?>
-        <a href="https://auth0.com" about="_blank"><?php _e('here', WPA0_LANG); ?></a>
+        <?php _e('To continue you need an Auth0 account, don\'t have one yet?', WPA0_LANG); ?>
 
-        <button class="a0-button default pull-right">Sign up for free</button>
+        <a class="a0-button default pull-right" href="https://auth0.com" about="_blank">Sign up for free</a>
 
       </div>
     </div>

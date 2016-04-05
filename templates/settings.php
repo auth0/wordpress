@@ -7,9 +7,9 @@
 		<div class="row">
 			<h1><?php _e('Auth0 WordPress Plugin Settings', WPA0_LANG); ?></h1>
 
-			<p class="row a0-message a0-warning manage">
+			<div class="row a0-message a0-warning manage">
 				For your Auth0 dashboard with more settings click <a href="https://manage.auth0.com">here</a>.
-			</p>
+			</div>
 			
 	    <?php if( count(get_settings_errors()) == 0 && isset($_GET['settings-updated']) ) { ?>
 	        <div id="message" class="updated">
@@ -44,10 +44,10 @@
 		    		<span>Updating the connections settings</span>
 		    	</div>
 
-		    	<p class="a0-message a0-tip row">
+		    	<div class="a0-message a0-tip row">
       			<b>Pro Tip:</b>
       			To set your own app keys and settings for the social connections, access the <a target="_blank" href="https://manage.auth0.com/#/connections/social">Auth0 Dashboard</a>. 
-       		</p>
+       		</div>
 
 		    	<div class="connections row">
 					  <?php foreach($social_connections as $social_connection) { ?>
