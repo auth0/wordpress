@@ -186,6 +186,7 @@
   display: inline-block;
   text-align: center;
   padding: 0 30px;
+  transition: background-color 0.2s ease;
   
   &:focus {
     box-shadow: none;
@@ -218,6 +219,18 @@
     &:hover {
       color: buttonSecondaryText;
     }
+  }
+  
+  &.default {
+    
+    background: #fff;
+    color: rgba(0,0,0,0.86);
+    border-color: #d0d2d3;
+
+    &:hover {
+      background: #d0d2d3;
+    }
+
   }
 }
 
@@ -291,13 +304,17 @@
   }
 }
 
-p.a0-message {
-  line-height: 38px;
+.a0-message {
+  line-height: 24px;
   font-size: 12px;
   border-radius: 3px;
   position: relative;
   color:text;
-  padding-left:20px;
+  padding: 15px;
+  
+  &.a0-step-text {
+    font-size: 14px;
+  }
   
   &.multiline {
     line-height: 25px;
@@ -317,8 +334,12 @@ p.a0-message {
     }
   }
   &.a0-warning {
-    background: #f8edb5;
-    color: #a78e11;
+    background: #fff7c9;
+    color: #786600;
+    a {
+      color: #786600;
+      font-decoration:underline;
+    }
   }
   
   b {
@@ -334,6 +355,15 @@ p.a0-message {
     position:absolute;
     left:20px;
     top:20px;
+  }
+  
+  .a0-button {
+    border: 0;
+    margin: -4px;
+    margin-left: 10px;
+    font-size: 12px;
+    line-height: 12px;
+    padding: 10px 15px;
   }
 }
 

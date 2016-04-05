@@ -7,6 +7,7 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
 
   public function __construct(WP_Auth0_Options $a0_options) {
       $this->a0_options = $a0_options;
+      $this->domain = $this->a0_options->get( 'auth0_server_domain' );
   }
 
   public function render($step) {

@@ -49,6 +49,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges', 'function' => 'render_ip_ranges' ),
       array( 'id' => 'wpa0_valid_proxy_ip', 'name' => 'Valid Proxy IP', 'function' => 'render_valid_proxy_ip' ),
       array( 'id' => 'wpa0_extra_conf', 'name' => 'Extra settings', 'function' => 'render_extra_conf' ),
+      array( 'id' => 'wpa0_auth0_server_domain', 'name' => 'Auth0 server domain', 'function' => 'render_auth0_server_domain' ),
       array( 'id' => 'wpa0_metrics', 'name' => 'Anonymous data', 'function' => 'render_metrics' ),
 
     );
@@ -303,6 +304,17 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
       <div class="subelement">
         <span class="description"><?php echo __( 'Point this to the latest widget available in the CDN', WPA0_LANG ); ?></span>
+      </div>
+    <?php
+  }
+
+  public function render_auth0_server_domain() {
+    $v = $this->options->get( 'auth0_server_domain' );
+    ?>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[auth0_server_domain]" id="wpa0_auth0_server_domain" value="<?php echo esc_attr( $v ); ?>" />
+
+      <div class="subelement">
+        <span class="description"><?php echo __( 'The Auth0 domain, it is used by the setup wizard to fetch your account information.', WPA0_LANG ); ?></span>
       </div>
     <?php
   }
