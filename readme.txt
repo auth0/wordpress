@@ -1,4 +1,4 @@
-=== Auth0 ===
+=== Login by Auth0 ===
 Tags: login, oauth, authentication, single sign on, ldap, active directory, saml, windows azure ad, google apps, two factor, two-factor, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer, passwordless, sms, magiclink, totp, social
 Tested up to: 4.4
 Requires at least: 3.8
