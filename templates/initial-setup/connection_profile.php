@@ -138,8 +138,21 @@
 <script type="text/javascript">
   var with_token = false;
 
+  var force_automatic = false;
+  var force_manual = false;
+
   document.addEventListener("DOMContentLoaded", function() {
     metricsTrack('initial-setup:step1:open');
+
+    var url = 'https://sandbox.it.auth0.com/api/run/wptest/wp-auth0-ping?domain=<?php echo urlencode(get_bloginfo('wpurl')); ?>';
+
+    jQuery.ajax(url).done(function(response) {
+      force_automatic = true;
+      metricsTrack('initial-setup:step1:ping:automatic');
+    }).fail(function( jqXHR, textStatus ) {
+      metricsTrack('initial-setup:step1:ping:manual');
+    });
+    
   });
 
   jQuery('.a0-button.submit').click(function(e){
@@ -152,7 +165,15 @@
   jQuery('.profile .a0-button').click(function(e){
     e.preventDefault();
     jQuery('#profile-type').val(jQuery(this).val());
-    jQuery('#connectionSelectedModal').modal();
+
+    if (force_automatic && !force_manual) {
+      jQuery('.a0-button.submit').click();
+    } else if (force_manual && !force_automatic) {
+      jQuery('#manuallySetToken').click();
+    } else {
+      jQuery('#connectionSelectedModal').modal();
+    }
+
     return false;
   });
   jQuery('#manuallySetToken').click(function(e){

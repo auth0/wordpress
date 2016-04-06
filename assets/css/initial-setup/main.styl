@@ -226,6 +226,7 @@
     background: #fff;
     color: rgba(0,0,0,0.86);
     border-color: #d0d2d3;
+    text-decoration:none;
 
     &:hover {
       background: #d0d2d3;
@@ -336,7 +337,7 @@
   &.a0-warning {
     background: #fff7c9;
     color: #786600;
-    a {
+    a.link {
       color: #786600;
       font-decoration:underline;
     }
@@ -380,13 +381,17 @@
 }
 
 .a0-profiles {
-  margin-top: 50px;
+  margin-top: 30px;
   margin-bottom: 30px;
 
   @media (min-width: 768px) {
-    .col {
-      padding-left: 10px;
+    .col:nth-of-type(1) {
+      padding-left: 0;
       padding-right: 10px;
+    }
+    .col:nth-of-type(2) {
+      padding-left: 10px;
+      padding-right: 0;
     }
   }
   
@@ -854,6 +859,10 @@
 
   label {
     margin-right: 10px;
+  }
+  
+  .connections {
+    margin-top:30px;
   }
 }
 

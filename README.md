@@ -92,6 +92,14 @@ wt create --name wp-auth0-slack \
     --output url slack-notifier.js 
 ```
 
+## Ping webtask creation
+
+```
+wt create --name wp-auth0-ping \
+    --profile wptest-default \
+    ping.js
+```
+
 ## Technical Notes
 
 **IMPORTANT**: By using this plugin you are delegating the site authentication to Auth0. That means that you won't be using the  **WordPress** database to authenticate users anymore and the default WP login box won't show anymore. However, we can still associate your existing users by merging them by email. This section explains how.
