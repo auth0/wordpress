@@ -1,5 +1,97 @@
 # Change Log
 
+## [2.1.9](https://github.com/auth0/wp-auth0/tree/2.1.9) (2016-04-07)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/2.1.8...2.1.9)
+
+**Closed issues:**
+
+- Windows Live logo [\#190](https://github.com/auth0/wp-auth0/issues/190)
+- Change name of plugin [\#187](https://github.com/auth0/wp-auth0/issues/187)
+- Set up process online / offline [\#156](https://github.com/auth0/wp-auth0/issues/156)
+
+**Merged pull requests:**
+
+- 2.1.9 [\#191](https://github.com/auth0/wp-auth0/pull/191) ([glena](https://github.com/glena))
+
+## [2.1.8](https://github.com/auth0/wp-auth0/tree/2.1.8) (2016-04-05)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/2.1.7...2.1.8)
+
+**Closed issues:**
+
+- CTA for account creation [\#183](https://github.com/auth0/wp-auth0/issues/183)
+
+**Merged pull requests:**
+
+- fix css issues [\#189](https://github.com/auth0/wp-auth0/pull/189) ([glena](https://github.com/glena))
+
+## [2.1.7](https://github.com/auth0/wp-auth0/tree/2.1.7) (2016-04-05)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/2.1.6...2.1.7)
+
+**Closed issues:**
+
+- change error message [\#186](https://github.com/auth0/wp-auth0/issues/186)
+- Make WP plugin installation entirely & fully automatic [\#184](https://github.com/auth0/wp-auth0/issues/184)
+- Maybe trim CSS on feedback  [\#182](https://github.com/auth0/wp-auth0/issues/182)
+- tracking for "powered by..." image [\#180](https://github.com/auth0/wp-auth0/issues/180)
+- import-export settings [\#175](https://github.com/auth0/wp-auth0/issues/175)
+- help [\#170](https://github.com/auth0/wp-auth0/issues/170)
+- Add a help tab [\#168](https://github.com/auth0/wp-auth0/issues/168)
+
+**Merged pull requests:**
+
+- 2.1.7 [\#188](https://github.com/auth0/wp-auth0/pull/188) ([glena](https://github.com/glena))
+- Added Scope Resolution to unserialize function call [\#181](https://github.com/auth0/wp-auth0/pull/181) ([caseyjbenko](https://github.com/caseyjbenko))
+
+## [2.1.6](https://github.com/auth0/wp-auth0/tree/2.1.6) (2016-03-23)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/2.1.5...2.1.6)
+
+## [2.1.5](https://github.com/auth0/wp-auth0/tree/2.1.5) (2016-03-23)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/2.1.4...2.1.5)
+
+**Closed issues:**
+
+- login box [\#177](https://github.com/auth0/wp-auth0/issues/177)
+- css login issue [\#176](https://github.com/auth0/wp-auth0/issues/176)
+- user export [\#174](https://github.com/auth0/wp-auth0/issues/174)
+- auth0 logo on the quick start guide [\#173](https://github.com/auth0/wp-auth0/issues/173)
+- online setup popup [\#172](https://github.com/auth0/wp-auth0/issues/172)
+- quick start guide screen 1 [\#171](https://github.com/auth0/wp-auth0/issues/171)
+- Quick Start Guide [\#169](https://github.com/auth0/wp-auth0/issues/169)
+- settings / features / fullcontact [\#167](https://github.com/auth0/wp-auth0/issues/167)
+- settings / features / MFA [\#166](https://github.com/auth0/wp-auth0/issues/166)
+- settings / features / sso [\#165](https://github.com/auth0/wp-auth0/issues/165)
+- Settings / Features / Password policy [\#164](https://github.com/auth0/wp-auth0/issues/164)
+- setting text [\#163](https://github.com/auth0/wp-auth0/issues/163)
+- title link [\#162](https://github.com/auth0/wp-auth0/issues/162)
+- Auth0 settings / basic [\#161](https://github.com/auth0/wp-auth0/issues/161)
+- Auth0 settings / Basic [\#160](https://github.com/auth0/wp-auth0/issues/160)
+- Auth0 settings page / Basic [\#159](https://github.com/auth0/wp-auth0/issues/159)
+- deleting plugin doesn't delete all data [\#158](https://github.com/auth0/wp-auth0/issues/158)
+- setup text [\#157](https://github.com/auth0/wp-auth0/issues/157)
+- Plugin description text [\#155](https://github.com/auth0/wp-auth0/issues/155)
+- New plugin breaks due to callback URL mismatch? [\#146](https://github.com/auth0/wp-auth0/issues/146)
+
+## [2.1.4](https://github.com/auth0/wp-auth0/tree/2.1.4) (2016-03-18)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/2.1.3...2.1.4)
+
+**Merged pull requests:**
+
+- 2.1.4 [\#154](https://github.com/auth0/wp-auth0/pull/154) ([glena](https://github.com/glena))
+
+## [2.1.3](https://github.com/auth0/wp-auth0/tree/2.1.3) (2016-03-16)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/2.1.2...2.1.3)
+
+**Closed issues:**
+
+- MFA reset [\#149](https://github.com/auth0/wp-auth0/issues/149)
+- Site login broken after updating the plugin to version 2 [\#143](https://github.com/auth0/wp-auth0/issues/143)
+- Add a way to customize error pages like templates/verify-email.php [\#103](https://github.com/auth0/wp-auth0/issues/103)
+- Docs changes [\#94](https://github.com/auth0/wp-auth0/issues/94)
+
+**Merged pull requests:**
+
+- 2.1.2 [\#152](https://github.com/auth0/wp-auth0/pull/152) ([glena](https://github.com/glena))
+
 ## [2.1.2](https://github.com/auth0/wp-auth0/tree/2.1.2) (2016-03-15)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/2.1.1...2.1.2)
 
