@@ -5,9 +5,9 @@ Requires at least: 3.8
 License: MIT
 License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE.md
 Stable tag: trunk
-Contributors: hrajchert, rrauch, glena
+Contributors: glena, rrauch
 
-Single Sign On for Enterprises + Social Login + User/Passwords + Passwordless. For all your WordPress instances. Powered by Auth0.
+Login by Auth0 provides improved Username/password login, Passwordless login, Social login and Single Sign On for all your sites.
 
 == Description ==
 
