@@ -43,7 +43,6 @@ class WP_Auth0 {
 		register_deactivation_hook( WPA0_PLUGIN_FILE, array( $this, 'deactivate' ) );
 		register_uninstall_hook(WPA0_PLUGIN_FILE, array('WP_Auth0', 'uninstall'));
 
-
 		add_action( 'activated_plugin', array($this, 'on_activate_redirect') );
 
 		// Add an action to append a stylesheet for the login page.

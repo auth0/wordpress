@@ -21,6 +21,7 @@ class WP_Auth0_InitialSetup {
         $this->adminuser_step = new WP_Auth0_InitialSetup_AdminUser($this->a0_options);
         $this->connections_step = new WP_Auth0_InitialSetup_Connections($this->a0_options);
         $this->end_step = new WP_Auth0_InitialSetup_End($this->a0_options);
+        $this->signup = new WP_Auth0_InitialSetup_Signup($this->a0_options);
     }
 
     public function init() {
@@ -73,6 +74,12 @@ class WP_Auth0_InitialSetup {
       wp_enqueue_style( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/css/bootstrap.min.css' );
       wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/js/bootstrap.min.js' );
   		wp_enqueue_style( 'wpa0_admin_initial_settup', WPA0_PLUGIN_URL . 'assets/css/initial-setup.css' );
+ 
+      if ( isset( $_REQUEST['signup'] ) ) {
+        $cdn_url = $this->a0_options->get( 'cdn_url' );
+        wp_enqueue_script( 'wpa0_lock', $cdn_url, 'jquery' );
+      } 
+
   		wp_enqueue_style( 'media' );
   	}
 
@@ -96,6 +103,11 @@ class WP_Auth0_InitialSetup {
 
         $step = (isset($_REQUEST['step']) ? $_REQUEST['step'] : 1);
         $profile = (isset($_REQUEST['profile']) ? $_REQUEST['profile'] : null);
+
+        if (isset($_REQUEST['signup'])) {
+          $this->signup->render();
+          return;
+        }
 
         if (is_numeric($step) && $step >= 1 && $step <= 6) {
 

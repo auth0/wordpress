@@ -1,0 +1,122 @@
+[
+  {
+    "name":"Login by Auth0",
+    "description":"Login by Auth0 provides improved Username/password login, Passwordless login, Social login and Single Sign On for all your sites.",
+    "repository":"http://plugins.svn.wordpress.org/auth0/",
+    "tags":"login, oauth, authentication, single sign on, ldap, active directory, saml, windows azure ad, google apps, two factor, two-factor, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer, passwordless, sms, magiclink, totp, social"
+  },
+  {
+    "name":"Social Login with Auth0",
+    "description":"Login with any social provider you can think of with this plugin and the Auth0 dashboard.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"Multi-factor Authentication with Auth0",
+    "description":"MFA is easy with Auth0. Connect WP to social and enterprise login and add MFA free with our dashboard.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"SSO with Auth0",
+    "description":"SSO is easy with Auth0. Connect WP to any SSO solution you can think of with our dashboard.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"Single Sign On with Auth0",
+    "description":"Connect WP to any Single Sign On provider you can think of in 5 minutes with the Auth0 dashboard.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"SMS Login with Auth0",
+    "description":"Allow your users to login with SMS codes with Auth0's dashboard. It's easy!",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"Two Factor Authentication with Auth0",
+    "description":"Two Factor Auth for WP in two minutes with the Auth0 dashboard.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"Passwordless login with Auth0",
+    "description":"Passwordless auth is a breeze with Auth0's plugin and simple dashboard.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"Magic Link Login with Auth0",
+    "description":"Send users a magic link to login with Auth0's plugin and simple dashboard.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"Email Login with Auth0",
+    "description":"Email Login with Auth0 provides improved Username/password login, Passwordless login, Social login and Single Sign On for all your sites.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"SAML Login with Auth0",
+    "description":"Connecting WP to SAML shouldn't be this easy. Simple plugin with the power of Auth0's management dashboard.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"Active Directory Login with Auth0",
+    "description":"Connecting WordPress to Active Directory is simple with Auth0's dashboard, you're minutes away from it being done.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"Azure Login with Auth0",
+    "description":"Azure AD Login. Solved. With Auth0's simple dashboard and plugin we'll have you up and running in a few minutes.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"LDAP Login with Auth0",
+    "description":"Connecting LDAP to WordPress in minutes. Try our simple dashboard and plugin.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"ADFS Login with Auth0",
+    "description":"ADFS made simple with Auth0's WordPress plugin and simple dashboard.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"Office 365 Login with Auth0",
+    "description":"Make O365 login work with your WordPress site in minutes with Auth0's dashboard.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"Enterprise Login with Auth0",
+    "description":"This plugin will make everything from Active Directory to LDAP simple for your WordPress site, with Auth0's dashboard.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"Google Login with Auth0",
+    "description":"Google and Google Apps login instantly with Auth0's dashboard and plugin.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"Facebook Login with Auth0",
+    "description":"Facebook login for your WordPress site and more with Auth0's dashboard and plugin.",
+    "repository":"",
+    "tags":""
+  },
+  {
+    "name":"Twitter Login with Auth0",
+    "description":"Let your users login with Twitter and more with Auth0's plugin and dashboard.",
+    "repository":"",
+    "tags":""
+  }
+]
