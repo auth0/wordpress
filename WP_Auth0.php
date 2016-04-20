@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Login by Auth0
- * Description: Login by Auth0 let's your users login with any social provider from Twitter to Facebook as well as many others like Github. Enterprise? We've got you covered - <a href="https://auth0.com">Auth0</a> is a full enterprise solution and will work with your Active Directory or any other environment to take control of your wordpress sites.
+ * Plugin Name: PLUGIN_NAME
+ * Description: PLUGIN_DESCRIPTION
  * Version: 2.1.9
  * Author: Auth0
  * Author URI: https://auth0.com

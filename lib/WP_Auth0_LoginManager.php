@@ -407,7 +407,6 @@ class WP_Auth0_LoginManager {
 				$msg .= '<a href="' . home_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
 				wp_die( $msg );
 			} catch ( WP_Auth0_EmailNotVerifiedException $e ) {
-				echo $e;exit;
 				$this->dieWithVerifyEmail( $e->userinfo, $e->id_token );
 			}
 			// catch ( Exception $e ) {
