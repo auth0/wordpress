@@ -374,7 +374,7 @@ class WP_Auth0_LoginManager {
 
 			wp_set_current_user( $user->ID, $user->user_login );
 	    wp_set_auth_cookie( $user->ID, $remember_users_session );
-	    do_action( 'wp_login', $user->user_login );
+	    do_action( 'wp_login', $user->user_login, $user );
 
 			do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token );
 
