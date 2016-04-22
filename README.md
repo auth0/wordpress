@@ -3,7 +3,7 @@
 Wordpress Plugin for Auth0
 ====
 
-Single Sign On for Enterprises + Social Login + User/Passwords. For all your WorpdPress instances. Powered by Auth0.
+Single Sign On for Enterprises + Social Login + User/Passwords. For all your WordPress instances. Powered by Auth0.
 
 Demo: <http://auth0wp.azurewebsites.net>
 
