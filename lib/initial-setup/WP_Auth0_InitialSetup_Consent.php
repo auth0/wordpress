@@ -163,10 +163,8 @@ class WP_Auth0_InitialSetup_Consent {
         $this->a0_options->set( "password_policy" , $connection_pwd_policy );
 
       }
-
       
     }
-    
 
     wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=2&profile=' . $this->state ) );
     exit();

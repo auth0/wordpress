@@ -1,5 +1,7 @@
 .idea
 .DS_Store
+job.sh
+job_original.sh
 /account_cleanup/config.json
 /account_cleanup/vendor/
 /vendor/

@@ -374,7 +374,7 @@ class WP_Auth0_LoginManager {
 
 			wp_set_current_user( $user->ID, $user->user_login );
 	    wp_set_auth_cookie( $user->ID, $remember_users_session );
-	    do_action( 'wp_login', $user->user_login );
+	    do_action( 'wp_login', $user->user_login, $user );
 
 			do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token );
 
@@ -407,7 +407,6 @@ class WP_Auth0_LoginManager {
 				$msg .= '<a href="' . home_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
 				wp_die( $msg );
 			} catch ( WP_Auth0_EmailNotVerifiedException $e ) {
-				echo $e;exit;
 				$this->dieWithVerifyEmail( $e->userinfo, $e->id_token );
 			}
 			// catch ( Exception $e ) {

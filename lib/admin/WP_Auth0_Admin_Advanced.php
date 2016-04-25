@@ -8,6 +8,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     'basic_validation',
     'migration_ws_validation',
     'link_accounts_validation',
+    'connections_validation',
     'loginredirection_validation',
   );
 
@@ -453,6 +454,62 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $link_script = str_replace('REPLACE_WITH_YOUR_DOMAIN', $input['domain'], $link_script);
     $link_script = str_replace('REPLACE_WITH_YOUR_API_TOKEN', $input['auth0_app_token'], $link_script);
     return $this->rule_validation($old_options, $input, 'link_auth0_users', WP_Auth0_RulesLib::$link_accounts['name'] . '-' . get_bloginfo('name'), $link_script);
+  }
+
+  public function connections_validation( $old_options, $input ) {
+
+    $check_if_enabled = array();
+    $passwordless_connections = array(
+      'sms' => 'sms', 
+      'magiclink' => 'email', 
+      'emailcode' => 'email');
+
+    if ($input['passwordless_enabled'] && $input['passwordless_enabled'] != $old_options['passwordless_enabled']) {
+
+      // $check_if_enabled = explode(',', $input['lock_connections']);
+
+      foreach($passwordless_connections as $alias => $name) {
+        if (strpos($input['passwordless_method'], $alias) !== false) {
+          $check_if_enabled[] = $name;
+        }
+      }
+      
+    } elseif ($input['passwordless_method'] != $old_options['passwordless_method']) {
+
+      // $check_if_enabled = explode(',', $input['lock_connections']);
+
+      foreach($passwordless_connections as $name) {
+        if (strpos($input['passwordless_method'], $name) !== false) {
+          $check_if_enabled[] = $name;
+        }
+      } 
+
+    } // elseif ($input['lock_connections'] != $old_options['lock_connections']) { 
+
+    //   $check_if_enabled = explode(',', $input['lock_connections']);
+
+    // }
+
+    if (!empty($check_if_enabled)) {
+
+      $response = WP_Auth0_Api_Client::search_connection($input['domain'], $input['auth0_app_token']);
+      $enabled_connections = array();
+      foreach ($response as $connection) {
+        if (in_array($input['client_id'], $connection->enabled_clients)) {
+          $enabled_connections[] = $connection->strategy;
+        }
+      }
+
+      $matching = array_intersect($enabled_connections, $check_if_enabled);
+
+      if (array_diff($matching, $check_if_enabled) !== array_diff($check_if_enabled, $matching)) {
+        $error = __( 'The passwordless connection is not enabled. Pleas go to the Auth0 Dashboard and configure it.', WPA0_LANG );
+        $this->add_validation_error( $error );
+      }
+
+    }
+
+    return $input;
   }
 
   public function loginredirection_validation( $old_options, $input ) {

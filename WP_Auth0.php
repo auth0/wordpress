@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Login by Auth0
- * Description: Login by Auth0 let's your users login with any social provider from Twitter to Facebook as well as many others like Github. Enterprise? We've got you covered - <a href="https://auth0.com">Auth0</a> is a full enterprise solution and will work with your Active Directory or any other environment to take control of your wordpress sites.
- * Version: 2.1.9
+ * Plugin Name: PLUGIN_NAME
+ * Description: PLUGIN_DESCRIPTION
+ * Version: 2.1.10
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,7 +12,7 @@ define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'WPA0_LANG', 'wp-auth0' );
 define( 'AUTH0_DB_VERSION', 4 );
-define( 'WPA0_VERSION', '2.1.9' );
+define( 'WPA0_VERSION', '2.1.10' );
 
 /**
  * Main plugin class
@@ -42,7 +42,6 @@ class WP_Auth0 {
 		register_activation_hook( WPA0_PLUGIN_FILE, array( $this, 'install' ) );
 		register_deactivation_hook( WPA0_PLUGIN_FILE, array( $this, 'deactivate' ) );
 		register_uninstall_hook(WPA0_PLUGIN_FILE, array('WP_Auth0', 'uninstall'));
-
 
 		add_action( 'activated_plugin', array($this, 'on_activate_redirect') );
 
