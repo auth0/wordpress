@@ -5,7 +5,7 @@ Requires at least: 3.8
 License: MIT
 License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE.md
 Stable tag: trunk
-Contributors: glena, rrauch
+Contributors: auth0, glena, rrauch
 
 PLUGIN_DESCRIPTION
 
