@@ -1,11 +1,11 @@
 === PLUGIN_NAME ===
 Tags: PLUGIN_TAGS
-Tested up to: 4.4
+Tested up to: 4.5
 Requires at least: 3.8
 License: MIT
 License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE.md
 Stable tag: trunk
-Contributors: glena, rrauch
+Contributors: auth0, glena, rrauch
 
 PLUGIN_DESCRIPTION
 
@@ -67,7 +67,7 @@ For both scenarios you may configure in the WP admin whether is mandatory that t
 
 = Accesing Profile Information =
 
-Wordpress defines a function called `get_currentuserinfo` to populate the global variable `current_user` with the logged in WP_User. Similary we define `get_currentauth0userinfo` that populates `current_user` and `currentauth0_user` with the information of the [Normalized profile](https://docs.auth0.com/user-profile)
+Wordpress defines a function called `wp_get_current_user` to populate the global variable `current_user` with the logged in WP_User. Similary we define `get_currentauth0userinfo` that populates `current_user` and `currentauth0_user` with the information of the [Normalized profile](https://docs.auth0.com/user-profile)
 
 = Enabling dual (Auth0 and Wordpress) login =
 

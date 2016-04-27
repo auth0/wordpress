@@ -10,35 +10,5 @@
     "description":"Login with any social provider you can think of with this plugin and the Auth0 dashboard.",
     "repository":"http://plugins.svn.wordpress.org/social-login-with-auth0/",
     "tags":"login, oauth, authentication, social login, social, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer"
-  },
-  {
-    "name":"Multi-factor Authentication with Auth0",
-    "description":"MFA is easy with Auth0. Connect WP to social and enterprise login and add MFA free with our dashboard.",
-    "repository":"http://plugins.svn.wordpress.org/multi-factor-authentication-with-auth0/",
-    "tags":"login, authentication, mfa, multifactor, multi factor, multi-factor, two factor, two-factor, 2FA"
-  },
-  {
-    "name":"SSO with Auth0",
-    "description":"SSO is easy with Auth0. Connect WP to any SSO solution you can think of with our dashboard.",
-    "repository":"http://plugins.svn.wordpress.org/sso-with-auth0/",
-    "tags":"login, oauth, authentication, single sign on, sso"
-  },
-  {
-    "name":"Single Sign On with Auth0",
-    "description":"Connect WP to any Single Sign On provider you can think of in 5 minutes with the Auth0 dashboard.",
-    "repository":"http://plugins.svn.wordpress.org/single-sign-on-with-auth0/",
-    "tags":"login, oauth, authentication, single sign on, sso"
-  },
-  {
-    "name":"SMS Login with Auth0",
-    "description":"Allow your users to login with SMS codes with Auth0's dashboard. It's easy!",
-    "repository":"http://plugins.svn.wordpress.org/sms-login-with-auth0/",
-    "tags":"login, oauth, authentication, passwordless, sms, magiclink, totp, social"
-  },
-  {
-    "name":"Two Factor Authentication with Auth0",
-    "description":"Two Factor Auth for WP in two minutes with the Auth0 dashboard.",
-    "repository":"http://plugins.svn.wordpress.org/two-factor-authentication-with-auth0/",
-    "tags":"login, authentication, mfa, multifactor, multi factor, multi-factor, two factor, two-factor, 2FA"
   }
 ]

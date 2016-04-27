@@ -38,7 +38,7 @@
   {
     "name":"Two Factor Authentication with Auth0",
     "description":"Two Factor Auth for WP in two minutes with the Auth0 dashboard.",
-    "repository":"two-factor-authentication-with-auth0",
+    "repository":"http://plugins.svn.wordpress.org/two-factor-authentication-with-auth0",
     "tags":"login, authentication, mfa, multifactor, multi factor, multi-factor, two factor, two-factor, 2FA"
   },
   {

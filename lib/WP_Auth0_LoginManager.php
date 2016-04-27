@@ -92,6 +92,7 @@ class WP_Auth0_LoginManager {
 
 		$sso = $this->a0_options->get( 'sso' );
 		$slo = $this->a0_options->get( 'singlelogout' );
+		$client_id = $this->a0_options->get( 'client_id' );
 		$auto_login = absint( $this->a0_options->get( 'auto_login' ) );
 
 		if ($slo && isset($_REQUEST['SLO'])) {
@@ -102,7 +103,7 @@ class WP_Auth0_LoginManager {
 
 		if ( $sso ) {
 			$redirect_to = home_url();
-			wp_redirect( 'https://' . $this->a0_options->get( 'domain' ) . '/v2/logout?returnTo=' . urlencode( $redirect_to ) . '&auth0Client=' . WP_Auth0_Api_Client::get_info_headers() );
+			wp_redirect( 'https://' . $this->a0_options->get( 'domain' ) . '/v2/logout?returnTo=' . urlencode( $redirect_to ) . '&client_id='.$client_id.'&auth0Client=' . base64_encode(json_encode(WP_Auth0_Api_Client::get_info_headers())) );
 			die();
 		}
 
