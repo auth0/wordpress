@@ -361,7 +361,7 @@ if ( ! function_exists( 'get_currentauth0user' ) ) {
 		global $current_user;
 		global $wpdb;
 
-		get_currentuserinfo();
+		wp_get_current_user();
 
 		if ( $current_user instanceof WP_User && $current_user->ID > 0 ) {
 			$sql = 'SELECT * FROM ' . $wpdb->auth0_user .' WHERE wp_id = %d order by last_update desc limit 1';

@@ -163,7 +163,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
     if ($old_options['sso'] != $input['sso'] && 1 == $input['sso']) {
       if ( false === WP_Auth0_Api_Client::update_client($input['domain'], $input['auth0_app_token'], $input['client_id'],$input['sso'] == 1) ) {
 
-        $error = __( 'There was an error updating your Auth0 App to enable SSO. To do it manually, turn it on ', WPA0_LANG );
+        $error = __( 'There was an error updating your Auth0 App to enable SSO. To do it manually, turn it ', WPA0_LANG );
         $error .= '<a href="https://auth0.com/docs/sso/single-sign-on#1">HERE</a>.';
         $this->add_validation_error( $error );
 
