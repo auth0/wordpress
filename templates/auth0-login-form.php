@@ -161,7 +161,11 @@ document.addEventListener("DOMContentLoaded", function() {
         var hashParams = getHashParams();
         if (hashParams && hashParams.id_token) {
             ignore_sso = true;
-            callback(null,null, hashParams.id_token);
+
+            post('<?php echo home_url('/index.php?auth0=implicit'); ?>', {
+                    token:hashParams.id_token,
+                    state:hashParams.state
+                }, 'POST');
 
         }
 
