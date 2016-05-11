@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PLUGIN_NAME
  * Description: PLUGIN_DESCRIPTION
- * Version: 2.1.11
+ * Version: 2.2.0
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,7 +12,7 @@ define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'WPA0_LANG', 'wp-auth0' );
 define( 'AUTH0_DB_VERSION', 4 );
-define( 'WPA0_VERSION', '2.1.11' );
+define( 'WPA0_VERSION', '2.2.0' );
 
 /**
  * Main plugin class
@@ -358,10 +358,9 @@ if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 
 if ( ! function_exists( 'get_currentauth0user' ) ) {
 	function get_currentauth0user() {
-		global $current_user;
 		global $wpdb;
 
-		wp_get_current_user();
+		$current_user = wp_get_current_user();
 
 		if ( $current_user instanceof WP_User && $current_user->ID > 0 ) {
 			$sql = 'SELECT * FROM ' . $wpdb->auth0_user .' WHERE wp_id = %d order by last_update desc limit 1';

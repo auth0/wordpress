@@ -8,8 +8,7 @@ class WP_Auth0_CustomDBLib {
     var request = require("request");
 
     request.post("{THE_WS_URL}", {
-      form:{username:email, password:password},
-      headers:{"Authorization":"Bearer {THE_WS_TOKEN}"}
+      form:{username:email, password:password, access_token:"{THE_WS_TOKEN}"},
     }, function(error, response, body){
 
       if ( response.statusCode === 200) {
@@ -37,15 +36,13 @@ class WP_Auth0_CustomDBLib {
 }
 ';
 
-
   public static $get_user_script = '
   function getByEmail (email, callback) {
 
     var request = require("request");
     
     request.post("{THE_WS_URL}", {
-      form:{username:email},
-      headers:{"Authorization":"Bearer {THE_WS_TOKEN}"}
+      form:{username:email, access_token:"{THE_WS_TOKEN}"},
     }, function(error, response, body){
 
       if (!error && response.statusCode === 200) {

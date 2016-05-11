@@ -19,7 +19,7 @@ class WP_Auth0_UserCreator {
 
     }
 
-    public function create($userinfo, $token, $access_token, $role = null, $ignore_unverified_email = false) {
+    public function create($userinfo, $token, $access_token = null, $role = null, $ignore_unverified_email = false) {
 
 // If the user doesn't exist we need to either create a new one, or asign him to an existing one
         $isDatabaseUser = false;
@@ -87,7 +87,7 @@ class WP_Auth0_UserCreator {
         $wpdb->insert(
             $wpdb->auth0_user,
             array(
-                'auth0_id' => $userinfo->user_id,
+                'auth0_id' => (isset($userinfo->user_id) ? $userinfo->user_id : $userinfo->sub),
                 'wp_id' => $user_id,
                 'auth0_obj' => WP_Auth0_Serializer::serialize($userinfo),
                 'last_update' =>  date( 'c' ),

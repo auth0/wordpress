@@ -34,7 +34,7 @@ class WP_Auth0_UsersRepo {
         
         if (is_null($userRow)) {
 
-            $creator = new WP_Auth0_UserCreator();
+            $creator = new WP_Auth0_UserCreator($this->a0_options);
 
             if ($creator->tokenHasRequiredScopes($jwt)) {
                 $auth0User = $jwt;

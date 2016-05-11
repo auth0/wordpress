@@ -65,10 +65,13 @@ class WP_Auth0_DBManager {
 		$options = WP_Auth0_Options::Instance();
 		$cdn_url = $options->get( 'cdn_url' );
 		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-6' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.0.min.js' );
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
 		}
 		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-8' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.0.min.js' );
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
+		}
+		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-9.0' ) !== false ) {
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
 		}
 
 	}
@@ -125,10 +128,9 @@ class WP_Auth0_DBManager {
 	}
 
 	function get_currentauth0user() {
-		global $current_user;
 		global $wpdb;
 
-		wp_get_current_user();
+		$current_user = wp_get_current_user();
 
 		if ( $current_user instanceof WP_User && $current_user->ID > 0 ) {
 			$sql = 'SELECT * FROM ' . $wpdb->auth0_user .' WHERE wp_id = %d order by last_update desc limit 1';
