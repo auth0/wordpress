@@ -50,11 +50,17 @@ class WP_Auth0_Routes {
 
   protected function getAuthorizationHeader() {
       $authorization = false;
-      if (function_exists('getallheaders'))
+
+      if (isset($_POST["access_token"])) {
+        $authorization = $_POST["access_token"];
+      }
+      elseif (function_exists('getallheaders'))
       {
           $headers = getallheaders();
           if (isset($headers['Authorization'])) {
               $authorization = $headers['Authorization'];
+          } elseif (isset($headers['authorization'])) {
+              $authorization = $headers['authorization'];
           }
       }
       elseif (isset($_SERVER["Authorization"])){
@@ -63,6 +69,7 @@ class WP_Auth0_Routes {
       elseif (isset($_SERVER["HTTP_AUTHORIZATION"])){
           $authorization = $_SERVER["HTTP_AUTHORIZATION"];
       }
+
       return $authorization;
   }
 
