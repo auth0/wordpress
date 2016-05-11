@@ -65,10 +65,13 @@ class WP_Auth0_DBManager {
 		$options = WP_Auth0_Options::Instance();
 		$cdn_url = $options->get( 'cdn_url' );
 		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-6' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.0.min.js' );
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
 		}
 		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-8' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.0.min.js' );
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
+		}
+		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-9.0' ) !== false ) {
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
 		}
 
 	}
