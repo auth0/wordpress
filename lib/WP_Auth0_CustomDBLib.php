@@ -36,7 +36,6 @@ class WP_Auth0_CustomDBLib {
 }
 ';
 
-
   public static $get_user_script = '
   function getByEmail (email, callback) {
 
