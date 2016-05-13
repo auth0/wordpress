@@ -105,8 +105,10 @@ class WP_Auth0_Import_Settings {
     }
 
     foreach ($settings as $key => $value) {
-      $this->a0_options->set($key, $value);
+      $this->a0_options->set($key, $value, false);
     }
+
+    $this->a0_options->update_all();
 
     exit( wp_redirect( admin_url( 'admin.php?page=wpa0' ) ) );
   }

@@ -74,6 +74,26 @@ class WP_Auth0_DBManager {
 			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
 		}
 
+		if ((int) get_site_option( 'auth0_db_version' ) <= 6) {
+			if ($options->get( 'db_connection_enabled' )) {
+
+				$app_token = $options->get( 'auth0_app_token' );
+				$connection_id = $options->get( 'db_connection_id' );
+				$migration_token = $options->get( "migration_token" );
+
+				$operations = new WP_Auth0_Api_Operations($options);
+				if (!empty($app_token) && 
+						!empty($connection_id) && 
+						!empty($migration_token)) {
+
+					$response = $operations->update_wordpress_connection(
+				    $app_token, 
+				    $connection_id, 
+				    $options->get( 'password_policy' ), 
+				    $migration_token);
+				}
+			}
+		}
 	}
 
 	public function get_auth0_users($user_ids = null) {

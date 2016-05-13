@@ -30,12 +30,18 @@ class WP_Auth0_Options_Generic {
         return apply_filters( 'wp_auth0_get_option', $options[$key], $key );
     }
 
-    public function set( $key, $value ){ 
+    public function set( $key, $value, $should_update = true ){ 
         $options = $this->get_options();
         $options[$key] = $value;
         $this->_opt = $options;
 
-        update_option( $this->options_name, $options );
+        if ($should_update) {
+            update_option( $this->options_name, $options );
+        }
+    }
+
+    public function update_all() {
+        update_option( $this->options_name, $this->_opt );
     }
 
     public function save() {
