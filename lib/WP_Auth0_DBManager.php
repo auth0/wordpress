@@ -74,7 +74,7 @@ class WP_Auth0_DBManager {
 			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
 		}
 
-		if ((int) get_site_option( 'auth0_db_version' ) <= 6) {
+		if ((int) get_site_option( 'auth0_db_version' ) <= 7) {
 			if ($options->get( 'db_connection_enabled' )) {
 
 				$app_token = $options->get( 'auth0_app_token' );

@@ -42,7 +42,7 @@ $options = json_encode($lock_options->get_lock_options());
             <div id="auth0-login-form"></div>
             <style>
             #attributionBadge {
-                margin: 15px 0;
+                margin: 35px 0 15px;
                 display: none;
                 text-align: center;
                 font-family:'Open Sans', sans-serif;
