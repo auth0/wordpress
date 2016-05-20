@@ -2,7 +2,7 @@
 
 class WP_Auth0_CustomDBLib {
 
-  public static $login_script = '
+	public static $login_script = '
 function login (email, password, callback) {
 
   var request = require("request");
@@ -16,7 +16,7 @@ function login (email, password, callback) {
     }
 
     var info = JSON.parse(body);
-    
+
     if (info.error) {
       callback();
     } else {
@@ -30,16 +30,16 @@ function login (email, password, callback) {
 
       callback(null, profile);
     }
-   
+
   });
 }
 ';
 
-  public static $get_user_script = '
+	public static $get_user_script = '
 function getByEmail (email, callback) {
 
   var request = require("request");
-  
+
   request.post("{THE_WS_URL}", {
     form:{username:email, access_token:"{THE_WS_TOKEN}"},
   }, function(error, response, body){
@@ -50,7 +50,7 @@ function getByEmail (email, callback) {
 
     var info = JSON.parse(body);
 
-    if (info.error) { 
+    if (info.error) {
       callback(null);
     } else {
       var profile = {
@@ -62,7 +62,7 @@ function getByEmail (email, callback) {
       };
 
       callback(null, profile);
-    } 
+    }
 
   });
 }

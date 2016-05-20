@@ -2,17 +2,17 @@
 
 class WP_Auth0_Dashboard_Plugins_Location extends WP_Auth0_Dashboard_Plugins_Generic {
 
-    protected $id = 'auth0_dashboard_widget_Location';
-    protected $name = 'Auth0 - User\'s Location';
+	protected $id = 'auth0_dashboard_widget_Location';
+	protected $name = 'Auth0 - User\'s Location';
 
-    public function __construct() {
-        wp_enqueue_script( 'auth0-dashboard-gmaps-js', 'https://maps.googleapis.com/maps/api/js' );
-        wp_enqueue_script( 'auth0-markerclusterer', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/markerclusterer.js' );
-    }
+	public function __construct() {
+		wp_enqueue_script( 'auth0-dashboard-gmaps-js', 'https://maps.googleapis.com/maps/api/js' );
+		wp_enqueue_script( 'auth0-markerclusterer', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/markerclusterer.js' );
+	}
 
-    public function render() {
+	public function render() {
 
-        ?>
+?>
         <div id="auth0ChartLocations" style="height: 320px;"></div>
         <script type="text/javascript">
 
@@ -73,6 +73,6 @@ class WP_Auth0_Dashboard_Plugins_Location extends WP_Auth0_Dashboard_Plugins_Gen
 
         </script>
         <?php
-    }
+	}
 
 }

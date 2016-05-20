@@ -55,7 +55,7 @@ class WP_Auth0_DBManager {
 					PRIMARY KEY  (id)
 				);";
 
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
 		foreach ( $sql as $s ) {
 			dbDelta( $s );
@@ -74,29 +74,29 @@ class WP_Auth0_DBManager {
 			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
 		}
 
-		if ((int) get_site_option( 'auth0_db_version' ) <= 7) {
-			if ($options->get( 'db_connection_enabled' )) {
+		if ( (int) get_site_option( 'auth0_db_version' ) <= 7 ) {
+			if ( $options->get( 'db_connection_enabled' ) ) {
 
 				$app_token = $options->get( 'auth0_app_token' );
 				$connection_id = $options->get( 'db_connection_id' );
 				$migration_token = $options->get( "migration_token" );
 
-				$operations = new WP_Auth0_Api_Operations($options);
-				if (!empty($app_token) && 
-						!empty($connection_id) && 
-						!empty($migration_token)) {
+				$operations = new WP_Auth0_Api_Operations( $options );
+				if ( !empty( $app_token ) &&
+					!empty( $connection_id ) &&
+					!empty( $migration_token ) ) {
 
 					$response = $operations->update_wordpress_connection(
-				    $app_token, 
-				    $connection_id, 
-				    $options->get( 'password_policy' ), 
-				    $migration_token);
+						$app_token,
+						$connection_id,
+						$options->get( 'password_policy' ),
+						$migration_token );
 				}
 			}
 		}
 	}
 
-	public function get_auth0_users($user_ids = null) {
+	public function get_auth0_users( $user_ids = null ) {
 		global $wpdb;
 
 		$where = '';
@@ -109,14 +109,14 @@ class WP_Auth0_DBManager {
 		$results = $wpdb->get_results( $sql );
 
 		if ( $results instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'findAuth0User',$userRow );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'findAuth0User', $userRow );
 			return array();
 		}
 
 		return $results;
 	}
 
-	public function get_users_by_auth0id($auth0_id) {
+	public function get_users_by_auth0id( $auth0_id ) {
 		global $wpdb;
 
 
@@ -128,7 +128,7 @@ class WP_Auth0_DBManager {
 		$result = $wpdb->get_row( $sql );
 
 		if ( $result instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'findAuth0User',$userRow );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'findAuth0User', $userRow );
 			return null;
 		}
 
@@ -140,7 +140,7 @@ class WP_Auth0_DBManager {
 		global $currentauth0_user;
 
 		$result = $this->get_currentauth0user();
-		if ($result) {
+		if ( $result ) {
 			$currentauth0_user = WP_Auth0_Serializer::unserialize( $result->auth0_obj );
 		}
 
@@ -166,29 +166,29 @@ class WP_Auth0_DBManager {
 	}
 
 	public function get_current_user_profiles() {
-        global $current_user;
-        global $wpdb;
+		global $current_user;
+		global $wpdb;
 
-        wp_get_current_user();
-        $userData = array();
+		wp_get_current_user();
+		$userData = array();
 
-        if ($current_user instanceof WP_User && $current_user->ID > 0 ) {
-            $sql = 'SELECT auth0_obj
+		if ( $current_user instanceof WP_User && $current_user->ID > 0 ) {
+			$sql = 'SELECT auth0_obj
                     FROM ' . $wpdb->auth0_user .'
                     WHERE wp_id = %d';
-            $results = $wpdb->get_results($wpdb->prepare($sql, $current_user->ID));
+			$results = $wpdb->get_results( $wpdb->prepare( $sql, $current_user->ID ) );
 
-            if (is_null($results) || $results instanceof WP_Error ) {
+			if ( is_null( $results ) || $results instanceof WP_Error ) {
 
-                return null;
-            }
+				return null;
+			}
 
-            foreach ($results as $value) {
-                $userData[] = WP_Auth0_Serializer::unserialize($value->auth0_obj);
-            }
+			foreach ( $results as $value ) {
+				$userData[] = WP_Auth0_Serializer::unserialize( $value->auth0_obj );
+			}
 
-        }
+		}
 
-        return $userData;
-    }
+		return $userData;
+	}
 }

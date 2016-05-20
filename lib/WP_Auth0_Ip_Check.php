@@ -9,28 +9,28 @@ class WP_Auth0_Ip_Check {
 
 	protected $a0_options;
 
-	public function __construct(WP_Auth0_Options $a0_options = null) {
+	public function __construct( WP_Auth0_Options $a0_options = null ) {
 		$this->a0_options = $a0_options;
 	}
 
-	public function get_ips_by_domain($domain) {
-		if (strpos($domain, 'au.auth0.com') !== false) {
+	public function get_ips_by_domain( $domain ) {
+		if ( strpos( $domain, 'au.auth0.com' ) !== false ) {
 			return $this->valid_webtask_ips['au'];
 		}
-		elseif (strpos($domain, 'eu.auth0.com') !== false) {
-			return $this->valid_webtask_ips['eu'];	
+		elseif ( strpos( $domain, 'eu.auth0.com' ) !== false ) {
+			return $this->valid_webtask_ips['eu'];
 		}
-		elseif (strpos($domain, 'auth0.com') !== false) {
+		elseif ( strpos( $domain, 'auth0.com' ) !== false ) {
 			return $this->valid_webtask_ips['us'];
 		}
 		return null;
 	}
 
 	protected function get_request_ip() {
-		$valid_proxy_ip = $this->a0_options->get('valid_proxy_ip');
+		$valid_proxy_ip = $this->a0_options->get( 'valid_proxy_ip' );
 
-		if ($valid_proxy_ip) {
-			if ($_SERVER['REMOTE_ADDR'] == $valid_proxy_ip) {
+		if ( $valid_proxy_ip ) {
+			if ( $_SERVER['REMOTE_ADDR'] == $valid_proxy_ip ) {
 				return $_SERVER['HTTP_X_FORWARDED_FOR'];
 			}
 		} else {
@@ -40,7 +40,7 @@ class WP_Auth0_Ip_Check {
 		return null;
 	}
 
-	protected function process_ip_list($ip_list) {
+	protected function process_ip_list( $ip_list ) {
 		$raw = explode( ",", $ip_list );
 
 		$ranges = array();
@@ -60,10 +60,10 @@ class WP_Auth0_Ip_Check {
 			}
 		}
 		return $ranges;
-	}	
-	public function connection_is_valid($valid_ips) {
+	}
+	public function connection_is_valid( $valid_ips ) {
 		$ip = $this->get_request_ip();
-		$valid_ip_ranges = $this->process_ip_list($valid_ips);
+		$valid_ip_ranges = $this->process_ip_list( $valid_ips );
 
 		foreach ( $valid_ip_ranges as $range ) {
 			$in_range = $this->in_range( $ip, $range );
@@ -76,7 +76,7 @@ class WP_Auth0_Ip_Check {
 	}
 
 
-// LEGACY
+	// LEGACY
 	public function init() {
 		if ( ! WP_Auth0_Options::Instance()->get( 'ip_range_check' ) || is_admin() ) {
 			return;
@@ -107,7 +107,7 @@ class WP_Auth0_Ip_Check {
 		return false;
 	}
 
-	private function in_range($ip, $range) {
+	private function in_range( $ip, $range ) {
 		$from = ip2long( $range['from'] );
 		$to = ip2long( $range['to'] );
 		$ip = ip2long( $ip );

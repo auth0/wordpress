@@ -41,9 +41,9 @@ class WP_Auth0 {
 		// Add hooks for install uninstall and update.
 		register_activation_hook( WPA0_PLUGIN_FILE, array( $this, 'install' ) );
 		register_deactivation_hook( WPA0_PLUGIN_FILE, array( $this, 'deactivate' ) );
-		register_uninstall_hook(WPA0_PLUGIN_FILE, array('WP_Auth0', 'uninstall'));
+		register_uninstall_hook( WPA0_PLUGIN_FILE, array( 'WP_Auth0', 'uninstall' ) );
 
-		add_action( 'activated_plugin', array($this, 'on_activate_redirect') );
+		add_action( 'activated_plugin', array( $this, 'on_activate_redirect' ) );
 
 		// Add an action to append a stylesheet for the login page.
 		add_action( 'login_enqueue_scripts', array( $this, 'render_auth0_login_css' ) );
@@ -71,55 +71,55 @@ class WP_Auth0 {
 			add_action( 'wp_footer', array( $this, 'a0_render_message' ) );
 		}
 
-		$initial_setup = new WP_Auth0_InitialSetup($this->a0_options);
+		$initial_setup = new WP_Auth0_InitialSetup( $this->a0_options );
 		$initial_setup->init();
 
 		// $seeder = new WP_Auth0_Seeder($this->a0_options);
-		// $seeder->init();		
+		// $seeder->init();
 
 		// $importer = new WP_Auth0_ImportUser($this->a0_options);
 		// $importer->init();
 
-		$login_manager = new WP_Auth0_LoginManager($this->a0_options);
+		$login_manager = new WP_Auth0_LoginManager( $this->a0_options );
 		$login_manager->init();
 
-		$users_repo = new WP_Auth0_UsersRepo($this->a0_options);
+		$users_repo = new WP_Auth0_UsersRepo( $this->a0_options );
 		$users_repo->init();
 
-		$this->router = new WP_Auth0_Routes($this->a0_options);
+		$this->router = new WP_Auth0_Routes( $this->a0_options );
 		$this->router->init();
 
-		$metrics = new WP_Auth0_Metrics($this->a0_options);
+		$metrics = new WP_Auth0_Metrics( $this->a0_options );
 		$metrics->init();
 
-		$auth0_admin = new WP_Auth0_Admin($this->a0_options, $this->router);
+		$auth0_admin = new WP_Auth0_Admin( $this->a0_options, $this->router );
 		$auth0_admin->init();
 
 		$error_log = new WP_Auth0_ErrorLog();
 		$error_log->init();
 
-		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH($this->a0_options);
+		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH( $this->a0_options );
 		$configure_jwt_auth->init();
 
-		$dashboard_widgets = new WP_Auth0_Dashboard_Widgets($this->a0_options, $this->db_manager);
+		$dashboard_widgets = new WP_Auth0_Dashboard_Widgets( $this->a0_options, $this->db_manager );
 		$dashboard_widgets->init();
 
-		$woocommerce_override = new WP_Auth0_WooCommerceOverrides($this);
+		$woocommerce_override = new WP_Auth0_WooCommerceOverrides( $this );
 		$woocommerce_override->init();
 
-		$users_exporter = new WP_Auth0_Export_Users($this->db_manager);
+		$users_exporter = new WP_Auth0_Export_Users( $this->db_manager );
 		$users_exporter->init();
 
-		$import_settings = new WP_Auth0_Import_Settings($this->a0_options);
+		$import_settings = new WP_Auth0_Import_Settings( $this->a0_options );
 		$import_settings->init();
 
-		$settings_section = new WP_Auth0_Settings_Section($this->a0_options, $initial_setup, $users_exporter, $configure_jwt_auth, $error_log, $auth0_admin, $import_settings);
+		$settings_section = new WP_Auth0_Settings_Section( $this->a0_options, $initial_setup, $users_exporter, $configure_jwt_auth, $error_log, $auth0_admin, $import_settings );
 		$settings_section->init();
 
-		$this->social_amplificator = new WP_Auth0_Amplificator($this->db_manager, $this->a0_options);
+		$this->social_amplificator = new WP_Auth0_Amplificator( $this->db_manager, $this->a0_options );
 		$this->social_amplificator->init();
 
-		$edit_profile = new WP_Auth0_EditProfile($this->db_manager, $this->a0_options);
+		$edit_profile = new WP_Auth0_EditProfile( $this->db_manager, $this->a0_options );
 		$edit_profile->init();
 
 		// $old_options = $this->a0_options->get_options();
@@ -127,20 +127,20 @@ class WP_Auth0 {
 	}
 
 	function on_activate_redirect( $plugin ) {
-		if( $plugin == plugin_basename( __FILE__ ) ) {
+		if ( $plugin == plugin_basename( __FILE__ ) ) {
 			$this->router->setup_rewrites();
 			flush_rewrite_rules();
 
-			$client_id = $this->a0_options->get('client_id');
-			$client_secret = $this->a0_options->get('client_secret');
-			$domain = $this->a0_options->get('domain');
+			$client_id = $this->a0_options->get( 'client_id' );
+			$client_secret = $this->a0_options->get( 'client_secret' );
+			$domain = $this->a0_options->get( 'domain' );
 
-			$show_initial_setup = ( ( ! $client_id) || ( ! $client_secret) || ( ! $domain) ) ;
+			$show_initial_setup = ( ( ! $client_id ) || ( ! $client_secret ) || ( ! $domain ) ) ;
 
-			if ($show_initial_setup) {
-					exit( wp_redirect( admin_url( 'admin.php?page=wpa0-setup&activation=1' ) ) );
+			if ( $show_initial_setup ) {
+				exit( wp_redirect( admin_url( 'admin.php?page=wpa0-setup&activation=1' ) ) );
 			} else {
-					exit( wp_redirect( admin_url( 'admin.php?page=wpa0' ) ) );
+				exit( wp_redirect( admin_url( 'admin.php?page=wpa0' ) ) );
 			}
 		}
 	}
@@ -149,7 +149,7 @@ class WP_Auth0 {
 		return plugin_dir_url( __FILE__ );
 	}
 
-	public function  a0_register_query_vars( $qvars ) {
+	public function a0_register_query_vars( $qvars ) {
 		$qvars[] = 'error_description';
 		$qvars[] = 'a0_action';
 		$qvars[] = 'auth0';
@@ -218,15 +218,15 @@ class WP_Auth0 {
 		wp_enqueue_script( 'jquery' );
 
 		if ( WP_Auth0_Options::Instance()->get('passwordless_enabled') ) {
-			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('passwordless_cdn_url'), 'jquery' ); 
+			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('passwordless_cdn_url'), 'jquery' );
 		} else {
-			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );	
+			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
 		}
 
 		if (!isset($atts['redirect_to'])) {
 			$atts['redirect_to'] = home_url($_SERVER["REQUEST_URI"]);
 		}
-		
+
 		ob_start();
 		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
 		renderAuth0Form( false, $atts );
@@ -247,7 +247,7 @@ class WP_Auth0 {
 		if ( trim( $client_id ) === '' ) {
 			return;
 		}
-	?>
+?>
 		<link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' />
 	<?php
 	}
@@ -274,9 +274,9 @@ class WP_Auth0 {
 		wp_enqueue_script( 'jquery' );
 
 		if ( WP_Auth0_Options::Instance()->get('passwordless_enabled') ) {
-			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('passwordless_cdn_url'), 'jquery' ); 
+			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('passwordless_cdn_url'), 'jquery' );
 		} else {
-			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );	
+			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
 		}
 
 		ob_start();
@@ -332,7 +332,7 @@ class WP_Auth0 {
 		foreach ( $paths as $p ) {
 			foreach ( $exts as $ext ) {
 				if ( file_exists( $p.$class.$ext ) ) {
-					require_once( $p.$class.$ext );
+					require_once $p.$class.$ext;
 					return true;
 				}
 			}

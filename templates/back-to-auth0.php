@@ -1,7 +1,7 @@
 <?php
-$title = WP_Auth0_Options::Instance()->get('form_title');
-if (empty($title)) {
-    $title = "Auth0";
+$title = WP_Auth0_Options::Instance()->get( 'form_title' );
+if ( empty( $title ) ) {
+	$title = "Auth0";
 }
 ?>
 
@@ -13,5 +13,5 @@ if (empty($title)) {
     }
 </style>
 <div id="extra-options">
-    <a href="?">← Back to <?= $title ?> login</a>
+    <a href="?">← Back to <?php echo $title ?> login</a>
 </div>

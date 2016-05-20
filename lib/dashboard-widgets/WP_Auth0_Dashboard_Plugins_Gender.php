@@ -2,45 +2,45 @@
 
 class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Generic {
 
-    protected $id = 'auth0_dashboard_widget_gender';
-    protected $name = 'Auth0 - User\'s Gender';
+	protected $id = 'auth0_dashboard_widget_gender';
+	protected $name = 'Auth0 - User\'s Gender';
 
-    protected $users = array('female' => 0, 'male' => 0, self::UNKNOWN_KEY => 0);
+	protected $users = array( 'female' => 0, 'male' => 0, self::UNKNOWN_KEY => 0 );
 
-    protected $type;
-    protected $has_data = false;
+	protected $type;
+	protected $has_data = false;
 
-    public function __construct(WP_Auth0_Options $a0_options) {
-      $this->a0_options = $a0_options;
-      $this->type = $this->a0_options->get('chart_gender_type');
-    }
+	public function __construct( WP_Auth0_Options $a0_options ) {
+		$this->a0_options = $a0_options;
+		$this->type = $this->a0_options->get( 'chart_gender_type' );
+	}
 
-    public function render() {
+	public function render() {
 
-        $chartSetup = array(
-            'bindto' => '#auth0ChartGender',
-            'data' => array(
-                'type' => $this->type,
-                'selection' => array(
-                   'enabled' => true
-                ),
-            ),
-            'color' => array(
-              'pattern' => array('#ff4282','#3e68ef', '#1ABC9C','#2ECC71','#3498DB','#9B59B6','#34495E','#F1C40F','#E67E22','#E74C3C','#F39C12'),
-            ),
-            'axis' => array(
-                'x' => array(
-                    'type' => 'category'
-                )
-            )
-        );
+		$chartSetup = array(
+			'bindto' => '#auth0ChartGender',
+			'data' => array(
+				'type' => $this->type,
+				'selection' => array(
+					'enabled' => true
+				),
+			),
+			'color' => array(
+				'pattern' => array( '#ff4282', '#3e68ef', '#1ABC9C', '#2ECC71', '#3498DB', '#9B59B6', '#34495E', '#F1C40F', '#E67E22', '#E74C3C', '#F39C12' ),
+			),
+			'axis' => array(
+				'x' => array(
+					'type' => 'category'
+				)
+			)
+		);
 
-        if ( $this->type == 'bar' ) {
-            $chartSetup['data']['x'] = 'x';
-        }
+		if ( $this->type == 'bar' ) {
+			$chartSetup['data']['x'] = 'x';
+		}
 
 
-        ?>
+?>
         <div id="auth0ChartGender"></div>
         <script type="text/javascript">
 
@@ -48,14 +48,14 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
             var _this = this;
             this.name = 'gender';
 
-            var setup = <?php echo json_encode($chartSetup);?>;
+            var setup = <?php echo json_encode( $chartSetup );?>;
             setup.data.columns = this.process_data(raw_data);
 
             setup.data.onclick = function (d, i) {
               var selection = this.selected();
               _this.filter_selection = selection.map(function(e){
 
-                <?php if($this->type === 'pie' || $this->type === 'donut') {?>
+                <?php if ( $this->type === 'pie' || $this->type === 'donut' ) {?>
                   return e.id;
                 <?php } else {?>
                   return _this.categories[e.index];
@@ -107,7 +107,7 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
             var keys = _.clone(this.categories);
             keys = _.sortBy(keys);
 
-            <?php if($this->type === 'pie' || $this->type === 'donut') {?>
+            <?php if ( $this->type === 'pie' || $this->type === 'donut' ) {?>
               var data = keys.map(function(key) {
                 return [key, (grouped_data[key] ? grouped_data[key].length : 0)];
               });
@@ -130,6 +130,6 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
 
         </script>
         <?php
-    }
+	}
 
 }

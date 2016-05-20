@@ -1,71 +1,71 @@
 <?php
 
-class WP_Auth0_Dashboard_Widgets  {
+class WP_Auth0_Dashboard_Widgets {
 
 	protected $db_manager;
 	protected $a0_options;
 
 	const UNKNOWN_KEY = 'unknown';
 
-	public function __construct(WP_Auth0_Options $a0_options, WP_Auth0_DBManager $db_manager) {
+	public function __construct( WP_Auth0_Options $a0_options, WP_Auth0_DBManager $db_manager ) {
 		$this->db_manager = $db_manager;
 		$this->a0_options = $a0_options;
 	}
 
 	public function init() {
 		add_action( 'wp_dashboard_setup', array( $this, 'set_up' ) );
-	  add_action( 'admin_footer', array($this,'render') );
+		add_action( 'admin_footer', array( $this, 'render' ) );
 
-		add_action('admin_notices', array($this,'show_admin_notice'));
-		add_action('admin_init', array($this,'notice_ignore'));
+		add_action( 'admin_notices', array( $this, 'show_admin_notice' ) );
+		add_action( 'admin_init', array( $this, 'notice_ignore' ) );
 	}
 
 	public function show_admin_notice() {
 		$screen = get_current_screen();
-		if ($screen->id !== 'dashboard') {
+		if ( $screen->id !== 'dashboard' ) {
 			return;
 		}
 
 		global $current_user ;
-    $user_id = $current_user->ID;
+		$user_id = $current_user->ID;
 
-		if ( ! get_user_meta($user_id, 'a0_ignore_widgets_explanation') ) {
-	        echo '<div class="updated"><p>';
-	        printf(__('Auth0 tip: You can filter the data by clicking on the charts. Click again to clear the selection.  | <a href="%1$s">Hide</a>'), '?a0_ignore_widgets_explanation=0');
-	        echo "</p></div>";
+		if ( ! get_user_meta( $user_id, 'a0_ignore_widgets_explanation' ) ) {
+			echo '<div class="updated"><p>';
+			printf( __( 'Auth0 tip: You can filter the data by clicking on the charts. Click again to clear the selection.  | <a href="%1$s">Hide</a>' ), '?a0_ignore_widgets_explanation=0' );
+			echo "</p></div>";
 		}
 	}
 
 	public function notice_ignore() {
 		global $current_user;
-	  $user_id = $current_user->ID;
-    if ( isset($_GET['a0_ignore_widgets_explanation']) && '0' == $_GET['a0_ignore_widgets_explanation'] ) {
-         add_user_meta($user_id, 'a0_ignore_widgets_explanation', 'true', true);
+		$user_id = $current_user->ID;
+		if ( isset( $_GET['a0_ignore_widgets_explanation'] ) && '0' == $_GET['a0_ignore_widgets_explanation'] ) {
+			add_user_meta( $user_id, 'a0_ignore_widgets_explanation', 'true', true );
 		}
 	}
 
-	protected function get_buckets($from, $to, $step) {
+	protected function get_buckets( $from, $to, $step ) {
 
 		$buckets = array();
 
 		$buckets[] = array(
 			'from' => 0,
 			'to' => $from - 1,
-			'name' => $step == 1 ? ($from - 1) : ('< ' . ($from - 1)),
+			'name' => $step == 1 ? ( $from - 1 ) : ( '< ' . ( $from - 1 ) ),
 		);
 
-		for ($a = $from; $a < $to; $a += $step) {
+		for ( $a = $from; $a < $to; $a += $step ) {
 			$buckets[] = array(
 				'from' => $a,
 				'to' => $a + $step - 1,
-				'name' => $step == 1 ? $a : ($a . '-' . ($a + $step - 1)),
+				'name' => $step == 1 ? $a : ( $a . '-' . ( $a + $step - 1 ) ),
 			);
 		}
 
 		$buckets[] = array(
 			'from' => $a,
 			'to' => 200,
-			'name' => $step == 1 ? $a : ('>= ' . $a),
+			'name' => $step == 1 ? $a : ( '>= ' . $a ),
 		);
 
 		return $buckets;
@@ -79,34 +79,34 @@ class WP_Auth0_Dashboard_Widgets  {
 			return;
 		}
 
-    $screen = get_current_screen();
-		if ($screen->id !== 'dashboard') {
+		$screen = get_current_screen();
+		if ( $screen->id !== 'dashboard' ) {
 			return;
 		}
 
 		$users = $this->db_manager->get_auth0_users();
 
 		$this->buckets = $this->get_buckets(
-			$this->a0_options->get('chart_age_from'),
-			$this->a0_options->get('chart_age_to'),
-			$this->a0_options->get('chart_age_step')
+			$this->a0_options->get( 'chart_age_from' ),
+			$this->a0_options->get( 'chart_age_to' ),
+			$this->a0_options->get( 'chart_age_step' )
 		);
 
 		$usersData = array();
 
-		foreach ($users as $user) {
-			$userObj = new WP_Auth0_UserProfile($user->auth0_obj);
+		foreach ( $users as $user ) {
+			$userObj = new WP_Auth0_UserProfile( $user->auth0_obj );
 			$userData = $userObj->get();
 
-			$userData['gender'] = empty($userData['gender']) ? self::UNKNOWN_KEY : $userData['gender'];
-			$userData['income'] = empty($userData['income']) ? 0 : $userData['income'];
-			$userData['created_at_day'] = date('Y-m-d',strtotime($userData['created_at']));
+			$userData['gender'] = empty( $userData['gender'] ) ? self::UNKNOWN_KEY : $userData['gender'];
+			$userData['income'] = empty( $userData['income'] ) ? 0 : $userData['income'];
+			$userData['created_at_day'] = date( 'Y-m-d', strtotime( $userData['created_at'] ) );
 			if ( ! $userData['age'] ) {
 				$userData['age'] = self::UNKNOWN_KEY;
 				$userData['agebucket'] = self::UNKNOWN_KEY;
 			} else {
-				foreach($this->buckets as $bucket) {
-					if ($userData['age'] >= $bucket['from'] && $userData['age'] <= $bucket['to']) {
+				foreach ( $this->buckets as $bucket ) {
+					if ( $userData['age'] >= $bucket['from'] && $userData['age'] <= $bucket['to'] ) {
 						$userData['agebucket'] = $bucket['name'];
 					}
 				}
@@ -115,9 +115,9 @@ class WP_Auth0_Dashboard_Widgets  {
 			$usersData[] = $userData;
 		}
 
-		?>
+?>
 		<script type="text/javascript">
-			var users_data = <?php echo json_encode($usersData); ?>;
+			var users_data = <?php echo json_encode( $usersData ); ?>;
 			var charts = [];
 			var filters = {};
 			function filter_callback(chart, label, data, callback) {
@@ -196,9 +196,9 @@ class WP_Auth0_Dashboard_Widgets  {
 
 
 		$widgets = array(
-			new WP_Auth0_Dashboard_Plugins_Age($this->a0_options),
-			new WP_Auth0_Dashboard_Plugins_Gender($this->a0_options),
-			new WP_Auth0_Dashboard_Plugins_IdP($this->a0_options),
+			new WP_Auth0_Dashboard_Plugins_Age( $this->a0_options ),
+			new WP_Auth0_Dashboard_Plugins_Gender( $this->a0_options ),
+			new WP_Auth0_Dashboard_Plugins_IdP( $this->a0_options ),
 			new WP_Auth0_Dashboard_Plugins_Location(),
 			new WP_Auth0_Dashboard_Plugins_Income(),
 			new WP_Auth0_Dashboard_Plugins_Signups(),

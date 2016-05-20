@@ -2,7 +2,7 @@
 
 class WP_Auth0_ErrorManager {
 
-  public static function insert_auth0_error( $section, $wp_error ) {
+	public static function insert_auth0_error( $section, $wp_error ) {
 
 		if ( $wp_error instanceof WP_Error ) {
 			$code = $wp_error->get_error_code();

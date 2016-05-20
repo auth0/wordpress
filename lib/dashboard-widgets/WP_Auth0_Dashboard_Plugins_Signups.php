@@ -2,26 +2,26 @@
 
 class WP_Auth0_Dashboard_Plugins_Signups extends WP_Auth0_Dashboard_Plugins_Generic {
 
-    protected $id = 'auth0_dashboard_widget_signups';
-    protected $name = 'Auth0 - User\'s Signups';
+	protected $id = 'auth0_dashboard_widget_signups';
+	protected $name = 'Auth0 - User\'s Signups';
 
-    protected function getType($user) {
-        $created_at = $user->get_created_at();
-        if ( ! $created_at ) return;
+	protected function gettype( $user ) {
+		$created_at = $user->get_created_at();
+		if ( ! $created_at ) return;
 
-        $limitDate = strtotime('1 months ago');
+		$limitDate = strtotime( '1 months ago' );
 
-        $created_at = strtotime($created_at);
-        if ($created_at > $limitDate) {
-            return date('Y-m-d',$created_at);
-        }
+		$created_at = strtotime( $created_at );
+		if ( $created_at > $limitDate ) {
+			return date( 'Y-m-d', $created_at );
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public function render() {
+	public function render() {
 
-        ?>
+?>
         <div id="auth0ChartSignups"></div>
         <script type="text/javascript">
             function a0_signup_chart(raw_data) {
@@ -88,6 +88,6 @@ class WP_Auth0_Dashboard_Plugins_Signups extends WP_Auth0_Dashboard_Plugins_Gene
         </script>
         <?php
 
-    }
+	}
 
 }

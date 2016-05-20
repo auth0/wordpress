@@ -1,7 +1,9 @@
 .idea
 .DS_Store
+.phptidy-cache
 job.sh
 job_original.sh
+wp-phptidy.php
 /account_cleanup/config.json
 /account_cleanup/vendor/
 /vendor/
