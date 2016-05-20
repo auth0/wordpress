@@ -7,11 +7,23 @@ class WP_Auth0_Api_Operations {
 		$this->a0_options = $a0_options;
 	}
 
+	public function disable_signup_wordpress_connection( $app_token, $connection_id, $disable_signup ) {
+		$domain = $this->a0_options->get( 'domain' );
+
+		$connection = WP_Auth0_Api_Client::get_connection( $domain, $app_token, $connection_id );
+
+		$connection->options->disable_signup = $disable_signup;
+
+		unset( $connection->name );
+		unset( $connection->strategy );
+		unset( $connection->id );
+
+		WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection_id, $connection );
+	}
 	public function update_wordpress_connection( $app_token, $connection_id, $password_policy, $migration_token ) {
 
 		$domain = $this->a0_options->get( 'domain' );
 
-		$domain = $this->a0_options->get( 'domain' );
 		$connection = WP_Auth0_Api_Client::get_connection( $domain, $app_token, $connection_id );
 
 		if ( isset( $connection->options ) ) {
@@ -280,7 +292,9 @@ class WP_Auth0_Api_Operations {
 	//$input['geo_rule'] = ( isset( $input['geo_rule'] ) ? $input['geo_rule'] : 0 );
 	//$enable = ($old_options['geo_rule'] == null && 1 == $input['geo_rule'])
 	public function toggle_rule($app_token, $rule_id, $rule_name, $rule_script) {
+		
 		$domain = $this->a0_options->get( 'domain' );
+		
 		if (is_null($rule_id)) {
 			$rule = WP_Auth0_Api_Client::create_rule( $domain, $app_token, $rule_name, $rule_script );
 

@@ -45,6 +45,7 @@ function (user, context, callback) {
   callback(null, user, context);
 }
 " );
+  
 	public static $link_accounts = array(
 
 		'name' => 'Accont-Linking-Do-Not-Rename',
