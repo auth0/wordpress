@@ -77,12 +77,13 @@ class WP_Auth0_Compatibility {
 	/**
 	 * Returns the username of a failed login attempt made via lock widget.
 	 *
-	 * @return string
+	 * @return array The "username" and whether or not it "is_valid".
 	 */
 	public static function get_failed_login_username() {
 		$login = self::get_sanitized_post_var( 'user_login', 'user' );
 		$email = self::get_sanitized_post_var( 'user_login', 'email' );
 		$username = '';
+		$result = array();
 
 		if ( '' !== $login && username_exists( $login ) ) {
 			$username = $login;
@@ -95,7 +96,15 @@ class WP_Auth0_Compatibility {
 			}
 		}
 
-		return $username;
+		if ( '' !== $username ) {
+			$result['username'] = $username;
+			$result['is_valid'] = true;
+		} else {
+			$result['username'] = ( '' !== $email && is_email( $email ) ) ? $email : $login;
+			$result['is_valid'] = false;
+		}
+
+		return $result;
 	}
 
 	/**
@@ -111,6 +120,7 @@ class WP_Auth0_Compatibility {
 		}
 
 		$username = self::get_failed_login_username();
+		$result = array( 'a0_failed_login_nonce' => wp_create_nonce( 'a0_failed_login' ) );
 
 		if ( is_array( self::$plugins['security'] ) && ! empty( self::$plugins['security'] ) ) {
 			foreach ( self::$plugins['security'] as $plugin => $plugin_info ) {
@@ -123,20 +133,22 @@ class WP_Auth0_Compatibility {
 				$this->$method_for_current_security_plugin( $plugin_info, $username );
 			}
 		}
+
+		die( json_encode( $result ) );
 	}
 
 	/**
 	 * Records a failed login attempt to Wordfence's logs.
 	 *
 	 * @param array $plugin_info
-	 * @param string $username
+	 * @param array $username The "username" and whether or not it "is_valid".
 	 */
 	private function record_failed_login_attempt_wordfence( $plugin_info, $username ) {
 		$wf_class = $plugin_info['class_name'];
 		$wf_log = $wf_class::getLog();
-		$action = ( '' !== $username ) ? 'loginFailValidUsername' : 'loginFailInvalidUsername';
+		$action = ( true === $username['is_valid'] ) ? 'loginFailValidUsername' : 'loginFailInvalidUsername';
 		$fail = 1;
 
-		$wf_log->logLogin($action, $fail, $username);
+		$wf_log->logLogin( $action, $fail, $username['username'] );
 	}
 }
