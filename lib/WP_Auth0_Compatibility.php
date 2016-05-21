@@ -46,6 +46,10 @@ class WP_Auth0_Compatibility {
 					action: 'a0_record_failed_login_attempt',
 					a0_failed_login_nonce: wpa0_lock_settings.a0_failed_login_nonce,
 					user_login: last_attempt
+				},
+				success: function( data ) {
+					data = JSON.parse( data );
+					wpa0_lock_settings.a0_failed_login_nonce = data.a0_failed_login_nonce;
 				}
 			});
 		}); <?php
