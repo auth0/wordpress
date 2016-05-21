@@ -201,5 +201,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    <?php do_action( 'auth0_login_form_after_lock_js' ); ?>
+
 });
 </script>

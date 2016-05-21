@@ -6,10 +6,13 @@ class WP_Auth0_LoginManager {
 	protected $default_role;
 	protected $ignore_unverified_email;
 
+	public $protocol;
+
 	public function __construct($a0_options = null, $default_role = null, $ignore_unverified_email = false) {
 
 		$this->default_role = $default_role;
 		$this->ignore_unverified_email = $ignore_unverified_email;
+		$this->protocol = is_ssl() ? 'https' : 'http';
 
 		if ($a0_options instanceof WP_Auth0_Options) {
 				$this->a0_options = $a0_options;
@@ -17,6 +20,16 @@ class WP_Auth0_LoginManager {
 			$this->a0_options = WP_Auth0_Options::Instance();
 		}
 
+	}
+
+	public function enqueue_lock_script( $cdn ) {
+		wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
+		wp_localize_script( 'wpa0_lock', 'wpa0_lock_settings',
+			array(
+				'ajaxurl'               => admin_url( 'admin-ajax.php', $this->protocol ),
+				'a0_failed_login_nonce' => wp_create_nonce( 'a0_failed_login' ),
+			)
+		);
 	}
 
 	public function init() {
@@ -46,10 +59,11 @@ class WP_Auth0_LoginManager {
 			$client_id = $lock_options->get_client_id();
 			$domain = $lock_options->get_domain();
 
-			wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
+			$this->enqueue_lock_script( $cdn );
 			include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler.php';
 		}
 	}
+
 	public function auth0_singlelogout_footer($previous_html) {
 		
 		echo $previous_html;
@@ -82,8 +96,8 @@ class WP_Auth0_LoginManager {
 		$client_id = $this->a0_options->get('client_id');
 		$domain = $this->a0_options->get('domain');
 		$logout_url = wp_logout_url(get_permalink()) . '&SLO=1';
-		
-		wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
+
+		$this->enqueue_lock_script( $cdn );
 		include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
 	}
 
