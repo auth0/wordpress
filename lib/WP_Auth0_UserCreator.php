@@ -83,24 +83,28 @@ class WP_Auth0_UserCreator {
 	}
 
 	public function insertAuth0User( $userinfo, $user_id ) {
-		global $wpdb;
-		$wpdb->insert(
-			$wpdb->auth0_user,
-			array(
-				'auth0_id' => ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub ),
-				'wp_id' => $user_id,
-				'auth0_obj' => WP_Auth0_Serializer::serialize( $userinfo ),
-				'last_update' =>  date( 'c' ),
-			),
-			array(
-				'%s',
-				'%d',
-				'%s',
-				'%s',
-				'%s',
-				'%s',
-			)
-		);
+
+		update_user_meta( $user_id, 'auth0_id', ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub )); 
+		update_user_meta( $user_id, 'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo )); 
+		update_user_meta( $user_id, 'last_update', date( 'c' ) ); 
+		// global $wpdb;
+		// $wpdb->insert(
+		// 	$wpdb->auth0_user,
+		// 	array(
+		// 		'auth0_id' => ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub ),
+		// 		'wp_id' => $user_id,
+		// 		'auth0_obj' => WP_Auth0_Serializer::serialize( $userinfo ),
+		// 		'last_update' =>  date( 'c' ),
+		// 	),
+		// 	array(
+		// 		'%s',
+		// 		'%d',
+		// 		'%s',
+		// 		'%s',
+		// 		'%s',
+		// 		'%s',
+		// 	)
+		// );
 	}
 
 

@@ -2,21 +2,28 @@
 
 class WP_Auth0_DBManager {
 
+	protected $current_db_version = null;
+	protected $a0_options;
+
+	public function __construct($a0_options) {
+		$this->a0_options = $a0_options;
+	}
+
 	public function init() {
 		add_action( 'plugins_loaded', array( $this, 'initialize_wpdb_tables' ) );
 		add_action( 'plugins_loaded', array( $this, 'check_update' ) );
+		$this->current_db_version = (int)get_site_option( 'auth0_db_version' );
 	}
 
 	public function initialize_wpdb_tables() {
 		global $wpdb;
-
 		$wpdb->auth0_log = $wpdb->prefix.'auth0_log';
 		$wpdb->auth0_user = $wpdb->prefix.'auth0_user';
 		$wpdb->auth0_error_logs = $wpdb->prefix.'auth0_error_logs';
 	}
 
 	public function check_update() {
-		if ( (int) get_site_option( 'auth0_db_version' ) !== AUTH0_DB_VERSION ) {
+		if ( $this->current_db_version !== AUTH0_DB_VERSION ) {
 			$this->install_db();
 		}
 	}
@@ -28,23 +35,29 @@ class WP_Auth0_DBManager {
 
 		$sql = array();
 
-		$sql[] = "CREATE TABLE ".$wpdb->auth0_log." (
-					id INT(11) AUTO_INCREMENT NOT NULL,
-					event VARCHAR(100) NOT NULL,
-					level VARCHAR(100) NOT NULL DEFAULT 'notice',
-					description TEXT,
-					details LONGTEXT,
-					logtime INT(11) NOT NULL,
-					PRIMARY KEY  (id)
-				);";
+		// $sql[] = "CREATE TABLE ".$wpdb->auth0_log." (
+		// 			id INT(11) AUTO_INCREMENT NOT NULL,
+		// 			event VARCHAR(100) NOT NULL,
+		// 			level VARCHAR(100) NOT NULL DEFAULT 'notice',
+		// 			description TEXT,
+		// 			details LONGTEXT,
+		// 			logtime INT(11) NOT NULL,
+		// 			PRIMARY KEY  (id)
+		// 		);";
 
-		$sql[] = "CREATE TABLE ".$wpdb->auth0_user." (
-					auth0_id VARCHAR(100) NOT NULL,
-					wp_id INT(11)  NOT NULL,
-					auth0_obj TEXT,
-					last_update DATETIME,
-					PRIMARY KEY  (auth0_id)
-				);";
+		// $sql[] = "CREATE TABLE ".$wpdb->auth0_user." (
+		// 			auth0_id VARCHAR(100) NOT NULL,
+		// 			wp_id INT(11)  NOT NULL,
+		// 			auth0_obj TEXT,
+		// 			last_update DATETIME,
+		// 			PRIMARY KEY  (auth0_id)
+		// 		);";
+
+		if ($this->current_db_version === 0) {
+			$this->a0_options->set('auth0_table', false);
+		} elseif($this->a0_options->get('auth0_table') === null) {
+			$this->a0_options->set('auth0_table', true);
+		}
 
 		$sql[] = "CREATE TABLE ".$wpdb->auth0_error_logs." (
 					id INT(11) AUTO_INCREMENT NOT NULL,
@@ -60,6 +73,8 @@ class WP_Auth0_DBManager {
 		foreach ( $sql as $s ) {
 			dbDelta( $s );
 		}
+
+		$this->current_db_version = AUTH0_DB_VERSION;
 		update_site_option( 'auth0_db_version', AUTH0_DB_VERSION );
 
 		$options = WP_Auth0_Options::Instance();

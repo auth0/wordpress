@@ -371,7 +371,7 @@ class WP_Auth0_LoginManager {
 				$user_id = wp_update_user( array( 'ID' => $user->data->ID, 'user_email' => $userinfo->email ) );
 			}
 
-			WP_Auth0_Users::update_auth0_object( $userinfo );
+			WP_Auth0_Users::update_auth0_object( $user->data->ID, $userinfo );
 
 			wp_set_current_user( $user->ID, $user->user_login );
 			wp_set_auth_cookie( $user->ID, $remember_users_session );

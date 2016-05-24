@@ -72,38 +72,59 @@ class WP_Auth0_Users {
 		return $user_id;
 	}
 
-	public static function update_auth0_object( $userinfo ) {
+	public static function update_auth0_object( $user_id, $userinfo ) {
 		global $wpdb;
 
-		$wpdb->update(
-			$wpdb->auth0_user,
-			array(
-				'auth0_obj' => WP_Auth0_Serializer::serialize( $userinfo ),
-				'last_update' =>  date( 'c' ),
-			),
-			array( 'auth0_id' => $userinfo->user_id ),
-			array( '%s' ),
-			array( '%s' )
-		);
+		update_user_meta( $user_id, 'auth0_id', ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub )); 
+		update_user_meta( $user_id, 'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo )); 
+		update_user_meta( $user_id, 'last_update', date( 'c' ) ); 
+
+		// $wpdb->update(
+		// 	$wpdb->auth0_user,
+		// 	array(
+		// 		'auth0_obj' => WP_Auth0_Serializer::serialize( $userinfo ),
+		// 		'last_update' =>  date( 'c' ),
+		// 	),
+		// 	array( 'auth0_id' => $userinfo->user_id ),
+		// 	array( '%s' ),
+		// 	array( '%s' )
+		// );
 	}
 
 	public static function find_auth0_user( $id ) {
-		global $wpdb;
-		$sql = 'SELECT u.*
-				FROM ' . $wpdb->auth0_user .' a
-				JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id
-				WHERE a.auth0_id = %s';
 
-		$userRow = $wpdb->get_row( $wpdb->prepare( $sql, $id ) );
-
-		if ( is_null( $userRow ) ) {
-			return null;
-		} elseif ( $userRow instanceof WP_Error ) {
+		$users = get_users( array( 'meta_key' => 'auth0_id', 'meta_value' => $id) ); 
+		var_dump($users);exit;
+		if ( $userRow instanceof WP_Error ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $userRow );
 			return null;
 		}
-		$user = new WP_User();
-		$user->init( $userRow );
-		return $user;
+
+		if (!empty($users)) {
+			return $users[0];
+		}
+
+		//try to fetch from database
+		if ($this->a0_options->get('auth0_table')) {
+			global $wpdb;
+			$sql = 'SELECT u.*
+					FROM ' . $wpdb->auth0_user .' a
+					JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id
+					WHERE a.auth0_id = %s';
+
+			$userRow = $wpdb->get_row( $wpdb->prepare( $sql, $id ) );
+
+			if ( is_null( $userRow ) ) {
+				return null;
+			} elseif ( $userRow instanceof WP_Error ) {
+				WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $userRow );
+				return null;
+			}
+			$user = new WP_User();
+			$user->init( $userRow );
+			return $user;
+		}
+
+		return null;
 	}
 }

@@ -36,7 +36,7 @@ class WP_Auth0 {
 
 		$this->a0_options = WP_Auth0_Options::Instance();
 
-		$this->db_manager = new WP_Auth0_DBManager();
+		$this->db_manager = new WP_Auth0_DBManager($this->a0_options);
 		$this->db_manager->init();
 
 		add_action( 'init', array( $this, 'wp_init' ) );
