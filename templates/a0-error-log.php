@@ -17,21 +17,21 @@
     <?php
 if ( empty( $data ) ) {
 ?>
-            <tr>
-                <td class="message" colspan="4">No errors.</td>
-            </tr>
-        <?php
+    <tr>
+        <td class="message" colspan="4">No errors.</td>
+    </tr>
+<?php
 }
 
-foreach ( $data as $item ) {
+foreach ( $data->posts as $item ) {
 ?>
-        <tr>
-            <td><?php echo date( 'm/d/Y H:i:s', strtotime( $item->date ) ); ?></td>
-            <td><?php echo $item->section; ?></td>
-            <td><?php echo empty( $item->code ) ? '-' : $item->code; ?></td>
-            <td><?php echo strip_tags( $item->message ); ?></td>
-        </tr>
-    <?php
+    <tr>
+        <td><?php echo date( 'm/d/Y H:i:s', strtotime( $item->post_date ) ); ?></td>
+        <td><?php echo $item->post_title; ?></td>
+        <td><?php echo empty( $item->post_excerpt ) ? '-' : $item->post_excerpt; ?></td>
+        <td><?php echo strip_tags( $item->post_content ); ?></td>
+    </tr>
+<?php
 }
 ?>
 

@@ -11,7 +11,7 @@ define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'WPA0_LANG', 'wp-auth0' );
-define( 'AUTH0_DB_VERSION', 7 );
+define( 'AUTH0_DB_VERSION', 8 );
 define( 'WPA0_VERSION', '2.2.3' );
 
 /**

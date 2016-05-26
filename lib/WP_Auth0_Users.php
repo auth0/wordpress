@@ -78,23 +78,12 @@ class WP_Auth0_Users {
 		update_user_meta( $user_id, 'auth0_id', ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub )); 
 		update_user_meta( $user_id, 'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo )); 
 		update_user_meta( $user_id, 'last_update', date( 'c' ) ); 
-
-		// $wpdb->update(
-		// 	$wpdb->auth0_user,
-		// 	array(
-		// 		'auth0_obj' => WP_Auth0_Serializer::serialize( $userinfo ),
-		// 		'last_update' =>  date( 'c' ),
-		// 	),
-		// 	array( 'auth0_id' => $userinfo->user_id ),
-		// 	array( '%s' ),
-		// 	array( '%s' )
-		// );
 	}
 
 	public static function find_auth0_user( $id ) {
 
 		$users = get_users( array( 'meta_key' => 'auth0_id', 'meta_value' => $id) ); 
-		var_dump($users);exit;
+
 		if ( $userRow instanceof WP_Error ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $userRow );
 			return null;
@@ -107,7 +96,7 @@ class WP_Auth0_Users {
 		//try to fetch from database
 		if ($this->a0_options->get('auth0_table')) {
 			global $wpdb;
-			$sql = 'SELECT u.*
+			$sql = 'SELECT u.*, a.auth0_obj
 					FROM ' . $wpdb->auth0_user .' a
 					JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id
 					WHERE a.auth0_id = %s';
@@ -122,6 +111,9 @@ class WP_Auth0_Users {
 			}
 			$user = new WP_User();
 			$user->init( $userRow );
+
+			self::update_auth0_object( $user->data->ID, WP_Auth0_Serializer::unserialize($userRow['auth0_obj']) );
+
 			return $user;
 		}
 

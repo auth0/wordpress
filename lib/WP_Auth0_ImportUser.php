@@ -44,30 +44,8 @@ class WP_Auth0_ImportUser {
 			if ( $user_id instanceof WP_Error ) {
 				return;
 			}
-
-			update_user_meta( $user_id, 'auth0_id', ( isset( $profile->user_id ) ? $profile->user_id : $profile->sub )); 
-			update_user_meta( $user_id, 'auth0_obj', WP_Auth0_Serializer::serialize( $profile )); 
-			update_user_meta( $user_id, 'last_update', date( 'c' ) );
-
-			// $wpdb->insert(
-			// 	$wpdb->auth0_user,
-			// 	array(
-			// 		'auth0_id' => $profile->user_id,
-			// 		'wp_id' => $user_id,
-			// 		'auth0_obj' => WP_Auth0_Serializer::serialize( $profile ),
-			// 		'last_update' =>  date( 'c' ),
-			// 	),
-			// 	array(
-			// 		'%s',
-			// 		'%d',
-			// 		'%s',
-			// 		'%s',
-			// 		'%s',
-			// 		'%s',
-			// 	)
-			// );
-		} else {
-			WP_Auth0_Users::update_auth0_object( $user->data->ID,$profile );
 		}
+
+		WP_Auth0_Users::update_auth0_object( $user_id,$profile );
 	}
 }

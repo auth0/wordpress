@@ -17,9 +17,7 @@ class WP_Auth0_DBManager {
 
 	public function initialize_wpdb_tables() {
 		global $wpdb;
-		$wpdb->auth0_log = $wpdb->prefix.'auth0_log';
 		$wpdb->auth0_user = $wpdb->prefix.'auth0_user';
-		$wpdb->auth0_error_logs = $wpdb->prefix.'auth0_error_logs';
 	}
 
 	public function check_update() {
@@ -33,45 +31,44 @@ class WP_Auth0_DBManager {
 
 		$this->initialize_wpdb_tables();
 
-		$sql = array();
-
-		// $sql[] = "CREATE TABLE ".$wpdb->auth0_log." (
-		// 			id INT(11) AUTO_INCREMENT NOT NULL,
-		// 			event VARCHAR(100) NOT NULL,
-		// 			level VARCHAR(100) NOT NULL DEFAULT 'notice',
-		// 			description TEXT,
-		// 			details LONGTEXT,
-		// 			logtime INT(11) NOT NULL,
-		// 			PRIMARY KEY  (id)
-		// 		);";
-
-		// $sql[] = "CREATE TABLE ".$wpdb->auth0_user." (
-		// 			auth0_id VARCHAR(100) NOT NULL,
-		// 			wp_id INT(11)  NOT NULL,
-		// 			auth0_obj TEXT,
-		// 			last_update DATETIME,
-		// 			PRIMARY KEY  (auth0_id)
-		// 		);";
-
 		if ($this->current_db_version === 0) {
 			$this->a0_options->set('auth0_table', false);
 		} elseif($this->a0_options->get('auth0_table') === null) {
 			$this->a0_options->set('auth0_table', true);
 		}
 
-		$sql[] = "CREATE TABLE ".$wpdb->auth0_error_logs." (
-					id INT(11) AUTO_INCREMENT NOT NULL,
-					date DATETIME  NOT NULL,
-					section VARCHAR(255),
-					code VARCHAR(255),
-					message TEXT,
-					PRIMARY KEY  (id)
-				);";
-
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-		foreach ( $sql as $s ) {
-			dbDelta( $s );
+		if (!post_type_exists('auth0_error_log')) {
+			register_post_type( 'auth0_error_log',
+		    array(
+		      'labels' => array(
+		        'name' => __( 'Auth0 Errors' ),
+		        'singular_name' => __( 'Auth0 Error' )
+		      ),
+		      'public' => false,
+		      'has_archive' => false,
+		      'exclude_from_search' => true, 
+		      'publicly_queryable' => false, 
+		      'show_ui' => false, 
+		      'show_in_nav_menus' => false, 
+		      'show_in_menu' => false, 
+		      'show_in_admin_bar' => false, 
+		      'capability_type' => false, 
+		      'query_var' => false, 
+		      'show_in_rest' => false, 
+		      'capabilities' => array(
+				    'edit_post'          => 'update_core',
+				    'read_post'          => 'update_core',
+				    'delete_post'        => 'update_core',
+				    'edit_posts'         => 'update_core',
+				    'edit_others_posts'  => 'update_core',
+				    'delete_posts'       => 'update_core',
+				    'publish_posts'      => 'update_core',
+				    'read_private_posts' => 'update_core'
+					),
+		    )
+		  );
 		}
 
 		$this->current_db_version = AUTH0_DB_VERSION;
@@ -132,22 +129,15 @@ class WP_Auth0_DBManager {
 	}
 
 	public function get_users_by_auth0id( $auth0_id ) {
-		global $wpdb;
 
+		$users = get_users( array( 'meta_key' => 'auth0_id', 'meta_value' => $auth0_id) ); 
 
-		$sql = sprintf( 'SELECT a.* FROM %s a JOIN %s u ON u.wp_id = a.id where u.auth0_id = "%s"',
-			$wpdb->users,
-			$wpdb->auth0_user,
-			$auth0_id );
-
-		$result = $wpdb->get_row( $sql );
-
-		if ( $result instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'findAuth0User', $userRow );
+		if ( $users instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'findAuth0User', $users );
 			return null;
 		}
 
-		return $result;
+		return $users;
 	}
 
 	function get_currentauth0userinfo() {

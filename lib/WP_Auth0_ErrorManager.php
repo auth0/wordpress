@@ -15,22 +15,13 @@ class WP_Auth0_ErrorManager {
 			$message = $wp_error;
 		}
 
-		global $wpdb;
-		$wpdb->insert(
-			$wpdb->auth0_error_logs,
-			array(
-				'section' => $section,
-				'date' => date( 'c' ),
-				'code' => $code,
-				'message' => $message,
-			),
-			array(
-				'%s',
-				'%s',
-				'%s',
-				'%s',
-			)
-		);
+		wp_insert_post(array(
+			'post_type'=>'auth0_error_log',
+			'post_title'=>$section,
+			'post_excerpt'=>$code,
+			'post_content'=>$message,
+			'post_status'=>'publish',
+		));
 	}
 
 }
