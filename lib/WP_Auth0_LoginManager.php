@@ -5,11 +5,13 @@ class WP_Auth0_LoginManager {
 	protected $a0_options;
 	protected $default_role;
 	protected $ignore_unverified_email;
+	protected $users_repo;
 
-	public function __construct( $a0_options = null, $default_role = null, $ignore_unverified_email = false ) {
+	public function __construct( WP_Auth0_UsersRepo $users_repo, $a0_options = null, $default_role = null, $ignore_unverified_email = false ) {
 
 		$this->default_role = $default_role;
 		$this->ignore_unverified_email = $ignore_unverified_email;
+		$this->users_repo = $users_repo;
 
 		if ( $a0_options instanceof WP_Auth0_Options ) {
 			$this->a0_options = $a0_options;
@@ -363,7 +365,7 @@ class WP_Auth0_LoginManager {
 		}
 
 		// See if there is a user in the auth0_user table with the user info client id
-		$user = WP_Auth0_Users::find_auth0_user( $userinfo->user_id );
+		$user = $this->users_repo->find_auth0_user( $userinfo->user_id );
 
 		if ( ! is_null( $user ) ) {
 			// User exists! Log in
@@ -371,7 +373,7 @@ class WP_Auth0_LoginManager {
 				$user_id = wp_update_user( array( 'ID' => $user->data->ID, 'user_email' => $userinfo->email ) );
 			}
 
-			WP_Auth0_Users::update_auth0_object( $user->data->ID, $userinfo );
+			$this->users_repo->update_auth0_object( $user->data->ID, $userinfo );
 
 			wp_set_current_user( $user->ID, $user->user_login );
 			wp_set_auth_cookie( $user->ID, $remember_users_session );

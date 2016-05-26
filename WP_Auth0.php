@@ -77,11 +77,11 @@ class WP_Auth0 {
 		$initial_setup = new WP_Auth0_InitialSetup( $this->a0_options );
 		$initial_setup->init();
 
-		$login_manager = new WP_Auth0_LoginManager( $this->a0_options );
-		$login_manager->init();
-
 		$users_repo = new WP_Auth0_UsersRepo( $this->a0_options );
 		$users_repo->init();
+
+		$login_manager = new WP_Auth0_LoginManager( $this->users_repo, $this->a0_options );
+		$login_manager->init();
 
 		$this->router = new WP_Auth0_Routes( $this->a0_options );
 		$this->router->init();

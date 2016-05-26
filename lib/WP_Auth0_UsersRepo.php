@@ -9,7 +9,7 @@ class WP_Auth0_UsersRepo {
 	}
 
 	public function init() {
-		if ( WP_Auth0_Options::Instance()->get( 'jwt_auth_integration' ) == 1 ) {
+		if ( $this->a0_options->get( 'jwt_auth_integration' ) == 1 ) {
 			add_filter( 'wp_jwt_auth_get_user', array( $this, 'getUser' ), 0, 2 );
 		}
 	}
@@ -104,7 +104,7 @@ class WP_Auth0_UsersRepo {
 
 		// $auto_provisioning = WP_Auth0_Options::get('auto_provisioning');
 		// $allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled() || $auto_provisioning;
-		$allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled();
+		$allow_signup = $this->a0_options->is_wp_registration_enabled();
 
 		$user_id = null;
 
@@ -138,7 +138,7 @@ class WP_Auth0_UsersRepo {
 
 		// If we are here we should have a valid $user_id with a new user or an existing one
 		// log him in, and update the auth0_user table
-		self::insertAuth0User( $userinfo, $user_id );
+		$this->insertAuth0User( $userinfo, $user_id );
 
 		return $user_id;
 	}
@@ -149,6 +149,52 @@ class WP_Auth0_UsersRepo {
 		update_user_meta( $user_id, 'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo )); 
 		update_user_meta( $user_id, 'last_update', date( 'c' ) ); 
 
+	}
+
+	public static function find_auth0_user( $id ) {
+
+		$users = get_users( array( 'meta_key' => 'auth0_id', 'meta_value' => $id) ); 
+
+		if ( $userRow instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $userRow );
+			return null;
+		}
+
+		if (!empty($users)) {
+			return $users[0];
+		}
+
+		//try to fetch from database
+		if ($this->a0_options->get('auth0_table')) {
+			global $wpdb;
+			$sql = 'SELECT u.*, a.auth0_obj
+					FROM ' . $wpdb->auth0_user .' a
+					JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id
+					WHERE a.auth0_id = %s';
+
+			$userRow = $wpdb->get_row( $wpdb->prepare( $sql, $id ) );
+
+			if ( is_null( $userRow ) ) {
+				return null;
+			} elseif ( $userRow instanceof WP_Error ) {
+				WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $userRow );
+				return null;
+			}
+			$user = new WP_User();
+			$user->init( $userRow );
+
+			$this->update_auth0_object( $user->data->ID, WP_Auth0_Serializer::unserialize($userRow['auth0_obj']) );
+
+			return $user;
+		}
+
+		return null;
+	}
+
+	public static function update_auth0_object( $user_id, $userinfo ) {
+		update_user_meta( $user_id, 'auth0_id', ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub )); 
+		update_user_meta( $user_id, 'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo )); 
+		update_user_meta( $user_id, 'last_update', date( 'c' ) ); 
 	}
 
 }
