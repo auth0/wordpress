@@ -10,9 +10,9 @@ class WP_Auth0_DBManager {
 	}
 
 	public function init() {
+		$this->current_db_version = (int)get_site_option( 'auth0_db_version' );
 		add_action( 'plugins_loaded', array( $this, 'initialize_wpdb_tables' ) );
 		add_action( 'plugins_loaded', array( $this, 'check_update' ) );
-		$this->current_db_version = (int)get_site_option( 'auth0_db_version' );
 	}
 
 	public function initialize_wpdb_tables() {
@@ -27,9 +27,6 @@ class WP_Auth0_DBManager {
 	}
 
 	public function install_db() {
-		global $wpdb;
-
-		$this->initialize_wpdb_tables();
 
 		if ($this->current_db_version === 0) {
 			$this->a0_options->set('auth0_table', false);
@@ -37,7 +34,17 @@ class WP_Auth0_DBManager {
 			$this->a0_options->set('auth0_table', true);
 		}
 
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		$options = WP_Auth0_Options::Instance();
+		$cdn_url = $options->get( 'cdn_url' );
+		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-6' ) !== false ) {
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
+		}
+		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-8' ) !== false ) {
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
+		}
+		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-9.0' ) !== false ) {
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
+		}
 
 		if (!post_type_exists('auth0_error_log')) {
 			register_post_type( 'auth0_error_log',
@@ -71,22 +78,7 @@ class WP_Auth0_DBManager {
 		  );
 		}
 
-		$this->current_db_version = AUTH0_DB_VERSION;
-		update_site_option( 'auth0_db_version', AUTH0_DB_VERSION );
-
-		$options = WP_Auth0_Options::Instance();
-		$cdn_url = $options->get( 'cdn_url' );
-		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-6' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
-		}
-		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-8' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
-		}
-		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-9.0' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
-		}
-
-		if ( (int) get_site_option( 'auth0_db_version' ) <= 7 ) {
+		if ( $this->current_db_version <= 7 ) {
 			if ( $options->get( 'db_connection_enabled' ) ) {
 
 				$app_token = $options->get( 'auth0_app_token' );
@@ -106,6 +98,9 @@ class WP_Auth0_DBManager {
 				}
 			}
 		}
+
+		$this->current_db_version = AUTH0_DB_VERSION;
+		update_site_option( 'auth0_db_version', AUTH0_DB_VERSION );
 	}
 
 	public function get_auth0_users( $user_ids = null ) {
@@ -138,36 +133,6 @@ class WP_Auth0_DBManager {
 		}
 
 		return $users;
-	}
-
-	function get_currentauth0userinfo() {
-
-		global $currentauth0_user;
-
-		$result = $this->get_currentauth0user();
-		if ( $result ) {
-			$currentauth0_user = WP_Auth0_Serializer::unserialize( $result->auth0_obj );
-		}
-
-		return $currentauth0_user;
-	}
-
-	function get_currentauth0user() {
-		global $wpdb;
-
-		$current_user = wp_get_current_user();
-
-		if ( $current_user instanceof WP_User && $current_user->ID > 0 ) {
-			$sql = 'SELECT * FROM ' . $wpdb->auth0_user .' WHERE wp_id = %d order by last_update desc limit 1';
-			$result = $wpdb->get_row( $wpdb->prepare( $sql, $current_user->ID ) );
-
-			if ( is_null( $result ) || $result instanceof WP_Error ) {
-				return null;
-			}
-
-		}
-
-		return $result;
 	}
 
 	public function get_current_user_profiles() {

@@ -378,9 +378,10 @@ if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 
 		global $currentauth0_user;
 
-		$result = get_currentauth0user();
+		$current_user = wp_get_current_user();
+
 		if ($result) {
-			$currentauth0_user = WP_Auth0_Serializer::unserialize( $result->auth0_obj );
+			$currentauth0_user = WP_Auth0_Serializer::unserialize( update_user_meta( $current_user, 'auth0_obj') );
 		}
 
 		return $currentauth0_user;
@@ -389,19 +390,13 @@ if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 
 if ( ! function_exists( 'get_currentauth0user' ) ) {
 	function get_currentauth0user() {
-		global $wpdb;
 
 		$current_user = wp_get_current_user();
+		$result = new stdClass();
 
-		if ( $current_user instanceof WP_User && $current_user->ID > 0 ) {
-			$sql = 'SELECT * FROM ' . $wpdb->auth0_user .' WHERE wp_id = %d order by last_update desc limit 1';
-			$result = $wpdb->get_row( $wpdb->prepare( $sql, $current_user->ID ) );
-
-			if ( is_null( $result ) || $result instanceof WP_Error ) {
-				return null;
-			}
-
-		}
+		$result->auth0_obj = update_user_meta( $current_user, 'auth0_obj');
+		$result->last_update = update_user_meta( $current_user, 'last_update');
+		$result->auth0_id = update_user_meta( $current_user, 'auth0_id');
 
 		return $result;
 	}

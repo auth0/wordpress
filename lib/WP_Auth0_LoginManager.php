@@ -384,7 +384,7 @@ class WP_Auth0_LoginManager {
 		} else {
 			try {
 
-				$creator = new WP_Auth0_UserCreator( $this->a0_options );
+				$creator = new WP_Auth0_UsersRepo( $this->a0_options );
 				$user_id = $creator->create( $userinfo, $id_token, $access_token, $this->default_role, $this->ignore_unverified_email );
 
 				$user = get_user_by( 'id', $user_id );
