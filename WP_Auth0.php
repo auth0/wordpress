@@ -80,7 +80,7 @@ class WP_Auth0 {
 		$users_repo = new WP_Auth0_UsersRepo( $this->a0_options );
 		$users_repo->init();
 
-		$login_manager = new WP_Auth0_LoginManager( $this->users_repo, $this->a0_options );
+		$login_manager = new WP_Auth0_LoginManager( $users_repo, $this->a0_options );
 		$login_manager->init();
 
 		$this->router = new WP_Auth0_Routes( $this->a0_options );
@@ -381,7 +381,7 @@ if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 		$current_user = wp_get_current_user();
 
 		if ($result) {
-			$currentauth0_user = WP_Auth0_Serializer::unserialize( update_user_meta( $current_user, 'auth0_obj') );
+			$currentauth0_user = WP_Auth0_Serializer::unserialize( get_user_meta( $current_user, 'auth0_obj'), true );
 		}
 
 		return $currentauth0_user;
@@ -394,9 +394,9 @@ if ( ! function_exists( 'get_currentauth0user' ) ) {
 		$current_user = wp_get_current_user();
 		$result = new stdClass();
 
-		$result->auth0_obj = update_user_meta( $current_user, 'auth0_obj');
-		$result->last_update = update_user_meta( $current_user, 'last_update');
-		$result->auth0_id = update_user_meta( $current_user, 'auth0_id');
+		$result->auth0_obj = get_user_meta( $current_user, 'auth0_obj', true);
+		$result->last_update = get_user_meta( $current_user, 'last_update', true);
+		$result->auth0_id = get_user_meta( $current_user, 'auth0_id', true);
 
 		return $result;
 	}

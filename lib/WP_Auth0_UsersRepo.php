@@ -138,17 +138,9 @@ class WP_Auth0_UsersRepo {
 
 		// If we are here we should have a valid $user_id with a new user or an existing one
 		// log him in, and update the auth0_user table
-		$this->insertAuth0User( $userinfo, $user_id );
+		$this->update_auth0_object( $user_id, $userinfo );
 
 		return $user_id;
-	}
-
-	public function insertAuth0User( $userinfo, $user_id ) {
-
-		update_user_meta( $user_id, 'auth0_id', ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub )); 
-		update_user_meta( $user_id, 'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo )); 
-		update_user_meta( $user_id, 'last_update', date( 'c' ) ); 
-
 	}
 
 	public static function find_auth0_user( $id ) {
@@ -196,5 +188,5 @@ class WP_Auth0_UsersRepo {
 		update_user_meta( $user_id, 'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo )); 
 		update_user_meta( $user_id, 'last_update', date( 'c' ) ); 
 	}
-
+	
 }

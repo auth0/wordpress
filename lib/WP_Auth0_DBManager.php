@@ -104,16 +104,7 @@ class WP_Auth0_DBManager {
 	}
 
 	public function get_auth0_users( $user_ids = null ) {
-		global $wpdb;
-
-		$where = '';
-		if ( $user_ids ) {
-			$ids = esc_sql( implode( ',',  array_filter( $user_ids, 'ctype_digit' ) ) );
-			$where .= " AND u.id IN ($ids) ";
-		}
-
-		$sql = sprintf( 'SELECT a.* FROM %s a JOIN %s u ON a.wp_id = u.id %s', $wpdb->auth0_user, $wpdb->users, $where );
-		$results = $wpdb->get_results( $sql );
+		$results = get_users( array( 'meta_key' => 'auth0_id' ) );
 
 		if ( $results instanceof WP_Error ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( 'findAuth0User', $userRow );
@@ -121,18 +112,6 @@ class WP_Auth0_DBManager {
 		}
 
 		return $results;
-	}
-
-	public function get_users_by_auth0id( $auth0_id ) {
-
-		$users = get_users( array( 'meta_key' => 'auth0_id', 'meta_value' => $auth0_id) ); 
-
-		if ( $users instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'findAuth0User', $users );
-			return null;
-		}
-
-		return $users;
 	}
 
 	public function get_current_user_profiles() {
