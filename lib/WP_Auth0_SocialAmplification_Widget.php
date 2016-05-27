@@ -46,9 +46,11 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 
 		$client_id = WP_Auth0_Options::Instance()->get( 'client_id' );
-		$userData = self::$db_manager->get_current_user_profiles();
 
-		if ( trim( $client_id ) != "" && $userData ) {
+		$current_user = get_currentauth0user();
+		$user_profile = $current_user->auth0_obj;
+
+		if ( trim( $client_id ) != "" && $user_profile ) {
 			$options = WP_Auth0_Options::Instance();
 
 			$supportedProviders = array( 'facebook', 'twitter' );
@@ -65,10 +67,8 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 			}
 
 			$providers = array();
-			foreach ( $userData as $value ) {
-				foreach ( $value->identities as $identity ) {
-					$providers[] = $identity->provider;
-				}
+			foreach ( $user_profile->identities as $identity ) {
+				$providers[] = $identity->provider;
 			}
 
 			$providers = array_intersect( array_unique( $providers ), $supportedProviders );

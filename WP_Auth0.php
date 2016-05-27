@@ -56,9 +56,6 @@ class WP_Auth0 {
 
 		add_filter( 'auth0_verify_email_page', array( $this, 'render_verify_email_page' ), 0, 3 );
 
-		// Add hook to handle when a user is deleted.
-		add_action( 'delete_user', array( $this, 'delete_user' ) );
-
 		add_shortcode( 'auth0', array( $this, 'shortcode' ) );
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue' ) );
@@ -318,11 +315,6 @@ class WP_Auth0 {
 		return $html;
 	}
 
-	public function delete_user( $user_id ) {
-		global $wpdb;
-		$wpdb->delete( $wpdb->auth0_user, array( 'wp_id' => $user_id ), array( '%d' ) );
-	}
-
 	public function wp_init() {
 		$this->router->setup_rewrites();
 	}
@@ -392,13 +384,14 @@ if ( ! function_exists( 'get_currentauth0user' ) ) {
 	function get_currentauth0user() {
 
 		$current_user = wp_get_current_user();
-		$result = new stdClass();
 
-		$result->auth0_obj = get_user_meta( $current_user, 'auth0_obj', true);
-		$result->last_update = get_user_meta( $current_user, 'last_update', true);
-		$result->auth0_id = get_user_meta( $current_user, 'auth0_id', true);
+		$serialized_profile = get_user_meta( $current_user, 'auth0_obj', true);
 
-		return $result;
+		$current_user->auth0_obj = WP_Auth0_Serializer::unserialize( $serialized_profile );
+		$current_user->last_update = get_user_meta( $current_user, 'last_update', true);
+		$current_user->auth0_id = get_user_meta( $current_user, 'auth0_id', true);
+
+		return $current_user;
 	}
 }
 

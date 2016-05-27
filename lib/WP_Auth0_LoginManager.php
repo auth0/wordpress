@@ -66,18 +66,11 @@ class WP_Auth0_LoginManager {
 			return;
 		}
 
-		$db_manager = new WP_Auth0_DBManager();
+		$current_user = get_currentauth0user();
+		$user_profile = $current_user->auth0_obj;
 
-		$profiles = $db_manager->get_current_user_profiles();
-
-		if ( empty( $profiles ) ) {
+		if ( empty( $user_profile ) ) {
 			return;
-		}
-
-		$ids = array();
-
-		foreach ( $profiles as $profile ) {
-			$ids[] = $profile->user_id;
 		}
 
 		$cdn = $this->a0_options->get( 'cdn_url' );

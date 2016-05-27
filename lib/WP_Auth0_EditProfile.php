@@ -40,9 +40,10 @@ class WP_Auth0_EditProfile {
 
 
 	public function update_change_password() {
-		$user_profiles = $this->db_manager->get_current_user_profiles();
+    $current_user = get_currentauth0user();
+    $user_profile = $current_user->auth0_obj;
 
-		if ( empty( $user_profiles ) ) return;
+		if ( empty( $user_profile ) ) return;
 
 		$auth0_password = isset( $_POST['auth0_password'] ) ? $_POST['auth0_password'] : null;
 		$auth0_repeat_password = isset( $_POST['auth0_repeat_password'] ) ? $_POST['auth0_repeat_password'] : null;
@@ -52,7 +53,6 @@ class WP_Auth0_EditProfile {
 			$client_id = $this->a0_options->get( 'client_id' );
 			$api_token = $this->a0_options->get( 'auth0_app_token' );
 
-			$user_profile = $user_profiles[0];
 			$connection = null;
 			$email = null;
 
@@ -138,11 +138,11 @@ class WP_Auth0_EditProfile {
 	}
 
 	public function show_change_password() {
-		$user_profiles = $this->db_manager->get_current_user_profiles();
+    $current_user = get_currentauth0user();
+    $user_profile = $current_user->auth0_obj;
 
-		if ( empty( $user_profiles ) ) return;
+		if ( empty( $user_profile ) ) return;
 
-		$user_profile = $user_profiles[0];
 		$connection = null;
 
 		foreach ( $user_profile->identities as $identity ) {
@@ -179,11 +179,10 @@ class WP_Auth0_EditProfile {
 	}
 
 	public function disable_email_field() {
+    $current_user = get_currentauth0user();
+    $user_profile = $current_user->auth0_obj;
 
-		$user_profiles = $this->db_manager->get_current_user_profiles();
-
-		if ( !empty( $user_profiles ) ) {
-			$user_profile = $user_profiles[0];
+		if ( !empty( $user_profile ) ) {
 			$connection = null;
 
 			foreach ( $user_profile->identities as $identity ) {
@@ -222,7 +221,9 @@ class WP_Auth0_EditProfile {
 			$errors = new WP_Error();
 		}
 
-		$current_user = wp_get_current_user();
+    $current_user = get_currentauth0user();
+    $user_profile = $current_user->auth0_obj;
+
 		$app_token = $this->a0_options->get( 'auth0_app_token' );;
 
 		if ( !$app_token ) {
@@ -233,13 +234,9 @@ class WP_Auth0_EditProfile {
 			return false;
 		}
 
-		$user_profiles = $this->db_manager->get_current_user_profiles();
-
-		if ( empty( $user_profiles ) ) {
+		if ( empty( $user_profile ) ) {
 			return;
 		}
-
-		$user_profile = $user_profiles[0];
 
 		if ( isset( $_POST['email'] ) && $current_user->user_email != $_POST['email'] ) {
 

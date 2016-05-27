@@ -16,15 +16,7 @@ class WP_Auth0_UsersRepo {
 
 	public function getUser( $jwt, $encodedJWT ) {
 
-		global $wpdb;
-
-		$sql = 'SELECT u.*
-                FROM ' . $wpdb->auth0_user .' a
-                JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id
-                WHERE a.auth0_id = %s;';
-
-		$userRow = $wpdb->get_row( $wpdb->prepare( $sql, $jwt->sub ) );
-
+		$userRow = $this->find_auth0_user( $jwt->sub )
 
 		$domain = $this->a0_options->get( 'domain' );
 
@@ -60,12 +52,10 @@ class WP_Auth0_UsersRepo {
 			WP_Auth0_ErrorManager::insert_auth0_error( 'findAuth0User', $userRow );
 			return null;
 		}else {
-			$user = new WP_User();
-			$user->init( $userRow );
 
-			do_action( 'auth0_user_login' , $user->ID, $response, false, $encodedJWT, null );
+			do_action( 'auth0_user_login' , $userRow->ID, $response, false, $encodedJWT, null );
 
-			return $user;
+			return $userRow;
 		}
 
 
@@ -143,7 +133,7 @@ class WP_Auth0_UsersRepo {
 		return $user_id;
 	}
 
-	public static function find_auth0_user( $id ) {
+	public function find_auth0_user( $id ) {
 
 		$users = get_users( array( 'meta_key' => 'auth0_id', 'meta_value' => $id) ); 
 
@@ -158,6 +148,7 @@ class WP_Auth0_UsersRepo {
 
 		//try to fetch from database
 		if ($this->a0_options->get('auth0_table')) {
+
 			global $wpdb;
 			$sql = 'SELECT u.*, a.auth0_obj
 					FROM ' . $wpdb->auth0_user .' a
@@ -172,10 +163,9 @@ class WP_Auth0_UsersRepo {
 				WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $userRow );
 				return null;
 			}
+
 			$user = new WP_User();
 			$user->init( $userRow );
-
-			$this->update_auth0_object( $user->data->ID, WP_Auth0_Serializer::unserialize($userRow['auth0_obj']) );
 
 			return $user;
 		}
@@ -183,10 +173,10 @@ class WP_Auth0_UsersRepo {
 		return null;
 	}
 
-	public static function update_auth0_object( $user_id, $userinfo ) {
+	public function update_auth0_object( $user_id, $userinfo ) {
 		update_user_meta( $user_id, 'auth0_id', ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub )); 
 		update_user_meta( $user_id, 'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo )); 
 		update_user_meta( $user_id, 'last_update', date( 'c' ) ); 
 	}
-	
+
 }
