@@ -137,7 +137,7 @@ class WP_Auth0_UsersRepo {
 
 		$users = get_users( array( 'meta_key' => 'auth0_id', 'meta_value' => $id) ); 
 
-		if ( $userRow instanceof WP_Error ) {
+		if ( $users instanceof WP_Error ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $userRow );
 			return null;
 		}
