@@ -11,7 +11,7 @@ class WP_Auth0_ErrorManager {
 			$code = $wp_error->getCode();
 			$message = $wp_error->getMessage();
 		} else {
-			$code = null;
+			$code = 'N/A';
 			$message = $wp_error;
 		}
 

@@ -80,17 +80,18 @@ class WP_Auth0_UsersRepo {
 			}
 		}
 		$joinUser = null;
+
 		// If the user has a verified email or is a database user try to see if there is
 		// a user to join with. The isDatabase is because we don't want to allow database
 		// user creation if there is an existing one with no verified email
 
-		if ( isset( $userinfo->email )
-			&& ( ( $ignore_unverified_email || ( isset( $userinfo->email_verified ) && $userinfo->email_verified ) )
-				|| !$isDatabaseUser
+		$shouldJoinUser = ( isset( $userinfo->email ) // if a0 user has email
+			&& ( ( $ignore_unverified_email || ( isset( $userinfo->email_verified ) && $userinfo->email_verified ) ) // and it is verifed (or we should ignore verification)
+				|| !$isDatabaseUser // or it is not a database user (we can trust the email is valid)
 			)
-		) { //TODO: check this
-			$joinUser = get_user_by( 'email', $userinfo->email );
-		}
+		); // if true, we can join the a0 user with the wp one
+
+		$joinUser = get_user_by( 'email', $userinfo->email ); 
 
 		// $auto_provisioning = WP_Auth0_Options::get('auto_provisioning');
 		// $allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled() || $auto_provisioning;
@@ -98,7 +99,16 @@ class WP_Auth0_UsersRepo {
 
 		$user_id = null;
 
-		if ( !is_null( $joinUser ) && $joinUser instanceof WP_User ) {
+		// If there is a user with the same email, we should check if the wp user was joined with an auth0 user. If so, we shouldn't allow it again
+		if (!is_null( $joinUser ) && $joinUser instanceof WP_User ) {
+			$auth0_id = get_user_meta( $joinUser->ID, 'auth0_id', true);
+
+			if ($auth0_id) { // if it has an a0 id, we cant join it
+				throw new WP_Auth0_CouldNotCreateUserException('There is a user with the same email');
+			}
+		}
+
+		if ( $shouldJoinUser && !is_null( $joinUser ) && $joinUser instanceof WP_User ) {
 			// If we are here, we have a potential join user
 			// Don't allow creation or assignation of user if the email is not verified, that would
 			// be hijacking
@@ -110,6 +120,7 @@ class WP_Auth0_UsersRepo {
 			}
 
 		} elseif ( $allow_signup ) {
+
 			// If we are here, we need to create the user
 			$user_id = WP_Auth0_Users::create_user( $userinfo, $role );
 

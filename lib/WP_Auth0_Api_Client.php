@@ -123,8 +123,9 @@ class WP_Auth0_Api_Client {
 		$endpoint = "https://$domain/";
 
 		$headers = self::get_info_headers();
+		$headers['Authorization'] = "Bearer $access_token";
 
-		return wp_remote_get( $endpoint . 'userinfo/?access_token=' . $access_token , array(
+		return wp_remote_get( $endpoint . 'userinfo/' , array(
 				'headers' => $headers,
 			) );
 

@@ -224,12 +224,10 @@ class WP_Auth0_LoginManager {
 		if ( isset( $data->access_token ) || isset( $data->id_token ) ) {
 			// Get the user information
 
-			if ( isset( $data->id_token ) ) {
-				$response = WP_Auth0_Api_Client::get_current_user( $domain, $data->id_token );
-			} else {
+			if ( !isset( $data->id_token ) ) {
 				$data->id_token = null;
-				$response = WP_Auth0_Api_Client::get_user_info( $domain, $data->access_token );
 			}
+			$response = WP_Auth0_Api_Client::get_user_info( $domain, $data->access_token );
 
 			if ( $response instanceof WP_Error ) {
 				WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_userinfo', $response );
@@ -357,8 +355,17 @@ class WP_Auth0_LoginManager {
 
 		}
 
-		// See if there is a user in the auth0_user table with the user info client id
-		$user = $this->users_repo->find_auth0_user( $userinfo->user_id );
+		// See if there is a user linked to the same auth0 user_id
+		if (isset($userinfo->identities)) {
+			foreach ($userinfo->identities as $identity) {
+				$user = $this->users_repo->find_auth0_user( "{$identity->provider}|{$identity->user_id}" );
+				if ($user) {
+					break;
+				}
+			}
+		} else {
+			$user = $this->users_repo->find_auth0_user( $userinfo->user_id );
+		}
 
 		if ( ! is_null( $user ) ) {
 			// User exists! Log in
@@ -441,7 +448,7 @@ class WP_Auth0_LoginManager {
 
 			$decodedToken->user_id = $decodedToken->sub;
 
-			if ( $this->login_user( $userinfo, $response->id_token, $response->access_token ) ) {
+			if ( $this->login_user( $decodedToken, $response->id_token, $response->access_token ) ) {
 				return false;
 			}
 

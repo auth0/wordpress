@@ -48,7 +48,7 @@ function (user, context, callback) {
   
 	public static $link_accounts = array(
 
-		'name' => 'Accont-Linking-Do-Not-Rename',
+		'name' => 'Account-Linking-Do-Not-Rename',
 		'script' => "
 function (user, context, callback) {
 
@@ -67,11 +67,11 @@ function (user, context, callback) {
   var request = require('request');
   var async = require('async');
 
-  var userApiUrl = 'https://REPLACE_WITH_YOUR_DOMAIN/api/v2/users';
+  var userApiUrl = auth0.baseUrl + '/users';
   request({
    url: userApiUrl,
    headers: {
-     Authorization: 'Bearer REPLACE_WITH_YOUR_API_TOKEN'
+     Authorization: 'Bearer ' + auth0.accessToken
    },
    qs: {
      search_engine: 'v2',
@@ -92,7 +92,7 @@ function (user, context, callback) {
           request.post({
             url: userApiUrl + '/' + user.user_id + '/identities',
             headers: {
-              Authorization: 'Bearer REPLACE_WITH_YOUR_API_TOKEN'
+              Authorization: 'Bearer ' + auth0.accessToken
             },
             json: { provider: provider, user_id: targetUserId }
           }, function(err, response, body) {
