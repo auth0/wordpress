@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PLUGIN_NAME
  * Description: PLUGIN_DESCRIPTION
- * Version: 2.2.3
+ * Version: 3.0.0
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,7 +12,7 @@ define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'WPA0_LANG', 'wp-auth0' );
 define( 'AUTH0_DB_VERSION', 8 );
-define( 'WPA0_VERSION', '2.2.3' );
+define( 'WPA0_VERSION', '3.0.0' );
 
 /**
  * Main plugin class
@@ -316,6 +316,7 @@ class WP_Auth0 {
 	}
 
 	public function wp_init() {
+		$this->db_manager->register_custom_post_types();
 		$this->router->setup_rewrites();
 	}
 

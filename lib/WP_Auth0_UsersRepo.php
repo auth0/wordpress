@@ -16,7 +16,7 @@ class WP_Auth0_UsersRepo {
 
 	public function getUser( $jwt, $encodedJWT ) {
 
-		$userRow = $this->find_auth0_user( $jwt->sub )
+		$userRow = $this->find_auth0_user( $jwt->sub );
 
 		$domain = $this->a0_options->get( 'domain' );
 
@@ -144,30 +144,6 @@ class WP_Auth0_UsersRepo {
 
 		if (!empty($users)) {
 			return $users[0];
-		}
-
-		//try to fetch from database
-		if ($this->a0_options->get('auth0_table')) {
-
-			global $wpdb;
-			$sql = 'SELECT u.*, a.auth0_obj
-					FROM ' . $wpdb->auth0_user .' a
-					JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id
-					WHERE a.auth0_id = %s';
-
-			$userRow = $wpdb->get_row( $wpdb->prepare( $sql, $id ) );
-
-			if ( is_null( $userRow ) ) {
-				return null;
-			} elseif ( $userRow instanceof WP_Error ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $userRow );
-				return null;
-			}
-
-			$user = new WP_User();
-			$user->init( $userRow );
-
-			return $user;
 		}
 
 		return null;
