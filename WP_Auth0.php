@@ -386,13 +386,15 @@ if ( ! function_exists( 'get_currentauth0user' ) ) {
 
 		$current_user = wp_get_current_user();
 
-		$serialized_profile = get_user_meta( $current_user, 'auth0_obj', true);
+		$serialized_profile = get_user_meta( $current_user->ID, 'auth0_obj', true);
 
-		$current_user->auth0_obj = WP_Auth0_Serializer::unserialize( $serialized_profile );
-		$current_user->last_update = get_user_meta( $current_user, 'last_update', true);
-		$current_user->auth0_id = get_user_meta( $current_user, 'auth0_id', true);
+		$data = new stdClass;
 
-		return $current_user;
+		$data->auth0_obj = WP_Auth0_Serializer::unserialize( $serialized_profile );
+		$data->last_update = get_user_meta( $current_user->ID, 'last_update', true);
+		$data->auth0_id = get_user_meta( $current_user->ID, 'auth0_id', true);
+
+		return $data;
 	}
 }
 

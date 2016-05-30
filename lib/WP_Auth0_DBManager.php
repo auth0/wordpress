@@ -100,7 +100,7 @@ class WP_Auth0_DBManager {
 		}
 
 		$this->current_db_version = AUTH0_DB_VERSION;
-		// update_site_option( 'auth0_db_version', AUTH0_DB_VERSION );
+		update_site_option( 'auth0_db_version', AUTH0_DB_VERSION );
 	}
 
 	protected function migrate_users_data() {
@@ -113,8 +113,8 @@ class WP_Auth0_DBManager {
 				JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id
 				ORDER BY a.last_update DESC;';
 
-		$userRows = $wpdb->get_row( $sql );
-var_dump($userRows);exit;
+		$userRows = $wpdb->get_results( $sql );
+
 		if ( is_null( $userRows ) ) {
 			return;
 		} elseif ( $userRows instanceof WP_Error ) {
@@ -125,13 +125,12 @@ var_dump($userRows);exit;
 		$repo = new WP_Auth0_UsersRepo( $this->a0_options );
 
 		foreach ($userRows as $row) {
-			$auth0_id = get_user_meta( $current_user, 'auth0_id', true);
+			$auth0_id = get_user_meta( $row->wp_id, 'auth0_id', true);
 
 			if (!$auth0_id) {
 				$repo->update_auth0_object( $row->wp_id, WP_Auth0_Serializer::unserialize($row->auth0_obj) );
 			}
 		}
-
 	}
 
 	public function get_auth0_users( $user_ids = null ) {
