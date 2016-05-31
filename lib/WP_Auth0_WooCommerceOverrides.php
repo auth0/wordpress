@@ -23,7 +23,7 @@ class WP_Auth0_WooCommerceOverrides {
 
 	public function override_woocommerce_login_form( $html ) {
 		$this->plugin->render_auth0_login_css();
-		echo $this->plugin->render_form( '' );
+		echo $this->plugin->shortcode( array() );
 	}
 
 }
