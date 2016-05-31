@@ -90,6 +90,7 @@ class WP_Auth0_Api_Operations {
 				'enabledDatabaseCustomization' => true,
 				"requires_username" => true,
 				'import_mode' => true,
+				'passwordPolicy' => $password_policy,
 				'customScripts' => array(
 					'login' => $login_script,
 					'get_user' => $get_user_script
