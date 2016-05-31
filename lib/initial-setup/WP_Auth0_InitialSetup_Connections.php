@@ -126,7 +126,13 @@ class WP_Auth0_InitialSetup_Connections {
 			$enabled_clients = array_diff( $connection->enabled_clients, array( $client_id ) );
 		}
 
-		WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection_id, array( 'enabled_clients' => array_values( $enabled_clients ) ) );
+		$connection->enabled_clients = array_values($enabled_clients);
+ 
+		unset($connection->name);
+		unset($connection->strategy);
+		unset($connection->id);
+
+		WP_Auth0_Api_Client::update_connection($domain, $app_token, $connection_id, $connection);
 
 		$this->a0_options->set( "db_connection_enabled" , $_POST["enabled"] === "true" ? 1 : 0 );
 
