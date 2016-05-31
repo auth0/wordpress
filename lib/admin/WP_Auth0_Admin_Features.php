@@ -183,11 +183,15 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
       foreach ($connections as $connection) {
 
         if ( in_array($input['client_id'], $connection->enabled_clients) ) {
-          if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $connection->id, array(
-            'options' => array(
-              'passwordPolicy' => $input['password_policy'],
-            )
-          ) ) ) {
+
+          $connection->options->passwordPolicy = $input['password_policy'];
+          $connection_id = $connection->id;
+
+          unset($connection->name);
+          unset($connection->strategy);
+          unset($connection->id);
+
+          if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $connection_id, $old_connection ) ) {
 
             $error = __( 'There was an error updating your Auth0 DB Connection. To do it manually, change it ', WPA0_LANG );
             $error .= '<a href="https://manage.auth0.com/#/connections/database">HERE</a>.';

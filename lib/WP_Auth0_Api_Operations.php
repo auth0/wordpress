@@ -11,7 +11,6 @@ class WP_Auth0_Api_Operations {
 
     $domain = $this->a0_options->get( 'domain' );
 
-    $domain = $this->a0_options->get( 'domain' );
     $connection = WP_Auth0_Api_Client::get_connection($domain, $app_token, $connection_id);
 
     if (isset($connection->options)) {
