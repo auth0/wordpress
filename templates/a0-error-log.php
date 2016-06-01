@@ -26,7 +26,7 @@ if ( empty( $data ) ) {
 foreach ( $data as $item ) {
 ?>
     <tr>
-        <td><?php echo date( 'm/d/Y H:i:s', strtotime( $item['date'] ) ); ?></td>
+        <td><?php echo date( 'm/d/Y H:i:s', $item['date'] ); ?></td>
         <td><?php echo $item['section']; ?></td>
         <td><?php echo $item['code'] ?></td>
         <td><?php echo $item['message'] ?></td>

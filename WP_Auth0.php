@@ -127,7 +127,6 @@ class WP_Auth0 {
 		$app_token = $this->a0_options->get( 'auth0_app_token' );
 
 		if ( $app_token ) {
-			$connection_id = $this->a0_options->get( 'db_connection_id' );
 			$disable_signup_rule = $this->a0_options->get( 'disable_signup_rule' );
 			$is_wp_registration_enabled = $this->a0_options->is_wp_registration_enabled();
 
@@ -136,9 +135,7 @@ class WP_Auth0 {
 
 					$operations = new WP_Auth0_Api_Operations( $this->a0_options );
 
-					if ($connection_id) {
-						$operations->disable_signup_wordpress_connection( $app_token, $connection_id, !$is_wp_registration_enabled );
-					}
+					$operations->disable_signup_wordpress_connection( $app_token, !$is_wp_registration_enabled );
 
 					$rule_name = WP_Auth0_RulesLib::$disable_social_signup['name'];
 
@@ -147,11 +144,10 @@ class WP_Auth0 {
 
 					try {
 						$disable_signup_rule = $operations->toggle_rule( $app_token, ( $is_wp_registration_enabled ? $disable_signup_rule : null ), $rule_name, $rule_script );
+						$this->a0_options->set( 'disable_signup_rule', $disable_signup_rule );
 					} catch(Exception $e) {
 
 					}
-
-					$this->a0_options->set( 'disable_signup_rule', $disable_signup_rule );
 			}
 		}
 	}

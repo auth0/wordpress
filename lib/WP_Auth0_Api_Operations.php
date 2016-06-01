@@ -7,19 +7,26 @@ class WP_Auth0_Api_Operations {
 		$this->a0_options = $a0_options;
 	}
 
-	public function disable_signup_wordpress_connection( $app_token, $connection_id, $disable_signup ) {
+	public function disable_signup_wordpress_connection( $app_token, $disable_signup ) {
 		$domain = $this->a0_options->get( 'domain' );
+		$client_id = $this->a0_options->get( 'client_id' );
 
-		$connection = WP_Auth0_Api_Client::get_connection( $domain, $app_token, $connection_id );
+		$connections = WP_Auth0_Api_Client::search_connection( $domain, $app_token, 'auth0' );
 
-		$connection->options->disable_signup = $disable_signup;
+		foreach ( $connections as $connection ) {
+			if ( in_array( $client_id, $connection->enabled_clients ) ) { 
+				$connection->options->disable_signup = $disable_signup;
+				$connection_id = $connection->id;
 
-		unset( $connection->name );
-		unset( $connection->strategy );
-		unset( $connection->id );
+				unset( $connection->name );
+				unset( $connection->strategy );
+				unset( $connection->id );
 
-		WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection_id, $connection );
+				WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection_id, $connection );
+			}
+		}
 	}
+
 	public function update_wordpress_connection( $app_token, $connection_id, $password_policy, $migration_token ) {
 
 		$domain = $this->a0_options->get( 'domain' );
