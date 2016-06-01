@@ -152,6 +152,9 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	}
 
 	public function basic_validation( $old_options, $input ) {
+    
+    // $input['registration_enabled'] = $old_options['registration_enabled'];
+
 		$input['client_id'] = sanitize_text_field( $input['client_id'] );
 		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] ) ? $input['wordpress_login_enabled'] : 0 );
 		$input['allow_signup'] = ( isset( $input['allow_signup'] ) ? $input['allow_signup'] : 0 );

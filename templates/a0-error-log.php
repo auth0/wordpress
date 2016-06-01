@@ -23,13 +23,13 @@ if ( empty( $data ) ) {
 <?php
 }
 
-foreach ( $data->posts as $item ) {
+foreach ( $data as $item ) {
 ?>
     <tr>
-        <td><?php echo date( 'm/d/Y H:i:s', strtotime( $item->post_date ) ); ?></td>
-        <td><?php echo $item->post_title; ?></td>
-        <td><?php echo empty( $item->post_excerpt ) ? '-' : $item->post_excerpt; ?></td>
-        <td><?php echo strip_tags( $item->post_content ); ?></td>
+        <td><?php echo date( 'm/d/Y H:i:s', strtotime( $item['date'] ) ); ?></td>
+        <td><?php echo $item['section']; ?></td>
+        <td><?php echo $item['code'] ?></td>
+        <td><?php echo $item['message'] ?></td>
     </tr>
 <?php
 }

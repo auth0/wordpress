@@ -145,7 +145,11 @@ class WP_Auth0 {
 					$rule_script = WP_Auth0_RulesLib::$disable_social_signup['script'];
 					$rule_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $this->a0_options->get( 'client_id' ), $rule_script );
 
-					$disable_signup_rule = $operations->toggle_rule( $app_token, ( $is_wp_registration_enabled ? $disable_signup_rule : null ), $rule_name, $rule_script );
+					try {
+						$disable_signup_rule = $operations->toggle_rule( $app_token, ( $is_wp_registration_enabled ? $disable_signup_rule : null ), $rule_name, $rule_script );
+					} catch(Exception $e) {
+
+					}
 
 					$this->a0_options->set( 'disable_signup_rule', $disable_signup_rule );
 			}
@@ -316,7 +320,6 @@ class WP_Auth0 {
 	}
 
 	public function wp_init() {
-		$this->db_manager->register_custom_post_types();
 		$this->router->setup_rewrites();
 	}
 

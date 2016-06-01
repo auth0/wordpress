@@ -10,42 +10,11 @@ class WP_Auth0_DBManager {
 	}
 
 	public function init() {
-		$this->current_db_version = (int)get_site_option( 'auth0_db_version' );
-		add_action( 'plugins_loaded', array( $this, 'check_update' ) );
-	}
-
-	public function register_custom_post_types() {
-		if ( ! post_type_exists( 'auth0_error_log' ) ) {
-			register_post_type( 'auth0_error_log',
-		    array(
-		      'labels' => array(
-		        'name' => __( 'Auth0 Errors' ),
-		        'singular_name' => __( 'Auth0 Error' )
-		      ),
-		      'public' => false,
-		      'has_archive' => false,
-		      'exclude_from_search' => true, 
-		      'publicly_queryable' => false, 
-		      'show_ui' => false, 
-		      'show_in_nav_menus' => false, 
-		      'show_in_menu' => false, 
-		      'show_in_admin_bar' => false, 
-		      'capability_type' => false, 
-		      'query_var' => false, 
-		      'show_in_rest' => false, 
-		      'capabilities' => array(
-				    'edit_post'          => 'update_core',
-				    'read_post'          => 'update_core',
-				    'delete_post'        => 'update_core',
-				    'edit_posts'         => 'update_core',
-				    'edit_others_posts'  => 'update_core',
-				    'delete_posts'       => 'update_core',
-				    'publish_posts'      => 'update_core',
-				    'read_private_posts' => 'update_core'
-					),
-		    )
-		  );
+		$this->current_db_version = (int)get_option( 'auth0_db_version', 0 );
+		if ($this->current_db_version === 0) {
+			$this->current_db_version = (int)get_site_option( 'auth0_db_version' );
 		}
+		add_action( 'plugins_loaded', array( $this, 'check_update' ) );
 	}
 
 	public function check_update() {
@@ -100,7 +69,7 @@ class WP_Auth0_DBManager {
 		}
 
 		$this->current_db_version = AUTH0_DB_VERSION;
-		update_site_option( 'auth0_db_version', AUTH0_DB_VERSION );
+		update_option( 'auth0_db_version', AUTH0_DB_VERSION );
 	}
 
 	protected function migrate_users_data() {

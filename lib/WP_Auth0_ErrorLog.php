@@ -19,13 +19,7 @@ class WP_Auth0_ErrorLog {
 
 	public function render_settings_page() {
 
-		$args = array( 
-			'post_type' => 'auth0_error_log', 
-			'posts_per_page' => 20,
-			'orderby' => 'post_date',
-			'order'   => 'DESC',
-		);
-		$data = new WP_Query( $args );
+		$data = get_option('auth0_error_log', array());
 
 		include WPA0_PLUGIN_DIR . 'templates/a0-error-log.php';
 	}

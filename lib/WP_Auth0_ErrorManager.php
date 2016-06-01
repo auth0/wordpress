@@ -15,13 +15,20 @@ class WP_Auth0_ErrorManager {
 			$message = $wp_error;
 		}
 
-		wp_insert_post(array(
-			'post_type'=>'auth0_error_log',
-			'post_title'=>$section,
-			'post_excerpt'=>$code,
-			'post_content'=>$message,
-			'post_status'=>'publish',
+		$log = get_option('auth0_error_log', array());
+
+		array_unshift($log, array(
+			'section'=>$section,
+			'code'=>$code,
+			'message'=>$message,
+			'date' => time(),
 		));
+
+		if (count($log) > 20) {
+			array_pop($log);
+		}
+
+		update_option( 'auth0_error_log', $log );
 	}
 
 }
