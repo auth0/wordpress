@@ -74,8 +74,10 @@ class WP_Auth0_Export_Users {
 		echo $this->process_numeric( "logins_count", false );
 		echo "\n";
 
+		global $wpdb;
+
 		foreach ( $users as $user ) {
-			$profile = new WP_Auth0_UserProfile(  get_user_meta( $user->ID, 'auth0_obj', true ) );
+			$profile = new WP_Auth0_UserProfile(  get_user_meta( $user->ID, $wpdb->prefix.'auth0_obj', true ) );
 
 			echo $this->process_str( $profile->get_email(), true );
 			echo $this->process_str( $profile->get_nickname(), true );

@@ -99,9 +99,11 @@ class WP_Auth0_UsersRepo {
 
 		$user_id = null;
 
+		global $wpdb;
+
 		// If there is a user with the same email, we should check if the wp user was joined with an auth0 user. If so, we shouldn't allow it again
 		if (!is_null( $joinUser ) && $joinUser instanceof WP_User ) {
-			$auth0_id = get_user_meta( $joinUser->ID, 'auth0_id', true);
+			$auth0_id = get_user_meta( $joinUser->ID, $wpdb->prefix.'auth0_id', true);
 
 			if ($auth0_id) { // if it has an a0 id, we cant join it
 				throw new WP_Auth0_CouldNotCreateUserException('There is a user with the same email');
@@ -161,9 +163,10 @@ class WP_Auth0_UsersRepo {
 	}
 
 	public function update_auth0_object( $user_id, $userinfo ) {
-		update_user_meta( $user_id, 'auth0_id', ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub )); 
-		update_user_meta( $user_id, 'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo )); 
-		update_user_meta( $user_id, 'last_update', date( 'c' ) ); 
+		global $wpdb;
+		update_user_meta( $user_id, $wpdb->prefix.'auth0_id', ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub )); 
+		update_user_meta( $user_id, $wpdb->prefix.'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo )); 
+		update_user_meta( $user_id, $wpdb->prefix.'last_update', date( 'c' ) ); 
 	}
 
 }

@@ -368,12 +368,12 @@ class WP_Auth0 {
 if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 	function get_currentauth0userinfo() {
 
-		global $currentauth0_user;
+		global $currentauth0_user, $wpdb;
 
 		$current_user = wp_get_current_user();
 
 		if ($result) {
-			$currentauth0_user = WP_Auth0_Serializer::unserialize( get_user_meta( $current_user, 'auth0_obj'), true );
+			$currentauth0_user = WP_Auth0_Serializer::unserialize( get_user_meta( $current_user, $wpdb->prefix.'auth0_obj'), true );
 		}
 
 		return $currentauth0_user;
@@ -383,15 +383,17 @@ if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 if ( ! function_exists( 'get_currentauth0user' ) ) {
 	function get_currentauth0user() {
 
+		global $wpdb; 
+
 		$current_user = wp_get_current_user();
 
-		$serialized_profile = get_user_meta( $current_user->ID, 'auth0_obj', true);
+		$serialized_profile = get_user_meta( $current_user->ID, $wpdb->prefix.'auth0_obj', true);
 
 		$data = new stdClass;
 
 		$data->auth0_obj = WP_Auth0_Serializer::unserialize( $serialized_profile );
-		$data->last_update = get_user_meta( $current_user->ID, 'last_update', true);
-		$data->auth0_id = get_user_meta( $current_user->ID, 'auth0_id', true);
+		$data->last_update = get_user_meta( $current_user->ID, $wpdb->prefix.'last_update', true);
+		$data->auth0_id = get_user_meta( $current_user->ID, $wpdb->prefix.'auth0_id', true);
 
 		return $data;
 	}
