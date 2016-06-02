@@ -23,6 +23,7 @@ class WP_Auth0 {
 	protected $a0_options;
 	protected $social_amplificator;
 	protected $router;
+	protected $compatibility;
 
 	public function init() {
 
@@ -121,6 +122,8 @@ class WP_Auth0 {
 
 		$edit_profile = new WP_Auth0_EditProfile($this->db_manager, $this->a0_options);
 		$edit_profile->init();
+
+		$this->compatibility = new WP_Auth0_Compatibility();
 
 		// $old_options = $this->a0_options->get_options();
 		// var_dump($old_options);exit;
