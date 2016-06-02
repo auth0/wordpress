@@ -13,7 +13,7 @@
         <b>Important:</b>
         <?php _e( 'To continue you need an Auth0 account, don\'t have one yet?', WPA0_LANG ); ?>
 
-        <a class="a0-button default pull-right" target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-setup&signup' ); ?>" >Sign up for free</a>
+        <a class="a0-button default pull-right" target="_blank" href="https://auth0.com/signup" >Sign up for free</a>
 
       </div>
     </div>
