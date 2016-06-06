@@ -12,7 +12,7 @@ class WP_Auth0_DBManager {
 	public function init() {
 		$this->current_db_version = (int)get_option( 'auth0_db_version', 0 );
 		if ($this->current_db_version === 0) {
-			$this->current_db_version = (int)get_site_option( 'auth0_db_version' );
+			$this->current_db_version = (int)get_site_option( 'auth0_db_version', 0 );
 		}
 		add_action( 'plugins_loaded', array( $this, 'check_update' ) );
 	}
@@ -103,13 +103,14 @@ class WP_Auth0_DBManager {
 	}
 
 	public function get_auth0_users( $user_ids = null ) {
+		global $wpdb;
 
 		if ($user_ids === null) {
-			$query = array( 'meta_key' => 'auth0_id' );
+			$query = array( 'meta_key' => $wpdb->prefix.'auth0_id' );
 		}
 		else {
 			$query = array( 'meta_query' => array(
-        'key' => 'auth0_id',
+        'key' => $wpdb->prefix.'auth0_id',
         'value' => $user_ids,
         'compare' => 'IN',
 			) );
