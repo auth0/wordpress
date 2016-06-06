@@ -1,5 +1,36 @@
 # Change Log
 
+## [3.1.1](https://github.com/auth0/wp-auth0/tree/3.1.1) (2016-06-06)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/2.2.0...3.1.1)
+
+**Merged pull requests:**
+
+- V3 [\#211](https://github.com/auth0/wp-auth0/pull/211) ([glena](https://github.com/glena))
+
+## [2.2.0](https://github.com/auth0/wp-auth0/tree/2.2.0) (2016-05-11)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/2.1.11...2.2.0)
+
+**Closed issues:**
+
+- Connection doesn't require username [\#202](https://github.com/auth0/wp-auth0/issues/202)
+
+**Merged pull requests:**
+
+- 2.2.0 [\#206](https://github.com/auth0/wp-auth0/pull/206) ([glena](https://github.com/glena))
+
+## [2.1.11](https://github.com/auth0/wp-auth0/tree/2.1.11) (2016-04-27)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/2.1.9...2.1.11)
+
+**Closed issues:**
+
+- auth0 account creation [\#192](https://github.com/auth0/wp-auth0/issues/192)
+
+**Merged pull requests:**
+
+- v2.1.11 [\#198](https://github.com/auth0/wp-auth0/pull/198) ([glena](https://github.com/glena))
+- v2.1.10 [\#197](https://github.com/auth0/wp-auth0/pull/197) ([glena](https://github.com/glena))
+- Fix WordPress typo in README [\#193](https://github.com/auth0/wp-auth0/pull/193) ([pieterbeulque](https://github.com/pieterbeulque))
+
 ## [2.1.9](https://github.com/auth0/wp-auth0/tree/2.1.9) (2016-04-07)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/2.1.8...2.1.9)
 
