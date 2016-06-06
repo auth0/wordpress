@@ -2,10 +2,54 @@
 
 class WP_Auth0_RulesLib {
 
-    public static $link_accounts = array(
+	public static $disable_social_signup = array(
 
-      'name' => 'Accont-Linking-Do-Not-Rename',
-      'script' => "
+		'name' => 'Disable-Social-Signup-Do-Not-Rename',
+		'script' => "
+function (user, context, callback) {
+
+  var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
+  // run only for the specified clients
+  if (CLIENTS_ENABLED.indexOf(context.clientID) === -1) {
+    return callback(null, user, context);
+  }
+
+  // initialize app_metadata
+  user.app_metadata = user.app_metadata || {};
+
+  // if it is the first login (hence the `signup`) and it is a social login
+  if (context.stats.loginsCount === 1 && user.identities[0].isSocial) {
+
+    // turn on the flag
+    user.app_metadata.is_signup = true;
+
+    // store the app_metadata
+    auth0.users.updateAppMetadata(user.user_id, user.app_metadata)
+      .then(function(){
+        // throw error
+        return callback('Signup disabled');
+      })
+      .catch(function(err){
+        callback(err);
+      });
+
+    return;
+  }
+
+  // if flag is enabled, throw error
+  if (user.app_metadata.is_signup) {
+    return callback('Signup disabled');
+  }
+
+  // else it is a non social login or it is not a signup
+  callback(null, user, context);
+}
+" );
+  
+	public static $link_accounts = array(
+
+		'name' => 'Account-Linking-Do-Not-Rename',
+		'script' => "
 function (user, context, callback) {
 
   var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
@@ -23,11 +67,11 @@ function (user, context, callback) {
   var request = require('request');
   var async = require('async');
 
-  var userApiUrl = 'https://REPLACE_WITH_YOUR_DOMAIN/api/v2/users';
+  var userApiUrl = auth0.baseUrl + '/users';
   request({
    url: userApiUrl,
    headers: {
-     Authorization: 'Bearer REPLACE_WITH_YOUR_API_TOKEN'
+     Authorization: 'Bearer ' + auth0.accessToken
    },
    qs: {
      search_engine: 'v2',
@@ -48,12 +92,12 @@ function (user, context, callback) {
           request.post({
             url: userApiUrl + '/' + user.user_id + '/identities',
             headers: {
-              Authorization: 'Bearer REPLACE_WITH_YOUR_API_TOKEN'
+              Authorization: 'Bearer ' + auth0.accessToken
             },
             json: { provider: provider, user_id: targetUserId }
           }, function(err, response, body) {
               if (response.statusCode >= 400) {
-               cb(new Error('Error linking account: ' + response.statusMessage));  
+               cb(new Error('Error linking account: ' + response.statusMessage));
               }
             cb(err);
           });
@@ -68,11 +112,11 @@ function (user, context, callback) {
     }
   });
 }"
-    );
+	);
 
-    public static $google_MFA = array(
-        'name' => 'Multifactor-Google-Authenticator-Do-Not-Rename',
-        'script' => "
+	public static $google_MFA = array(
+		'name' => 'Multifactor-Google-Authenticator-Do-Not-Rename',
+		'script' => "
 function (user, context, callback) {
   var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
   // run only for the specified clients
@@ -89,11 +133,11 @@ function (user, context, callback) {
   }
   callback(null, user, context);
 }"
-    );
+	);
 
-    public static $geo = array(
-        'name' => 'Store-Geo-Location-Do-Not-Rename',
-        'script' => "
+	public static $geo = array(
+		'name' => 'Store-Geo-Location-Do-Not-Rename',
+		'script' => "
 function (user, context, callback) {
 
   var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
@@ -112,11 +156,11 @@ function (user, context, callback) {
       callback(err);
     });
 }"
-    );
+	);
 
-    public static $fullcontact = array(
-        'name' => 'Enrich-profile-with-FullContact-Do-Not-Rename',
-        'script' => "
+	public static $fullcontact = array(
+		'name' => 'Enrich-profile-with-FullContact-Do-Not-Rename',
+		'script' => "
 function (user, context, callback) {
 
   var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
@@ -159,11 +203,11 @@ function (user, context, callback) {
     }
   });
 }"
-    );
+	);
 
-    public static $income = array(
-        'name' => 'Enrich-profile-with-Zipcode-Income-Do-Not-Rename',
-        'script' => "
+	public static $income = array(
+		'name' => 'Enrich-profile-with-Zipcode-Income-Do-Not-Rename',
+		'script' => "
 function (user, context, callback) {
 
     var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
@@ -215,5 +259,5 @@ function (user, context, callback) {
         }
     }
 }"
-    );
+	);
 }

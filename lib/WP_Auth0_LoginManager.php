@@ -5,14 +5,16 @@ class WP_Auth0_LoginManager {
 	protected $a0_options;
 	protected $default_role;
 	protected $ignore_unverified_email;
+	protected $users_repo;
 
-	public function __construct($a0_options = null, $default_role = null, $ignore_unverified_email = false) {
+	public function __construct( WP_Auth0_UsersRepo $users_repo, $a0_options = null, $default_role = null, $ignore_unverified_email = false ) {
 
 		$this->default_role = $default_role;
 		$this->ignore_unverified_email = $ignore_unverified_email;
+		$this->users_repo = $users_repo;
 
-		if ($a0_options instanceof WP_Auth0_Options) {
-				$this->a0_options = $a0_options;
+		if ( $a0_options instanceof WP_Auth0_Options ) {
+			$this->a0_options = $a0_options;
 		} else {
 			$this->a0_options = WP_Auth0_Options::Instance();
 		}
@@ -24,16 +26,16 @@ class WP_Auth0_LoginManager {
 		add_action( 'wp_login', array( $this, 'end_session' ) );
 		add_action( 'login_init', array( $this, 'login_auto' ) );
 		add_action( 'template_redirect', array( $this, 'init_auth0' ), 1 );
-		add_action( 'wp_footer', array( $this, 'auth0_sso_footer') );
-		add_action( 'wp_footer', array( $this, 'auth0_singlelogout_footer') );
+		add_action( 'wp_footer', array( $this, 'auth0_sso_footer' ) );
+		add_action( 'wp_footer', array( $this, 'auth0_singlelogout_footer' ) );
 		add_filter( 'login_message', array( $this, 'auth0_sso_footer' ) );
 	}
 
-	public function auth0_sso_footer($previous_html) {
+	public function auth0_sso_footer( $previous_html ) {
 
 		echo $previous_html;
 
-		if (is_user_logged_in()) {
+		if ( is_user_logged_in() ) {
 			return;
 		}
 
@@ -50,39 +52,32 @@ class WP_Auth0_LoginManager {
 			include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler.php';
 		}
 	}
-	public function auth0_singlelogout_footer($previous_html) {
-		
+	public function auth0_singlelogout_footer( $previous_html ) {
+
 		echo $previous_html;
 
-		if (!is_user_logged_in()) {
+		if ( !is_user_logged_in() ) {
 			return;
 		}
 
-		$singlelogout = $this->a0_options->get('singlelogout');
+		$singlelogout = $this->a0_options->get( 'singlelogout' );
 
-		if ( ! $singlelogout ) { 
+		if ( ! $singlelogout ) {
 			return;
 		}
 
-		$db_manager = new WP_Auth0_DBManager();
+		$current_user = get_currentauth0user();
+		$user_profile = $current_user->auth0_obj;
 
-		$profiles = $db_manager->get_current_user_profiles();
-
-		if ( empty($profiles) ) { 
+		if ( empty( $user_profile ) ) {
 			return;
 		}
 
-		$ids = array();
+		$cdn = $this->a0_options->get( 'cdn_url' );
+		$client_id = $this->a0_options->get( 'client_id' );
+		$domain = $this->a0_options->get( 'domain' );
+		$logout_url = wp_logout_url( get_permalink() ) . '&SLO=1';
 
-		foreach($profiles as $profile) {
-			$ids[] = $profile->user_id;
-		}
-
-		$cdn = $this->a0_options->get('cdn_url');
-		$client_id = $this->a0_options->get('client_id');
-		$domain = $this->a0_options->get('domain');
-		$logout_url = wp_logout_url(get_permalink()) . '&SLO=1';
-		
 		wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
 		include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
 	}
@@ -95,15 +90,15 @@ class WP_Auth0_LoginManager {
 		$client_id = $this->a0_options->get( 'client_id' );
 		$auto_login = absint( $this->a0_options->get( 'auto_login' ) );
 
-		if ($slo && isset($_REQUEST['SLO'])) {
+		if ( $slo && isset( $_REQUEST['SLO'] ) ) {
 			$redirect_to = $_REQUEST['redirect_to'];
-			wp_redirect($redirect_to);
+			wp_redirect( $redirect_to );
 			die();
 		}
 
 		if ( $sso ) {
 			$redirect_to = home_url();
-			wp_redirect( 'https://' . $this->a0_options->get( 'domain' ) . '/v2/logout?returnTo=' . urlencode( $redirect_to ) . '&client_id='.$client_id.'&auth0Client=' . base64_encode(json_encode(WP_Auth0_Api_Client::get_info_headers())) );
+			wp_redirect( 'https://' . $this->a0_options->get( 'domain' ) . '/v2/logout?returnTo=' . urlencode( $redirect_to ) . '&client_id='.$client_id.'&auth0Client=' . base64_encode( json_encode( WP_Auth0_Api_Client::get_info_headers() ) ) );
 			die();
 		}
 
@@ -124,7 +119,7 @@ class WP_Auth0_LoginManager {
 
 		if ( $auto_login && ( ! isset( $_GET['action'] ) || 'logout' !== $_GET['action'] ) && ! isset( $_GET['wle'] ) ) {
 
-			if (strtolower($_SERVER['REQUEST_METHOD']) !== 'get') {
+			if ( strtolower( $_SERVER['REQUEST_METHOD'] ) !== 'get' ) {
 				return;
 			}
 
@@ -137,12 +132,12 @@ class WP_Auth0_LoginManager {
 
 			// Create the link to log in.
 			$login_url = "https://". $this->a0_options->get( 'domain' ) .
-						 "/authorize?response_type=code&scope=openid%20profile".
-						 "&client_id=".$this->a0_options->get( 'client_id' ) .
-						 "&redirect_uri=".home_url( '/index.php?auth0=1' ) .
-						 "&state=".urlencode( $state ).
-						 "&connection=".$this->a0_options->get( 'auto_login_method' ).
-						 "&auth0Client=" . WP_Auth0_Api_Client::get_info_headers();
+				"/authorize?response_type=code&scope=openid%20profile".
+				"&client_id=".$this->a0_options->get( 'client_id' ) .
+				"&redirect_uri=".home_url( '/index.php?auth0=1' ) .
+				"&state=".urlencode( $state ).
+				"&connection=".$this->a0_options->get( 'auto_login_method' ).
+				"&auth0Client=" . WP_Auth0_Api_Client::get_info_headers();
 
 			wp_redirect( $login_url );
 			die();
@@ -155,11 +150,11 @@ class WP_Auth0_LoginManager {
 		// WP_Auth0_Seeder::get_me(100);
 		// exit;
 
-		if ( $this->query_vars('auth0') === null ) {
+		if ( $this->query_vars( 'auth0' ) === null ) {
 			return;
 		}
 
-		if ( $this->query_vars('auth0') === 'implicit' ) {
+		if ( $this->query_vars( 'auth0' ) === 'implicit' ) {
 			$this->implicit_login();
 		} else {
 			$this->redirect_login();
@@ -169,28 +164,28 @@ class WP_Auth0_LoginManager {
 	public function redirect_login() {
 		global $wp_query;
 
-		if ( $this->query_vars('auth0') === null ) {
+		if ( $this->query_vars( 'auth0' ) === null ) {
 			return;
 		}
 
-		if ( $this->query_vars('error_description') !== null && $this->query_vars('error_description') !== '' ) {
+		if ( $this->query_vars( 'error_description' ) !== null && $this->query_vars( 'error_description' ) !== '' ) {
 			$msg = __( 'There was a problem with your log in:', WPA0_LANG );
-			$msg .= ' '.$this->query_vars('error_description');
+			$msg .= ' '.$this->query_vars( 'error_description' );
 			$msg .= '<br/><br/>';
 			$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', WPA0_LANG ) . '</a>';
 			wp_die( $msg );
 		}
 
-		if ( $this->query_vars('error') !== null && trim( $this->query_vars('error') ) !== '' ) {
+		if ( $this->query_vars( 'error' ) !== null && trim( $this->query_vars( 'error' ) ) !== '' ) {
 			$msg = __( 'There was a problem with your log in:', WPA0_LANG );
-			$msg .= ' '.$this->query_vars('error');
+			$msg .= ' '.$this->query_vars( 'error' );
 			$msg .= '<br/><br/>';
 			$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', WPA0_LANG ) . '</a>';
 			wp_die( $msg );
 		}
 
-		$code = $this->query_vars('code');
-		$state = $this->query_vars('state');
+		$code = $this->query_vars( 'code' );
+		$state = $this->query_vars( 'state' );
 
 		$stateFromGet = json_decode( stripcslashes( $state ) );
 
@@ -215,7 +210,7 @@ class WP_Auth0_LoginManager {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_oauth/token',$response );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_oauth/token', $response );
 
 			error_log( $response->get_error_message() );
 			$msg = __( 'Sorry. There was a problem logging you in.', WPA0_LANG );
@@ -229,12 +224,10 @@ class WP_Auth0_LoginManager {
 		if ( isset( $data->access_token ) || isset( $data->id_token ) ) {
 			// Get the user information
 
-			if ( isset( $data->id_token ) ) { 
-				$response = WP_Auth0_Api_Client::get_current_user( $domain, $data->id_token );
-			} else {
+			if ( !isset( $data->id_token ) ) {
 				$data->id_token = null;
-				$response = WP_Auth0_Api_Client::get_user_info($domain, $data->access_token);
 			}
+			$response = WP_Auth0_Api_Client::get_user_info( $domain, $data->access_token );
 
 			if ( $response instanceof WP_Error ) {
 				WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_userinfo', $response );
@@ -362,20 +355,29 @@ class WP_Auth0_LoginManager {
 
 		}
 
-		// See if there is a user in the auth0_user table with the user info client id
-		$user = WP_Auth0_Users::find_auth0_user( $userinfo->user_id );
+		// See if there is a user linked to the same auth0 user_id
+		if (isset($userinfo->identities)) {
+			foreach ($userinfo->identities as $identity) {
+				$user = $this->users_repo->find_auth0_user( "{$identity->provider}|{$identity->user_id}" );
+				if ($user) {
+					break;
+				}
+			}
+		} else {
+			$user = $this->users_repo->find_auth0_user( $userinfo->user_id );
+		}
 
 		if ( ! is_null( $user ) ) {
 			// User exists! Log in
-			if (isset($userinfo->email) && $user->data->user_email !== $userinfo->email) {
+			if ( isset( $userinfo->email ) && $user->data->user_email !== $userinfo->email ) {
 				$user_id = wp_update_user( array( 'ID' => $user->data->ID, 'user_email' => $userinfo->email ) );
 			}
 
-			WP_Auth0_Users::update_auth0_object($userinfo);
+			$this->users_repo->update_auth0_object( $user->data->ID, $userinfo );
 
 			wp_set_current_user( $user->ID, $user->user_login );
-	    wp_set_auth_cookie( $user->ID, $remember_users_session );
-	    do_action( 'wp_login', $user->user_login, $user );
+			wp_set_auth_cookie( $user->ID, $remember_users_session );
+			do_action( 'wp_login', $user->user_login, $user );
 
 			do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token );
 
@@ -384,14 +386,14 @@ class WP_Auth0_LoginManager {
 		} else {
 			try {
 
-				$creator = new WP_Auth0_UserCreator($this->a0_options);
+				$creator = new WP_Auth0_UsersRepo( $this->a0_options );
 				$user_id = $creator->create( $userinfo, $id_token, $access_token, $this->default_role, $this->ignore_unverified_email );
 
-				$user = get_user_by( 'id', $user_id ); 
+				$user = get_user_by( 'id', $user_id );
 
 				wp_set_current_user( $user->ID, $user->user_login );
-		    wp_set_auth_cookie( $user->ID, $remember_users_session );
-		    do_action( 'wp_login', $user->user_login );
+				wp_set_auth_cookie( $user->ID, $remember_users_session );
+				do_action( 'wp_login', $user->user_login );
 
 
 				do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token );
@@ -411,25 +413,25 @@ class WP_Auth0_LoginManager {
 				$this->dieWithVerifyEmail( $e->userinfo, $e->id_token );
 			}
 			// catch ( Exception $e ) {
-			// 	echo $e;exit;
+			//  echo $e;exit;
 			// }
 
 			return true;
 		}
 	}
 
-	private function dieWithVerifyEmail($userinfo, $id_token) {
-		
+	private function dieWithVerifyEmail( $userinfo, $id_token ) {
+
 		$html = apply_filters( 'auth0_verify_email_page' , '', $userinfo, $id_token );
 		wp_die( $html );
 	}
 
-	public function login_with_credentials($username, $password, $connection="Username-Password-Authentication") {
+	public function login_with_credentials( $username, $password, $connection="Username-Password-Authentication" ) {
 
 		$domain = $this->a0_options->get( 'domain' );
 		$client_id = $this->a0_options->get( 'client_id' );
 
-		$response = WP_Auth0_Api_Client::ro($domain, $client_id, $username, $password, $connection, 'openid name email nickname email_verified identities');
+		$response = WP_Auth0_Api_Client::ro( $domain, $client_id, $username, $password, $connection, 'openid name email nickname email_verified identities' );
 
 		$secret = $this->a0_options->get( 'client_secret' );
 
@@ -446,8 +448,8 @@ class WP_Auth0_LoginManager {
 
 			$decodedToken->user_id = $decodedToken->sub;
 
-			if ( $this->login_user( $userinfo, $response->id_token, $response->access_token ) ) {
-					return false;
+			if ( $this->login_user( $decodedToken, $response->id_token, $response->access_token ) ) {
+				return false;
 			}
 
 		} catch( UnexpectedValueException $e ) {
@@ -460,10 +462,10 @@ class WP_Auth0_LoginManager {
 
 	}
 
-	protected function query_vars($key) {
+	protected function query_vars( $key ) {
 		global $wp_query;
-		if (isset($wp_query->query_vars[$key])) return $wp_query->query_vars[$key];
-		if (isset($_REQUEST[$key])) return $_REQUEST[$key];
+		if ( isset( $wp_query->query_vars[$key] ) ) return $wp_query->query_vars[$key];
+		if ( isset( $_REQUEST[$key] ) ) return $_REQUEST[$key];
 		return null;
 	}
 

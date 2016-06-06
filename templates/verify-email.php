@@ -1,8 +1,8 @@
-<?php echo __('Please verify your email and log in again.', WPA0_LANG);?>
+<?php echo __( 'Please verify your email and log in again.', WPA0_LANG );?>
 <br/>
-<strong><a id="resend" href="#"><?php echo __('Resend verification email.', WPA0_LANG);?> </a></strong>
+<strong><a id="resend" href="#"><?php echo __( 'Resend verification email.', WPA0_LANG );?> </a></strong>
 <br/><br/>
-<a href="<?php echo wp_login_url()?>"> <?php echo __('← Login', WPA0_LANG) ?> </a>
+<a href="<?php echo wp_login_url()?>"> <?php echo __( '← Login', WPA0_LANG ) ?> </a>
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <script type="text/javascript">
     function resendEmail() {

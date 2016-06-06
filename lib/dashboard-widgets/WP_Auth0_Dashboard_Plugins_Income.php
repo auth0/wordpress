@@ -2,11 +2,11 @@
 
 class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Generic {
 
-    protected $id = 'auth0_dashboard_widget_income';
-    protected $name = 'Auth0 - Users Income';
+	protected $id = 'auth0_dashboard_widget_income';
+	protected $name = 'Auth0 - Users Income';
 
-    public function render() {
-        ?>
+	public function render() {
+?>
         <div id="auth0ChartIncome">
         </div>
 
@@ -81,6 +81,6 @@ class WP_Auth0_Dashboard_Plugins_Income extends WP_Auth0_Dashboard_Plugins_Gener
 
         <?php
 
-    }
+	}
 
 }

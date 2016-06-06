@@ -2,7 +2,7 @@
 
 class WP_Auth0_ErrorManager {
 
-  public static function insert_auth0_error( $section, $wp_error ) {
+	public static function insert_auth0_error( $section, $wp_error ) {
 
 		if ( $wp_error instanceof WP_Error ) {
 			$code = $wp_error->get_error_code();
@@ -11,26 +11,24 @@ class WP_Auth0_ErrorManager {
 			$code = $wp_error->getCode();
 			$message = $wp_error->getMessage();
 		} else {
-			$code = null;
+			$code = 'N/A';
 			$message = $wp_error;
 		}
 
-		global $wpdb;
-		$wpdb->insert(
-			$wpdb->auth0_error_logs,
-			array(
-				'section' => $section,
-				'date' => date( 'c' ),
-				'code' => $code,
-				'message' => $message,
-			),
-			array(
-				'%s',
-				'%s',
-				'%s',
-				'%s',
-			)
-		);
+		$log = get_option('auth0_error_log', array());
+
+		array_unshift($log, array(
+			'section'=>$section,
+			'code'=>$code,
+			'message'=>$message,
+			'date' => time(),
+		));
+
+		if (count($log) > 20) {
+			array_pop($log);
+		}
+
+		update_option( 'auth0_error_log', $log );
 	}
 
 }

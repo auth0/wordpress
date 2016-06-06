@@ -12,23 +12,14 @@ class WP_Auth0_ErrorLog {
 
 		wp_enqueue_media();
 		wp_enqueue_style( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/css/bootstrap.min.css' );
-    wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/js/bootstrap.min.js' );
+		wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/js/bootstrap.min.js' );
 		wp_enqueue_style( 'wpa0_admin_initial_settup', WPA0_PLUGIN_URL . 'assets/css/initial-setup.css' );
 		wp_enqueue_style( 'media' );
 	}
 
 	public function render_settings_page() {
-		global $wpdb;
-		$sql = 'SELECT *
-				FROM ' . $wpdb->auth0_error_logs .'
-				WHERE date > %s
-				ORDER BY date DESC';
 
-		$data = $wpdb->get_results( $wpdb->prepare( $sql, date( 'c', strtotime( '1 month ago' ) ) ) );
-
-		if ( is_null( $data ) || $data instanceof WP_Error ) {
-			return null;
-		}
+		$data = get_option('auth0_error_log', array());
 
 		include WPA0_PLUGIN_DIR . 'templates/a0-error-log.php';
 	}

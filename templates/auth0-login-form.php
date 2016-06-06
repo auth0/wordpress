@@ -1,34 +1,34 @@
 <?php
 
-$lock_options = new WP_Auth0_Lock_Options($specialSettings);
+$lock_options = new WP_Auth0_Lock_Options( $specialSettings );
 
 if ( ! $lock_options->can_show() ) {
 ?>
-    <p><?php _e('Auth0 Integration has not yet been set up! Please visit your Wordpress Auth0 settings and fill in the required settings.', WPA0_LANG); ?></p>
+    <p><?php _e( 'Auth0 Integration has not yet been set up! Please visit your Wordpress Auth0 settings and fill in the required settings.', WPA0_LANG ); ?></p>
 <?php
-    return;
+	return;
 }
 
-if (isset($_GET['action']) && $_GET['action'] == 'register') {
-    $lock_options->set_signup_mode(true);
+if ( isset( $_GET['action'] ) && $_GET['action'] == 'register' ) {
+	$lock_options->set_signup_mode( true );
 }
 
 $extra_css = '';
 
-if ($lock_options->isPasswordlessEnable()) {
-    $extra_css = '.auth0-lock {margin-bottom: 50px;}';
+if ( $lock_options->isPasswordlessEnable() ) {
+	$extra_css = '.auth0-lock {margin-bottom: 50px;}';
 }
 
-$extra_css .= trim(apply_filters( 'auth0_login_css', ''));
-$extra_css .= trim($lock_options->get_custom_css());
+$extra_css .= trim( apply_filters( 'auth0_login_css', '' ) );
+$extra_css .= trim( $lock_options->get_custom_css() );
 
-$custom_js = trim($lock_options->get_custom_js());
+$custom_js = trim( $lock_options->get_custom_js() );
 
-if (empty($title)) {
-    $title = "Sign In";
+if ( empty( $title ) ) {
+	$title = "Sign In";
 }
 
-$options = json_encode($lock_options->get_lock_options());
+$options = json_encode( $lock_options->get_lock_options() );
 
 ?>
 
@@ -36,7 +36,7 @@ $options = json_encode($lock_options->get_lock_options());
     <?php include 'error-msg.php'; ?>
     <div class="form-signin">
 
-        <?php if ($lock_options->show_as_modal()) { ?>
+        <?php if ( $lock_options->show_as_modal() ) { ?>
             <button id="a0LoginButton" ><?php echo $lock_options->modal_button_name(); ?></button>
         <?php } else { ?>
             <div id="auth0-login-form"></div>
@@ -71,7 +71,7 @@ $options = json_encode($lock_options->get_lock_options());
             </div>
         <?php } ?>
 
-        <?php if ($lock_options->get_wordpress_login_enabled() && $canShowLegacyLogin) { ?>
+        <?php if ( $lock_options->get_wordpress_login_enabled() && $canShowLegacyLogin ) { ?>
             <div id="extra-options">
                 <a href="?wle">Login with WordPress username</a>
             </div>
@@ -80,7 +80,7 @@ $options = json_encode($lock_options->get_lock_options());
     </div>
 </div>
 
-<?php if (!empty($extra_css)) { ?>
+<?php if ( !empty( $extra_css ) ) { ?>
     <style type="text/css">
         <?php echo $extra_css; ?>
     </style>
@@ -98,9 +98,9 @@ document.addEventListener("DOMContentLoaded", function() {
         callback = function(err,profile, token) {
 
             if (!err) {
-                post('<?php echo home_url('/index.php?auth0=implicit'); ?>', {
+                post('<?php echo home_url( '/index.php?auth0=implicit' ); ?>', {
                     token:token,
-                    state:<?php echo json_encode($lock_options->get_state_obj()); ?>
+                    state:<?php echo json_encode( $lock_options->get_state_obj() ); ?>
                 }, 'POST');
             }
 
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         function a0ShowLoginModal() {
-            var options = <?php echo json_encode($lock_options->get_lock_options()); ?>;
+            var options = <?php echo json_encode( $lock_options->get_lock_options() ); ?>;
 
             lock.<?php echo $lock_options->get_lock_show_method(); ?>(options);
         }
@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (hashParams && hashParams.id_token) {
             ignore_sso = true;
 
-            post('<?php echo home_url('/index.php?auth0=implicit'); ?>', {
+            post('<?php echo home_url( '/index.php?auth0=implicit' ); ?>', {
                     token:hashParams.id_token,
                     state:hashParams.state
                 }, 'POST');
@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var lock = new <?php echo $lock_options->get_lock_classname(); ?>('<?php echo $lock_options->get_client_id(); ?>', '<?php echo $lock_options->get_domain(); ?>');
 
-    <?php if( ! empty( $custom_js )) { ?>
+    <?php if ( ! empty( $custom_js ) ) { ?>
 
         <?php echo $custom_js;?>
 

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PLUGIN_NAME
  * Description: PLUGIN_DESCRIPTION
- * Version: 2.2.4
+ * Version: 3.0.0
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -11,8 +11,8 @@ define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'WPA0_LANG', 'wp-auth0' );
-define( 'AUTH0_DB_VERSION', 7 );
-define( 'WPA0_VERSION', '2.2.4' );
+define( 'AUTH0_DB_VERSION', 8 );
+define( 'WPA0_VERSION', '3.0.0' );
 
 /**
  * Main plugin class
@@ -24,6 +24,9 @@ class WP_Auth0 {
 	protected $social_amplificator;
 	protected $router;
 
+	/**
+	 * Initialize the plugin and its modules setting all the hooks
+	 */
 	public function init() {
 
 		spl_autoload_register( array( $this, 'autoloader' ) );
@@ -33,7 +36,7 @@ class WP_Auth0 {
 
 		$this->a0_options = WP_Auth0_Options::Instance();
 
-		$this->db_manager = new WP_Auth0_DBManager();
+		$this->db_manager = new WP_Auth0_DBManager($this->a0_options);
 		$this->db_manager->init();
 
 		add_action( 'init', array( $this, 'wp_init' ) );
@@ -41,9 +44,9 @@ class WP_Auth0 {
 		// Add hooks for install uninstall and update.
 		register_activation_hook( WPA0_PLUGIN_FILE, array( $this, 'install' ) );
 		register_deactivation_hook( WPA0_PLUGIN_FILE, array( $this, 'deactivate' ) );
-		register_uninstall_hook(WPA0_PLUGIN_FILE, array('WP_Auth0', 'uninstall'));
+		register_uninstall_hook( WPA0_PLUGIN_FILE, array( 'WP_Auth0', 'uninstall' ) );
 
-		add_action( 'activated_plugin', array($this, 'on_activate_redirect') );
+		add_action( 'activated_plugin', array( $this, 'on_activate_redirect' ) );
 
 		// Add an action to append a stylesheet for the login page.
 		add_action( 'login_enqueue_scripts', array( $this, 'render_auth0_login_css' ) );
@@ -52,9 +55,6 @@ class WP_Auth0 {
 		add_filter( 'login_message', array( $this, 'render_form' ) );
 
 		add_filter( 'auth0_verify_email_page', array( $this, 'render_verify_email_page' ), 0, 3 );
-
-		// Add hook to handle when a user is deleted.
-		add_action( 'delete_user', array( $this, 'delete_user' ) );
 
 		add_shortcode( 'auth0', array( $this, 'shortcode' ) );
 
@@ -71,76 +71,104 @@ class WP_Auth0 {
 			add_action( 'wp_footer', array( $this, 'a0_render_message' ) );
 		}
 
-		$initial_setup = new WP_Auth0_InitialSetup($this->a0_options);
+		$initial_setup = new WP_Auth0_InitialSetup( $this->a0_options );
 		$initial_setup->init();
 
-		// $seeder = new WP_Auth0_Seeder($this->a0_options);
-		// $seeder->init();		
-
-		// $importer = new WP_Auth0_ImportUser($this->a0_options);
-		// $importer->init();
-
-		$login_manager = new WP_Auth0_LoginManager($this->a0_options);
-		$login_manager->init();
-
-		$users_repo = new WP_Auth0_UsersRepo($this->a0_options);
+		$users_repo = new WP_Auth0_UsersRepo( $this->a0_options );
 		$users_repo->init();
 
-		$this->router = new WP_Auth0_Routes($this->a0_options);
+		$login_manager = new WP_Auth0_LoginManager( $users_repo, $this->a0_options );
+		$login_manager->init();
+
+		$this->router = new WP_Auth0_Routes( $this->a0_options );
 		$this->router->init();
 
-		$metrics = new WP_Auth0_Metrics($this->a0_options);
+		$metrics = new WP_Auth0_Metrics( $this->a0_options );
 		$metrics->init();
 
-		$auth0_admin = new WP_Auth0_Admin($this->a0_options, $this->router);
+		$auth0_admin = new WP_Auth0_Admin( $this->a0_options, $this->router );
 		$auth0_admin->init();
 
 		$error_log = new WP_Auth0_ErrorLog();
 		$error_log->init();
 
-		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH($this->a0_options);
+		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH( $this->a0_options );
 		$configure_jwt_auth->init();
 
-		$dashboard_widgets = new WP_Auth0_Dashboard_Widgets($this->a0_options, $this->db_manager);
+		$dashboard_widgets = new WP_Auth0_Dashboard_Widgets( $this->a0_options, $this->db_manager );
 		$dashboard_widgets->init();
 
-		$woocommerce_override = new WP_Auth0_WooCommerceOverrides($this);
+		$woocommerce_override = new WP_Auth0_WooCommerceOverrides( $this );
 		$woocommerce_override->init();
 
-		$users_exporter = new WP_Auth0_Export_Users($this->db_manager);
+		$users_exporter = new WP_Auth0_Export_Users( $this->db_manager );
 		$users_exporter->init();
 
-		$import_settings = new WP_Auth0_Import_Settings($this->a0_options);
+		$import_settings = new WP_Auth0_Import_Settings( $this->a0_options );
 		$import_settings->init();
 
-		$settings_section = new WP_Auth0_Settings_Section($this->a0_options, $initial_setup, $users_exporter, $configure_jwt_auth, $error_log, $auth0_admin, $import_settings);
+		$settings_section = new WP_Auth0_Settings_Section( $this->a0_options, $initial_setup, $users_exporter, $configure_jwt_auth, $error_log, $auth0_admin, $import_settings );
 		$settings_section->init();
 
-		$this->social_amplificator = new WP_Auth0_Amplificator($this->db_manager, $this->a0_options);
+		$this->social_amplificator = new WP_Auth0_Amplificator( $this->db_manager, $this->a0_options );
 		$this->social_amplificator->init();
 
-		$edit_profile = new WP_Auth0_EditProfile($this->db_manager, $this->a0_options);
+		$edit_profile = new WP_Auth0_EditProfile( $this->db_manager, $this->a0_options );
 		$edit_profile->init();
 
-		// $old_options = $this->a0_options->get_options();
-		// var_dump($old_options);exit;
+		$this->check_signup_status();
+	}
+
+	/**
+	 * Checks it it should update the database connection no enable or disable signups and create or delete
+	 * the rule that will disable social signups.
+	 */
+	function check_signup_status() {
+		$app_token = $this->a0_options->get( 'auth0_app_token' );
+
+		if ( $app_token ) {
+			$disable_signup_rule = $this->a0_options->get( 'disable_signup_rule' );
+			$is_wp_registration_enabled = $this->a0_options->is_wp_registration_enabled();
+
+			if ( $is_wp_registration_enabled != $this->a0_options->get( 'registration_enabled' ) ) {
+					$this->a0_options->set( 'registration_enabled', $is_wp_registration_enabled );
+
+					$operations = new WP_Auth0_Api_Operations( $this->a0_options );
+
+					$operations->disable_signup_wordpress_connection( $app_token, !$is_wp_registration_enabled );
+
+					$rule_name = WP_Auth0_RulesLib::$disable_social_signup['name'];
+
+					$rule_script = WP_Auth0_RulesLib::$disable_social_signup['script'];
+					$rule_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $this->a0_options->get( 'client_id' ), $rule_script );
+
+					try {
+						$disable_signup_rule = $operations->toggle_rule( $app_token, ( $is_wp_registration_enabled ? $disable_signup_rule : null ), $rule_name, $rule_script );
+						$this->a0_options->set( 'disable_signup_rule', $disable_signup_rule );
+					} catch(Exception $e) {
+
+					}
+			}
+		}
 	}
 
 	function on_activate_redirect( $plugin ) {
-		if( $plugin == plugin_basename( __FILE__ ) ) {
+
+		if ( $plugin == plugin_basename( __FILE__ ) ) {
+
 			$this->router->setup_rewrites();
 			flush_rewrite_rules();
 
-			$client_id = $this->a0_options->get('client_id');
-			$client_secret = $this->a0_options->get('client_secret');
-			$domain = $this->a0_options->get('domain');
+			$client_id = $this->a0_options->get( 'client_id' );
+			$client_secret = $this->a0_options->get( 'client_secret' );
+			$domain = $this->a0_options->get( 'domain' );
 
-			$show_initial_setup = ( ( ! $client_id) || ( ! $client_secret) || ( ! $domain) ) ;
+			$show_initial_setup = ( ( ! $client_id ) || ( ! $client_secret ) || ( ! $domain ) ) ;
 
-			if ($show_initial_setup) {
-					exit( wp_redirect( admin_url( 'admin.php?page=wpa0-setup&activation=1' ) ) );
+			if ( $show_initial_setup ) {
+				exit( wp_redirect( admin_url( 'admin.php?page=wpa0-setup&activation=1' ) ) );
 			} else {
-					exit( wp_redirect( admin_url( 'admin.php?page=wpa0' ) ) );
+				exit( wp_redirect( admin_url( 'admin.php?page=wpa0' ) ) );
 			}
 		}
 	}
@@ -149,7 +177,7 @@ class WP_Auth0 {
 		return plugin_dir_url( __FILE__ );
 	}
 
-	public function  a0_register_query_vars( $qvars ) {
+	public function a0_register_query_vars( $qvars ) {
 		$qvars[] = 'error_description';
 		$qvars[] = 'a0_action';
 		$qvars[] = 'auth0';
@@ -218,15 +246,15 @@ class WP_Auth0 {
 		wp_enqueue_script( 'jquery' );
 
 		if ( WP_Auth0_Options::Instance()->get('passwordless_enabled') ) {
-			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('passwordless_cdn_url'), 'jquery' ); 
+			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('passwordless_cdn_url'), 'jquery' );
 		} else {
-			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );	
+			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
 		}
 
 		if (!isset($atts['redirect_to'])) {
 			$atts['redirect_to'] = home_url($_SERVER["REQUEST_URI"]);
 		}
-		
+
 		ob_start();
 		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
 		renderAuth0Form( false, $atts );
@@ -247,7 +275,7 @@ class WP_Auth0 {
 		if ( trim( $client_id ) === '' ) {
 			return;
 		}
-	?>
+?>
 		<link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' />
 	<?php
 	}
@@ -274,9 +302,9 @@ class WP_Auth0 {
 		wp_enqueue_script( 'jquery' );
 
 		if ( WP_Auth0_Options::Instance()->get('passwordless_enabled') ) {
-			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('passwordless_cdn_url'), 'jquery' ); 
+			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('passwordless_cdn_url'), 'jquery' );
 		} else {
-			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );	
+			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
 		}
 
 		ob_start();
@@ -285,11 +313,6 @@ class WP_Auth0 {
 
 		$html = ob_get_clean();
 		return $html;
-	}
-
-	public function delete_user( $user_id ) {
-		global $wpdb;
-		$wpdb->delete( $wpdb->auth0_user, array( 'wp_id' => $user_id ), array( '%d' ) );
 	}
 
 	public function wp_init() {
@@ -332,7 +355,7 @@ class WP_Auth0 {
 		foreach ( $paths as $p ) {
 			foreach ( $exts as $ext ) {
 				if ( file_exists( $p.$class.$ext ) ) {
-					require_once( $p.$class.$ext );
+					require_once $p.$class.$ext;
 					return true;
 				}
 			}
@@ -345,11 +368,12 @@ class WP_Auth0 {
 if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 	function get_currentauth0userinfo() {
 
-		global $currentauth0_user;
+		global $currentauth0_user, $wpdb;
 
-		$result = get_currentauth0user();
+		$current_user = wp_get_current_user();
+
 		if ($result) {
-			$currentauth0_user = WP_Auth0_Serializer::unserialize( $result->auth0_obj );
+			$currentauth0_user = WP_Auth0_Serializer::unserialize( get_user_meta( $current_user, $wpdb->prefix.'auth0_obj'), true );
 		}
 
 		return $currentauth0_user;
@@ -358,21 +382,20 @@ if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 
 if ( ! function_exists( 'get_currentauth0user' ) ) {
 	function get_currentauth0user() {
-		global $wpdb;
+
+		global $wpdb; 
 
 		$current_user = wp_get_current_user();
 
-		if ( $current_user instanceof WP_User && $current_user->ID > 0 ) {
-			$sql = 'SELECT * FROM ' . $wpdb->auth0_user .' WHERE wp_id = %d order by last_update desc limit 1';
-			$result = $wpdb->get_row( $wpdb->prepare( $sql, $current_user->ID ) );
+		$serialized_profile = get_user_meta( $current_user->ID, $wpdb->prefix.'auth0_obj', true);
 
-			if ( is_null( $result ) || $result instanceof WP_Error ) {
-				return null;
-			}
+		$data = new stdClass;
 
-		}
+		$data->auth0_obj = WP_Auth0_Serializer::unserialize( $serialized_profile );
+		$data->last_update = get_user_meta( $current_user->ID, $wpdb->prefix.'last_update', true);
+		$data->auth0_id = get_user_meta( $current_user->ID, $wpdb->prefix.'auth0_id', true);
 
-		return $result;
+		return $data;
 	}
 }
 

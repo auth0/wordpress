@@ -1,15 +1,15 @@
 <?php
 
 $options = WP_Auth0_Options::Instance();
-$social_facebook_message = $options->get('social_facebook_message');
-$social_twitter_message = $options->get('social_twitter_message');
-$amplificator_title = $options->get('amplificator_title');
-$amplificator_subtitle = $options->get('amplificator_subtitle');
-$auth0_implicit_workflow = $options->get('auth0_implicit_workflow');
+$social_facebook_message = $options->get( 'social_facebook_message' );
+$social_twitter_message = $options->get( 'social_twitter_message' );
+$amplificator_title = $options->get( 'amplificator_title' );
+$amplificator_subtitle = $options->get( 'amplificator_subtitle' );
+$auth0_implicit_workflow = $options->get( 'auth0_implicit_workflow' );
 
 ?>
 
-<?php if ($auth0_implicit_workflow) { ?>
+<?php if ( $auth0_implicit_workflow ) { ?>
 <p style="color:red;">
     This widget needs access to the Facebook and Twitter APIs to work. Make sure your server has internet access (or at least access to these APIs).
 </p>

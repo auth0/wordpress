@@ -2,39 +2,39 @@
 
 class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic {
 
-    protected $id = 'auth0_dashboard_widget_idp';
-    protected $name = 'Auth0 - Identity Providers';
-    protected $type;
+	protected $id = 'auth0_dashboard_widget_idp';
+	protected $name = 'Auth0 - Identity Providers';
+	protected $type;
 
-    public function __construct(WP_Auth0_Options $a0_options) {
-      $this->a0_options = $a0_options;
-      $this->type = $this->a0_options->get('chart_idp_type');
-    }
+	public function __construct( WP_Auth0_Options $a0_options ) {
+		$this->a0_options = $a0_options;
+		$this->type = $this->a0_options->get( 'chart_idp_type' );
+	}
 
-    public function render() {
+	public function render() {
 
-        $chartSetup = array(
-            'bindto' => '#auth0ChartIdP',
-            'data' => array(
-                'type' => $this->type,
-                'selection' => array(
-                   'enabled' => true
-                ),
-            ),
-            'axis' => array(
-                'x' => array(
-                    'type' => 'category'
-                )
-            )
+		$chartSetup = array(
+			'bindto' => '#auth0ChartIdP',
+			'data' => array(
+				'type' => $this->type,
+				'selection' => array(
+					'enabled' => true
+				),
+			),
+			'axis' => array(
+				'x' => array(
+					'type' => 'category'
+				)
+			)
 
-        );
+		);
 
-        if ( $this->type == 'bar' ) {
-            $chartSetup['data']['x'] = 'x';
-        }
+		if ( $this->type == 'bar' ) {
+			$chartSetup['data']['x'] = 'x';
+		}
 
 
-        ?>
+?>
         <div id="auth0ChartIdP"></div>
         <script type="text/javascript">
 
@@ -79,7 +79,7 @@ class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic 
           var _this = this;
           this.name = 'idp';
 
-          var setup = <?php echo json_encode($chartSetup);?>;
+          var setup = <?php echo json_encode( $chartSetup );?>;
           setup.data.columns = this.process_data(raw_data);
 
           setup.data.onclick = function (d, i) {
@@ -87,7 +87,7 @@ class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic 
 
             _this.filter_selection = selection.map(function(e){
 
-              <?php if($this->type === 'pie' || $this->type === 'donut') {?>
+              <?php if ( $this->type === 'pie' || $this->type === 'donut' ) {?>
                 return e.id;
               <?php } else {?>
                 return _this.categories[e.index];
@@ -145,7 +145,7 @@ class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic 
           var keys = _.clone(this.categories);
           keys = _.sortBy(keys);
 
-        <?php if($this->type === 'pie' || $this->type === 'donut') {?>
+        <?php if ( $this->type === 'pie' || $this->type === 'donut' ) {?>
           var data = keys.map(function(key) {
             return [key, (grouped_data[key] ? grouped_data[key].length : 0)];
           });
@@ -169,5 +169,5 @@ class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic 
         </script>
         <?php
 
-    }
+	}
 }

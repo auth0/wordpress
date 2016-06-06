@@ -1,7 +1,7 @@
 <div class="wrap">
 
 	<?php screen_icon(); ?>
-	<h2><?php _e("Auth0 for WordPress - Setup Wizard (step $step)", WPA0_LANG); ?></h2>
+	<h2><?php _e( "Auth0 for WordPress - Setup Wizard (step $step)", WPA0_LANG ); ?></h2>
 
 	<p>This will create a new database connections, expose 2 endpoints and will pupulate the custom scripts to call this endpoints to migrate the users to auth0. the users will not be changed in wordpress.</p>
 
@@ -9,7 +9,7 @@
 		<input type="hidden" name="action" value="wpauth0_callback_step5" />
 
 		<div>
-			MFA: <input type="checkbox" name="mfa" id="wpa0_mfa" value="1" <?php echo (empty($mfa) ? '' : 'checked'); ?>/>
+			MFA: <input type="checkbox" name="mfa" id="wpa0_mfa" value="1" <?php echo empty( $mfa ) ? '' : 'checked'; ?>/>
 			<div class="subelement">
 				<span class="description">
 					<?php echo __( 'Mark this if you want to enable multifactor authentication with Google Authenticator. More info ', WPA0_LANG ); ?>
@@ -21,7 +21,7 @@
 		</div>
 
 		<div>
-			GEO: <input type="checkbox" name="geo_rule" id="wpa0_geo_rule" value="1" <?php echo (is_null($geo) ? '' : 'checked'); ?>/>
+			GEO: <input type="checkbox" name="geo_rule" id="wpa0_geo_rule" value="1" <?php echo is_null( $geo ) ? '' : 'checked'; ?>/>
 			<div class="subelement">
 				<span class="description">
 					<?php echo __( 'Mark this if you want to store geo location information based on your users IP in the user_metadata', WPA0_LANG );?>
@@ -31,7 +31,7 @@
 
 
 		<div>
-			Income: <input type="checkbox" name="income_rule" id="wpa0_income_rule" value="1" <?php echo (is_null($income) ? '' : 'checked'); ?>/>
+			Income: <input type="checkbox" name="income_rule" id="wpa0_income_rule" value="1" <?php echo is_null( $income ) ? '' : 'checked'; ?>/>
 			<div class="subelement">
 				<span class="description"><?php echo __( 'Mark this if you want to store income data based on the zipcode (calculated using the users IP).', WPA0_LANG ); ?></span>
 			</div>
@@ -41,9 +41,9 @@
 		</div>
 
 		<div>
-			Fullcontact: <input type="checkbox" class="toggle_check" id="wpa0_fullcontact" name="fullcontact" value="1" <?php echo (empty($fullcontact) ? '' : 'checked'); ?> />
+			Fullcontact: <input type="checkbox" class="toggle_check" id="wpa0_fullcontact" name="fullcontact" value="1" <?php echo empty( $fullcontact ) ? '' : 'checked'; ?> />
 
-			<div class="subelement toggle fullcontact <?php echo (empty($v) ? 'hidden' : ''); ?>">
+			<div class="subelement toggle fullcontact <?php echo empty( $v ) ? 'hidden' : ''; ?>">
 				<label for="wpa0_fullcontact_key" id="wpa0_fullcontact_key_label">Enter your FullContact api key:</label>
 				<input type="text" id="wpa0_fullcontact_key" name="fullcontact_apikey" value="<?php echo $fullcontact_apikey; ?>" />
 			</div>

@@ -1,19 +1,19 @@
 <div class="a0-wrap settings">
 
-	<?php require(WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'); ?>
+	<?php require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'; ?>
 
 	<div class="container-fluid">
 
 		<div class="row">
-			<h1><?php _e('Auth0 WordPress Plugin Settings', WPA0_LANG); ?></h1>
+			<h1><?php _e( 'Auth0 WordPress Plugin Settings', WPA0_LANG ); ?></h1>
 
 			<div class="row a0-message a0-warning manage">
 				For your Auth0 dashboard with more settings click <a href="https://manage.auth0.com">here</a>.
 			</div>
-			
-	    <?php if( count(get_settings_errors()) == 0 && isset($_GET['settings-updated']) ) { ?>
+
+	    <?php if ( count( get_settings_errors() ) == 0 && isset( $_GET['settings-updated'] ) ) { ?>
 	        <div id="message" class="updated">
-	            <p><strong><?php _e('Settings saved.') ?></strong></p>
+	            <p><strong><?php _e( 'Settings saved.' ) ?></strong></p>
 	        </div>
 	    <?php } ?>
 	    <?php settings_errors(); ?>
@@ -46,11 +46,11 @@
 
 		    	<div class="a0-message a0-tip row">
       			<b>Pro Tip:</b>
-      			To set your own app keys and settings for the social connections, access the <a target="_blank" href="https://manage.auth0.com/#/connections/social">Auth0 Dashboard</a>. 
+      			To set your own app keys and settings for the social connections, access the <a target="_blank" href="https://manage.auth0.com/#/connections/social">Auth0 Dashboard</a>.
        		</div>
 
 		    	<div class="connections row">
-					  <?php foreach($social_connections as $social_connection) { ?>
+					  <?php foreach ( $social_connections as $social_connection ) { ?>
 					    <div class="connection col-sm-4 col-xs-6">
 					      <div class="logo" data-logo="<?php echo $social_connection['icon']; ?>">
 					        <span class="logo-child"></span>
@@ -71,7 +71,7 @@
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_advanced' ); ?>
 		    </div>
 		    <div role="tabpanel" class="tab-pane row" id="dashboard">
-					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_dashboard'); ?>
+					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_dashboard' ); ?>
 		    </div>
 		    <div role="tabpanel" class="tab-pane row" id="help">
 
@@ -121,7 +121,7 @@
 						</div>
 
 						<div>
-							<div class="a0-buttons">			    
+							<div class="a0-buttons">
 								<span class="a0-button primary" onclick="send_feedback()">Send!</span>
 							</div>
 						</div>
@@ -130,8 +130,8 @@
 		    </div>
 		  </div>
 
-			<div class="row">			    
-				<div class="a0-buttons">			    
+			<div class="row">
+				<div class="a0-buttons">
 					<input type="submit" name="submit" id="submit" class="a0-button primary" value="Save Changes" />
 				</div>
 			</div>
@@ -186,7 +186,7 @@
 				metricsTrack('settings:'+matches[1]+":"+(this.value === "" ? 'off' : 'on'));
 			}
 		});
-		
+
 		var q = async.queue(function (task, callback) {
 
 			var data = {
@@ -270,4 +270,3 @@
 		}
 	}
 </script>
-

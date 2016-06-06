@@ -2,41 +2,41 @@
 
 class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic {
 
-    protected $id = 'auth0_dashboard_widget_age';
-    protected $name = 'Auth0 - User\'s Age';
-    protected $type;
+	protected $id = 'auth0_dashboard_widget_age';
+	protected $name = 'Auth0 - User\'s Age';
+	protected $type;
 
-    public function __construct(WP_Auth0_Options $a0_options) {
-      $this->a0_options = $a0_options;
-      $this->type = $this->a0_options->get('chart_age_type');
-    }
+	public function __construct( WP_Auth0_Options $a0_options ) {
+		$this->a0_options = $a0_options;
+		$this->type = $this->a0_options->get( 'chart_age_type' );
+	}
 
-    public function render() {
+	public function render() {
 
-        $chartSetup = array(
-            'bindto' => '#auth0ChartAge',
-            'data' => array(
-                'type' => $this->type,
-                'selection' => array(
-                   'enabled' => true
-                ),
-            ),
-            'color' => array(
-              'pattern' => array('#F39C12','#2ECC71','#3498DB','#9B59B6','#34495E','#F1C40F','#E67E22','#E74C3C', '#1ABC9C'),
-            ),
-            'axis' => array(
-                'x' => array(
-                    'type' => 'category'
-                )
-            )
+		$chartSetup = array(
+			'bindto' => '#auth0ChartAge',
+			'data' => array(
+				'type' => $this->type,
+				'selection' => array(
+					'enabled' => true
+				),
+			),
+			'color' => array(
+				'pattern' => array( '#F39C12', '#2ECC71', '#3498DB', '#9B59B6', '#34495E', '#F1C40F', '#E67E22', '#E74C3C', '#1ABC9C' ),
+			),
+			'axis' => array(
+				'x' => array(
+					'type' => 'category'
+				)
+			)
 
-        );
+		);
 
-        if ( $this->type == 'bar' ) {
-            $chartSetup['data']['x'] = 'x';
-        }
+		if ( $this->type == 'bar' ) {
+			$chartSetup['data']['x'] = 'x';
+		}
 
-        ?>
+?>
         <div id="auth0ChartAge"></div>
 
         <script type="text/javascript">
@@ -45,7 +45,7 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
             var _this = this;
             this.name = 'age';
 
-            var setup = <?php echo json_encode($chartSetup);?>;
+            var setup = <?php echo json_encode( $chartSetup );?>;
             setup.data.columns = this.process_data(raw_data);
 
             setup.data.onclick = function (d, i) {
@@ -53,7 +53,7 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
 
               _this.filter_selection = selection.map(function(e){
 
-                <?php if($this->type === 'pie' || $this->type === 'donut') {?>
+                <?php if ( $this->type === 'pie' || $this->type === 'donut' ) {?>
                   return e.id;
                 <?php } else {?>
                   return _this.categories[e.index];
@@ -105,7 +105,7 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
             var keys = _.clone(this.categories);
             keys = _.sortBy(keys);
 
-          <?php if($this->type === 'pie' || $this->type === 'donut') {?>
+          <?php if ( $this->type === 'pie' || $this->type === 'donut' ) {?>
             var data = keys.map(function(key) {
               return [key, (grouped_data[key] ? grouped_data[key].length : 0)];
             });
@@ -129,7 +129,7 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
         </script>
         <?php
 
-    }
+	}
 
 
 }
