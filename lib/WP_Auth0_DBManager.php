@@ -43,7 +43,7 @@ class WP_Auth0_DBManager {
 			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
 		}
 
-		if ( $this->current_db_version < 8 ) {
+		if ( $this->current_db_version < 9 ) {
 			$this->migrate_users_data();
 		}
 
