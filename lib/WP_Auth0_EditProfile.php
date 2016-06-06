@@ -3,10 +3,12 @@
 class WP_Auth0_EditProfile {
 
 	protected $a0_options;
-	protected $db_manager;
+  protected $db_manager;
+	protected $users_repo;
 
-	public function __construct( WP_Auth0_DBManager $db_manager, WP_Auth0_Options $a0_options ) {
-		$this->a0_options = $a0_options;
+	public function __construct( WP_Auth0_DBManager $db_manager, WP_Auth0_UsersRepo $users_repo, WP_Auth0_Options $a0_options ) {
+    $this->a0_options = $a0_options;
+		$this->users_repo = $users_repo;
 		$this->db_manager = $db_manager;
 	}
 
@@ -15,10 +17,12 @@ class WP_Auth0_EditProfile {
 
 		add_action( 'personal_options_update', array( $this, 'override_email_update' ), 1 );
 
+    add_action( 'edit_user_profile', array( $this, 'show_delete_identity' ) );
 		add_action( 'edit_user_profile', array( $this, 'show_delete_mfa' ) );
-		add_action( 'show_user_profile', array( $this, 'show_delete_mfa' ) );
+    add_action( 'show_user_profile', array( $this, 'show_delete_mfa' ) );
 
-		add_action( 'wp_ajax_auth0_delete_mfa', array( $this, 'delete_mfa' ) );
+    add_action( 'wp_ajax_auth0_delete_mfa', array( $this, 'delete_mfa' ) );
+		add_action( 'wp_ajax_auth0_delete_data', array( $this, 'delete_user_data' ) );
 
 		add_action( 'show_user_profile', array( $this, 'show_change_password' ) );
 		add_action( 'personal_options_update', array( $this, 'update_change_password' ) );
@@ -82,6 +86,14 @@ class WP_Auth0_EditProfile {
 		}
 	}
 
+  public function delete_user_data() {
+    if ( ! is_admin() ) return;
+
+    $user_id = $_POST["user_id"];
+
+    $this->users_repo->delete_auth0_object( $user_id );
+  }
+
 	public function delete_mfa() {
 		if ( ! is_admin() ) return;
 
@@ -99,6 +111,41 @@ class WP_Auth0_EditProfile {
 		WP_Auth0_Api_Client::delete_user_mfa( $domain, $app_token, $user_id, $provider );
 	}
 
+  public function show_delete_identity() {
+    if ( ! is_admin() ) return;
+    if ( ! get_auth0userinfo( $_GET['user_id'] ) ) return;
+    ?>
+    <table class="form-table">
+    <tr>
+      <th>
+        <label><?php _e( 'Delete Auth0 data' ); ?></label>
+      </th>
+      <td>
+        <input type="button" onclick="DeleteAuth0Data(event);" name="auth0_delete_data" id="auth0_delete_data" value="Delete Auth0 Data" class="button button-secondary" />
+      </td>
+    </tr>
+    </table>
+    <script>
+    function DeleteAuth0Data(event) {
+      event.preventDefault();
+
+      var data = {
+        'action': 'auth0_delete_data',
+        'user_id': '<?php echo $_GET['user_id']; ?>'
+      };
+
+      jQuery('#auth0_delete_data').attr('disabled', 'true');
+
+      jQuery.post('<?php echo admin_url( 'admin-ajax.php' ); ?>', data, function(response) {
+
+        jQuery('#auth0_delete_data').val('Done!').attr('disabled', 'true');
+
+      }, 'json');
+
+    }
+    </script>
+  <?php
+  }
 	public function show_delete_mfa() {
 		if ( ! is_admin() ) return;
 		if ( ! $this->a0_options->get( 'mfa' ) ) return;
@@ -182,7 +229,7 @@ class WP_Auth0_EditProfile {
     $current_user = get_currentauth0user();
     $user_profile = $current_user->auth0_obj;
 
-		if ( !empty( $user_profile ) ) {
+		if ( $user_profile && !empty( $user_profile ) ) {
 			$connection = null;
 
 			foreach ( $user_profile->identities as $identity ) {

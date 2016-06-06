@@ -113,7 +113,7 @@ class WP_Auth0 {
 		$this->social_amplificator = new WP_Auth0_Amplificator( $this->db_manager, $this->a0_options );
 		$this->social_amplificator->init();
 
-		$edit_profile = new WP_Auth0_EditProfile( $this->db_manager, $this->a0_options );
+		$edit_profile = new WP_Auth0_EditProfile( $this->db_manager, $users_repo, $this->a0_options );
 		$edit_profile->init();
 
 		$this->check_signup_status();
@@ -365,17 +365,30 @@ class WP_Auth0 {
 	}
 }
 
+if ( ! function_exists( 'get_auth0userinfo' ) ) {
+	function get_auth0userinfo( $user_id ) {
+
+		global $wpdb;
+
+		$profile = get_user_meta( $user_id, $wpdb->prefix.'auth0_obj', true);
+
+		if ($profile) {
+			return WP_Auth0_Serializer::unserialize( $profile );
+		}
+
+		return false;
+	}
+}
+
 if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 	function get_currentauth0userinfo() {
 
-		global $currentauth0_user, $wpdb;
+		global $currentauth0_user;
 
 		$current_user = wp_get_current_user();
 
-		if ($result) {
-			$currentauth0_user = WP_Auth0_Serializer::unserialize( get_user_meta( $current_user, $wpdb->prefix.'auth0_obj'), true );
-		}
-
+		$currentauth0_user = get_auth0userinfo($current_user);
+		
 		return $currentauth0_user;
 	}
 }
@@ -391,7 +404,7 @@ if ( ! function_exists( 'get_currentauth0user' ) ) {
 
 		$data = new stdClass;
 
-		$data->auth0_obj = WP_Auth0_Serializer::unserialize( $serialized_profile );
+		$data->auth0_obj = empty($serialized_profile) ? false : WP_Auth0_Serializer::unserialize( $serialized_profile );
 		$data->last_update = get_user_meta( $current_user->ID, $wpdb->prefix.'last_update', true);
 		$data->auth0_id = get_user_meta( $current_user->ID, $wpdb->prefix.'auth0_id', true);
 
