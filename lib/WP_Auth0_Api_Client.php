@@ -329,13 +329,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_rule', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_rule ' . $name, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 201 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_rule', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_rule ' . $name, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}

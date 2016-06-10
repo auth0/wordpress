@@ -129,7 +129,7 @@ class WP_Auth0 {
 		if ( $app_token ) {
 			$disable_signup_rule = $this->a0_options->get( 'disable_signup_rule' );
 			$is_wp_registration_enabled = $this->a0_options->is_wp_registration_enabled();
-
+// var_dump($disable_signup_rule, $is_wp_registration_enabled , $this->a0_options->get( 'registration_enabled' ));exit;
 			if ( $is_wp_registration_enabled != $this->a0_options->get( 'registration_enabled' ) ) {
 					$this->a0_options->set( 'registration_enabled', $is_wp_registration_enabled );
 
@@ -137,7 +137,7 @@ class WP_Auth0 {
 
 					$operations->disable_signup_wordpress_connection( $app_token, !$is_wp_registration_enabled );
 
-					$rule_name = WP_Auth0_RulesLib::$disable_social_signup['name'];
+					$rule_name = WP_Auth0_RulesLib::$disable_social_signup['name'] . '-' . get_bloginfo('name');
 
 					$rule_script = WP_Auth0_RulesLib::$disable_social_signup['script'];
 					$rule_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $this->a0_options->get( 'client_id' ), $rule_script );
