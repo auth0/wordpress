@@ -147,18 +147,28 @@ class WP_Auth0_LoginManager {
 	public function init_auth0() {
 		global $wp_query;
 
-		// WP_Auth0_Seeder::get_me(100);
-		// exit;
-
 		if ( $this->query_vars( 'auth0' ) === null ) {
 			return;
 		}
 
-		if ( $this->query_vars( 'auth0' ) === 'implicit' ) {
-			$this->implicit_login();
-		} else {
-			$this->redirect_login();
+		try {
+			if ( $this->query_vars( 'auth0' ) === 'implicit' ) {
+				$this->implicit_login();
+			} else {
+				$this->redirect_login();
+			}	
+		} catch (WP_Auth0_LoginFlowValidationException $e) {
+
+			$msg = __( 'There was a problem with your log in', WPA0_LANG );
+			$msg .= ' '. $e->getMessage();
+			$msg .= '<br/><br/>';
+			$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', WPA0_LANG ) . '</a>';
+			wp_die( $msg );
+
+		} catch (Exception $e) {
+
 		}
+		
 	}
 
 	public function redirect_login() {
@@ -169,19 +179,11 @@ class WP_Auth0_LoginManager {
 		}
 
 		if ( $this->query_vars( 'error_description' ) !== null && $this->query_vars( 'error_description' ) !== '' ) {
-			$msg = __( 'There was a problem with your log in:', WPA0_LANG );
-			$msg .= ' '.$this->query_vars( 'error_description' );
-			$msg .= '<br/><br/>';
-			$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', WPA0_LANG ) . '</a>';
-			wp_die( $msg );
+			throw new WP_Auth0_LoginFlowValidationException( $this->query_vars( 'error_description' ) );
 		}
 
 		if ( $this->query_vars( 'error' ) !== null && trim( $this->query_vars( 'error' ) ) !== '' ) {
-			$msg = __( 'There was a problem with your log in:', WPA0_LANG );
-			$msg .= ' '.$this->query_vars( 'error' );
-			$msg .= '<br/><br/>';
-			$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', WPA0_LANG ) . '</a>';
-			wp_die( $msg );
+			throw new WP_Auth0_LoginFlowValidationException( $this->query_vars( 'error' ) );
 		}
 
 		$code = $this->query_vars( 'code' );
@@ -195,13 +197,13 @@ class WP_Auth0_LoginManager {
 		$client_secret = $this->a0_options->get( 'client_secret' );
 
 		if ( empty( $client_id ) ) {
-			wp_die( __( 'Error: Your Auth0 Client ID has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG ) );
+			throw new WP_Auth0_LoginFlowValidationException( __( 'Error: Your Auth0 Client ID has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG ) );
 		}
 		if ( empty( $client_secret ) ) {
-			wp_die( __( 'Error: Your Auth0 Client Secret has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG ) );
+			throw new WP_Auth0_LoginFlowValidationException( __( 'Error: Your Auth0 Client Secret has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG ) );
 		}
 		if ( empty( $domain ) ) {
-			wp_die( __( 'Error: No Domain defined in Wordpress Administration!', WPA0_LANG ) );
+			throw new WP_Auth0_LoginFlowValidationException( __( 'Error: No Domain defined in Wordpress Administration!', WPA0_LANG ) );
 		}
 
 		$response = WP_Auth0_Api_Client::get_token( $domain, $client_id, $client_secret, 'authorization_code', array(
@@ -213,10 +215,8 @@ class WP_Auth0_LoginManager {
 			WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_oauth/token', $response );
 
 			error_log( $response->get_error_message() );
-			$msg = __( 'Sorry. There was a problem logging you in.', WPA0_LANG );
-			$msg .= '<br/><br/>';
-			$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', WPA0_LANG ) . '</a>';
-			wp_die( $msg );
+
+			throw new WP_Auth0_LoginFlowValidationException( $response->get_error_message() );
 		}
 
 		$data = json_decode( $response['body'] );
@@ -233,10 +233,8 @@ class WP_Auth0_LoginManager {
 				WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_userinfo', $response );
 
 				error_log( $response->get_error_message() );
-				$msg = __( 'There was a problem with your log in.', WPA0_LANG );
-				$msg .= '<br/><br/>';
-				$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', WPA0_LANG ) . '</a>';
-				wp_die( $msg );
+				
+				throw new WP_Auth0_LoginFlowValidationException( );
 			}
 
 			$userinfo = json_decode( $response['body'] );
@@ -261,9 +259,8 @@ class WP_Auth0_LoginManager {
 			WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_oauth/token', $error );
 
 			$msg = __( 'Error: the Client Secret configured on the Auth0 plugin is wrong. Make sure to copy the right one from the Auth0 dashboard.', WPA0_LANG );
-			$msg .= '<br/><br/>';
-			$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', WPA0_LANG ) . '</a>';
-			wp_die( $msg );
+
+			throw new WP_Auth0_LoginFlowValidationException( $msg );
 		} else {
 			$error = '';
 			$description = '';
@@ -323,14 +320,11 @@ class WP_Auth0_LoginManager {
 			}
 
 		} catch( UnexpectedValueException $e ) {
-
 			WP_Auth0_ErrorManager::insert_auth0_error( 'implicit_login', $e );
 
 			error_log( $e->getMessage() );
-			$msg = __( 'Sorry. There was a problem logging you in.', WPA0_LANG );
-			$msg .= '<br/><br/>';
-			$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', WPA0_LANG ) . '</a>';
-			wp_die( $msg );
+
+			throw new WP_Auth0_LoginFlowValidationException( );
 		}
 	}
 
@@ -340,13 +334,12 @@ class WP_Auth0_LoginManager {
 		$requires_verified_email = $this->a0_options->get( 'requires_verified_email' );
 		$remember_users_session = $this->a0_options->get( 'remember_users_session' );
 
+
 		if ( ! $this->ignore_unverified_email &&  1 == $requires_verified_email ) {
 			if ( empty( $userinfo->email ) ) {
 				$msg = __( 'This account does not have an email associated, as required by your site administrator.', WPA0_LANG );
-				$msg .= '<br/><br/>';
-				$msg .= '<a href="' . home_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
 
-				wp_die( $msg );
+				throw new WP_Auth0_LoginFlowValidationException( 'PEPE' );
 			}
 
 			if ( ! $userinfo->email_verified ) {
@@ -399,16 +392,9 @@ class WP_Auth0_LoginManager {
 				do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token );
 			}
 			catch ( WP_Auth0_CouldNotCreateUserException $e ) {
-				$msg = __( 'Error: Could not create user.', WPA0_LANG );
-				$msg = ' ' . $e->getMessage();
-				$msg .= '<br/><br/>';
-				$msg .= '<a href="' . home_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
-				wp_die( $msg );
+				throw new WP_Auth0_LoginFlowValidationException( $e->getMessage() );
 			} catch ( WP_Auth0_RegistrationNotEnabledException $e ) {
-				$msg = __( 'Error: Could not create user. The registration process is not available. Please contact your site’s administrator.', WPA0_LANG );
-				$msg .= '<br/><br/>';
-				$msg .= '<a href="' . home_url() . '">' . __( '← Go back', WPA0_LANG ) . '</a>';
-				wp_die( $msg );
+				throw new WP_Auth0_LoginFlowValidationException( 'Could not create user. The registration process is not available. Please contact your site’s administrator.' );
 			} catch ( WP_Auth0_EmailNotVerifiedException $e ) {
 				$this->dieWithVerifyEmail( $e->userinfo, $e->id_token );
 			}

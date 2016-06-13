@@ -137,7 +137,7 @@ class WP_Auth0 {
 
 					$operations->disable_signup_wordpress_connection( $app_token, !$is_wp_registration_enabled );
 
-					$rule_name = WP_Auth0_RulesLib::$disable_social_signup['name'];
+					$rule_name = WP_Auth0_RulesLib::$disable_social_signup['name'] . '-' . get_bloginfo('name');
 
 					$rule_script = WP_Auth0_RulesLib::$disable_social_signup['script'];
 					$rule_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $this->a0_options->get( 'client_id' ), $rule_script );

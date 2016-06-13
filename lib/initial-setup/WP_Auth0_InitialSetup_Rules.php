@@ -43,15 +43,15 @@ class WP_Auth0_InitialSetup_Rules {
 
 		$mfa_script = WP_Auth0_RulesLib::$google_MFA['script'];
 		$mfa_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $client_id, $mfa_script );
-		$input = $this->rule_validation( $old_options, $input, 'mfa', WP_Auth0_RulesLib::$google_MFA['name'], $mfa_script );
+		$input = $this->rule_validation( $old_options, $input, 'mfa', WP_Auth0_RulesLib::$google_MFA['name'] . '-' . get_bloginfo('name'), $mfa_script );
 
-		$input = $this->rule_validation( $old_options, $input, 'geo_rule', WP_Auth0_RulesLib::$geo['name'], WP_Auth0_RulesLib::$geo['script'] );
+		$input = $this->rule_validation( $old_options, $input, 'geo_rule', WP_Auth0_RulesLib::$geo['name'] . '-' . get_bloginfo('name'), WP_Auth0_RulesLib::$geo['script'] );
 
-		$input = $this->rule_validation( $old_options, $input, 'income_rule', WP_Auth0_RulesLib::$income['name'], WP_Auth0_RulesLib::$income['script'] );
+		$input = $this->rule_validation( $old_options, $input, 'income_rule', WP_Auth0_RulesLib::$income['name'] . '-' . get_bloginfo('name'), WP_Auth0_RulesLib::$income['script'] );
 
 		$fullcontact_script = WP_Auth0_RulesLib::$fullcontact['script'];
 		$fullcontact_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $input['fullcontact_apikey'], $fullcontact_script );
-		$input = $this->rule_validation( $old_options, $input, 'fullcontact', WP_Auth0_RulesLib::$fullcontact['name'], $fullcontact_script );
+		$input = $this->rule_validation( $old_options, $input, 'fullcontact', WP_Auth0_RulesLib::$fullcontact['name'] . '-' . get_bloginfo('name'), $fullcontact_script );
 
 		$this->a0_options->set( 'fullcontact_apikey', $input['fullcontact_apikey'] );
 

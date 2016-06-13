@@ -2,7 +2,7 @@
 <script type="text/javascript">
 (function(){
 
-  var uuids = '<?php echo $profile->user_id; ?>';
+  var uuids = '<?php echo $user_profile->user_id; ?>';
   document.addEventListener("DOMContentLoaded", function() {
     var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
     lock.$auth0.getSSOData(function(err, data) {

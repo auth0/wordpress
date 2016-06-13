@@ -160,6 +160,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
   public function sso_validation( $old_options, $input ) {
     $input['sso'] = ( isset( $input['sso'] ) ? $input['sso'] : 0 );
+
     if ( $old_options['sso'] != $input['sso'] && 1 == $input['sso'] ) {
       if ( false === WP_Auth0_Api_Client::update_client( $input['domain'], $input['auth0_app_token'], $input['client_id'], $input['sso'] == 1 ) ) {
 

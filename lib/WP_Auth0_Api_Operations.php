@@ -14,6 +14,7 @@ class WP_Auth0_Api_Operations {
 		$connections = WP_Auth0_Api_Client::search_connection( $domain, $app_token, 'auth0' );
 
 		foreach ( $connections as $connection ) {
+
 			if ( in_array( $client_id, $connection->enabled_clients ) ) { 
 				$connection->options->disable_signup = $disable_signup;
 				$connection_id = $connection->id;
@@ -25,6 +26,7 @@ class WP_Auth0_Api_Operations {
 				WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection_id, $connection );
 			}
 		}
+
 	}
 
 	public function update_wordpress_connection( $app_token, $connection_id, $password_policy, $migration_token ) {
