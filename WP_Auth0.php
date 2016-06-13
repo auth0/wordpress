@@ -129,7 +129,7 @@ class WP_Auth0 {
 		if ( $app_token ) {
 			$disable_signup_rule = $this->a0_options->get( 'disable_signup_rule' );
 			$is_wp_registration_enabled = $this->a0_options->is_wp_registration_enabled();
-// var_dump($disable_signup_rule, $is_wp_registration_enabled , $this->a0_options->get( 'registration_enabled' ));exit;
+
 			if ( $is_wp_registration_enabled != $this->a0_options->get( 'registration_enabled' ) ) {
 					$this->a0_options->set( 'registration_enabled', $is_wp_registration_enabled );
 
