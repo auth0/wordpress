@@ -165,6 +165,14 @@ class WP_Auth0_LoginManager {
 			$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', WPA0_LANG ) . '</a>';
 			wp_die( $msg );
 
+		} catch (WP_Auth0_BeforeLoginException $e) {
+
+			$msg = __( 'You have logged in successfully, but there is a problem accessing this site', WPA0_LANG );
+			$msg .= ' '. $e->getMessage();
+			$msg .= '<br/><br/>';
+			$msg .= '<a href="' . wp_logout_url() . '">' . __( '← Logout', WPA0_LANG ) . '</a>';
+			wp_die( $msg );
+
 		} catch (Exception $e) {
 
 		}
@@ -328,11 +336,35 @@ class WP_Auth0_LoginManager {
 		}
 	}
 
+	// Does all actions required to log the user in to wordpress, invoking hooks as necessary
+	// $user (stdClass): the WP user object, such as returned by get_user_by(...)
+	// $user_profile (stdClass): the Auth0 profile of the user
+	// $is_new (boolean): `true` if the user was created on Wordress, `false` if not.  Don't get confused with Auth0 registrations, this flag will tell you if a new user was created on the WordPress database.
+	// $id_token (string): the user's JWT
+	// $access_token (string): the user's access token.  It is not provided when using the **Implicit flow**.
+	private function do_login( $user, $userinfo, $is_new, $id_token, $access_token ) {
+		$remember_users_session = $this->a0_options->get( 'remember_users_session' );
+
+		// allow other hooks to run prior to login
+		// if something goes wrong with the login, they should throw an exception.
+		try {
+			do_action( 'auth0_before_login', $user );
+		}
+		catch ( Exception $e ) {
+			throw new WP_Auth0_BeforeLoginException( $e->getMessage() );
+		}
+
+		wp_set_current_user( $user->ID, $user->user_login );
+		wp_set_auth_cookie( $user->ID, $remember_users_session );
+		do_action( 'wp_login', $user->user_login, $user );
+		do_action( 'auth0_user_login' , $user->ID, $userinfo, $is_new, $id_token, $access_token );
+	}
+
+	// return true if login was successful, false otherwise
 	public function login_user( $userinfo, $id_token, $access_token ) {
 		// If the userinfo has no email or an unverified email, and in the options we require a verified email
 		// notify the user he cant login until he does so.
 		$requires_verified_email = $this->a0_options->get( 'requires_verified_email' );
-		$remember_users_session = $this->a0_options->get( 'remember_users_session' );
 
 
 		if ( ! $this->ignore_unverified_email &&  1 == $requires_verified_email ) {
@@ -368,11 +400,7 @@ class WP_Auth0_LoginManager {
 
 			$this->users_repo->update_auth0_object( $user->data->ID, $userinfo );
 
-			wp_set_current_user( $user->ID, $user->user_login );
-			wp_set_auth_cookie( $user->ID, $remember_users_session );
-			do_action( 'wp_login', $user->user_login, $user );
-
-			do_action( 'auth0_user_login' , $user->ID, $userinfo, false, $id_token, $access_token );
+			$this->do_login( $user, $userinfo, false, $id_token, $access_token );
 
 			return true;
 
@@ -384,12 +412,7 @@ class WP_Auth0_LoginManager {
 
 				$user = get_user_by( 'id', $user_id );
 
-				wp_set_current_user( $user->ID, $user->user_login );
-				wp_set_auth_cookie( $user->ID, $remember_users_session );
-				do_action( 'wp_login', $user->user_login );
-
-
-				do_action( 'auth0_user_login' , $user_id, $userinfo, true, $id_token, $access_token );
+				$this->do_login( $user, $userinfo, true, $id_token, $access_token );
 			}
 			catch ( WP_Auth0_CouldNotCreateUserException $e ) {
 				throw new WP_Auth0_LoginFlowValidationException( $e->getMessage() );
