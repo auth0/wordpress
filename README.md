@@ -28,7 +28,7 @@ Before you start, **make sure the admin user has a valid email that you own**, r
 
 There are cases where the server is behind a firewall and does not have access to internet (or at least, can't reach the Auth0 servers). In those cases, you can enable the Auth0 Implicit Flow in the advanced settings of the Auth0 Settings page.
 
-When it is enabled, the token is returned in the login callback and then sent back to the WordPress sever so it doesn't need to call the Auth0 webervices.
+When it is enabled, the token is returned in the login callback and then sent back to the WordPress server so it doesn't need to call the Auth0 webservices.
 
 ## Integrating with the plugin
 
@@ -67,7 +67,7 @@ The last version of the plugin provides the ability integrate with **wp-jwt-auth
 
 This plugin will detect if you have wp-jwt-auth installed and active and will offer to configure it. Accepting this, will set up the client id, secret and the custom user repository.
 
-After the user logs in via Auth0 in your Api client (ie: using Lock in a mobile app) you will get a JWT (Json Web Token). Then you need to send this token in a HTTP header in the following way:
+After the user logs in via Auth0 in your Api client (ie: using Lock in a mobile app) you will get a JWT (JSON Web Token). Then you need to send this token in a HTTP header in the following way:
 
 ```
 Authorization: Bearer ##jwt##
@@ -79,7 +79,7 @@ For example:
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZW50IjoiVGhpcyBpcyB5b3VyIHVzZXIgSldUIHByb3ZpZGVkIGJ5IHRoZSBBdXRoMCBzZXJ2ZXIifQ.b47GoWoY_5n4jIyG0hPTLFEQtSegnVydcvl6gpWNeUE
 ```
 
-This JWT should match with a registered user in your WP instalation.
+This JWT should match with a registered user in your WP installation.
 
 You can use this feature with API's provided by plugins like **WP REST API (WP API)**.
 
@@ -112,11 +112,11 @@ Auth0 allows multiple authentication providers. You can have social providers li
 
 If the email was not verified (`email_verified` property of the user is `false`) and there is an account with that email in WordPress, the user will be presented with a page saying that the email was not verified and a link to "Re-send the verification email".
 
-For both scenarios you may configure in the WP admin whether is mandatory that the user has a verified email or not.
+For both scenarios you may configure in the WP admin whether it is mandatory that the user has a verified email or not.
 
-### Accesing Profile Information
+### Accessing Profile Information
 
-You can access the rich user profile information coming from the Identity Providers.  **WordPress** defines a function called `wp_get_current_user` to populate the global variable `current_user` with the logged in `WP_User`. Similary we define `get_currentauth0userinfo` that populates `current_user` and `currentauth0_user` with the information of the Normalized profile.
+You can access the rich user profile information coming from the Identity Providers.  **WordPress** defines a function called `wp_get_current_user` to populate the global variable `current_user` with the logged in `WP_User`. Similarly we define `get_currentauth0userinfo` that populates `current_user` and `currentauth0_user` with the information of the Normalized profile.
 
 ### Enabling dual (Auth0 and Wordpress) login
 
@@ -124,7 +124,7 @@ You can enable the standard Wordpress login by turning on the "WordPress login e
 
 ### Using the plugin widget
 
-You can enable the Auth0 as a Wordpress widget in order to show it in the sidebar. The widget inherits the plugin settings and it can be overrided with its own settings.
+You can enable the Auth0 as a Wordpress widget in order to show it in the sidebar. The widget inherits the plugin settings and it can be overridden with its own settings.
 
 Also, a new layout setting is enabled in order to be shown as a modal. Enabling the "Show as modal" setting, a button which trigger the modal is generated.
 
@@ -193,7 +193,7 @@ For a complete list look at https://docs.auth0.com/identityproviders
 
 ### "This account does not have an email associated..."
 
-If you get this error, make sure you are requesting the Email attribute from each provider in the Auth0 Dashboard under Connections -> Social (expand each provider). Take into account that not all providers return Email addresses for users (e.g. Twitter). If this happens, you can always add an Email address to any logged in user through the Auth0 Dashbaord (pr API). See Users -> Edit.
+If you get this error, make sure you are requesting the Email attribute from each provider in the Auth0 Dashboard under Connections -> Social (expand each provider). Take into account that not all providers return Email addresses for users (e.g. Twitter). If this happens, you can always add an Email address to any logged in user through the Auth0 Dashboard (pr API). See Users -> Edit.
 
 ### The form_title setting is ignored when I set up the dict setting
 
