@@ -143,6 +143,9 @@ class WP_Auth0 {
 					$rule_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $this->a0_options->get( 'client_id' ), $rule_script );
 
 					try {
+						if ($is_wp_registration_enabled && $disable_signup_rule === null) {
+							return;
+						}
 						$disable_signup_rule = $operations->toggle_rule( $app_token, ( $is_wp_registration_enabled ? $disable_signup_rule : null ), $rule_name, $rule_script );
 						$this->a0_options->set( 'disable_signup_rule', $disable_signup_rule );
 					} catch(Exception $e) {
