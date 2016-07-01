@@ -392,7 +392,7 @@ class WP_Auth0_LoginManager {
 			$user = $this->users_repo->find_auth0_user( $userinfo->user_id );
 		}
 
-		$user = apply_filters( 'auth0_get_wp_user' , $user, $userinfo );
+		$user = apply_filters( 'auth0_get_wp_user', $user, $userinfo );
 
 		if ( ! is_null( $user ) ) {
 			// User exists! Log in
