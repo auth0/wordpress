@@ -13,6 +13,10 @@ class WP_Auth0_Api_Operations {
 
 		$connections = WP_Auth0_Api_Client::search_connection( $domain, $app_token, 'auth0' );
 
+		if ($connections === false) {
+			return;
+		}
+
 		foreach ( $connections as $connection ) {
 
 			if ( in_array( $client_id, $connection->enabled_clients ) ) { 

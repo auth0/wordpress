@@ -61,6 +61,26 @@ To hook to this filter, you will need to do the following:
         return "You need to verify your email to log in.";
     }   
 ```
+
+### Customize users matching
+
+This filter is called after the plugin finds the related user to login (based on the auth0 `user_id`). It allows to override the default behaviour with custom matching rules(for example, always match by email).
+
+If the filter returns null, it will lookup by email as stated in the [How doe it work?](https://auth0.com/docs/cms/wordpress/how-does-it-work) document.
+
+```
+    add_filter( 'auth0_get_wp_user', 'auth0_get_wp_user_handler', 1, 2 );
+    function auth0_get_wp_user_handler($user, $userinfo) {
+        $user = get_user_by( 'email', $userinfo->email );
+
+        if ($joinUser instanceof WP_User) {
+            return $user;
+        }
+
+        return null;
+    }   
+```
+
 ## API authentication
 
 The last version of the plugin provides the ability integrate with **wp-jwt-auth** plugin to authenticate api calls via a HTTP Authorization Header.

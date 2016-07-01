@@ -23,6 +23,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
     $advancedOptions = array(
 
+      array( 'id' => 'wpa0_auto_provisioning', 'name' => 'Auto provisioning', 'function' => 'render_auto_provisioning' ),
       array( 'id' => 'wpa0_passwordless_enabled', 'name' => 'Use passwordless login', 'function' => 'render_passwordless_enabled' ),
       array( 'id' => 'wpa0_passwordless_method', 'name' => 'Use passwordless login', 'function' => 'render_passwordless_method' ),
 
@@ -140,6 +141,18 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 ?>
       <div class="subelement">
         <span class="description"><?php echo __( 'Links accounts with the same e-mail address. It will only occur if both e-mails are previously verified.', WPA0_LANG ); ?></span>
+      </div>
+    <?php
+  }
+
+  public function render_auto_provisioning() {
+    $v = $this->options->get( 'auto_provisioning' );
+
+    echo $this->render_a0_switch( "wpa0_auto_provisioning", "auto_provisioning", 1, 1 == $v );
+?>
+
+      <div class="subelement">
+        <span class="description"><?php echo __( 'The plugin will automatically add new users if they do not exist in the WordPress database.(Even with signups disabled, the plugin will create users if they already exists in your Auth0 account, enabling this setting will disable this behaviour).', WPA0_LANG ); ?></span>
       </div>
     <?php
   }
@@ -366,6 +379,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
   public function basic_validation( $old_options, $input ) {
     $input['requires_verified_email'] = ( isset( $input['requires_verified_email'] ) ? $input['requires_verified_email'] : 0 );
+    $input['auto_provisioning'] = ( isset( $input['auto_provisioning'] ) ? $input['auto_provisioning'] : 0 );
     $input['remember_users_session'] = ( isset( $input['remember_users_session'] ) ? $input['remember_users_session'] : 0 ) == 1;
     $input['passwordless_enabled'] = ( isset( $input['passwordless_enabled'] ) ? $input['passwordless_enabled'] : 0 ) == 1;
     $input['jwt_auth_integration'] = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );

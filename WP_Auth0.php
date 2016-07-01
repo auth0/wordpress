@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PLUGIN_NAME
  * Description: PLUGIN_DESCRIPTION
- * Version: 3.1.3
+ * Version: 3.1.4
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,7 +12,7 @@ define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'WPA0_LANG', 'wp-auth0' );
 define( 'AUTH0_DB_VERSION', 9 );
-define( 'WPA0_VERSION', '3.1.3' );
+define( 'WPA0_VERSION', '3.1.4' );
 
 /**
  * Main plugin class
@@ -143,6 +143,9 @@ class WP_Auth0 {
 					$rule_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $this->a0_options->get( 'client_id' ), $rule_script );
 
 					try {
+						if ($is_wp_registration_enabled && $disable_signup_rule === null) {
+							return;
+						}
 						$disable_signup_rule = $operations->toggle_rule( $app_token, ( $is_wp_registration_enabled ? $disable_signup_rule : null ), $rule_name, $rule_script );
 						$this->a0_options->set( 'disable_signup_rule', $disable_signup_rule );
 					} catch(Exception $e) {

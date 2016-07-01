@@ -93,9 +93,8 @@ class WP_Auth0_UsersRepo {
 
 		$joinUser = get_user_by( 'email', $userinfo->email ); 
 
-		// $auto_provisioning = WP_Auth0_Options::get('auto_provisioning');
-		// $allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled() || $auto_provisioning;
-		$allow_signup = $this->a0_options->is_wp_registration_enabled();
+		$auto_provisioning = WP_Auth0_Options::Instance()->get('auto_provisioning');
+		$allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled() && $auto_provisioning;
 
 		$user_id = null;
 
