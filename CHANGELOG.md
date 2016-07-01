@@ -1,5 +1,31 @@
 # Change Log
 
+## [3.1.4](https://github.com/auth0/wp-auth0/tree/3.1.4) (2016-07-01)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.1.3...3.1.4)
+
+**Closed issues:**
+
+- Lock blank after signup [\#216](https://github.com/auth0/wp-auth0/issues/216)
+
+**Merged pull requests:**
+
+- 3.1.4 [\#220](https://github.com/auth0/wp-auth0/pull/220) ([glena](https://github.com/glena))
+
+## [3.1.3](https://github.com/auth0/wp-auth0/tree/3.1.3) (2016-06-15)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.1.2...3.1.3)
+
+**Merged pull requests:**
+
+- Add auth0\_before\_login hook and exception type [\#215](https://github.com/auth0/wp-auth0/pull/215) ([schamp](https://github.com/schamp))
+- Fix some minor spelling issues in README.md [\#205](https://github.com/auth0/wp-auth0/pull/205) ([thameera](https://github.com/thameera))
+
+## [3.1.2](https://github.com/auth0/wp-auth0/tree/3.1.2) (2016-06-13)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.1.1...3.1.2)
+
+**Merged pull requests:**
+
+- refactor error handling, fix rules creation with site name, fix SLO [\#214](https://github.com/auth0/wp-auth0/pull/214) ([glena](https://github.com/glena))
+
 ## [3.1.1](https://github.com/auth0/wp-auth0/tree/3.1.1) (2016-06-06)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/2.2.0...3.1.1)
 
