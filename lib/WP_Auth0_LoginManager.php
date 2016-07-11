@@ -371,7 +371,7 @@ class WP_Auth0_LoginManager {
 			if ( empty( $userinfo->email ) ) {
 				$msg = __( 'This account does not have an email associated, as required by your site administrator.', WPA0_LANG );
 
-				throw new WP_Auth0_LoginFlowValidationException( 'PEPE' );
+				throw new WP_Auth0_LoginFlowValidationException( $msg );
 			}
 
 			if ( ! $userinfo->email_verified ) {
