@@ -27,6 +27,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_passwordless_enabled', 'name' => 'Use passwordless login', 'function' => 'render_passwordless_enabled' ),
       array( 'id' => 'wpa0_passwordless_method', 'name' => 'Use passwordless login', 'function' => 'render_passwordless_method' ),
 
+      array( 'id' => 'wpa0_use_lock_10', 'name' => 'Use Lock 10', 'function' => 'render_use_lock_10' ),
+
       array( 'id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url' ),
 
       array( 'id' => 'wpa0_connections', 'name' => 'Connections', 'function' => 'render_connections' ),
@@ -165,6 +167,18 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
       <div class="subelement">
         <span class="description"><?php echo __( 'This option will replace the login widget by Lock Passwordles (Username and password login will not be enabled).', WPA0_LANG ); ?></span>
+      </div>
+    <?php
+  }
+
+  public function render_use_lock_10() {
+    $v = $this->options->get( 'use_lock_10' );
+
+    echo $this->render_a0_switch( "wpa0_use_lock_10", "use_lock_10", 1, 1 == $v );
+?>
+
+      <div class="subelement">
+        <span class="description"><?php echo __( 'This option will use the latest version of lock. The lock API has changed on this version and can produce some incompatibilities with CSS or JS customizations you might made.', WPA0_LANG ); ?></span>
       </div>
     <?php
   }

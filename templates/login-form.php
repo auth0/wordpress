@@ -4,7 +4,13 @@ function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = array()
 		return;
 
 	if ( !$canShowLegacyLogin || !isset( $_GET['wle'] ) ) {
-		require_once 'auth0-login-form.php';
+    $options = WP_Auth0_Options::Instance();
+
+    if ($options->get('use_lock_10')) {
+      require_once 'auth0-login-form-lock10.php';
+    } else {
+      require_once 'auth0-login-form.php';
+    }
 	}else {
 		add_action( 'login_footer', array( 'WP_Auth0', 'render_back_to_auth0' ) );
 		add_action( 'woocommerce_after_customer_login_form', array( 'WP_Auth0', 'render_back_to_auth0' ) );

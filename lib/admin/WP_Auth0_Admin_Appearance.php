@@ -20,7 +20,9 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 				array( 'id' => 'wpa0_custom_js', 'name' => 'Customize the Login Widget with custom JS', 'function' => 'render_custom_js' ),
 				array( 'id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style' ),
 				array( 'id' => 'wpa0_remember_last_login', 'name' => 'Remember last login', 'function' => 'render_remember_last_login' ),
-				array( 'id' => 'wpa0_dict', 'name' => 'Translation', 'function' => 'render_dict' ),
+        array( 'id' => 'wpa0_primary_color', 'name' => 'Lock primary color', 'function' => 'render_primary_color' ),
+        array( 'id' => 'wpa0_language', 'name' => 'Lock Language', 'function' => 'render_language' ),
+				array( 'id' => 'wpa0_language_dictionary', 'name' => 'Lock Language Dictionary', 'function' => 'render_language_dictionary' ),
 
 			) );
 	}
@@ -49,15 +51,35 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
     <?php
 	}
 
-	public function render_dict() {
-		$v = $this->options->get( 'dict' );
+  public function render_language() {
+    $v = $this->options->get( 'language' );
 ?>
-      <textarea name="<?php echo $this->options->get_options_name(); ?>[dict]" id="wpa0_dict"><?php echo esc_attr( $v ); ?></textarea>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[language]" id="wpa0_language" value="<?php echo esc_attr( $v ); ?>" />
       <div class="subelement">
-        <span class="description"><?php echo __( 'This is the widget\'s dict param.', WPA0_LANG ); ?><a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#4"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
+        <span class="description"><?php echo __( 'This is the widget\'s language param.', WPA0_LANG ); ?><a target="_blank" href="https://github.com/auth0/lock#ui-options"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
       </div>
     <?php
-	}
+  }
+
+	public function render_primary_color() {
+    $v = $this->options->get( 'primary_color' );
+?>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[primary_color]" id="wpa0_primary_color" value="<?php echo esc_attr( $v ); ?>" />
+      <div class="subelement">
+        <span class="description"><?php echo __( 'The primary color for Lock', WPA0_LANG ); ?></span>
+      </div>
+    <?php
+  }
+
+  public function render_language_dictionary() {
+    $v = $this->options->get( 'language_dictionary' );
+?>
+      <textarea name="<?php echo $this->options->get_options_name(); ?>[language_dictionary]" id="wpa0_language_dictionary"><?php echo esc_attr( $v ); ?></textarea>
+      <div class="subelement">
+        <span class="description"><?php echo __( 'This is the widget\'s languageDictionary param.', WPA0_LANG ); ?><a target="_blank" href="https://github.com/auth0/lock#ui-options"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
+      </div>
+    <?php
+  }
 
 	public function render_custom_css() {
 		$v = $this->options->get( 'custom_css' );
@@ -137,18 +159,21 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	}
 
 	public function basic_validation( $old_options, $input ) {
-		$input['form_title'] = sanitize_text_field( $input['form_title'] );
+    $input['form_title'] = sanitize_text_field( $input['form_title'] );
 		$input['icon_url'] = esc_url( $input['icon_url'], array( 'http', 'https' ) );
 		$input['social_big_buttons'] = ( isset( $input['social_big_buttons'] ) ? $input['social_big_buttons'] : 0 );
 		$input['gravatar'] = ( isset( $input['gravatar'] ) ? $input['gravatar'] : 0 );
 		$input['remember_last_login'] = ( isset( $input['remember_last_login'] ) ? $input['remember_last_login'] : 0 );
 
-		if ( trim( $input['dict'] ) !== '' ) {
-			if ( strpos( $input['dict'], '{' ) !== false && json_decode( $input['dict'] ) === null ) {
-				$error = __( 'The Translation parameter should be a valid json object.', WPA0_LANG );
-				$this->add_validation_error( $error );
-			}
-		}
+    $input['language'] = sanitize_text_field( $input['language'] );
+    $input['primary_color'] = sanitize_text_field( $input['primary_color'] );
+
+    if ( trim( $input['language_dictionary'] ) !== '' ) {
+      if ( json_decode( $input['language_dictionary'] ) === null ) {
+        $error = __( 'The language dictionary parameter should be a valid json object.', WPA0_LANG );
+        $this->add_validation_error( $error );
+      }
+    }
 
 		// if ( trim( $input['extra_conf'] ) !== '' ) {
 		//  if ( json_decode( $input['extra_conf'] ) === null ) {
