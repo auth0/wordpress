@@ -215,9 +215,14 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   }
 
   public function mfa_validation( $old_options, $input ) {
-    $mfa_script = WP_Auth0_RulesLib::$google_MFA['script'];
+
+    if ($old_options['mfa'] != $input['mfa'] && $input['mfa'] !== null) {
+      WP_Auth0_Api_Client::update_guardian($input['domain'], $input['auth0_app_token'], 'push-notification', true);
+    }
+    
+    $mfa_script = WP_Auth0_RulesLib::$guardian_MFA['script'];
     $mfa_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $mfa_script );
-    return $this->rule_validation( $old_options, $input, 'mfa', WP_Auth0_RulesLib::$google_MFA['name'] . '-' . get_bloginfo( 'name' ), $mfa_script );
+    return $this->rule_validation( $old_options, $input, 'mfa', WP_Auth0_RulesLib::$guardian_MFA['name'] . '-' . get_bloginfo( 'name' ), $mfa_script );
   }
 
 

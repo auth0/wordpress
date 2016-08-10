@@ -669,6 +669,8 @@ class WP_Auth0_Api_Client {
 			'read:users',
 			'update:users',
 			'create:users',
+
+			'update:guardian_factors',
 		);
 	}
 
@@ -700,5 +702,40 @@ class WP_Auth0_Api_Client {
 			$processed[$resource] = $str;
 		}
 		return $processed;
+	}
+
+	public static function update_guardian($domain, $app_token, $factor, $enabled) {
+		$endpoint = "https://$domain/api/v2/guardian/factors/$factor";
+
+		$headers = self::get_info_headers();
+
+		$headers['Authorization'] = "Bearer $app_token";
+		$headers['content-type'] = "application/json";
+
+		$payload = array(
+			"enabled" => $enabled
+		);
+
+		$response = wp_remote_post( $endpoint  , array(
+				'method' => 'PATCH',
+				'headers' => $headers,
+				'body' => json_encode($payload)
+			) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::update_guardian', $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] != 200 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::update_guardian', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		if ( $response['response']['code'] >= 300 ) return false;
+
+		return json_decode($response['body']);
 	}
 }
