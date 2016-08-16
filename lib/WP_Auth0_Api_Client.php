@@ -717,7 +717,7 @@ class WP_Auth0_Api_Client {
 		);
 
 		$response = wp_remote_post( $endpoint  , array(
-				'method' => 'PATCH',
+				'method' => 'PUT',
 				'headers' => $headers,
 				'body' => json_encode($payload)
 			) );

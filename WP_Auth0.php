@@ -415,5 +415,16 @@ if ( ! function_exists( 'get_currentauth0user' ) ) {
 	}
 }
 
+if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
+	function get_auth0_curatedBlogName() {
+		$name = get_bloginfo( 'name' );
+
+		$name = preg_replace("/[^A-Za-z0-9 ]/", '', $name);
+		$name = str_replace(" ", "-", $name);
+
+		return $name;
+	}
+}
+
 $a0_plugin = new WP_Auth0();
 $a0_plugin->init();

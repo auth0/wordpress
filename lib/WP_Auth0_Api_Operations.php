@@ -68,7 +68,7 @@ class WP_Auth0_Api_Operations {
 
 		$domain = $this->a0_options->get( 'domain' );
 		$client_id = $this->a0_options->get( 'client_id' );
-		$db_connection_name = 'DB-' . str_replace( ' ', '-', get_bloginfo( 'name' ) );
+		$db_connection_name = 'DB-' . get_auth0_curatedBlogName();
 
 		$body = array(
 			'name' => $db_connection_name,

@@ -32,7 +32,7 @@ class WP_Auth0_InitialSetup_Consent {
 
 		$this->a0_options->set( "account_profile" , $this->state );
 
-		$name = get_bloginfo( 'name' );
+		$name = get_auth0_curatedBlogName();
 		$this->consent_callback( $name );
 
 	}
@@ -111,7 +111,7 @@ class WP_Auth0_InitialSetup_Consent {
 			$client_id = $client_response->client_id;
 		}
 
-		$db_connection_name = 'DB-' . str_replace( ' ', '-', get_bloginfo( 'name' ) );
+		$db_connection_name = 'DB-' . get_auth0_curatedBlogName();
 		$connection_exists = false;
 		$connection_pwd_policy = null;
 

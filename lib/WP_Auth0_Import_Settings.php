@@ -115,7 +115,7 @@ class WP_Auth0_Import_Settings {
 
 	public function export_settings() {
 		header( 'Content-Type: application/json' );
-		$name = urlencode( get_bloginfo( 'name' ) );
+		$name = urlencode( get_auth0_curatedBlogName() );
 		header( "Content-Disposition: attachment; filename=auth0_for_wordpress_settings-$name.json" );
 		header( 'Pragma: no-cache' );
 
