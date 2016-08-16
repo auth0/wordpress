@@ -144,7 +144,7 @@
   document.addEventListener("DOMContentLoaded", function() {
     metricsTrack('initial-setup:step1:open');
 
-    var url = 'https://sandbox.it.auth0.com/api/run/wptest/wp-auth0-ping?domain=<?php echo urlencode( get_bloginfo( 'wpurl' ) ); ?>';
+    var url = 'https://sandbox.it.auth0.com/api/run/wptest/wp-auth0-ping?domain=<?php echo urlencode( get_bloginfo( 'url' ) ); ?>';
 
     jQuery.ajax(url).done(function(response) {
       force_automatic = true;
