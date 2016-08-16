@@ -39,6 +39,7 @@ class WP_Auth0_Api_Client {
 	}
 
 	public static function validate_user_token( $app_token ) {
+
 		if ( empty( $app_token ) ) {
 			return false;
 		} else {
@@ -198,7 +199,8 @@ class WP_Auth0_Api_Client {
 			'read:connections',
 			'create:rules',
 			'delete:rules',
-			'update:users'
+			'update:users',
+			'update:guardian_factors',
 		);
 	}
 
