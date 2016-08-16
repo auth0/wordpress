@@ -39,7 +39,7 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
 	}
 
 	public function build_consent_url( $type ) {
-		$callback_url = urlencode( admin_url( 'admin.php?page=wpa0-setup&callback=1' ) );
+		$callback_url = urlencode( home_url( 'admin.php?page=wpa0-setup&callback=1' ) );
 
 		$client_id = urlencode( get_bloginfo( 'wpurl' ) );
 
