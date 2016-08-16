@@ -206,6 +206,8 @@ class WP_Auth0_Admin {
 			$tenant .= '@us';
 		}
 
+		$options = $this->a0_options;
+
 		include WPA0_PLUGIN_DIR . 'templates/settings.php';
 	}
 }

@@ -231,12 +231,21 @@
 		jQuery('#wpa0_passwordless_enabled').click(function() {
 			if (this.checked) {
 				jQuery('#wpa0_cdn_url').hide();
+				jQuery('#wpa0_use_lock_10').parent().parent().parent().hide();
 				jQuery('#wpa0_passwordless_cdn_url').show();
 				jQuery('#wpa0_passwordless_method_social').parent().parent().show();
 			} else {
 				jQuery('#wpa0_passwordless_method_social').parent().parent().hide();
 				jQuery('#wpa0_passwordless_cdn_url').hide();
 				jQuery('#wpa0_cdn_url').show();
+				jQuery('#wpa0_use_lock_10').parent().parent().parent().show();
+			}
+		});
+		jQuery('#wpa0_use_lock_10').click(function() {
+			if (this.checked) {
+				jQuery('#wpa0_cdn_url').val("<?php echo $options->get_default('cdn_url') ?>");
+			} else {
+				jQuery('#wpa0_cdn_url').val("<?php echo $options->get_default('cdn_url_legacy') ?>");
 			}
 		});
 

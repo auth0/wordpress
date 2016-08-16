@@ -49,7 +49,13 @@ class WP_Auth0_LoginManager {
 			$domain = $lock_options->get_domain();
 
 			wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
-			include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler.php';
+
+			if ($this->a0_options->get('use_lock_10')) {
+	      include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler-lock10.php';
+	    } else {
+	    	include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler.php';
+	    }
+
 		}
 	}
 	public function auth0_singlelogout_footer( $previous_html ) {

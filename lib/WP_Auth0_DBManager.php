@@ -25,14 +25,16 @@ class WP_Auth0_DBManager {
 
 	public function install_db() {
 
+		$options = WP_Auth0_Options::Instance();
+
 		if ($this->current_db_version === 0) {
-			$this->a0_options->set('auth0_table', false);
-		} elseif($this->a0_options->get('auth0_table') === null) {
-			$this->a0_options->set('auth0_table', true);
+			$options->set('auth0_table', false);
+		} elseif($options->get('auth0_table') === null) {
+			$options->set('auth0_table', true);
 		}
 
-		$options = WP_Auth0_Options::Instance();
 		$cdn_url = $options->get( 'cdn_url' );
+
 		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-6' ) !== false ) {
 			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
 		}
@@ -42,9 +44,8 @@ class WP_Auth0_DBManager {
 		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-9.0' ) !== false ) {
 			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
 		}
-
-		if ( $this->current_db_version < 9 ) {
-			$this->migrate_users_data();
+		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-9.1' ) !== false ) {
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.2.min.js' );
 		}
 
 		if ( $this->current_db_version <= 7 ) {
@@ -66,6 +67,40 @@ class WP_Auth0_DBManager {
 						$migration_token );
 				}
 			}
+		}
+
+		if ( $this->current_db_version < 9 ) {
+			$this->migrate_users_data();
+		}
+
+		if ( $this->current_db_version < 10 ) {
+
+			if ($options->get('use_lock_10') === null) {
+
+				if ( strpos( $cdn_url, 'lock-10.0' ) !== false ) {
+					$options->set('use_lock_10', false);
+				} else {
+					$options->set('use_lock_10', true);
+				}
+
+			}
+
+			$dict = $options->get('dict');
+
+			if (!empty($dict)) 
+			{
+
+				if (json_decode($dict) === null) 
+				{
+					$options->set('language', $dict);
+				} 
+				else 
+				{
+					$options->set('language_dictionary', $dict);
+				}
+
+			}
+
 		}
 
 		$this->current_db_version = AUTH0_DB_VERSION;

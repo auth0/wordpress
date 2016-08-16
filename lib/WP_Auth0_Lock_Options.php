@@ -123,9 +123,7 @@ class WP_Auth0_Lock_Options {
 
 	protected function build_settings( $settings ) {
 		$options_obj = array();
-		if ( isset( $settings['form_title'] ) &&
-			( ! isset( $settings['dict'] ) || ( isset( $settings['dict'] ) && trim( $settings['dict'] ) === '' ) ) &&
-			trim( $settings['form_title'] ) !== '' ) {
+		if ( isset( $settings['form_title'] ) && trim( $settings['form_title'] ) !== '' ) {
 
 			$options_obj['dict'] = array(
 				'signin' => array(
@@ -133,13 +131,19 @@ class WP_Auth0_Lock_Options {
 				)
 			);
 
-		} elseif ( isset( $settings['dict'] ) && trim( $settings['dict'] ) !== '' ) {
-			if ( $oDict = json_decode( $settings['dict'], true ) ) {
+		} 
+
+		if ( isset( $settings['language_dictionary'] ) && trim( $settings['language_dictionary'] ) !== '' ) {
+			if ( $oDict = json_decode( $settings['language_dictionary'], true ) ) {
 				$options_obj['dict'] = $oDict;
-			} else {
-				$options_obj['dict'] = $settings['dict'];
-			}
+			} 
 		}
+
+		if ( isset( $settings['language'] ) && trim( $settings['language'] ) !== '' ) {
+			$options_obj['dict'] = $settings['language'];
+		}
+
+		
 		if ( $this->_is_valid( $settings, 'social_big_buttons' ) ) {
 			$options_obj['socialBigButtons'] = $this->_get_boolean( $settings['social_big_buttons'] );
 		}

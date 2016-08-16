@@ -38,6 +38,11 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		return apply_filters( 'wp_auth0_get_option', $options['connections'][$key], $key );
 	}
 
+	public function get_default($key) {
+		$defaults = $this->defaults();
+		return $defaults[$key];
+	}
+
 	protected function defaults() {
 		return array(
 			'version' => 1,
@@ -56,10 +61,16 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'passwordless_enabled' => false,
 			'passwordless_method' => 'magiclink',
 			'passwordless_cdn_url' => '//cdn.auth0.com/js/lock-passwordless-2.2.min.js',
-			'cdn_url' => '//cdn.auth0.com/js/lock-9.1.min.js',
+			'use_lock_10' => null,
+			'cdn_url' => '//cdn.auth0.com/js/lock/10.0/lock.min.js',
+			'cdn_url_legacy' => '//cdn.auth0.com/js/lock-9.2.min.js',
 			'requires_verified_email' => true,
 			'wordpress_login_enabled' => true,
-			'dict' => '',
+			'primary_color' => '',
+			
+			'language' => '',
+			'language_dictionary' => '',
+
 			'social_big_buttons' => false,
 			'username_style' => 'email',
 			'extra_conf' => '',
