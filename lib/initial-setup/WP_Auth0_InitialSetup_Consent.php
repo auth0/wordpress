@@ -70,7 +70,7 @@ class WP_Auth0_InitialSetup_Consent {
 		$code = $_REQUEST['code'];
 		$callback_url = urlencode( admin_url( 'admin.php?page=wpa0-setup&step=2' ) );
 
-		$client_id = get_bloginfo( 'wpurl' );
+		$client_id = get_bloginfo( 'url' );
 
 		$response = WP_Auth0_Api_Client::get_token( $this->domain, $client_id, null, 'authorization_code', array(
 				'redirect_uri' => home_url(),
