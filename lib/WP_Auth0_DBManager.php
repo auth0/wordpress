@@ -77,7 +77,7 @@ class WP_Auth0_DBManager {
 
 			if ($options->get('use_lock_10') === null) {
 
-				if ( strpos( $cdn_url, 'lock-10.0' ) !== false ) {
+				if ( strpos( $cdn_url, '10.0' ) !== false ) {
 					$options->set('use_lock_10', false);
 				} else {
 					$options->set('use_lock_10', true);
@@ -99,6 +99,18 @@ class WP_Auth0_DBManager {
 					$options->set('language_dictionary', $dict);
 				}
 
+			}
+
+		}
+
+		if ( $this->current_db_version < 11 ) {
+
+			if ( strpos( $cdn_url, '10.0' ) === false ) {
+				$options->set('use_lock_10', false);
+			}	
+			else 
+			{
+				$options->set('use_lock_10', true);
 			}
 
 		}
