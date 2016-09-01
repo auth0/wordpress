@@ -92,6 +92,8 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'link_auth0_users' => null,
 			'remember_users_session' => false,
 
+			'override_wp_avatars' => true,
+
 			'migration_ws' => false,
 			'migration_token' => null,
 			'migration_token_id' => null,

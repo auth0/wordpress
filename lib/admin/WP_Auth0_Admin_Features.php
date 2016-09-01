@@ -25,6 +25,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
         array( 'id' => 'wpa0_fullcontact', 'name' => 'FullContact integration', 'function' => 'render_fullcontact' ),
         array( 'id' => 'wpa0_geo', 'name' => 'Store geolocation', 'function' => 'render_geo' ),
         array( 'id' => 'wpa0_income', 'name' => 'Store zipcode income', 'function' => 'render_income' ),
+        array( 'id' => 'wpa0_override_wp_avatars', 'name' => 'Override WordPress avatars', 'function' => 'render_override_wp_avatars' ),
 
       ) );
   }
@@ -121,6 +122,17 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
     <?php
   }
 
+  public function render_override_wp_avatars() {
+    $v = $this->options->get( 'override_wp_avatars' );
+
+    echo $this->render_a0_switch( "wpa0_override_wp_avatars", "override_wp_avatars", 1, !empty( $v ) );
+?>
+      <div class="subelement">
+        <span class="description"><?php echo __( 'Mark this if you want to override the WordPress avatar with the user\'s Auth0 profile avatar.', WPA0_LANG ); ?></span>
+      </div>
+    <?php
+  }
+
   public function render_fullcontact() {
     $v = $this->options->get( 'fullcontact' );
     $apikey = $this->options->get( 'fullcontact_apikey' );
@@ -154,6 +166,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
   public function basic_validation( $old_options, $input ) {
     $input['singlelogout'] = ( isset( $input['singlelogout'] ) ? $input['singlelogout'] : 0 );
+    $input['override_wp_avatars'] = ( isset( $input['override_wp_avatars'] ) ? $input['override_wp_avatars'] : 0 );
 
     return $input;
   }

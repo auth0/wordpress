@@ -48,6 +48,8 @@ class WP_Auth0 {
 
 		add_action( 'activated_plugin', array( $this, 'on_activate_redirect' ) );
 
+		add_filter( 'get_avatar' , array( $this, 'my_custom_avatar') , 1 , 5 );
+
 		// Add an action to append a stylesheet for the login page.
 		add_action( 'login_enqueue_scripts', array( $this, 'render_auth0_login_css' ) );
 
@@ -153,6 +155,19 @@ class WP_Auth0 {
 					}
 			}
 		}
+	}
+
+	function my_custom_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
+		$auth0Profile = get_auth0userinfo($id_or_email);
+
+		if ($this->a0_options->get('override_wp_avatars')) {
+			if ($auth0Profile && isset($auth0Profile->picture)) {
+				$avatar_url = $auth0Profile->picture;
+				$avatar = "<img alt='{$alt}' src='{$avatar_url}' class='avatar avatar-{$size} photo' height='{$size}' width='{$size}' />";
+			}
+		}
+
+		return $avatar;
 	}
 
 	function on_activate_redirect( $plugin ) {
