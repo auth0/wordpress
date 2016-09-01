@@ -46,6 +46,23 @@ class WP_Auth0_Users {
 		while ( username_exists( $username ) ) {
 			$username = $username . rand( 0, 9 );
 		}
+
+		$description = '';
+				
+		if (empty($description)){
+			if (isset($userinfo->headline)) {
+				$description = $userinfo->headline;
+			}
+			if (isset($userinfo->description)) {
+				$description = $userinfo->description;
+			}
+			if (isset($userinfo->bio)) {
+				$description = $userinfo->bio;
+			}
+			if (isset($userinfo->about)) {
+				$description = $userinfo->about;
+			}
+		}
 		// Create the user data array for updating first- and lastname
 		$user_data = array(
 			'user_email' => $email,
@@ -54,6 +71,7 @@ class WP_Auth0_Users {
 			'first_name' => $firstname,
 			'last_name' => $lastname,
 			'display_name' => $username,
+			'description' => $description,
 		);
 
 		if ( $role ) {

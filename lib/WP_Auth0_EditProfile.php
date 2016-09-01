@@ -332,7 +332,7 @@ class WP_Auth0_EditProfile {
 				}
 				wp_update_user( array(
 						'ID' => $current_user->ID,
-						'user_email' => $user_email,
+						'user_email' => $user_email
 					) );
 
 				if ($requires_verified_email) {

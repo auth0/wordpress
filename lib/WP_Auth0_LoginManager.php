@@ -403,7 +403,29 @@ class WP_Auth0_LoginManager {
 		if ( ! is_null( $user ) ) {
 			// User exists! Log in
 			if ( isset( $userinfo->email ) && $user->data->user_email !== $userinfo->email ) {
-				$user_id = wp_update_user( array( 'ID' => $user->data->ID, 'user_email' => $userinfo->email ) );
+
+				$description = $user->data->description;
+				
+				if (empty($description)){
+					if (isset($userinfo->headline)) {
+						$description = $userinfo->headline;
+					}
+					if (isset($userinfo->description)) {
+						$description = $userinfo->description;
+					}
+					if (isset($userinfo->bio)) {
+						$description = $userinfo->bio;
+					}
+					if (isset($userinfo->about)) {
+						$description = $userinfo->about;
+					}
+				}
+
+				$user_id = wp_update_user( array( 
+					'ID' => $user->data->ID, 
+					'user_email' => $userinfo->email, 
+					'description' => $description, 
+				) );
 			}
 
 			$this->users_repo->update_auth0_object( $user->data->ID, $userinfo );
