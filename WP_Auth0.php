@@ -296,6 +296,11 @@ class WP_Auth0 {
 	}
 
 	public function render_form( $html ) {
+
+		if ( isset( $_GET['action'] ) && $_GET['action'] == 'lostpassword' ) {
+			return $html;
+		}
+
 		$client_id = WP_Auth0_Options::Instance()->get( 'client_id' );
 
 		if ( trim( $client_id ) === '' ) {
@@ -390,7 +395,7 @@ if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 
 		$current_user = wp_get_current_user();
 
-		$currentauth0_user = get_auth0userinfo($current_user);
+		$currentauth0_user = get_auth0userinfo($current_user->ID);
 		
 		return $currentauth0_user;
 	}
@@ -428,3 +433,4 @@ if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
 
 $a0_plugin = new WP_Auth0();
 $a0_plugin->init();
+
