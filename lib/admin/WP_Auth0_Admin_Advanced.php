@@ -154,8 +154,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 ?>
 
       <div class="subelement">
-        <span class="description"><?php echo __( 'The plugin will automatically add new users if they do not exist in the WordPress database.(Even with signups disabled, the plugin will create users if they already exists in your Auth0 account, enabling this setting will disable this behaviour).', WPA0_LANG ); ?></span>
-      </div>
+        <span class="description"><?php echo __( 'The plugin will automatically add new users if they do not exist in the WordPress database. (Even with signups disabled, the plugin will create users if they already exist in your Auth0 account, enabling this setting will disable this behaviour).', WPA0_LANG ); ?></span>
+        </div>
     <?php
   }
 
