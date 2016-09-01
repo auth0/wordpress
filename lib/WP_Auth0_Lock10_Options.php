@@ -231,6 +231,8 @@ class WP_Auth0_Lock10_Options {
 
     if ( $this->get_auth0_implicit_workflow() ) {
       $extraOptions["auth"]["params"]["scope"] .= "name email nickname email_verified";
+      $extraOptions["auth"]["responseType"] = 'token';
+      $extraOptions["auth"]["redirectUrl"] = $this->get_implicit_callback_url();
     } else {
       $extraOptions["auth"]["responseType"] = 'code';
       $extraOptions["auth"]["redirectUrl"] = $this->get_code_callback_url();
