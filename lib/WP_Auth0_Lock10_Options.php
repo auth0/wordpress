@@ -128,7 +128,7 @@ class WP_Auth0_Lock10_Options {
       $options_obj['language'] = $settings['language'];
     }
     if (isset($settings['language_dictionary']) && !empty($settings['language_dictionary'])) {
-      $options_obj['languageDictionary'] = $settings['language_dictionary'];
+      $options_obj['languageDictionary'] = json_decode($settings['language_dictionary']);
     }
 
     if ( isset( $settings['form_title'] ) && trim( $settings['form_title'] ) !== '' ) {
