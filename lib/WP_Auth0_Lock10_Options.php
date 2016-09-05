@@ -180,6 +180,19 @@ class WP_Auth0_Lock10_Options {
     return $options_obj;
   }
 
+  public function get_custom_signup_fields() {
+    $fields = $this->wp_options->get('custom_signup_fields');
+
+    if (trim($fields) === '') {
+      return "[]";
+    }
+
+    return $fields;
+  }
+  public function has_custom_signup_fields() {
+    return $this->wp_options->get('custom_signup_fields');
+  }
+
   public function get_sso_options() {
     $options = $this->get_lock_options();
 

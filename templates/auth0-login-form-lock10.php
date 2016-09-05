@@ -94,6 +94,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var options = <?php echo $options; ?>;
 
+    options.additionalSignUpFields = <?php echo $lock_options->get_custom_signup_fields(); ?>;
+
     var lock = new <?php echo $lock_options->get_lock_classname(); ?>('<?php echo $lock_options->get_client_id(); ?>', '<?php echo $lock_options->get_domain(); ?>', options);
 
     <?php if ( ! empty( $custom_js ) ) { ?>

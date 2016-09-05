@@ -52,6 +52,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_ip_range_check', 'name' => 'Enable on IP Ranges', 'function' => 'render_ip_range_check' ),
       array( 'id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges', 'function' => 'render_ip_ranges' ),
       array( 'id' => 'wpa0_valid_proxy_ip', 'name' => 'Valid Proxy IP', 'function' => 'render_valid_proxy_ip' ),
+      array( 'id' => 'wpa0_custom_signup_fields', 'name' => 'Custom signup fields', 'function' => 'render_custom_signup_fields' ),
       array( 'id' => 'wpa0_extra_conf', 'name' => 'Extra settings', 'function' => 'render_extra_conf' ),
       array( 'id' => 'wpa0_auth0_server_domain', 'name' => 'Auth0 server domain', 'function' => 'render_auth0_server_domain' ),
       array( 'id' => 'wpa0_metrics', 'name' => 'Anonymous data', 'function' => 'render_metrics' ),
@@ -134,6 +135,36 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       </span>
     </div>
     <?php
+  }  
+
+  public function render_custom_signup_fields() {
+    $v = $this->options->get( 'custom_signup_fields' );
+?>
+
+    <textarea name="<?php echo $this->options->get_options_name(); ?>[custom_signup_fields]" id="wpa0_custom_signup_fields"><?php echo esc_attr( $v ); ?></textarea>
+    <div class="subelement">
+      <span class="description">
+        <?php echo __( 'This field is the Json that describes the custom signup fields for lock. It should be a valida json and allows the use of functions (for validation). More info', WPA0_LANG ); ?>
+        <a target="_blank" href="https://auth0.com/docs/libraries/lock/v10/new-features#custom-sign-up-fields"><?php echo __( 'here', WPA0_LANG ); ?></a>
+
+        <code><pre>[
+  {
+    name: "address",                              // required
+    placeholder: "enter your address",            // required
+    icon: "https://example.com/address_icon.png", // optional
+    prefill: "street 123",                        // optional
+    validator: function(value) {                  // optional
+      // only accept addresses with more than 10 chars
+      return value.length > 10;
+    }
+  }, 
+  {
+    ... // more fields could be specified
+  }
+]</pre></code>
+      </span>
+    </div>
+    <?php
   }
 
   public function render_link_auth0_users() {
@@ -154,7 +185,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 ?>
 
       <div class="subelement">
-        <span class="description"><?php echo __( 'The plugin will automatically add new users if they do not exist in the WordPress database. (Even with signups disabled, the plugin will create users if they already exist in your Auth0 account, enabling this setting will disable this behaviour).', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'The plugin will automatically add new users if they do not exist in the WordPress database if the signups are enabled (enabling this setting will enable this behaviour when signups are disabled).', WPA0_LANG ); ?></span>
         </div>
     <?php
   }
@@ -280,7 +311,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 ?>
     <textarea cols="25" name="<?php echo $this->options->get_options_name(); ?>[ip_ranges]" id="wpa0_ip_ranges"><?php echo esc_textarea( $v ); ?></textarea>
     <div class="subelement">
-      <span class="description"><?php echo __( 'Only one range per line! Range format should be as follows: <code>xx.xx.xx.xx - yy.yy.yy.yy</code> (spaces will be trimmed)', WPA0_LANG ); ?></span>
+      <span class="description"><?php echo __( 'Only one range per line! Range format should be as follows (spaces will be trimmed):', WPA0_LANG ); ?></span>
+      <code>xx.xx.xx.xx - yy.yy.yy.yy</code> 
     </div>
     <?php
   }
@@ -414,6 +446,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $input['valid_proxy_ip'] = ( isset( $input['valid_proxy_ip'] ) ? $input['valid_proxy_ip'] : null );
 
     $input['lock_connections'] = trim( $input['lock_connections'] );
+    $input['custom_signup_fields'] = trim( $input['custom_signup_fields'] );
 
     if ( $input['passwordless_enabled'] && empty( $input['lock_connections'] ) && strpos( strtolower( $input['passwordless_method'] ), 'social' ) !== false ) {
       $error = __( "Please complete the list of connections to be used by Lock in social mode.", WPA0_LANG );

@@ -71,6 +71,8 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'language' => '',
 			'language_dictionary' => '',
 
+			'custom_signup_fields' => '',
+
 			'social_big_buttons' => false,
 			'username_style' => 'username',
 			'extra_conf' => '',
