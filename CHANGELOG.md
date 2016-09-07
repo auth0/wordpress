@@ -1,5 +1,43 @@
 # Change Log
 
+## [Unreleased](https://github.com/auth0/wp-auth0/tree/HEAD)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.0...HEAD)
+
+**Closed issues:**
+
+- Profile data not returned in get\_auth0userinfo\(\) [\#236](https://github.com/auth0/wp-auth0/issues/236)
+- Login Only Not Allowed [\#234](https://github.com/auth0/wp-auth0/issues/234)
+- Dashboard widget, Uninitialized string offset [\#232](https://github.com/auth0/wp-auth0/issues/232)
+- allow toggle to override users avatars [\#231](https://github.com/auth0/wp-auth0/issues/231)
+- Lock in register page does not show custom fields [\#229](https://github.com/auth0/wp-auth0/issues/229)
+- Wordpress user creation with duplicate emails [\#219](https://github.com/auth0/wp-auth0/issues/219)
+- Setup Wizard errors out halfway [\#218](https://github.com/auth0/wp-auth0/issues/218)
+- Add compatibility class that can be used to improve integration with 3rd-party plugins  [\#208](https://github.com/auth0/wp-auth0/issues/208)
+- Bug - Twitter authentication fails when user's Twitter name has non-ASCII characters [\#207](https://github.com/auth0/wp-auth0/issues/207)
+- Callback URL's not working [\#203](https://github.com/auth0/wp-auth0/issues/203)
+- Support Lock10 with custom fields [\#195](https://github.com/auth0/wp-auth0/issues/195)
+- Broken \(or confusing?\) flow in creating passwordless auth [\#194](https://github.com/auth0/wp-auth0/issues/194)
+- Add support button pointing to support.auth0.com [\#178](https://github.com/auth0/wp-auth0/issues/178)
+- Disable social logins [\#153](https://github.com/auth0/wp-auth0/issues/153)
+
+**Merged pull requests:**
+
+- 3.2.5 - Lock 10 custom fields + added avatars + bugfixes [\#237](https://github.com/auth0/wp-auth0/pull/237) ([glena](https://github.com/glena))
+- fix migration [\#228](https://github.com/auth0/wp-auth0/pull/228) ([glena](https://github.com/glena))
+- fix [\#227](https://github.com/auth0/wp-auth0/pull/227) ([glena](https://github.com/glena))
+- Fix federated clientid [\#226](https://github.com/auth0/wp-auth0/pull/226) ([glena](https://github.com/glena))
+- changed the federated client metadata url to be relative to th ehome … [\#225](https://github.com/auth0/wp-auth0/pull/225) ([glena](https://github.com/glena))
+
+## [3.2.0](https://github.com/auth0/wp-auth0/tree/3.2.0) (2016-08-16)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.1.4...3.2.0)
+
+**Merged pull requests:**
+
+- Lock10 + guardian support [\#224](https://github.com/auth0/wp-auth0/pull/224) ([glena](https://github.com/glena))
+- Force logo to https [\#222](https://github.com/auth0/wp-auth0/pull/222) ([lesaff](https://github.com/lesaff))
+- added federated SLO [\#221](https://github.com/auth0/wp-auth0/pull/221) ([glena](https://github.com/glena))
+
 ## [3.1.4](https://github.com/auth0/wp-auth0/tree/3.1.4) (2016-07-01)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.1.3...3.1.4)
 
