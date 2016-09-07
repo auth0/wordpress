@@ -162,6 +162,7 @@ class WP_Auth0_DBManager {
         'compare' => 'IN',
 			) );
 		}
+		$query['blog_id'] = 0;
 
 		$results = get_users( $query );
 
