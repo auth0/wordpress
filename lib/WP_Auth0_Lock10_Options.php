@@ -128,7 +128,7 @@ class WP_Auth0_Lock10_Options {
       $options_obj['language'] = $settings['language'];
     }
     if (isset($settings['language_dictionary']) && !empty($settings['language_dictionary'])) {
-      $options_obj['languageDictionary'] = $settings['language_dictionary'];
+      $options_obj['languageDictionary'] = json_decode($settings['language_dictionary']);
     }
 
     if ( isset( $settings['form_title'] ) && trim( $settings['form_title'] ) !== '' ) {
@@ -180,6 +180,19 @@ class WP_Auth0_Lock10_Options {
     return $options_obj;
   }
 
+  public function get_custom_signup_fields() {
+    $fields = $this->wp_options->get('custom_signup_fields');
+
+    if (trim($fields) === '') {
+      return "[]";
+    }
+
+    return $fields;
+  }
+  public function has_custom_signup_fields() {
+    return $this->wp_options->get('custom_signup_fields');
+  }
+
   public function get_sso_options() {
     $options = $this->get_lock_options();
 
@@ -188,7 +201,7 @@ class WP_Auth0_Lock10_Options {
     if ( $this->get_auth0_implicit_workflow() ) {
       $options["callbackOnLocationHash"] = true;
       $options["callbackURL"] = $this->get_implicit_callback_url();
-      $options["scope"] .= "name email nickname email_verified identities";
+      $options["scope"] .= "name email picture nickname email_verified identities";
     } else {
       $options["callbackOnLocationHash"] = false;
       $options["callbackURL"] = $this->get_code_callback_url();
@@ -230,7 +243,9 @@ class WP_Auth0_Lock10_Options {
     $extraOptions["auth"]["params"]["scope"] = "openid ";
 
     if ( $this->get_auth0_implicit_workflow() ) {
-      $extraOptions["auth"]["params"]["scope"] .= "name email nickname email_verified";
+      $extraOptions["auth"]["params"]["scope"] .= "name email picture nickname email_verified";
+      $extraOptions["auth"]["responseType"] = 'token';
+      $extraOptions["auth"]["redirectUrl"] = $this->get_implicit_callback_url();
     } else {
       $extraOptions["auth"]["responseType"] = 'code';
       $extraOptions["auth"]["redirectUrl"] = $this->get_code_callback_url();

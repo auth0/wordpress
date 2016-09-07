@@ -94,7 +94,7 @@ class WP_Auth0_UsersRepo {
 		$joinUser = get_user_by( 'email', $userinfo->email ); 
 
 		$auto_provisioning = WP_Auth0_Options::Instance()->get('auto_provisioning');
-		$allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled() && $auto_provisioning;
+		$allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled() || $auto_provisioning;
 
 		$user_id = null;
 
@@ -148,7 +148,11 @@ class WP_Auth0_UsersRepo {
 	public function find_auth0_user( $id ) {
 		global $wpdb;
 
-		$users = get_users( array( 'meta_key' => $wpdb->prefix.'auth0_id', 'meta_value' => $id) ); 
+		$users = get_users( array( 
+  		'meta_key' => $wpdb->prefix.'auth0_id',
+  		'meta_value' => $id,
+  		'blog_id' => 0)
+  	); 
 
 		if ( $users instanceof WP_Error ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $userRow );
