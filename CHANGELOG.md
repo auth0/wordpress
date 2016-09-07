@@ -1,8 +1,7 @@
 # Change Log
 
-## [Unreleased](https://github.com/auth0/wp-auth0/tree/HEAD)
-
-[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.0...HEAD)
+## [3.2.5](https://github.com/auth0/wp-auth0/tree/3.2.5) (2016-09-07)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.0...3.2.5)
 
 **Closed issues:**
 
