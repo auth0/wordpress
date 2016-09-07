@@ -431,8 +431,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $input['jwt_auth_integration'] = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
     $input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
     $input['metrics'] = ( isset( $input['metrics'] ) ? $input['metrics'] : 0 );
+    $input['use_lock_10'] = ( isset( $input['use_lock_10'] ) ? $input['use_lock_10'] : 0 );
     $input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
-
+    
     if ( isset( $input['connections'] ) ) {
       if ( isset( $input['connections']['social_twitter_key'] ) ) $input['connections']['social_twitter_key'] = sanitize_text_field( $input['connections']['social_twitter_key'] );
       if ( isset( $input['connections']['social_twitter_secret'] ) ) $input['connections']['social_twitter_secret'] = sanitize_text_field( $input['connections']['social_twitter_secret'] );
