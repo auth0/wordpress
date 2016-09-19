@@ -6,7 +6,7 @@ function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = array()
 	if ( !$canShowLegacyLogin || !isset( $_GET['wle'] ) ) {
     $options = WP_Auth0_Options::Instance();
 
-    if ($options->get('use_lock_10')) {
+    if ($options->get('use_lock_10') && ! $options->get('passwordless_enabled')) {
       require_once 'auth0-login-form-lock10.php';
     } else {
       require_once 'auth0-login-form.php';

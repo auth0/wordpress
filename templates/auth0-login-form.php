@@ -195,16 +195,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
     <?php } ?>
 
-    lock.on('ready', function(){
-        if ( lock.options['$client'].subscription === 'free' ) {
-            jQuery('#attributionBadge').fadeIn();
-            jQuery(".a0-footer").parent().css('margin-bottom', '50px');
-        }
-    });
+    if (lock.on) {
+        lock.on('ready', function(){
+            if ( lock.options['$client'].subscription === 'free' ) {
+                jQuery('#attributionBadge').fadeIn();
+                jQuery(".a0-footer").parent().css('margin-bottom', '50px');
+            }
+        });
 
-    lock.on('error shown', function(){
-        jQuery(".a0-footer").parent().css('margin-bottom', '50px');
-    });
+        lock.on('error shown', function(){
+            jQuery(".a0-footer").parent().css('margin-bottom', '50px');
+        });
+    }
 
 });
 </script>
