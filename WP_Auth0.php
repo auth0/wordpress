@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PLUGIN_NAME
  * Description: PLUGIN_DESCRIPTION
- * Version: 3.2.6
+ * Version: 3.2.7
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -12,7 +12,7 @@ define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'WPA0_LANG', 'wp-auth0' );
 define( 'AUTH0_DB_VERSION', 11 );
-define( 'WPA0_VERSION', '3.2.6' );
+define( 'WPA0_VERSION', '3.2.7' );
 
 /**
  * Main plugin class
@@ -54,7 +54,7 @@ class WP_Auth0 {
 		add_action( 'login_enqueue_scripts', array( $this, 'render_auth0_login_css' ) );
 
 		// Add a hook to add Auth0 code on the login page.
-		add_filter( 'login_message', array( $this, 'render_form' ) );
+		add_filter( 'login_message', array( $this, 'render_form'), 5);
 
 		add_filter( 'auth0_verify_email_page', array( $this, 'render_verify_email_page' ), 0, 3 );
 
@@ -311,7 +311,6 @@ class WP_Auth0 {
 	}
 
 	public function render_form( $html ) {
-
 		if ( isset( $_GET['action'] ) && $_GET['action'] == 'lostpassword' ) {
 			return $html;
 		}
@@ -335,6 +334,7 @@ class WP_Auth0 {
 		renderAuth0Form();
 
 		$html = ob_get_clean();
+
 		return $html;
 	}
 
@@ -448,4 +448,3 @@ if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
 
 $a0_plugin = new WP_Auth0();
 $a0_plugin->init();
-
