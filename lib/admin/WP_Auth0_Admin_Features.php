@@ -54,7 +54,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'Single Sign On (SSO) allows users to signing once to multiple services. For more details, see our ', WPA0_LANG ); ?>
+          <?php echo __( 'Single Sign On (SSO) allows users to sign in once to multiple services. For more details, see our ', WPA0_LANG ); ?>
           <a target="_blank" href="https://auth0.com/docs/sso/single-sign-on"><?php echo __( 'help page on SSO', WPA0_LANG ); ?></a>.
         </span>
       </div>
