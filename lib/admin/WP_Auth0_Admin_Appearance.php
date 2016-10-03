@@ -104,6 +104,9 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	public function render_username_style() {
 		$v = $this->options->get( 'username_style' );
 ?>
+      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[username_style]" id="wpa0_username_style_auto" value="" <?php echo esc_attr( $v ) == '' ? 'checked="true"' : ''; ?> />
+      <label for="wpa0_username_style_auto"><?php echo __( 'Auto', WPA0_LANG ); ?></label>
+
       <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[username_style]" id="wpa0_username_style_email" value="email" <?php echo esc_attr( $v ) == 'email' ? 'checked="true"' : ''; ?> />
       <label for="wpa0_username_style_email"><?php echo __( 'Email', WPA0_LANG ); ?></label>
 
@@ -112,7 +115,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'If you don\'t want to validate that the user enters an email, just set this to username.', WPA0_LANG ); ?>
+          <?php echo __( 'If you want to allow the user to use either email or password, set it to Auto.', WPA0_LANG ); ?>
           <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#usernamestyle-string-"><?php echo __( 'More info', WPA0_LANG ); ?></a>
         </span>
       </div>
