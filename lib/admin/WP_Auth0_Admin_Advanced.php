@@ -568,7 +568,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       $matching = array_intersect($enabled_connections, $check_if_enabled);
 
       if (array_diff($matching, $check_if_enabled) !== array_diff($check_if_enabled, $matching)) {
-        $error = __( 'The passwordless connection is not enabled. Pleas go to the Auth0 Dashboard and configure it.', WPA0_LANG );
+        $error = __( 'The passwordless connection is not enabled. Please go to the Auth0 Dashboard and configure it.', WPA0_LANG );
         $this->add_validation_error( $error );
       }
 
