@@ -485,17 +485,23 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
         $input['migration_token'] = null;
         $input['migration_token_id'] = null;
 
-        $connection = WP_Auth0_Api_Client::get_connection($input['domain'], $input['auth0_app_token'], $old_options['db_connection_id']);
+        if (isset($old_options['db_connection_id'])) {
 
-        $connection->options->enabledDatabaseCustomization = false;
-        $connection->options->import_mode = false;
 
-        unset($connection->name);
-        unset($connection->strategy);
-        unset($connection->id);
+          $connection = WP_Auth0_Api_Client::get_connection($input['domain'], $input['auth0_app_token'], $old_options['db_connection_id']);
 
-        $response = WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $old_options['db_connection_id'], $connection);
-  
+          $connection->options->enabledDatabaseCustomization = false;
+          $connection->options->import_mode = false;
+
+
+          unset($connection->name);
+          unset($connection->strategy);
+          unset($connection->id);
+
+          $response = WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $old_options['db_connection_id'], $connection);
+        } else {
+          $response = false;
+        }
 
         if ( $response === false ) {
           $error = __( 'There was an error disabling your custom database. Check how to do it manually ', WPA0_LANG );
@@ -568,7 +574,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       $matching = array_intersect($enabled_connections, $check_if_enabled);
 
       if (array_diff($matching, $check_if_enabled) !== array_diff($check_if_enabled, $matching)) {
-        $error = __( 'The passwordless connection is not enabled. Pleas go to the Auth0 Dashboard and configure it.', WPA0_LANG );
+        $error = __( 'The passwordless connection is not enabled. Please go to the Auth0 Dashboard and configure it.', WPA0_LANG );
         $this->add_validation_error( $error );
       }
 
