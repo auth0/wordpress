@@ -148,11 +148,13 @@ class WP_Auth0_UsersRepo {
 	public function find_auth0_user( $id ) {
 		global $wpdb;
 
-		$users = get_users( array( 
+		$query = array( 
   		'meta_key' => $wpdb->prefix.'auth0_id',
   		'meta_value' => $id,
-  		'blog_id' => 0)
-  	); 
+  		'blog_id' => 0,
+  	);
+
+		$users = get_users( $query ); 
 
 		if ( $users instanceof WP_Error ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $userRow );
