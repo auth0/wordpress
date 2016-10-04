@@ -112,7 +112,7 @@ class WP_Auth0_DBManager {
 
 		}
 
-		if ( $this->current_db_version < 11 ) {
+		if ( $this->current_db_version < 12 ) {
 
 			if ( strpos( $cdn_url, '10.' ) === false ) {
 				$options->set('use_lock_10', false);
