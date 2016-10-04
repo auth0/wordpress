@@ -47,6 +47,15 @@ class WP_Auth0_DBManager {
 		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-9.1' ) !== false ) {
 			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.2.min.js' );
 		}
+		if ( strpos( $cdn_url, '10.0' ) !== false ) {
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock/10.3/lock.min.js' );
+		}
+		if ( strpos( $cdn_url, '10.1' ) !== false ) {
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock/10.3/lock.min.js' );
+		}
+		if ( strpos( $cdn_url, '10.2' ) !== false ) {
+			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock/10.3/lock.min.js' );
+		}
 
 		if ( $this->current_db_version <= 7 ) {
 			if ( $options->get( 'db_connection_enabled' ) ) {
@@ -77,7 +86,7 @@ class WP_Auth0_DBManager {
 
 			if ($options->get('use_lock_10') === null) {
 
-				if ( strpos( $cdn_url, '10.0' ) !== false ) {
+				if ( strpos( $cdn_url, '10.' ) !== false ) {
 					$options->set('use_lock_10', false);
 				} else {
 					$options->set('use_lock_10', true);
@@ -105,7 +114,7 @@ class WP_Auth0_DBManager {
 
 		if ( $this->current_db_version < 11 ) {
 
-			if ( strpos( $cdn_url, '10.0' ) === false ) {
+			if ( strpos( $cdn_url, '10.' ) === false ) {
 				$options->set('use_lock_10', false);
 			}	
 			else 
