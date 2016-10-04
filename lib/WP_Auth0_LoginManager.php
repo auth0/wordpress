@@ -360,8 +360,32 @@ class WP_Auth0_LoginManager {
 			throw new WP_Auth0_BeforeLoginException( $e->getMessage() );
 		}
 
+		$secure_cookie = is_ssl();
+
+		/**
+		 * Filters whether to use a secure sign-on cookie.
+		 *
+		 * @since 3.1.0
+		 *
+		 * @param bool  $secure_cookie Whether to use a secure sign-on cookie.
+		 * @param array $credentials {
+	 	 *     Array of entered sign-on data.
+	 	 *
+	 	 *     @type string $user_login    Username.
+	 	 *     @type string $user_password Password entered.
+		 *     @type bool   $remember      Whether to 'remember' the user. Increases the time
+		 *                                 that the cookie will be kept. Default false.
+	 	 * }
+		 */
+		$secure_cookie = apply_filters( 'secure_signon_cookie', $secure_cookie, array(
+			"user_login" => $user->user_login,
+			"user_password" => null,
+			"remember" => $remember_users_session
+			) 
+		);
+
 		wp_set_current_user( $user->ID, $user->user_login );
-		wp_set_auth_cookie( $user->ID, $remember_users_session );
+		wp_set_auth_cookie( $user->ID, $remember_users_session, $secure_cookie);
 		do_action( 'wp_login', $user->user_login, $user );
 		do_action( 'auth0_user_login' , $user->ID, $userinfo, $is_new, $id_token, $access_token );
 	}
