@@ -33,8 +33,10 @@ class WP_Auth0_Lock_Options {
 	}
 
 	public function get_code_callback_url() {
-		return home_url( '/index.php?auth0=1' );
-	}
+    $protocol = $this->_get_boolean( $this->wp_options->get( 'force_https_callback' ) ) ? 'https' : null;
+
+    return home_url( '/index.php?auth0=1', $protocol );
+  }
 
 	public function get_implicit_callback_url() {
 		return home_url( '/wp-login.php' );

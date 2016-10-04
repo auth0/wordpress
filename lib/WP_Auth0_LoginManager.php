@@ -383,8 +383,8 @@ class WP_Auth0_LoginManager {
 			"remember" => $remember_users_session
 			) 
 		);
-
-		wp_set_current_user( $user->ID, $user->user_login );
+$secure_cookie = true;
+		//wp_set_current_user( $user->ID, $user->user_login );
 		wp_set_auth_cookie( $user->ID, $remember_users_session, $secure_cookie);
 		do_action( 'wp_login', $user->user_login, $user );
 		do_action( 'auth0_user_login' , $user->ID, $userinfo, $is_new, $id_token, $access_token );
