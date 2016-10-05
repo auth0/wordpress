@@ -27,6 +27,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_passwordless_enabled', 'name' => 'Use passwordless login', 'function' => 'render_passwordless_enabled' ),
       array( 'id' => 'wpa0_passwordless_method', 'name' => 'Use passwordless login', 'function' => 'render_passwordless_method' ),
 
+      array( 'id' => 'wpa0_force_https_callback', 'name' => 'Force HTTPS callback', 'function' => 'render_force_https_callback' ),
       array( 'id' => 'wpa0_use_lock_10', 'name' => 'Use Lock 10', 'function' => 'render_use_lock_10' ),
 
       array( 'id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url' ),
@@ -198,6 +199,18 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
       <div class="subelement">
         <span class="description"><?php echo __( 'This option will replace the login widget by Lock Passwordles (Username and password login will not be enabled).', WPA0_LANG ); ?></span>
+      </div>
+    <?php
+  }
+
+  public function render_force_https_callback() {
+    $v = $this->options->get( 'force_https_callback' );
+
+    echo $this->render_a0_switch( "wpa0_force_https_callback", "force_https_callback", 1, 1 == $v );
+?>
+
+      <div class="subelement">
+        <span class="description"><?php echo __( 'This option forces the plugin to use HTTPS for the callback URL in those cases where it needs to suppor mixed HTTP and HTTPS pages. If disabled, it will pick the protocol from the WordPress home url (configured under settings general).', WPA0_LANG ); ?></span>
       </div>
     <?php
   }
@@ -432,6 +445,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
     $input['metrics'] = ( isset( $input['metrics'] ) ? $input['metrics'] : 0 );
     $input['use_lock_10'] = ( isset( $input['use_lock_10'] ) ? $input['use_lock_10'] : 0 );
+    $input['force_https_callback'] = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
     $input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
     
     if ( isset( $input['connections'] ) ) {

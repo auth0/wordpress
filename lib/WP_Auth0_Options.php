@@ -110,6 +110,8 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
 			'password_policy' => 'fair',
 
+			'force_https_callback' => false,
+			
 			'auto_provisioning' => true,
 			'default_login_redirection' => home_url(),
 

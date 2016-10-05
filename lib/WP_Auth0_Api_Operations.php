@@ -104,6 +104,13 @@ class WP_Auth0_Api_Operations {
 				"requires_username" => true,
 				'import_mode' => true,
 				'passwordPolicy' => $password_policy,
+				"brute_force_protection": true,
+				"validation"  => array(
+					"username" => array(
+	          "min" => 1,
+	          "max" => 100,
+	        ),
+        ),
 				'customScripts' => array(
 					'login' => $login_script,
 					'get_user' => $get_user_script
