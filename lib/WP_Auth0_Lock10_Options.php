@@ -239,7 +239,9 @@ class WP_Auth0_Lock10_Options {
     $extended_settings = $this->build_settings( $extended_settings );
 
     $extraOptions = array(
-      "auth"    => array( "state" => $state ),
+      "auth"    => array( 
+        "params" => array("state" => $state ),
+      ),
     );
 
     $extraOptions["auth"]["params"]["scope"] = "openid ";
