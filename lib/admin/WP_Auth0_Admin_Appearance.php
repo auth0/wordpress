@@ -175,6 +175,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
       if ( json_decode( $input['language_dictionary'] ) === null ) {
         $error = __( 'The language dictionary parameter should be a valid json object.', WPA0_LANG );
         $this->add_validation_error( $error );
+        $input['language'] = $old_options['language'];
       }
     }
 
