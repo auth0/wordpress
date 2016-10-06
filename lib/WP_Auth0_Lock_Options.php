@@ -112,7 +112,7 @@ class WP_Auth0_Lock_Options {
 			$stateObj["redirect_to"] = addslashes( $_GET['redirect_to'] );
 		}
 
-		return json_encode( $stateObj );
+		return base64_encode( json_encode( $stateObj ) );
 	}
 
 	protected function _get_boolean( $value ) {

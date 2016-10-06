@@ -134,7 +134,7 @@ class WP_Auth0_LoginManager {
 			if ( isset( $_GET['redirect_to'] ) ) {
 				$stateObj['redirect_to'] = $_GET['redirect_to'];
 			}
-			$state = wp_json_encode( $stateObj );
+			$state = base64_encode( json_encode( $stateObj ) );
 
 			// Create the link to log in.
 			$login_url = "https://". $this->a0_options->get( 'domain' ) .
@@ -203,7 +203,7 @@ class WP_Auth0_LoginManager {
 		$code = $this->query_vars( 'code' );
 		$state = $this->query_vars( 'state' );
 
-		$stateFromGet = json_decode( stripcslashes( $state ) );
+		$stateFromGet = json_decode( base64_decode( $state ) );
 
 		$domain = $this->a0_options->get( 'domain' );
 
@@ -300,7 +300,7 @@ class WP_Auth0_LoginManager {
 	public function implicit_login() {
 
 		$token = $_POST['token'];
-		$stateFromGet = json_decode( stripcslashes( $_POST['state'] ) );
+		$stateFromGet = json_decode( base64_decode( $_POST['state'] ) );
 
 		$secret = $this->a0_options->get( 'client_secret' );
 
