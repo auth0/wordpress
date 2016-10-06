@@ -99,11 +99,13 @@ class WP_Auth0_Lock10_Options {
   }
 
   public function get_state_obj( $redirect_to = null ) {
+    
     if ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ) {
       $interim_login = true;
     } else {
       $interim_login = false;
     }
+
     $stateObj = array( "interim" => $interim_login, "uuid" =>uniqid() );
     if ( !empty( $redirect_to ) ) {
       $stateObj["redirect_to"] = addslashes( $redirect_to );
@@ -112,7 +114,7 @@ class WP_Auth0_Lock10_Options {
       $stateObj["redirect_to"] = addslashes( $_GET['redirect_to'] );
     }
 
-    return json_encode( $stateObj );
+    return base64_encode( json_encode( $stateObj ) );
   }
 
   protected function _get_boolean( $value ) {
