@@ -112,7 +112,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
 			'force_https_callback' => false,
 			
-			'auto_provisioning' => true,
+			'auto_provisioning' => false,
 			'default_login_redirection' => home_url(),
 
 			'auth0_server_domain' => 'auth0.auth0.com',
