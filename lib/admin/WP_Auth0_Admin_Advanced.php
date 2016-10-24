@@ -210,7 +210,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 ?>
 
       <div class="subelement">
-        <span class="description"><?php echo __( 'This option forces the plugin to use HTTPS for the callback URL in those cases where it needs to suppor mixed HTTP and HTTPS pages. If disabled, it will pick the protocol from the WordPress home url (configured under settings general).', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'This option forces the plugin to use HTTPS for the callback URL in those cases where it needs to support mixed HTTP and HTTPS pages. If disabled, it will pick the protocol from the WordPress home URL (configured under Settings > General).', WPA0_LANG ); ?></span>
       </div>
     <?php
   }
