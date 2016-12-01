@@ -62,12 +62,12 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'passwordless_method' => 'magiclink',
 			'passwordless_cdn_url' => '//cdn.auth0.com/js/lock-passwordless-2.2.min.js',
 			'use_lock_10' => null,
-			'cdn_url' => '//cdn.auth0.com/js/lock/10.3/lock.min.js',
+			'cdn_url' => '//cdn.auth0.com/js/lock/10.7/lock.min.js',
 			'cdn_url_legacy' => '//cdn.auth0.com/js/lock-9.2.min.js',
 			'requires_verified_email' => true,
 			'wordpress_login_enabled' => true,
 			'primary_color' => '',
-			
+
 			'language' => '',
 			'language_dictionary' => '',
 
@@ -111,7 +111,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'password_policy' => 'fair',
 
 			'force_https_callback' => false,
-			
+
 			'auto_provisioning' => false,
 			'default_login_redirection' => home_url(),
 
