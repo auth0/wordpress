@@ -136,7 +136,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       </span>
     </div>
     <?php
-  }  
+  }
 
   public function render_custom_signup_fields() {
     $v = $this->options->get( 'custom_signup_fields' );
@@ -158,7 +158,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       // only accept addresses with more than 10 chars
       return value.length > 10;
     }
-  }, 
+  },
   {
     ... // more fields could be specified
   }
@@ -210,7 +210,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 ?>
 
       <div class="subelement">
-        <span class="description"><?php echo __( 'This option forces the plugin to use HTTPS for the callback URL in those cases where it needs to suppor mixed HTTP and HTTPS pages. If disabled, it will pick the protocol from the WordPress home url (configured under settings general).', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'This option forces the plugin to use HTTPS for the callback URL in those cases where it needs to support mixed HTTP and HTTPS pages. If disabled, it will pick the protocol from the WordPress home URL (configured under Settings > General).', WPA0_LANG ); ?></span>
       </div>
     <?php
   }
@@ -325,7 +325,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     <textarea cols="25" name="<?php echo $this->options->get_options_name(); ?>[ip_ranges]" id="wpa0_ip_ranges"><?php echo esc_textarea( $v ); ?></textarea>
     <div class="subelement">
       <span class="description"><?php echo __( 'Only one range per line! Range format should be as follows (spaces will be trimmed):', WPA0_LANG ); ?></span>
-      <code>xx.xx.xx.xx - yy.yy.yy.yy</code> 
+      <code>xx.xx.xx.xx - yy.yy.yy.yy</code>
     </div>
     <?php
   }
@@ -447,7 +447,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $input['use_lock_10'] = ( isset( $input['use_lock_10'] ) ? $input['use_lock_10'] : 0 );
     $input['force_https_callback'] = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
     $input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
-    
+
     if ( isset( $input['connections'] ) ) {
       if ( isset( $input['connections']['social_twitter_key'] ) ) $input['connections']['social_twitter_key'] = sanitize_text_field( $input['connections']['social_twitter_key'] );
       if ( isset( $input['connections']['social_twitter_secret'] ) ) $input['connections']['social_twitter_secret'] = sanitize_text_field( $input['connections']['social_twitter_secret'] );
