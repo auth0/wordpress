@@ -2,17 +2,16 @@
 /**
  * Plugin Name: PLUGIN_NAME
  * Description: PLUGIN_DESCRIPTION
- * Version: 3.2.13
+ * Version: 3.2.14
  * Author: Auth0
  * Author URI: https://auth0.com
  */
-
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'WPA0_LANG', 'wp-auth0' );
 define( 'AUTH0_DB_VERSION', 12 );
-define( 'WPA0_VERSION', '3.2.13' );
+define( 'WPA0_VERSION', '3.2.14' );
 
 /**
  * Main plugin class
@@ -357,6 +356,7 @@ class WP_Auth0 {
 	public static function uninstall() {
 		$a0_options = WP_Auth0_Options::Instance();
 		$a0_options->delete();
+    delete_option( 'auth0_db_version' );
 	}
 
 	private function autoloader( $class ) {
@@ -411,7 +411,7 @@ if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 		$current_user = wp_get_current_user();
 
 		$currentauth0_user = get_auth0userinfo($current_user->ID);
-		
+
 		return $currentauth0_user;
 	}
 }
@@ -419,7 +419,7 @@ if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 if ( ! function_exists( 'get_currentauth0user' ) ) {
 	function get_currentauth0user() {
 
-		global $wpdb; 
+		global $wpdb;
 
 		$current_user = wp_get_current_user();
 
@@ -437,9 +437,11 @@ if ( ! function_exists( 'get_currentauth0user' ) ) {
 
 if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
 	function get_auth0_curatedBlogName() {
-		$name = get_bloginfo( 'name' );
 
-		$name = preg_replace("/[^A-Za-z0-9 ]/", '', $name);
+    $name = get_bloginfo( 'name' );
+
+    $name = preg_replace("/[^A-Za-z0-9 ]/", '', $name);
+    $name = preg_replace("/\s+/", ' ', $name);
 		$name = str_replace(" ", "-", $name);
 
 		return $name;

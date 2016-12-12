@@ -68,7 +68,7 @@ if ( !$migration_ws_enabled ) {
 
 	</div>
 </div>
-<script src="http://cdn.auth0.com/js/lock-8.min.js"></script>
+<script src="//cdn.auth0.com/js/lock-8.min.js"></script>
 <script type="text/javascript">
 
 document.addEventListener("DOMContentLoaded", function() {

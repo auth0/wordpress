@@ -86,7 +86,7 @@ class WP_Auth0_DBManager {
 
 			if ($options->get('use_lock_10') === null) {
 
-				if ( strpos( $cdn_url, '10.' ) !== false ) {
+				if ( strpos( $cdn_url, '10.' ) === false ) {
 					$options->set('use_lock_10', false);
 				} else {
 					$options->set('use_lock_10', true);
@@ -96,14 +96,14 @@ class WP_Auth0_DBManager {
 
 			$dict = $options->get('dict');
 
-			if (!empty($dict)) 
+			if (!empty($dict))
 			{
 
-				if (json_decode($dict) === null) 
+				if (json_decode($dict) === null)
 				{
 					$options->set('language', $dict);
-				} 
-				else 
+				}
+				else
 				{
 					$options->set('language_dictionary', $dict);
 				}
@@ -116,9 +116,7 @@ class WP_Auth0_DBManager {
 
 			if ( strpos( $cdn_url, '10.' ) === false ) {
 				$options->set('use_lock_10', false);
-			}	
-			else 
-			{
+			} else {
 				$options->set('use_lock_10', true);
 			}
 
@@ -135,8 +133,7 @@ class WP_Auth0_DBManager {
 
 		$sql = 'SELECT a.*
 				FROM ' . $wpdb->auth0_user .' a
-				JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id
-				ORDER BY a.last_update DESC;';
+				JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id;';
 
 		$userRows = $wpdb->get_results( $sql );
 
