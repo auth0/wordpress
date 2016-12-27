@@ -1,4 +1,3 @@
-<script id="auth0" src="<?php echo $cdn ?>"></script>
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function() {
   if (typeof(ignore_sso) !== 'undefined' && ignore_sso) {
