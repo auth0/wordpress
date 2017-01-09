@@ -66,7 +66,7 @@ To hook to this filter, you will need to do the following:
 
 This filter is called after the plugin finds the related user to login (based on the auth0 `user_id`). It allows to override the default behaviour with custom matching rules(for example, always match by email).
 
-If the filter returns null, it will lookup by email as stated in the [How doe it work?](https://auth0.com/docs/cms/wordpress/how-does-it-work) document.
+If the filter returns null, it will lookup by email as stated in the [How does it work?](https://auth0.com/docs/cms/wordpress/how-does-it-work) document.
 
 ```
     add_filter( 'auth0_get_wp_user', 'auth0_get_wp_user_handler', 1, 2 );
