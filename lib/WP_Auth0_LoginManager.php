@@ -240,8 +240,18 @@ class WP_Auth0_LoginManager {
 
 			if ( !isset( $data->id_token ) ) {
 				$data->id_token = null;
+				$response = WP_Auth0_Api_Client::get_user_info( $domain, $data->access_token );
+			} else {
+				// grab the user ID from the id_token to call get_user
+				$decodedToken = JWT::decode( $data->id_token, $client_secret, array( 'HS256' ) );
+
+				// validate that this JWT was made for us
+				if ( $this->a0_options->get( 'client_id' ) !== $decodedToken->aud ) {
+					throw new Exception( 'This token is not intended for us.' );
+				}
+
+				$response = WP_Auth0_Api_Client::get_user( $domain, $data->id_token, $decodedToken->sub );
 			}
-			$response = WP_Auth0_Api_Client::get_user_info( $domain, $data->access_token );
 
 			if ( $response instanceof WP_Error ) {
 				WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_userinfo', $response );
