@@ -162,7 +162,6 @@ class WP_Auth0_Api_Operations {
 	 */
 	public function social_validation( $app_token, $old_options, $input, $strategy, $connection_options ) {
 		$domain = $this->a0_options->get( 'domain' );
-		$secret = $this->a0_options->get( 'client_secret' );
 		$client_id = $this->a0_options->get( 'client_id' );
 
 		$main_key = "social_$strategy";

@@ -84,7 +84,7 @@ class WP_Auth0_Routes {
 		$authorization = $this->getAuthorizationHeader();
 		$authorization = trim( str_replace( 'Bearer ', '', $authorization ) );
 
-		$secret = $this->a0_options->get( 'client_secret' );
+		$secret = $this->a0_options->get_client_secret_as_key();
 		$token_id = $this->a0_options->get( 'migration_token_id' );
 
 		$user = null;
@@ -94,7 +94,7 @@ class WP_Auth0_Routes {
 				throw new Exception( 'Unauthorized: missing authorization header' );
 			}
 
-			$token = JWT::decode( $authorization, JWT::urlsafeB64Decode( $secret ), array( 'HS256' ) );
+			$token = JWT::decode( $authorization, $secret, array( 'HS256' ) );
 
 			if ( $token->jti != $token_id ) {
 				throw new Exception( 'Invalid token id' );
@@ -145,7 +145,7 @@ class WP_Auth0_Routes {
 		$authorization = $this->getAuthorizationHeader();
 		$authorization = trim(str_replace('Bearer ', '', $authorization));
 
-		$secret = $this->a0_options->get( 'client_secret' );
+		$secret = $this->a0_options->get_client_secret_as_key();
 		$token_id = $this->a0_options->get( 'migration_token_id' );
 
 		$user = null;
@@ -155,7 +155,7 @@ class WP_Auth0_Routes {
 				throw new Exception('Unauthorized: missing authorization header');
 			}
 
-			$token = JWT::decode($authorization, JWT::urlsafeB64Decode( $secret ), array('HS256'));
+			$token = JWT::decode($authorization, $secret, array('HS256'));
 
 			if ($token->jti != $token_id) {
 				throw new Exception('Invalid token id');

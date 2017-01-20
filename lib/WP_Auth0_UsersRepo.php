@@ -74,11 +74,23 @@ class WP_Auth0_UsersRepo {
 
 		// If the user doesn't exist we need to either create a new one, or asign him to an existing one
 		$isDatabaseUser = false;
-		foreach ( $userinfo->identities as $identity ) {
-			if ( $identity->provider == "auth0" ) {
+
+		if (isset($userinfo->identities)) {
+			foreach ( $userinfo->identities as $identity ) {
+				if ( $identity->provider == "auth0" ) {
+					$isDatabaseUser = true;
+				}
+			}
+		} else {
+			$sub = $userinfo->sub;
+			list($provider, $id) = explode('|', $sub);
+			if ( $provider == "auth0" ) {
 				$isDatabaseUser = true;
 			}
 		}
+
+
+
 		$joinUser = null;
 
 		// If the user has a verified email or is a database user try to see if there is
