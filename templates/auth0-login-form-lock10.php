@@ -78,8 +78,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     <?php if ( $lock_options->get_auth0_implicit_workflow() ) { ?>
 
-        lock.on("authenticated", function(authResult) {
+        if (window.location.hash !== '' && window.location.hash.indexOf('id_token') !== -1) {
+            ignore_sso = true;
+        }
 
+        lock.on("authenticated", function(authResult) {
             post('<?php echo home_url( '/index.php?auth0=implicit' ); ?>', {
                 token:authResult.idToken,
                 state:authResult.state

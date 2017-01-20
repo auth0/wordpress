@@ -17,6 +17,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				array( 'id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain' ),
 				array( 'id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id' ),
 				array( 'id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret' ),
+				array( 'id' => 'wpa0_client_secret_b64_encoded', 'name' => 'Client Secret Base64 Encoded', 'function' => 'render_client_secret_b64_encoded' ),
 				array( 'id' => 'wpa0_auth0_app_token', 'name' => 'API token', 'function' => 'render_auth0_app_token' ), //we are not going to show the token
 				array( 'id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login' ),
 				array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
@@ -71,6 +72,18 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
         <span class="description"><?php echo __( 'Application secret, copy from your application\'s settings in the', WPA0_LANG ); ?> <a href="https://manage.auth0.com/#/applications" target="_blank">Auth0 dashboard</a>.</span>
       </div>
     <?php
+	}
+
+	public function render_client_secret_b64_encoded() {
+		$v = absint( $this->options->get( 'client_secret_b64_encoded' ) );
+
+		echo $this->render_a0_switch( "Not Base64 Enabled", "Base64 Enabled", 1, 1 == $v );
+	?>
+				<div class="subelement">
+					<span class="description"><?php echo __( 'Enable if your client secret is base64 enabled.  If you are not sure, check your clients page in Auth0.  Displayed below the client secret on that page is the text "The Client Secret is not base64 encoded.
+	" when this is not encoded.', WPA0_LANG ); ?></span>
+				</div>
+			<?php
 	}
 
 	public function render_domain() {
@@ -161,6 +174,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
 		// Only replace the secret or token if a new value was set. If not, we will keep the last one entered.
 		$input['client_secret'] = ( !empty( $input['client_secret'] ) ? $input['client_secret'] : $old_options['client_secret'] );
+		$input['client_secret_b64_encoded'] = ( isset( $input['client_secret_b64_encoded'] ) ? $input['client_secret_b64_encoded'] : 0 );
 		$input['auth0_app_token'] = ( !empty( $input['auth0_app_token'] ) ? $input['auth0_app_token'] : $old_options['auth0_app_token'] );
 
 
