@@ -268,8 +268,8 @@ class WP_Auth0_EditProfile {
 			$errors = new WP_Error();
 		}
 
-    $current_user = get_currentauth0user();
-    $user_profile = $current_user->auth0_obj;
+    $current_user = wp_get_current_user();
+    $user_profile =  get_currentauth0userinfo();
 
 		$app_token = $this->a0_options->get( 'auth0_app_token' );;
 
