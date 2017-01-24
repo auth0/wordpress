@@ -205,7 +205,7 @@ class WP_Auth0_Lock10_Options {
     if ( $this->get_auth0_implicit_workflow() ) {
       $options["callbackOnLocationHash"] = true;
       $options["callbackURL"] = $this->get_implicit_callback_url();
-      $options["scope"] .= "name email picture nickname email_verified identities";
+      $options["scope"] .= "name email picture nickname email_verified";
     } else {
       $options["callbackOnLocationHash"] = false;
       $options["callbackURL"] = $this->get_code_callback_url();

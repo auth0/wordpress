@@ -53,7 +53,7 @@ class WP_Auth0_Configure_JWTAUTH {
 		if ( self::is_jwt_auth_enabled() ) {
 			JWT_AUTH_Options::set( 'aud', $this->a0_options->get( 'client_id' ) );
 			JWT_AUTH_Options::set( 'secret', $this->a0_options->get( 'client_secret' ) );
-			JWT_AUTH_Options::set( 'secret_base64_encoded', true );
+			JWT_AUTH_Options::set( 'secret_base64_encoded', $this->a0_options->get( 'client_secret_b64_encoded' ) );
 			JWT_AUTH_Options::set( 'override_user_repo', 'WP_Auth0_UsersRepo' );
 			$this->a0_options->set( 'jwt_auth_integration', true );
 		}
@@ -75,7 +75,7 @@ class WP_Auth0_Configure_JWTAUTH {
 		return (
 			JWT_AUTH_Options::get( 'aud' ) === $options->get( 'client_id' ) &&
 			JWT_AUTH_Options::get( 'secret' ) === $options->get( 'client_secret' ) &&
-			JWT_AUTH_Options::get( 'secret_base64_encoded' ) &&
+			JWT_AUTH_Options::get( 'secret_base64_encoded' ) === $options->get( 'client_secret_b64_encoded' ) &&
 			$options->get( 'jwt_auth_integration' ) &&
 			JWT_AUTH_Options::get( 'jwt_attribute' ) === 'sub'
 		);

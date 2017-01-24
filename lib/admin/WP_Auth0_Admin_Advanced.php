@@ -484,9 +484,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     if ( $old_options['migration_ws'] != $input['migration_ws'] ) {
 
       if ( 1 == $input['migration_ws'] ) {
-        $secret = $input['client_secret'];
+        $secret = $input['client_secret_b64_encoded'] ? JWT::urlsafeB64Decode( $secret) : $input['client_secret'];
         $token_id = uniqid();
-        $input['migration_token'] = JWT::encode( array( 'scope' => 'migration_ws', 'jti' => $token_id ), JWT::urlsafeB64Decode( $secret ) );
+        $input['migration_token'] = JWT::encode( array( 'scope' => 'migration_ws', 'jti' => $token_id ), $secret );
         $input['migration_token_id'] = $token_id;
 
         // if ($response === false) {
