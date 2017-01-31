@@ -45,7 +45,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
 	public function get_client_secret_as_key() {
 		$secret = $this->get('client_secret', '');
-		$isEncoded = $this->get('client_secret_b64_encoded', false);
+    $isEncoded = $this->get('client_secret_b64_encoded', false);
 		return $isEncoded ? JWT::urlsafeB64Decode($secret) : $secret;
 	}
 
@@ -58,7 +58,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'auto_login_method' => '',
 			'client_id' => '',
 			'client_secret' => '',
-			'client_secret_b64_enabled' => true,
+			'client_secret_b64_encoded' => true,
 			'domain' => '',
 			'form_title' => '',
 			'icon_url' => '',
