@@ -85,7 +85,11 @@ class WP_Auth0_LoginManager {
 		$logout_url = wp_logout_url( get_permalink() ) . '&SLO=1';
 
 		wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
-		include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
+		if ($this->a0_options->get('use_lock_10')) {
+            include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler-lock10.php';
+        } else {
+            include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
+        }
 	}
 
 	public function logout() {
