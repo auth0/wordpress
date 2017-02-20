@@ -4,12 +4,18 @@
 
   var uuids = '<?php echo $user_profile->user_id; ?>';
   document.addEventListener("DOMContentLoaded", function() {
-    var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
-    lock.$auth0.getSSOData(function(err, data) {
-      if (!err && ( !data.sso || uuids != data.lastUsedUserID) ) {
+    if (typeof(auth0) === 'undefined') {
+      return;
+    }
 
+    var webAuth = new auth0.WebAuth({
+      clientID:'<?php echo $client_id; ?>',
+      domain:'<?php echo $domain; ?>'
+    });
+
+    webAuth.client.getSSOData(function(err, data) {
+      if (!err && ( !data.sso || uuids != data.lastUsedUserID)) {
         window.location = '<?php echo html_entity_decode( $logout_url ); ?>';
-
       }
     });
   });
