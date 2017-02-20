@@ -77,7 +77,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	public function render_client_secret_b64_encoded() {
 		$v = absint( $this->options->get( 'client_secret_b64_encoded' ) );
 
-		echo $this->render_a0_switch( "Not Base64 Enabled", "Base64 Enabled", 1, 1 == $v );
+		echo $this->render_a0_switch( "wpa_client_secret_b64_encoded", "client_secret_b64_encoded", 1, 1 == $v );
 	?>
 				<div class="subelement">
 					<span class="description"><?php echo __( 'Enable if your client secret is base64 enabled.  If you are not sure, check your clients page in Auth0.  Displayed below the client secret on that page is the text "The Client Secret is not base64 encoded.
@@ -165,7 +165,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	}
 
 	public function basic_validation( $old_options, $input ) {
-    
+
     // $input['registration_enabled'] = $old_options['registration_enabled'];
 
 		$input['client_id'] = sanitize_text_field( $input['client_id'] );
