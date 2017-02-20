@@ -114,13 +114,24 @@ class WP_Auth0_DBManager {
 
 		if ( $this->current_db_version < 12 ) {
 
-			if ( strpos( $cdn_url, '10.' ) === false ) {
-				$options->set('use_lock_10', false);
-			} else {
-				$options->set('use_lock_10', true);
-			}
+      if ( strpos( $cdn_url, '10.' ) === false ) {
+        $options->set('use_lock_10', false);
+      } else {
+        $options->set('use_lock_10', true);
+      }
 
-		}
+    }
+
+    if ( $this->current_db_version < 13 ) {
+      $ips = $options->get('migration_ips');
+      $oldips = '138.91.154.99,54.221.228.15,54.183.64.135,54.67.77.38,54.67.15.170,54.183.204.205,54.173.21.107,54.85.173.28';
+
+      $ipCheck = new WP_Auth0_Ip_Check($options);
+
+      if ( $ips === $oldips ) {
+        $options->set('migration_ips', $ipCheck->get_ip_by_region('us'));
+      }
+    }
 
 		$this->current_db_version = AUTH0_DB_VERSION;
 		update_option( 'auth0_db_version', AUTH0_DB_VERSION );

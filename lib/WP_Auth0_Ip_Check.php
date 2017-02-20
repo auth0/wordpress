@@ -26,6 +26,10 @@ class WP_Auth0_Ip_Check {
 		return null;
 	}
 
+  public function get_ip_by_region($region) {
+    return $this->valid_webtask_ips[$region];
+  }
+
 	protected function get_request_ip() {
 		$valid_proxy_ip = $this->a0_options->get( 'valid_proxy_ip' );
 
