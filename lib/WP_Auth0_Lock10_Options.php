@@ -99,7 +99,7 @@ class WP_Auth0_Lock10_Options {
   }
 
   public function get_state_obj( $redirect_to = null ) {
-    
+
     if ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ) {
       $interim_login = true;
     } else {
@@ -113,6 +113,8 @@ class WP_Auth0_Lock10_Options {
     elseif ( isset( $_GET['redirect_to'] ) ) {
       $stateObj["redirect_to"] = addslashes( $_GET['redirect_to'] );
     }
+
+    $stateObj["state"] = 'nonce';
 
     return base64_encode( json_encode( $stateObj ) );
   }
@@ -198,17 +200,15 @@ class WP_Auth0_Lock10_Options {
   }
 
   public function get_sso_options() {
-    $options = $this->get_lock_options();
-
     $options["scope"] = "openid ";
 
     if ( $this->get_auth0_implicit_workflow() ) {
-      $options["callbackOnLocationHash"] = true;
-      $options["callbackURL"] = $this->get_implicit_callback_url();
+      $options["responseType"] = 'id_token';
+      $options["redirectUri"] = $this->get_implicit_callback_url();
       $options["scope"] .= "name email picture nickname email_verified";
     } else {
-      $options["callbackOnLocationHash"] = false;
-      $options["callbackURL"] = $this->get_code_callback_url();
+      $options["responseType"] = 'code';
+      $options["redirectUri"] = $this->get_code_callback_url();
     }
 
     $redirect_to = null;
@@ -221,9 +221,9 @@ class WP_Auth0_Lock10_Options {
 
     unset( $options["authParams"] );
     $options["state"] = $this->get_state_obj( $redirect_to );
+    $options["nonce"] = 'nonce';
 
     return $options;
-
   }
 
   public function get_lock_options() {
@@ -241,7 +241,7 @@ class WP_Auth0_Lock10_Options {
     $extended_settings = $this->build_settings( $extended_settings );
 
     $extraOptions = array(
-      "auth"    => array( 
+      "auth"    => array(
         "params" => array("state" => $state ),
       ),
     );

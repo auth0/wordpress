@@ -39,23 +39,17 @@ class WP_Auth0_LoginManager {
 			return;
 		}
 
-		$lock_options = new WP_Auth0_Lock_Options();
+		$lock_options = new WP_Auth0_Lock10_Options();
 
 		$sso = $lock_options->get_sso();
 
 		if ( $sso ) {
-			$cdn = $lock_options->get_cdn_url();
 			$client_id = $lock_options->get_client_id();
 			$domain = $lock_options->get_domain();
+      $cdn = $this->a0_options->get('auth0js-cdn');
 
-			wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
-
-			if ($this->a0_options->get('use_lock_10')) {
-	      include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler-lock10.php';
-	    } else {
-	    	include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler.php';
-	    }
-
+      wp_enqueue_script( 'wpa0_auth0js', $cdn );
+      include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler-lock10.php';
 		}
 	}
 	public function auth0_singlelogout_footer( $previous_html ) {
@@ -79,12 +73,11 @@ class WP_Auth0_LoginManager {
 			return;
 		}
 
-		$cdn = $this->a0_options->get( 'cdn_url' );
+		$cdn = $this->a0_options->get('auth0js-cdn');
 		$client_id = $this->a0_options->get( 'client_id' );
 		$domain = $this->a0_options->get( 'domain' );
 		$logout_url = wp_logout_url( get_permalink() ) . '&SLO=1';
 
-		wp_enqueue_script( 'wpa0_lock', $cdn, 'jquery' );
 		include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
 	}
 
@@ -162,7 +155,7 @@ class WP_Auth0_LoginManager {
 				$this->implicit_login();
 			} else {
 				$this->redirect_login();
-			}	
+			}
 		} catch (WP_Auth0_LoginFlowValidationException $e) {
 
 			$msg = __( 'There was a problem with your log in', WPA0_LANG );
@@ -182,7 +175,7 @@ class WP_Auth0_LoginManager {
 		} catch (Exception $e) {
 
 		}
-		
+
 	}
 
 	public function redirect_login() {
@@ -257,7 +250,7 @@ class WP_Auth0_LoginManager {
 				WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_userinfo', $response );
 
 				error_log( $response->get_error_message() );
-				
+
 				throw new WP_Auth0_LoginFlowValidationException( );
 			}
 
@@ -389,7 +382,7 @@ class WP_Auth0_LoginManager {
 			"user_login" => $user->user_login,
 			"user_password" => null,
 			"remember" => $remember_users_session
-			) 
+			)
 		);
 
 		//wp_set_current_user( $user->ID, $user->user_login );
@@ -437,7 +430,7 @@ class WP_Auth0_LoginManager {
 			if ( isset( $userinfo->email ) && $user->data->user_email !== $userinfo->email ) {
 
 				$description = $user->data->description;
-				
+
 				if (empty($description)){
 					if (isset($userinfo->headline)) {
 						$description = $userinfo->headline;
@@ -453,10 +446,10 @@ class WP_Auth0_LoginManager {
 					}
 				}
 
-				$user_id = wp_update_user( array( 
-					'ID' => $user->data->ID, 
-					'user_email' => $userinfo->email, 
-					'description' => $description, 
+				$user_id = wp_update_user( array(
+					'ID' => $user->data->ID,
+					'user_email' => $userinfo->email,
+					'description' => $description,
 				) );
 			}
 
