@@ -198,7 +198,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 ?>
 
       <div class="subelement">
-        <span class="description"><?php echo __( 'This option will replace the login widget by Lock Passwordles (Username and password login will not be enabled).', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'This option will replace the login widget with Lock Passwordless (Username and password login will not be enabled).', WPA0_LANG ); ?></span>
       </div>
     <?php
   }
