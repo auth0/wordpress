@@ -129,13 +129,15 @@ class WP_Auth0_LoginManager {
 			}
 			$state = base64_encode( json_encode( $stateObj ) );
 
+      $connection = apply_filters( 'auth0_get_auto_login_connection', $this->a0_options->get( 'auto_login_method' ) );
+
 			// Create the link to log in.
 			$login_url = "https://". $this->a0_options->get( 'domain' ) .
 				"/authorize?response_type=code&scope=openid%20profile".
 				"&client_id=".$this->a0_options->get( 'client_id' ) .
 				"&redirect_uri=".home_url( '/index.php?auth0=1' ) .
 				"&state=".urlencode( $state ).
-				"&connection=".$this->a0_options->get( 'auto_login_method' ).
+				"&connection=". trim($connection) .
 				"&auth0Client=" . WP_Auth0_Api_Client::get_info_headers();
 
 			wp_redirect( $login_url );

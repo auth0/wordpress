@@ -81,6 +81,23 @@ If the filter returns null, it will lookup by email as stated in the [How doe it
     }   
 ```
 
+### Customize autologin connection
+
+This filter will allow to programatically set which connection the plugin should use when autologin is enabled.
+
+```
+    add_filter( 'auth0_get_auto_login_connection', 'auth0_get_auto_login_connection', 1, 1 );
+
+    function auth0_get_auto_login_connection($connection) {
+
+        if ( /* check some condition */ ) {
+            return 'twitter';
+        }
+
+        return $connection;
+    }
+```
+
 ## API authentication
 
 The last version of the plugin provides the ability integrate with **wp-jwt-auth** plugin to authenticate api calls via a HTTP Authorization Header.
