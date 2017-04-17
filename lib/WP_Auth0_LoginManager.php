@@ -481,7 +481,9 @@ class WP_Auth0_LoginManager {
 			catch ( WP_Auth0_CouldNotCreateUserException $e ) {
 				throw new WP_Auth0_LoginFlowValidationException( $e->getMessage() );
 			} catch ( WP_Auth0_RegistrationNotEnabledException $e ) {
-				throw new WP_Auth0_LoginFlowValidationException( 'Could not create user. The registration process is not available. Please contact your site’s administrator.' );
+				$msg = __( 'Could not create user. The registration process is not available. Please contact your site’s administrator.', 'wp-auth0' );
+				
+				throw new WP_Auth0_LoginFlowValidationException( $msg );
 			} catch ( WP_Auth0_EmailNotVerifiedException $e ) {
 				$this->dieWithVerifyEmail( $e->userinfo, $e->id_token );
 			}
