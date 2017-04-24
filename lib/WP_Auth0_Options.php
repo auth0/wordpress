@@ -58,7 +58,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'auto_login_method' => '',
 			'client_id' => '',
 			'client_secret' => '',
-			'client_secret_b64_encoded' => true,
+			'client_secret_b64_encoded' => false,
 			'domain' => '',
 			'form_title' => '',
 			'icon_url' => '',
