@@ -16,7 +16,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		if ( is_multisite() ) {
 			return users_can_register_signup_filter();
 		}
-		return get_site_option( 'users_can_register', 0 ) == 1;
+		return apply_filters( 'wp_auth0_is_registration_enabled', (get_site_option('users_can_register', 0) == 1) );
 	}
 
 	public function get_enabled_connections() {
