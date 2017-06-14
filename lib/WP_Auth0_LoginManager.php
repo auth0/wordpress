@@ -237,8 +237,13 @@ class WP_Auth0_LoginManager {
 				$data->id_token = null;
 				$response = WP_Auth0_Api_Client::get_user_info( $domain, $data->access_token );
 			} else {
-				// grab the user ID from the id_token to call get_user
-				$decodedToken = JWT::decode( $data->id_token, $this->a0_options->get_client_secret_as_key(), array( 'HS256' ) );
+				try {
+					// grab the user ID from the id_token to call get_user
+					$decodedToken = JWT::decode( $data->id_token, $this->a0_options->get_client_secret_as_key(), array( 'HS256' ) );
+				} catch (Exception $e) {
+					WP_Auth0_ErrorManager::insert_auth0_error('redirect_login/decode', $e->getMessage());
+					throw new WP_Auth0_LoginFlowValidationException(__('Error: There was an issue decoding the token, please review the Auth0 Plugin Error Log.', WPA0_LANG));
+				}
 
 				// validate that this JWT was made for us
 				if ( $this->a0_options->get( 'client_id' ) !== $decodedToken->aud ) {
