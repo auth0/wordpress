@@ -242,7 +242,7 @@ class WP_Auth0_LoginManager {
 					$decodedToken = JWT::decode( $data->id_token, $this->a0_options->get_client_secret_as_key(), array( 'HS256' ) );
 				} catch (Exception $e) {
 					WP_Auth0_ErrorManager::insert_auth0_error('redirect_login/decode', $e->getMessage());
-					throw new WP_Auth0_LoginFlowValidationException(__('Error: There was an issue decoding the token', WPA0_LANG));
+					throw new WP_Auth0_LoginFlowValidationException(__('Error: There was an issue decoding the token, please review the Auth0 Plugin Error Log.', WPA0_LANG));
 				}
 
 				// validate that this JWT was made for us

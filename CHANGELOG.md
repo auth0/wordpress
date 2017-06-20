@@ -1,5 +1,15 @@
 # Change Log
 
+## [3.2.21](https://github.com/auth0/wp-auth0/tree/3.2.21) (2017-06-14)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.5...3.2.21)
+
+**Added**
+- Improve redirect_login error logging, JWT leeway [\#317](https://github.com/auth0/wp-auth0/pull/317) ([cocojoe](https://github.com/cocojoe))
+
+**Changed**
+- Expand internal login error with hint to disable base 64 encoding [\#318](https://github.com/auth0/wp-auth0/pull/318) ([cocojoe](https://github.com/cocojoe))
+- Disable base64_encoded by default [\#313](https://github.com/auth0/wp-auth0/pull/313) ([thameera](https://github.com/thameera))
+
 ## [3.2.5](https://github.com/auth0/wp-auth0/tree/3.2.5) (2016-09-07)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.0...3.2.5)
 
