@@ -174,9 +174,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
 		// Only replace the secret or token if a new value was set. If not, we will keep the last one entered.
 		$input['client_secret'] = ( !empty( $input['client_secret'] ) ? $input['client_secret'] : $old_options['client_secret'] );
-		$input['client_secret_b64_encoded'] = ( isset( $input['client_secret_b64_encoded'] ) ? $input['client_secret_b64_encoded'] : 0 );
+		$input['client_secret_b64_encoded'] = ( isset( $input['client_secret_b64_encoded'] ) ? $input['client_secret_b64_encoded'] == 1 : false );
 		$input['auth0_app_token'] = ( !empty( $input['auth0_app_token'] ) ? $input['auth0_app_token'] : $old_options['auth0_app_token'] );
-
 
 		$error = '';
 		$completeBasicData = true;

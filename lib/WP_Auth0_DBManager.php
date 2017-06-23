@@ -133,6 +133,14 @@ class WP_Auth0_DBManager {
       }
     }
 
+	if ( $this->current_db_version < 14 && is_null($options->get('client_secret_b64_encoded' ))) {
+		if ( $options->get('client_id' )) {
+			$options->set('client_secret_b64_encoded', true);
+		} else {
+			$options->set('client_secret_b64_encoded', false);
+		}
+	}
+
 		$this->current_db_version = AUTH0_DB_VERSION;
 		update_option( 'auth0_db_version', AUTH0_DB_VERSION );
 	}
