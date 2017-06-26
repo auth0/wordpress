@@ -1,5 +1,11 @@
 # Change Log
 
+## [3.2.22](https://github.com/auth0/wp-auth0/tree/3.2.22) (2017-06-26)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.21...3.2.22)
+
+**Fixed**
+- Fixed migration for older plugins that use base64 secret [\#324](https://github.com/auth0/wp-auth0/pull/324) ([cocojoe](https://github.com/cocojoe))
+
 ## [3.2.21](https://github.com/auth0/wp-auth0/tree/3.2.21) (2017-06-14)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.5...3.2.21)
 

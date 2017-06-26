@@ -75,7 +75,7 @@ class JWT
 
             // Check the signature
             if (!JWT::verify("$headb64.$bodyb64", $sig, $key, $header->alg)) {
-                throw new SignatureInvalidException('Signature verification failed, disabling "Settings \ Basic \ Client Secret Base64 Encoded" may resolve this issue.');
+                throw new SignatureInvalidException('Signature verification failed, check "Client Secret Base64 Encoded" value matches your Auth0 client.');
             }
 
             // Check if the nbf if it is defined. This is the time that the
