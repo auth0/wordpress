@@ -160,18 +160,18 @@ class WP_Auth0_LoginManager {
 			}
 		} catch (WP_Auth0_LoginFlowValidationException $e) {
 
-			$msg = __( 'There was a problem with your log in', WPA0_LANG );
+			$msg = __( 'There was a problem with your log in', 'wp-auth0' );
 			$msg .= ' '. $e->getMessage();
 			$msg .= '<br/><br/>';
-			$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', WPA0_LANG ) . '</a>';
+			$msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', 'wp-auth0' ) . '</a>';
 			wp_die( $msg );
 
 		} catch (WP_Auth0_BeforeLoginException $e) {
 
-			$msg = __( 'You have logged in successfully, but there is a problem accessing this site', WPA0_LANG );
+			$msg = __( 'You have logged in successfully, but there is a problem accessing this site', 'wp-auth0' );
 			$msg .= ' '. $e->getMessage();
 			$msg .= '<br/><br/>';
-			$msg .= '<a href="' . wp_logout_url() . '">' . __( '← Logout', WPA0_LANG ) . '</a>';
+			$msg .= '<a href="' . wp_logout_url() . '">' . __( '← Logout', 'wp-auth0' ) . '</a>';
 			wp_die( $msg );
 
 		} catch (Exception $e) {
@@ -206,13 +206,13 @@ class WP_Auth0_LoginManager {
 		$client_secret = $this->a0_options->get( 'client_secret' );
 
 		if ( empty( $client_id ) ) {
-			throw new WP_Auth0_LoginFlowValidationException( __( 'Error: Your Auth0 Client ID has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG ) );
+			throw new WP_Auth0_LoginFlowValidationException( __( 'Error: Your Auth0 Client ID has not been entered in the Auth0 SSO plugin settings.', 'wp-auth0' ) );
 		}
 		if ( empty( $client_secret ) ) {
-			throw new WP_Auth0_LoginFlowValidationException( __( 'Error: Your Auth0 Client Secret has not been entered in the Auth0 SSO plugin settings.', WPA0_LANG ) );
+			throw new WP_Auth0_LoginFlowValidationException( __( 'Error: Your Auth0 Client Secret has not been entered in the Auth0 SSO plugin settings.', 'wp-auth0' ) );
 		}
 		if ( empty( $domain ) ) {
-			throw new WP_Auth0_LoginFlowValidationException( __( 'Error: No Domain defined in Wordpress Administration!', WPA0_LANG ) );
+			throw new WP_Auth0_LoginFlowValidationException( __( 'Error: No Domain defined in Wordpress Administration!', 'wp-auth0' ) );
 		}
 
 		$response = WP_Auth0_Api_Client::get_token( $domain, $client_id, $client_secret, 'authorization_code', array(
@@ -242,7 +242,7 @@ class WP_Auth0_LoginManager {
 					$decodedToken = JWT::decode( $data->id_token, $this->a0_options->get_client_secret_as_key(), array( 'HS256' ) );
 				} catch (Exception $e) {
 					WP_Auth0_ErrorManager::insert_auth0_error('redirect_login/decode', $e->getMessage());
-					throw new WP_Auth0_LoginFlowValidationException(__('Error: There was an issue decoding the token, please review the Auth0 Plugin Error Log.', WPA0_LANG));
+					throw new WP_Auth0_LoginFlowValidationException(__('Error: There was an issue decoding the token, please review the Auth0 Plugin Error Log.', 'wp-auth0'));
 				}
 
 				// validate that this JWT was made for us
@@ -282,7 +282,7 @@ class WP_Auth0_LoginManager {
 
 			WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_oauth/token', $error );
 
-			$msg = __( 'Error: the Client Secret configured on the Auth0 plugin is wrong. Make sure to copy the right one from the Auth0 dashboard.', WPA0_LANG );
+			$msg = __( 'Error: the Client Secret configured on the Auth0 plugin is wrong. Make sure to copy the right one from the Auth0 dashboard.', 'wp-auth0' );
 
 			throw new WP_Auth0_LoginFlowValidationException( $msg );
 		} else {
@@ -407,7 +407,7 @@ class WP_Auth0_LoginManager {
 
 		if ( ! $this->ignore_unverified_email &&  1 == $requires_verified_email ) {
 			if ( empty( $userinfo->email ) ) {
-				$msg = __( 'This account does not have an email associated, as required by your site administrator.', WPA0_LANG );
+				$msg = __( 'This account does not have an email associated, as required by your site administrator.', 'wp-auth0' );
 
 				throw new WP_Auth0_LoginFlowValidationException( $msg );
 			}

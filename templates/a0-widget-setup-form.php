@@ -115,12 +115,12 @@ $redirect_to = isset( $instance[ 'redirect_to' ] ) ? $instance[ 'redirect_to' ] 
         <?php echo esc_attr( $dict ); ?>
     </textarea>
     <br/><span class="description">
-            <?php echo __( 'This is the widget\'s dict param.', WPA0_LANG ); ?>
-        <a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject"><?php echo __( 'More info', WPA0_LANG ); ?></a>
+            <?php echo __( 'This is the widget\'s dict param.', 'wp-auth0' ); ?>
+        <a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject"><?php echo __( 'More info', 'wp-auth0' ); ?></a>
         </span><br>
         <span class="description">
-            <i><b><?php echo __( 'Note', WPA0_LANG ); ?>:</b>
-                <?php echo __( 'This will override the "Form title" setting', WPA0_LANG ); ?>
+            <i><b><?php echo __( 'Note', 'wp-auth0' ); ?>:</b>
+                <?php echo __( 'This will override the "Form title" setting', 'wp-auth0' ); ?>
             </i>
         </span>
     </span>
@@ -132,12 +132,12 @@ $redirect_to = isset( $instance[ 'redirect_to' ] ) ? $instance[ 'redirect_to' ] 
         <?php echo esc_attr( $extra_conf ); ?>
     </textarea>
     <br/><span class="description">
-            <?php echo __( 'This field allows you to set all the widget settings.', WPA0_LANG ); ?>
-        <a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization"><?php echo __( 'More info', WPA0_LANG ); ?></a>
+            <?php echo __( 'This field allows you to set all the widget settings.', 'wp-auth0' ); ?>
+        <a target="_blank" href="https://github.com/auth0/lock/wiki/Auth0Lock-customization"><?php echo __( 'More info', 'wp-auth0' ); ?></a>
         </span><br>
         <span class="description">
-            <i><b><?php echo __( 'Note', WPA0_LANG ); ?>:</b>
-                <?php echo __( 'The other settings will override this configuration', WPA0_LANG ); ?>
+            <i><b><?php echo __( 'Note', 'wp-auth0' ); ?>:</b>
+                <?php echo __( 'The other settings will override this configuration', 'wp-auth0' ); ?>
             </i>
         </span>
     </span>
@@ -149,8 +149,8 @@ $redirect_to = isset( $instance[ 'redirect_to' ] ) ? $instance[ 'redirect_to' ] 
         <?php echo esc_attr( $custom_css ); ?>
     </textarea>
     <br/><span class="description">
-            <?php echo __( 'This should be a valid CSS to customize the Auth0 login widget.', WPA0_LANG ); ?>
-        <a target="_blank" href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget"><?php echo __( 'More info', WPA0_LANG ); ?></a>
+            <?php echo __( 'This should be a valid CSS to customize the Auth0 login widget.', 'wp-auth0' ); ?>
+        <a target="_blank" href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget"><?php echo __( 'More info', 'wp-auth0' ); ?></a>
         </span>
     </span>
 </p>
@@ -161,5 +161,5 @@ $redirect_to = isset( $instance[ 'redirect_to' ] ) ? $instance[ 'redirect_to' ] 
         <?php echo esc_attr( $custom_js ); ?>
     </textarea>
     <br/>
-    <span class="description"><?php echo __( 'This should be a valid JS to customize the Auth0 login widget to, for example, add custom buttons. ', WPA0_LANG ); ?><a target="_blank" href="https://auth0.com/docs/hrd#3"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
+    <span class="description"><?php echo __( 'This should be a valid JS to customize the Auth0 login widget to, for example, add custom buttons. ', 'wp-auth0' ); ?><a target="_blank" href="https://auth0.com/docs/hrd#3"><?php echo __( 'More info', 'wp-auth0' ); ?></a></span>
 </p>
