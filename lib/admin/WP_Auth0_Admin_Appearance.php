@@ -34,8 +34,8 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 ?>
     <div class="subelement">
       <span class="description">
-        <?php echo __( 'Request for SSO data and enable "Last time you signed in with[...]" message.', WPA0_LANG ); ?>
-        <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#rememberlastlogin-boolean-"><?php echo __( 'More info', WPA0_LANG ); ?></a>
+        <?php echo __( 'Request for SSO data and enable "Last time you signed in with[...]" message.', 'wp-auth0' ); ?>
+        <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#rememberlastlogin-boolean-"><?php echo __( 'More info', 'wp-auth0' ); ?></a>
       </span>
     </div>
   <?php
@@ -46,7 +46,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 ?>
       <input type="text" name="<?php echo $this->options->get_options_name(); ?>[form_title]" id="wpa0_form_title" value="<?php echo esc_attr( $v ); ?>"/>
       <div class="subelement">
-        <span class="description"><?php echo __( 'This is the title for the login widget', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'This is the title for the login widget', 'wp-auth0' ); ?></span>
       </div>
     <?php
 	}
@@ -56,7 +56,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 ?>
       <input type="text" name="<?php echo $this->options->get_options_name(); ?>[language]" id="wpa0_language" value="<?php echo esc_attr( $v ); ?>" />
       <div class="subelement">
-        <span class="description"><?php echo __( 'This is the widget\'s language param.', WPA0_LANG ); ?><a target="_blank" href="https://github.com/auth0/lock#ui-options"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
+        <span class="description"><?php echo __( 'This is the widget\'s language param.', 'wp-auth0' ); ?><a target="_blank" href="https://github.com/auth0/lock#ui-options"><?php echo __( 'More info', 'wp-auth0' ); ?></a></span>
       </div>
     <?php
   }
@@ -66,7 +66,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 ?>
       <input type="text" name="<?php echo $this->options->get_options_name(); ?>[primary_color]" id="wpa0_primary_color" value="<?php echo esc_attr( $v ); ?>" />
       <div class="subelement">
-        <span class="description"><?php echo __( 'The primary color for Lock', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'The primary color for Lock', 'wp-auth0' ); ?></span>
       </div>
     <?php
   }
@@ -76,7 +76,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 ?>
       <textarea name="<?php echo $this->options->get_options_name(); ?>[language_dictionary]" id="wpa0_language_dictionary"><?php echo esc_attr( $v ); ?></textarea>
       <div class="subelement">
-        <span class="description"><?php echo __( 'This is the widget\'s languageDictionary param.', WPA0_LANG ); ?><a target="_blank" href="https://github.com/auth0/lock#ui-options"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
+        <span class="description"><?php echo __( 'This is the widget\'s languageDictionary param.', 'wp-auth0' ); ?><a target="_blank" href="https://github.com/auth0/lock#ui-options"><?php echo __( 'More info', 'wp-auth0' ); ?></a></span>
       </div>
     <?php
   }
@@ -86,7 +86,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 ?>
       <textarea name="<?php echo $this->options->get_options_name(); ?>[custom_css]" id="wpa0_custom_css"><?php echo esc_attr( $v ); ?></textarea>
       <div class="subelement">
-        <span class="description"><?php echo __( 'This should be a valid CSS to customize the Auth0 login widget. ', WPA0_LANG ); ?><a target="_blank" href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
+        <span class="description"><?php echo __( 'This should be a valid CSS to customize the Auth0 login widget. ', 'wp-auth0' ); ?><a target="_blank" href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget"><?php echo __( 'More info', 'wp-auth0' ); ?></a></span>
       </div>
     <?php
 	}
@@ -96,7 +96,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 ?>
       <textarea name="<?php echo $this->options->get_options_name(); ?>[custom_js]" id="wpa0_custom_js"><?php echo esc_attr( $v ); ?></textarea>
       <div class="subelement">
-        <span class="description"><?php echo __( 'This should be a valid JS to customize the Auth0 login widget to, for example, add custom buttons. ', WPA0_LANG ); ?><a target="_blank" href="https://auth0.com/docs/hrd#option-3-adding-custom-buttons-to-lock"><?php echo __( 'More info', WPA0_LANG ); ?></a></span>
+        <span class="description"><?php echo __( 'This should be a valid JS to customize the Auth0 login widget to, for example, add custom buttons. ', 'wp-auth0' ); ?><a target="_blank" href="https://auth0.com/docs/hrd#option-3-adding-custom-buttons-to-lock"><?php echo __( 'More info', 'wp-auth0' ); ?></a></span>
       </div>
     <?php
 	}
@@ -105,18 +105,18 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$v = $this->options->get( 'username_style' );
 ?>
       <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[username_style]" id="wpa0_username_style_auto" value="" <?php echo esc_attr( $v ) == '' ? 'checked="true"' : ''; ?> />
-      <label for="wpa0_username_style_auto"><?php echo __( 'Auto', WPA0_LANG ); ?></label>
+      <label for="wpa0_username_style_auto"><?php echo __( 'Auto', 'wp-auth0' ); ?></label>
 
       <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[username_style]" id="wpa0_username_style_email" value="email" <?php echo esc_attr( $v ) == 'email' ? 'checked="true"' : ''; ?> />
-      <label for="wpa0_username_style_email"><?php echo __( 'Email', WPA0_LANG ); ?></label>
+      <label for="wpa0_username_style_email"><?php echo __( 'Email', 'wp-auth0' ); ?></label>
 
       <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[username_style]" id="wpa0_username_style_username" value="username" <?php echo esc_attr( $v ) == 'username' ? 'checked="true"' : ''; ?> />
-      <label for="wpa0_username_style_username"><?php echo __( 'Username', WPA0_LANG ); ?></label>
+      <label for="wpa0_username_style_username"><?php echo __( 'Username', 'wp-auth0' ); ?></label>
 
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'If you want to allow the user to use either email or password, set it to Auto.', WPA0_LANG ); ?>
-          <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#usernamestyle-string-"><?php echo __( 'More info', WPA0_LANG ); ?></a>
+          <?php echo __( 'If you want to allow the user to use either email or password, set it to Auto.', 'wp-auth0' ); ?>
+          <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#usernamestyle-string-"><?php echo __( 'More info', 'wp-auth0' ); ?></a>
         </span>
       </div>
     <?php
@@ -136,8 +136,8 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'Read more about the gravatar integration ', WPA0_LANG ); ?>
-          <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#gravatar-boolean-"><?php echo __( 'HERE', WPA0_LANG ); ?></a></span>
+          <?php echo __( 'Read more about the gravatar integration ', 'wp-auth0' ); ?>
+          <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#gravatar-boolean-"><?php echo __( 'HERE', 'wp-auth0' ); ?></a></span>
       </div>
     <?php
 	}
@@ -146,9 +146,9 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$v = $this->options->get( 'icon_url' );
 ?>
       <input type="text" name="<?php echo $this->options->get_options_name(); ?>[icon_url]" id="wpa0_icon_url" value="<?php echo esc_attr( $v ); ?>"/>
-      <a target="_blank" href="javascript:void(0);" id="wpa0_choose_icon" class="button-secondary"><?php echo __( 'Choose Icon', WPA0_LANG ); ?></a>
+      <a target="_blank" href="javascript:void(0);" id="wpa0_choose_icon" class="button-secondary"><?php echo __( 'Choose Icon', 'wp-auth0' ); ?></a>
       <div class="subelement">
-        <span class="description"><?php echo __( 'The icon should be 32x32 pixels!', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'The icon should be 32x32 pixels!', 'wp-auth0' ); ?></span>
       </div>
     <?php
 	}
@@ -173,7 +173,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
     if ( trim( $input['language_dictionary'] ) !== '' ) {
       if ( json_decode( $input['language_dictionary'] ) === null ) {
-        $error = __( 'The language dictionary parameter should be a valid json object.', WPA0_LANG );
+        $error = __( 'The language dictionary parameter should be a valid json object.', 'wp-auth0' );
         $this->add_validation_error( $error );
         $input['language'] = $old_options['language'];
       }
@@ -181,7 +181,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
 		// if ( trim( $input['extra_conf'] ) !== '' ) {
 		//  if ( json_decode( $input['extra_conf'] ) === null ) {
-		//    $error = __( 'The Extra settings parameter should be a valid json object.', WPA0_LANG );
+		//    $error = __( 'The Extra settings parameter should be a valid json object.', 'wp-auth0' );
 		//    $this->add_validation_error( $error );
 		//  }
 		// }

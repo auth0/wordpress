@@ -40,7 +40,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
       <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[password_policy]" id="wpa0_password_policy_excellent" value="excellent" <?php echo checked( $v, 'excellent', false ); ?>/><label for="wpa0_password_policy_excellent">Excellent</label>
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'The difficulty of the user password where \'none\' requires a single character, \'low\' requires six characters and so on. For more details see our', WPA0_LANG ); ?> <a target="_blank" href="https://auth0.com/docs/password-strength"><?php echo __( 'help page', WPA0_LANG ); ?></a> <?php echo __( 'on password difficulty.', WPA0_LANG ); ?>
+          <?php echo __( 'The difficulty of the user password where \'none\' requires a single character, \'low\' requires six characters and so on. For more details see our', 'wp-auth0' ); ?> <a target="_blank" href="https://auth0.com/docs/password-strength"><?php echo __( 'help page', 'wp-auth0' ); ?></a> <?php echo __( 'on password difficulty.', 'wp-auth0' ); ?>
         </span>
       </div>
     <?php
@@ -54,8 +54,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'Single Sign On (SSO) allows users to sign in once to multiple services. For more details, see our ', WPA0_LANG ); ?>
-          <a target="_blank" href="https://auth0.com/docs/sso/single-sign-on"><?php echo __( 'help page on SSO', WPA0_LANG ); ?></a>.
+          <?php echo __( 'Single Sign On (SSO) allows users to sign in once to multiple services. For more details, see our ', 'wp-auth0' ); ?>
+          <a target="_blank" href="https://auth0.com/docs/sso/single-sign-on"><?php echo __( 'help page on SSO', 'wp-auth0' ); ?></a>.
         </span>
       </div>
     <?php
@@ -69,8 +69,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'Single Logout is the opposite of the above SSO, it logs users out of everything at once. For more details, see our', WPA0_LANG ); ?>
-          <a target="_blank" href="https://auth0.com/docs/sso/single-sign-on"><?php echo __( 'help page on SSO', WPA0_LANG ); ?></a>.
+          <?php echo __( 'Single Logout is the opposite of the above SSO, it logs users out of everything at once. For more details, see our', 'wp-auth0' ); ?>
+          <a target="_blank" href="https://auth0.com/docs/sso/single-sign-on"><?php echo __( 'help page on SSO', 'wp-auth0' ); ?></a>.
         </span>
       </div>
     <?php
@@ -84,11 +84,11 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'Mark this if you want to enable multifactor authentication with Auth0 Guardian. For more information, see ', WPA0_LANG ); ?>
-          <a target="_blank" href="https://auth0.com/docs/mfa"><?php echo __( 'our help page on MFA', WPA0_LANG ); ?></a>.
-          <?php echo __( 'You can enable other MFA providers from the ', WPA0_LANG ); ?>
-          <a target="_blank" href="https://manage.auth0.com/#/multifactor"><?php echo __( 'Auth0 dashboard', WPA0_LANG ); ?></a>.
-          <?php echo __( 'You can reset your users MFA provider data, by going to the user and clicking on "Delete MFA Provider" button.', WPA0_LANG ); ?>
+          <?php echo __( 'Mark this if you want to enable multifactor authentication with Auth0 Guardian. For more information, see ', 'wp-auth0' ); ?>
+          <a target="_blank" href="https://auth0.com/docs/mfa"><?php echo __( 'our help page on MFA', 'wp-auth0' ); ?></a>.
+          <?php echo __( 'You can enable other MFA providers from the ', 'wp-auth0' ); ?>
+          <a target="_blank" href="https://manage.auth0.com/#/multifactor"><?php echo __( 'Auth0 dashboard', 'wp-auth0' ); ?></a>.
+          <?php echo __( 'You can reset your users MFA provider data, by going to the user and clicking on "Delete MFA Provider" button.', 'wp-auth0' ); ?>
         </span>
       </div>
     <?php
@@ -102,7 +102,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'Mark this if you want to store geo location information based on your users IP in the user_metadata', WPA0_LANG );?>
+          <?php echo __( 'Mark this if you want to store geo location information based on your users IP in the user_metadata', 'wp-auth0' );?>
         </span>
       </div>
     <?php
@@ -114,10 +114,10 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
     echo $this->render_a0_switch( "wpa0_income_rule", "income_rule", 1, !empty( $v ) );
 ?>
       <div class="subelement">
-        <span class="description"><?php echo __( 'Mark this if you want to store income data based on the zipcode (calculated using the users IP).', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'Mark this if you want to store income data based on the zipcode (calculated using the users IP).', 'wp-auth0' ); ?></span>
       </div>
       <div class="subelement">
-        <span class="description"><?php echo __( 'Represents the median income of the users zipcode, based on last US census data.', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'Represents the median income of the users zipcode, based on last US census data.', 'wp-auth0' ); ?></span>
       </div>
     <?php
   }
@@ -128,7 +128,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
     echo $this->render_a0_switch( "wpa0_override_wp_avatars", "override_wp_avatars", 1, !empty( $v ) );
 ?>
       <div class="subelement">
-        <span class="description"><?php echo __( 'Mark this if you want to override the WordPress avatar with the user\'s Auth0 profile avatar.', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'Mark this if you want to override the WordPress avatar with the user\'s Auth0 profile avatar.', 'wp-auth0' ); ?></span>
       </div>
     <?php
   }
@@ -148,9 +148,9 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'Mark this if you want to enrich your users\' profiles with the data provided by FullContact. A valid api key is required. ', WPA0_LANG ); ?>
-          <?php echo __( 'For more information, see our ', WPA0_LANG ); ?>
-          <a target="_blank" href="https://auth0.com/docs/scenarios/mixpanel-fullcontact-salesforce#2-augment-user-profile-with-fullcontact-"><?php echo __( 'help page on FullContact integration with Auth0', WPA0_LANG );?></a>
+          <?php echo __( 'Mark this if you want to enrich your users\' profiles with the data provided by FullContact. A valid api key is required. ', 'wp-auth0' ); ?>
+          <?php echo __( 'For more information, see our ', 'wp-auth0' ); ?>
+          <a target="_blank" href="https://auth0.com/docs/scenarios/mixpanel-fullcontact-salesforce#2-augment-user-profile-with-fullcontact-"><?php echo __( 'help page on FullContact integration with Auth0', 'wp-auth0' );?></a>
         </span>
       </div>
     <?php
@@ -177,7 +177,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
     if ( $old_options['sso'] != $input['sso'] && 1 == $input['sso'] ) {
       if ( false === WP_Auth0_Api_Client::update_client( $input['domain'], $input['auth0_app_token'], $input['client_id'], $input['sso'] == 1 ) ) {
 
-        $error = __( 'There was an error updating your Auth0 App to enable SSO. To do it manually, turn it ', WPA0_LANG );
+        $error = __( 'There was an error updating your Auth0 App to enable SSO. To do it manually, turn it ', 'wp-auth0' );
         $error .= '<a href="https://auth0.com/docs/sso/single-sign-on#1">HERE</a>.';
         $this->add_validation_error( $error );
 
@@ -207,7 +207,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
  
           if ( false === WP_Auth0_Api_Client::update_connection($input['domain'], $input['auth0_app_token'], $connection_id, $connection ) ) {
 
-            $error = __( 'There was an error updating your Auth0 DB Connection. To do it manually, change it ', WPA0_LANG );
+            $error = __( 'There was an error updating your Auth0 DB Connection. To do it manually, change it ', 'wp-auth0' );
             $error .= '<a href="https://manage.auth0.com/#/connections/database">HERE</a>.';
             $this->add_validation_error( $error );
 

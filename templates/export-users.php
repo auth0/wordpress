@@ -4,7 +4,7 @@
 
 	<div class="container-fluid">
 
-		<h1><?php _e( 'Export Auth0 Users', WPA0_LANG ); ?></h1>
+		<h1><?php _e( 'Export Auth0 Users', 'wp-auth0' ); ?></h1>
 
    	<form action="options.php" method="post" onsubmit="return presubmit();">
 			<input type="hidden" name="action" value="wpauth0_export_users" />
