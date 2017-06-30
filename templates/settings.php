@@ -5,7 +5,7 @@
 	<div class="container-fluid">
 
 		<div class="row">
-			<h1><?php _e( 'Auth0 WordPress Plugin Settings', WPA0_LANG ); ?></h1>
+			<h1><?php _e( 'Auth0 WordPress Plugin Settings', 'wp-auth0' ); ?></h1>
 
 			<div class="row a0-message a0-warning manage">
 				For your Auth0 dashboard with more settings click <a target="_blank" href="https://manage.auth0.com">here</a>.

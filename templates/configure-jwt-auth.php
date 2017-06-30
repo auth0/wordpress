@@ -4,7 +4,7 @@
 
 	<div class="container-fluid">
 
-		<h1><?php _e( 'JWT Auth authentication', WPA0_LANG ); ?></h1>
+		<h1><?php _e( 'JWT Auth authentication', 'wp-auth0' ); ?></h1>
 
 		<?php if ( !$ready ) { ?>
 			<form action="options.php" method="post">

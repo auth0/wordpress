@@ -65,13 +65,13 @@ class WP_Auth0_Admin_Dashboard extends WP_Auth0_Admin_Generic {
 ?>
 
     <input type="radio" name="<?php echo $this->options->get_options_name() ?>[chart_age_type]" id="wpa0_auth0_age_chart_type_donut" value="donut" <?php echo checked( $v, 'donut', false ); ?>/>
-    <label for="wpa0_auth0_age_chart_type_donut"><?php echo __( 'Donut', WPA0_LANG ); ?></label>
+    <label for="wpa0_auth0_age_chart_type_donut"><?php echo __( 'Donut', 'wp-auth0' ); ?></label>
 
     <input type="radio" name="<?php echo $this->options->get_options_name() ?>[chart_age_type]" id="wpa0_auth0_age_chart_type_pie" value="pie" <?php echo checked( $v, 'pie', false ); ?>/>
-    <label for="wpa0_auth0_age_chart_type_pie"><?php echo __( 'Pie', WPA0_LANG ); ?></label>
+    <label for="wpa0_auth0_age_chart_type_pie"><?php echo __( 'Pie', 'wp-auth0' ); ?></label>
     &nbsp;
     <input type="radio" name="<?php echo $this->options->get_options_name() ?>[chart_age_type]" id="wpa0_auth0_age_chart_type_bar" value="bar" <?php echo checked( $v, 'bar', false ); ?>/>
-    <label for="wpa0_auth0_age_chart_type_bars"><?php echo __( 'Bars', WPA0_LANG ); ?></label>
+    <label for="wpa0_auth0_age_chart_type_bars"><?php echo __( 'Bars', 'wp-auth0' ); ?></label>
 
     <?php
 	}
@@ -82,13 +82,13 @@ class WP_Auth0_Admin_Dashboard extends WP_Auth0_Admin_Generic {
 ?>
 
     <input type="radio" name="<?php echo $this->options->get_options_name() ?>[chart_idp_type]" id="wpa0_auth0_idp_chart_type_donut" value="donut" <?php echo checked( $v, 'donut', false ); ?>/>
-    <label for="wpa0_auth0_idp_chart_type_donut"><?php echo __( 'Donut', WPA0_LANG ); ?></label>
+    <label for="wpa0_auth0_idp_chart_type_donut"><?php echo __( 'Donut', 'wp-auth0' ); ?></label>
 
     <input type="radio" name="<?php echo $this->options->get_options_name() ?>[chart_idp_type]" id="wpa0_auth0_idp_chart_type_pie" value="pie" <?php echo checked( $v, 'pie', false ); ?>/>
-    <label for="wpa0_auth0_idp_chart_type_pie"><?php echo __( 'Pie', WPA0_LANG ); ?></label>
+    <label for="wpa0_auth0_idp_chart_type_pie"><?php echo __( 'Pie', 'wp-auth0' ); ?></label>
     &nbsp;
     <input type="radio" name="<?php echo $this->options->get_options_name() ?>[chart_idp_type]" id="wpa0_auth0_idp_chart_type_bar" value="bar" <?php echo checked( $v, 'bar', false ); ?>/>
-    <label for="wpa0_auth0_idp_chart_type_bars"><?php echo __( 'Bars', WPA0_LANG ); ?></label>
+    <label for="wpa0_auth0_idp_chart_type_bars"><?php echo __( 'Bars', 'wp-auth0' ); ?></label>
 
     <?php
 	}
@@ -99,13 +99,13 @@ class WP_Auth0_Admin_Dashboard extends WP_Auth0_Admin_Generic {
 ?>
 
     <input type="radio" name="<?php echo $this->options->get_options_name() ?>[chart_gender_type]" id="wpa0_auth0_gender_chart_type_donut" value="donut" <?php echo checked( $v, 'donut', false ); ?>/>
-    <label for="wpa0_auth0_gender_chart_type_donut"><?php echo __( 'Donut', WPA0_LANG ); ?></label>
+    <label for="wpa0_auth0_gender_chart_type_donut"><?php echo __( 'Donut', 'wp-auth0' ); ?></label>
 
     <input type="radio" name="<?php echo $this->options->get_options_name() ?>[chart_gender_type]" id="wpa0_auth0_gender_chart_type_pie" value="pie" <?php echo checked( $v, 'pie', false ); ?>/>
-    <label for="wpa0_auth0_gender_chart_type_pie"><?php echo __( 'Pie', WPA0_LANG ); ?></label>
+    <label for="wpa0_auth0_gender_chart_type_pie"><?php echo __( 'Pie', 'wp-auth0' ); ?></label>
     &nbsp;
     <input type="radio" name="<?php echo $this->options->get_options_name() ?>[chart_gender_type]" id="wpa0_auth0_gender_chart_type_bar" value="bar" <?php echo checked( $v, 'bar', false ); ?>/>
-    <label for="wpa0_auth0_gender_chart_type_bars"><?php echo __( 'Bars', WPA0_LANG ); ?></label>
+    <label for="wpa0_auth0_gender_chart_type_bars"><?php echo __( 'Bars', 'wp-auth0' ); ?></label>
 
     <?php
 	}

@@ -89,8 +89,8 @@ class WP_Auth0_Admin {
 		wp_enqueue_style( 'media' );
 
 		wp_localize_script( 'wpa0_admin', 'wpa0', array(
-				'media_title' => __( 'Choose your icon', WPA0_LANG ),
-				'media_button' => __( 'Choose icon', WPA0_LANG ),
+				'media_title' => __( 'Choose your icon', 'wp-auth0' ),
+				'media_button' => __( 'Choose icon', 'wp-auth0' ),
 			) );
 	}
 
@@ -106,9 +106,9 @@ class WP_Auth0_Admin {
 		<div id="message" class="error">
 			<p>
 				<strong>
-					<?php echo __( 'The current user is not authorized to manage the Auth0 account. You must be both a WordPress site administrator and a user known to Auth0 to control Auth0 from this settings page. Please see the', WPA0_LANG ); ?>
-					<a href="https://auth0.com/docs/cms/wordpress/troubleshoot#the-settings-page-shows-me-this-warning-the-current-user-is-not-authorized-to-manage-the-auth0-account-"><?php echo __( 'documentation', WPA0_LANG ); ?></a>
-					<?php echo __( 'for more information.', WPA0_LANG ); ?>
+					<?php echo __( 'The current user is not authorized to manage the Auth0 account. You must be both a WordPress site administrator and a user known to Auth0 to control Auth0 from this settings page. Please see the', 'wp-auth0' ); ?>
+					<a href="https://auth0.com/docs/cms/wordpress/troubleshoot#the-settings-page-shows-me-this-warning-the-current-user-is-not-authorized-to-manage-the-auth0-account-"><?php echo __( 'documentation', 'wp-auth0' ); ?></a>
+					<?php echo __( 'for more information.', 'wp-auth0' ); ?>
 				</strong>
 			</p>
 		</div>
@@ -164,9 +164,9 @@ class WP_Auth0_Admin {
 		<div id="message" class="updated">
 			<p>
 				<strong>
-					<?php echo __( 'In order to use this plugin, you need to first', WPA0_LANG ); ?>
-					<a target="_blank" href="https://manage.auth0.com/#/applications"><?php echo __( 'create an application', WPA0_LANG ); ?></a>
-					<?php echo __( ' on Auth0 and copy the information here.', WPA0_LANG ); ?>
+					<?php echo __( 'In order to use this plugin, you need to first', 'wp-auth0' ); ?>
+					<a target="_blank" href="https://manage.auth0.com/#/applications"><?php echo __( 'create an application', 'wp-auth0' ); ?></a>
+					<?php echo __( ' on Auth0 and copy the information here.', 'wp-auth0' ); ?>
 				</strong>
 			</p>
 		</div>

@@ -43,26 +43,26 @@ class WP_Auth0_Settings_Section {
 			$main_menu = 'wpa0-setup';
 		}
 
-		add_menu_page( __( 'Auth0', WPA0_LANG ), __( 'Auth0', WPA0_LANG ), 'manage_options', $main_menu,
+		add_menu_page( __( 'Auth0', 'wp-auth0' ), __( 'Auth0', 'wp-auth0' ), 'manage_options', $main_menu,
 			( $show_initial_setup ? array( $this->initial_setup, 'render_setup_page' ) : array( $this->auth0_admin, 'render_settings_page' ) ), WP_Auth0::get_plugin_dir_url() . 'assets/img/a0icon.png', 85.55 );
 
 		if ( $show_initial_setup ) {
-			add_submenu_page( $main_menu, __( 'Auth0 for WordPress - Setup Wizard', WPA0_LANG ), __( 'Setup Wizard', WPA0_LANG ), 'manage_options', 'wpa0-setup', array( $this->initial_setup, 'render_setup_page' ) );
-			add_submenu_page( $main_menu, __( 'Settings', WPA0_LANG ), __( 'Settings', WPA0_LANG ), 'manage_options', 'wpa0', array( $this->auth0_admin, 'render_settings_page' ) );
+			add_submenu_page( $main_menu, __( 'Auth0 for WordPress - Setup Wizard', 'wp-auth0' ), __( 'Setup Wizard', 'wp-auth0' ), 'manage_options', 'wpa0-setup', array( $this->initial_setup, 'render_setup_page' ) );
+			add_submenu_page( $main_menu, __( 'Settings', 'wp-auth0' ), __( 'Settings', 'wp-auth0' ), 'manage_options', 'wpa0', array( $this->auth0_admin, 'render_settings_page' ) );
 		} else {
-			add_submenu_page( $main_menu, __( 'Settings', WPA0_LANG ), __( 'Settings', WPA0_LANG ), 'manage_options', 'wpa0', array( $this->auth0_admin, 'render_settings_page' ) );
+			add_submenu_page( $main_menu, __( 'Settings', 'wp-auth0' ), __( 'Settings', 'wp-auth0' ), 'manage_options', 'wpa0', array( $this->auth0_admin, 'render_settings_page' ) );
 
-			add_submenu_page( $main_menu, __( 'Help', WPA0_LANG ), __( 'Help', WPA0_LANG ), 'manage_options', 'wpa0-help', array( $this, 'redirect_to_help' ) );
+			add_submenu_page( $main_menu, __( 'Help', 'wp-auth0' ), __( 'Help', 'wp-auth0' ), 'manage_options', 'wpa0-help', array( $this, 'redirect_to_help' ) );
 
-			add_submenu_page( $main_menu, __( 'Auth0 for WordPress - Setup Wizard', WPA0_LANG ), __( 'Setup Wizard', WPA0_LANG ), 'manage_options', 'wpa0-setup', array( $this->initial_setup, 'render_setup_page' ) );
+			add_submenu_page( $main_menu, __( 'Auth0 for WordPress - Setup Wizard', 'wp-auth0' ), __( 'Setup Wizard', 'wp-auth0' ), 'manage_options', 'wpa0-setup', array( $this->initial_setup, 'render_setup_page' ) );
 		}
 
-		add_submenu_page( $main_menu, __( 'Export Users Data', WPA0_LANG ), __( 'Export Users Data', WPA0_LANG ), 'manage_options', 'wpa0-users-export', array( $this->users_exporter, 'render_export_users' ) );
-		add_submenu_page( $main_menu, __( 'Error Log', WPA0_LANG ), __( 'Error Log', WPA0_LANG ), 'manage_options', 'wpa0-errors', array( $this->error_log, 'render_settings_page' ) );
-		add_submenu_page( $main_menu, __( 'Import-Export settings', WPA0_LANG ), __( 'Import-Export settings', WPA0_LANG ), 'manage_options', 'wpa0-import-settings', array( $this->import_settings, 'render_import_settings_page' ) );
+		add_submenu_page( $main_menu, __( 'Export Users Data', 'wp-auth0' ), __( 'Export Users Data', 'wp-auth0' ), 'manage_options', 'wpa0-users-export', array( $this->users_exporter, 'render_export_users' ) );
+		add_submenu_page( $main_menu, __( 'Error Log', 'wp-auth0' ), __( 'Error Log', 'wp-auth0' ), 'manage_options', 'wpa0-errors', array( $this->error_log, 'render_settings_page' ) );
+		add_submenu_page( $main_menu, __( 'Import-Export settings', 'wp-auth0' ), __( 'Import-Export settings', 'wp-auth0' ), 'manage_options', 'wpa0-import-settings', array( $this->import_settings, 'render_import_settings_page' ) );
 
 		if ( WP_Auth0_Configure_JWTAUTH::is_jwt_auth_enabled() ) {
-			add_submenu_page( $main_menu, __( 'JWT Auth integration', WPA0_LANG ), __( 'JWT Auth integration', WPA0_LANG ), 'manage_options', 'wpa0-jwt-auth', array( $this->configure_jwt_auth, 'render_settings_page' ) );
+			add_submenu_page( $main_menu, __( 'JWT Auth integration', 'wp-auth0' ), __( 'JWT Auth integration', 'wp-auth0' ), 'manage_options', 'wpa0-jwt-auth', array( $this->configure_jwt_auth, 'render_settings_page' ) );
 		}
 	}
 

@@ -31,7 +31,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 ?>
       <input type="text" name="<?php echo $this->options->get_options_name(); ?>[client_id]" id="wpa0_client_id" value="<?php echo esc_attr( $v ); ?>"/>
       <div class="subelement">
-        <span class="description"><?php echo __( 'Application ID, copy from your application\'s settings in the', WPA0_LANG ); ?> <a href="https://manage.auth0.com/#/applications" target="_blank">Auth0 dashboard</a>.</span>
+        <span class="description"><?php echo __( 'Application ID, copy from your application\'s settings in the', 'wp-auth0' ); ?> <a href="https://manage.auth0.com/#/applications" target="_blank">Auth0 dashboard</a>.</span>
       </div>
     <?php
 	}
@@ -45,9 +45,9 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
       <input type="text" name="<?php echo $this->options->get_options_name(); ?>[auth0_app_token]" id="wpa0_auth0_app_token" autocomplete="off" <?php if ( !empty( $v ) ) {?>placeholder="Not visible"<?php } ?> />
       <div class="subelement">
         <span class="description">
-          <?php echo __( 'The token should be generated via the ', WPA0_LANG ); ?>
-          <a href="https://auth0.com/docs/api/v2" target="_blank"><?php echo __( 'token generator', WPA0_LANG ); ?></a>
-          <?php echo __( ' with the following scopes:', WPA0_LANG ); ?>
+          <?php echo __( 'The token should be generated via the ', 'wp-auth0' ); ?>
+          <a href="https://auth0.com/docs/api/v2" target="_blank"><?php echo __( 'token generator', 'wp-auth0' ); ?></a>
+          <?php echo __( ' with the following scopes:', 'wp-auth0' ); ?>
           <i>
           <?php $a = 0; foreach ( $scopes as $resource => $actions ) { $a++;?>
             <b><?php echo $resource ?></b> (<?php echo $actions ?>)<?php
@@ -69,7 +69,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 ?>
       <input type="text" autocomplete="off" name="<?php echo $this->options->get_options_name(); ?>[client_secret]" id="wpa0_client_secret"  <?php if ( !empty( $v ) ) {?>placeholder="Not visible"<?php } ?> />
       <div class="subelement">
-        <span class="description"><?php echo __( 'Application secret, copy from your application\'s settings in the', WPA0_LANG ); ?> <a href="https://manage.auth0.com/#/applications" target="_blank">Auth0 dashboard</a>.</span>
+        <span class="description"><?php echo __( 'Application secret, copy from your application\'s settings in the', 'wp-auth0' ); ?> <a href="https://manage.auth0.com/#/applications" target="_blank">Auth0 dashboard</a>.</span>
       </div>
     <?php
 	}
@@ -81,7 +81,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	?>
 				<div class="subelement">
 					<span class="description"><?php echo __( 'Enable if your client secret is base64 enabled.  If you are not sure, check your clients page in Auth0.  Displayed below the client secret on that page is the text "The Client Secret is not base64 encoded.
-	" when this is not encoded.', WPA0_LANG ); ?></span>
+	" when this is not encoded.', 'wp-auth0' ); ?></span>
 				</div>
 			<?php
 	}
@@ -91,7 +91,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 ?>
       <input type="text" name="<?php echo $this->options->get_options_name(); ?>[domain]" id="wpa0_domain" value="<?php echo esc_attr( $v ); ?>" />
       <div class="subelement">
-        <span class="description"><?php echo __( 'Your Auth0 domain, you can see it in the', WPA0_LANG ); ?> <a href="https://manage.auth0.com/#/applications" target="_blank">Auth0 dashboard</a><?php echo __( '. Example: foo.auth0.com', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'Your Auth0 domain, you can see it in the', 'wp-auth0' ); ?> <a href="https://manage.auth0.com/#/applications" target="_blank">Auth0 dashboard</a><?php echo __( '. Example: foo.auth0.com', 'wp-auth0' ); ?></span>
       </div>
     <?php
 	}
@@ -109,17 +109,17 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$allow_signup = $this->options->is_wp_registration_enabled();
 ?>
       <span class="description">
-        <?php echo __( 'Signup will be', WPA0_LANG ); ?>
+        <?php echo __( 'Signup will be', 'wp-auth0' ); ?>
 
         <?php if ( ! $allow_signup ) { ?>
-          <b><?php echo __( 'disabled', WPA0_LANG ); ?></b>
-          <?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', WPA0_LANG ); ?>
+          <b><?php echo __( 'disabled', 'wp-auth0' ); ?></b>
+          <?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', 'wp-auth0' ); ?>
         <?php } else { ?>
-          <b><?php echo __( 'enabled', WPA0_LANG ); ?></b>
-          <?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', WPA0_LANG ); ?>
+          <b><?php echo __( 'enabled', 'wp-auth0' ); ?></b>
+          <?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', 'wp-auth0' ); ?>
         <?php } ?>
 
-        <?php echo __( 'You can manage this setting on <code>Network Admin > Settings > Network Settings > Allow new registrations</code> (you need to set it up to <b>User accounts may be registered</b> or <b>Both sites and user accounts can be registered</b> depending on your preferences).', WPA0_LANG ); ?>
+        <?php echo __( 'You can manage this setting on <code>Network Admin > Settings > Network Settings > Allow new registrations</code> (you need to set it up to <b>User accounts may be registered</b> or <b>Both sites and user accounts can be registered</b> depending on your preferences).', 'wp-auth0' ); ?>
       </span>
 
     <?php
@@ -129,17 +129,17 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$allow_signup = $this->options->is_wp_registration_enabled();
 ?>
       <span class="description">
-        <?php echo __( 'Signup will be', WPA0_LANG ); ?>
+        <?php echo __( 'Signup will be', 'wp-auth0' ); ?>
 
         <?php if ( ! $allow_signup ) { ?>
-          <b><?php echo __( 'disabled', WPA0_LANG ); ?></b>
-          <?php echo __( ' because it is enabled by the setting "Anyone can register" in the WordPress General Settings.', WPA0_LANG ); ?>
+          <b><?php echo __( 'disabled', 'wp-auth0' ); ?></b>
+          <?php echo __( ' because it is enabled by the setting "Anyone can register" in the WordPress General Settings.', 'wp-auth0' ); ?>
         <?php } else { ?>
-          <b><?php echo __( 'enabled', WPA0_LANG ); ?></b>
-          <?php echo __( ' because it is enabled by the setting "Anyone can register" in the WordPress General Settings.', WPA0_LANG ); ?>
+          <b><?php echo __( 'enabled', 'wp-auth0' ); ?></b>
+          <?php echo __( ' because it is enabled by the setting "Anyone can register" in the WordPress General Settings.', 'wp-auth0' ); ?>
         <?php } ?>
 
-        <?php echo __( 'You can manage this setting on <code>Settings > General > Membership</code>, Anyone can register', WPA0_LANG ); ?>
+        <?php echo __( 'You can manage this setting on <code>Settings > General > Membership</code>, Anyone can register', 'wp-auth0' ); ?>
       </span>
 
     <?php
@@ -151,7 +151,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		echo $this->render_a0_switch( "wpa0_wp_login_enabled", "wordpress_login_enabled", 1, 1 == $v );
 ?>
       <div class="subelement">
-        <span class="description"><?php echo __( 'Enable to allow existing and new WordPress logins to work. If this site already had users before you installed Auth0, and you want them to still be able to use those logins, enable this.', WPA0_LANG ); ?></span>
+        <span class="description"><?php echo __( 'Enable to allow existing and new WordPress logins to work. If this site already had users before you installed Auth0, and you want them to still be able to use those logins, enable this.', 'wp-auth0' ); ?></span>
       </div>
     <?php
 	}
@@ -180,18 +180,18 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$error = '';
 		$completeBasicData = true;
 		if ( empty( $input['domain'] ) ) {
-			$error = __( 'You need to specify domain', WPA0_LANG );
+			$error = __( 'You need to specify domain', 'wp-auth0' );
 			$this->add_validation_error( $error );
 			$completeBasicData = false;
 		}
 
 		if ( empty( $input['client_id'] ) ) {
-			$error = __( 'You need to specify a client id', WPA0_LANG );
+			$error = __( 'You need to specify a client id', 'wp-auth0' );
 			$this->add_validation_error( $error );
 			$completeBasicData = false;
 		}
 		if ( empty( $input['client_secret'] ) && empty( $old_options['client_secret'] ) ) {
-			$error = __( 'You need to specify a client secret', WPA0_LANG );
+			$error = __( 'You need to specify a client secret', 'wp-auth0' );
 			$this->add_validation_error( $error );
 			$completeBasicData = false;
 		}
