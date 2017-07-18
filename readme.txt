@@ -134,7 +134,7 @@ For a complete list look at https://docs.auth0.com/identityproviders
 
 = "This account does not have an email associated..." =
 
-If you get this error, make sure you are requesting the Email attribute from each provider in the Auth0 Dashboard under Connections -> Social (expand each provider). Take into account that not all providers return Email addresses for users (e.g. Twitter). If this happens, you can always add an Email address to any logged in user through the Auth0 Dashbaord (pr API). See Users -> Edit.
+If you get this error, make sure you are requesting the Email attribute from each provider in the Auth0 Dashboard under Connections -> Social (expand each provider). Take into account that not all providers return Email addresses for users (e.g. Twitter). If this happens, you can always add an Email address to any logged in user through the Auth0 Dashboard (or API). See Users -> Edit.
 
 = The form_title setting is ignored when I set up the dict setting =
 

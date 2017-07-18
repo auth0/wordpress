@@ -1,5 +1,11 @@
 # Change Log
 
+## [3.2.23](https://github.com/auth0/wp-auth0/tree/3.2.23) (2017-07-18)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.22...3.2.23)
+
+**Changed**
+- Update /authorize URL [\#326](https://github.com/auth0/wp-auth0/pull/326) ([cocojoe](https://github.com/cocojoe))
+
 ## [3.2.22](https://github.com/auth0/wp-auth0/tree/3.2.22) (2017-06-26)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.21...3.2.22)
 
