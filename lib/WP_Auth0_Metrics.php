@@ -66,6 +66,15 @@ class WP_Auth0_Metrics {
       </script>
     <?php
 		}
+		else {
+?>
+      <script>
+        function metricsTrack() {
+          // Metrics are disabled
+        }
+      </script>
+    <?php
+		}
 	}
 
 }
