@@ -94,7 +94,7 @@ class WP_Auth0_Routes {
 				throw new Exception( 'Unauthorized: missing authorization header' );
 			}
 
-			$token = JWT::decode( $authorization, $secret, array( 'HS256' ) );
+			$token = JWT::decode( $authorization, $secret, array( $this->a0_options->get_client_signing_algorithm() ) );
 
 			if ( $token->jti != $token_id ) {
 				throw new Exception( 'Invalid token id' );
@@ -155,7 +155,7 @@ class WP_Auth0_Routes {
 				throw new Exception('Unauthorized: missing authorization header');
 			}
 
-			$token = JWT::decode($authorization, $secret, array('HS256'));
+			$token = JWT::decode($authorization, $secret, array('RS256'));
 
 			if ($token->jti != $token_id) {
 				throw new Exception('Invalid token id');

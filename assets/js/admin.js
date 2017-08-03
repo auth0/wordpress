@@ -57,4 +57,20 @@ jQuery(document).ready(function($) {
 
     configureHideShowAutoLogin();
 
+
+    //signing algorithm select
+    $('#wpa0_client_signing_algorithm').change(function() {
+        var newSelected = $("option:selected", this);
+          if ( newSelected.val() == "RS256") {
+            $('#app_secret_message').css('display', 'none');
+            $('#RS256_inputs_container').css('display', 'block');
+            $('#cert_message').css('display', 'block');
+          } else if ( newSelected.val() == "HS256"){
+            $('#cert_message').css('display', 'none');
+            $('#app_secret_message').css('display', 'block');
+            $('#RS256_inputs_container').css('display', 'none');
+          }
+    });
+
+
 });
