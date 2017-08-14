@@ -195,18 +195,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			$this->add_validation_error( $error );
 			$completeBasicData = false;
 		}
-
-		if ( $completeBasicData ) {
-			$response = WP_Auth0_Api_Client::get_token( $input['domain'], $input['client_id'], $input['client_secret'] );
-
-			if ( $response instanceof WP_Error ) {
-				$error = $response->get_error_message();
-				$this->add_validation_error( $error );
-			} elseif ( 200 !== (int) $response['response']['code'] ) {
-				$error = __( 'The client id or secret is not valid.', WPA0_LANG );
-				$this->add_validation_error( $error );
-			}
-		}
+		
 		return $input;
 	}
 

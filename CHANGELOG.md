@@ -1,5 +1,14 @@
 # Change Log
 
+## [3.2.24](https://github.com/auth0/wp-auth0/tree/3.2.23) (2017-08-14)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.23...3.2.24)
+
+**Changed**
+- More generous JWT leeway [\#332](https://github.com/auth0/wp-auth0/pull/332) ([cocojoe](https://github.com/cocojoe))
+
+**Removed**
+- Remove client_id/secret validation since it is not allowed anymore [\#334](https://github.com/auth0/wp-auth0/pull/334) ([glena](https://github.com/glena))
+
 ## [3.2.23](https://github.com/auth0/wp-auth0/tree/3.2.23) (2017-07-18)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.22...3.2.23)
 
