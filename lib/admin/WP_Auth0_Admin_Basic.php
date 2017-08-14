@@ -67,26 +67,11 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
 	public function render_client_secret() {
 		$v = $this->options->get( 'client_secret' );
-		$c = $this->options->get( 'client_secret_HS256' );
-		$s = $this->options->get( 'client_signing_algorithm' );
 ?>
-
-<textarea name="<?php echo $this->options->get_options_name(); ?>[client_secret]" id="wpa0_client_secret"  
-      	<?php if ( !empty( $v ) ) {?> placeholder="Not vivisble"<?php } ?>></textarea>
-    	<div class="subelement" id="cert_message" style="<?php echo $s == "RS256" ? 'display: block' : 'display:none' ?>;">
-        <span class="description"><?php echo __( 'Signing certificate, copy from your application\'s advanced settings in the', WPA0_LANG ); ?> <a href="https://manage.auth0.com/#/applications" target="_blank">Auth0 dashboard</a>.</span>
-      </div>
-      <div class="subelement" id="app_secret_message" style="<?php echo $s == "HS256" ? 'display: block' : 'display:none' ?>">
-        <span class="description"><?php echo __( 'Application secret, copy from your application\'s settings in the', WPA0_LANG ); ?> <a href="https://manage.auth0.com/#/applications" target="_blank">Auth0 dashboard</a>.</span>
-      </div>
-
-	<div id="RS256_inputs_container" style="<?php echo $s == "RS256" ? 'display: block' : 'display:none' ?>;">
-		   <input type="text" name="<?php echo $this->options->get_options_name(); ?>[client_secret_HS256]" id="wpa0_client_secret_HS256" 
-      	<?php if ( !empty( $c ) ) {?> placeholder="Not vivisble"<?php } ?>/>
+      <input type="text" autocomplete="off" name="<?php echo $this->options->get_options_name(); ?>[client_secret]" id="wpa0_client_secret"  <?php if ( !empty( $v ) ) {?>placeholder="Not visible"<?php } ?> />
       <div class="subelement">
         <span class="description"><?php echo __( 'Application secret, copy from your application\'s settings in the', WPA0_LANG ); ?> <a href="https://manage.auth0.com/#/applications" target="_blank">Auth0 dashboard</a>.</span>
       </div>
-	</div>   
     <?php
 	}
 
@@ -102,7 +87,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			<?php
 	}
     public function render_client_signing_algorithm(){
-
 		$v = $this->options->get( 'client_signing_algorithm' );?>
 
         <select id="wpa0_client_signing_algorithm" name="<?php echo $this->options->get_options_name() ?>[client_signing_algorithm]">
@@ -114,7 +98,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				</div>
    <?php  
  }
-
 	public function render_domain() {
 		$v = $this->options->get( 'domain' );
 ?>
@@ -203,7 +186,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
 		// Only replace the secret or token if a new value was set. If not, we will keep the last one entered.
 		$input['client_secret'] = ( !empty( $input['client_secret'] ) ? $input['client_secret'] : $old_options['client_secret'] );
-		$input['client_secret_HS256'] = ( !empty( $input['client_secret_HS256'] ) ? $input['client_secret_HS256'] : $old_options['client_secret_HS256'] );
 		$input['client_secret_b64_encoded'] = ( isset( $input['client_secret_b64_encoded'] ) ? $input['client_secret_b64_encoded'] == 1 : false );
 		$input['auth0_app_token'] = ( !empty( $input['auth0_app_token'] ) ? $input['auth0_app_token'] : $old_options['auth0_app_token'] );
 
@@ -226,17 +208,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			$completeBasicData = false;
 		}
 
-		if ( $input['client_signing_algorithm'] == "RS256" && empty( $input['client_secret_HS256'] ) && empty( $old_options['client_secret_HS256'] )) {
-			$error = __( 'You need to specify a client secret', WPA0_LANG );
-			$this->add_validation_error( $error );
-			$completeBasicData = false;
-		}
 		if ( $completeBasicData ) {
-
-			// need to use regular client secret for get_token() to work (client_credentials grant)
-			$client_secret = $input['client_signing_algorithm'] == "RS256" ? $input['client_secret_HS256'] : $input['client_secret'];
-
-			$response = WP_Auth0_Api_Client::get_token( $input['domain'], $input['client_id'], $client_secret );
+			$response = WP_Auth0_Api_Client::get_token( $input['domain'], $input['client_id'], $input['client_secret'] );
 
 			if ( $response instanceof WP_Error ) {
 				$error = $response->get_error_message();

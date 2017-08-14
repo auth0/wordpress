@@ -43,11 +43,27 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		return $defaults[$key];
 	}
 
+
+
 	public function get_client_secret_as_key() {
 		$secret = $this->get('client_secret', '');
+
     $isEncoded = $this->get('client_secret_b64_encoded', false);
-		return $isEncoded ? JWT::urlsafeB64Decode($secret) : $secret;
+
+    $isRS256 = $this->get_client_signing_algorithm() === 'RS256';
+
+    if ( $isRS256 ) {
+    	$domain = $this->get( 'domain' );
+
+    	$secret = WP_Auth0_Api_Client::JWKfetch($domain);
+
+  	} else {
+  		$secret = $isEncoded ? JWT::urlsafeB64Decode($secret) : $secret;
+  	}
+  
+		return $secret;
 	}
+
 	public function get_client_signing_algorithm() {
 			$client_signing_algorithm = $this->get('client_signing_algorithm', '');
 			return $client_signing_algorithm;

@@ -740,4 +740,39 @@ class WP_Auth0_Api_Client {
 
 		return json_decode($response['body']);
 	}
+
+  protected function convertCertToPem($cert) {
+      return '-----BEGIN CERTIFICATE-----'.PHP_EOL
+          .chunk_split($cert, 64, PHP_EOL)
+          .'-----END CERTIFICATE-----'.PHP_EOL;
+  }
+
+  public static function JWKfetch($domain) {
+
+      $endpoint = "https://$domain/.well-known/jwks.json";
+
+      $secret = [];
+
+      $response = wp_remote_get( $endpoint, array() );
+
+			if ( $response instanceof WP_Error ) {
+				WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Options::JWK_fetch', $response );
+				error_log( $response->get_error_message() );
+				return false;
+			}
+
+			if ( $response['response']['code'] != 200 ) {
+				WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Options::JWK_fetch', $response['body'] );
+				error_log( $response['body'] );
+				return false;
+			}
+
+			if ( $response['response']['code'] >= 300 ) return false;			
+
+			$jwks = json_decode($response['body'], true);
+      foreach ($jwks['keys'] as $key) { 
+          $secret[$key['kid']] = self::convertCertToPem($key['x5c'][0]);
+      }
+      return $secret;
+	}
 }
