@@ -749,30 +749,45 @@ class WP_Auth0_Api_Client {
 
   public static function JWKfetch($domain) {
 
-      $endpoint = "https://$domain/.well-known/jwks.json";
+		$a0_options = WP_Auth0_Options::Instance();
 
-      $secret = [];
+    $endpoint = "https://$domain/.well-known/jwks.json";
 
-      $response = wp_remote_get( $endpoint, array() );
+    $cache_expiration = $a0_options->get('cache_expiration');
+
+		if ( false === ($secret = get_transient('WP_Auth0_JWKS_cache') ) ) {
+
+			$secret = [];
+
+			$response = wp_remote_get( $endpoint, array() );
 
 			if ( $response instanceof WP_Error ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Options::JWK_fetch', $response );
+				WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::JWK_fetch', $response );
 				error_log( $response->get_error_message() );
 				return false;
 			}
 
 			if ( $response['response']['code'] != 200 ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Options::JWK_fetch', $response['body'] );
+				WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::JWK_fetch', $response['body'] );
 				error_log( $response['body'] );
 				return false;
 			}
 
-			if ( $response['response']['code'] >= 300 ) return false;			
+			if ( $response['response']['code'] >= 300 ) return false;		
 
 			$jwks = json_decode($response['body'], true);
-      foreach ($jwks['keys'] as $key) { 
-          $secret[$key['kid']] = self::convertCertToPem($key['x5c'][0]);
+
+			foreach ($jwks['keys'] as $key) { 
+				$secret[$key['kid']] = self::convertCertToPem($key['x5c'][0]);
       }
-      return $secret;
+
+      if ($cache_expiration !== 0) {
+      	set_transient( 'WP_Auth0_JWKS_cache', $secret, $cache_expiration * MINUTE_IN_SECONDS );
+      	WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::JWK_cache', 'cacheing jwks for '.$cache_expiration.' minutes' );
+    	}
+
+		}
+
+    return $secret;
 	}
 }
