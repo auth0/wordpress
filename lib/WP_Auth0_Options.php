@@ -60,7 +60,8 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
   	} else {
   		$secret = $isEncoded ? JWT::urlsafeB64Decode($secret) : $secret;
   	}
-  
+    WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Options::get_client_secret_as_key', $secret );
+
 		return $secret;
 	}
 
@@ -77,8 +78,8 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'auto_login_method' => '',
 			'client_id' => '',
 			'client_secret' => '',
-			'client_signing_algorithm' => 'H256',
-			'client_secret_HS256' => '',
+			'client_signing_algorithm' => 'HS256',
+			'cache_expiration' => 1440,
 			'client_secret_b64_encoded' => null,
 			'domain' => '',
 			'form_title' => '',
