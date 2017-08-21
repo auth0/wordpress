@@ -222,10 +222,10 @@ class WP_Auth0_Api_Client {
 						'name' => $name,
 						'callbacks' => array(
 							home_url( '/index.php?auth0=1' ),
-							home_url( '/wp-login.php' )
+							wp_login_url()
 						),
 						"allowed_origins"=>array(
-							home_url( '/wp-login.php' ),
+							wp_login_url(),
 							admin_url( '/admin.php?page=wpa0-setup&step=2&profile=social' )
 						),
 						"allowed_logout_urls" => array(

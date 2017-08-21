@@ -39,7 +39,7 @@ class WP_Auth0_Lock10_Options {
   }
 
   public function get_implicit_callback_url() {
-    return home_url( '/wp-login.php' );
+    return wp_login_url();
   }
 
   public function get_sso() {
