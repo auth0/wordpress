@@ -60,8 +60,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
   	} else {
   		$secret = $isEncoded ? JWT::urlsafeB64Decode($secret) : $secret;
   	}
-    WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Options::get_client_secret_as_key', $secret );
-
+  	
 		return $secret;
 	}
 
