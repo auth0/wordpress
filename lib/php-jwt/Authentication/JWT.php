@@ -75,12 +75,12 @@ class JWT
 
             // Check the signature
             if (!JWT::verify("$headb64.$bodyb64", $sig, $key, $header->alg)) {
-                throw new SignatureInvalidException('Signature verification failed, disabling "Settings \ Basic \ Client Secret Base64 Encoded" may resolve this issue.');
+                throw new SignatureInvalidException('Signature verification failed, check "Client Secret Base64 Encoded" value matches your Auth0 client.');
             }
 
             // Check if the nbf if it is defined. This is the time that the
             // token can actually be used. If it's not yet that time, abort. Small leeway for clock skew.
-            if (isset($payload->nbf) && $payload->nbf > time() + 2) {
+            if (isset($payload->nbf) && $payload->nbf > time() + 15) {
                 throw new BeforeValidException(
                     'Cannot handle token prior to (nbf) ' . date(DateTime::ISO8601, $payload->nbf)
                 );
@@ -89,14 +89,14 @@ class JWT
             // Check that this token has been created before 'now'. This prevents
             // using tokens that have been created for later use (and haven't
             // correctly used the nbf claim). Small leeway for clock skew.
-            if (isset($payload->iat) && $payload->iat > time() + 2) {
+            if (isset($payload->iat) && $payload->iat > time() + 15) {
                 throw new BeforeValidException(
                     'Cannot handle token prior to (iat) ' . date(DateTime::ISO8601, $payload->iat)
                 );
             }
 
             // Check if this token has expired. Small leeway for clock skew.
-            if (isset($payload->exp) && time() >= $payload->exp + 2) {
+            if (isset($payload->exp) && time() >= $payload->exp + 15) {
                 throw new ExpiredException('Expired token');
             }
         }

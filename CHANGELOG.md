@@ -1,5 +1,26 @@
 # Change Log
 
+## [3.2.24](https://github.com/auth0/wp-auth0/tree/3.2.23) (2017-08-14)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.23...3.2.24)
+
+**Changed**
+- More generous JWT leeway [\#332](https://github.com/auth0/wp-auth0/pull/332) ([cocojoe](https://github.com/cocojoe))
+
+**Removed**
+- Remove client_id/secret validation since it is not allowed anymore [\#334](https://github.com/auth0/wp-auth0/pull/334) ([glena](https://github.com/glena))
+
+## [3.2.23](https://github.com/auth0/wp-auth0/tree/3.2.23) (2017-07-18)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.22...3.2.23)
+
+**Changed**
+- Update /authorize URL [\#326](https://github.com/auth0/wp-auth0/pull/326) ([cocojoe](https://github.com/cocojoe))
+
+## [3.2.22](https://github.com/auth0/wp-auth0/tree/3.2.22) (2017-06-26)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.21...3.2.22)
+
+**Fixed**
+- Fixed migration for older plugins that use base64 secret [\#324](https://github.com/auth0/wp-auth0/pull/324) ([cocojoe](https://github.com/cocojoe))
+
 ## [3.2.21](https://github.com/auth0/wp-auth0/tree/3.2.21) (2017-06-14)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.5...3.2.21)
 
