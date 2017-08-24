@@ -171,7 +171,7 @@ class WP_Auth0 {
 
 	function on_activate_redirect( $plugin ) {
 
-		if ( $plugin == plugin_basename( __FILE__ ) ) {
+		if ( !defined( 'WP_CLI' ) && $plugin == plugin_basename( __FILE__ ) ) {
 
 			$this->router->setup_rewrites();
 			flush_rewrite_rules();
