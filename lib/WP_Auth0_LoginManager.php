@@ -122,6 +122,8 @@ class WP_Auth0_LoginManager {
 				return;
 			}
 
+      $lock_options = new WP_Auth0_Lock10_Options();
+      $options = $lock_options->get_lock_options();
 
 			$stateObj = array( 'interim' => false, 'uuid' => uniqid() );
 			if ( isset( $_GET['redirect_to'] ) ) {
@@ -133,10 +135,13 @@ class WP_Auth0_LoginManager {
 
 			// Create the link to log in.
 			$login_url = "https://". $this->a0_options->get( 'domain' ) .
-				"/authorize?response_type=code&scope=openid%20profile".
+				"/authorize?".
+        "&scope=".$options["auth"]["params"]["scope"] .
+        "&response_type=".$options["auth"]["responseType"] .
 				"&client_id=".$this->a0_options->get( 'client_id' ) .
-				"&redirect_uri=".home_url( '/index.php?auth0=1' ) .
-				"&state=".urlencode( $state ).
+				"&redirect_uri=" . $options["auth"]["redirectUrl"] .
+        "&state=" . urlencode( $state ).
+				"&nonce=nonce" . // TODO add full nonce support
 				"&connection=". trim($connection) .
 				"&auth0Client=" . WP_Auth0_Api_Client::get_info_headers();
 
@@ -482,7 +487,7 @@ class WP_Auth0_LoginManager {
 				throw new WP_Auth0_LoginFlowValidationException( $e->getMessage() );
 			} catch ( WP_Auth0_RegistrationNotEnabledException $e ) {
 				$msg = __( 'Could not create user. The registration process is not available. Please contact your site’s administrator.', 'wp-auth0' );
-				
+
 				throw new WP_Auth0_LoginFlowValidationException( $msg );
 			} catch ( WP_Auth0_EmailNotVerifiedException $e ) {
 				$this->dieWithVerifyEmail( $e->userinfo, $e->id_token );
