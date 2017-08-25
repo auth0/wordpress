@@ -122,6 +122,10 @@ class WP_Auth0_LoginManager {
         return;
       }
 
+      if ( $this->query_vars( 'auth0' ) !== null ) {
+        return;
+      }
+
       $lock_options = new WP_Auth0_Lock10_Options();
       $options = $lock_options->get_lock_options();
 
@@ -133,11 +137,13 @@ class WP_Auth0_LoginManager {
 
       $connection = apply_filters( 'auth0_get_auto_login_connection', $this->a0_options->get( 'auto_login_method' ) );
 
+      $response_type = $lock_options->get_auth0_implicit_workflow() ? 'id_token' : 'code';
+
       // Create the link to log in.
       $login_url = "https://". $this->a0_options->get( 'domain' ) .
         "/authorize?".
-        "&scope=".$options["auth"]["params"]["scope"] .
-        "&response_type=".$options["auth"]["responseType"] .
+        "scope=".urlencode($options["auth"]["params"]["scope"]) .
+        "&response_type=" . $response_type .
         "&client_id=".$this->a0_options->get( 'client_id' ) .
         "&redirect_uri=" . $options["auth"]["redirectUrl"] .
         "&state=" . urlencode( $state ).
