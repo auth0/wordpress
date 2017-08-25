@@ -129,31 +129,31 @@ document.addEventListener("DOMContentLoaded", function() {
         // function a0ShowLoginModal() {
         //     lock.<?php echo $lock_options->get_lock_show_method(); ?>();
         // }
-    <?php } else { ?>
-
-      var lock = new <?php echo $lock_options->get_lock_classname(); ?>('<?php echo $lock_options->get_client_id(); ?>', '<?php echo $lock_options->get_domain(); ?>', options);
-
-      <?php if ( ! empty( $custom_js ) ) { ?>
-
-          <?php echo $custom_js;?>
-
-      <?php } ?>
-
-      function a0ShowLoginModal() {
-          lock.<?php echo $lock_options->get_lock_show_method(); ?>();
-      }
-
-      <?php if ( ! $lock_options->show_as_modal() ) { ?>
-          a0ShowLoginModal();
-      <?php } else { ?>
-          jQuery('#a0LoginButton').click(a0ShowLoginModal);
-      <?php } ?>
-
-      if (lock.on) {
-          lock.on('error shown', function(){
-              jQuery(".a0-footer").parent().css('margin-bottom', '50px');
-          });
-      }
     <?php } ?>
+
+    var lock = new <?php echo $lock_options->get_lock_classname(); ?>('<?php echo $lock_options->get_client_id(); ?>', '<?php echo $lock_options->get_domain(); ?>', options);
+
+    <?php if ( ! empty( $custom_js ) ) { ?>
+
+        <?php echo $custom_js;?>
+
+    <?php } ?>
+
+    function a0ShowLoginModal() {
+        lock.<?php echo $lock_options->get_lock_show_method(); ?>();
+    }
+
+    <?php if ( ! $lock_options->show_as_modal() ) { ?>
+        a0ShowLoginModal();
+    <?php } else { ?>
+        jQuery('#a0LoginButton').click(a0ShowLoginModal);
+    <?php } ?>
+
+    if (lock.on) {
+        lock.on('error shown', function(){
+            jQuery(".a0-footer").parent().css('margin-bottom', '50px');
+        });
+    }
+
 });
 </script>
