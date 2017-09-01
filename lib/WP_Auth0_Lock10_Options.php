@@ -39,7 +39,7 @@ class WP_Auth0_Lock10_Options {
   }
 
   public function get_implicit_callback_url() {
-    return home_url( '/wp-login.php' );
+    return home_url( '/wp-login.php?auth0=1' );
   }
 
   public function get_sso() {
@@ -252,6 +252,7 @@ class WP_Auth0_Lock10_Options {
       $extraOptions["auth"]["params"]["scope"] .= "name email picture nickname email_verified";
       $extraOptions["auth"]["responseType"] = 'token';
       $extraOptions["auth"]["redirectUrl"] = $this->get_implicit_callback_url();
+      $extraOptions["autoParseHash"] = false;
     } else {
       $extraOptions["auth"]["responseType"] = 'code';
       $extraOptions["auth"]["redirectUrl"] = $this->get_code_callback_url();
