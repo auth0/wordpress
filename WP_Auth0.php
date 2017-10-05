@@ -2,16 +2,16 @@
 /**
  * Plugin Name: PLUGIN_NAME
  * Description: PLUGIN_DESCRIPTION
- * Version: 3.3.1
+ * Version: 3.3.2
  * Author: Auth0
  * Author URI: https://auth0.com
  */
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
-define( 'WPA0_LANG', 'wp-auth0' );
+define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 define( 'AUTH0_DB_VERSION', 14 );
-define( 'WPA0_VERSION', '3.3.1' );
+define( 'WPA0_VERSION', '3.3.2' );
 
 /**
  * Main plugin class

@@ -150,11 +150,11 @@ class WP_Auth0_InitialSetup {
   		<div id="message" class="error">
   			<p>
   				<strong>
-  					<?php echo __( 'There was an error creating the Auth0 App. Check the ', WPA0_LANG ); ?>
-  					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', WPA0_LANG ); ?></a>
-  					<?php echo __( ' for more information. If the problem persists, please create it manually in the ', WPA0_LANG ); ?>
-  					<a target="_blank" href="https://manage.auth0.com/#/applications"><?php echo __( 'Auth0 Dashboard', WPA0_LANG ); ?></a>
-  					<?php echo __( ' and copy the client_id and secret.', WPA0_LANG ); ?>
+  					<?php echo __( 'There was an error creating the Auth0 App. Check the ', 'wp-auth0' ); ?>
+  					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', 'wp-auth0' ); ?></a>
+  					<?php echo __( ' for more information. If the problem persists, please create it manually in the ', 'wp-auth0' ); ?>
+  					<a target="_blank" href="https://manage.auth0.com/#/applications"><?php echo __( 'Auth0 Dashboard', 'wp-auth0' ); ?></a>
+  					<?php echo __( ' and copy the client_id and secret.', 'wp-auth0' ); ?>
   				</strong>
   			</p>
   		</div>
@@ -167,9 +167,9 @@ class WP_Auth0_InitialSetup {
   		<div id="message" class="error">
   			<p>
   				<strong>
-  					<?php echo __( 'There was an error retieving your auth0 credentials. Check the ', WPA0_LANG ); ?>
-  					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', WPA0_LANG ); ?></a>
-  					<?php echo __( ' for more information. Please check that your sever has internet access and can reach "https://'.$domain.'/" ', WPA0_LANG ); ?>
+  					<?php echo __( 'There was an error retieving your auth0 credentials. Check the ', 'wp-auth0' ); ?>
+  					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', 'wp-auth0' ); ?></a>
+  					<?php echo __( ' for more information. Please check that your sever has internet access and can reach "https://'.$domain.'/" ', 'wp-auth0' ); ?>
   				</strong>
   			</p>
   		</div>
@@ -182,7 +182,7 @@ class WP_Auth0_InitialSetup {
       <div id="message" class="error">
         <p>
           <strong>
-            <?php echo __( 'The required scoped were rejected.', WPA0_LANG ); ?>
+            <?php echo __( 'The required scoped were rejected.', 'wp-auth0' ); ?>
           </strong>
         </p>
       </div>
@@ -194,7 +194,7 @@ class WP_Auth0_InitialSetup {
   		<div id="message" class="error">
   			<p>
   				<strong>
-  					<?php echo __( 'Please create your Auth0 account first at ', WPA0_LANG ); ?>
+  					<?php echo __( 'Please create your Auth0 account first at ', 'wp-auth0' ); ?>
             <a href="https://manage.auth0.com">https://manage.auth0.com</a>
   				</strong>
   			</p>

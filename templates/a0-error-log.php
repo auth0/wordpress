@@ -2,7 +2,7 @@
 
     <?php require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'; ?>
 
-    <div class="a0-table"><h1><?php _e( 'Auth0 Error Log', WPA0_LANG ); ?></h1></div>
+    <div class="a0-table"><h1><?php _e( 'Auth0 Error Log', 'wp-auth0' ); ?></h1></div>
 
     <table class="a0-table widefat">
         <thead>
