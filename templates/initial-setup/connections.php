@@ -68,7 +68,6 @@ if ( !$migration_ws_enabled ) {
 
 	</div>
 </div>
-<script src="//cdn.auth0.com/js/lock-8.min.js"></script>
 <script type="text/javascript">
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -83,28 +82,6 @@ function onToggleConnection(connection, enabled) {
 	metricsTrack('initial-setup:step2:' + connection + ':' + (enabled ? "on" :"off"));
 }
 
-var lock = new Auth0Lock('<?php echo $client_id; ?>', '<?php echo $domain; ?>');
-
-lock.once('shown', function() {
-  showLock();
-});
-
-lock.once('signin success', function() {
-  showLock();
-});
-
-function showLock() {
-	lock.show({
-		container: 'lock-container',
-		socialBigButtons: true,
-		popup:false
-	},function (err, profile, token) {
-		showLock();
-	});
-}
-
-showLock();
-
 document.addEventListener("DOMContentLoaded", function() {
 
 	var q = async.queue(function (task, callback) {
@@ -116,8 +93,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		};
 
 		onToggleConnection(task.connection, task.enabled);
-
-		showLock()
 
 		jQuery.post(ajaxurl, data, function(response) {
 			callback();
@@ -132,18 +107,6 @@ document.addEventListener("DOMContentLoaded", function() {
 			enabled: e.target.checked
 		};
 
-		if (data.enabled) {
-			lock.options.$client.strategies.push({"name":data.connection,"connections":[{"name":data.connection}]});
-		} else {
-			for (var a = 0; a < lock.options.$client.strategies.length; a++){
-				if (lock.options.$client.strategies[a].name === data.connection) {
-					lock.options.$client.strategies.splice(a,1);
-					break;
-				}
-			}
-		}
-
-		jQuery('.lock').addClass('loading');
 		window.onbeforeunload = confirmExit;
 		q.push(data);
 
