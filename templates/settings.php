@@ -8,7 +8,7 @@
 			<h1><?php _e( 'Auth0 WordPress Plugin Settings', 'wp-auth0' ); ?></h1>
 
 			<div class="row a0-message a0-warning manage">
-				For your Auth0 dashboard with more settings click <a target="_blank" href="https://manage.auth0.com">here</a>.
+				For your Auth0 dashboard with more settings and connection options click <a target="_blank" href="https://manage.auth0.com/#/clients/<?php echo WP_Auth0_Options::Instance()->get('client_id'); ?>/connections">here</a>.
 			</div>
 
 	    <?php if ( count( get_settings_errors() ) == 0 && isset( $_GET['settings-updated'] ) ) { ?>
