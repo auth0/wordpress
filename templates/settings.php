@@ -21,8 +21,7 @@
 	    <ul class="nav nav-tabs" role="tablist">
 		    <li role="presentation"><a id="tab-basic" href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Basic</a></li>
 		    <li role="presentation"><a id="tab-features" href="#features" aria-controls="features" role="tab" data-toggle="tab">Features</a></li>
-		    <li role="presentation"><a id="tab-connections" href="#connections" aria-controls="connections" role="tab" data-toggle="tab">Connections</a></li>
-		    <li role="presentation"><a id="tab-appearance" href="#appearance" aria-controls="appearance" role="tab" data-toggle="tab">Appearance</a></li>
+			<li role="presentation"><a id="tab-appearance" href="#appearance" aria-controls="appearance" role="tab" data-toggle="tab">Appearance</a></li>
 		    <li role="presentation"><a id="tab-advanced" href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab">Advanced</a></li>
 		    <li role="presentation"><a id="tab-dashboard" href="#dashboard" aria-controls="dashboard" role="tab" data-toggle="tab">Dashboard</a></li>
 		    <li role="presentation"><a id="tab-help" href="#help" aria-controls="help" role="tab" data-toggle="tab">Help</a></li>
@@ -37,32 +36,6 @@
 		    </div>
 		    <div role="tabpanel" class="tab-pane row active" id="features">
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_features' ); ?>
-		    </div>
-		    <div role="tabpanel" class="tab-pane" id="connections">
-		    	<div class="loading" style="display:none;">
-		    		<div class="a0-spinner-css"></div>
-		    		<span>Updating the connections settings</span>
-		    	</div>
-
-		    	<div class="a0-message a0-tip row">
-      			<b>Pro Tip:</b>
-      			To set your own app keys and settings for the social connections, access the <a target="_blank" href="https://manage.auth0.com/#/connections/social">Auth0 Dashboard</a>.
-       		</div>
-
-		    	<div class="connections row">
-					  <?php foreach ( $social_connections as $social_connection ) { ?>
-					    <div class="connection col-sm-4 col-xs-6">
-					      <div class="logo" data-logo="<?php echo $social_connection['icon']; ?>">
-					        <span class="logo-child"></span>
-					      </div>
-
-					      <div class="a0-switch">
-					        <input type="checkbox" name="social_<?php echo $social_connection['provider']; ?>" id="wpa0_social_<?php echo $social_connection['provider']; ?>" value="<?php echo $social_connection['provider']; ?>" <?php echo checked( $social_connection['status'], 1, false ); ?>/>
-					        <label for="wpa0_social_<?php echo $social_connection['provider']; ?>"></label>
-					      </div>
-					    </div>
-					  <?php } ?>
-					</div>
 		    </div>
 		    <div role="tabpanel" class="tab-pane row" id="appearance">
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_appearance' ); ?>
