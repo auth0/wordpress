@@ -182,7 +182,6 @@ And can be customized by adding the following parameters:
 * social_big_buttons: boolean
 * gravatar: boolean
 * username_style: string, "email" or "username"
-* remember_last_login: boolean
 * icon_url: string (valid url)
 * extra_conf: string, valid json
 * show_as_modal: boolean

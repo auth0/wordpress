@@ -97,9 +97,7 @@ function showLock() {
 	lock.show({
 		container: 'lock-container',
 		socialBigButtons: true,
-		popup:false,
-		rememberLastLogin:false,
-		sso:false
+		popup:false
 	},function (err, profile, token) {
 		showLock();
 	});
