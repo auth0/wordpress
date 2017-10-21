@@ -229,7 +229,7 @@ class WP_Auth0_Api_Client {
 							admin_url( '/admin.php?page=wpa0-setup&step=2&profile=social' )
 						),
 						"cross_origin_auth" => true,
-						"cross_origin_loc" => home_url( '/fallback.php' ),
+						"cross_origin_loc" => "https://localhost/dummy", // TODO: 
 						"allowed_logout_urls" => array(
 							$logout_url
 						),

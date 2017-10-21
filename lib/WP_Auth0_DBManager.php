@@ -119,6 +119,9 @@ class WP_Auth0_DBManager {
 		}
 	}
 
+	if ( $this->current_db_version < 15 ) {
+		$options->set('use_lock_10', true);
+	}
 		$this->current_db_version = AUTH0_DB_VERSION;
 		update_option( 'auth0_db_version', AUTH0_DB_VERSION );
 	}
