@@ -15,9 +15,11 @@ document.addEventListener("DOMContentLoaded", function() {
   var options = <?php echo json_encode( $lock_options->get_sso_options() ); ?>;
   webAuth.checkSession(options
   , function (err, authResult) {
-    console.log(err);
-    console.log(authResult);
-  });
+      if (typeof(authResult) === 'undefined') {
+        return;
+      }
+      window.location = '<?php echo home_url( '/?auth0=1' ); ?>&code=' + authResult.code + '&state=' + authResult.state;
+    });
 
 });
 </script>

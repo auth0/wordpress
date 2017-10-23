@@ -226,7 +226,7 @@ class WP_Auth0_Api_Client {
 						),
 						"allowed_origins"=>array(
 							home_url( '/wp-login.php' ),
-							admin_url( '/admin.php?page=wpa0-setup&step=2&profile=social' )
+							admin_url( '/')
 						),
 						"cross_origin_auth" => true,
 						"cross_origin_loc" => "https://localhost/dummy", // TODO: 
