@@ -121,6 +121,8 @@ class WP_Auth0_DBManager {
 
 	if ( $this->current_db_version < 15 ) {
 		$options->set('use_lock_10', true);
+		$options->set('cdn_url', '//cdn.auth0.com/js/lock/11.0.0-beta.1/lock.min.js');
+		$options->set('auth0js-cdn', '//cdn.auth0.com/js/auth0/9.0.0-beta.2/auth0.min.js');
 
 		// Update Client
 		$app_token = $options->get( 'auth0_app_token' );
