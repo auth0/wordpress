@@ -27,7 +27,7 @@ class WP_Auth0_LoginManager {
     add_action( 'login_init', array( $this, 'login_auto' ) );
     add_action( 'template_redirect', array( $this, 'init_auth0' ), 1 );
     //add_action( 'wp_footer', array( $this, 'auth0_sso_footer' ) );
-    add_action( 'wp_footer', array( $this, 'auth0_singlelogout_footer' ) );
+    //add_action( 'wp_footer', array( $this, 'auth0_singlelogout_footer' ) );
     add_filter( 'login_message', array( $this, 'auth0_sso_footer' ) );
   }
 

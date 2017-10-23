@@ -225,11 +225,10 @@ class WP_Auth0_Api_Client {
 							home_url( '/wp-login.php' )
 						),
 						"allowed_origins"=>array(
-							home_url( '/wp-login.php' ),
-							admin_url( '/')
+							home_url( '/wp-login.php' )
 						),
 						"cross_origin_auth" => true,
-						"cross_origin_loc" => "https://localhost/dummy", // TODO: 
+						"cross_origin_loc" => "https://localhost/dummy", // TODO
 						"allowed_logout_urls" => array(
 							$logout_url
 						),
