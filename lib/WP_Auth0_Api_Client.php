@@ -231,7 +231,7 @@ class WP_Auth0_Api_Client {
 							home_url()
 						),
 						"cross_origin_auth" => true,
-						"cross_origin_loc" => "https://localhost/dummy", // TODO
+						"cross_origin_loc" => home_url('/index.php?auth0fallback=1','https'),
 						"allowed_logout_urls" => array(
 							$logout_url
 						),
@@ -281,7 +281,7 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
-	public static function update_client( $domain, $app_token, $client_id, $sso ) {
+	public static function update_client( $domain, $app_token, $client_id, $sso, $payload = array() ) {
 
 		$endpoint = "https://$domain/api/v2/clients/$client_id";
 
@@ -293,9 +293,7 @@ class WP_Auth0_Api_Client {
 		$response = wp_remote_post( $endpoint  , array(
 				'method' => 'PATCH',
 				'headers' => $headers,
-				'body' => json_encode( array(
-						'sso' => $sso,
-					) )
+				'body' => json_encode( array_merge(array( 'sso' => boolval($sso)), $payload) )
 			) );
 
 		if ( $response instanceof WP_Error ) {

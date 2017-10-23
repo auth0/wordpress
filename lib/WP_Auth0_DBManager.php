@@ -121,6 +121,18 @@ class WP_Auth0_DBManager {
 
 	if ( $this->current_db_version < 15 ) {
 		$options->set('use_lock_10', true);
+
+		// Update Client
+		$app_token = $options->get( 'auth0_app_token' );
+		$client_id = $options->get( 'client_id' );
+		$domain = $options->get( 'domain' );
+		$sso = $options->get( 'sso' );
+		$payload = array(
+			"cross_origin_auth" => true,
+			"cross_origin_loc" => home_url('/index.php?auth0fallback=1','https'),
+			"web_origins" => array(home_url())
+		);
+		$updateClient = WP_Auth0_Api_Client::update_client($domain, $app_token, $client_id, $sso, $payload);
 	}
 		$this->current_db_version = AUTH0_DB_VERSION;
 		update_option( 'auth0_db_version', AUTH0_DB_VERSION );
