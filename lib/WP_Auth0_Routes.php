@@ -65,7 +65,6 @@ class WP_Auth0_Routes {
 		<head>
 		<script src="$cdn"></script>
 		<script type="text/javascript">
-		console.log('hi');
 		  var auth0 = new auth0.WebAuth({
 			clientID: '$client_id',
 			domain: '$domain',
