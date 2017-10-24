@@ -60,9 +60,12 @@ class WP_Auth0_Routes {
 		$domain = $this->a0_options->get( 'domain' );
 		$redirect_uri = home_url( '/index.php?auth0=1', $this->a0_options->get( 'force_https_callback' ) );
 		echo <<<EOT
+		<!DOCTYPE html>
+		<html>
 		<head>
 		<script src="$cdn"></script>
 		<script type="text/javascript">
+		console.log('hi');
 		  var auth0 = new auth0.WebAuth({
 			clientID: '$client_id',
 			domain: '$domain',
@@ -70,7 +73,9 @@ class WP_Auth0_Routes {
 		  });
 		  auth0.crossOriginAuthenticationCallback();
 		</script>
-	  	</head>
+		</head>
+		<body></body>
+		</html>	  
 EOT;
 	}
 
