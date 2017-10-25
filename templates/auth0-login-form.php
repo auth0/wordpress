@@ -4,7 +4,7 @@ $lock_options = new WP_Auth0_Lock_Options( $specialSettings );
 
 if ( ! $lock_options->can_show() ) {
 ?>
-    <p><?php _e( 'Auth0 Integration has not yet been set up! Please visit your Wordpress Auth0 settings and fill in the required settings.', WPA0_LANG ); ?></p>
+    <p><?php _e( 'Auth0 Integration has not yet been set up! Please visit your Wordpress Auth0 settings and fill in the required settings.', 'wp-auth0' ); ?></p>
 <?php
 	return;
 }

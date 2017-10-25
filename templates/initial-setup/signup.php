@@ -4,8 +4,8 @@
 
   <div class="container-fluid">
     <div class="row">
-      <h1><?php _e( "Sign Up with Auth0", WPA0_LANG ); ?></h1>
-      <p class="a0-step-text"><?php _e( "To get started with the plugin we need you to sign up with Auth0 below. It should only take a second:", WPA0_LANG ); ?></p>
+      <h1><?php _e( "Sign Up with Auth0", "wp-auth0" ); ?></h1>
+      <p class="a0-step-text"><?php _e( "To get started with the plugin we need you to sign up with Auth0 below. It should only take a second:", "wp-auth0" ); ?></p>
     </div>
   </div>
 </div>

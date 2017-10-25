@@ -5,7 +5,7 @@
   <div class="container-fluid">
 
     <div class="row">
-      <h1><?php _e( 'Import and Export Settings', WPA0_LANG ); ?></h1>
+      <h1><?php _e( 'Import and Export Settings', 'wp-auth0' ); ?></h1>
       <p class="a0-step-text top-margin no-bottom-margin">You can import and export your Auth0 WordPress plugin settings here. This allows you to either backup the data, or to move your settings to a new WordPress instance.</p>
     </div>
     <div class="row">

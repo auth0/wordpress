@@ -15,7 +15,7 @@ class WP_Auth0_Admin_Generic {
 
 		add_settings_section(
 			"wp_auth0_{$id}_settings_section",
-			__( $sectionName, WPA0_LANG ),
+			__( $sectionName, 'wp-auth0' ),
 			array( $this, "render_{$id}_description" ),
 			$options_name
 		);
@@ -23,7 +23,7 @@ class WP_Auth0_Admin_Generic {
 		foreach ( $settings as $setting ) {
 			add_settings_field(
 				$setting['id'],
-				__( $setting['name'], WPA0_LANG ),
+				__( $setting['name'], 'wp-auth0' ),
 				array( $this, $setting['function'] ),
 				$options_name,
 				"wp_auth0_{$id}_settings_section",
