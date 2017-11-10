@@ -227,9 +227,6 @@ class WP_Auth0_Api_Client {
 						"allowed_origins"=>array(
 							home_url( '/wp-login.php' )
 						),
-						"web_origins"=>array(
-							home_url()
-						),
 						"cross_origin_auth" => true,
 						"cross_origin_loc" => home_url('/index.php?auth0fallback=1','https'),
 						"allowed_logout_urls" => array(
@@ -250,7 +247,21 @@ class WP_Auth0_Api_Client {
 			return false;
 		}
 
-		return json_decode( $response['body'] );
+		$response = json_decode( $response['body'] );
+	
+		// Workaround: Can't add `web_origin` on create
+		$payload = array(
+			"web_origins" => array(home_url())
+		);
+		$updateResponse = WP_Auth0_Api_Client::update_client($domain, $app_token, $response->client_id, false, $payload);
+
+		if ( $updateClient instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_client', $updateResponse );
+			error_log( $updateResponse->get_error_message() );
+			return false;
+		}
+
+		return $response;
 	}
 
 	public static function search_clients( $domain, $app_token ) {
