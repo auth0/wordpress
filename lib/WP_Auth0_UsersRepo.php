@@ -117,7 +117,9 @@ class WP_Auth0_UsersRepo {
 			$auth0_id = get_user_meta( $joinUser->ID, $wpdb->prefix.'auth0_id', true);
 
 			if ($auth0_id) { // if it has an a0 id, we cant join it
-				throw new WP_Auth0_CouldNotCreateUserException('There is a user with the same email');
+				$msg = __( 'There is a user with the same email', 'wp-auth0' );
+				
+				throw new WP_Auth0_CouldNotCreateUserException( $msg );
 			}
 		}
 
@@ -142,7 +144,9 @@ class WP_Auth0_UsersRepo {
 			if ( is_wp_error( $user_id ) ) {
 				throw new WP_Auth0_CouldNotCreateUserException( $user_id->get_error_message() );
 			}elseif ( $user_id == -2 ) {
-				throw new WP_Auth0_CouldNotCreateUserException( 'Could not create user. The registration process were rejected. Please verify that your account is whitelisted for this system. Please contact your site’s administrator.' );
+				$msg = __( 'Could not create user. The registration process were rejected. Please verify that your account is whitelisted for this system. Please contact your site’s administrator.', 'wp-auth0' );
+				
+				throw new WP_Auth0_CouldNotCreateUserException( $msg );
 			}elseif ( $user_id <0 ) {
 				throw new WP_Auth0_CouldNotCreateUserException();
 			}

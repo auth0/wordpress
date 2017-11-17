@@ -1,5 +1,21 @@
 # Change Log
 
+## [3.3.2](https://github.com/auth0/wp-auth0/tree/3.3.2) (2017-10-05)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.3.2...3.2.24)
+
+**Added**
+- Added translation support for a few user-facing exception messages [\#312](https://github.com/auth0/wp-auth0/pull/312) ([idpaterson](https://github.com/idpaterson))
+
+**Changed**
+- Use literal 'wp-auth0' rather than WPA0_LANG constant [\#311](https://github.com/auth0/wp-auth0/pull/311) ([idpaterson](https://github.com/idpaterson))
+
+**Fixed**
+- Properly handle auto login configuration + custom parse url hash in login page ([glena](https://github.com/glena))
+- Implicit mode in auto login ([glena](https://github.com/glena))
+
+**Notes**
+There is a jump in version due to a release issue which required bumping the version a few times. 
+
 ## [3.2.24](https://github.com/auth0/wp-auth0/tree/3.2.23) (2017-08-14)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.2.23...3.2.24)
 

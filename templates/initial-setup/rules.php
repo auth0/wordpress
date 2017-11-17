@@ -1,7 +1,7 @@
 <div class="wrap">
 
 	<?php screen_icon(); ?>
-	<h2><?php _e( "Auth0 for WordPress - Setup Wizard (step $step)", WPA0_LANG ); ?></h2>
+	<h2><?php _e( "Auth0 for WordPress - Setup Wizard (step $step)", "wp-auth0" ); ?></h2>
 
 	<p>This will create a new database connections, expose 2 endpoints and will pupulate the custom scripts to call this endpoints to migrate the users to auth0. the users will not be changed in wordpress.</p>
 
@@ -12,10 +12,10 @@
 			MFA: <input type="checkbox" name="mfa" id="wpa0_mfa" value="1" <?php echo empty( $mfa ) ? '' : 'checked'; ?>/>
 			<div class="subelement">
 				<span class="description">
-					<?php echo __( 'Mark this if you want to enable multifactor authentication with Google Authenticator. More info ', WPA0_LANG ); ?>
-					<a target="_blank" href="https://auth0.com/docs/mfa"><?php echo __( 'HERE', WPA0_LANG ); ?></a>.
-					<?php echo __( 'You can enable other MFA providers from the ', WPA0_LANG ); ?>
-					<a target="_blank" href="https://manage.auth0.com/#/multifactor"><?php echo __( 'Auth0 dashboard', WPA0_LANG ); ?></a>.
+					<?php echo __( 'Mark this if you want to enable multifactor authentication with Google Authenticator. More info ', 'wp-auth0' ); ?>
+					<a target="_blank" href="https://auth0.com/docs/mfa"><?php echo __( 'HERE', 'wp-auth0' ); ?></a>.
+					<?php echo __( 'You can enable other MFA providers from the ', 'wp-auth0' ); ?>
+					<a target="_blank" href="https://manage.auth0.com/#/multifactor"><?php echo __( 'Auth0 dashboard', 'wp-auth0' ); ?></a>.
 				</span>
 			</div>
 		</div>
@@ -24,7 +24,7 @@
 			GEO: <input type="checkbox" name="geo_rule" id="wpa0_geo_rule" value="1" <?php echo is_null( $geo ) ? '' : 'checked'; ?>/>
 			<div class="subelement">
 				<span class="description">
-					<?php echo __( 'Mark this if you want to store geo location information based on your users IP in the user_metadata', WPA0_LANG );?>
+					<?php echo __( 'Mark this if you want to store geo location information based on your users IP in the user_metadata', 'wp-auth0' );?>
 				</span>
 			</div>
 		</div>
@@ -33,10 +33,10 @@
 		<div>
 			Income: <input type="checkbox" name="income_rule" id="wpa0_income_rule" value="1" <?php echo is_null( $income ) ? '' : 'checked'; ?>/>
 			<div class="subelement">
-				<span class="description"><?php echo __( 'Mark this if you want to store income data based on the zipcode (calculated using the users IP).', WPA0_LANG ); ?></span>
+				<span class="description"><?php echo __( 'Mark this if you want to store income data based on the zipcode (calculated using the users IP).', 'wp-auth0' ); ?></span>
 			</div>
 			<div class="subelement">
-				<span class="description"><?php echo __( 'Represents the median income of the users zipcode, based on last US census data.', WPA0_LANG ); ?></span>
+				<span class="description"><?php echo __( 'Represents the median income of the users zipcode, based on last US census data.', 'wp-auth0' ); ?></span>
 			</div>
 		</div>
 
@@ -50,9 +50,9 @@
 
 			<div class="subelement">
 				<span class="description">
-					<?php echo __( 'Mark this if you want to hydrate your users profile with the data provided by FullContact. A valid api key is requiere.', WPA0_LANG ); ?>
-					<?php echo __( 'More info ', WPA0_LANG ); ?>
-					<a href="https://auth0.com/docs/scenarios/fullcontact"><?php echo __( 'HERE', WPA0_LANG );?></a>
+					<?php echo __( 'Mark this if you want to hydrate your users profile with the data provided by FullContact. A valid api key is requiere.', 'wp-auth0' ); ?>
+					<?php echo __( 'More info ', 'wp-auth0' ); ?>
+					<a href="https://auth0.com/docs/scenarios/fullcontact"><?php echo __( 'HERE', 'wp-auth0' );?></a>
 				</span>
 			</div>
 		</div>

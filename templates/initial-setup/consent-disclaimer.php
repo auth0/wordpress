@@ -2,9 +2,9 @@
 	<div class="container-fluid">
 		<img class="logo" src="http://cdn.auth0.com/styleguide/latest/img/badge.png" />
 
-		<h1><?php _e( 'Get started with Auth0 for WordPress', WPA0_LANG ); ?></h1>
+		<h1><?php _e( 'Get started with Auth0 for WordPress', 'wp-auth0' ); ?></h1>
 
-		<p><?php _e( 'This wizard gets you started with the Auth0 for WordPress plug-in. You\'ll be transferred to Auth0 and can login or sign-up. Then you\'ll authorize the plug-in and configure identity providers, whether social or enterprise connections. Finally, you\'ll migrate your own WordPress administrator account to Auth0, ready to configure the plug-in through the WordPress dashboard.', WPA0_LANG ); ?></p>
+		<p><?php _e( 'This wizard gets you started with the Auth0 for WordPress plug-in. You\'ll be transferred to Auth0 and can login or sign-up. Then you\'ll authorize the plug-in and configure identity providers, whether social or enterprise connections. Finally, you\'ll migrate your own WordPress administrator account to Auth0, ready to configure the plug-in through the WordPress dashboard.', 'wp-auth0' ); ?></p>
 
 		<div class="a0-buttons">
 			<a href="<?php echo $consent_url; ?>" class="a0-button primary"><?php echo _e( 'Start' ); ?></a>
