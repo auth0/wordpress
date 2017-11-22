@@ -66,7 +66,7 @@
                 <div class="a0-message a0-warning multiline">
 
                   <b>Note:</b>
-                  <?php _e( 'For this plugin to work, your server/host needs an inbound connection from auth0.com, as Auth0 needs to fetch some information to complete the process. If this website is not accesible from the internet, it will require manual intervention to configure the api token.', 'wp-auth0' ); ?>
+                  <?php _e( 'For this plugin to work, your server/host needs an inbound connection from auth0.com, as Auth0 needs to fetch some information to complete the process. If this website is not accessible from the internet, it will require manual intervention to configure the api token.', 'wp-auth0' ); ?>
 
                 </div>
 
