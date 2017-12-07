@@ -250,7 +250,7 @@ class WP_Auth0_LoginManager {
       } else {
         try {
           // grab the user ID from the id_token to call get_user
-          $decodedToken = JWT::decode( $data->id_token, $this->a0_options->get_client_secret_as_key(), array( 'HS256' ) );
+          $decodedToken = JWT::decode( $data->id_token, $this->a0_options->get_client_secret_as_key(), array(  $this->a0_options->get_client_signing_algorithm() ) );
         } catch (Exception $e) {
           WP_Auth0_ErrorManager::insert_auth0_error('redirect_login/decode', $e->getMessage());
           throw new WP_Auth0_LoginFlowValidationException(__('Error: There was an issue decoding the token, please review the Auth0 Plugin Error Log.', 'wp-auth0'));
@@ -327,7 +327,7 @@ class WP_Auth0_LoginManager {
 
     try {
       // Decode the user
-      $decodedToken = JWT::decode( $token, $secret, array( 'HS256' ) );
+      $decodedToken = JWT::decode( $token, $secret, array(  $this->a0_options->get_client_signing_algorithm() ) );
 
       // validate that this JWT was made for us
       if ( $this->a0_options->get( 'client_id' ) !== $decodedToken->aud ) {
@@ -523,7 +523,7 @@ class WP_Auth0_LoginManager {
 
     try {
       // Decode the user
-      $decodedToken = JWT::decode( $response->id_token, $secret, array( 'HS256' ) );
+      $decodedToken = JWT::decode( $response->id_token, $secret, array(  $this->a0_options->get_client_signing_algorithm() ) );
 
       // validate that this JWT was made for us
       if ( $this->a0_options->get( 'client_id' ) !== $decodedToken->aud ) {
