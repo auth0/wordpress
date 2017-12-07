@@ -54,6 +54,9 @@ class WP_Auth0_Configure_JWTAUTH {
 			JWT_AUTH_Options::set( 'aud', $this->a0_options->get( 'client_id' ) );
 			JWT_AUTH_Options::set( 'secret', $this->a0_options->get( 'client_secret' ) );
 			JWT_AUTH_Options::set( 'secret_base64_encoded', $this->a0_options->get( 'client_secret_b64_encoded' ) );
+			JWT_AUTH_Options::set( 'signing_algorithm', $this->a0_options->get( 'client_signing_algorithm' ) );
+			JWT_AUTH_Options::set( 'domain', $this->a0_options->get( 'domain' ) );
+			JWT_AUTH_Options::set( 'cache_expiration', $this->a0_options->get( 'cache_expiration' ) );
 			JWT_AUTH_Options::set( 'override_user_repo', 'WP_Auth0_UsersRepo' );
 			$this->a0_options->set( 'jwt_auth_integration', true );
 		}
@@ -76,6 +79,9 @@ class WP_Auth0_Configure_JWTAUTH {
 			JWT_AUTH_Options::get( 'aud' ) === $options->get( 'client_id' ) &&
 			JWT_AUTH_Options::get( 'secret' ) === $options->get( 'client_secret' ) &&
 			JWT_AUTH_Options::get( 'secret_base64_encoded' ) === $options->get( 'client_secret_b64_encoded' ) &&
+			JWT_AUTH_Options::get( 'signing_algorithm' ) === $options->get( 'client_signing_algorithm' ) &&
+			JWT_AUTH_Options::get( 'domain' ) === $options->get( 'domain' ) &&
+			JWT_AUTH_Options::get( 'cache_expiration' ) === $options->get( 'cache_expiration' ) &&
 			$options->get( 'jwt_auth_integration' ) &&
 			JWT_AUTH_Options::get( 'jwt_attribute' ) === 'sub'
 		);
