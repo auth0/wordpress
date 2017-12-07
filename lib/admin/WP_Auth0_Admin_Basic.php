@@ -94,8 +94,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	?>
 
     <select id="wpa0_client_signing_algorithm" name="<?php echo $this->options->get_options_name() ?>[client_signing_algorithm]">
-    	<option value="HS256" <?php echo ($v === "HS256" ? 'selected' : '') ?>>HS256</option>
-    	<option value="RS256" <?php echo ($v === "RS256" ? 'selected' : '') ?>>RS256</option>
+    	<option value="HS256" <?php echo ($v == "HS256" ? 'selected' : '') ?>>HS256</option>
+    	<option value="RS256" <?php echo ($v == "RS256" ? 'selected' : '') ?>>RS256</option>
     </select>
     <div class="subelement">
 			<span class="description"><?php echo __( 'If you use the default client secret to sign tokens, select HS256. See your clients page in Auth0. Advanced > OAuth > JsonWebToken Signature Algorithm', WPA0_LANG ); ?></span>

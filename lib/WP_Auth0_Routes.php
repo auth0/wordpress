@@ -114,7 +114,7 @@ EOT;
 		$authorization = $this->getAuthorizationHeader();
 		$authorization = trim( str_replace( 'Bearer ', '', $authorization ) );
 
-		$secret = $this->a0_options->get_client_secret_as_key();
+		$secret = $this->a0_options->get_client_secret_as_key(true);
 		$token_id = $this->a0_options->get( 'migration_token_id' );
 
 		$user = null;
@@ -124,7 +124,7 @@ EOT;
 				throw new Exception( 'Unauthorized: missing authorization header' );
 			}
 
-			$token = JWT::decode( $authorization, $secret, array( $this->a0_options->get_client_signing_algorithm() ) );
+			$token = JWT::decode( $authorization, $secret);
 
 			if ( $token->jti != $token_id ) {
 				throw new Exception( 'Invalid token id' );
@@ -175,7 +175,7 @@ EOT;
 		$authorization = $this->getAuthorizationHeader();
 		$authorization = trim(str_replace('Bearer ', '', $authorization));
 
-		$secret = $this->a0_options->get_client_secret_as_key();
+		$secret = $this->a0_options->get_client_secret_as_key(true);
 		$token_id = $this->a0_options->get( 'migration_token_id' );
 
 		$user = null;
@@ -185,7 +185,7 @@ EOT;
 				throw new Exception('Unauthorized: missing authorization header');
 			}
 
-			$token = JWT::decode($authorization, $secret, array( $this->a0_options->get_client_signing_algorithm() ) );
+			$token = JWT::decode($authorization, $secret );
 
 			if ($token->jti != $token_id) {
 				throw new Exception('Invalid token id');
