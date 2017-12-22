@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PLUGIN_NAME
  * Description: PLUGIN_DESCRIPTION
- * Version: 4.0.0
+ * Version: 3.4.0
  * Author: Auth0
  * Author URI: https://auth0.com
  */
