@@ -35,28 +35,6 @@ class WP_Auth0_DBManager {
 
 		$cdn_url = $options->get( 'cdn_url' );
 
-		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-6' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
-		}
-		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-8' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
-		}
-		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-9.0' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.1.min.js' );
-		}
-		if ( strpos( $cdn_url, 'auth0-widget-5' ) !== false || strpos( $cdn_url, 'lock-9.1' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock-9.2.min.js' );
-		}
-		if ( strpos( $cdn_url, '10.0' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock/10.3/lock.min.js' );
-		}
-		if ( strpos( $cdn_url, '10.1' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock/10.3/lock.min.js' );
-		}
-		if ( strpos( $cdn_url, '10.2' ) !== false ) {
-			$options->set( 'cdn_url', '//cdn.auth0.com/js/lock/10.3/lock.min.js' );
-		}
-
 		if ( $this->current_db_version <= 7 ) {
 			if ( $options->get( 'db_connection_enabled' ) ) {
 
@@ -141,6 +119,27 @@ class WP_Auth0_DBManager {
 		}
 	}
 
+	if ( $this->current_db_version < 15 ) {
+		$options->set('use_lock_10', true);
+		$options->set('cdn_url', '//cdn.auth0.com/js/lock/11.0.0/lock.min.js');
+		$options->set('auth0js-cdn', '//cdn.auth0.com/js/auth0/9.0.0/auth0.min.js');
+		$options->set('cache_expiration', 1440);
+
+		// Update Client
+		$client_id = $options->get( 'client_id' );
+		$domain = $options->get( 'domain' );
+		if (!empty($client_id) && !empty($domain)) {
+			$app_token = $options->get( 'auth0_app_token' );
+			$sso = $options->get( 'sso' );
+			$payload = array(
+				"cross_origin_auth" => true,
+				"cross_origin_loc" => home_url('/index.php?auth0fallback=1','https'),
+				"web_origins" => array(home_url())
+			);
+			$updateClient = WP_Auth0_Api_Client::update_client($domain, $app_token, $client_id, $sso, $payload);
+			$options->set('client_signing_algorithm', 'HS256');
+		}
+	}
 		$this->current_db_version = AUTH0_DB_VERSION;
 		update_option( 'auth0_db_version', AUTH0_DB_VERSION );
 	}

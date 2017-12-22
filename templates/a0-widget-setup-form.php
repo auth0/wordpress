@@ -9,7 +9,6 @@ $show_icon = isset( $instance[ 'show_icon' ] ) ? $instance[ 'show_icon' ] : '';
 $icon_url = isset( $instance[ 'icon_url' ] ) ? $instance[ 'icon_url' ] : '';
 $dict = isset( $instance[ 'dict' ] ) ? $instance[ 'dict' ] : '';
 $extra_conf = isset( $instance[ 'extra_conf' ] ) ? $instance[ 'extra_conf' ] : '';
-$remember_last_login = isset( $instance[ 'remember_last_login' ] ) ? $instance[ 'remember_last_login' ] : '';
 $custom_css = isset( $instance[ 'custom_css' ] ) ? $instance[ 'custom_css' ] : '';
 $custom_js = isset( $instance[ 'custom_js' ] ) ? $instance[ 'custom_js' ] : '';
 $redirect_to = isset( $instance[ 'redirect_to' ] ) ? $instance[ 'redirect_to' ] : '';
@@ -76,27 +75,6 @@ $redirect_to = isset( $instance[ 'redirect_to' ] ) ? $instance[ 'redirect_to' ] 
         <label for="<?php echo $this->get_field_id( 'gravatar' ); ?>_no"><?php _e( 'Default Setting' ); ?></label>
     </div>
 
-</p>
-<p>
-
-    <label><?php _e( 'Remember last login:' ); ?></label>
-    <br>
-    <div class="radio-wrapper" style="text-align: center;">
-        <input id="<?php echo $this->get_field_id( 'remember_last_login' ); ?>_yes"
-               name="<?php echo $this->get_field_name( 'remember_last_login' ); ?>"
-               type="radio" value="1" <?php echo esc_attr( $remember_last_login ) == 1 ? 'checked="true"' : ''; ?> />
-        <label for="<?php echo $this->get_field_id( 'remember_last_login' ); ?>_yes"><?php _e( 'Yes' ); ?></label>
-        &nbsp;
-        <input id="<?php echo $this->get_field_id( 'remember_last_login' ); ?>_no"
-               name="<?php echo $this->get_field_name( 'remember_last_login' ); ?>"
-               type="radio" value="0" <?php echo esc_attr( $remember_last_login ) == 0 ? 'checked="true"' : ''; ?> />
-        <label for="<?php echo $this->get_field_id( 'remember_last_login' ); ?>_no"><?php _e( 'No' ); ?></label>
-        &nbsp;
-        <input id="<?php echo $this->get_field_id( 'remember_last_login' ); ?>_inherit"
-               name="<?php echo $this->get_field_name( 'remember_last_login' ); ?>"
-               type="radio" value="" <?php echo esc_attr( $remember_last_login ) === '' ? 'checked="true"' : ''; ?> />
-        <label for="<?php echo $this->get_field_id( 'remember_last_login' ); ?>_no"><?php _e( 'Default Setting' ); ?></label>
-    </div>
 </p>
 <p>
     <label for="<?php echo $this->get_field_id( 'icon_url' ); ?>"><?php _e( 'Icon Url:' ); ?></label>

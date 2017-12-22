@@ -26,7 +26,7 @@ class WP_Auth0_LoginManager {
     add_action( 'wp_login', array( $this, 'end_session' ) );
     add_action( 'login_init', array( $this, 'login_auto' ) );
     add_action( 'template_redirect', array( $this, 'init_auth0' ), 1 );
-    add_action( 'wp_footer', array( $this, 'auth0_sso_footer' ) );
+    //add_action( 'wp_footer', array( $this, 'auth0_sso_footer' ) );
     add_action( 'wp_footer', array( $this, 'auth0_singlelogout_footer' ) );
     add_filter( 'login_message', array( $this, 'auth0_sso_footer' ) );
   }
@@ -73,6 +73,7 @@ class WP_Auth0_LoginManager {
       return;
     }
 
+    $lock_options = new WP_Auth0_Lock10_Options();
     $cdn = $this->a0_options->get('auth0js-cdn');
     $client_id = $this->a0_options->get( 'client_id' );
     $domain = $this->a0_options->get( 'domain' );
