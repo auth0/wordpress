@@ -1,5 +1,15 @@
 # Change Log
 
+## [3.4.0](https://github.com/auth0/wp-auth0/tree/3.4.0) (2018-01-08)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.3.2...3.4.0)
+
+**Added**
+- Added Lock 11 / Auth0 9.0, Updated SSO, JWT Algorithm Upgrade Fixes [\#350](https://github.com/auth0/wp-auth0/pull/350) ([cocojoe](https://github.com/cocojoe))
+- Add RS256 support [\#331](https://github.com/auth0/wp-auth0/pull/331) ([renrizzolo](https://github.com/renrizzolo))
+
+**Fixed**
+- Switching wizard admin user creation to use /dbconnections/signup  [\#356](https://github.com/auth0/wp-auth0/pull/356) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [3.3.2](https://github.com/auth0/wp-auth0/tree/3.3.2) (2017-10-05)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.3.2...3.2.24)
 
