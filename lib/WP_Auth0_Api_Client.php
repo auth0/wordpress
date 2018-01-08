@@ -168,10 +168,9 @@ class WP_Auth0_Api_Client {
 		$headers = self::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $jwt";
-		$headers['content-type'] = "application/json";
+		$headers['content-type'] = 'application/json';
 
 		$response = wp_remote_post( $endpoint  , array(
-				'method' => 'POST',
 				'headers' => $headers,
 				'body' => json_encode( $data )
 			) );
@@ -184,6 +183,34 @@ class WP_Auth0_Api_Client {
 
 		if ( $response['response']['code'] != 201 ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_user', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		return json_decode( $response['body'] );
+	}
+
+	public static function signup_user( $domain, $data ) {
+
+		$endpoint = "https://$domain/dbconnections/signup";
+
+		$headers = self::get_info_headers();
+
+		$headers['content-type'] = 'application/json';
+
+		$response = wp_remote_post( $endpoint  , array(
+			'headers' => $headers,
+			'body' => json_encode( $data )
+		) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::signup_user', $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] !== 200 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::signup_user', $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
