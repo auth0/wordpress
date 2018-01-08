@@ -210,7 +210,7 @@ class WP_Auth0_Api_Client {
 			return false;
 		}
 
-		if ( $response['response']['code'] != 201 ) {
+		if ( $response['response']['code'] !== 200 ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::signup_user', $response['body'] );
 			error_log( $response['body'] );
 			return false;
