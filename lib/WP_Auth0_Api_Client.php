@@ -191,6 +191,34 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
+	public static function signup_user( $domain, $data ) {
+
+		$endpoint = "https://$domain/dbconnections/signup";
+
+		$headers = self::get_info_headers();
+
+		$headers['content-type'] = "application/json";
+
+		$response = wp_remote_post( $endpoint  , array(
+			'headers' => $headers,
+			'body' => json_encode( $data )
+		) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::signup_user', $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] != 201 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::signup_user', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		return json_decode( $response['body'] );
+	}
+
 	public static function get_required_scopes() {
 		return array(
 			'update:clients',
