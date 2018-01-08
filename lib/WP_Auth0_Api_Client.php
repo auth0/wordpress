@@ -168,10 +168,9 @@ class WP_Auth0_Api_Client {
 		$headers = self::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $jwt";
-		$headers['content-type'] = "application/json";
+		$headers['content-type'] = 'application/json';
 
 		$response = wp_remote_post( $endpoint  , array(
-				'method' => 'POST',
 				'headers' => $headers,
 				'body' => json_encode( $data )
 			) );
@@ -197,7 +196,7 @@ class WP_Auth0_Api_Client {
 
 		$headers = self::get_info_headers();
 
-		$headers['content-type'] = "application/json";
+		$headers['content-type'] = 'application/json';
 
 		$response = wp_remote_post( $endpoint  , array(
 			'headers' => $headers,
