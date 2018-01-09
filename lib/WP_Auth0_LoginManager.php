@@ -26,7 +26,7 @@ class WP_Auth0_LoginManager {
     add_action( 'wp_login', array( $this, 'end_session' ) );
     add_action( 'login_init', array( $this, 'login_auto' ) );
     add_action( 'template_redirect', array( $this, 'init_auth0' ), 1 );
-    add_action( 'wp_footer', array( $this, 'auth0_sso_footer' ) );
+    //add_action( 'wp_footer', array( $this, 'auth0_sso_footer' ) );
     add_action( 'wp_footer', array( $this, 'auth0_singlelogout_footer' ) );
     add_filter( 'login_message', array( $this, 'auth0_sso_footer' ) );
   }
@@ -73,6 +73,7 @@ class WP_Auth0_LoginManager {
       return;
     }
 
+    $lock_options = new WP_Auth0_Lock10_Options();
     $cdn = $this->a0_options->get('auth0js-cdn');
     $client_id = $this->a0_options->get( 'client_id' );
     $domain = $this->a0_options->get( 'domain' );
@@ -250,7 +251,7 @@ class WP_Auth0_LoginManager {
       } else {
         try {
           // grab the user ID from the id_token to call get_user
-          $decodedToken = JWT::decode( $data->id_token, $this->a0_options->get_client_secret_as_key(), array( 'HS256' ) );
+          $decodedToken = JWT::decode( $data->id_token, $this->a0_options->get_client_secret_as_key(), array(  $this->a0_options->get_client_signing_algorithm() ) );
         } catch (Exception $e) {
           WP_Auth0_ErrorManager::insert_auth0_error('redirect_login/decode', $e->getMessage());
           throw new WP_Auth0_LoginFlowValidationException(__('Error: There was an issue decoding the token, please review the Auth0 Plugin Error Log.', 'wp-auth0'));
@@ -327,7 +328,7 @@ class WP_Auth0_LoginManager {
 
     try {
       // Decode the user
-      $decodedToken = JWT::decode( $token, $secret, array( 'HS256' ) );
+      $decodedToken = JWT::decode( $token, $secret, array(  $this->a0_options->get_client_signing_algorithm() ) );
 
       // validate that this JWT was made for us
       if ( $this->a0_options->get( 'client_id' ) !== $decodedToken->aud ) {
@@ -523,7 +524,7 @@ class WP_Auth0_LoginManager {
 
     try {
       // Decode the user
-      $decodedToken = JWT::decode( $response->id_token, $secret, array( 'HS256' ) );
+      $decodedToken = JWT::decode( $response->id_token, $secret, array(  $this->a0_options->get_client_signing_algorithm() ) );
 
       // validate that this JWT was made for us
       if ( $this->a0_options->get( 'client_id' ) !== $decodedToken->aud ) {

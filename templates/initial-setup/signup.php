@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function() {
 var lock = new Auth0Lock('zEYfpoFzUMEzilhkHilcWoNkrFfJ3hAI', 'auth0.auth0.com');
 
 lock.showSignup({
-  rememberLastLogin: true,
   integratedWindowsLogin: false,
   dict: {
     signup: {

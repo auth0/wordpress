@@ -155,9 +155,6 @@ class WP_Auth0_Lock_Options {
 		if ( $this->_is_valid( $settings, 'username_style' ) ) {
 			$options_obj['usernameStyle'] = $settings['username_style'];
 		}
-		if ( $this->_is_valid( $settings, 'remember_last_login' ) ) {
-			$options_obj['rememberLastLogin'] = $this->_get_boolean( $settings['remember_last_login'] );
-		}
 		if ( $this->_is_valid( $settings, 'sso' ) ) {
 			$options_obj['sso'] = $this->_get_boolean( $settings['sso'] );
 		}

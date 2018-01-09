@@ -142,7 +142,7 @@ class WP_Auth0_InitialSetup_Consent {
 
 			if ( $connection_exists === false ) {
 
-				$secret = $this->a0_options->get_client_secret_as_key();
+				$secret = $this->a0_options->get_client_secret_as_key(true);
 				$token_id = uniqid();
 				$migration_token = JWT::encode( array( 'scope' => 'migration_ws', 'jti' => $token_id ), $secret );
 				$migration_token_id = $token_id;
