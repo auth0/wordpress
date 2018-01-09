@@ -43,12 +43,27 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		return $defaults[$key];
 	}
 
-	public function get_client_secret_as_key() {
+	public function get_client_secret_as_key($legacy = false) {
 		$secret = $this->get('client_secret', '');
-    $isEncoded = $this->get('client_secret_b64_encoded', false);
-		return $isEncoded ? JWT::urlsafeB64Decode($secret) : $secret;
+
+		$isEncoded = $this->get('client_secret_b64_encoded', false);
+		$isRS256 = $legacy ? false : $this->get_client_signing_algorithm() === 'RS256';
+
+		if ( $isRS256 ) {
+			$domain = $this->get( 'domain' );
+			$secret = WP_Auth0_Api_Client::JWKfetch($domain);
+		} else {
+			$secret = $isEncoded ? JWT::urlsafeB64Decode($secret) : $secret;
+		}
+  	
+		return $secret;
 	}
 
+	public function get_client_signing_algorithm() {
+			$client_signing_algorithm = $this->get('client_signing_algorithm', 'RS256');
+			return $client_signing_algorithm;
+	}
+	
 	protected function defaults() {
 		return array(
 			'version' => 1,
@@ -58,6 +73,8 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'auto_login_method' => '',
 			'client_id' => '',
 			'client_secret' => '',
+			'client_signing_algorithm' => 'RS256',
+			'cache_expiration' => 1440,
 			'client_secret_b64_encoded' => null,
 			'domain' => '',
 			'form_title' => '',
@@ -68,8 +85,8 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'passwordless_enabled' => false,
 			'passwordless_method' => 'magiclink',
 			'passwordless_cdn_url' => '//cdn.auth0.com/js/lock-passwordless-2.2.min.js',
-			'use_lock_10' => null,
-			'cdn_url' => '//cdn.auth0.com/js/lock/10.7/lock.min.js',
+			'use_lock_10' => true,
+			'cdn_url' => '//cdn.auth0.com/js/lock/11.0.0/lock.min.js',
 			'cdn_url_legacy' => '//cdn.auth0.com/js/lock-9.2.min.js',
 			'requires_verified_email' => true,
 			'wordpress_login_enabled' => true,
@@ -83,7 +100,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'social_big_buttons' => false,
 			'username_style' => '',
 			'extra_conf' => '',
-			'remember_last_login' => true,
 			'custom_css' => '',
 			'custom_js' => '',
 			'auth0_implicit_workflow' => false,
@@ -122,9 +138,8 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'auto_provisioning' => false,
 			'default_login_redirection' => home_url(),
 
-      'auth0_server_domain' => 'auth0.auth0.com',
-
-			'auth0js-cdn' => '//cdn.auth0.com/js/auth0/8.2.0/auth0.min.js',
+      		'auth0_server_domain' => 'auth0.auth0.com',
+			'auth0js-cdn' => '//cdn.auth0.com/js/auth0/9.0.0/auth0.min.js',
 
 			//DASHBOARD
 			'chart_idp_type' => 'donut',

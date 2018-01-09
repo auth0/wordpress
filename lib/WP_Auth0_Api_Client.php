@@ -168,10 +168,9 @@ class WP_Auth0_Api_Client {
 		$headers = self::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $jwt";
-		$headers['content-type'] = "application/json";
+		$headers['content-type'] = 'application/json';
 
 		$response = wp_remote_post( $endpoint  , array(
-				'method' => 'POST',
 				'headers' => $headers,
 				'body' => json_encode( $data )
 			) );
@@ -184,6 +183,34 @@ class WP_Auth0_Api_Client {
 
 		if ( $response['response']['code'] != 201 ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_user', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		return json_decode( $response['body'] );
+	}
+
+	public static function signup_user( $domain, $data ) {
+
+		$endpoint = "https://$domain/dbconnections/signup";
+
+		$headers = self::get_info_headers();
+
+		$headers['content-type'] = 'application/json';
+
+		$response = wp_remote_post( $endpoint  , array(
+			'headers' => $headers,
+			'body' => json_encode( $data )
+		) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::signup_user', $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] !== 200 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::signup_user', $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -225,9 +252,14 @@ class WP_Auth0_Api_Client {
 							home_url( '/wp-login.php' )
 						),
 						"allowed_origins"=>array(
-							home_url( '/wp-login.php' ),
-							admin_url( '/admin.php?page=wpa0-setup&step=2&profile=social' )
+							home_url( '/wp-login.php' )
 						),
+						"jwt_configuration" => array(
+							"alg" => "RS256"
+						),
+						"app_type" => "regular_web",
+						"cross_origin_auth" => true,
+						"cross_origin_loc" => home_url('/index.php?auth0fallback=1','https'),
 						"allowed_logout_urls" => array(
 							$logout_url
 						),
@@ -246,7 +278,21 @@ class WP_Auth0_Api_Client {
 			return false;
 		}
 
-		return json_decode( $response['body'] );
+		$response = json_decode( $response['body'] );
+	
+		// Workaround: Can't add `web_origin` on create
+		$payload = array(
+			"web_origins" => array(home_url())
+		);
+		$updateResponse = WP_Auth0_Api_Client::update_client($domain, $app_token, $response->client_id, false, $payload);
+
+		if ( $updateClient instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_client', $updateResponse );
+			error_log( $updateResponse->get_error_message() );
+			return false;
+		}
+
+		return $response;
 	}
 
 	public static function search_clients( $domain, $app_token ) {
@@ -277,7 +323,7 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
-	public static function update_client( $domain, $app_token, $client_id, $sso ) {
+	public static function update_client( $domain, $app_token, $client_id, $sso, $payload = array() ) {
 
 		$endpoint = "https://$domain/api/v2/clients/$client_id";
 
@@ -289,9 +335,7 @@ class WP_Auth0_Api_Client {
 		$response = wp_remote_post( $endpoint  , array(
 				'method' => 'PATCH',
 				'headers' => $headers,
-				'body' => json_encode( array(
-						'sso' => $sso,
-					) )
+				'body' => json_encode( array_merge(array( 'sso' => boolval($sso)), $payload) )
 			) );
 
 		if ( $response instanceof WP_Error ) {
@@ -740,4 +784,53 @@ class WP_Auth0_Api_Client {
 
 		return json_decode($response['body']);
 	}
+
+  protected function convertCertToPem($cert) {
+      return '-----BEGIN CERTIFICATE-----'.PHP_EOL
+          .chunk_split($cert, 64, PHP_EOL)
+          .'-----END CERTIFICATE-----'.PHP_EOL;
+  }
+
+  public static function JWKfetch($domain) {
+
+	$a0_options = WP_Auth0_Options::Instance();
+
+	$endpoint = "https://$domain/.well-known/jwks.json";
+
+    $cache_expiration = $a0_options->get('cache_expiration');
+
+	if ( false === ($secret = get_transient('WP_Auth0_JWKS_cache') ) ) {
+
+		$secret = [];
+
+		$response = wp_remote_get( $endpoint, array() );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::JWK_fetch', $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] != 200 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::JWK_fetch', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		if ( $response['response']['code'] >= 300 ) return false;		
+
+		$jwks = json_decode($response['body'], true);
+
+		foreach ($jwks['keys'] as $key) { 
+			$secret[$key['kid']] = self::convertCertToPem($key['x5c'][0]);
+		}
+
+		if ($cache_expiration !== 0) {
+			set_transient( 'WP_Auth0_JWKS_cache', $secret, $cache_expiration * MINUTE_IN_SECONDS );
+		}
+
+	}
+
+  return $secret;
+  }
 }
