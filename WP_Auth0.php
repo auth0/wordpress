@@ -296,14 +296,30 @@ class WP_Auth0 {
 		<link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' />
 	<?php
 	}
+	
+	/**
+     * Output email verification prompt
+     *
+     * TODO: look for HTML, include template if not
+     * TODO: $id_token is not allowed, need to use access token (upstream)
+     *
+	 * @param string $html - passed-in HTML from auth0_verify_email_page filter
+	 * @param object $userinfo - user info returned from Auth0
+	 * @param string $id_token - JWT for access
+	 *
+	 * @return string
+	 */
 
 	public function render_verify_email_page($html, $userinfo, $id_token) {
+	 
 		ob_start();
+		
 		$domain = $this->a0_options->get( 'domain' );
 		$token = $id_token;
 		$email = $userinfo->email;
 		$connection = $userinfo->identities[0]->connection;
 		$userId = $userinfo->user_id;
+		
 		include WPA0_PLUGIN_DIR . 'templates/verify-email.php';
 
 		return ob_get_clean();
