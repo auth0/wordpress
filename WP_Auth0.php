@@ -55,7 +55,7 @@ class WP_Auth0 {
 		// Add a hook to add Auth0 code on the login page.
 		add_filter( 'login_message', array( $this, 'render_form'), 5);
 
-		add_filter( 'auth0_verify_email_page', array( $this, 'render_verify_email_page' ), 0, 3 );
+		add_filter( 'auth0_verify_email_page', array( $this, 'render_verify_email_page' ), 0, 4 );
 
 		add_shortcode( 'auth0', array( $this, 'shortcode' ) );
 
@@ -300,29 +300,35 @@ class WP_Auth0 {
 	/**
      * Output email verification prompt
      *
-     * TODO: look for HTML, include template if not
      * TODO: $id_token is not allowed, need to use access token (upstream)
      *
 	 * @param string $html - passed-in HTML from auth0_verify_email_page filter
 	 * @param object $userinfo - user info returned from Auth0
-	 * @param string $id_token - JWT for access
+	 * @param string $id_token - DEPRECATED
+	 * @param string $access_token - access token used to re-send verification email
 	 *
 	 * @return string
 	 */
 
-	public function render_verify_email_page($html, $userinfo, $id_token) {
-	 
-		ob_start();
-		
-		$domain = $this->a0_options->get( 'domain' );
-		$token = $id_token;
-		$email = $userinfo->email;
-		$connection = $userinfo->identities[0]->connection;
-		$userId = $userinfo->user_id;
-		
-		include WPA0_PLUGIN_DIR . 'templates/verify-email.php';
-
-		return ob_get_clean();
+	public function render_verify_email_page($html = '', $userinfo, $id_token, $access_token) {
+	    
+	    if ( ! empty( $html ) ) {
+	        return $html;
+        } else {
+			
+            ob_start();
+        
+            $domain = $this->a0_options->get( 'domain' );
+            $token = $id_token;
+            $email = $userinfo->email;
+            $userId = $userinfo->user_id;
+            
+            // TODO: Security! Need to replace jQuery call with server to server
+          
+            include WPA0_PLUGIN_DIR . 'templates/verify-email.php';
+        
+            return ob_get_clean();
+        }
 	}
 
 	public function render_form( $html ) {

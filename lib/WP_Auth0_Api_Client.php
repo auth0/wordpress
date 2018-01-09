@@ -214,6 +214,8 @@ class WP_Auth0_Api_Client {
 			error_log( $response['body'] );
 			return false;
 		}
+		
+		// TODO: Need to store Auth0 id in user meta
 
 		return json_decode( $response['body'] );
 	}

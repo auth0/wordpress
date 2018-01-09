@@ -243,7 +243,7 @@ class WP_Auth0_LoginManager {
     	
       // Get the user information
 	
-	    $data->id_token = null;
+			// $data->id_token = null;
 	    $response = WP_Auth0_Api_Client::get_user_info( $domain, $data->access_token );
 
       if ( $response instanceof WP_Error ) {
@@ -436,7 +436,7 @@ class WP_Auth0_LoginManager {
       	
       	// TODO: $id_token is not allowed, need to use access token
 	      
-        $this->dieWithVerifyEmail( $userinfo, $id_token );
+        $this->dieWithVerifyEmail( $userinfo, $id_token, $access_token );
       }
     }
 
