@@ -6,6 +6,7 @@ class WP_Auth0_LoginManager {
   protected $default_role;
   protected $ignore_unverified_email;
   protected $users_repo;
+  protected $email_verification;
 
   public function __construct( WP_Auth0_UsersRepo $users_repo, $a0_options = null, $default_role = null, $ignore_unverified_email = false ) {
 
@@ -18,7 +19,8 @@ class WP_Auth0_LoginManager {
     } else {
       $this->a0_options = WP_Auth0_Options::Instance();
     }
-
+    
+    $this->email_verification = new WP_Auth0_Email_Verification();
   }
 
   public function init() {
@@ -433,10 +435,7 @@ class WP_Auth0_LoginManager {
       // Email verification needed
 
       if ( ! $auth0_email_verified ) {
-      	
-      	// TODO: $id_token is not allowed, need to use access token
-	      
-        $this->dieWithVerifyEmail( $userinfo, $id_token, $access_token );
+      	$this->email_verification->render_die( $userinfo, $id_token, $access_token );
       }
     }
 
@@ -515,7 +514,7 @@ class WP_Auth0_LoginManager {
 
         throw new WP_Auth0_LoginFlowValidationException( $msg );
       } catch ( WP_Auth0_EmailNotVerifiedException $e ) {
-        $this->dieWithVerifyEmail( $e->userinfo, $e->id_token, $e->access_token );
+	      $this->email_verification->render_die( $e->userinfo, $e->id_token, $e->access_token );
       }
       // catch ( Exception $e ) {
       //  echo $e;exit;
@@ -523,20 +522,6 @@ class WP_Auth0_LoginManager {
 
       return true;
     }
-  }
-	
-	/**
-	 * Stop the login process and show email verification prompt
-	 *
-	 * TODO: $id_token is not allowed, need to use access token
-	 *
-	 * @param object $userinfo
-	 * @param string $id_token
-	 * @param string $access_token
-	 */
-  private function dieWithVerifyEmail( $userinfo, $id_token, $access_token ) {
-    $html = apply_filters( 'auth0_verify_email_page' , '', $userinfo, $id_token, $access_token );
-    wp_die( $html );
   }
 
   public function login_with_credentials( $username, $password, $connection="Username-Password-Authentication" ) {
@@ -579,5 +564,13 @@ class WP_Auth0_LoginManager {
     if ( isset( $_REQUEST[$key] ) ) return $_REQUEST[$key];
     return null;
   }
+	
+	/*
+	 * Deprecated functions
+	 */
+	
+	private function dieWithVerifyEmail( $userinfo, $id_token, $access_token ) {
+		$this->email_verification->render_die( $userinfo, $id_token, $access_token );
+	}
 
 }

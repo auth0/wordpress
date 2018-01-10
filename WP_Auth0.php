@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PLUGIN_NAME
  * Description: PLUGIN_DESCRIPTION
- * Version: 3.4.0
+ * Version: 3.5.0
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -11,7 +11,7 @@ define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 define( 'AUTH0_DB_VERSION', 15 );
-define( 'WPA0_VERSION', '3.4.0' );
+define( 'WPA0_VERSION', '3.5.0' );
 
 /**
  * Main plugin class
@@ -54,9 +54,7 @@ class WP_Auth0 {
 
 		// Add a hook to add Auth0 code on the login page.
 		add_filter( 'login_message', array( $this, 'render_form'), 5);
-
-		add_filter( 'auth0_verify_email_page', array( $this, 'render_verify_email_page' ), 0, 4 );
-
+		
 		add_shortcode( 'auth0', array( $this, 'shortcode' ) );
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue' ) );
@@ -297,40 +295,6 @@ class WP_Auth0 {
 	<?php
 	}
 	
-	/**
-     * Output email verification prompt
-     *
-     * TODO: $id_token is not allowed, need to use access token (upstream)
-     *
-	 * @param string $html - passed-in HTML from auth0_verify_email_page filter
-	 * @param object $userinfo - user info returned from Auth0
-	 * @param string $id_token - DEPRECATED
-	 * @param string $access_token - access token used to re-send verification email
-	 *
-	 * @return string
-	 */
-
-	public function render_verify_email_page($html = '', $userinfo, $id_token, $access_token) {
-	    
-	    if ( ! empty( $html ) ) {
-	        return $html;
-        } else {
-			
-            ob_start();
-        
-            $domain = $this->a0_options->get( 'domain' );
-            $token = $id_token;
-            $email = $userinfo->email;
-            $userId = $userinfo->user_id;
-            
-            // TODO: Security! Need to replace jQuery call with server to server
-          
-            include WPA0_PLUGIN_DIR . 'templates/verify-email.php';
-        
-            return ob_get_clean();
-        }
-	}
-
 	public function render_form( $html ) {
 		if ( isset( $_GET['action'] ) && $_GET['action'] == 'lostpassword' ) {
 			return $html;

@@ -119,6 +119,26 @@ class WP_Auth0_Api_Client {
 		return $response;
 	}
 
+	public static function resend_verification_email( $domain, $access_token, $user_id ) {
+		
+		$a0_options = WP_Auth0_Options::Instance();
+		
+		$endpoint = "https://$domain/";
+
+		$headers = self::get_info_headers();
+		$headers['Authorization'] = "Bearer $access_token";
+		
+		$data = array(
+			'user_id' => $user_id,
+			'client_id' => $a0_options->get( 'client_id' ),
+		);
+
+		return wp_remote_post( $endpoint . '/api/v2/jobs/verification-email' , array(
+			'headers' => $headers,
+			'body' => json_encode( $data ),
+		) );
+	}
+
 	public static function get_user_info( $domain, $access_token ) {
 
 		$endpoint = "https://$domain/";
