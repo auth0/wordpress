@@ -9,8 +9,10 @@ jQuery( document ).ready( function ($) {
         var postData = {
             action: 'resend_verification_email',
             nonce: WPAuth0EmailVerification.nonce,
-            email: WPAuth0EmailVerification.email
+            sub: WPAuth0EmailVerification.sub
         };
+
+        console.log( postData );
 
         $.post( WPAuth0EmailVerification.ajaxUrl, postData )
             .done( function( data ) {

@@ -303,7 +303,7 @@ class WP_Auth0_LoginManager {
   }
 
   // TODO: Am I still OK?
-  public function implicit_login() {
+	  public function implicit_login() {
 
     $token = $_POST['token'];
     $stateFromGet = json_decode( base64_decode( $_POST['state'] ) );

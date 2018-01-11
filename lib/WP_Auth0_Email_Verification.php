@@ -57,6 +57,8 @@ class WP_Auth0_Email_Verification {
 		
 		check_ajax_referer( $this->resend_nonce_action, 'nonce' );
 		
+		$apiClient = new WP_Auth0_Api_Client();
+		
 		$a0_options = WP_Auth0_Options::Instance();
 		
 		$token = WP_Auth0_Api_Client::get_token(
@@ -65,19 +67,21 @@ class WP_Auth0_Email_Verification {
 			$a0_options->get( 'client_secret' ),
 			'client_credentials',
 			array(
-				'audience' => 'https://joshc-test.auth0.com/api/v2/'
+				'audience' => $apiClient->get_endpoint( 'api/v2/' )
 			)
 		);
 		
-		echo '<pre>' . print_r( get_option('wp_auth0_settings'), TRUE ) . '</pre>';
-		echo '<pre>' . print_r( $token, TRUE ) . '</pre>'; die();
+		$tokenDecoded = json_decode( $token['body'] );
 		
-		$response = WP_Auth0_Api_Client::resend_verification_email(
-			$a0_options->get( 'domain' ),
-			'',
+		if ( empty( $tokenDecoded->access_token ) ) {
+			die( '0' );
+		}
+		
+		echo (int) $apiClient->resend_verification_email(
+			$tokenDecoded->access_token,
 			sanitize_text_field( $_POST[ 'sub' ] )
 		);
 		
-		die( '1' );
+		die();
 	}
 }
