@@ -8,7 +8,12 @@ class WP_Auth0_LoginManager {
   protected $users_repo;
   protected $email_verification;
 
-  public function __construct( WP_Auth0_UsersRepo $users_repo, $a0_options = null, $default_role = null, $ignore_unverified_email = false ) {
+  public function __construct(
+  	WP_Auth0_UsersRepo $users_repo,
+	  $a0_options = null,
+	  $default_role = null,
+	  $ignore_unverified_email = false
+  ) {
 
     $this->default_role = $default_role;
     $this->ignore_unverified_email = $ignore_unverified_email;
@@ -100,7 +105,9 @@ class WP_Auth0_LoginManager {
 
     if ( $sso ) {
       $redirect_to = home_url();
-      wp_redirect( 'https://' . $this->a0_options->get( 'domain' ) . '/v2/logout?federated&returnTo=' . urlencode( $redirect_to ) . '&client_id='.$client_id.'&auth0Client=' . base64_encode( json_encode( WP_Auth0_Api_Client::get_info_headers() ) ) );
+      wp_redirect( 'https://' . $this->a0_options->get( 'domain' ) . '/v2/logout?federated&returnTo='
+                   . urlencode( $redirect_to ) . '&client_id='.$client_id.'&auth0Client='
+                   . base64_encode( json_encode( WP_Auth0_Api_Client::get_info_headers() ) ) );
       die();
     }
 
@@ -217,13 +224,19 @@ class WP_Auth0_LoginManager {
     $client_secret = $this->a0_options->get( 'client_secret' );
 
     if ( empty( $client_id ) ) {
-      throw new WP_Auth0_LoginFlowValidationException( __( 'Error: Your Auth0 Client ID has not been entered in the Auth0 SSO plugin settings.', 'wp-auth0' ) );
+      throw new WP_Auth0_LoginFlowValidationException(
+      	__( 'Error: Your Auth0 Client ID has not been entered in the Auth0 SSO plugin settings.', 'wp-auth0' )
+      );
     }
     if ( empty( $client_secret ) ) {
-      throw new WP_Auth0_LoginFlowValidationException( __( 'Error: Your Auth0 Client Secret has not been entered in the Auth0 SSO plugin settings.', 'wp-auth0' ) );
+      throw new WP_Auth0_LoginFlowValidationException(
+      	__( 'Error: Your Auth0 Client Secret has not been entered in the Auth0 SSO plugin settings.', 'wp-auth0' )
+      );
     }
     if ( empty( $domain ) ) {
-      throw new WP_Auth0_LoginFlowValidationException( __( 'Error: No Domain defined in Wordpress Administration!', 'wp-auth0' ) );
+      throw new WP_Auth0_LoginFlowValidationException(
+      	__( 'Error: No Domain defined in Wordpress Administration!', 'wp-auth0' )
+      );
     }
 
     $response = WP_Auth0_Api_Client::get_token( $domain, $client_id, $client_secret, 'authorization_code', array(
@@ -277,7 +290,8 @@ class WP_Auth0_LoginManager {
 
       WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_oauth/token', $error );
 
-      $msg = __( 'Error: the Client Secret configured on the Auth0 plugin is wrong. Make sure to copy the right one from the Auth0 dashboard.', 'wp-auth0' );
+      $msg = __( 'Error: the Client Secret configured on the Auth0 plugin is wrong. '
+                 . 'Make sure to copy the right one from the Auth0 dashboard.', 'wp-auth0' );
 
       throw new WP_Auth0_LoginFlowValidationException( $msg );
     } else {
@@ -352,7 +366,8 @@ class WP_Auth0_LoginManager {
 	 * @param stdClass $userinfo - the Auth0 profile of the user
 	 * @param bool $is_new - `true` if the user was created in/by WordPress.
 	 * @param string $id_token - DEPRECATED 4.0.0, use $access_token if needed
-	 * @param $access_token - token is not used in this method, only passed to auth0_user_login action; not provided when using Implicit login flow
+	 * @param $access_token - token is not used in this method, only passed to auth0_user_login action;
+	 *                        not provided when using Implicit login flow
 	 *
 	 * @throws WP_Auth0_BeforeLoginException
 	 */
@@ -400,7 +415,7 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Creates a user, if necessary, and logs the user in
 	 *
-	 * @param object $userinfo - Needs to have openid and email scopes
+	 * @param object $userinfo - Needs to have openid, email, and identities scopes
 	 * @param string $id_token - DEPRECATED 4.0.0, use $access_token if needed
 	 * @param string $access_token - token is not used in this method, only passed to $this->do_login
 	 *
@@ -438,7 +453,6 @@ class WP_Auth0_LoginManager {
     }
 
     // See if there is a user linked to the same auth0 user_id/sub
-	  // TODO: Current process does not return this for $userinfo ... add a scope?
 	  if ( isset( $userinfo->identities ) ) {
 		  foreach ( $userinfo->identities as $identity ) {
 			  $user = $this->users_repo->find_auth0_user( "{$identity->provider}|{$identity->user_id}" );
@@ -451,13 +465,13 @@ class WP_Auth0_LoginManager {
 	  }
 
     $user = apply_filters( 'auth0_get_wp_user', $user, $userinfo );
-    
-    $wp_user_id = $user->ID;
-    $wp_user_email = $user->data->user_email;
 
     if ( ! is_null( $user ) ) {
     	
       // User exists! Log in
+	
+	    $wp_user_id = $user->ID;
+	    $wp_user_email = $user->data->user_email;
 	    
 	    // Update WP email with Auth0 one
 	    
@@ -500,41 +514,44 @@ class WP_Auth0_LoginManager {
       try {
 
         $creator = new WP_Auth0_UsersRepo( $this->a0_options );
-        $user_id = $creator->create( $userinfo, $id_token, $access_token, $this->default_role, $this->ignore_unverified_email );
+        $user_id = $creator->create(
+        	$userinfo, $id_token, $access_token, $this->default_role, $this->ignore_unverified_email
+        );
 
         $user = get_user_by( 'id', $user_id );
 
         $this->do_login( $user, $userinfo, true, $id_token, $access_token );
-      }
-      catch ( WP_Auth0_CouldNotCreateUserException $e ) {
+      } catch ( WP_Auth0_CouldNotCreateUserException $e ) {
         throw new WP_Auth0_LoginFlowValidationException( $e->getMessage() );
       } catch ( WP_Auth0_RegistrationNotEnabledException $e ) {
-        $msg = __( 'Could not create user. The registration process is not available. Please contact your site’s administrator.', 'wp-auth0' );
+        $msg = __( 'Could not create user. The registration process is not available. '
+                   . 'Please contact your site’s administrator.', 'wp-auth0' );
 
         throw new WP_Auth0_LoginFlowValidationException( $msg );
       } catch ( WP_Auth0_EmailNotVerifiedException $e ) {
 	      $this->email_verification->render_die( $e->userinfo, $e->id_token, $e->access_token );
       }
-      // catch ( Exception $e ) {
-      //  echo $e;exit;
-      // }
 
       return true;
     }
   }
 
-  public function login_with_credentials( $username, $password, $connection="Username-Password-Authentication" ) {
+  public function login_with_credentials( $username, $password, $connection = "Username-Password-Authentication" ) {
 
     $domain = $this->a0_options->get( 'domain' );
     $client_id = $this->a0_options->get( 'client_id' );
 
-    $response = WP_Auth0_Api_Client::ro( $domain, $client_id, $username, $password, $connection, 'openid name email nickname email_verified identities' );
+    $response = WP_Auth0_Api_Client::ro(
+    	$domain, $client_id, $username, $password, $connection, 'openid name email nickname email_verified identities'
+    );
 
     $secret = $this->a0_options->get_client_secret_as_key();
 
     try {
       // Decode the user
-      $decodedToken = JWT::decode( $response->id_token, $secret, array(  $this->a0_options->get_client_signing_algorithm() ) );
+      $decodedToken = JWT::decode(
+      	$response->id_token, $secret, array( $this->a0_options->get_client_signing_algorithm() )
+      );
 
       // validate that this JWT was made for us
       if ( $this->a0_options->get( 'client_id' ) !== $decodedToken->aud ) {

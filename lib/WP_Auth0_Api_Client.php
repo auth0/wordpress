@@ -183,6 +183,8 @@ class WP_Auth0_Api_Client {
 	/**
 	 * Get an authorization token to use for login, management, etc
 	 *
+	 * TODO: This is currently using the WP-created Client which does not, by default, have access to the Management API
+	 *
 	 * @param string $domain
 	 * @param string $client_id
 	 * @param string $client_secret
@@ -205,17 +207,20 @@ class WP_Auth0_Api_Client {
 		$body['client_secret'] = is_null( $client_secret ) ? '' : $client_secret;
 		$body['grant_type'] = $grant_type;
 
-		$headers = self::get_info_headers();
-		$headers['Content-Type'] = 'application/x-www-form-urlencoded';
-		
 		$response = wp_remote_post( self::get_endpoint( 'oauth/token', $domain ), array(
-				'headers' => $headers,
+				'headers' => self::get_headers( '', 'application/x-www-form-urlencoded' ),
 				'body' => $body,
 			) );
 
 		if ( $response instanceof WP_Error ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
 			error_log( $response->get_error_message() );
+			return false;
+		}
+		
+		if ( $response['response']['code'] !== 200 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
+			error_log( $response['body'] );
 			return false;
 		}
 
@@ -390,8 +395,6 @@ class WP_Auth0_Api_Client {
 			return false;
 		}
 		
-		// TODO: Need to store Auth0 id in user meta
-
 		return json_decode( $response['body'] );
 	}
 
