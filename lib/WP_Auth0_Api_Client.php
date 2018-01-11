@@ -274,12 +274,32 @@ class WP_Auth0_Api_Client {
 			)
 		);
 	}
-
-	public static function search_users( $domain, $jwt, $q = "", $page = 0, $per_page = 100, $include_totals = false, $sort = "user_id:1" ) {
+	
+	/**
+	 * @param $domain
+	 * @param $jwt
+	 * @param string $q
+	 * @param int $page
+	 * @param int $per_page
+	 * @param bool $include_totals
+	 * @param string $sort
+	 *
+	 * @return array|mixed|object
+	 */
+	public static function search_users(
+		$domain,
+		$jwt,
+		$q = "",
+		$page = 0,
+		$per_page = 100,
+		$include_totals = false,
+		$sort = "user_id:1"
+	) {
 
 		$include_totals = $include_totals ? 'true' : 'false';
 
-		$endpoint = "https://$domain/api/v2/users?include_totals=$include_totals&per_page=$per_page&page=$page&sort=$sort&q=$q&search_engine=v2";
+		$endpoint = "https://$domain/api/v2/users?include_totals=$include_totals&per_page=$per_page&page=$page" .
+		            "&sort=$sort&q=$q&search_engine=v2";
 
 		$headers = self::get_info_headers();
 
