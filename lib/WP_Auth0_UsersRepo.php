@@ -74,8 +74,8 @@ class WP_Auth0_UsersRepo {
 	 * Join or create a new user in the WordPress database
 	 *
 	 * @param stdClass $userinfo - Auth0 userinfo object
-	 * @param string $token - DEPRECATED
-	 * @param string|null $access_token - token used to retrieve Auth0 userinfo object
+	 * @param string $token - DEPRECATED 4.0.0, use $access_token if needed
+	 * @param string|null $access_token
 	 * @param string|null $role - the WP role to use
 	 * @param bool $ignore_unverified_email - skip the unverified email check
 	 *

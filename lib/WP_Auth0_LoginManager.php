@@ -167,9 +167,9 @@ class WP_Auth0_LoginManager {
 
     try {
       if ( $this->query_vars( 'auth0' ) === 'implicit' ) {
-        $this->implicit_login();
+	      $this->implicit_login();
       } else {
-        $this->redirect_login();
+	      $this->redirect_login();
       }
     } catch (WP_Auth0_LoginFlowValidationException $e) {
 
@@ -302,8 +302,7 @@ class WP_Auth0_LoginManager {
     exit();
   }
 
-  // TODO: Am I still OK?
-	  public function implicit_login() {
+  public function implicit_login() {
 
     $token = $_POST['token'];
     $stateFromGet = json_decode( base64_decode( $_POST['state'] ) );
@@ -338,7 +337,7 @@ class WP_Auth0_LoginManager {
       }
 
     } catch( UnexpectedValueException $e ) {
-      WP_Auth0_ErrorManager::insert_auth0_error( 'implicit_login', $e );
+      WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
 
       error_log( $e->getMessage() );
 
@@ -352,8 +351,8 @@ class WP_Auth0_LoginManager {
 	 * @param stdClass $user - the WP user object, such as returned by get_user_by(...)
 	 * @param stdClass $userinfo - the Auth0 profile of the user
 	 * @param bool $is_new - `true` if the user was created in/by WordPress.
-	 * @param string $id_token - DEPRECATED
-	 * @param $access_token - the user's access token.  It is not provided when using the **Implicit flow**.
+	 * @param string $id_token - DEPRECATED 4.0.0, use $access_token if needed
+	 * @param $access_token - token is not used in this method, only passed to auth0_user_login action; not provided when using Implicit login flow
 	 *
 	 * @throws WP_Auth0_BeforeLoginException
 	 */
@@ -402,8 +401,8 @@ class WP_Auth0_LoginManager {
 	 * Creates a user, if necessary, and logs the user in
 	 *
 	 * @param object $userinfo - Needs to have openid and email scopes
-	 * @param string $id_token - DEPRECATED
-	 * @param string $access_token
+	 * @param string $id_token - DEPRECATED 4.0.0, use $access_token if needed
+	 * @param string $access_token - token is not used in this method, only passed to $this->do_login
 	 *
 	 * @return bool
 	 *
@@ -435,7 +434,7 @@ class WP_Auth0_LoginManager {
       // Email verification needed
 
       if ( ! $auth0_email_verified ) {
-      	$this->email_verification->render_die( $userinfo, $id_token, $access_token );
+      	$this->email_verification->render_die( $userinfo );
       }
     }
 

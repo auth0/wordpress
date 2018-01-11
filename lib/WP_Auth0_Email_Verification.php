@@ -16,10 +16,10 @@ class WP_Auth0_Email_Verification {
 	 * Stop the login process and show email verification prompt
 	 *
 	 * @param object $userinfo
-	 * @param string $id_token - DEPRECATED 3.5.0
-	 * @param string $access_token - DEPRECATED
+	 * @param string $id_token - DEPRECATED 4.0.0, no tokens used for template rendering
+	 * @param string $access_token - DEPRECATED 4.0.0, no tokens used for template rendering
 	 */
-	public function render_die( $userinfo, $id_token, $access_token ) {
+	public function render_die( $userinfo, $id_token = '', $access_token = '' ) {
 		
 		$html = sprintf(
 			
@@ -46,6 +46,8 @@ class WP_Auth0_Email_Verification {
 			'//code.jquery.com/jquery-1.12.4.js',
 			WPA0_PLUGIN_URL . 'assets/js/die-with-verify-email.js?ver=' . WPA0_VERSION
 		);
+		
+		// TODO: Remove tokens from this filter? Should not be exposed in a template
 		
 		$html = apply_filters( 'auth0_verify_email_page' , $html, $userinfo, $id_token, $access_token );
 		
