@@ -193,11 +193,7 @@ class WP_Auth0_UsersRepo {
 	public function find_auth0_user ( $id ) {
 		
 		if ( empty( $id ) ) {
-			
-			WP_Auth0_ErrorManager::insert_auth0_error(
-				__CLASS__ . '->' . __METHOD__,
-				__( 'Empty user id', 'wp-auth0' )
-			);
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, __( 'Empty user id', 'wp-auth0' ) );
 			return null;
 		}
 		
@@ -211,25 +207,35 @@ class WP_Auth0_UsersRepo {
 		
 		if ( $users instanceof WP_Error ) {
 			
-			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '->' . __METHOD__, $users->get_error_message() );
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $users->get_error_message() );
 			return null;
 		}
 		
 		return ! empty( $users[0] ) ? $users[0] : null;
 	}
-
-	public function update_auth0_object( $user_id, $userinfo ) {
+	
+	/**
+	 * Create Auth0 user meta fields
+	 *
+	 * @param int $wp_user_id - WordPress user ID
+	 * @param array|stdClass $userinfo - userinfo returned from Auth0 user creation
+	 */
+	public function update_auth0_object( $wp_user_id, $userinfo ) {
 		global $wpdb;
-		update_user_meta( $user_id, $wpdb->prefix.'auth0_id', ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub )); 
-		update_user_meta( $user_id, $wpdb->prefix.'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo )); 
-		update_user_meta( $user_id, $wpdb->prefix.'last_update', date( 'c' ) ); 
+		update_user_meta( $wp_user_id, $wpdb->prefix . 'auth0_id', ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub ));
+		update_user_meta( $wp_user_id, $wpdb->prefix . 'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo ));
+		update_user_meta( $wp_user_id, $wpdb->prefix . 'last_update', date( 'c' ) );
 	}
-
-	public function delete_auth0_object( $user_id ) {
+	
+	/**
+	 * Remove Auth0 user meta fields
+	 *
+	 * @param int $wp_user_id - WordPress user ID
+	 */
+	public function delete_auth0_object( $wp_user_id ) {
 		global $wpdb;
-		delete_user_meta( $user_id, $wpdb->prefix.'auth0_id' ); 
-		delete_user_meta( $user_id, $wpdb->prefix.'auth0_obj' ); 
-		delete_user_meta( $user_id, $wpdb->prefix.'last_update' ); 
+		delete_user_meta( $wp_user_id, $wpdb->prefix . 'auth0_id' );
+		delete_user_meta( $wp_user_id, $wpdb->prefix . 'auth0_obj' );
+		delete_user_meta( $wp_user_id, $wpdb->prefix . 'last_update' );
 	}
-
 }

@@ -39,6 +39,7 @@ class WP_Auth0_Api_Client {
 			'domain' => $a0_options->get( 'domain' ),
 			'client_id' => $a0_options->get( 'client_id' ),
 			'client_secret' => $a0_options->get( 'client_secret' ),
+			'connection' => $a0_options->get( 'db_connection_name' ),
 			'audience' => self::get_endpoint( 'api/v2/' ),
 		);
 		
@@ -147,7 +148,6 @@ class WP_Auth0_Api_Client {
 	 * @return array|bool|mixed|object
 	 */
 	public static function ro( $domain, $client_id, $username, $password, $connection, $scope ) {
-
 
 		$headers = self::get_info_headers();
 		$headers['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -323,7 +323,18 @@ class WP_Auth0_Api_Client {
 				'headers' => $headers,
 			) );
 	}
-
+	
+	/**
+	 * Create an Auth0 user
+	 *
+	 * DEPRECATED 3.4.0, use self::signup_user()
+	 *
+	 * @param string $domain
+	 * @param string $jwt
+	 * @param array $data
+	 *
+	 * @return array|bool|mixed|object
+	 */
 	public static function create_user( $domain, $jwt, $data ) {
 
 		$endpoint = "https://$domain/api/v2/users";
@@ -352,17 +363,18 @@ class WP_Auth0_Api_Client {
 
 		return json_decode( $response['body'] );
 	}
+	
+	/**
+	 * Used to create an admin user during the setup wizard
+	 *
+	 * @param array $data
+	 *
+	 * @return array|bool|mixed|object
+	 */
+	public static function signup_user( $data ) {
 
-	public static function signup_user( $domain, $data ) {
-
-		$endpoint = "https://$domain/dbconnections/signup";
-
-		$headers = self::get_info_headers();
-
-		$headers['content-type'] = 'application/json';
-
-		$response = wp_remote_post( $endpoint  , array(
-			'headers' => $headers,
+		$response = wp_remote_post( WP_Auth0_Api_Client::get_endpoint( 'dbconnections/signup' ), array(
+			'headers' => WP_Auth0_Api_Client::get_headers(),
 			'body' => json_encode( $data )
 		) );
 

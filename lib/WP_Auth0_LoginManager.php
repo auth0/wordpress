@@ -426,7 +426,6 @@ class WP_Auth0_LoginManager {
       if ( empty( $auth0_email ) ) {
       	
       	// TODO: Need a way forward here
-	      
         $msg = __( 'Your account does not have an email, which is required by the administrator.', 'wp-auth0' );
         throw new WP_Auth0_LoginFlowValidationException( $msg );
       }
@@ -439,6 +438,7 @@ class WP_Auth0_LoginManager {
     }
 
     // See if there is a user linked to the same auth0 user_id/sub
+	  // TODO: Current process does not return this for $userinfo ... add a scope?
 	  if ( isset( $userinfo->identities ) ) {
 		  foreach ( $userinfo->identities as $identity ) {
 			  $user = $this->users_repo->find_auth0_user( "{$identity->provider}|{$identity->user_id}" );

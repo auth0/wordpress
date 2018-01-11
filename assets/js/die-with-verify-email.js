@@ -12,12 +12,8 @@ jQuery( document ).ready( function ($) {
             sub: WPAuth0EmailVerification.sub
         };
 
-        console.log( postData );
-
         $.post( WPAuth0EmailVerification.ajaxUrl, postData )
             .done( function( data ) {
-
-                console.log( data );
 
                 if ( '1' === data ) {
                     $resendLink.after( WPAuth0EmailVerification.s_msg );
