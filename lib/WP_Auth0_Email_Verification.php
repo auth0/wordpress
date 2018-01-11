@@ -4,6 +4,9 @@ class WP_Auth0_Email_Verification {
 	
 	private $resend_nonce_action = 'auth0_resend_verification_email';
 	
+	/**
+	 * WP_Auth0_Email_Verification constructor
+	 */
 	public function __construct () {
 		
 		add_action( 'wp_ajax_nopriv_resend_verification_email', array( $this, 'ajax_resend_email' ) );
@@ -57,18 +60,14 @@ class WP_Auth0_Email_Verification {
 		
 		check_ajax_referer( $this->resend_nonce_action, 'nonce' );
 		
-		$apiClient = new WP_Auth0_Api_Client();
-		
-		$a0_options = WP_Auth0_Options::Instance();
+		$connect_info = WP_Auth0_Api_Client::get_connect_info();
 		
 		$token = WP_Auth0_Api_Client::get_token(
-			$a0_options->get( 'domain' ),
-			$a0_options->get( 'client_id' ),
-			$a0_options->get( 'client_secret' ),
+			$connect_info[ 'domain' ],
+			$connect_info[ 'client_id' ],
+			$connect_info[ 'client_secret' ],
 			'client_credentials',
-			array(
-				'audience' => $apiClient->get_endpoint( 'api/v2/' )
-			)
+			array( 'audience' => $connect_info[ 'audience' ] )
 		);
 		
 		$tokenDecoded = json_decode( $token['body'] );
@@ -77,7 +76,7 @@ class WP_Auth0_Email_Verification {
 			die( '0' );
 		}
 		
-		echo (int) $apiClient->resend_verification_email(
+		echo (int) WP_Auth0_Api_Client::resend_verification_email(
 			$tokenDecoded->access_token,
 			sanitize_text_field( $_POST[ 'sub' ] )
 		);

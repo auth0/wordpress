@@ -2,22 +2,6 @@
 
 class WP_Auth0_Api_Client {
 	
-	private $domain;
-	private $client_id;
-	private $client_secret;
-	
-	/**
-	 * WP_Auth0_Api_Client constructor.
-	 */
-	public function __construct () {
-		
-		$a0_options = WP_Auth0_Options::Instance();
-		
-		$this->domain = $a0_options->get( 'domain' );
-		$this->client_id = $a0_options->get( 'client_id' );
-		$this->client_secret = $a0_options->get( 'client_secret' );
-	}
-	
 	/**
 	 * Generate the API endpoint with a provided domain
 	 *
@@ -26,10 +10,11 @@ class WP_Auth0_Api_Client {
 	 *
 	 * @return string
 	 */
-	public function get_endpoint( $path = '', $domain = '' ) {
+	public static function get_endpoint( $path = '', $domain = '' ) {
 		
 		if ( empty( $domain ) ) {
-			$domain = $this->domain;
+			$a0_options = WP_Auth0_Options::Instance();
+			$domain = $a0_options->get( 'domain' );
 		}
 		
 		if ( ! empty( $path[0] ) && '/' === $path[0] ) {
@@ -37,6 +22,31 @@ class WP_Auth0_Api_Client {
 		}
 		
 		return "https://{$domain}/{$path}";
+	}
+	
+	/**
+	 * Return basic connection information, or a specific value
+	 *
+	 * @param string $opt
+	 *
+	 * @return string|array
+	 */
+	public static function get_connect_info( $opt = '' ) {
+		
+		$a0_options = WP_Auth0_Options::Instance();
+		
+		$connect_info = array(
+			'domain' => $a0_options->get( 'domain' ),
+			'client_id' => $a0_options->get( 'client_id' ),
+			'client_secret' => $a0_options->get( 'client_secret' ),
+			'audience' => self::get_endpoint( 'api/v2/' ),
+		);
+		
+		if ( empty( $opt ) ) {
+			return $connect_info;
+		} else {
+			return ! empty( $connect_info[ $opt ] ) ? $connect_info[ $opt ] : '';
+		}
 	}
 	
 	/**
@@ -138,10 +148,9 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function ro( $domain, $client_id, $username, $password, $connection, $scope ) {
 
-		$endpoint = "https://{$domain}/";
 
 		$headers = self::get_info_headers();
-		$headers['content-type'] = 'application/x-www-form-urlencoded';
+		$headers['Content-Type'] = 'application/x-www-form-urlencoded';
 		$body = array(
 			'client_id' => $client_id,
 			'username' => $username,
@@ -151,25 +160,24 @@ class WP_Auth0_Api_Client {
 			'scope' => $scope
 		);
 
-		$response = wp_remote_post( $endpoint . 'oauth/ro', array(
+		$response = wp_remote_post( self::get_endpoint( 'oauth/ro', $domain ), array(
 				'headers' => $headers,
 				'body' => $body,
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::ro', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::ro', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
 
 		return json_decode( $response['body'] );
-
 	}
 	
 	/**
@@ -183,27 +191,30 @@ class WP_Auth0_Api_Client {
 	 *
 	 * @return array|bool|WP_Error
 	 */
-	public static function get_token( $domain, $client_id, $client_secret, $grant_type = 'client_credentials', $extra_body = null ) {
+	public static function get_token(
+		$domain,
+		$client_id,
+		$client_secret,
+		$grant_type = 'client_credentials',
+		$extra_body = null
+	) {
 		
 		$body = ! is_array( $extra_body ) ? array() : $extra_body;
-
-		$endpoint = "https://$domain/";
-
+		
 		$body['client_id'] = $client_id;
 		$body['client_secret'] = is_null( $client_secret ) ? '' : $client_secret;
 		$body['grant_type'] = $grant_type;
 
 		$headers = self::get_info_headers();
-		$headers['content-type'] = 'application/x-www-form-urlencoded';
-
-
-		$response = wp_remote_post( $endpoint . 'oauth/token', array(
+		$headers['Content-Type'] = 'application/x-www-form-urlencoded';
+		
+		$response = wp_remote_post( self::get_endpoint( 'oauth/token', $domain ), array(
 				'headers' => $headers,
 				'body' => $body,
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::get_token', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
@@ -219,26 +230,26 @@ class WP_Auth0_Api_Client {
 	 *
 	 * @return bool
 	 */
-	public function resend_verification_email( $access_token, $user_id ) {
+	public static function resend_verification_email( $access_token, $user_id ) {
 		
 		$response = wp_remote_post(
-			$this->get_endpoint( 'api/v2/jobs/verification-email' ),
+			self::get_endpoint( 'api/v2/jobs/verification-email' ),
 			array(
 				'headers' => self::get_headers( $access_token ),
 				'body' => json_encode( array(
 					'user_id' => $user_id,
-					'client_id' => $this->client_id,
+					'client_id' => self::get_connect_info( 'client_id' ),
 				) ),
 		) );
 		
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::resend_verification_email', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 		
 		if ( $response['response']['code'] !== 201 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::resend_verification_email', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -308,13 +319,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_user', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 201 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_user', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -336,13 +347,13 @@ class WP_Auth0_Api_Client {
 		) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::signup_user', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] !== 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::signup_user', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -401,13 +412,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_client', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 201 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_client', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -422,7 +433,7 @@ class WP_Auth0_Api_Client {
 		$updateResponse = WP_Auth0_Api_Client::update_client($domain, $app_token, $response->client_id, false, $payload);
 
 		if ( $updateResponse instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_client', $updateResponse );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $updateResponse );
 			error_log( $updateResponse->get_error_message() );
 			return false;
 		}
@@ -442,13 +453,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::search_clients', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::search_clients', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -474,13 +485,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::update_client', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::update_client', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -510,13 +521,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_rule ' . $name, $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__ . ' ' . $name, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 201 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_rule ' . $name, $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__ . ' ' . $name, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -539,13 +550,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::delete_rule', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 204 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::delete_rule', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -568,13 +579,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_connection', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 201 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_connection', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -598,13 +609,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::search_connection', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::search_connection', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -626,13 +637,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::get_connection', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::get_connection', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -664,13 +675,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::update_connection', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::update_connection', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -694,13 +705,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::delete_connection', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 204 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::delete_connection', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -723,13 +734,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::delete_user_mfa', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 204 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::delete_user_mfa', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -752,13 +763,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::update_users', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::update_users', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -782,13 +793,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::change_password', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::change_password', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -819,13 +830,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::link_users', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 201 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::link_users', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -904,13 +915,13 @@ class WP_Auth0_Api_Client {
 			) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::update_guardian', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::update_guardian', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -941,22 +952,22 @@ class WP_Auth0_Api_Client {
 		$response = wp_remote_get( $endpoint, array() );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::JWK_fetch', $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::JWK_fetch', $response['body'] );
+			WP_Auth0_ErrorManager::insert_auth0_error( __CLASS__ . '::' . __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
 
-		if ( $response['response']['code'] >= 300 ) return false;		
+		if ( $response['response']['code'] >= 300 ) return false;
 
 		$jwks = json_decode($response['body'], true);
 
-		foreach ($jwks['keys'] as $key) { 
+		foreach ($jwks['keys'] as $key) {
 			$secret[$key['kid']] = self::convertCertToPem($key['x5c'][0]);
 		}
 
