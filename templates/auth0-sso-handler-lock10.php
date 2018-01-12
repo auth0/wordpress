@@ -20,10 +20,10 @@ document.addEventListener("DOMContentLoaded", function() {
       }
 
       if (typeof(authResult.code) !== 'undefined') {
-        window.location = '<?php echo home_url( '/?auth0=1' ); ?>&code=' + authResult.code + '&state=' + authResult.state;
+        window.location = '<?php echo home_url( '?auth0=1' ); ?>&code=' + authResult.code + '&state=' + authResult.state;
       } else if (typeof(authResult.idToken) !== 'undefined') {
         jQuery(document).ready(function($){
-          var $form=$(document.createElement('form')).css({display:'none'}).attr("method","POST").attr("action","<?php echo home_url( '/?auth0=implicit' ); ?>");
+          var $form=$(document.createElement('form')).css({display:'none'}).attr("method","POST").attr("action","<?php echo home_url( '?auth0=implicit' ); ?>");
           var $input=$(document.createElement('input')).attr('name','token').val(authResult.idToken);
           var $input2=$(document.createElement('input')).attr('name','state').val(authResult.state);
           $form.append($input).append($input2);

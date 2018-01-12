@@ -80,14 +80,14 @@ document.addEventListener("DOMContentLoaded", function() {
             return p;
           }, {});
 
-          post('<?php echo home_url( '/index.php?auth0=implicit' ); ?>', {
+          post('<?php echo site_url( 'index.php?auth0=implicit' ); ?>', {
             token:data.id_token,
             state:data.state
           }, 'POST');
         }
 
         // lock.on("authenticated", function(authResult) {
-        //   post('<?php echo home_url( '/index.php?auth0=implicit' ); ?>', {
+        //   post('<?php echo site_url( 'index.php?auth0=implicit' ); ?>', {
         //     token:authResult.idToken,
         //     state:authResult.state
         //   }, 'POST');
