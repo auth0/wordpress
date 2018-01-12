@@ -1,16 +1,22 @@
 <?php
 
+/**
+ * Class WP_Auth0_Options
+ *
+ * Debug console to see all options:
+ * echo '<pre>' . print_r( WP_Auth0_Options::Instance()->get_options(), TRUE ) . '</pre>'; die();
+ */
 class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
 	protected static $instance = null;
+	protected $options_name = 'wp_auth0_settings';
+	
 	public static function Instance() {
 		if ( self::$instance === null ) {
 			self::$instance = new WP_Auth0_Options;
 		}
 		return self::$instance;
 	}
-
-	protected $options_name = 'wp_auth0_settings';
 
 	public function is_wp_registration_enabled() {
 		if ( is_multisite() ) {

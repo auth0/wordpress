@@ -5,14 +5,15 @@
 <a href="<?php echo wp_login_url()?>"> <?php echo __( '← Login', 'wp-auth0' ) ?> </a>
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <script type="text/javascript">
-    function resendEmail() {
+    
+    $('#resend').click( function () {
 
         jQuery.post({
             url: 'https://<?php echo $domain ?>/api/users/<?php echo $userId ?>/send_verification_email',
             dataType: 'html',
             contentType: 'application/json',
             headers: {
-              'Authorization': "Bearer <?php echo $token ?>"
+                'Authorization': "Bearer <?php echo $token ?>"
             },
             success: function (resp) {
                 alert("An email was sent to <?php echo $email?>" );
@@ -20,8 +21,6 @@
         }).fail(function() {
             alert("Sorry, something went wrong");
         })
-    }
-    document.getElementById("resend").onclick = function () {
-        resendEmail();
-    }
+        
+    } );
 </script>

@@ -118,6 +118,8 @@ class WP_Auth0_Api_Operations {
 			);
 
 		}
+		
+		// TODO: make sure this is set on setup
 
 		$this->a0_options->set( "db_connection_name", $db_connection_name );
 
