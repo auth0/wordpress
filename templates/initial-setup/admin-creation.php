@@ -14,7 +14,7 @@
 
       <p class="bg-danger">
 
-        <?php _e( "An error occurred creating the user. Check that the migration webservices are accesible or check the ", "wp-auth0" ); ?>
+        <?php _e( "An error occurred creating the user. Check that the migration webservices are accessible or check the ", "wp-auth0" ); ?>
         <a href="<?php echo admin_url( "admin.php?page=wpa0-errors" ); ?>" target="_blank"><?php _e( "Error Log", "wp-auth0" ); ?></a>
         <?php _e( "for more info.", "wp-auth0" ); ?>
       </p>
