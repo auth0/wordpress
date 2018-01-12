@@ -286,7 +286,7 @@ class WP_Auth0_Api_Client {
 		);
 		$updateResponse = WP_Auth0_Api_Client::update_client($domain, $app_token, $response->client_id, false, $payload);
 
-		if ( $updateClient instanceof WP_Error ) {
+		if ( $updateResponse instanceof WP_Error ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::create_client', $updateResponse );
 			error_log( $updateResponse->get_error_message() );
 			return false;
