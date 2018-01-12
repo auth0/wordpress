@@ -243,10 +243,11 @@ class WP_Auth0_LoginManager {
     $data = json_decode( $response['body'] );
 
     if ( isset( $data->access_token ) || isset( $data->id_token ) ) {
+  
       // Get the user information
-	
-	    $data->id_token = null;
-	    $response = WP_Auth0_Api_Client::get_user_info( $domain, $data->access_token );
+  
+      $data->id_token = null;
+      $response = WP_Auth0_Api_Client::get_user_info( $domain, $data->access_token );
 
       if ( $response instanceof WP_Error ) {
         WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_userinfo', $response );
