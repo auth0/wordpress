@@ -163,6 +163,11 @@ class WP_Auth0_UsersRepo {
 
 	public function find_auth0_user( $id ) {
 		global $wpdb;
+    
+    if ( empty( $id ) ) {
+      WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, __( 'Empty user id', 'wp-auth0' ) );
+      return null;
+    }
 
 		$query = array( 
   		'meta_key' => $wpdb->prefix.'auth0_id',
