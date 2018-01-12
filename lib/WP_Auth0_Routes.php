@@ -124,7 +124,7 @@ EOT;
 				throw new Exception( 'Unauthorized: missing authorization header' );
 			}
 
-			$token = JWT::decode( $authorization, $secret);
+			$token = JWT::decode( $authorization, $secret, array(  $this->a0_options->get_client_signing_algorithm() ) );
 
 			if ( $token->jti != $token_id ) {
 				throw new Exception( 'Invalid token id' );
@@ -185,7 +185,7 @@ EOT;
 				throw new Exception('Unauthorized: missing authorization header');
 			}
 
-			$token = JWT::decode($authorization, $secret );
+			$token = JWT::decode( $authorization, $secret, array(  $this->a0_options->get_client_signing_algorithm() ) );
 
 			if ($token->jti != $token_id) {
 				throw new Exception('Invalid token id');
