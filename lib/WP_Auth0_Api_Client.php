@@ -250,7 +250,7 @@ class WP_Auth0_Api_Client {
 							wp_login_url()
 						),
 						"allowed_origins"=>array(
-              wp_login_url()
+							wp_login_url()
 						),
 						"jwt_configuration" => array(
 							"alg" => "RS256"
