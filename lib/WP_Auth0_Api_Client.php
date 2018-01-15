@@ -227,41 +227,42 @@ class WP_Auth0_Api_Client {
 	}
   
   /**
-   * Trigger a verification email re-send
-   *
-   * @since 3.4.1
-   *
-   * @param $access_token
-   * @param $user_id
-   *
-   * @return bool
-   */
-	public static function resend_verification_email( $access_token, $user_id ) {
+  * Trigger a verification email re-send
+  *
+  * @since 3.4.1
+  *
+  * @param $access_token
+  * @param $user_id
+  *
+  * @return bool
+  */
+  public static function resend_verification_email( $access_token, $user_id ) {
   
-  		$response = wp_remote_post(
-    			self::get_endpoint( 'api/v2/jobs/verification-email' ),
-    			array(
-      				'headers' => self::get_headers( $access_token ),
-      				'body' => json_encode( array(
-        					'user_id' => $user_id,
-        					'client_id' => self::get_connect_info( 'client_id' ),
-        				) ),
-      		) );
-  
-  		if ( $response instanceof WP_Error ) {
-    			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
-    			error_log( $response->get_error_message() );
-    			return false;
- 		}
- 
- 		if ( $response['response']['code'] !== 201 ) {
-    			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
-    			error_log( $response['body'] );
-    			return false;
- 		}
- 
- 		return true;
- 	}
+    $response = wp_remote_post(
+      self::get_endpoint( 'api/v2/jobs/verification-email' ),
+      array(
+        'headers' => self::get_headers( $access_token ),
+        'body' => json_encode( array(
+          'user_id' => $user_id,
+          'client_id' => self::get_connect_info( 'client_id' ),
+        ) ),
+      )
+    );
+    
+    if ( $response instanceof WP_Error ) {
+      WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
+      error_log( $response->get_error_message() );
+      return false;
+    }
+    
+    if ( $response['response']['code'] !== 201 ) {
+      WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
+      error_log( $response['body'] );
+      return false;
+    }
+    
+    return true;
+  }
 
 	public static function get_user( $domain, $jwt, $user_id ) {
 		$endpoint = "https://$domain/api/v2/users/" . urlencode( $user_id );
