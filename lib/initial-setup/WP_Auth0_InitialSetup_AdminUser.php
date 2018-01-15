@@ -33,11 +33,11 @@ class WP_Auth0_InitialSetup_AdminUser {
 			wp_redirect( admin_url( "admin.php?page=wpa0-setup&step=3&profile=social&result=error" ) );
 		} else {
       
-      $admin_user->sub = 'auth0|' . $admin_user->_id;
-      unset( $admin_user->_id );
-    
-      $user_repo = new WP_Auth0_UsersRepo( WP_Auth0_Options::Instance() );
-      $user_repo->update_auth0_object( $current_user->ID, $admin_user );
+//      $admin_user->sub = 'auth0|' . $admin_user->_id;
+//      unset( $admin_user->_id );
+//
+//      $user_repo = new WP_Auth0_UsersRepo( WP_Auth0_Options::Instance() );
+//      $user_repo->update_auth0_object( $current_user->ID, $admin_user );
  
 			wp_redirect( admin_url( "admin.php?page=wpa0-setup&step=4&profile=social" ) );
 		}
