@@ -133,8 +133,8 @@ class WP_Auth0_DBManager {
 			$sso = $options->get( 'sso' );
 			$payload = array(
 				"cross_origin_auth" => true,
-				"cross_origin_loc" => home_url('/index.php?auth0fallback=1','https'),
-				"web_origins" => array(home_url())
+				"cross_origin_loc" => site_url('index.php?auth0fallback=1','https'),
+				"web_origins" => ( home_url() === site_url() ? array( home_url() ) : array( home_url(), site_url() ) )
 			);
 			$updateClient = WP_Auth0_Api_Client::update_client($domain, $app_token, $client_id, $sso, $payload);
 			$options->set('client_signing_algorithm', 'HS256');

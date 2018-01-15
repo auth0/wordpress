@@ -355,29 +355,25 @@ class WP_Auth0_Api_Client {
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type'] = "application/json";
 
-		$logout_url = home_url();
-
 		$response = wp_remote_post( $endpoint  , array(
 				'method' => 'POST',
 				'headers' => $headers,
 				'body' => json_encode( array(
 						'name' => $name,
 						'callbacks' => array(
-							home_url( '/index.php?auth0=1' ),
-							home_url( '/wp-login.php' )
+							site_url( 'index.php?auth0=1' ),
+							wp_login_url()
 						),
 						"allowed_origins"=>array(
-							home_url( '/wp-login.php' )
+							wp_login_url()
 						),
 						"jwt_configuration" => array(
 							"alg" => "RS256"
 						),
 						"app_type" => "regular_web",
 						"cross_origin_auth" => true,
-						"cross_origin_loc" => home_url('/index.php?auth0fallback=1','https'),
-						"allowed_logout_urls" => array(
-							$logout_url
-						),
+						"cross_origin_loc" => site_url('index.php?auth0fallback=1','https'),
+						"allowed_logout_urls" => array( wp_logout_url() ),
 					) )
 			) );
 
@@ -397,7 +393,7 @@ class WP_Auth0_Api_Client {
 	
 		// Workaround: Can't add `web_origin` on create
 		$payload = array(
-			"web_origins" => array(home_url())
+			"web_origins" => ( home_url() === site_url() ? array( home_url() ) : array( home_url(), site_url() ) )
 		);
 		$updateResponse = WP_Auth0_Api_Client::update_client($domain, $app_token, $response->client_id, false, $payload);
 
