@@ -1,58 +1,58 @@
 <?php
 
 class WP_Auth0_Api_Client {
-  
-  /**
-   * Generate the API endpoint with a provided domain
-   *
-   * @since 3.4.1
-   *
-   * @param string $path - API path appended to the domain
-   * @param string $domain - domain to use, blank uses default
-   *
-   * @return string
-   */
-  public static function get_endpoint( $path = '', $domain = '' ) {
-    
-    if ( empty( $domain ) ) {
-      $a0_options = WP_Auth0_Options::Instance();
-      $domain = $a0_options->get( 'domain' );
-    }
-    
-    if ( ! empty( $path[0] ) && '/' === $path[0] ) {
-      $path = substr( $path, 1 );
-    }
-    
-    return "https://{$domain}/{$path}";
-  }
-  
-  /**
-   * Return basic connection information, or a specific value
-   *
-   * @since 3.4.1
-   *
-   * @param string $opt
-   *
-   * @return string|array
-   */
-  public static function get_connect_info( $opt = '' ) {
-    
-    $a0_options = WP_Auth0_Options::Instance();
-    
-    $connect_info = array(
-      'domain' => $a0_options->get( 'domain' ),
-      'client_id' => $a0_options->get( 'client_id' ),
-      'client_secret' => $a0_options->get( 'client_secret' ),
-      'connection' => $a0_options->get( 'db_connection_name' ),
-      'audience' => self::get_endpoint( 'api/v2/' ),
-    );
-    
-    if ( empty( $opt ) ) {
-      return $connect_info;
-    } else {
-      return ! empty( $connect_info[ $opt ] ) ? $connect_info[ $opt ] : '';
-    }
-  }
+
+	/**
+	 * Generate the API endpoint with a provided domain
+	 *
+	 * @since 3.4.1
+	 *
+	 * @param string $path - API path appended to the domain
+	 * @param string $domain - domain to use, blank uses default
+	 *
+	 * @return string
+	 */
+	public static function get_endpoint( $path = '', $domain = '' ) {
+
+		if ( empty( $domain ) ) {
+			$a0_options = WP_Auth0_Options::Instance();
+			$domain = $a0_options->get( 'domain' );
+		}
+
+		if ( ! empty( $path[0] ) && '/' === $path[0] ) {
+			$path = substr( $path, 1 );
+		}
+
+		return "https://{$domain}/{$path}";
+	}
+
+	/**
+	 * Return basic connection information, or a specific value
+	 *
+	 * @since 3.4.1
+	 *
+	 * @param string $opt
+	 *
+	 * @return string|array
+	 */
+	public static function get_connect_info( $opt = '' ) {
+
+		$a0_options = WP_Auth0_Options::Instance();
+
+		$connect_info = array(
+			'domain' => $a0_options->get( 'domain' ),
+			'client_id' => $a0_options->get( 'client_id' ),
+			'client_secret' => $a0_options->get( 'client_secret' ),
+			'connection' => $a0_options->get( 'db_connection_name' ),
+			'audience' => self::get_endpoint( 'api/v2/' ),
+		);
+
+		if ( empty( $opt ) ) {
+			return $connect_info;
+		} else {
+			return ! empty( $connect_info[ $opt ] ) ? $connect_info[ $opt ] : '';
+		}
+	}
 
 	public static function ro( $domain, $client_id, $username, $password, $connection, $scope ) {
 
@@ -139,31 +139,31 @@ class WP_Auth0_Api_Client {
 					) ) )
 		);
 	}
-  
-  /**
-   * Basic header components for an Auth0 API call
-   *
-   * @since 3.4.1
-   *
-   * @param string $token - for Authorization header
-   * @param string $content_type - for Content-Type header
-   *
-   * @return array
-   */
-  public static function get_headers( $token = '', $content_type = 'application/json' ) {
-    
-    $r_headers = self::get_info_headers();
-    
-    if ( ! empty( $token ) ) {
-      $r_headers['Authorization'] = "Bearer {$token}";
-    }
-    
-    if ( ! empty( $content_type ) ) {
-      $r_headers[ 'Content-Type' ] = $content_type;
-    }
-    
-    return $r_headers;
-  }
+
+	/**
+	 * Basic header components for an Auth0 API call
+	 *
+	 * @since 3.4.1
+	 *
+	 * @param string $token - for Authorization header
+	 * @param string $content_type - for Content-Type header
+	 *
+	 * @return array
+	 */
+	public static function get_headers( $token = '', $content_type = 'application/json' ) {
+
+		$r_headers = self::get_info_headers();
+
+		if ( ! empty( $token ) ) {
+			$r_headers['Authorization'] = "Bearer {$token}";
+		}
+
+		if ( ! empty( $content_type ) ) {
+			$r_headers[ 'Content-Type' ] = $content_type;
+		}
+
+		return $r_headers;
+	}
 
 	public static function get_token( $domain, $client_id, $client_secret, $grantType = 'client_credentials', $extraBody = null ) {
 		if ( ! is_array( $extraBody ) ) {
@@ -225,44 +225,44 @@ class WP_Auth0_Api_Client {
 
 		return json_decode( $response['body'] );
 	}
-  
-  /**
-  * Trigger a verification email re-send
-  *
-  * @since 3.4.1
-  *
-  * @param $access_token
-  * @param $user_id
-  *
-  * @return bool
-  */
-  public static function resend_verification_email( $access_token, $user_id ) {
-  
-    $response = wp_remote_post(
-      self::get_endpoint( 'api/v2/jobs/verification-email' ),
-      array(
-        'headers' => self::get_headers( $access_token ),
-        'body' => json_encode( array(
-          'user_id' => $user_id,
-          'client_id' => self::get_connect_info( 'client_id' ),
-        ) ),
-      )
-    );
-    
-    if ( $response instanceof WP_Error ) {
-      WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
-      error_log( $response->get_error_message() );
-      return false;
-    }
-    
-    if ( $response['response']['code'] !== 201 ) {
-      WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
-      error_log( $response['body'] );
-      return false;
-    }
-    
-    return true;
-  }
+
+	/**
+	 * Trigger a verification email re-send
+	 *
+	 * @since 3.4.1
+	 *
+	 * @param $access_token
+	 * @param $user_id
+	 *
+	 * @return bool
+	 */
+	public static function resend_verification_email( $access_token, $user_id ) {
+
+		$response = wp_remote_post(
+			self::get_endpoint( 'api/v2/jobs/verification-email' ),
+			array(
+				'headers' => self::get_headers( $access_token ),
+				'body' => json_encode( array(
+					'user_id' => $user_id,
+					'client_id' => self::get_connect_info( 'client_id' ),
+				) ),
+			)
+		);
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] !== 201 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		return true;
+	}
 
 	public static function get_user( $domain, $jwt, $user_id ) {
 		$endpoint = "https://$domain/api/v2/users/" . urlencode( $user_id );

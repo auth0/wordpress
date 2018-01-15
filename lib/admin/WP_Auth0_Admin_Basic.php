@@ -49,7 +49,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
       <div class="subelement">
         <span class="description">
           <?php echo __( 'The token should be generated via the ', 'wp-auth0' ); ?>
-          <a href="https://auth0.com/docs/api/v2" target="_blank"><?php echo __( 'token generator', 'wp-auth0' ); ?></a>
+          <a href="https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually" target="_blank"><?php echo __( 'token generator', 'wp-auth0' ); ?></a>
           <?php echo __( ' with the following scopes:', 'wp-auth0' ); ?>
           <i>
           <?php $a = 0; foreach ( $scopes as $resource => $actions ) { $a++;?>
