@@ -40,7 +40,7 @@ class WP_Auth0_Email_Verification {
       WPA0_PLUGIN_URL . 'assets/js/die-with-verify-email.js?ver=' . WPA0_VERSION
     );
     
-    $html = apply_filters( 'auth0_verify_email_page', $html, $userinfo );
+    $html = apply_filters( 'auth0_verify_email_page', $html, $userinfo, '' );
     
     wp_die( $html );
   }
