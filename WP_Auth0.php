@@ -273,7 +273,7 @@ class WP_Auth0 {
 		}
 		
 		if (empty($atts['redirect_to'])) {
-			$atts['redirect_to'] = home_url($_SERVER["REQUEST_URI"]);
+			$atts['redirect_to'] = home_url($_SERVER['REQUEST_URI']);
 		}
 		
 		ob_start();
