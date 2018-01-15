@@ -258,24 +258,28 @@ class WP_Auth0 {
 
 		wp_enqueue_style( 'auth0-widget', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/css/main.css' );
 	}
-
+	
 	public function shortcode( $atts ) {
 		wp_enqueue_script( 'jquery' );
-
+		
 		if ( WP_Auth0_Options::Instance()->get('passwordless_enabled') ) {
 			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('passwordless_cdn_url'), 'jquery' );
 		} else {
 			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
 		}
-
-		if (!isset($atts['redirect_to'])) {
-			$atts['redirect_to'] = home_url($_SERVER["REQUEST_URI"]);
+		
+		if (empty($atts)) {
+			$atts = array();
 		}
-
+		
+		if (empty($atts['redirect_to'])) {
+			$atts['redirect_to'] = home_url($_SERVER['REQUEST_URI']);
+		}
+		
 		ob_start();
 		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
 		renderAuth0Form( false, $atts );
-
+		
 		$html = ob_get_clean();
 		return $html;
 	}
