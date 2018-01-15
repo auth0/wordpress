@@ -172,7 +172,7 @@ class WP_Auth0_LoginManager {
       }
     } catch (WP_Auth0_LoginFlowValidationException $e) {
 
-      $msg = __( 'There was a problem with your log in', 'wp-auth0' );
+      $msg = __( 'There was a problem with your log in. ', 'wp-auth0' );
       $msg .= ' '. $e->getMessage();
       $msg .= '<br/><br/>';
       $msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', 'wp-auth0' ) . '</a>';
@@ -180,7 +180,7 @@ class WP_Auth0_LoginManager {
 
     } catch (WP_Auth0_BeforeLoginException $e) {
 
-      $msg = __( 'You have logged in successfully, but there is a problem accessing this site', 'wp-auth0' );
+      $msg = __( 'You have logged in successfully, but there is a problem accessing this site. ', 'wp-auth0' );
       $msg .= ' '. $e->getMessage();
       $msg .= '<br/><br/>';
       $msg .= '<a href="' . wp_logout_url() . '">' . __( '← Logout', 'wp-auth0' ) . '</a>';
@@ -409,7 +409,7 @@ class WP_Auth0_LoginManager {
       }
 
       if ( ! $userinfo->email_verified ) {
-        $this->dieWithVerifyEmail( $userinfo, $id_token );
+        WP_Auth0_Email_Verification::render_die( $userinfo );
       }
 
     }
@@ -423,7 +423,7 @@ class WP_Auth0_LoginManager {
         }
       }
     } else {
-      $user = $this->users_repo->find_auth0_user( $userinfo->user_id );
+      $user = $this->users_repo->find_auth0_user( $userinfo->sub );
     }
 
     $user = apply_filters( 'auth0_get_wp_user', $user, $userinfo );
@@ -481,7 +481,7 @@ class WP_Auth0_LoginManager {
 
         throw new WP_Auth0_LoginFlowValidationException( $msg );
       } catch ( WP_Auth0_EmailNotVerifiedException $e ) {
-        $this->dieWithVerifyEmail( $e->userinfo, $e->id_token );
+        WP_Auth0_Email_Verification::render_die( $e->userinfo );
       }
       // catch ( Exception $e ) {
       //  echo $e;exit;
@@ -489,12 +489,6 @@ class WP_Auth0_LoginManager {
 
       return true;
     }
-  }
-
-  private function dieWithVerifyEmail( $userinfo, $id_token ) {
-
-    $html = apply_filters( 'auth0_verify_email_page' , '', $userinfo, $id_token );
-    wp_die( $html );
   }
 
   public function login_with_credentials( $username, $password, $connection="Username-Password-Authentication" ) {
@@ -537,5 +531,14 @@ class WP_Auth0_LoginManager {
     if ( isset( $_REQUEST[$key] ) ) return $_REQUEST[$key];
     return null;
   }
-
+  
+  /**
+   * DEPRECATED 3.4.1
+   *
+   * @param $userinfo
+   * @param $id_token
+   */
+  private function dieWithVerifyEmail( $userinfo, $id_token = '' ) {
+    WP_Auth0_Email_Verification::render_die( $userinfo );
+  }
 }
