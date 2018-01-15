@@ -15,16 +15,11 @@ class WP_Auth0_Email_Verification {
 	public static function render_die ( $userinfo ) {
 		
 		$html = sprintf(
-		
-		// Format
-			
 			'<p>%s<br><a id="js-a0-resend-verification" href="#">%s</a></p>
 			<p><a href="%s?%d">%s</a></p>
 			<script>var WPAuth0EmailVerification={ajaxUrl:"%s",sub:"%s",nonce:"%s",e_msg:"%s",s_msg:"%s"}</script>
 			<script src="%s"></script>
 			<script src="%s"></script>',
-			
-			// Replacements
 			
 			__( 'Please verify your email and log in again.', 'wp-auth0' ),
 			__( 'Resend verification email.', 'wp-auth0' ),
@@ -34,7 +29,7 @@ class WP_Auth0_Email_Verification {
 			esc_url( admin_url( 'admin-ajax.php' ) ),
 			esc_js( $userinfo->sub ),
 			esc_js( wp_create_nonce( self::$resend_nonce_action ) ),
-			esc_js( __( 'Something went wrong; please attempt to login again.', 'wp-auth0' ) ),
+			esc_js( __( 'Something went wrong; please login and try again.', 'wp-auth0' ) ),
 			esc_js( __( 'Email successfully re-sent to ' . $userinfo->email . '!', 'wp-auth0' ) ),
 			'//code.jquery.com/jquery-1.12.4.js',
 			WPA0_PLUGIN_URL . 'assets/js/die-with-verify-email.js?ver=' . WPA0_VERSION
@@ -50,7 +45,7 @@ class WP_Auth0_Email_Verification {
 	 * Triggered in $this->render_die
 	 */
 	public static function ajax_resend_email () {
-		
+
 		check_ajax_referer( self::$resend_nonce_action, 'nonce' );
 		
 		$connect_info = WP_Auth0_Api_Client::get_connect_info();
