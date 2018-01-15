@@ -91,14 +91,12 @@ class WP_Auth0_LoginManager {
     $auto_login = absint( $this->a0_options->get( 'auto_login' ) );
 
     if ( $slo && isset( $_REQUEST['SLO'] ) ) {
-      $redirect_to = $_REQUEST['redirect_to'];
-      wp_redirect( $redirect_to );
+      wp_redirect( $_REQUEST['redirect_to'] );
       die();
     }
 
     if ( $sso ) {
-      $redirect_to = home_url();
-      wp_redirect( 'https://' . $this->a0_options->get( 'domain' ) . '/v2/logout?federated&returnTo=' . urlencode( $redirect_to ) . '&client_id='.$client_id.'&auth0Client=' . base64_encode( json_encode( WP_Auth0_Api_Client::get_info_headers() ) ) );
+      wp_redirect( 'https://' . $this->a0_options->get( 'domain' ) . '/v2/logout?federated&returnTo=' . urlencode( home_url() ) . '&client_id='.$client_id.'&auth0Client=' . base64_encode( json_encode( WP_Auth0_Api_Client::get_info_headers() ) ) );
       die();
     }
 
