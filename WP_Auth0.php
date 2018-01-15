@@ -267,8 +267,12 @@ class WP_Auth0 {
 		} else {
 			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
 		}
+      
+        if (empty($atts)) {
+            $atts = array();
+        }
 
-		if (!isset($atts['redirect_to'])) {
+		if (empty($atts['redirect_to'])) {
 			$atts['redirect_to'] = home_url($_SERVER["REQUEST_URI"]);
 		}
 
