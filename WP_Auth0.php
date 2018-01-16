@@ -116,6 +116,10 @@ class WP_Auth0 {
 		$edit_profile->init();
 
 		$this->check_signup_status();
+
+        if ( wp_doing_ajax() ) {
+            WP_Auth0_Email_Verification::init();
+        }
 	}
 
 	/**
