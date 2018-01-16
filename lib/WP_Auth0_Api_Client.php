@@ -2,7 +2,7 @@
 
 class WP_Auth0_Api_Client {
 
-	public static $connect_info = null;
+	private static $connect_info = null;
 
 	/**
 	 * Generate the API endpoint with a provided domain
@@ -14,7 +14,7 @@ class WP_Auth0_Api_Client {
 	 *
 	 * @return string
 	 */
-	public static function get_endpoint( $path = '', $domain = '' ) {
+	private static function get_endpoint( $path = '', $domain = '' ) {
 
 		if ( empty( $domain ) ) {
 			$a0_options = WP_Auth0_Options::Instance();
@@ -154,7 +154,7 @@ class WP_Auth0_Api_Client {
 	 *
 	 * @return array
 	 */
-	public static function get_headers( $token = '', $content_type = 'application/json' ) {
+	private static function get_headers( $token = '', $content_type = 'application/json' ) {
 
 		$headers = self::get_info_headers();
 

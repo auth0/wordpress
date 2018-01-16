@@ -5,7 +5,7 @@
  */
 class WP_Auth0_Email_Verification {
 
-	private static $resend_nonce_action = 'auth0_resend_verification_email';
+	const RESEND_NONCE_ACTION = 'auth0_resend_verification_email';
 
 	/**
 	 * Setup hooks tied to functions that can be dequeued
@@ -35,7 +35,7 @@ class WP_Auth0_Email_Verification {
 			__( '← Login', 'wp-auth0' ),
 			esc_url( admin_url( 'admin-ajax.php' ) ),
 			esc_js( $userinfo->sub ),
-			esc_js( wp_create_nonce( self::$resend_nonce_action ) ),
+			esc_js( wp_create_nonce( self::RESEND_NONCE_ACTION ) ),
 			esc_js( __( 'Something went wrong; please login and try again.', 'wp-auth0' ) ),
 			esc_js( __( 'Email successfully re-sent to ' . $userinfo->email . '!', 'wp-auth0' ) ),
 			'//code.jquery.com/jquery-1.12.4.js',
@@ -53,7 +53,7 @@ class WP_Auth0_Email_Verification {
 	 */
 	public static function ajax_resend_email() {
 
-		check_ajax_referer( self::$resend_nonce_action, 'nonce' );
+		check_ajax_referer( self::RESEND_NONCE_ACTION, 'nonce' );
 
 		if ( empty( $_POST['sub'] ) ) {
 			die();
