@@ -196,7 +196,7 @@ class WP_Auth0_Lock10_Options {
   }
 
   public function get_sso_options() {
-    $options["scope"] = "openid ";
+    $options["scope"] = "openid email identities ";
 
     if ( $this->get_auth0_implicit_workflow() ) {
       $options["responseType"] = 'id_token';
@@ -242,7 +242,7 @@ class WP_Auth0_Lock10_Options {
       ),
     );
 
-    $extraOptions["auth"]["params"]["scope"] = "openid ";
+    $extraOptions["auth"]["params"]["scope"] = "openid email identities ";
 
     if ( $this->get_auth0_implicit_workflow() ) {
       $extraOptions["auth"]["params"]["scope"] .= "name email picture nickname email_verified";

@@ -185,21 +185,23 @@ class WP_Auth0_EditProfile {
 	}
 
 	public function show_change_password() {
-    $current_user = get_currentauth0user();
-    $user_profile = $current_user->auth0_obj;
+		$current_user = get_currentauth0user();
+		$user_profile = $current_user->auth0_obj;
 
 		if ( empty( $user_profile ) ) return;
 
 		$connection = null;
 
-		foreach ( $user_profile->identities as $identity ) {
-			if ( $identity->provider === 'auth0' ) {
-				$connection = $identity->connection;
+		if ( ! empty( $user_profile->identities ) && is_array( $user_profile->identities ) ) {
+			foreach ( $user_profile->identities as $identity ) {
+				if ( $identity->provider === 'auth0' ) {
+					$connection = $identity->connection;
+				}
 			}
 		}
 
 		if ( $connection === null ) return;
-?>
+        ?>
     <script>
       jQuery('.wp-pwd').parent().parent().hide();
     </script>
@@ -226,20 +228,21 @@ class WP_Auth0_EditProfile {
 	}
 
 	public function disable_email_field() {
-    $current_user = get_currentauth0user();
-    $user_profile = $current_user->auth0_obj;
+		$current_user = get_currentauth0user();
+		$user_profile = $current_user->auth0_obj;
 
 		if ( $user_profile && !empty( $user_profile ) ) {
 			$connection = null;
-
-			foreach ( $user_profile->identities as $identity ) {
-				if ( $identity->provider === 'auth0' ) {
-					$connection = $identity->connection;
+			if ( ! empty( $user_profile->identities ) && is_array( $user_profile->identities ) ) {
+				foreach ( $user_profile->identities as $identity ) {
+					if ( $identity->provider === 'auth0' ) {
+						$connection = $identity->connection;
+					}
 				}
 			}
 
 			if ( $connection === null ) {
-?>
+            ?>
         <script>
           jQuery(document).ready( function($) {
             if ( $('input[name=email]').length ) {
@@ -255,7 +258,7 @@ class WP_Auth0_EditProfile {
             }
           });
         </script>
-        <?php
+            <?php
 			}
 		}
 	}
@@ -271,7 +274,7 @@ class WP_Auth0_EditProfile {
     $current_user = wp_get_current_user();
     $user_profile =  get_currentauth0userinfo();
 
-		$app_token = $this->a0_options->get( 'auth0_app_token' );;
+		$app_token = $this->a0_options->get( 'auth0_app_token' );
 
 		if ( !$app_token ) {
 			return;
