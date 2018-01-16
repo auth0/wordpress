@@ -160,37 +160,39 @@ class WP_Auth0_UsersRepo {
 
 		return $user_id;
 	}
-  
-  /**
-   * @param $id
-   *
-   * @return null
-   */
-  public function find_auth0_user ( $id ) {
-    global $wpdb;
-    
-    if ( empty( $id ) ) {
-      WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, __( 'Empty user id', 'wp-auth0' ) );
-      
-      return null;
-    }
-    
-    $query = array(
-      'meta_key'   => $wpdb->prefix . 'auth0_id',
-      'meta_value' => $id,
-      'blog_id'    => 0,
-    );
-    
-    $users = get_users( $query );
-    
-    if ( $users instanceof WP_Error ) {
-      WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $users->get_error_message() );
-      
-      return null;
-    }
-    
-    return ! empty( $users[ 0 ] ) ? $users[ 0 ] : null;
-  }
+
+	/**
+	 * Look for and return a user with an Auth0 ID
+	 *
+	 * @param string $id - An Auth0 user ID, like "provider|id"
+	 *
+	 * @return null|WP_User
+	 */
+	public function find_auth0_user ( $id ) {
+		global $wpdb;
+
+		if ( empty( $id ) ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, __( 'Empty user id', 'wp-auth0' ) );
+
+			return null;
+		}
+
+		$query = array(
+			'meta_key'   => $wpdb->prefix . 'auth0_id',
+			'meta_value' => $id,
+			'blog_id'    => 0,
+		);
+
+		$users = get_users( $query );
+
+		if ( $users instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $users->get_error_message() );
+
+			return null;
+		}
+
+		return ! empty( $users[ 0 ] ) ? $users[ 0 ] : null;
+	}
 
 	public function update_auth0_object( $user_id, $userinfo ) {
 		global $wpdb;

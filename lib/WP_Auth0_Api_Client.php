@@ -152,17 +152,17 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function get_headers( $token = '', $content_type = 'application/json' ) {
 
-		$r_headers = self::get_info_headers();
+		$headers = self::get_info_headers();
 
 		if ( ! empty( $token ) ) {
-			$r_headers['Authorization'] = "Bearer {$token}";
+			$headers['Authorization'] = "Bearer {$token}";
 		}
 
 		if ( ! empty( $content_type ) ) {
-			$r_headers[ 'Content-Type' ] = $content_type;
+			$headers[ 'Content-Type' ] = $content_type;
 		}
 
-		return $r_headers;
+		return $headers;
 	}
 
 	public static function get_token( $domain, $client_id, $client_secret, $grantType = 'client_credentials', $extraBody = null ) {

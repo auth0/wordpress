@@ -62,13 +62,15 @@ class WP_Auth0_Email_Verification {
 			$connect_info['client_id'],
 			$connect_info['client_secret'],
 			'client_credentials',
-			array( 'audience' => $connect_info['audience'] )
+			array(
+				'audience' => $connect_info['audience']
+			)
 		);
 
 		$tokenDecoded = json_decode( $token['body'] );
 
 		if ( empty( $tokenDecoded->access_token ) ) {
-			die( '0' );
+			die();
 		}
 
 		echo (int) WP_Auth0_Api_Client::resend_verification_email(
