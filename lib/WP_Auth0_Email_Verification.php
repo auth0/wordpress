@@ -55,6 +55,10 @@ class WP_Auth0_Email_Verification {
 
 		check_ajax_referer( self::$resend_nonce_action, 'nonce' );
 
+		if ( empty( $_POST['sub'] ) ) {
+			die();
+		}
+
 		$connect_info = WP_Auth0_Api_Client::get_connect_info();
 
 		$token = WP_Auth0_Api_Client::get_token(
@@ -73,10 +77,10 @@ class WP_Auth0_Email_Verification {
 			die();
 		}
 
-		echo (int) WP_Auth0_Api_Client::resend_verification_email(
+		echo WP_Auth0_Api_Client::resend_verification_email(
 			$tokenDecoded->access_token,
 			sanitize_text_field( $_POST['sub'] )
-		);
+		) ? 'success' : 'fail';
 
 		die();
 	}

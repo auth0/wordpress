@@ -2,6 +2,8 @@
 
 class WP_Auth0_Api_Client {
 
+	public static $connect_info = null;
+
 	/**
 	 * Generate the API endpoint with a provided domain
 	 *
@@ -31,26 +33,28 @@ class WP_Auth0_Api_Client {
 	 *
 	 * @since 3.4.1
 	 *
-	 * @param string $opt
+	 * @param string $opt - specific option needed, returns all if blank
 	 *
 	 * @return string|array
 	 */
 	public static function get_connect_info( $opt = '' ) {
 
-		$a0_options = WP_Auth0_Options::Instance();
+		if ( is_null( self::$connect_info ) ) {
+			$a0_options = WP_Auth0_Options::Instance();
 
-		$connect_info = array(
-			'domain' => $a0_options->get( 'domain' ),
-			'client_id' => $a0_options->get( 'client_id' ),
-			'client_secret' => $a0_options->get( 'client_secret' ),
-			'connection' => $a0_options->get( 'db_connection_name' ),
-			'audience' => self::get_endpoint( 'api/v2/' ),
-		);
+			self::$connect_info = array(
+				'domain' => $a0_options->get( 'domain' ),
+				'client_id' => $a0_options->get( 'client_id' ),
+				'client_secret' => $a0_options->get( 'client_secret' ),
+				'connection' => $a0_options->get( 'db_connection_name' ),
+				'audience' => self::get_endpoint( 'api/v2/' ),
+			);
+		}
 
 		if ( empty( $opt ) ) {
-			return $connect_info;
+			return self::$connect_info;
 		} else {
-			return ! empty( $connect_info[ $opt ] ) ? $connect_info[ $opt ] : '';
+			return ! empty( self::$connect_info[ $opt ] ) ? self::$connect_info[ $opt ] : '';
 		}
 	}
 

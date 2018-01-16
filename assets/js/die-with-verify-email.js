@@ -15,7 +15,7 @@ jQuery( document ).ready( function ($) {
         $.post( WPAuth0EmailVerification.ajaxUrl, postData )
             .done( function( data ) {
 
-                if ( '1' === data ) {
+                if ( 'success' === data ) {
                     $resendLink.after( WPAuth0EmailVerification.s_msg );
                     $resendLink.remove();
                 } else {
