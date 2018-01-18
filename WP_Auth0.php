@@ -199,6 +199,7 @@ class WP_Auth0 {
 		$qvars[] = 'a0_action';
 		$qvars[] = 'auth0';
 		$qvars[] = 'code';
+		$qvars[] = 'state';
 		return $qvars;
 	}
 
