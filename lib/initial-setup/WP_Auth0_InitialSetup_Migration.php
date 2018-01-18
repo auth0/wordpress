@@ -11,7 +11,7 @@ class WP_Auth0_InitialSetup_Migration {
 	public function render( $step ) {
 		$migration_ws = $this->a0_options->get( 'migration_ws' );
 
-		$secret = $this->a0_options->get_client_secret_as_key();
+		$secret = $this->a0_options->get_client_secret_as_key(true);
 		$token_id = uniqid();
 		$token = JWT::encode( array( 'scope' => 'migration_ws', 'jti' => $token_id ), $secret );
 

@@ -66,8 +66,6 @@ document.addEventListener("DOMContentLoaded", function() {
     var options = <?php echo $options; ?>;
 
     options.additionalSignUpFields = <?php echo $lock_options->get_custom_signup_fields(); ?>;
-
-
     <?php if ( $lock_options->get_auth0_implicit_workflow() ) { ?>
 
         if (window.location.hash !== '' && window.location.hash.indexOf('id_token') !== -1) {
@@ -149,12 +147,6 @@ document.addEventListener("DOMContentLoaded", function() {
       <?php } else { ?>
           jQuery('#a0LoginButton').click(a0ShowLoginModal);
       <?php } ?>
-
-      if (lock.on) {
-          lock.on('error shown', function(){
-              jQuery(".a0-footer").parent().css('margin-bottom', '50px');
-          });
-      }
     }
 
 });

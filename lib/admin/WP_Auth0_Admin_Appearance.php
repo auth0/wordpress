@@ -19,26 +19,11 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 				array( 'id' => 'wpa0_custom_css', 'name' => 'Customize the Login Widget CSS', 'function' => 'render_custom_css' ),
 				array( 'id' => 'wpa0_custom_js', 'name' => 'Customize the Login Widget with custom JS', 'function' => 'render_custom_js' ),
 				array( 'id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style' ),
-				array( 'id' => 'wpa0_remember_last_login', 'name' => 'Remember last login', 'function' => 'render_remember_last_login' ),
         array( 'id' => 'wpa0_primary_color', 'name' => 'Lock primary color', 'function' => 'render_primary_color' ),
         array( 'id' => 'wpa0_language', 'name' => 'Lock Language', 'function' => 'render_language' ),
 				array( 'id' => 'wpa0_language_dictionary', 'name' => 'Lock Language Dictionary', 'function' => 'render_language_dictionary' ),
 
 			) );
-	}
-
-	public function render_remember_last_login() {
-		$v = absint( $this->options->get( 'remember_last_login' ) );
-
-		echo $this->render_a0_switch( "wpa0_remember_last_login", "remember_last_login", 1, 1 == $v );
-?>
-    <div class="subelement">
-      <span class="description">
-        <?php echo __( 'Request for SSO data and enable "Last time you signed in with[...]" message.', 'wp-auth0' ); ?>
-        <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#rememberlastlogin-boolean-"><?php echo __( 'More info', 'wp-auth0' ); ?></a>
-      </span>
-    </div>
-  <?php
 	}
 
 	public function render_form_title() {
@@ -166,8 +151,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$input['icon_url'] = esc_url( $input['icon_url'], array( 'http', 'https' ) );
 		$input['social_big_buttons'] = ( isset( $input['social_big_buttons'] ) ? $input['social_big_buttons'] : 0 );
 		$input['gravatar'] = ( isset( $input['gravatar'] ) ? $input['gravatar'] : 0 );
-		$input['remember_last_login'] = ( isset( $input['remember_last_login'] ) ? $input['remember_last_login'] : 0 );
-
     $input['language'] = sanitize_text_field( $input['language'] );
     $input['primary_color'] = sanitize_text_field( $input['primary_color'] );
 
