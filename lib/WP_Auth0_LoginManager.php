@@ -531,7 +531,7 @@ class WP_Auth0_LoginManager {
   }
 
 	/**
-	 * DEPRECATED 3.4.1
+	 * DEPRECATED 3.5.0
 	 *
 	 * @param $userinfo
 	 * @param $id_token

@@ -7,7 +7,7 @@ class WP_Auth0_Api_Client {
 	/**
 	 * Generate the API endpoint with a provided domain
 	 *
-	 * @since 3.4.1
+	 * @since 3.5.0
 	 *
 	 * @param string $path - API path appended to the domain
 	 * @param string $domain - domain to use, blank uses default
@@ -31,7 +31,7 @@ class WP_Auth0_Api_Client {
 	/**
 	 * Return basic connection information, or a specific value
 	 *
-	 * @since 3.4.1
+	 * @since 3.5.0
 	 *
 	 * @param string $opt - specific option needed, returns all if blank
 	 *
@@ -151,7 +151,7 @@ class WP_Auth0_Api_Client {
 	/**
 	 * Basic header components for an Auth0 API call
 	 *
-	 * @since 3.4.1
+	 * @since 3.5.0
 	 *
 	 * @param string $token - for Authorization header
 	 * @param string $content_type - for Content-Type header
@@ -237,7 +237,7 @@ class WP_Auth0_Api_Client {
 	/**
 	 * Trigger a verification email re-send
 	 *
-	 * @since 3.4.1
+	 * @since 3.5.0
 	 *
 	 * @param $access_token
 	 * @param $user_id
@@ -550,7 +550,7 @@ class WP_Auth0_Api_Client {
 		$data = array(
 			'client_id' => $client_id,
 			'audience' => self::get_connect_info( 'audience' ),
-			'scope' => self::ConsentRequiredScopes()
+			'scope' => self::get_required_scopes()
 		);
 
 		$response = wp_remote_post( self::get_endpoint( 'api/v2/client-grants' ), array(
@@ -564,7 +564,22 @@ class WP_Auth0_Api_Client {
 			return false;
 		}
 
-		if ( $response['response']['code'] != 201 ) {
+		if ( 409 === $response['response']['code'] ) {
+
+			// Client grant from WP-created client to Management API already exists
+			WP_Auth0_ErrorManager::insert_auth0_error(
+				__METHOD__,
+				sprintf(
+					__( 'A client grant for %s to %s has already been created. Make sure this grant at least includes %s.', 'wp-auth0' ),
+					self::get_connect_info( 'client_id' ),
+					self::get_connect_info( 'audience' ),
+					implode( ', ', self::get_required_scopes() )
+				)
+			);
+			return true;
+
+		} else if ( $response['response']['code'] != 201 ) {
+
 			WP_Auth0_ErrorManager::insert_auth0_error(  __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
