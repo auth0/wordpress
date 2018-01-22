@@ -204,6 +204,42 @@ class WP_Auth0_Api_Client {
 		return $response;
 	}
 
+	/**
+	 * Get a client_credentials token using default stored connection info
+	 *
+	 * @since 3.4.1
+	 *
+	 * @return bool|string
+	 */
+	public static function get_client_token() {
+
+		$response = wp_remote_post( self::get_endpoint( 'oauth/token' ), array(
+				'headers' => self::get_headers( '', 'application/x-www-form-urlencoded' ),
+				'body' => array(
+					'client_id' => self::get_connect_info( 'client_id' ),
+					'client_secret' => self::get_connect_info( 'client_secret' ),
+					'audience' => self::get_connect_info( 'audience' ),
+					'grant_type' => 'client_credentials',
+				),
+			) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] !== 200 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		$response = json_decode( $response['body'] );
+
+		return ! empty( $response->access_token ) ? $response->access_token : '';
+	}
+
 	public static function get_user_info( $domain, $access_token ) {
 
 		$endpoint = "https://$domain/";
@@ -239,17 +275,16 @@ class WP_Auth0_Api_Client {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param $access_token
-	 * @param $user_id
+	 * @param string $user_id - Auth0 formatted user_id
 	 *
 	 * @return bool
 	 */
-	public static function resend_verification_email( $access_token, $user_id ) {
+	public static function resend_verification_email( $user_id ) {
 
 		$response = wp_remote_post(
 			self::get_endpoint( 'api/v2/jobs/verification-email' ),
 			array(
-				'headers' => self::get_headers( $access_token ),
+				'headers' => self::get_headers( self::get_client_token() ),
 				'body' => json_encode( array(
 					'user_id' => $user_id,
 					'client_id' => self::get_connect_info( 'client_id' ),
@@ -282,6 +317,8 @@ class WP_Auth0_Api_Client {
 		return wp_remote_get( $endpoint  , array(
 				'headers' => $headers,
 			) );
+
+
 	}
 
 	public static function create_user( $domain, $jwt, $data ) {
@@ -349,6 +386,7 @@ class WP_Auth0_Api_Client {
 			'read:connections',
 			'create:rules',
 			'delete:rules',
+			'read:users',
 			'update:users',
 			'update:guardian_factors',
 		);

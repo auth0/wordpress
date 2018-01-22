@@ -221,7 +221,7 @@ class WP_Auth0_Lock_Options {
 			"authParams"    => array( "state" => $state ),
 		);
 
-		$extraOptions["authParams"]["scope"] = "openid email identities ";
+		$extraOptions["authParams"]["scope"] = "openid ";
 
 		if ( $this->get_auth0_implicit_workflow() ) {
 			$extraOptions["authParams"]["scope"] .= "name email nickname email_verified identities";
