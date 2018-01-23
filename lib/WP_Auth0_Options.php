@@ -43,25 +43,68 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		return $defaults[$key];
 	}
 
-	public function get_client_secret_as_key($legacy = false) {
-		$secret = $this->get('client_secret', '');
-
-		$isEncoded = $this->get('client_secret_b64_encoded', false);
-		$isRS256 = $legacy ? false : $this->get_client_signing_algorithm() === 'RS256';
-
-		if ( $isRS256 ) {
-			$domain = $this->get( 'domain' );
-			$secret = WP_Auth0_Api_Client::JWKfetch($domain);
-		} else {
-			$secret = $isEncoded ? JWT::urlsafeB64Decode($secret) : $secret;
-		}
-  	
-		return $secret;
-	}
-
 	public function get_client_signing_algorithm() {
 			$client_signing_algorithm = $this->get('client_signing_algorithm', 'RS256');
 			return $client_signing_algorithm;
+	}
+
+	/**
+	 * Get the currently-stored client ID as a JWT key
+	 *
+	 * @param bool $legacy - legacy installs did not provide RS256, forces HS256
+	 *
+	 * @return bool|string
+	 */
+	public function get_client_secret_as_key( $legacy = false ) {
+		return $this->convert_client_secret_to_key(
+			$this->get('client_secret', ''),
+			$this->get('client_secret_b64_encoded', false),
+			( $legacy ? false : $this->get_client_signing_algorithm() === 'RS256' ),
+			$this->get( 'domain' )
+		);
+	}
+
+	/**
+	 * Convert a client_secret value into a JWT key
+	 *
+	 * @param string $secret - client_secret value
+	 * @param bool $is_encoded - is the client_secret base64 encoded?
+	 * @param bool $is_RS256 - if true, use RS256; if false, use HS256
+	 * @param string $domain - tenant domain
+	 *
+	 * @return array|bool|mixed|string
+	 */
+	public function convert_client_secret_to_key( $secret, $is_encoded, $is_RS256, $domain ) {
+		if ( $is_RS256 ) {
+			return WP_Auth0_Api_Client::JWKfetch( $domain );
+		} else {
+			return $is_encoded ? JWT::urlsafeB64Decode( $secret ) : $secret;
+		}
+	}
+
+	/**
+	 * Update the app token audience with one from a decoded JWT
+	 *
+	 * @param string $jwt - a valid JWT
+	 *
+	 * @return bool
+	 */
+	public function set_audience_with_token( $jwt ) {
+		$audience = '';
+		try {
+			$decoded_token = JWT::decode(
+				$jwt,
+				$this->get_client_secret_as_key(),
+				array( $this->get_client_signing_algorithm() )
+			);
+			if ( ! empty( $decoded_token->aud ) ) {
+				$audience = $decoded_token->aud;
+			}
+		} catch ( Exception $e ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e->getMessage() );
+		}
+		$this->set( 'auth0_app_token_audience', $audience );
+		return ! empty( $audience );
 	}
 	
 	protected function defaults() {
@@ -108,6 +151,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'gravatar' => true,
 			'jwt_auth_integration' => false,
 			'auth0_app_token' => null,
+			'auth0_app_token_audience' => null,
 			'mfa' => null,
 			'fullcontact' => null,
 			'fullcontact_rule' => null,

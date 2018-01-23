@@ -10,8 +10,9 @@ define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
-define( 'AUTH0_DB_VERSION', 15 );
+define( 'AUTH0_DB_VERSION', 16 );
 define( 'WPA0_VERSION', '3.4.0' );
+define( 'WPA0_CACHE_GROUP', 'wp_auth0' );
 
 /**
  * Main plugin class
@@ -22,6 +23,7 @@ class WP_Auth0 {
 	protected $a0_options;
 	protected $social_amplificator;
 	protected $router;
+	protected $basename;
 
 	/**
 	 * Initialize the plugin and its modules setting all the hooks
@@ -29,6 +31,8 @@ class WP_Auth0 {
 	public function init() {
 
 		spl_autoload_register( array( $this, 'autoloader' ) );
+
+		$this->basename = plugin_basename( __FILE__ );
 
 		$ip_checker = new WP_Auth0_Ip_Check();
 		$ip_checker->init();
@@ -63,8 +67,7 @@ class WP_Auth0 {
 
 		add_filter( 'query_vars', array( $this, 'a0_register_query_vars' ) );
 
-		$plugin = plugin_basename( __FILE__ );
-		add_filter( "plugin_action_links_$plugin", array( $this, 'wp_add_plugin_settings_link' ) );
+		add_filter( 'plugin_action_links_' . $this->basename, array( $this, 'wp_add_plugin_settings_link' ) );
 
 		if ( isset( $_GET['message'] ) ) {
 			add_action( 'wp_footer', array( $this, 'a0_render_message' ) );
@@ -117,9 +120,7 @@ class WP_Auth0 {
 
 		$this->check_signup_status();
 
-		if ( wp_doing_ajax() ) {
-			WP_Auth0_Email_Verification::init();
-		}
+		WP_Auth0_Email_Verification::init();
 	}
 
 	/**
@@ -173,7 +174,7 @@ class WP_Auth0 {
 
 	function on_activate_redirect( $plugin ) {
 
-		if ( !defined( 'WP_CLI' ) && $plugin == plugin_basename( __FILE__ ) ) {
+		if ( !defined( 'WP_CLI' ) && $plugin == $this->basename ) {
 
 			$this->router->setup_rewrites();
 			flush_rewrite_rules();

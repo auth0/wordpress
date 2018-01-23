@@ -529,15 +529,15 @@ class WP_Auth0_LoginManager {
     if ( isset( $_REQUEST[$key] ) ) return $_REQUEST[$key];
     return null;
   }
-  
-  /**
-   * DEPRECATED 3.4.1
-   *
-   * @param $userinfo
-   * @param $id_token
-   */
-  private function dieWithVerifyEmail( $userinfo, $id_token = '' ) {
-    trigger_error( __( 'Method dieWithVerifyEmail is deprecated.', 'wp-auth0' ), E_USER_DEPRECATED);
-    WP_Auth0_Email_Verification::render_die( $userinfo );
-  }
+
+	/**
+	 * DEPRECATED 3.4.1
+	 *
+	 * @param $userinfo
+	 * @param $id_token
+	 */
+	private function dieWithVerifyEmail( $userinfo, $id_token = '' ) {
+		trigger_error( __( 'Method dieWithVerifyEmail is deprecated.', 'wp-auth0' ), E_USER_DEPRECATED);
+		WP_Auth0_Email_Verification::render_die( $userinfo );
+	}
 }

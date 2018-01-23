@@ -47,8 +47,12 @@ class WP_Auth0_Api_Client {
 				'client_id' => $a0_options->get( 'client_id' ),
 				'client_secret' => $a0_options->get( 'client_secret' ),
 				'connection' => $a0_options->get( 'db_connection_name' ),
-				'audience' => self::get_endpoint( 'api/v2/' ),
+				'audience' => $a0_options->get( 'auth0_app_token_audience' ),
 			);
+
+			if ( empty( self::$connect_info[ 'audience' ] ) ) {
+				self::$connect_info[ 'audience' ] = self::get_endpoint( 'api/v2/' );
+			}
 		}
 
 		if ( empty( $opt ) ) {
@@ -526,6 +530,42 @@ class WP_Auth0_Api_Client {
 
 		if ( $response['response']['code'] != 204 ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Api_Client::delete_rule', $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		return json_decode( $response['body'] );
+	}
+
+	/**
+	 * Create a client grant for the management API
+	 *
+	 * @param $app_token
+	 * @param $client_id
+	 *
+	 * @return array|bool|mixed|object
+	 */
+	public static function create_client_grant( $app_token, $client_id ) {
+
+		$data = array(
+			'client_id' => $client_id,
+			'audience' => self::get_connect_info( 'audience' ),
+			'scope' => self::ConsentRequiredScopes()
+		);
+
+		$response = wp_remote_post( self::get_endpoint( 'api/v2/client-grants' ), array(
+			'headers' => self::get_headers( $app_token ),
+			'body' => json_encode( $data ),
+		) );
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] != 201 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error(  __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
