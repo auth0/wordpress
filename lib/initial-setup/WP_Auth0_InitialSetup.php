@@ -174,7 +174,7 @@ class WP_Auth0_InitialSetup {
 					<?php echo __( 'Go to your Auth0 dashboard > APIs > Auth0 Management API > Non-Interactive Clients'
 					               . ' tab and authorize the client for this site. ', 'wp-auth0' ); ?>
 					<?php echo __( 'Make sure to add the following scopes: ', 'wp-auth0' ); ?>
-					<code><?php echo implode( '</code>, <code>', WP_Auth0_Api_Client::ConsentRequiredScopes() ) ?></code>
+					<code><?php echo implode( '</code>, <code>', WP_Auth0_Api_Client::get_required_scopes() ) ?></code>
 					<?php echo __( 'You can also check the ', 'wp-auth0' ); ?>
 					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', 'wp-auth0' ); ?></a> <?php echo __( ' for more information.' ); ?>
 				</strong>

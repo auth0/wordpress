@@ -17,6 +17,7 @@ class WP_Auth0_DBManager {
 
 		add_action( 'plugins_loaded', array( $this, 'check_update' ) );
 		add_action( 'admin_notices', array( $this, 'notice_failed_client_grant' ) );
+		add_action( 'admin_notices', array( $this, 'notice_successful_client_grant' ) );
 	}
 
 	public function check_update() {
@@ -153,8 +154,22 @@ class WP_Auth0_DBManager {
 		}
 
 
-		// 3.4.1
+		// 3.5.0
+
 		if ( ( $this->current_db_version < 16 && 0 !== $this->current_db_version ) || 16 === $version_to_install ) {
+
+			// Update Lock and Auth versions
+
+			if ( '//cdn.auth0.com/js/lock/11.0.0/lock.min.js' === $options->get( 'cdn_url' ) ) {
+				$options->set( 'cdn_url', '//cdn.auth0.com/js/lock/11.1/lock.min.js' );
+			}
+
+			if ( '//cdn.auth0.com/js/auth0/9.0.0/auth0.min.js' === $options->get( 'auth0js-cdn' ) ) {
+				$options->set( 'auth0js-cdn', '//cdn.auth0.com/js/auth0/9.1/auth0.min.js' );
+			}
+
+			// Update app type and client grant
+
 			$client_grant_created = FALSE;
 
 			// Need a valid app token to update audience and client grant
@@ -200,13 +215,14 @@ class WP_Auth0_DBManager {
 
 			if ( $client_grant_created ) {
 				delete_option( 'wp_auth0_client_grant_failed' );
+				update_option( 'wp_auth0_client_grant_success', 1 );
 			} else {
 				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, sprintf(
 					__( 'Unable to automatically create client grant. Please go to your Auth0 Dashboard '
 					    . 'and authorize your client %s for management API scopes %s.',
 						'wp-auth0' ),
 					$options->get( 'client_id' ),
-					implode( ', ', WP_Auth0_Api_Client::ConsentRequiredScopes() )
+					implode( ', ', WP_Auth0_Api_Client::get_required_scopes() )
 				) );
 				update_option( 'wp_auth0_client_grant_failed', 1 );
 			}
@@ -257,6 +273,24 @@ class WP_Auth0_DBManager {
 				<?php
 			}
 		}
+	}
+
+	public function notice_successful_client_grant() {
+
+		if ( ! get_option( 'wp_auth0_client_grant_success' ) ) {
+			return;
+		}
+		?>
+		<div class="notice notice-success">
+			<p><?php
+				_e( 'As a part of this upgrade, a client grant was created for the Auth0 Management API.', 'wp-auth0' );
+				?><br><?php
+				_e( 'Please check the plugin error log for any additional instructions to complete the upgrade. ', 'wp-auth0' );
+			?><br><a href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ) ?>">
+					<strong><?php _e( 'Error Log', 'wp-auth0' ); ?></strong></a></p>
+		</div>
+		<?php
+		delete_option( 'wp_auth0_client_grant_success' );
 	}
 
 	protected function migrate_users_data() {
