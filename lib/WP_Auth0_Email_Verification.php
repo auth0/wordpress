@@ -34,7 +34,7 @@ class WP_Auth0_Email_Verification {
 			time(),
 			__( '← Login', 'wp-auth0' ),
 			esc_url( admin_url( 'admin-ajax.php' ) ),
-			esc_js( $userinfo->sub ),
+			esc_js( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub ),
 			esc_js( wp_create_nonce( self::RESEND_NONCE_ACTION ) ),
 			esc_js( __( 'Something went wrong; please login and try again.', 'wp-auth0' ) ),
 			esc_js( __( 'Email successfully re-sent to ' . $userinfo->email . '!', 'wp-auth0' ) ),
@@ -59,26 +59,7 @@ class WP_Auth0_Email_Verification {
 			die();
 		}
 
-		$connect_info = WP_Auth0_Api_Client::get_connect_info();
-
-		$token = WP_Auth0_Api_Client::get_token(
-			$connect_info['domain'],
-			$connect_info['client_id'],
-			$connect_info['client_secret'],
-			'client_credentials',
-			array(
-				'audience' => $connect_info['audience']
-			)
-		);
-
-		$tokenDecoded = json_decode( $token['body'] );
-
-		if ( empty( $tokenDecoded->access_token ) ) {
-			die();
-		}
-
 		echo WP_Auth0_Api_Client::resend_verification_email(
-			$tokenDecoded->access_token,
 			sanitize_text_field( $_POST['sub'] )
 		) ? 'success' : 'fail';
 

@@ -242,7 +242,7 @@ class WP_Auth0_Lock10_Options {
       ),
     );
 
-    $extraOptions["auth"]["params"]["scope"] = "openid email identities ";
+    $extraOptions["auth"]["params"]["scope"] = "openid ";
 
     if ( $this->get_auth0_implicit_workflow() ) {
       $extraOptions["auth"]["params"]["scope"] .= "name email picture nickname email_verified";

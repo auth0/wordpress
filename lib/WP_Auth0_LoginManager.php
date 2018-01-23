@@ -241,11 +241,19 @@ class WP_Auth0_LoginManager {
     $data = json_decode( $response['body'] );
 
     if ( isset( $data->access_token ) || isset( $data->id_token ) ) {
-  
-      // Get the user information
-  
-      $data->id_token = null;
-      $response = WP_Auth0_Api_Client::get_user_info( $domain, $data->access_token );
+
+	    $decoded_token = JWT::decode(
+		    $data->id_token,
+		    $this->a0_options->get_client_secret_as_key(),
+		    array( $this->a0_options->get_client_signing_algorithm() )
+	    );
+
+	    $data->id_token = null;
+	    $response = WP_Auth0_Api_Client::get_user(
+		    $this->a0_options->get( 'domain' ),
+		    WP_Auth0_Api_Client::get_client_token(),
+		    $decoded_token->sub
+	    );
 
       if ( $response instanceof WP_Error ) {
         WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_userinfo', $response );
@@ -296,7 +304,6 @@ class WP_Auth0_LoginManager {
       }
       // Login failed!
       wp_redirect( home_url() . '?message=' . $data->error_description );
-      //echo "Error logging in! Description received was:<br/>" . $data->error_description;
     }
     exit();
   }

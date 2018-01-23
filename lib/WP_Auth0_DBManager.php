@@ -238,17 +238,7 @@ class WP_Auth0_DBManager {
 
 		if ( get_option( 'wp_auth0_client_grant_failed' ) && current_user_can( 'update_plugins' ) ) {
 
-			$token = WP_Auth0_Api_Client::get_token(
-				WP_Auth0_Api_Client::get_connect_info( 'domain' ),
-				WP_Auth0_Api_Client::get_connect_info( 'client_id' ),
-				WP_Auth0_Api_Client::get_connect_info('client_secret' ),
-				'client_credentials',
-				array(
-					'audience' => WP_Auth0_Api_Client::get_connect_info( 'audience' )
-				)
-			);
-
-			if ( 200 === $token[ 'response' ][ 'code' ] ) {
+			if ( WP_Auth0_Api_Client::get_client_token() ) {
 				delete_option( 'wp_auth0_client_grant_failed' );
 			} else {
 				?>
