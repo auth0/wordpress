@@ -43,7 +43,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       array( 'id' => 'wpa0_social_facebook_secret', 'name' => 'Facebook app secret', 'function' => 'render_social_facebook_secret' ),
 
       array( 'id' => 'wpa0_migration_ws', 'name' => 'Users Migration', 'function' => 'render_migration_ws' ),
-      array( 'id' => 'wpa0_migration_ws_ips_filter', 'name' => 'Migration IPs whitelist', 'function' => 'render_migration_ws_ips_filter' ),
+      array( 'id' => 'wpa0_migration_ws_ips_filter', 'name' => 'Migration IPs Whitelist', 'function' => 'render_migration_ws_ips_filter' ),
+      array( 'id' => 'wpa0_migration_ws_ips', 'name' => '', 'function' => 'render_migration_ws_ips' ),
       array( 'id' => 'wpa0_auth0_implicit_workflow', 'name' => 'Auth0 Implicit flow', 'function' => 'render_auth0_implicit_workflow' ),
       array( 'id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL', 'function' => 'render_default_login_redirection' ),
       array( 'id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email' ),
@@ -253,17 +254,20 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
   public function render_migration_ws_ips_filter() {
     $v = $this->options->get( 'migration_ips_filter' );
-    $list = $this->options->get( 'migration_ips' );
+    $this->render_a0_switch( "wpa0_auth0_migration_ips_filter", "migration_ips_filter", 1, 1 == $v );
+  }
 
-    echo $this->render_a0_switch( "wpa0_auth0_migration_ips_filter", "migration_ips_filter", 1, 1 == $v );
-
-?>
-      <div class="subelement">
-        <textarea name="migration_ips_filter"><?php echo $list; ?></textarea>
-        <span class="description"><?php echo __( 'Only requests from this IPs will be allowed to the migration WS.', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
-
+  public function render_migration_ws_ips() {
+	  $list = $this->options->get( 'migration_ips' );
+	  ?>
+	  <div class="subelement">
+		  <textarea name="<?php echo $this->options->get_options_name(); ?>[migration_ips]" id="wpa0_auth0_migration_ips"><?php echo $list; ?></textarea>
+		  <span class="description">
+	        <?php echo __( 'Only requests from this IPs will be allowed to the migration WS.', 'wp-auth0' ); ?>
+	        <?php echo __( 'Separate multiple IPs with commas.', 'wp-auth0' ); ?>
+        </span>
+	  </div>
+	  <?php
   }
 
   public function render_auth0_implicit_workflow() {
@@ -441,8 +445,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       if ( isset( $input['connections']['social_facebook_secret'] ) ) $input['connections']['social_facebook_secret'] = sanitize_text_field( $input['connections']['social_facebook_secret'] );
     }
 
-    $input['migration_ips_filter'] =  ( isset( $input['migration_ips_filter'] ) ? $input['migration_ips_filter'] : 0 );
-    $input['migration_ips'] = sanitize_text_field( $old_options['migration_ips'] );
+    $input['migration_ips_filter'] =  ( ! empty( $input['migration_ips_filter'] ) ? 1 : 0 );
+    $input['migration_ips'] = sanitize_text_field( $input['migration_ips'] );
 
     $input['valid_proxy_ip'] = ( isset( $input['valid_proxy_ip'] ) ? $input['valid_proxy_ip'] : null );
 
