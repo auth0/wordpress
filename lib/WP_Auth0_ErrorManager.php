@@ -1,28 +1,41 @@
 <?php
 
+/**
+ * Class WP_Auth0_ErrorManager
+ */
 class WP_Auth0_ErrorManager {
 
-	public static function insert_auth0_error( $section, $wp_error ) {
+	/**
+	 * Create a row in the error log, up to 20 entries
+	 *
+	 * @param string $section - portion of the codebase that generated the error
+	 * @param string|WP_Error|Exception $error - error message string or discoverable error type
+	 */
+	public static function insert_auth0_error( $section, $error ) {
 
-		if ( $wp_error instanceof WP_Error ) {
-			$code = $wp_error->get_error_code();
-			$message = $wp_error->get_error_message();
-		} elseif ( $wp_error instanceof Exception ) {
-			$code = $wp_error->getCode();
-			$message = $wp_error->getMessage();
+		if ( $error instanceof WP_Error ) {
+			$code = $error->get_error_code();
+			$message = $error->get_error_message();
+		} elseif ( $error instanceof Exception ) {
+			$code = $error->getCode();
+			$message = $error->getMessage();
 		} else {
 			$code = 'N/A';
-			$message = $wp_error;
+			$message = $error;
 		}
 
-		$log = get_option('auth0_error_log', array());
+		$log = get_option( 'auth0_error_log' );
 
-		array_unshift($log, array(
-			'section'=>$section,
-			'code'=>$code,
-			'message'=>$message,
+		if ( empty( $log ) ) {
+			$log = array();
+		}
+
+		array_unshift( $log, array(
+			'section' => $section,
+			'code' => $code,
+			'message' => $message,
 			'date' => time(),
-		));
+		) );
 
 		if (count($log) > 20) {
 			array_pop($log);
@@ -30,5 +43,4 @@ class WP_Auth0_ErrorManager {
 
 		update_option( 'auth0_error_log', $log );
 	}
-
 }
