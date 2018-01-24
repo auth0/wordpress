@@ -153,7 +153,6 @@ class WP_Auth0_DBManager {
 			}
 		}
 
-
 		// 3.5.0
 
 		if ( ( $this->current_db_version < 16 && 0 !== $this->current_db_version ) || 16 === $version_to_install ) {
@@ -167,6 +166,10 @@ class WP_Auth0_DBManager {
 			if ( '//cdn.auth0.com/js/auth0/9.0.0/auth0.min.js' === $options->get( 'auth0js-cdn' ) ) {
 				$options->set( 'auth0js-cdn', '//cdn.auth0.com/js/auth0/9.1/auth0.min.js' );
 			}
+
+			// Add API audience
+
+			$options->set( 'api_audience', 'https://' . $options->get( 'domain' ) . '/api/v2/' );
 
 			// Update app type and client grant
 
@@ -191,16 +194,17 @@ class WP_Auth0_DBManager {
 
 				if ( $decoded_token ) {
 
-					if ( ! empty( $decoded_token->aud ) ) {
-						$options->set( 'auth0_app_token_audience', $decoded_token->aud );
-					}
-
 					$payload = array(
 						'app_type' => 'regular_web',
 						'callbacks' => array(
 							site_url( 'index.php?auth0=1' ),
 							wp_login_url()
-						)
+						),
+
+						// Duplicate of DB version 15 upgrade to account for site_url() changes
+						'cross_origin_auth' => true,
+						'cross_origin_loc' => site_url('index.php?auth0fallback=1','https'),
+						'web_origins' => ( home_url() === site_url() ? array( home_url() ) : array( home_url(), site_url() ) )
 					);
 
 					// Update the WP-created client
@@ -234,6 +238,10 @@ class WP_Auth0_DBManager {
 		wp_cache_set( 'doing_db_update', FALSE, WPA0_CACHE_GROUP );
 	}
 
+	/**
+	 * Display a banner if we are not able to get a Management API token
+	 * Hooked to admin_notices in $this->init()
+	 */
 	public function notice_failed_client_grant() {
 
 		if ( get_option( 'wp_auth0_client_grant_failed' ) && current_user_can( 'update_plugins' ) ) {
@@ -255,7 +263,9 @@ class WP_Auth0_DBManager {
 							_e( 'Create a new Management API token', 'wp-auth0' ) ?></a>
 						<?php _e( 'and save it in the Auth0 > Settings > Basic tab > API Token field.', 'wp-auth0' ) ?>
 						<?php _e( 'This will run the update process again.', 'wp-auth0' ) ?></p>
-					<p><strong>2.</strong> <a href="https://auth0.com/docs/cms/wordpress/configuration" target="_blank"><?php
+					<p><strong>2.</strong>
+						<a href="https://auth0.com/docs/cms/wordpress/configuration#authorize-the-client-for-the-management-api"
+						   target="_blank"><?php
 							_e( 'Follow the configuration steps here', 'wp-auth0' ) ?></a>
 						<?php _e( 'to manually complete the setup.', 'wp-auth0' ) ?></p>
 					<p><?php _e( 'This banner will disappear once the process is complete.', 'wp-auth0' ) ?></p>
@@ -265,6 +275,10 @@ class WP_Auth0_DBManager {
 		}
 	}
 
+	/**
+	 * Display a banner once after 3.5.0 upgrade
+	 * Hooked to admin_notices in $this->init()
+	 */
 	public function notice_successful_client_grant() {
 
 		if ( ! get_option( 'wp_auth0_client_grant_success' ) ) {

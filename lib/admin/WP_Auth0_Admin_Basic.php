@@ -22,7 +22,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				array( 'id' => 'wpa0_client_signing_algorithm', 'name' => 'Client Signing Algorithm', 'function' => 'render_client_signing_algorithm' ),
 				array( 'id' => 'wpa0_cache_expiration', 'name' => 'Cache Time (minutes)', 'function' => 'render_cache_expiration' ),
 				array( 'id' => 'wpa0_auth0_app_token', 'name' => 'API token', 'function' => 'render_auth0_app_token' ),
-				array( 'id' => 'wpa0_auth0_app_token_audience', 'name' => 'API token audience', 'function' => 'render_auth0_app_token_audience' ),
+				array( 'id' => 'wpa0_api_audience', 'name' => 'API Identifier (audience)', 'function' => 'render_api_audience' ),
 				array( 'id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login' ),
 				array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
 
@@ -68,17 +68,14 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
     <?php
 	}
 
-	public function render_auth0_app_token_audience() {
-		$v = $this->options->get( 'auth0_app_token_audience' );
+	public function render_api_audience() {
+		$v = $this->options->get( 'api_audience' );
 		?>
-		<input type="text"
-		       disabled="disabled"
-		       name="<?php echo $this->options->get_options_name(); ?>[auth0_app_token_audience]"
-		       id="wpa0_auth0_app_token_audience"
-		       value="<?php echo esc_attr( $v ); ?>"
-		       class="form-control"/>
+		<input type="text" name="<?php
+			echo $this->options->get_options_name(); ?>[api_audience]" id="wpa0_api_audience" value="<?php
+			echo esc_attr( $v ); ?>"/>
 		<div class="subelement">
-			<span class="description"><?php _e( 'Identifier value for the token above.', 'wp-auth0' ); ?></span>
+			<span class="description"><?php _e( 'API Identifier for the management API. ', 'wp-auth0' ); ?></span>
 		</div>
 		<?php
 	}
@@ -266,39 +263,17 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			? $input['auth0_app_token']
 			: $old_options['auth0_app_token'] );
 
+		if ( ! empty( $input['domain'] ) ) {
+
+			$input['api_audience'] = ( ! empty( $input['api_audience'] )
+				? $input['api_audience']
+				: 'https://' . $input['domain'] . '/api/v2/' );
+		}
+
 		// If we have an app token, get and store the audience
-		if ( ! empty( $input['auth0_app_token'] ) && ! empty( $input['client_secret'] ) ) {
-
-			$a0_options = WP_Auth0_Options::Instance();
-
-			try {
-				$token_parts = explode( '.', $input['auth0_app_token'] );
-				$header = json_decode( JWT::urlsafeB64Decode( $token_parts[0] ) );
-
-				$decoded_token = JWT::decode(
-					$input['auth0_app_token'],
-					$a0_options->convert_client_secret_to_key(
-						$input['client_secret'],
-						$input['client_secret_b64_encoded'],
-						'RS256' === $header->alg,
-						$input['domain']
-					),
-					array( $header->alg )
-				);
-
-				if ( ! empty( $decoded_token->aud ) ) {
-					$input['auth0_app_token_audience'] = $decoded_token->aud;
-				}
-
-			} catch ( Exception $e ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e->getMessage() );
-				$this->add_validation_error( $e->getMessage() );
-			}
-
-			if ( get_option( 'wp_auth0_client_grant_failed' ) ) {
-				$db_manager = new WP_Auth0_DBManager( WP_Auth0_Options::Instance() );
-				$db_manager->install_db( 16, $input['auth0_app_token'] );
-			}
+		if ( ! empty( $input['auth0_app_token'] ) && get_option( 'wp_auth0_client_grant_failed' ) ) {
+			$db_manager = new WP_Auth0_DBManager( WP_Auth0_Options::Instance() );
+			$db_manager->install_db( 16, $input['auth0_app_token'] );
 		}
 
 		if ( empty( $input['domain'] ) ) {
@@ -311,10 +286,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
 		if ( empty( $input['client_secret'] ) && empty( $old_options['client_secret'] ) ) {
 			$this->add_validation_error( __( 'You need to specify a client secret', 'wp-auth0' ) );
-		}
-
-		if ( empty( $input['cache_expiration'] ) && empty( $old_options['cache_expiration'] ) ) {
-			$this->add_validation_error( __( 'You need to specify a number for cache expiration', 'wp-auth0' ) );
 		}
 
 		return $input;

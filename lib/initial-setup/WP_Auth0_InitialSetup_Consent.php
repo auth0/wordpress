@@ -20,7 +20,6 @@ class WP_Auth0_InitialSetup_Consent {
 
 		$this->a0_options->set( 'auth0_app_token', $access_token );
 		$this->a0_options->set( 'domain', $domain );
-		$this->a0_options->set_audience_with_token( $access_token );
 
 		$this->hasInternetConnection = $hasInternetConnection;
 
