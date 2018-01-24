@@ -204,7 +204,7 @@ EOT;
 			}
 
 			if ($user instanceof WP_Error) {
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $user );
+				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $user->get_error_message() );
 				$user = array('error' => 'invalid credentials');
 			} else {
 
