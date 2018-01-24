@@ -254,8 +254,7 @@ class WP_Auth0_Lock10_Options {
       $extraOptions["auth"]["redirectUrl"] = $this->get_code_callback_url();
     }
 
-    $options_obj = array_merge_recursive( $extraOptions, $options_obj  );
-    $options_obj = array_merge_recursive( $options_obj , $extended_settings );
+    $options_obj = array_replace_recursive( $extraOptions, $options_obj, $extended_settings );
 
     if ( ! $this->show_as_modal() ) {
       $options_obj['container'] = 'auth0-login-form';

@@ -230,8 +230,7 @@ class WP_Auth0_Lock_Options {
 			$extraOptions["callbackURL"] = $this->get_code_callback_url();
 		}
 
-		$options_obj = array_merge( $extraOptions, $options_obj  );
-		$options_obj = array_merge( $options_obj , $extended_settings );
+		$options_obj = array_merge( $extraOptions, $options_obj, $extended_settings );
 
 		if ( ! $this->show_as_modal() ) {
 			$options_obj['container'] = 'auth0-login-form';
