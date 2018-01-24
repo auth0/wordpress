@@ -46,8 +46,10 @@ class WP_Auth0_Api_Client {
 				'domain' => $a0_options->get( 'domain' ),
 				'client_id' => $a0_options->get( 'client_id' ),
 				'client_secret' => $a0_options->get( 'client_secret' ),
+				'client_secret_encoded' => $a0_options->get( 'client_secret_b64_encoded' ),
 				'connection' => $a0_options->get( 'db_connection_name' ),
-				'audience' => $a0_options->get( 'auth0_app_token_audience' ),
+				'app_token' => $a0_options->get( 'auth0_app_token' ),
+				'audience' => $a0_options->get( 'api_audience' ),
 			);
 
 			if ( empty( self::$connect_info[ 'audience' ] ) ) {
@@ -214,13 +216,13 @@ class WP_Auth0_Api_Client {
 	public static function get_client_token() {
 
 		$response = wp_remote_post( self::get_endpoint( 'oauth/token' ), array(
-				'headers' => self::get_headers( '', 'application/x-www-form-urlencoded' ),
-				'body' => array(
+				'headers' => self::get_headers(),
+				'body' => json_encode( array(
 					'client_id' => self::get_connect_info( 'client_id' ),
 					'client_secret' => self::get_connect_info( 'client_secret' ),
 					'audience' => self::get_connect_info( 'audience' ),
 					'grant_type' => 'client_credentials',
-				),
+				) ),
 			) );
 
 		if ( $response instanceof WP_Error ) {
@@ -912,6 +914,9 @@ class WP_Auth0_Api_Client {
 		return array(
 			'create:clients',
 			'update:clients',
+
+			'create:client_grants',
+			'update:client_grants',
 
 			'update:connections',
 			'create:connections',

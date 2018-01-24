@@ -81,31 +81,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			return $is_encoded ? JWT::urlsafeB64Decode( $secret ) : $secret;
 		}
 	}
-
-	/**
-	 * Update the app token audience with one from a decoded JWT
-	 *
-	 * @param string $jwt - a valid JWT
-	 *
-	 * @return bool
-	 */
-	public function set_audience_with_token( $jwt ) {
-		$audience = '';
-		try {
-			$decoded_token = JWT::decode(
-				$jwt,
-				$this->get_client_secret_as_key(),
-				array( $this->get_client_signing_algorithm() )
-			);
-			if ( ! empty( $decoded_token->aud ) ) {
-				$audience = $decoded_token->aud;
-			}
-		} catch ( Exception $e ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e->getMessage() );
-		}
-		$this->set( 'auth0_app_token_audience', $audience );
-		return ! empty( $audience );
-	}
 	
 	protected function defaults() {
 		return array(
@@ -151,7 +126,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'gravatar' => true,
 			'jwt_auth_integration' => false,
 			'auth0_app_token' => null,
-			'auth0_app_token_audience' => null,
+			'api_audience' => null,
 			'mfa' => null,
 			'fullcontact' => null,
 			'fullcontact_rule' => null,
