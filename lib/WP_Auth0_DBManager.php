@@ -392,7 +392,7 @@ class WP_Auth0_DBManager {
 		if ( is_null( $userRows ) ) {
 			return;
 		} elseif ( $userRows instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'migrate_users_data', $userRows );
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $userRows );
 			return;
 		}
 
@@ -425,7 +425,7 @@ class WP_Auth0_DBManager {
 		$results = get_users( $query );
 
 		if ( $results instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'findAuth0User', $userRow );
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $results->get_error_message() );
 			return array();
 		}
 

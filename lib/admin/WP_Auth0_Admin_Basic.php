@@ -229,7 +229,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	public function auth0_delete_cache_transient() {
 		if ( ! is_admin() ) return;
 
-		WP_Auth0_ErrorManager::insert_auth0_error( 'WP_Auth0_Admin_Basic::delete_cache_transient', 'deleting cache transient' );
+		WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, 'deleting cache transient' );
 
 		delete_transient('WP_Auth0_JWKS_cache');
 
