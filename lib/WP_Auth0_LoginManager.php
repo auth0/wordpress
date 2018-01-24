@@ -231,7 +231,7 @@ class WP_Auth0_LoginManager {
       ) );
 
     if ( $response instanceof WP_Error ) {
-      WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_oauth/token', $response );
+      WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' => WP_Auth0_Api_Client::get_token()', $response );
 
       error_log( $response->get_error_message() );
 
@@ -256,7 +256,7 @@ class WP_Auth0_LoginManager {
 	    );
 
       if ( $response instanceof WP_Error ) {
-        WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_userinfo', $response );
+        WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' => WP_Auth0_Api_Client::get_user()', $response );
 
         error_log( $response->get_error_message() );
 
@@ -282,7 +282,7 @@ class WP_Auth0_LoginManager {
 
       $error = new WP_Error( '401', 'auth/token response code: 401 Unauthorized' );
 
-      WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_oauth/token', $error );
+      WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' => $this->login_user() = 401', $error );
 
       $msg = __( 'Error: the Client Secret configured on the Auth0 plugin is wrong. Make sure to copy the right one from the Auth0 dashboard.', 'wp-auth0' );
 
@@ -300,7 +300,7 @@ class WP_Auth0_LoginManager {
 
       if ( ! empty( $error ) || ! empty( $description ) ) {
         $error = new WP_Error( $error, $description );
-        WP_Auth0_ErrorManager::insert_auth0_error( 'init_auth0_oauth/token', $error );
+        WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' => $this->login_user()', $error );
       }
       // Login failed!
       wp_redirect( home_url() . '?message=' . $data->error_description );
@@ -343,7 +343,7 @@ class WP_Auth0_LoginManager {
       }
 
     } catch( UnexpectedValueException $e ) {
-      WP_Auth0_ErrorManager::insert_auth0_error( 'implicit_login', $e );
+      WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
 
       error_log( $e->getMessage() );
 
@@ -522,7 +522,7 @@ class WP_Auth0_LoginManager {
 
     } catch( UnexpectedValueException $e ) {
 
-      WP_Auth0_ErrorManager::insert_auth0_error( 'login_with_credentials', $e );
+      WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
 
       error_log( $e->getMessage() );
     }

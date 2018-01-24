@@ -144,7 +144,7 @@ EOT;
 			$user = wp_authenticate( $username, $password );
 
 			if ( $user instanceof WP_Error ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws_login', $user );
+				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' => wp_authenticate()', $user );
 				$user = array( 'error' => 'invalid credentials' );
 			} else {
 				if ( $user instanceof WP_User ) {
@@ -155,7 +155,7 @@ EOT;
 			}
 		}
 		catch( Exception $e) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws_login', $e );
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
 			$user = array('error' => $e->getMessage());
 		}
 
@@ -204,7 +204,7 @@ EOT;
 			}
 
 			if ($user instanceof WP_Error) {
-				WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws_get_user', $user );
+				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $user );
 				$user = array('error' => 'invalid credentials');
 			} else {
 
@@ -217,7 +217,7 @@ EOT;
 			}
 		}
 		catch(Exception $e) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'migration_ws_get_user', $e );
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
 			$user = array('error' => $e->getMessage());
 		}
 
