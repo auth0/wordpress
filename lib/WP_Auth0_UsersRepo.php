@@ -49,7 +49,7 @@ class WP_Auth0_UsersRepo {
 
 			return null;
 		}elseif ( $userRow instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( 'findAuth0User', $userRow );
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $userRow );
 			return null;
 		}else {
 
@@ -186,7 +186,7 @@ class WP_Auth0_UsersRepo {
 		$users = get_users( $query );
 
 		if ( $users instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $users->get_error_message() );
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' => get_users() ', $users->get_error_message() );
 
 			return null;
 		}
