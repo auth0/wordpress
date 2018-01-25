@@ -58,7 +58,7 @@ class WP_Auth0_Routes {
 		$cdn = $this->a0_options->get( 'auth0js-cdn' );
 		$client_id = $this->a0_options->get( 'client_id' );
 		$domain = $this->a0_options->get( 'domain' );
-		$redirect_uri = home_url( '/index.php?auth0=1', $this->a0_options->get( 'force_https_callback' ) );
+		$redirect_uri = site_url( 'index.php?auth0=1', $this->a0_options->get( 'force_https_callback' ) );
 		echo <<<EOT
 		<!DOCTYPE html>
 		<html>
@@ -124,7 +124,7 @@ EOT;
 				throw new Exception( 'Unauthorized: missing authorization header' );
 			}
 
-			$token = JWT::decode( $authorization, $secret);
+			$token = JWT::decode( $authorization, $secret, array( 'HS256' ) );
 
 			if ( $token->jti != $token_id ) {
 				throw new Exception( 'Invalid token id' );
@@ -185,7 +185,7 @@ EOT;
 				throw new Exception('Unauthorized: missing authorization header');
 			}
 
-			$token = JWT::decode($authorization, $secret );
+			$token = JWT::decode( $authorization, $secret, array( 'HS256' ) );
 
 			if ($token->jti != $token_id) {
 				throw new Exception('Invalid token id');

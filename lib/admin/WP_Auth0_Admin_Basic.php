@@ -21,7 +21,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				array( 'id' => 'wpa0_client_secret_b64_encoded', 'name' => 'Client Secret Base64 Encoded', 'function' => 'render_client_secret_b64_encoded' ),
 				array( 'id' => 'wpa0_client_signing_algorithm', 'name' => 'Client Signing Algorithm', 'function' => 'render_client_signing_algorithm' ),
 				array( 'id' => 'wpa0_cache_expiration', 'name' => 'Cache Time (minutes)', 'function' => 'render_cache_expiration' ),
-				array( 'id' => 'wpa0_auth0_app_token', 'name' => 'API token', 'function' => 'render_auth0_app_token' ), //we are not going to show the token
+				array( 'id' => 'wpa0_auth0_app_token', 'name' => 'API token', 'function' => 'render_auth0_app_token' ),
+				array( 'id' => 'wpa0_api_audience', 'name' => 'API Identifier (audience)', 'function' => 'render_api_audience' ),
 				array( 'id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login' ),
 				array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
 
@@ -49,7 +50,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
       <div class="subelement">
         <span class="description">
           <?php echo __( 'The token should be generated via the ', 'wp-auth0' ); ?>
-          <a href="https://auth0.com/docs/api/v2" target="_blank"><?php echo __( 'token generator', 'wp-auth0' ); ?></a>
+          <a href="https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually" target="_blank"><?php echo __( 'token generator', 'wp-auth0' ); ?></a>
           <?php echo __( ' with the following scopes:', 'wp-auth0' ); ?>
           <i>
           <?php $a = 0; foreach ( $scopes as $resource => $actions ) { $a++;?>
@@ -67,6 +68,18 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
     <?php
 	}
 
+	public function render_api_audience() {
+		$v = $this->options->get( 'api_audience' );
+		?>
+		<input type="text" name="<?php
+			echo $this->options->get_options_name(); ?>[api_audience]" id="wpa0_api_audience" value="<?php
+			echo esc_attr( $v ); ?>"/>
+		<div class="subelement">
+			<span class="description"><?php _e( 'API Identifier for the management API. ', 'wp-auth0' ); ?></span>
+		</div>
+		<?php
+	}
+
 	public function render_client_secret() {
 		$v = $this->options->get( 'client_secret' );
 	?>
@@ -80,7 +93,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	public function render_client_secret_b64_encoded() {
 		$v = absint( $this->options->get( 'client_secret_b64_encoded' ) );
 
-		echo $this->render_a0_switch( "wpa_client_secret_b64_encoded", "client_secret_b64_encoded", 1, 1 == $v );
+		$this->render_a0_switch( "wpa_client_secret_b64_encoded", "client_secret_b64_encoded", 1, 1 == $v );
 	?>
 				<div class="subelement">
 					<span class="description"><?php echo __( 'Enable if your client secret is base64 enabled.  If you are not sure, check your clients page in Auth0.  Displayed below the client secret on that page is the text "The Client Secret is not base64 encoded.
@@ -98,7 +111,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
     	<option value="RS256" <?php echo ($v == "RS256" ? 'selected' : '') ?>>RS256</option>
     </select>
     <div class="subelement">
-			<span class="description"><?php echo __( 'If you use the default client secret to sign tokens, select HS256. See your clients page in Auth0. Advanced > OAuth > JsonWebToken Signature Algorithm', WPA0_LANG ); ?></span>
+			<span class="description"><?php echo __( 'If you use the default client secret to sign tokens, select HS256. See your clients page in Auth0. Advanced > OAuth > JsonWebToken Signature Algorithm', 'wp-auth0' ); ?></span>
 		</div>
   <?php  
  	}
@@ -189,6 +202,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
         <?php } ?>
 
         <?php echo __( 'You can manage this setting on <code>Settings > General > Membership</code>, Anyone can register', 'wp-auth0' ); ?>
+	       <a href="<?php echo admin_url( 'options-general.php' ) ?>" target="_blank"><?php _e( 'here', 'wp-auth0' ) ?></a>.
       </span>
 
     <?php
@@ -197,7 +211,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	public function render_allow_wordpress_login() {
 		$v = absint( $this->options->get( 'wordpress_login_enabled' ) );
 
-		echo $this->render_a0_switch( "wpa0_wp_login_enabled", "wordpress_login_enabled", 1, 1 == $v );
+		$this->render_a0_switch( "wpa0_wp_login_enabled", "wordpress_login_enabled", 1, 1 == $v );
 ?>
       <div class="subelement">
         <span class="description"><?php echo __( 'Enable to allow existing and new WordPress logins to work. If this site already had users before you installed Auth0, and you want them to still be able to use those logins, enable this.', 'wp-auth0' ); ?></span>
@@ -220,47 +234,60 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		delete_transient('WP_Auth0_JWKS_cache');
 
 	}
+
 	public function basic_validation( $old_options, $input ) {
 
-    // $input['registration_enabled'] = $old_options['registration_enabled'];
+		if ( wp_cache_get( 'doing_db_update', WPA0_CACHE_GROUP ) ) {
+			return $input;
+		}
 
 		$input['client_id'] = sanitize_text_field( $input['client_id'] );
 		$input['cache_expiration'] = absint( $input['cache_expiration'] );
-		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] ) ? $input['wordpress_login_enabled'] : 0 );
+
+		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] )
+			? $input['wordpress_login_enabled']
+			: 0 );
+
 		$input['allow_signup'] = ( isset( $input['allow_signup'] ) ? $input['allow_signup'] : 0 );
 
 		// Only replace the secret or token if a new value was set. If not, we will keep the last one entered.
-		$input['client_secret'] = ( !empty( $input['client_secret'] ) ? $input['client_secret'] : $old_options['client_secret'] );
-		$input['client_secret_b64_encoded'] = ( isset( $input['client_secret_b64_encoded'] ) ? $input['client_secret_b64_encoded'] == 1 : false );
-		$input['auth0_app_token'] = ( !empty( $input['auth0_app_token'] ) ? $input['auth0_app_token'] : $old_options['auth0_app_token'] );
+		$input['client_secret'] = ( ! empty( $input['client_secret'] )
+			? $input['client_secret']
+			: $old_options['client_secret'] );
 
-		$error = '';
-		$completeBasicData = true;
+		$input['client_secret_b64_encoded'] = ( isset( $input['client_secret_b64_encoded'] )
+			? $input['client_secret_b64_encoded'] == 1
+			: false );
+
+		$input['auth0_app_token'] = ( ! empty( $input['auth0_app_token'] )
+			? $input['auth0_app_token']
+			: $old_options['auth0_app_token'] );
+
+		if ( ! empty( $input['domain'] ) ) {
+
+			$input['api_audience'] = ( ! empty( $input['api_audience'] )
+				? $input['api_audience']
+				: 'https://' . $input['domain'] . '/api/v2/' );
+		}
+
+		// If we have an app token, get and store the audience
+		if ( ! empty( $input['auth0_app_token'] ) && get_option( 'wp_auth0_client_grant_failed' ) ) {
+			$db_manager = new WP_Auth0_DBManager( WP_Auth0_Options::Instance() );
+			$db_manager->install_db( 16, $input['auth0_app_token'] );
+		}
+
 		if ( empty( $input['domain'] ) ) {
-			$error = __( 'You need to specify domain', 'wp-auth0' );
-			$this->add_validation_error( $error );
-			$completeBasicData = false;
+			$this->add_validation_error( __( 'You need to specify domain', 'wp-auth0' ) );
 		}
 
 		if ( empty( $input['client_id'] ) ) {
-			$error = __( 'You need to specify a client id', 'wp-auth0' );
-			$this->add_validation_error( $error );
-			$completeBasicData = false;
-		}
-		if ( empty( $input['client_secret'] ) && empty( $old_options['client_secret'] ) ) {
-			$error = __( 'You need to specify a client secret', 'wp-auth0' );
-			$this->add_validation_error( $error );
-			$completeBasicData = false;
+			$this->add_validation_error( __( 'You need to specify a client id', 'wp-auth0' ) );
 		}
 
-		if ( empty( $input['cache_expiration'] ) && empty( $old_options['cache_expiration'] ) ) {
-			$error = __( 'You need to specify a number for cache expiration', WPA0_LANG );
-			$this->add_validation_error( $error );
-			$completeBasicData = false;
+		if ( empty( $input['client_secret'] ) && empty( $old_options['client_secret'] ) ) {
+			$this->add_validation_error( __( 'You need to specify a client secret', 'wp-auth0' ) );
 		}
 
 		return $input;
 	}
-
-
 }

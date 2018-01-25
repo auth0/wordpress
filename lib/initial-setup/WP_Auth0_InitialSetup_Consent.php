@@ -88,10 +88,13 @@ class WP_Auth0_InitialSetup_Consent {
 
 	public function consent_callback( $name ) {
 
-		$app_token = $this->a0_options->get( 'auth0_app_token' );
 		$domain = $this->a0_options->get( 'domain' );
-
+		$app_token = $this->a0_options->get( 'auth0_app_token' );
 		$client_id = trim( $this->a0_options->get( 'client_id' ) );
+
+		/*
+		 * Create Client
+		 */
 
 		$should_create_and_update_connection = false;
 
@@ -110,6 +113,10 @@ class WP_Auth0_InitialSetup_Consent {
 
 			$client_id = $client_response->client_id;
 		}
+
+		/*
+		 * Create Connection
+		 */
 
 		$db_connection_name = 'DB-' . get_auth0_curatedBlogName();
 		$connection_exists = false;
@@ -166,9 +173,18 @@ class WP_Auth0_InitialSetup_Consent {
 
 		}
 
+		/*
+		 * Create Client Grant
+		 */
+
+		$grant_response = WP_Auth0_Api_Client::create_client_grant( $app_token, $client_id );
+
+		if ( FALSE === $grant_response ) {
+			wp_redirect( admin_url( 'admin.php?page=wpa0&error=cant_create_client_grant' ) );
+			exit;
+		}
+
 		wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=2&profile=' . $this->state ) );
 		exit();
-
 	}
-
 }

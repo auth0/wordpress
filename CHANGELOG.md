@@ -1,5 +1,24 @@
 # Change Log
 
+## [3.5.0](https://github.com/auth0/wp-auth0/tree/3.5.0) (2018-01-25)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.4.0...3.5.0)
+
+**Changed**
+- updating CDN URLs for Lock and Auth.js [\#365](https://github.com/auth0/wp-auth0/pull/365) ([joshcanhelp](https://github.com/joshcanhelp))
+- Changing home_url() to site_url(), wp_login_url(), and wp_logout_url()  [\#360](https://github.com/auth0/wp-auth0/pull/360) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Changing algorithm for migration tokens [\#372](https://github.com/auth0/wp-auth0/pull/372) ([joshcanhelp](https://github.com/joshcanhelp))
+- Migration tokens only use HS256 [\#371](https://github.com/auth0/wp-auth0/pull/371) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fixed automatic setup process for public sites [\#370](https://github.com/auth0/wp-auth0/pull/370) ([joshcanhelp](https://github.com/joshcanhelp))
+- Added use Management API for user data [\#368](https://github.com/auth0/wp-auth0/pull/368) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fixing DB version upgrade [\#367](https://github.com/auth0/wp-auth0/pull/367) ([joshcanhelp](https://github.com/joshcanhelp))
+- Creating client_grant for management API [\#366](https://github.com/auth0/wp-auth0/pull/366) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fixed login flow for new tenants, refactored verification email resend [\#364](https://github.com/auth0/wp-auth0/pull/364) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fixed shortcode warning [\#362](https://github.com/auth0/wp-auth0/pull/362) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fixing "Algorithm not allowed" error during user migration [\#361](https://github.com/auth0/wp-auth0/pull/361) ([joshcanhelp](https://github.com/joshcanhelp))
+- When activating using wp-cli the plugin should not redirect [\#344](https://github.com/auth0/wp-auth0/pull/344) ([AubreyHewes](https://github.com/AubreyHewes))
+
 ## [3.4.0](https://github.com/auth0/wp-auth0/tree/3.4.0) (2018-01-08)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.3.2...3.4.0)
 

@@ -51,6 +51,10 @@ class WP_Auth0_InitialSetup {
 			add_action( 'admin_notices', array( $this, 'cant_create_client_message' ) );
 		}
 
+		if ( isset( $_REQUEST['error'] ) && 'cant_create_client_grant' == $_REQUEST['error'] ) {
+			add_action( 'admin_notices', array( $this, 'cant_create_client_grant_message' ) );
+		}
+
 		if ( isset( $_REQUEST['error'] ) && 'cant_exchange_token' == $_REQUEST['error'] ) {
 			add_action( 'admin_notices', array( $this, 'cant_exchange_token_message' ) );
 		}
@@ -161,13 +165,31 @@ class WP_Auth0_InitialSetup {
   		<?php
 	}
 
+	public function cant_create_client_grant_message() {
+		?>
+		<div id="message" class="error">
+			<p>
+				<strong>
+					<?php echo __( 'There was an error creating the necessary client grants. ', 'wp-auth0' ); ?>
+					<?php echo __( 'Go to your Auth0 dashboard > APIs > Auth0 Management API > Non-Interactive Clients'
+					               . ' tab and authorize the client for this site. ', 'wp-auth0' ); ?>
+					<?php echo __( 'Make sure to add the following scopes: ', 'wp-auth0' ); ?>
+					<code><?php echo implode( '</code>, <code>', WP_Auth0_Api_Client::get_required_scopes() ) ?></code>
+					<?php echo __( 'You can also check the ', 'wp-auth0' ); ?>
+					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', 'wp-auth0' ); ?></a> <?php echo __( ' for more information.' ); ?>
+				</strong>
+			</p>
+		</div>
+		<?php
+	}
+
 	public function cant_exchange_token_message() {
 		$domain = $this->a0_options->get( 'domain' );
 ?>
   		<div id="message" class="error">
   			<p>
   				<strong>
-  					<?php echo __( 'There was an error retieving your auth0 credentials. Check the ', 'wp-auth0' ); ?>
+  					<?php echo __( 'There was an error retrieving your auth0 credentials. Check the ', 'wp-auth0' ); ?>
   					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', 'wp-auth0' ); ?></a>
   					<?php echo __( ' for more information. Please check that your sever has internet access and can reach "https://'.$domain.'/" ', 'wp-auth0' ); ?>
   				</strong>

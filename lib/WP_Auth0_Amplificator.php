@@ -34,7 +34,7 @@ class WP_Auth0_Amplificator {
 		$message = $this->a0_options->get_connection( "social_{$provider}_message" );
 
 		$message = str_replace( '%page_url%', $page_url, $message );
-		$message = str_replace( '%site_url%', home_url( '/' ), $message );
+		$message = str_replace( '%site_url%', home_url(), $message );
 
 		return $message;
 	}

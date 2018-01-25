@@ -66,7 +66,7 @@
                 <div class="a0-message a0-warning multiline">
 
                   <b>Note:</b>
-                  <?php _e( 'For this plugin to work, your server/host needs an inbound connection from auth0.com, as Auth0 needs to fetch some information to complete the process. If this website is not accesible from the internet, it will require manual intervention to configure the api token.', 'wp-auth0' ); ?>
+                  <?php _e( 'For this plugin to work, your server/host needs an inbound connection from auth0.com, as Auth0 needs to fetch some information to complete the process. If this website is not accessible from the internet, it will require manual intervention to configure the api token.', 'wp-auth0' ); ?>
 
                 </div>
 
@@ -88,13 +88,14 @@
               </div>
               <div class="modal-body">
                 <p>
-                  <?php _e( 'To complete the plugin\'s initial setup, you will need to enter your account subdomain:', 'wp-auth0' ); ?>
+                  <?php _e( 'To complete the plugin\'s initial setup, you will need to enter your tenant Domain:', 'wp-auth0' ); ?>
                 </p>
                 <input type="text" name="domain" placeholder="youraccount.auth0.com" />
                 <br><br>
                 <p>
-                  <?php _e( 'And manually create an api token on the', 'wp-auth0' ); ?>
-                  <a href="https://auth0.com/docs/api/v2" target="_blank"><?php echo __( 'token generator', 'wp-auth0' ); ?></a>
+                  <?php _e( 'And manually create an api token with the', 'wp-auth0' ); ?>
+                  <a href="https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually" target="_blank">
+	                  <?php echo __( 'token generator', 'wp-auth0' ); ?></a>
                   <?php _e( ' and paste it here:', 'wp-auth0' ); ?>
                 </p>
                 <input type="text" name="apitoken" autocomplete="off" />

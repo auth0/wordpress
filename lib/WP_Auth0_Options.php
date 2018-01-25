@@ -43,25 +43,43 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		return $defaults[$key];
 	}
 
-	public function get_client_secret_as_key($legacy = false) {
-		$secret = $this->get('client_secret', '');
-
-		$isEncoded = $this->get('client_secret_b64_encoded', false);
-		$isRS256 = $legacy ? false : $this->get_client_signing_algorithm() === 'RS256';
-
-		if ( $isRS256 ) {
-			$domain = $this->get( 'domain' );
-			$secret = WP_Auth0_Api_Client::JWKfetch($domain);
-		} else {
-			$secret = $isEncoded ? JWT::urlsafeB64Decode($secret) : $secret;
-		}
-  	
-		return $secret;
-	}
-
 	public function get_client_signing_algorithm() {
 			$client_signing_algorithm = $this->get('client_signing_algorithm', 'RS256');
 			return $client_signing_algorithm;
+	}
+
+	/**
+	 * Get the currently-stored client ID as a JWT key
+	 *
+	 * @param bool $legacy - legacy installs did not provide RS256, forces HS256
+	 *
+	 * @return bool|string
+	 */
+	public function get_client_secret_as_key( $legacy = false ) {
+		return $this->convert_client_secret_to_key(
+			$this->get('client_secret', ''),
+			$this->get('client_secret_b64_encoded', false),
+			( $legacy ? false : $this->get_client_signing_algorithm() === 'RS256' ),
+			$this->get( 'domain' )
+		);
+	}
+
+	/**
+	 * Convert a client_secret value into a JWT key
+	 *
+	 * @param string $secret - client_secret value
+	 * @param bool $is_encoded - is the client_secret base64 encoded?
+	 * @param bool $is_RS256 - if true, use RS256; if false, use HS256
+	 * @param string $domain - tenant domain
+	 *
+	 * @return array|bool|mixed|string
+	 */
+	public function convert_client_secret_to_key( $secret, $is_encoded, $is_RS256, $domain ) {
+		if ( $is_RS256 ) {
+			return WP_Auth0_Api_Client::JWKfetch( $domain );
+		} else {
+			return $is_encoded ? JWT::urlsafeB64Decode( $secret ) : $secret;
+		}
 	}
 	
 	protected function defaults() {
@@ -86,7 +104,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'passwordless_method' => 'magiclink',
 			'passwordless_cdn_url' => '//cdn.auth0.com/js/lock-passwordless-2.2.min.js',
 			'use_lock_10' => true,
-			'cdn_url' => '//cdn.auth0.com/js/lock/11.0.0/lock.min.js',
+			'cdn_url' => '//cdn.auth0.com/js/lock/11.1/lock.min.js',
 			'cdn_url_legacy' => '//cdn.auth0.com/js/lock-9.2.min.js',
 			'requires_verified_email' => true,
 			'wordpress_login_enabled' => true,
@@ -108,6 +126,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'gravatar' => true,
 			'jwt_auth_integration' => false,
 			'auth0_app_token' => null,
+			'api_audience' => null,
 			'mfa' => null,
 			'fullcontact' => null,
 			'fullcontact_rule' => null,
@@ -137,9 +156,9 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
 			'auto_provisioning' => false,
 			'default_login_redirection' => home_url(),
-
-      		'auth0_server_domain' => 'auth0.auth0.com',
-			'auth0js-cdn' => '//cdn.auth0.com/js/auth0/9.0.0/auth0.min.js',
+			
+			'auth0_server_domain' => 'auth0.auth0.com',
+			'auth0js-cdn' => '//cdn.auth0.com/js/auth0/9.1/auth0.min.js',
 
 			//DASHBOARD
 			'chart_idp_type' => 'donut',

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PLUGIN_NAME
  * Description: PLUGIN_DESCRIPTION
- * Version: 3.4.0
+ * Version: 3.5.0
  * Author: Auth0
  * Author URI: https://auth0.com
  */
@@ -10,8 +10,9 @@ define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
-define( 'AUTH0_DB_VERSION', 15 );
-define( 'WPA0_VERSION', '3.4.0' );
+define( 'AUTH0_DB_VERSION', 16 );
+define( 'WPA0_VERSION', '3.5.0' );
+define( 'WPA0_CACHE_GROUP', 'wp_auth0' );
 
 /**
  * Main plugin class
@@ -22,6 +23,7 @@ class WP_Auth0 {
 	protected $a0_options;
 	protected $social_amplificator;
 	protected $router;
+	protected $basename;
 
 	/**
 	 * Initialize the plugin and its modules setting all the hooks
@@ -29,6 +31,8 @@ class WP_Auth0 {
 	public function init() {
 
 		spl_autoload_register( array( $this, 'autoloader' ) );
+
+		$this->basename = plugin_basename( __FILE__ );
 
 		$ip_checker = new WP_Auth0_Ip_Check();
 		$ip_checker->init();
@@ -55,8 +59,6 @@ class WP_Auth0 {
 		// Add a hook to add Auth0 code on the login page.
 		add_filter( 'login_message', array( $this, 'render_form'), 5);
 
-		add_filter( 'auth0_verify_email_page', array( $this, 'render_verify_email_page' ), 0, 3 );
-
 		add_shortcode( 'auth0', array( $this, 'shortcode' ) );
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue' ) );
@@ -65,8 +67,7 @@ class WP_Auth0 {
 
 		add_filter( 'query_vars', array( $this, 'a0_register_query_vars' ) );
 
-		$plugin = plugin_basename( __FILE__ );
-		add_filter( "plugin_action_links_$plugin", array( $this, 'wp_add_plugin_settings_link' ) );
+		add_filter( 'plugin_action_links_' . $this->basename, array( $this, 'wp_add_plugin_settings_link' ) );
 
 		if ( isset( $_GET['message'] ) ) {
 			add_action( 'wp_footer', array( $this, 'a0_render_message' ) );
@@ -118,6 +119,8 @@ class WP_Auth0 {
 		$edit_profile->init();
 
 		$this->check_signup_status();
+
+		WP_Auth0_Email_Verification::init();
 	}
 
 	/**
@@ -171,7 +174,7 @@ class WP_Auth0 {
 
 	function on_activate_redirect( $plugin ) {
 
-		if ( $plugin == plugin_basename( __FILE__ ) ) {
+		if ( !defined( 'WP_CLI' ) && $plugin == $this->basename ) {
 
 			$this->router->setup_rewrites();
 			flush_rewrite_rules();
@@ -258,24 +261,28 @@ class WP_Auth0 {
 
 		wp_enqueue_style( 'auth0-widget', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/css/main.css' );
 	}
-
+	
 	public function shortcode( $atts ) {
 		wp_enqueue_script( 'jquery' );
-
+		
 		if ( WP_Auth0_Options::Instance()->get('passwordless_enabled') ) {
 			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('passwordless_cdn_url'), 'jquery' );
 		} else {
 			wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get('cdn_url'), 'jquery' );
 		}
-
-		if (!isset($atts['redirect_to'])) {
-			$atts['redirect_to'] = home_url($_SERVER["REQUEST_URI"]);
+		
+		if (empty($atts)) {
+			$atts = array();
 		}
-
+		
+		if (empty($atts['redirect_to'])) {
+			$atts['redirect_to'] = home_url($_SERVER['REQUEST_URI']);
+		}
+		
 		ob_start();
 		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
 		renderAuth0Form( false, $atts );
-
+		
 		$html = ob_get_clean();
 		return $html;
 	}
@@ -295,18 +302,6 @@ class WP_Auth0 {
 ?>
 		<link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' />
 	<?php
-	}
-
-	public function render_verify_email_page($html, $userinfo, $id_token) {
-		ob_start();
-		$domain = $this->a0_options->get( 'domain' );
-		$token = $id_token;
-		$email = $userinfo->email;
-		$connection = $userinfo->identities[0]->connection;
-		$userId = $userinfo->user_id;
-		include WPA0_PLUGIN_DIR . 'templates/verify-email.php';
-
-		return ob_get_clean();
 	}
 
 	public function render_form( $html ) {

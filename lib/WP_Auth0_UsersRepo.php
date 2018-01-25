@@ -103,7 +103,7 @@ class WP_Auth0_UsersRepo {
 			)
 		); // if true, we can join the a0 user with the wp one
 
-		$joinUser = get_user_by( 'email', $userinfo->email ); 
+		$joinUser = get_user_by( 'email', $userinfo->email );
 
 		$auto_provisioning = WP_Auth0_Options::Instance()->get('auto_provisioning');
 		$allow_signup = WP_Auth0_Options::Instance()->is_wp_registration_enabled() || $auto_provisioning;
@@ -161,41 +161,51 @@ class WP_Auth0_UsersRepo {
 		return $user_id;
 	}
 
-	public function find_auth0_user( $id ) {
+	/**
+	 * Look for and return a user with an Auth0 ID
+	 *
+	 * @param string $id - An Auth0 user ID, like "provider|id"
+	 *
+	 * @return null|WP_User
+	 */
+	public function find_auth0_user ( $id ) {
 		global $wpdb;
 
-		$query = array( 
-  		'meta_key' => $wpdb->prefix.'auth0_id',
-  		'meta_value' => $id,
-  		'blog_id' => 0,
-  	);
+		if ( empty( $id ) ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, __( 'Empty user id', 'wp-auth0' ) );
 
-		$users = get_users( $query ); 
-
-		if ( $users instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $userRow );
 			return null;
 		}
 
-		if (!empty($users)) {
-			return $users[0];
+		$query = array(
+			'meta_key'   => $wpdb->prefix . 'auth0_id',
+			'meta_value' => $id,
+			'blog_id'    => 0,
+		);
+
+		$users = get_users( $query );
+
+		if ( $users instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( '_find_auth0_user', $users->get_error_message() );
+
+			return null;
 		}
 
-		return null;
+		return ! empty( $users[ 0 ] ) ? $users[ 0 ] : null;
 	}
 
 	public function update_auth0_object( $user_id, $userinfo ) {
 		global $wpdb;
-		update_user_meta( $user_id, $wpdb->prefix.'auth0_id', ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub )); 
-		update_user_meta( $user_id, $wpdb->prefix.'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo )); 
-		update_user_meta( $user_id, $wpdb->prefix.'last_update', date( 'c' ) ); 
+		update_user_meta( $user_id, $wpdb->prefix.'auth0_id', ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub ));
+		update_user_meta( $user_id, $wpdb->prefix.'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo ));
+		update_user_meta( $user_id, $wpdb->prefix.'last_update', date( 'c' ) );
 	}
 
 	public function delete_auth0_object( $user_id ) {
 		global $wpdb;
-		delete_user_meta( $user_id, $wpdb->prefix.'auth0_id' ); 
-		delete_user_meta( $user_id, $wpdb->prefix.'auth0_obj' ); 
-		delete_user_meta( $user_id, $wpdb->prefix.'last_update' ); 
+		delete_user_meta( $user_id, $wpdb->prefix.'auth0_id' );
+		delete_user_meta( $user_id, $wpdb->prefix.'auth0_obj' );
+		delete_user_meta( $user_id, $wpdb->prefix.'last_update' );
 	}
 
 }

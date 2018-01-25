@@ -35,11 +35,11 @@ class WP_Auth0_Lock_Options {
 	public function get_code_callback_url() {
     $protocol = $this->_get_boolean( $this->wp_options->get( 'force_https_callback' ) ) ? 'https' : null;
 
-    return home_url( '/index.php?auth0=1', $protocol );
+    return site_url( 'index.php?auth0=1', $protocol );
   }
 
 	public function get_implicit_callback_url() {
-		return home_url( '/wp-login.php' );
+		return wp_login_url();
 	}
 
 	public function get_sso() {
@@ -177,7 +177,7 @@ class WP_Auth0_Lock_Options {
 	public function get_sso_options() {
 		$options = $this->get_lock_options();
 
-		$options["scope"] = "openid ";
+		$options["scope"] = "openid email identities ";
 
 		if ( $this->get_auth0_implicit_workflow() ) {
 			$options["callbackOnLocationHash"] = true;
