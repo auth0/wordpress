@@ -51,7 +51,7 @@ class WP_Auth0 {
 
 		add_action( 'activated_plugin', array( $this, 'on_activate_redirect' ) );
 
-		add_filter( 'get_avatar' , array( $this, 'my_custom_avatar') , 1 , 5 );
+		add_filter( 'get_avatar' , array( $this, 'filter_get_avatar') , 1 , 5 );
 
 		// Add an action to append a stylesheet for the login page.
 		add_action( 'login_enqueue_scripts', array( $this, 'render_auth0_login_css' ) );
@@ -159,17 +159,59 @@ class WP_Auth0 {
 		}
 	}
 
-	function my_custom_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
-		$auth0Profile = get_auth0userinfo($id_or_email);
-
-		if ($this->a0_options->get('override_wp_avatars')) {
-			if ($auth0Profile && isset($auth0Profile->picture)) {
-				$avatar_url = $auth0Profile->picture;
-				$avatar = "<img alt='{$alt}' src='{$avatar_url}' class='avatar avatar-{$size} photo' height='{$size}' width='{$size}' />";
-			}
+	/**
+	 * Filter the avatar to use the Auth0 profile image
+	 *
+	 * @param string $avatar - avatar HTML
+	 * @param int|string|WP_User|WP_Comment|WP_Post $id_or_email - user identifier
+	 * @param int $size - width and height of avatar
+	 * @param string $default - what to do if nothing
+	 * @param string $alt - alt text for the <img> tag
+	 *
+	 * @return string
+	 */
+	function filter_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
+		if ( ! $this->a0_options->get( 'override_wp_avatars' ) ) {
+			return $avatar;
 		}
 
-		return $avatar;
+		$user_id = null;
+
+		if ( $id_or_email instanceof WP_User ) {
+			$user_id = $id_or_email->ID;
+		} elseif ( $id_or_email instanceof WP_Comment ) {
+			$user_id = $id_or_email->user_id;
+		} elseif ( $id_or_email instanceof WP_Post ) {
+			$user_id = $id_or_email->post_author;
+		} elseif ( is_email( $id_or_email ) ) {
+			$maybe_user = get_user_by( 'email', $id_or_email );
+
+			if ( $maybe_user instanceof WP_User ) {
+				$user_id = $maybe_user->ID;
+			}
+		} elseif ( is_numeric( $id_or_email ) ) {
+			$user_id = absint( $id_or_email );
+		}
+
+
+		if ( ! $user_id ) {
+			return $avatar;
+		}
+
+		$auth0Profile = get_auth0userinfo( $user_id );
+
+		if ( ! $auth0Profile || empty( $auth0Profile->picture ) ) {
+			return $avatar;
+		}
+
+		return sprintf(
+			'<img alt="%s" src="%s" class="avatar avatar-%d photo avatar-auth0" width="%d" height="%d"/>',
+			esc_attr( $alt ),
+			esc_url( $auth0Profile->picture ),
+			absint( $size ),
+			absint( $size ),
+			absint( $size )
+		);
 	}
 
 	function on_activate_redirect( $plugin ) {
