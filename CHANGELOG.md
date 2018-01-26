@@ -3,6 +3,8 @@
 ## [3.5.0](https://github.com/auth0/wp-auth0/tree/3.5.0) (2018-01-25)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.4.0...3.5.0)
 
+**Please note:** This is a major update that requires changes to your Auth0 Dashboard to be completed. You can save a new [API token](https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually) in your Basic settings in wp-admin before upgrading and the changes will be made automatically during the update. Otherwise, after upgrading, please review your [Client Advanced Settings](https://auth0.com/docs/cms/wordpress/configuration#client-setup), specifically your Grant Types, and [authorize your Client for the Management API](https://auth0.com/docs/cms/wordpress/configuration#authorize-the-client-for-the-management-api). 
+
 **Changed**
 - updating CDN URLs for Lock and Auth.js [\#365](https://github.com/auth0/wp-auth0/pull/365) ([joshcanhelp](https://github.com/joshcanhelp))
 - Changing home_url() to site_url(), wp_login_url(), and wp_logout_url()  [\#360](https://github.com/auth0/wp-auth0/pull/360) ([joshcanhelp](https://github.com/joshcanhelp))

@@ -271,9 +271,16 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		}
 
 		// If we have an app token, get and store the audience
-		if ( ! empty( $input['auth0_app_token'] ) && get_option( 'wp_auth0_client_grant_failed' ) ) {
+		if ( ! empty( $input['auth0_app_token'] ) ) {
 			$db_manager = new WP_Auth0_DBManager( WP_Auth0_Options::Instance() );
-			$db_manager->install_db( 16, $input['auth0_app_token'] );
+
+			if ( get_option( 'wp_auth0_client_grant_failed' ) ) {
+				$db_manager->install_db( 16, $input['auth0_app_token'] );
+			}
+
+			if ( get_option( 'wp_auth0_grant_types_failed' ) ) {
+				$db_manager->install_db( 17, $input['auth0_app_token'] );
+			}
 		}
 
 		if ( empty( $input['domain'] ) ) {
