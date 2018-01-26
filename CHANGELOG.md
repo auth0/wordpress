@@ -1,5 +1,13 @@
 # Change Log
 
+## [3.5.1](https://github.com/auth0/wp-auth0/tree/3.5.1) (2018-01-26)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.5.0...3.5.1)
+
+**Please see note from 3.5.0 below if upgrading from 3.4.0 or earlier**
+
+**Fixed**
+- Fixed Client Grant Types during update [\#377](https://github.com/auth0/wp-auth0/pull/377) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [3.5.0](https://github.com/auth0/wp-auth0/tree/3.5.0) (2018-01-25)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.4.0...3.5.0)
 
