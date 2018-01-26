@@ -394,6 +394,40 @@ class WP_Auth0_Api_Client {
 		);
 	}
 
+	/**
+	 * Get a single client via the Management API
+	 *
+	 * @see https://auth0.com/docs/api/management/v2#!/Clients/get_clients_by_id
+	 *
+	 * @param string $app_token - an app token for the management API with read:clients scope
+	 * @param string $client_id - a valid client ID in the same tenant as the app token
+	 *
+	 * @return array|bool|mixed|object
+	 */
+	public static function get_client( $app_token, $client_id ) {
+
+		$response = wp_remote_get(
+			self::get_endpoint( '/api/v2/clients/' . urlencode( $client_id ) ),
+			array(
+				'headers' => self::get_headers( $app_token )
+			)
+		);
+
+		if ( $response instanceof WP_Error ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
+			error_log( $response->get_error_message() );
+			return false;
+		}
+
+		if ( $response['response']['code'] != 200 ) {
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
+			error_log( $response['body'] );
+			return false;
+		}
+
+		return json_decode( $response['body'] );
+	}
+
 	public static function create_client( $domain, $app_token, $name ) {
 
 		$endpoint = "https://$domain/api/v2/clients";
@@ -419,6 +453,7 @@ class WP_Auth0_Api_Client {
 							"alg" => "RS256"
 						),
 						"app_type" => "regular_web",
+						"grant_types" => self::get_client_grant_types(),
 						"cross_origin_auth" => true,
 						"cross_origin_loc" => site_url('index.php?auth0fallback=1','https'),
 						"allowed_logout_urls" => array( wp_logout_url() ),
@@ -610,13 +645,14 @@ class WP_Auth0_Api_Client {
 			WP_Auth0_ErrorManager::insert_auth0_error(
 				__METHOD__,
 				sprintf(
-					__( 'A client grant for %s to %s has already been created. Make sure this grant at least includes %s.', 'wp-auth0' ),
+					__( 'A client grant for %s to %s already exists. Make sure this grant at least includes %s.', 'wp-auth0' ),
 					self::get_connect_info( 'client_id' ),
 					self::get_connect_info( 'audience' ),
 					implode( ', ', self::get_required_scopes() )
 				)
 			);
-			return true;
+
+			return json_decode( $response['body'] );
 
 		} else if ( $response['response']['code'] != 201 ) {
 
@@ -624,6 +660,11 @@ class WP_Auth0_Api_Client {
 			error_log( $response['body'] );
 			return false;
 		}
+
+		WP_Auth0_ErrorManager::insert_auth0_error(
+			__METHOD__,
+			'Client Grant has been successfully created!'
+		);
 
 		return json_decode( $response['body'] );
 	}
@@ -1045,5 +1086,20 @@ class WP_Auth0_Api_Client {
 	}
 
   return $secret;
+  }
+
+	/**
+	 * Return the grant types needed for new clients
+	 *
+	 * @return array
+	 */
+  public static function get_client_grant_types() {
+
+		return array(
+			'authorization_code',
+			'implicit',
+			'refresh_token',
+			'client_credentials',
+		);
   }
 }
