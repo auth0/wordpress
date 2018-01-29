@@ -33,9 +33,8 @@ class WP_Auth0_Lock_Options {
 	}
 
 	public function get_code_callback_url() {
-    $protocol = $this->_get_boolean( $this->wp_options->get( 'force_https_callback' ) ) ? 'https' : null;
-
-    return site_url( 'index.php?auth0=1', $protocol );
+		$protocol = $this->_get_boolean( $this->wp_options->get( 'force_https_callback' ) ) ? 'https' : '';
+		return $this->wp_options->get_wp_auth0_url( $protocol );
   }
 
 	public function get_implicit_callback_url() {
