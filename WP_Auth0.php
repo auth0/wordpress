@@ -490,6 +490,15 @@ if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
 
     $name = get_bloginfo( 'name' );
 
+    // WordPress can have a blank site title, which will cause initial client creation to fail
+    if ( empty( $name ) ) {
+	    $name = parse_url( home_url(), PHP_URL_HOST );
+
+	    if ( $port = parse_url( home_url(), PHP_URL_PORT ) ) {
+		    $name .= ':' . $port;
+	    }
+    }
+
     $name = preg_replace("/[^A-Za-z0-9 ]/", '', $name);
     $name = preg_replace("/\s+/", ' ', $name);
 		$name = str_replace(" ", "-", $name);
