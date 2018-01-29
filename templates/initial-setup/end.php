@@ -8,7 +8,7 @@
 
     <h1><?php _e( "Done! You finished this Setup Wizard", "wp-auth0" ); ?></h1>
 
-    <p class="a0-step-text"><?php _e( "Adjust the plug-in's settings from the WordPress dashboard, and visit Auth0's dashboard to change how users log in, add connections, enable multi-factor authentication, and more.", "wp-auth0" ); ?></h1>
+    <p class="a0-step-text"><?php _e( "Adjust the plug-in's settings from the WordPress dashboard, and visit Auth0's dashboard to change how users log in, add connections, enable multi-factor authentication, and more.", "wp-auth0" ); ?></p>
 
     <div class="a0-buttons extra-space">
       <a onclick="onNext()" href="<?php echo admin_url( 'admin.php?page=wpa0' ); ?>" class="a0-button primary">GO TO PLUG-IN SETTINGS</a>
