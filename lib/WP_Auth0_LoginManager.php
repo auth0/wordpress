@@ -198,11 +198,11 @@ class WP_Auth0_LoginManager {
     }
 
     if ( $this->query_vars( 'error_description' ) !== null && $this->query_vars( 'error_description' ) !== '' ) {
-      throw new WP_Auth0_LoginFlowValidationException( $this->query_vars( 'error_description' ) );
+      throw new WP_Auth0_LoginFlowValidationException( sanitize_text_field( $this->query_vars( 'error_description' ) ) );
     }
 
     if ( $this->query_vars( 'error' ) !== null && trim( $this->query_vars( 'error' ) ) !== '' ) {
-      throw new WP_Auth0_LoginFlowValidationException( $this->query_vars( 'error' ) );
+      throw new WP_Auth0_LoginFlowValidationException( sanitize_text_field( $this->query_vars( 'error' ) ) );
     }
 
     $code = $this->query_vars( 'code' );
