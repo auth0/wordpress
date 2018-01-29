@@ -44,7 +44,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	public function get_client_signing_algorithm() {
-			$client_signing_algorithm = $this->get('client_signing_algorithm', 'RS256');
+			$client_signing_algorithm = $this->get('client_signing_algorithm', WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG);
 			return $client_signing_algorithm;
 	}
 
@@ -81,7 +81,54 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			return $is_encoded ? JWT::urlsafeB64Decode( $secret ) : $secret;
 		}
 	}
-	
+
+	/**
+	 * Get web_origin settings for new Clients
+	 *
+	 * @return array
+	 */
+	public function get_web_origins() {
+		$home_url_parsed = parse_url( home_url() );
+		$home_url_origin = str_replace( $home_url_parsed[ 'path' ], '', home_url() );
+
+		$site_url_parsed = parse_url( site_url() );
+		$site_url_origin = str_replace( $site_url_parsed[ 'path' ], '', site_url() );
+
+		return $home_url_origin === $site_url_origin
+			? array( $home_url_origin )
+			: array( $home_url_origin, $site_url_origin );
+	}
+
+	/**
+	 * Get the main site URL for Auth0 processing
+	 *
+	 * @param string $protocol - forced URL protocol, use default if empty
+	 *
+	 * @return string
+	 */
+	public function get_wp_auth0_url( $protocol = '' ) {
+		$site_url = empty( $protocol ) ? site_url( 'index.php' ) : site_url( 'index.php', $protocol );
+		return add_query_arg( 'auth0', '1', $site_url );
+	}
+
+	/**
+	 * Get get_cross_origin_loc URL for new Clients
+	 *
+	 * @return string
+	 */
+	public function get_cross_origin_loc() {
+		return add_query_arg( 'auth0fallback', '1', site_url( 'index.php', 'https' ) );
+	}
+
+	/**
+	 * Get the main site logout URL, minus a nonce
+	 *
+	 * @return string
+	 */
+	public function get_logout_url() {
+		return add_query_arg( 'action', 'logout', site_url( 'wp-login.php', 'login' ) );
+	}
+
 	protected function defaults() {
 		return array(
 			'version' => 1,
@@ -91,7 +138,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'auto_login_method' => '',
 			'client_id' => '',
 			'client_secret' => '',
-			'client_signing_algorithm' => 'RS256',
+			'client_signing_algorithm' => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
 			'cache_expiration' => 1440,
 			'client_secret_b64_encoded' => null,
 			'domain' => '',
