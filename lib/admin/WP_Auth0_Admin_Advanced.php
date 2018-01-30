@@ -474,15 +474,21 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     if ( $old_options['migration_ws'] != $input['migration_ws'] ) {
 
       if ( 1 == $input['migration_ws'] ) {
-        $secret = $input['client_secret_b64_encoded'] ? JWT::urlsafeB64Decode( $secret) : $input['client_secret'];
+
+	      $token_id = uniqid();
+	      $secret = $input['client_secret'];
+	      if ( $input['client_secret_b64_encoded'] ) {
+		      $secret = JWT::urlsafeB64Decode( $secret );
+	      }
+
         $input['migration_token'] = JWT::encode( array( 'scope' => 'migration_ws', 'jti' => $token_id ), $secret );
         $input['migration_token_id'] = $token_id;
 
-        // if ($response === false) {
-        $error = __( 'There was an error enabling your custom database. Check how to do it manually ', 'wp-auth0' );
-        $error .= '<a href="https://manage.auth0.com/#/connections/database">HERE</a>.';
-        $this->add_validation_error( $error );
-        // }
+	      $this->add_validation_error(
+		      __( 'User Migration needs to be configured manually. ', 'wp-auth0' )
+		      . __( 'Please see Advanced > Users Migration below for your token, instructions are ', 'wp-auth0' )
+		      . '<a href="https://auth0.com/docs/users/migrations/automatic">HERE</a>.'
+	      );
 
       } else {
         $input['migration_token'] = null;
