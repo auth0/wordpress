@@ -1039,7 +1039,7 @@ class WP_Auth0_Api_Client {
 		return json_decode($response['body']);
 	}
 
-  protected function convertCertToPem($cert) {
+  protected static function convert_cert_to_pem( $cert ) {
       return '-----BEGIN CERTIFICATE-----'.PHP_EOL
           .chunk_split($cert, 64, PHP_EOL)
           .'-----END CERTIFICATE-----'.PHP_EOL;
@@ -1076,7 +1076,7 @@ class WP_Auth0_Api_Client {
 		$jwks = json_decode($response['body'], true);
 
 		foreach ($jwks['keys'] as $key) { 
-			$secret[$key['kid']] = self::convertCertToPem($key['x5c'][0]);
+			$secret[$key['kid']] = self::convert_cert_to_pem($key['x5c'][0]);
 		}
 
 		if ($cache_expiration !== 0) {
@@ -1102,4 +1102,16 @@ class WP_Auth0_Api_Client {
 			'client_credentials',
 		);
   }
+
+	/**
+	 * DEPRECATED 3.5.2
+	 *
+	 * @param $cert
+	 *
+	 * @return string
+	 */
+	protected function convertCertToPem( $cert ) {
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		return self::convert_cert_to_pem( $cert );
+	}
 }

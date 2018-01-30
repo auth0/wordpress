@@ -544,7 +544,7 @@ class WP_Auth0_LoginManager {
 	 * @param $id_token
 	 */
 	private function dieWithVerifyEmail( $userinfo, $id_token = '' ) {
-		trigger_error( __( 'Method dieWithVerifyEmail is deprecated.', 'wp-auth0' ), E_USER_DEPRECATED);
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		WP_Auth0_Email_Verification::render_die( $userinfo );
 	}
 }
