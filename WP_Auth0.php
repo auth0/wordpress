@@ -393,7 +393,20 @@ class WP_Auth0 {
 	public static function uninstall() {
 		$a0_options = WP_Auth0_Options::Instance();
 		$a0_options->delete();
+
     delete_option( 'auth0_db_version' );
+    delete_option( 'auth0_error_log' );
+
+    delete_option( 'widget_wp_auth0_popup_widget' );
+    delete_option( 'widget_wp_auth0_widget' );
+    delete_option( 'widget_wp_auth0_social_amplification_widget' );
+
+    delete_option( 'wp_auth0_client_grant_failed' );
+    delete_option( 'wp_auth0_client_grant_success' );
+    delete_option( 'wp_auth0_grant_types_failed' );
+    delete_option( 'wp_auth0_grant_types_success' );
+
+		delete_transient('WP_Auth0_JWKS_cache');
 	}
 
 	private function autoloader( $class ) {
