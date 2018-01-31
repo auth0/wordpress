@@ -480,7 +480,7 @@ class WP_Auth0_Api_Client {
 		) );
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
+			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response->get_error_message() );
 			error_log( $response->get_error_message() );
 			return false;
 		}
@@ -665,11 +665,6 @@ class WP_Auth0_Api_Client {
 			error_log( $response['body'] );
 			return false;
 		}
-
-		WP_Auth0_ErrorManager::insert_auth0_error(
-			__METHOD__,
-			'Client Grant has been successfully created!'
-		);
 
 		return json_decode( $response['body'] );
 	}
