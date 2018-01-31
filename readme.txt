@@ -13,9 +13,6 @@ PLUGIN_DESCRIPTION
 
 This plugin gives WordPress a new Login Widget (powered by [Auth0](https://auth0.com)) that enables:
 
-- Easy setup
-    + 5 minutes installation
-    + Extensible custom rules
 - Universal authentication
     + +30 Social Providers
     + Enterprise connections (ADFS, Active directory / LDAP, SAML, Office 365, Google Apps and more)
@@ -151,88 +148,148 @@ To change the form_title in this case, you need to add the following attribute t
 
 We added a new field called "Extra settings" that allows you to add a json object with all the settings you want to configure.
 
-Have in mind that all the "Extra settings" that we allow to set up in the plugin settings page will be overrided.
+Have in mind that all the "Extra settings" that we allow to set up in the plugin settings page will be overridden.
 
 == Changelog ==
 
+[Complete CHANGELOG.md maintained on Github](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md)
+
 = 3.5.1 =
 
-**Fixed**
-- Fixed Client Grant Types during update [Github PR 377](https://github.com/auth0/wp-auth0/pull/377) - [joshcanhelp](https://github.com/joshcanhelp)
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#351-2018-01-26)
 
 = 3.5.0 =
 
-**Major Update:** [Please see our Community post for more details](https://community.auth0.com/questions/14128/information-on-the-350-release).
-
-**Closed issues**
-- Usage with headless Wordpress [Github Issue 341](https://github.com/auth0/wp-auth0/issues/341)
-- Resetting password via WordPress (not Auth0) doesn't apply changes [Github Issue 315](https://github.com/auth0/wp-auth0/issues/315)
-- Outdated instructions about Mgmt API token generator [Github Issue 307](https://github.com/auth0/wp-auth0/issues/307)
-
-**Changed**
-- updating CDN URLs for Lock and Auth.js [Github PR 365](https://github.com/auth0/wp-auth0/pull/365) - [joshcanhelp](https://github.com/joshcanhelp)
-- Changing home_url() to site_url(), wp_login_url(), and wp_logout_url()  [Github PR 360](https://github.com/auth0/wp-auth0/pull/360) - [joshcanhelp](https://github.com/joshcanhelp)
-
-**Fixed**
-- Changing algorithm for migration tokens [Github PR 372](https://github.com/auth0/wp-auth0/pull/372) - [joshcanhelp](https://github.com/joshcanhelp)
-- Migration tokens only use HS256 [Github PR 371](https://github.com/auth0/wp-auth0/pull/371) - [joshcanhelp](https://github.com/joshcanhelp)
-- Fixed automatic setup process for public sites [Github PR 370](https://github.com/auth0/wp-auth0/pull/370) - [joshcanhelp](https://github.com/joshcanhelp)
-- Added use Management API for user data [Github PR 368](https://github.com/auth0/wp-auth0/pull/368) - [joshcanhelp](https://github.com/joshcanhelp)
-- Fixing DB version upgrade [Github PR 367](https://github.com/auth0/wp-auth0/pull/367) - [joshcanhelp](https://github.com/joshcanhelp)
-- Creating client_grant for management API [Github PR 366](https://github.com/auth0/wp-auth0/pull/366) - [joshcanhelp](https://github.com/joshcanhelp)
-- Fixed login flow for new tenants, refactored verification email resend [Github PR 364](https://github.com/auth0/wp-auth0/pull/364) - [joshcanhelp](https://github.com/joshcanhelp)
-- Fixed shortcode warning [Github PR 362](https://github.com/auth0/wp-auth0/pull/362) - [joshcanhelp](https://github.com/joshcanhelp)
-- Fixing "Algorithm not allowed" error during user migration [Github PR 361](https://github.com/auth0/wp-auth0/pull/361) - [joshcanhelp](https://github.com/joshcanhelp)
-- When activating using wp-cli the plugin should not redirect [Github PR 344](https://github.com/auth0/wp-auth0/pull/344) ([AubreyHewes](https://github.com/AubreyHewes))
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#350-2018-01-25)
 
 = 3.4.0 =
 
-**Closed issues**
-- Remove connections interface [Github Issue 338](https://github.com/auth0/wp-auth0/issues/338)
-- Outdated php-jwt does not conform to specs, breaks my login flow [Github Issue 306](https://github.com/auth0/wp-auth0/issues/306)
-
-**Added**
-- Added Lock 11 / Auth0 9.0, Updated SSO, JWT Algorithm Upgrade Fixes [Github PR 350](https://github.com/auth0/wp-auth0/pull/350) - [cocojoe](https://github.com/cocojoe)
-- Add RS256 support [Github PR 331](https://github.com/auth0/wp-auth0/pull/331) - [renrizzolo](https://github.com/renrizzolo)
-
-**Fixed**
-- Switching wizard admin user creation to use /dbconnections/signup  [Github PR 356](https://github.com/auth0/wp-auth0/pull/356) - [joshcanhelp](https://github.com/joshcanhelp)
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#340-2018-01-08)
 
 = 3.3.2 =
 
-**Added**
-- Added translation support for a few user-facing exception messages [Github PR 312](https://github.com/auth0/wp-auth0/pull/312) - [idpaterson](https://github.com/idpaterson)
-
-**Changed**
-- Use literal 'wp-auth0' rather than WPA0_LANG constant [Github PR 311](https://github.com/auth0/wp-auth0/pull/311) - [idpaterson](https://github.com/idpaterson)
-
-**Fixed**
-- Prevent script errors throughout the admin panel when anonymous data metrics are disabled [Github PR 328](https://github.com/auth0/wp-auth0/pull/328) - [idpaterson](https://github.com/idpaterson)
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#332-2017-10-05)
 
 = 3.2.24 =
 
-**Changed**
-- More generous JWT leeway [Github PR 332](https://github.com/auth0/wp-auth0/pull/332) - [cocojoe](https://github.com/cocojoe)
-
-**Removed**
-- Remove client_id/secret validation since it is not allowed anymore [Github PR 334](https://github.com/auth0/wp-auth0/pull/334) - [glena](https://github.com/glena)
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#3224-2017-08-14)
 
 = 3.2.23 =
 
-**Changed**
-- Update /authorize URL [Github PR 326](https://github.com/auth0/wp-auth0/pull/326) - [cocojoe](https://github.com/cocojoe)
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#3223-2017-07-18)
 
 = 3.2.22 =
 
-**Fixed**
-- Fixed migration for older plugins that use base64 secret [Github PR 324](https://github.com/auth0/wp-auth0/pull/324) - [cocojoe](https://github.com/cocojoe)
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#3222-2017-06-26)
 
 = 3.2.21 =
 
-**Added**
-- Improve redirect_login error logging, JWT leeway [Github PR 317](https://github.com/auth0/wp-auth0/pull/317) - [cocojoe](https://github.com/cocojoe)
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#3221-2017-06-14)
 
-**Changed**
-- Expand internal login error with hint to disable base 64 encoding [Github PR 318](https://github.com/auth0/wp-auth0/pull/318) - [cocojoe](https://github.com/cocojoe)
-- Disable base64_encoded by default [Github PR 313](https://github.com/auth0/wp-auth0/pull/313) - [thameera](https://github.com/thameera)
+= 3.2.5 =
 
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#325-2016-09-07)
+
+= 3.2.0 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#320-2016-08-16)
+
+= 3.1.4 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#314-2016-07-01)
+
+= 3.1.3 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#313-2016-06-15)
+
+= 3.1.2 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#312-2016-06-13)
+
+= 3.1.1 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#311-2016-06-06)
+
+= 2.2.0 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#220-2016-05-11)
+
+= 2.1.11 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#2111-2016-04-27)
+
+= 2.1.9 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#219-2016-04-07)
+
+= 2.1.8 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#218-2016-04-05)
+
+= 2.1.7 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#217-2016-04-05)
+
+= 2.1.6 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#216-2016-03-23)
+
+= 2.1.5 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#215-2016-03-23)
+
+= 2.1.4 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#214-2016-03-18)
+
+= 2.1.3 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#213-2016-03-16)
+
+= 2.1.2 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#212-2016-03-15)
+
+= 2.1.1 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#211-2016-03-11)
+
+= 2.1.0 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#210-2016-03-08)
+
+= 2.0.0 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#200-2016-03-01)
+
+= 1.3.6 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#136-2015-10-01)
+
+= 1.3.1 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#131-2015-06-10)
+
+= 1.3.0 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#130-2015-06-01)
+
+= 1.2.7 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#127-2015-05-28)
+
+= 1.2.4 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#124-2015-05-21)
+
+= 1.2.3 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#123-2015-05-19)
+
+= 1.2.2 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#122-2015-05-19)
+
+= 1.2.1 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#121-2015-05-14)
