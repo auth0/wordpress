@@ -240,7 +240,7 @@ class WP_Auth0_Lock_Options {
 		if ( ! $this->is_registration_enabled() ) {
 			$options_obj['disableSignupAction'] = true;
 		}
-
+		$options_obj['configurationBaseUrl'] =  'https://cdn.auth0.com';
 		return $options_obj;
 	}
 }
