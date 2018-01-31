@@ -221,6 +221,14 @@ class WP_Auth0_DBManager {
 			if ( $client_grant_created ) {
 				delete_option( 'wp_auth0_client_grant_failed' );
 				update_option( 'wp_auth0_client_grant_success', 1 );
+
+				if ( 409 !== $client_grant_created[ 'statusCode' ] ) {
+					WP_Auth0_ErrorManager::insert_auth0_error(
+						__METHOD__,
+						'Client Grant has been successfully created!'
+					);
+				}
+
 			} else {
 				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, sprintf(
 					__( 'Unable to automatically create Client Grant. Please go to your Auth0 Dashboard '
