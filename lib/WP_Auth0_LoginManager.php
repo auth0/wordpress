@@ -271,6 +271,8 @@ class WP_Auth0_LoginManager {
         } else {
           if ( null !== $stateFromGet && isset( $stateFromGet->redirect_to ) ) {
             $redirectURL = $stateFromGet->redirect_to;
+          } elseif ( !empty($state) ) {
+            $redirectURL = $state;
           } else {
             $redirectURL = $this->a0_options->get( 'default_login_redirection' );
           }
