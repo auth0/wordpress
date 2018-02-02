@@ -33,7 +33,7 @@ class WP_Auth0_Lock10_Options {
   }
 
   public function get_code_callback_url() {
-    $protocol = $this->_get_boolean( $this->wp_options->get( 'force_https_callback' ) ) ? 'https' : '';
+    $protocol = $this->_get_boolean( $this->wp_options->get( 'force_https_callback' ) ) ? 'https' : null;
     return $this->wp_options->get_wp_auth0_url( $protocol );
   }
 

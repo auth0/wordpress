@@ -58,7 +58,7 @@ class WP_Auth0_Routes {
 		$cdn = $this->a0_options->get( 'auth0js-cdn' );
 		$client_id = $this->a0_options->get( 'client_id' );
 		$domain = $this->a0_options->get( 'domain' );
-		$protocol = $this->a0_options->get( 'force_https_callback', FALSE ) ? 'https' : '';
+		$protocol = $this->a0_options->get( 'force_https_callback', FALSE ) ? 'https' : null;
 		$redirect_uri = $this->a0_options->get_wp_auth0_url( $protocol );
 		echo <<<EOT
 		<!DOCTYPE html>
