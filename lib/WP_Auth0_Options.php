@@ -129,6 +129,13 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		return add_query_arg( 'action', 'logout', site_url( 'wp-login.php', 'login' ) );
 	}
 
+	/**
+	 * Default settings when plugin is installed or reset
+	 *
+	 * TODO: Group these by settings page
+	 *
+	 * @return array
+	 */
 	protected function defaults() {
 		return array(
 			'version' => 1,

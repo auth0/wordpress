@@ -105,7 +105,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_jwt_auth_integration() {
     $v = absint( $this->options->get( 'jwt_auth_integration' ) );
 
-    echo $this->render_a0_switch( "wpa0_jwt_auth_integration", "jwt_auth_integration", 1, 1 == $v );
+    $this->render_a0_switch( "wpa0_jwt_auth_integration", "jwt_auth_integration", 1, 1 == $v );
 ?>
     <div class="subelement">
       <span class="description"><?php echo __( 'This will enable the JWT Auth\'s Users Repository override.', 'wp-auth0' ); ?></span>
@@ -171,7 +171,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_link_auth0_users() {
     $v = $this->options->get( 'link_auth0_users' );
 
-    echo $this->render_a0_switch( "wpa0_link_auth0_users", "link_auth0_users", 1, ! empty( $v ) );
+    $this->render_a0_switch( "wpa0_link_auth0_users", "link_auth0_users", 1, ! empty( $v ) );
 ?>
       <div class="subelement">
         <span class="description"><?php echo __( 'Links accounts with the same e-mail address. It will only occur if both e-mails are previously verified.', 'wp-auth0' ); ?></span>
@@ -182,7 +182,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_auto_provisioning() {
     $v = $this->options->get( 'auto_provisioning' );
 
-    echo $this->render_a0_switch( "wpa0_auto_provisioning", "auto_provisioning", 1, 1 == $v );
+    $this->render_a0_switch( "wpa0_auto_provisioning", "auto_provisioning", 1, 1 == $v );
 ?>
 
       <div class="subelement">
@@ -194,7 +194,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_passwordless_enabled() {
     $v = $this->options->get( 'passwordless_enabled' );
 
-    echo $this->render_a0_switch( "wpa0_passwordless_enabled", "passwordless_enabled", 1, 1 == $v );
+    $this->render_a0_switch( "wpa0_passwordless_enabled", "passwordless_enabled", 1, 1 == $v );
 ?>
 
       <div class="subelement">
@@ -206,7 +206,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_force_https_callback() {
     $v = $this->options->get( 'force_https_callback' );
 
-    echo $this->render_a0_switch( "wpa0_force_https_callback", "force_https_callback", 1, 1 == $v );
+    $this->render_a0_switch( "wpa0_force_https_callback", "force_https_callback", 1, 1 == $v );
 ?>
 
       <div class="subelement">
@@ -218,7 +218,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_remember_users_session() {
     $v = $this->options->get( 'remember_users_session' );
 
-    echo $this->render_a0_switch( "wpa0_remember_users_session", "remember_users_session", 1, 1 == $v );
+    $this->render_a0_switch( "wpa0_remember_users_session", "remember_users_session", 1, 1 == $v );
 ?>
 
       <div class="subelement">
@@ -231,7 +231,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $v = $this->options->get( 'migration_ws' );
     $token = $this->options->get( 'migration_token' );
 
-    echo $this->render_a0_switch( "wpa0_auth0_migration_ws", "migration_ws", 1, 1 == $v );
+    $this->render_a0_switch( "wpa0_auth0_migration_ws", "migration_ws", 1, 1 == $v );
 
     if ( $v ) {
 ?>
@@ -273,7 +273,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_auth0_implicit_workflow() {
     $v = absint( $this->options->get( 'auth0_implicit_workflow' ) );
 
-    echo $this->render_a0_switch( "wpa0_auth0_implicit_workflow", "auth0_implicit_workflow", 1, 1 == $v );
+    $this->render_a0_switch( "wpa0_auth0_implicit_workflow", "auth0_implicit_workflow", 1, 1 == $v );
 ?>
 
     <div class="subelement">
@@ -285,7 +285,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_auto_login() {
     $v = absint( $this->options->get( 'auto_login' ) );
 
-    echo $this->render_a0_switch( "wpa0_auto_login", "auto_login", 1, 1 == $v );
+    $this->render_a0_switch( "wpa0_auto_login", "auto_login", 1, 1 == $v );
 ?>
 
     <div class="subelement">
@@ -307,7 +307,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_ip_range_check() {
     $v = absint( $this->options->get( 'ip_range_check' ) );
 
-    echo $this->render_a0_switch( "wpa0_ip_range_check", "ip_range_check", 1, 1 == $v );
+    $this->render_a0_switch( "wpa0_ip_range_check", "ip_range_check", 1, 1 == $v );
   }
 
   public function render_ip_ranges() {
@@ -397,7 +397,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_metrics() {
     $v = absint( $this->options->get( 'metrics' ) );
 
-    echo $this->render_a0_switch( "wpa0_metrics", "metrics", 1, 1 == $v );
+    $this->render_a0_switch( "wpa0_metrics", "metrics", 1, 1 == $v );
 ?>
 
       <div class="subelement">
@@ -411,7 +411,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_verified_email() {
     $v = absint( $this->options->get( 'requires_verified_email' ) );
 
-    echo $this->render_a0_switch( "wpa0_verified_email", "requires_verified_email", 1, 1 == $v );
+    $this->render_a0_switch( "wpa0_verified_email", "requires_verified_email", 1, 1 == $v );
 ?>
       <div class="subelement">
         <span class="description"><?php echo __( 'Mark this if you require the user to have a verified email to login', 'wp-auth0' ); ?></span>

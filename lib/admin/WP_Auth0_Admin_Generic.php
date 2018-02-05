@@ -3,15 +3,17 @@
 class WP_Auth0_Admin_Generic {
 
 	protected $options;
+	protected $option_name;
 
 	protected $actions_middlewares = array();
 
 	public function __construct( WP_Auth0_Options_Generic $options ) {
 		$this->options = $options;
+		$this->option_name = $options->get_options_name();
 	}
 
 	protected function init_option_section( $sectionName, $id, $settings ) {
-		$options_name = $this->options->get_options_name() . '_' . strtolower( $id );
+		$options_name = $this->option_name . '_' . strtolower( $id );
 
 		add_settings_section(
 			"wp_auth0_{$id}_settings_section",
@@ -46,8 +48,8 @@ class WP_Auth0_Admin_Generic {
 
 	protected function add_validation_error( $error ) {
 		add_settings_error(
-			$this->options->get_options_name(),
-			$this->options->get_options_name(),
+			$this->option_name,
+			$this->option_name,
 			$error,
 			'error'
 		);
@@ -72,16 +74,23 @@ class WP_Auth0_Admin_Generic {
 		return $input;
 	}
 
-
-	protected function render_a0_switch( $id, $name, $value, $checked ) {
-?>
-
+	/**
+	 * Output a stylized switch on the options page
+	 *
+	 * @param string $id - input id attribute
+	 * @param string $input_name - input name attribute
+	 * @param string|integer|float $value - input value attribute
+	 * @param boolean $checked - is the switch checked or not?
+	 */
+	protected function render_a0_switch( $id, $input_name, $value, $checked ) {
+		?>
     <div class="a0-switch">
-      <input type="checkbox" name="<?php echo $this->options->get_options_name(); ?>[<?php echo $name; ?>]" id="<?php echo $id; ?>" value="<?php echo $value; ?>" <?php echo checked( $checked ); ?>/>
-      <label for="<?php echo $id; ?>"></label>
+      <input <?php echo checked( $checked ); ?> type="checkbox"
+             name="<?php echo esc_attr( $this->option_name . '[' . $input_name . ']' ); ?>"
+             id="<?php echo esc_attr( $id ); ?>"
+             value="<?php echo $value; ?>" />
+	    <label for="<?php echo esc_attr( $id ); ?>"></label>
     </div>
-
     <?php
 	}
-
 }
