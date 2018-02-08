@@ -265,11 +265,11 @@ class WP_Auth0_LoginManager {
 
       $userinfo = json_decode( $response['body'] );
       if ( $this->login_user( $userinfo, $data->id_token, $data->access_token ) ) {
-        if ( null !== $stateFromGet && isset( $stateFromGet->interim ) && $stateFromGet->interim ) {
+        if ( ! empty( $stateFromGet->interim ) ) {
           include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
           exit();
         } else {
-          if ( null !== $stateFromGet && isset( $stateFromGet->redirect_to ) ) {
+          if ( ! empty( $stateFromGet->redirect_to ) && wp_login_url() !== $stateFromGet->redirect_to ) {
             $redirectURL = $stateFromGet->redirect_to;
           } else {
             $redirectURL = $this->a0_options->get( 'default_login_redirection' );
@@ -327,11 +327,11 @@ class WP_Auth0_LoginManager {
       $decodedToken->user_id = $decodedToken->sub;
 
       if ( $this->login_user( $decodedToken, $token, null ) ) {
-        if ( null !== $stateFromGet && isset( $stateFromGet->interim ) && $stateFromGet->interim ) {
+        if ( ! empty( $stateFromGet->interim ) ) {
           include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
           exit();
         } else {
-          if ( null !== $stateFromGet && isset( $stateFromGet->redirect_to ) ) {
+          if ( ! empty( $stateFromGet->redirect_to ) && wp_login_url() !== $stateFromGet->redirect_to ) {
             $redirectURL = $stateFromGet->redirect_to;
           } else {
             $redirectURL = $this->a0_options->get( 'default_login_redirection' );
