@@ -1048,11 +1048,11 @@ class WP_Auth0_Api_Client {
 	 *
 	 * @return string
 	 */
-  protected static function convert_cert_to_pem( $cert ) {
-      return '-----BEGIN CERTIFICATE-----'.PHP_EOL
-          .chunk_split($cert, 64, PHP_EOL)
-          .'-----END CERTIFICATE-----'.PHP_EOL;
-  }
+	protected static function convertCertToPem( $cert ) {
+		return '-----BEGIN CERTIFICATE-----'.PHP_EOL
+		       . chunk_split($cert, 64, PHP_EOL)
+		       . '-----END CERTIFICATE-----'.PHP_EOL;
+	}
 
   public static function JWKfetch($domain) {
 
@@ -1111,19 +1111,4 @@ class WP_Auth0_Api_Client {
 			'client_credentials',
 		);
   }
-
-	/**
-	 * DEPRECATED 3.5.2
-	 * Deprecated in favor of a static method
-	 *
-	 * @see self::convert_cert_to_pem()
-	 *
-	 * @param string $cert
-	 *
-	 * @return string
-	 */
-	protected function convertCertToPem( $cert ) {
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		return self::convert_cert_to_pem( $cert );
-	}
 }
