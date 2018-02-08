@@ -14,6 +14,7 @@
     });
 
     var options = <?php echo json_encode( $lock_options->get_sso_options() ); ?>;
+    options.responseType = 'token id_token';
     webAuth.checkSession(options, function (err, authResult) {
       if (err !== null) {
         if(err.error ==='login_required') {
