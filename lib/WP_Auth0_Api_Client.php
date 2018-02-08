@@ -1039,6 +1039,15 @@ class WP_Auth0_Api_Client {
 		return json_decode($response['body']);
 	}
 
+	/**
+	 * Convert a certificate to PEM format
+	 *
+	 * @see https://en.wikipedia.org/wiki/Privacy-enhanced_Electronic_Mail
+	 *
+	 * @param string $cert - certificate, like from .well-known/jwks.json
+	 *
+	 * @return string
+	 */
   protected static function convert_cert_to_pem( $cert ) {
       return '-----BEGIN CERTIFICATE-----'.PHP_EOL
           .chunk_split($cert, 64, PHP_EOL)
@@ -1105,8 +1114,11 @@ class WP_Auth0_Api_Client {
 
 	/**
 	 * DEPRECATED 3.5.2
+	 * Deprecated in favor of a static method
 	 *
-	 * @param $cert
+	 * @see self::convert_cert_to_pem()
+	 *
+	 * @param string $cert
 	 *
 	 * @return string
 	 */
