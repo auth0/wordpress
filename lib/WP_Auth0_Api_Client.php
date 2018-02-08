@@ -1084,8 +1084,8 @@ class WP_Auth0_Api_Client {
 
 		$jwks = json_decode($response['body'], true);
 
-		foreach ($jwks['keys'] as $key) { 
-			$secret[$key['kid']] = self::convert_cert_to_pem($key['x5c'][0]);
+		foreach ($jwks['keys'] as $key) {
+			$secret[$key['kid']] = self::convertCertToPem($key['x5c'][0]);
 		}
 
 		if ($cache_expiration !== 0) {
