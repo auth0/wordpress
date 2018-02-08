@@ -36,17 +36,16 @@ Before you start, **make sure the admin user has a valid email that you own**, r
 1. Activate the plugin through the 'Plugins' menu in WordPress.
 1. Create an account in Auth0 (https://auth0.com) and add a new PHP Application. Copy the Client ID, Client Secret and Domain from the Settings of the Application.
 1. On the Settings of the Auth0 application change the Callback URL to be: `http://your-domain/index.php?auth0=1`. Using **TLS/SSL** is **recommended for production**.
-1. Go back to Wordpress `Settings` - `Auth0 Settings` edit the *Domain*, *Client ID* and *Client Secret* with the ones you copied from Auth0 Dashboard.
+1. Go back to WordPress `Settings` - `Auth0 Settings` edit the *Domain*, *Client ID* and *Client Secret* with the ones you copied from Auth0 Dashboard.
 
 == Screenshots ==
 
-1. The new login page on Wordpress
+1. The new login page on WordPress
 2. The admin to configure the plugin
 3. The new plugin quick setup
-4. Manage your social connections from the plugin
-5. Get info about the supported enterprise connections
-6. Set up the Auth0 widgets
-7. Your home page with the login widget enabled
+4. Get info about the supported enterprise connections
+5. Set up the Auth0 widgets
+6. Your home page with the login widget enabled
 
 == Technical Notes ==
 
@@ -64,27 +63,25 @@ For both scenarios you may configure in the WP admin whether is mandatory that t
 
 = Accessing Profile Information =
 
-Wordpress defines a function called `wp_get_current_user` to populate the global variable `current_user` with the logged in WP_User. Similarly we define `get_currentauth0userinfo` that populates `current_user` and `currentauth0_user` with the information of the [Normalized profile](https://docs.auth0.com/user-profile)
+WordPress defines a function called `wp_get_current_user` to populate the global variable `current_user` with the logged in WP_User. Similarly we define `get_currentauth0userinfo` that populates `current_user` and `currentauth0_user` with the information of the [Normalized profile](https://docs.auth0.com/user-profile)
 
-= Enabling dual (Auth0 and Wordpress) login =
+= Enabling dual (Auth0 and WordPress) login =
 
-You can enable the standard Wordpress login by turning on the "WordPress login enabled" setting (enabled by default). This will make visible a link on the login page to swap between both.
+You can enable the standard WordPress login by turning on the "WordPress login enabled" setting (enabled by default). This will make visible a link on the login page to swap between both.
 
 = Using the plugin widget =
 
-You can enable the Auth0 as a Wordpress widget in order to show it in the sidebar. The widget inherits the plugin settings and it can be overridden with its own settings.
+You can enable the Auth0 as a WordPress widget in order to show it in the sidebar. The widget inherits the plugin settings and it can be overridden with its own settings.
 
 Also, a new layout setting is enabled in order to be shown as a modal. Enabling the "Show as modal" setting, a button which trigger the modal is generated.
 
 = Using the login widget as a shortcode =
 
-Also, you can use the Auth0 widget as a shortcode in your posts.
-
-The way to use it is just adding the following:
+Also, you can use the Auth0 widget as a shortcode in your editor. Just add the following:
 
     [auth0]
 
-And can be customized by adding the following parameters:
+It can be customized by adding the following attributes:
 
 * form_title: string
 * dict: string, should be a the language or a valid json with the translation (see https://github.com/auth0/lock/wiki/Auth0Lock-customization#dict-stringobject)
@@ -104,9 +101,13 @@ All the details about the parameters on the lock wiki (https://github.com/auth0/
 
 == Frequently Asked Questions ==
 
+= Is this plugin compatible with WooCommerce? =
+
+Yes, this plugin will override the default WooCommerce login forms with the Lock widget.
+
 = What should I do if I end up with two accounts for the same user? =
 
-Under some situations, you may end up with a user with two accounts. Wordpress allows you to do merge users. You just delete one of the accounts and then attribute its contents to the user you want to merge with. Go to Users, select the account you want to delete, and in the confirmation dialog select another user to transfer the content.
+Under some situations, you may end up with a user with two accounts. WordPress allows you to do merge users. You just delete one of the accounts and then attribute its contents to the user you want to merge with. Go to Users, select the account you want to delete, and in the confirmation dialog select another user to transfer the content.
 
 = Can I customize the Login Widget? =
 
@@ -118,7 +119,7 @@ The Login Widget is Open Source. For more information about it: https://github.c
 
 = Can I access the user profile information? =
 
-The Auth0 plugin transparently handles login information for your Wordpress site and the plugins you use, so that it looks like any other login.
+The Auth0 plugin transparently handles login information for your WordPress site and the plugins you use, so that it looks like any other login.
 
 = When I install this plugin, will existing users still be able to login? =
 
