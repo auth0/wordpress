@@ -539,6 +539,9 @@ class WP_Auth0_LoginManager {
 
 	/**
 	 * DEPRECATED 3.5.0
+	 * Deprecated to improve the functionality and move to a new class
+	 *
+	 * @see \WP_Auth0_Email_Verification::render_die()
 	 *
 	 * @param $userinfo
 	 * @param $id_token
