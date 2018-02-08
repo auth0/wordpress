@@ -1,110 +1,31 @@
 ![](https://raw.githubusercontent.com/auth0/wp-auth0/master/banner-1544x500.png)
 
-Wordpress Plugin for Auth0
+Login by Auth0
 ====
 
 Single Sign On for Enterprises + Social Login + User/Passwords. For all your WordPress instances. Powered by Auth0.
 
-Demo: <http://auth0wp.azurewebsites.net>
-
-Documentation: <https://auth0.com/docs/cms>
+Download and install <https://wordpress.org/plugins/auth0/>
+Documentation: <https://auth0.com/docs/cms/wordpress>
 
 ## Important note on 3.5
 
 This is a major update that requires changes to your Auth0 Dashboard to be completed. You can save a new [API token](https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually) in your Basic settings in wp-admin before upgrading and the changes will be made automatically during the update. Otherwise, please review your [Client Advanced Settings](https://auth0.com/docs/cms/wordpress/configuration#client-setup), specifically your Grant Types, and [authorize your Client for the Management API](https://auth0.com/docs/cms/wordpress/configuration#authorize-the-client-for-the-management-api). 
 
-## Contributions
-
-All PR should be done towards the `dev` branch.
-
 ## Installation
 
-Before you start, **make sure the admin user has a valid email that you own**, read the Technical Notes for more information.
+[Please see the Installation page on auth0.com/docs](https://auth0.com/docs/cms/wordpress/installation)
 
-1. Install from the  **WordPress** Store or upload the entire wp-auth0 folder to the /wp-content/plugins/ directory.
-2. Activate the plugin through the 'Plugins' menu in  **WordPress**.
-3. Create an account in Auth0 (https://auth0.com) and add a new Application.
-4. Copy the Client ID, Client Secret and Domain from the Settings of the Application.
-5. On the Settings of the Auth0 application change the Callback URL to be: http://your-domain/index.php?auth0=1. Using TLS/SSL is recommended for production.
-6. Go back to  **WordPress** Settings - Auth0 Settings edit the Domain, Client ID and Client Secret with the ones you copied from Auth0 Dashboard.
+## Extending the plugin
 
-## Implicit Flow
+[Please see the Extending page on auth0.com/docs](https://auth0.com/docs/cms/wordpress/extending)
 
-There are cases where the server is behind a firewall and does not have access to internet (or at least, can't reach the Auth0 servers). In those cases, you can enable the Auth0 Implicit Flow in the advanced settings of the Auth0 Settings page.
-
-When it is enabled, the token is returned in the login callback and then sent back to the WordPress server so it doesn't need to call the Auth0 webservices.
-
-## Integrating with the plugin
-
-### User login action
-
-The plugin provides an action to get notified each time a user logs in or is created in WordPress. This action is called `auth0_user_login` and receives 5 params:
-1. $user_id (int): the id of the user logged in
-2. $user_profile (stdClass): the Auth0 profile of the user
-3. $is_new (boolean): `true` if the user was created on WordPress, `false` if doesn't. Don't get confused with Auth0 registrations, this flag will tell you if a new user was created on the WordPress database.
-4. $id_token (string): the user's JWT.
-5. $access_token (string): the user's access token. It is not provided when using the **Implicit flow**.
-
-To hook to this action, you will need to do the following:
-```
-    add_action( 'auth0_user_login', 'auth0UserLoginAction', 0,5 );
-
-    function auth0UserLoginAction($user_id, $user_profile, $is_new, $id_token, $access_token) {
-        ...
-    }
-```
-
-### Render verify email page
-
-This filter is called when a user with an unverified email logs in, and the `Requires verified email` setting is enabled.
-
-To hook to this filter, you will need to do the following:
-```
-    add_filter( 'auth0_verify_email_page', 'render_verify_email_page', 1, 3 );
-    function render_verify_email_page($html, $userinfo, $id_token) {
-        return "You need to verify your email to log in.";
-    }   
-```
-
-### Customize users matching
-
-This filter is called after the plugin finds the related user to login (based on the auth0 `user_id`). It allows to override the default behaviour with custom matching rules(for example, always match by email).
-
-If the filter returns null, it will lookup by email as stated in the [How does it work?](https://auth0.com/docs/cms/wordpress/how-does-it-work) document.
-
-```
-    add_filter( 'auth0_get_wp_user', 'auth0_get_wp_user_handler', 1, 2 );
-    function auth0_get_wp_user_handler($user, $userinfo) {
-        $user = get_user_by( 'email', $userinfo->email );
-
-        if ($joinUser instanceof WP_User) {
-            return $user;
-        }
-
-        return null;
-    }   
-```
-
-### Customize autologin connection
-
-This filter will allow to programatically set which connection the plugin should use when autologin is enabled.
-
-```
-    add_filter( 'auth0_get_auto_login_connection', 'auth0_get_auto_login_connection', 1, 1 );
-
-    function auth0_get_auto_login_connection($connection) {
-
-        if ( /* check some condition */ ) {
-            return 'twitter';
-        }
-
-        return $connection;
-    }
-```
+We're happy to review and approve new filters and actions that help you integrate even further in this plugin. Please
+ see the Contributing section at the bottom of this page.
 
 ## API authentication
 
-The last version of the plugin provides the ability integrate with **wp-jwt-auth** plugin to authenticate api calls via a HTTP Authorization Header.
+This plugin provides the ability integrate with **wp-jwt-auth** plugin to authenticate api calls via a HTTP Authorization Header.
 
 This plugin will detect if you have wp-jwt-auth installed and active and will offer to configure it. Accepting this, will set up the client id, secret and the custom user repository.
 
@@ -123,23 +44,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZW50IjoiVGhpc
 This JWT should match with a registered user in your WP installation.
 
 You can use this feature with API's provided by plugins like **WP REST API (WP API)**.
-
-## Fedback webtask creation
-
-```
-wt create --name wp-auth0-slack \
-    --secret SLACK_WEBHOOK_URL=... \
-    --secret SLACK_CHANNEL_NAME=... \
-    --output url slack-notifier.js 
-```
-
-## Ping webtask creation
-
-```
-wt create --name wp-auth0-ping \
-    --profile wptest-default \
-    ping.js
-```
 
 ## Technical Notes
 
@@ -209,7 +113,7 @@ Yes, this plugin will override the default WooCommerce login forms with the Lock
 
 Under some situations, you may end up with a user with two accounts.  **WordPress** allows you to do merge users. You just delete one of the accounts and then attribute its contents to the user you want to merge with. Go to Users, select the account you want to delete, and in the confirmation dialog select another user to transfer the content.
 
-### Can I customize the Login Widget?
+### Can I customize the login widget?
 
 You can style the login form by adding your css on the "Customize the Login Widget CSS" Auth0 setting and the widget settings
 
@@ -217,7 +121,7 @@ You can style the login form by adding your css on the "Customize the Login Widg
     form a.a0-btn-small { background-color: red !important; }
 ```
 
-The Login Widget is Open Source. For more information about it: https://github.com/auth0/lock
+The login widget, called Lock, is open source. For more information about it: https://github.com/auth0/lock
 
 ### Can I access the user profile information?
 
@@ -229,7 +133,7 @@ Yes. Read more about the requirements for that to happen in the Technical Notes.
 
 ### What authentication providers do you support?
 
-For a complete list look at https://docs.auth0.com/identityproviders
+For a complete list look at <https://auth0.com/docs/identityproviders>
 
 ### "This account does not have an email associated..."
 
@@ -256,6 +160,10 @@ We added a new field called "Extra settings" that allows you to add a json objec
 Have in mind that all the "Extra settings" that we allow to set up in the plugin settings page will be overrided (For more information about it: https://github.com/auth0/widget).
 
 ## Contributing
+
+Thank you in advance!
+
+All PR should be done towards the `dev` branch.
 
 ### How to build the initial setup assets?
 
@@ -284,8 +192,6 @@ $ stylus -w -o initial-setup.css initial-setup/main.styl
 ![](https://raw.githubusercontent.com/auth0/wp-auth0/master/screenshot-5.png)
 
 ![](https://raw.githubusercontent.com/auth0/wp-auth0/master/screenshot-6.png)
-
-![](https://raw.githubusercontent.com/auth0/wp-auth0/master/screenshot-7.png)
 
 ## Issue Reporting
 
