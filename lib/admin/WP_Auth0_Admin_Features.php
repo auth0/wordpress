@@ -49,7 +49,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function render_sso() {
     $v = absint( $this->options->get( 'sso' ) );
 
-    $this->render_a0_switch( "wpa0_sso", "sso", 1, 1 == $v );
+    $this->render_a0_switch( "wpa0_sso", "sso", 1 == $v );
 ?>
 
       <div class="subelement">
@@ -64,7 +64,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function render_singlelogout() {
     $v = absint( $this->options->get( 'singlelogout' ) );
 
-    $this->render_a0_switch( "wpa0_singlelogout", "singlelogout", 1, 1 == $v );
+    $this->render_a0_switch( "wpa0_singlelogout", "singlelogout", 1 == $v );
 ?>
 
       <div class="subelement">
@@ -79,7 +79,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function render_mfa() {
     $v = $this->options->get( 'mfa' );
 
-    $this->render_a0_switch( "wpa0_mfa", "mfa", 1, !empty( $v ) );
+    $this->render_a0_switch( "wpa0_mfa", "mfa", !empty( $v ) );
 ?>
 
       <div class="subelement">
@@ -97,7 +97,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function render_geo() {
     $v = $this->options->get( 'geo_rule' );
 
-    $this->render_a0_switch( "wpa0_geo_rule", "geo_rule", 1, !empty( $v ) );
+    $this->render_a0_switch( "wpa0_geo_rule", "geo_rule", !empty( $v ) );
 ?>
 
       <div class="subelement">
@@ -111,7 +111,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function render_income() {
     $v = $this->options->get( 'income_rule' );
 
-    $this->render_a0_switch( "wpa0_income_rule", "income_rule", 1, !empty( $v ) );
+    $this->render_a0_switch( "wpa0_income_rule", "income_rule", !empty( $v ) );
 ?>
       <div class="subelement">
         <span class="description"><?php echo __( 'Mark this if you want to store income data based on the zipcode (calculated using the users IP).', 'wp-auth0' ); ?></span>
@@ -125,7 +125,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function render_override_wp_avatars() {
     $v = $this->options->get( 'override_wp_avatars' );
 
-    $this->render_a0_switch( "wpa0_override_wp_avatars", "override_wp_avatars", 1, !empty( $v ) );
+    $this->render_a0_switch( "wpa0_override_wp_avatars", "override_wp_avatars", !empty( $v ) );
 ?>
       <div class="subelement">
         <span class="description"><?php echo __( 'Mark this if you want to override the WordPress avatar with the user\'s Auth0 profile avatar.', 'wp-auth0' ); ?></span>
@@ -137,7 +137,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
     $v = $this->options->get( 'fullcontact' );
     $apikey = $this->options->get( 'fullcontact_apikey' );
 
-    $this->render_a0_switch( "wpa0_fullcontact", "fullcontact", 1, !empty( $v ) );
+    $this->render_a0_switch( "wpa0_fullcontact", "fullcontact", !empty( $v ) );
 
 ?>
 

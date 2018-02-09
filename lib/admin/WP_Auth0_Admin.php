@@ -62,7 +62,7 @@ class WP_Auth0_Admin {
 
 	public function init() {
 		add_action( 'admin_init', array( $this, 'init_admin' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ), 1 );
 	}
 
 	public function admin_enqueue() {
@@ -72,17 +72,31 @@ class WP_Auth0_Admin {
 		}
 
 		wp_enqueue_media();
-		wp_enqueue_script( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/js/admin.js' );
-		wp_enqueue_script( 'wpa0_async', WPA0_PLUGIN_URL . 'assets/lib/async.min.js' );
-		wp_enqueue_style( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/css/bootstrap.min.css' );
-		wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/js/bootstrap.min.js' );
-		wp_enqueue_style( 'wpa0_admin_initial_settup', WPA0_PLUGIN_URL . 'assets/css/initial-setup.css' );
+		wp_enqueue_script(
+			'wpa0_admin',
+			WPA0_PLUGIN_URL . 'assets/js/admin.js',
+			array( 'jquery' ),
+			WPA0_VERSION
+		);
+		wp_enqueue_script( 'wpa0_async', WPA0_PLUGIN_URL . 'assets/lib/async.min.js', FALSE, WPA0_VERSION );
+		wp_enqueue_style( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/css/bootstrap.min.css', FALSE, '3.3.5' );
+		wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/js/bootstrap.min.js', FALSE, '3.3.6' );
+		wp_enqueue_style(
+			'wpa0_admin_initial_setup',
+			WPA0_PLUGIN_URL . 'assets/css/initial-setup.css',
+			FALSE,
+			WPA0_VERSION
+		);
 		wp_enqueue_style( 'media' );
 
 		wp_localize_script( 'wpa0_admin', 'wpa0', array(
-				'media_title' => __( 'Choose your icon', 'wp-auth0' ),
-				'media_button' => __( 'Choose icon', 'wp-auth0' ),
-			) );
+			'media_title' => __( 'Choose your icon', 'wp-auth0' ),
+			'media_button' => __( 'Choose icon', 'wp-auth0' ),
+			'clear_cache_working' => __( 'Working ...', 'wp-auth0' ),
+			'clear_cache_done' => __( 'Done!', 'wp-auth0' ),
+			'clear_cache_nonce' => wp_create_nonce( 'auth0_delete_cache_transient' ),
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+		) );
 	}
 
 	public function init_admin() {
@@ -107,8 +121,11 @@ class WP_Auth0_Admin {
 		$this->sections['advanced'] = new WP_Auth0_Admin_Advanced( $this->a0_options, $this->router );
 		$this->sections['advanced']->init();
 
-		register_setting( $this->a0_options->get_options_name() . '_basic', $this->a0_options->get_options_name(), array( $this, 'input_validator' ) );
-
+		register_setting(
+			$this->a0_options->get_options_name() . '_basic',
+			$this->a0_options->get_options_name(),
+			array( $this, 'input_validator' )
+		);
 	}
 
 	public function input_validator( $input ) {
@@ -137,9 +154,6 @@ class WP_Auth0_Admin {
 
 	public function render_settings_page() {
 
-		/**
-		 * TODO: Remove $social_connections and $this->get_social_connection()
-		 */
 		$social_connections = array();
 
 		foreach ( $this->providers as $provider ) {

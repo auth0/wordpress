@@ -88,7 +88,9 @@ class WP_Auth0_InitialSetup {
 	}
 
 	/**
-	 * TODO: collides with WP_Auth0_Admin->cant_connect_to_auth0() on settings page
+	 * Admin notice to appear if setup is incorrect or missing info
+	 *
+	 * @see init() method for this class
 	 */
 	public function notify_setup() {
 		?>

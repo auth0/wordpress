@@ -79,18 +79,77 @@ class WP_Auth0_Admin_Generic {
 	 *
 	 * @param string $id - input id attribute
 	 * @param string $input_name - input name attribute
-	 * @param string|integer|float $value - input value attribute
 	 * @param boolean $checked - is the switch checked or not?
 	 */
-	protected function render_a0_switch( $id, $input_name, $value, $checked ) {
-		?>
-    <div class="a0-switch">
-      <input <?php echo checked( $checked ); ?> type="checkbox"
-             name="<?php echo esc_attr( $this->option_name . '[' . $input_name . ']' ); ?>"
-             id="<?php echo esc_attr( $id ); ?>"
-             value="<?php echo $value; ?>" />
-	    <label for="<?php echo esc_attr( $id ); ?>"></label>
-    </div>
-    <?php
+	protected function render_a0_switch( $id, $input_name, $checked ) {
+		printf(
+			'<div class="a0-switch"><input type="checkbox" name="%s[%s]" id="%s" value="1"%s><label for="%s"></label></div>',
+			esc_attr( $this->option_name ),
+			esc_attr( $input_name ),
+			esc_attr( $id ),
+			checked( $checked, TRUE, FALSE ),
+			esc_attr( $id )
+		);
+	}
+
+	/**
+	 * Output a stylized text field on the options page
+	 *
+	 * @param string $id - input id attribute
+	 * @param string $input_name - input name attribute
+	 * @param string|integer|float $value - input value attribute
+	 * @param string $placeholder - input placeholder
+	 * @param string $type - input type attribute
+	 */
+	protected function render_text_field( $id, $input_name, $value, $placeholder = '', $type = 'text' ) {
+		printf(
+			'<input type="%s" name="%s[%s]" id="%s" value="%s" placeholder="%s">',
+			esc_attr( $type ),
+			esc_attr( $this->option_name ),
+			esc_attr( $input_name ),
+			esc_attr( $id ),
+			esc_attr( $value ),
+			$placeholder ? esc_attr( $placeholder ) : ''
+		);
+	}
+
+	protected function render_radio_button( $id, $input_name, $value, $label = '', $selected = FALSE ) {
+		printf(
+			'<input type="radio" name="%s[%s]" id="%s" value="%s" %s> <label for="%s">%s</label>',
+			esc_attr( $this->option_name ),
+			esc_attr( $input_name ),
+			esc_attr( $id ),
+			esc_attr( $value ),
+			checked( $selected, TRUE, FALSE ),
+			esc_attr( $id ),
+			sanitize_text_field( ! empty( $label ) ? $label : $value )
+		);
+	}
+
+	/**
+	 * Output a stylized text field on the options page
+	 *
+	 * @param string $text - description text to display
+	 */
+	protected function render_field_description( $text ) {
+		printf(
+			'<div class="subelement"><span class="description">%s</span></div>',
+			$text
+		);
+	}
+
+	/**
+	 * Output a translated dashboard URL
+	 *
+	 * @param string $path - dashboard sub-section, if any
+	 *
+	 * @return string
+	 */
+	protected function get_dashboard_link( $path = '' ) {
+		return sprintf(
+			'<a href="https://manage.auth0.com/#/%s" target="_blank">%s</a>',
+			$path,
+			__( 'Auth0 dashboard', 'wp-auth0' )
+		);
 	}
 }

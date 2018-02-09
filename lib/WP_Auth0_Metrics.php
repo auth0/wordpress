@@ -42,7 +42,14 @@ class WP_Auth0_Metrics {
 ?>
       <script src="//cdn.auth0.com/js/m/metrics-1.min.js"></script>
       <script>
-        var a0metricsLib = new Auth0Metrics("auth0-for-wordpress", "https://dwh-tracking.it.auth0.com/dwh-metrics", "wp-plugin");
+	      if ( typeof Auth0Metrics === 'object' ) {
+            var a0metricsLib = new Auth0Metrics(
+                'auth0-for-wordpress',
+		            'https://dwh-tracking.it.auth0.com/dwh-metrics',
+		            'wp-plugin'
+            );
+	      }
+
         function metricsTrack(event, trackData, callback) {
           if (typeof(a0metricsLib) === 'undefined') {
             return;

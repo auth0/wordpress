@@ -132,96 +132,90 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	/**
 	 * Default settings when plugin is installed or reset
 	 *
-	 * TODO: Group these by settings page
-	 *
 	 * @return array
 	 */
 	protected function defaults() {
 		return array(
+
+			// System
 			'version' => 1,
 			'metrics' => 1,
 			'last_step' => 1,
-			'auto_login' => 0,
-			'auto_login_method' => '',
+
+			// Basic
+			'domain' => '',
 			'client_id' => '',
 			'client_secret' => '',
+			'client_secret_b64_encoded' => null,
 			'client_signing_algorithm' => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
 			'cache_expiration' => 1440,
-			'client_secret_b64_encoded' => null,
-			'domain' => '',
-			'form_title' => '',
-			'icon_url' => '',
-			'ip_range_check' => 0,
-			'ip_ranges' => '',
-			'lock_connections' => '',
-			'passwordless_enabled' => false,
-			'passwordless_method' => 'magiclink',
-			'passwordless_cdn_url' => '//cdn.auth0.com/js/lock-passwordless-2.2.min.js',
-			'use_lock_10' => true,
-			'cdn_url' => '//cdn.auth0.com/js/lock/11.1/lock.min.js',
-			'cdn_url_legacy' => '//cdn.auth0.com/js/lock-9.2.min.js',
-			'requires_verified_email' => true,
-			'wordpress_login_enabled' => true,
-			'primary_color' => '',
-
-			'language' => '',
-			'language_dictionary' => '',
-
-			'custom_signup_fields' => '',
-
-			'social_big_buttons' => false,
-			'username_style' => '',
-			'extra_conf' => '',
-			'custom_css' => '',
-			'custom_js' => '',
-			'auth0_implicit_workflow' => false,
-			'sso' => false,
-			'singlelogout' => false,
-			'gravatar' => true,
-			'jwt_auth_integration' => false,
 			'auth0_app_token' => null,
 			'api_audience' => null,
+			'wordpress_login_enabled' => true,
+
+			// Features
+			'password_policy' => 'fair',
+			'sso' => false,
+			'singlelogout' => false,
 			'mfa' => null,
 			'fullcontact' => null,
 			'fullcontact_rule' => null,
 			'fullcontact_apikey' => null,
 			'geo_rule' => null,
 			'income_rule' => null,
-			'link_auth0_users' => null,
-			'remember_users_session' => false,
-
 			'override_wp_avatars' => true,
 
+			// Appearance
+			'form_title' => '',
+			'social_big_buttons' => false,
+			'icon_url' => '',
+			'gravatar' => true,
+			'custom_css' => '',
+			'custom_js' => '',
+			'username_style' => '',
+			'primary_color' => '',
+			'language' => '',
+			'language_dictionary' => '',
+
+			// Advanced
+			'auto_provisioning' => false,
+			'passwordless_enabled' => false,
+			'passwordless_method' => 'magiclink',
+			'force_https_callback' => false,
+			'cdn_url' => '//cdn.auth0.com/js/lock/11.1/lock.min.js',
+			'cdn_url_legacy' => '//cdn.auth0.com/js/lock-9.2.min.js',
+			'passwordless_cdn_url' => '//cdn.auth0.com/js/lock-passwordless-2.2.min.js',
+			'lock_connections' => '',
+			'remember_users_session' => false,
+			'link_auth0_users' => null,
+			'social_twitter_key' => '',
+			'social_twitter_secret' => '',
+			'social_facebook_key' => '',
+			'social_facebook_secret' => '',
 			'migration_ws' => false,
-			'migration_token' => null,
-			'migration_token_id' => null,
+
 			'migration_ips_filter' => false,
 			'migration_ips' => null,
-			'valid_proxy_ip' => null,
 
+			'auto_login' => 0,
+			'auto_login_method' => '',
+			'ip_range_check' => 0,
+			'ip_ranges' => '',
+			'use_lock_10' => true,
+			'requires_verified_email' => true,
+			'custom_signup_fields' => '',
+			'extra_conf' => '',
+			'auth0_implicit_workflow' => false,
+			'jwt_auth_integration' => false,
+			'migration_token' => null,
+			'migration_token_id' => null,
+			'valid_proxy_ip' => null,
 			'amplificator_title' => '',
 			'amplificator_subtitle' => '',
-
 			'connections' => array(),
-
-			'password_policy' => 'fair',
-
-			'force_https_callback' => false,
-
-			'auto_provisioning' => false,
 			'default_login_redirection' => home_url(),
-			
 			'auth0_server_domain' => 'auth0.auth0.com',
 			'auth0js-cdn' => '//cdn.auth0.com/js/auth0/9.1/auth0.min.js',
-
-			//DASHBOARD
-			'chart_idp_type' => 'donut',
-			'chart_gender_type' => 'donut',
-			'chart_age_type' => 'donut',
-
-			'chart_age_from' => '10',
-			'chart_age_to' => '70',
-			'chart_age_step' => '5',
 		);
 	}
 }

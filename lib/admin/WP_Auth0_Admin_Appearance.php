@@ -110,13 +110,13 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	public function render_social_big_buttons() {
 		$v = absint( $this->options->get( 'social_big_buttons' ) );
 
-		$this->render_a0_switch( "wpa0_social_big_buttons", "social_big_buttons", 1, 1 == $v );
+		$this->render_a0_switch( "wpa0_social_big_buttons", "social_big_buttons", 1 == $v );
 	}
 
 	public function render_gravatar() {
 		$v = absint( $this->options->get( 'gravatar' ) );
 
-		$this->render_a0_switch( "wpa0_gravatar", "gravatar", 1, 1 == $v );
+		$this->render_a0_switch( "wpa0_gravatar", "gravatar", 1 == $v );
 ?>
 
       <div class="subelement">
