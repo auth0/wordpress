@@ -14,160 +14,192 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
     'mfa_validation',
   );
 
+	/**
+	 * Sets up settings field registration
+	 */
   public function init() {
-
     $this->init_option_section( '', 'features', array(
-
-        array( 'id' => 'wpa0_password_policy', 'name' => 'Password Policy', 'function' => 'render_password_policy' ),
-        array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)', 'function' => 'render_sso' ),
-        array( 'id' => 'wpa0_singlelogout', 'name' => 'Single Logout', 'function' => 'render_singlelogout' ),
-        array( 'id' => 'wpa0_mfa', 'name' => 'Multifactor Authentication (MFA)', 'function' => 'render_mfa' ),
-        array( 'id' => 'wpa0_fullcontact', 'name' => 'FullContact integration', 'function' => 'render_fullcontact' ),
-        array( 'id' => 'wpa0_geo', 'name' => 'Store geolocation', 'function' => 'render_geo' ),
-        array( 'id' => 'wpa0_income', 'name' => 'Store zipcode income', 'function' => 'render_income' ),
-        array( 'id' => 'wpa0_override_wp_avatars', 'name' => 'Override WordPress avatars', 'function' => 'render_override_wp_avatars' ),
-
+        array( 'id' => 'wpa0_password_policy', 'name' => 'Password Policy',
+               'function' => 'render_password_policy' ),
+        array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)',
+               'function' => 'render_sso' ),
+        array( 'id' => 'wpa0_singlelogout', 'name' => 'Single Logout',
+               'function' => 'render_singlelogout' ),
+        array( 'id' => 'wpa0_mfa', 'name' => 'Multifactor Authentication (MFA)',
+               'function' => 'render_mfa' ),
+        array( 'id' => 'wpa0_fullcontact', 'name' => 'FullContact integration',
+               'function' => 'render_fullcontact' ),
+        array( 'id' => 'wpa0_geo', 'name' => 'Store geolocation',
+               'function' => 'render_geo' ),
+        array( 'id' => 'wpa0_income', 'name' => 'Store zipcode income',
+               'function' => 'render_income' ),
+        array( 'id' => 'wpa0_override_wp_avatars', 'name' => 'Override WordPress avatars',
+               'function' => 'render_override_wp_avatars' ),
       ) );
   }
 
+	/**
+	 * Render description at the top of the settings block
+	 */
+	public function render_features_description() {
+		printf( '<p class="a0-step-text">%s</p>', self::FEATURES_DESCRIPTION );
+	}
+
+	/**
+	 * Render password_policy options
+	 */
   public function render_password_policy() {
-    $v = $this->options->get( 'password_policy' );
-?>
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[password_policy]" id="wpa0_password_policy_none" value="" <?php echo checked( $v, null, false ); ?>/><label for="wpa0_password_policy_none">None</label>
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[password_policy]" id="wpa0_password_policy_low" value="low" <?php echo checked( $v, 'low', false ); ?>/><label for="wpa0_password_policy_low">Low</label>
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[password_policy]" id="wpa0_password_policy_fair" value="fair" <?php echo checked( $v, 'fair', false ); ?>/><label for="wpa0_password_policy_fair">Fair</label>
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[password_policy]" id="wpa0_password_policy_good" value="good" <?php echo checked( $v, 'good', false ); ?>/><label for="wpa0_password_policy_good">Good</label>
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[password_policy]" id="wpa0_password_policy_excellent" value="excellent" <?php echo checked( $v, 'excellent', false ); ?>/><label for="wpa0_password_policy_excellent">Excellent</label>
-      <div class="subelement">
-        <span class="description">
-          <?php echo __( 'The difficulty of the user password where \'none\' requires a single character, \'low\' requires six characters and so on. For more details see our', 'wp-auth0' ); ?> <a target="_blank" href="https://auth0.com/docs/password-strength"><?php echo __( 'help page', 'wp-auth0' ); ?></a> <?php echo __( 'on password difficulty.', 'wp-auth0' ); ?>
-        </span>
-      </div>
-    <?php
+	  $value = $this->options->get( 'password_policy' );
+	  $this->render_radio_button( 'wpa0_password_policy_none', 'password_policy', '', 'None', empty( $value ) );
+	  $this->render_radio_button( 'wpa0_password_policy_low', 'password_policy', 'low', '', 'low' === $value );
+	  $this->render_radio_button( 'wpa0_password_policy_fair', 'password_policy', 'fair', '', 'fair' === $value );
+	  $this->render_radio_button( 'wpa0_password_policy_fair', 'password_policy', 'good', '', 'good' === $value );
+	  $this->render_radio_button( 'wpa0_password_policy_ex', 'password_policy', 'excellent', '', 'excellent' === $value );
+	  $this->render_field_description(
+		  __( 'Password security policy used; for information on the levels, see our ', 'wp-auth0' ) .
+		  sprintf(
+		  	'<a target="_blank" href="https://auth0.com/docs/password-strength">%s</a>',
+			  __( 'help page on password strength', 'wp-auth0' )
+		  )
+	  );
   }
 
-  public function render_sso() {
-    $v = absint( $this->options->get( 'sso' ) );
+	/**
+	 * Render SSO switch
+	 */
+	public function render_sso() {
+		$value = absint( $this->options->get( 'sso' ) );
+		$this->render_a0_switch( 'wpa0_sso', 'sso', 1 == $value );
+		$this->render_field_description(
+			__( 'Single Sign On (SSO) allows users to sign in once to multiple Clients in the same tenant. ', 'wp-auth0' ) .
+			__( 'For more details, see our ', 'wp-auth0' ) .
+			sprintf(
+				'<a target="_blank" href="https://auth0.com/docs/sso/single-sign-on">%s</a>',
+				__( 'help page on SSO', 'wp-auth0' )
+			)
+		);
+	}
 
-    $this->render_a0_switch( "wpa0_sso", "sso", 1 == $v );
-?>
+	/**
+	 * Render SLO switch
+	 */
+	public function render_singlelogout() {
+		$value = absint( $this->options->get( 'singlelogout' ) );
+		$this->render_a0_switch( 'wpa0_singlelogout', 'singlelogout', 1 == $value );
+		$this->render_field_description(
+			__( 'Single Logout (SLO) allows users to sign out of multiple Clients in the same tenant. ', 'wp-auth0' ) .
+			__( 'For more details, see our ', 'wp-auth0' ) .
+			sprintf(
+				'<a target="_blank" href="https://auth0.com/docs/sso/single-sign-on">%s</a>',
+				__( 'help page on SSO', 'wp-auth0' )
+			)
+		);
+	}
 
-      <div class="subelement">
-        <span class="description">
-          <?php echo __( 'Single Sign On (SSO) allows users to sign in once to multiple services. For more details, see our ', 'wp-auth0' ); ?>
-          <a target="_blank" href="https://auth0.com/docs/sso/single-sign-on"><?php echo __( 'help page on SSO', 'wp-auth0' ); ?></a>.
-        </span>
-      </div>
-    <?php
-  }
-
-  public function render_singlelogout() {
-    $v = absint( $this->options->get( 'singlelogout' ) );
-
-    $this->render_a0_switch( "wpa0_singlelogout", "singlelogout", 1 == $v );
-?>
-
-      <div class="subelement">
-        <span class="description">
-          <?php echo __( 'Single Logout is the opposite of the above SSO, it logs users out of everything at once. For more details, see our', 'wp-auth0' ); ?>
-          <a target="_blank" href="https://auth0.com/docs/sso/single-sign-on"><?php echo __( 'help page on SSO', 'wp-auth0' ); ?></a>.
-        </span>
-      </div>
-    <?php
-  }
-
+	/**
+	 * Render MFA switch
+	 */
   public function render_mfa() {
-    $v = $this->options->get( 'mfa' );
-
-    $this->render_a0_switch( "wpa0_mfa", "mfa", !empty( $v ) );
-?>
-
-      <div class="subelement">
-        <span class="description">
-          <?php echo __( 'Mark this if you want to enable multifactor authentication with Auth0 Guardian. For more information, see ', 'wp-auth0' ); ?>
-          <a target="_blank" href="https://auth0.com/docs/mfa"><?php echo __( 'our help page on MFA', 'wp-auth0' ); ?></a>.
-          <?php echo __( 'You can enable other MFA providers from the ', 'wp-auth0' ); ?>
-          <a target="_blank" href="https://manage.auth0.com/#/multifactor"><?php echo __( 'Auth0 dashboard', 'wp-auth0' ); ?></a>.
-          <?php echo __( 'You can reset your users MFA provider data, by going to the user and clicking on "Delete MFA Provider" button.', 'wp-auth0' ); ?>
-        </span>
-      </div>
-    <?php
+	  $value = absint( $this->options->get( 'mfa' ) );
+	  $this->render_a0_switch( 'wpa0_mfa', 'mfa', ! empty( $value ) );
+	  $this->render_field_description(
+		  __( 'Mark this if you want to enable multifactor authentication with Auth0 Guardian. ', 'wp-auth0' ) .
+		  __( 'For more details, see our ', 'wp-auth0' ) .
+		  sprintf(
+			  '<a target="_blank" href="https://auth0.com/docs/mfa">%s</a>',
+			  __( 'help page on MFA', 'wp-auth0' )
+		  ) .
+		  __( 'You can enable other MFA providers from the ', 'wp-auth0' ) .
+		  $this->get_dashboard_link( 'multifactor' )
+	  );
   }
 
+	/**
+	 * Render FullContact switch and API key field
+	 *
+	 * TODO: test me ... remove validation if not working
+	 */
+	public function render_fullcontact() {
+		$fullcontact_on = absint( $this->options->get( 'fullcontact' ) );
+		$fullcontact_key = $this->options->get( 'fullcontact_apikey' );
+		$this->render_a0_switch( 'wpa0_fullcontact', 'fullcontact', ! empty( $fullcontact_on ) );
+
+		$fullcontact_key_id = 'wpa0_fullcontact_key';
+		printf(
+			'<div class="subelement fullcontact %s">
+				<label for="%s" id="%s_label">%s</label>
+				<input type="text" id="%s" name="%s[fullcontact_apikey]" value="%s">
+			</div>',
+			empty( $fullcontact_on ) ? 'hidden' : '',
+			esc_attr( $fullcontact_key_id ),
+			esc_attr( $fullcontact_key_id ),
+			__( 'Enter your FullContact api key:', 'wp-auth0' ),
+			esc_attr( $fullcontact_key_id ),
+			esc_attr( $this->option_name ),
+			esc_attr( $fullcontact_key )
+		);
+
+		$this->render_field_description(
+			__( 'Enriches your user profiles with the data provided by FullContact. ', 'wp-auth0' ) .
+			__( 'A valid FullContact API key is required. ', 'wp-auth0' ) .
+			__( 'For more details, see our ', 'wp-auth0' ) .
+			sprintf(
+				'<a target="_blank" href="https://auth0.com/docs/scenarios/mixpanel-fullcontact-salesforce'
+					. '#2-augment-user-profile-with-fullcontact-">%s</a>',
+				__( 'help page on FullContact integration with Auth0', 'wp-auth0' )
+			)
+		);
+	}
+
+	/**
+	 * Render geolocation switch
+	 *
+	 * TODO: test me ... remove validation if not working
+	 */
   public function render_geo() {
-    $v = $this->options->get( 'geo_rule' );
-
-    $this->render_a0_switch( "wpa0_geo_rule", "geo_rule", !empty( $v ) );
-?>
-
-      <div class="subelement">
-        <span class="description">
-          <?php echo __( 'Mark this if you want to store geo location information based on your users IP in the user_metadata', 'wp-auth0' );?>
-        </span>
-      </div>
-    <?php
+	  $value = absint( $this->options->get( 'geo_rule' ) );
+	  $this->render_a0_switch( 'wpa0_geo_rule', 'geo_rule', ! empty( $value ) );
+	  $this->render_field_description(
+		  __( 'Store geo location information based on your users IP in the user_metadata', 'wp-auth0' )
+	  );
   }
 
+	/**
+	 * Render zipcode income switch
+	 *
+	 * TODO: test me ... remove validation if not working
+	 */
   public function render_income() {
-    $v = $this->options->get( 'income_rule' );
-
-    $this->render_a0_switch( "wpa0_income_rule", "income_rule", !empty( $v ) );
-?>
-      <div class="subelement">
-        <span class="description"><?php echo __( 'Mark this if you want to store income data based on the zipcode (calculated using the users IP).', 'wp-auth0' ); ?></span>
-      </div>
-      <div class="subelement">
-        <span class="description"><?php echo __( 'Represents the median income of the users zipcode, based on last US census data.', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
+	  $value = absint( $this->options->get( 'income_rule' ) );
+	  $this->render_a0_switch( 'wpa0_income_rule', 'income_rule', ! empty( $value ) );
+	  $this->render_field_description(
+		  __( 'Mark this if you want to store income data based on the zipcode (based on IP address). ', 'wp-auth0' ).
+		  __( 'Represents the median income of the users zipcode, based on last US census data. ', 'wp-auth0' )
+	  );
   }
 
+	/**
+	 * Render avatar override switch
+	 */
   public function render_override_wp_avatars() {
-    $v = $this->options->get( 'override_wp_avatars' );
-
-    $this->render_a0_switch( "wpa0_override_wp_avatars", "override_wp_avatars", !empty( $v ) );
-?>
-      <div class="subelement">
-        <span class="description"><?php echo __( 'Mark this if you want to override the WordPress avatar with the user\'s Auth0 profile avatar.', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
+	  $value = absint( $this->options->get( 'override_wp_avatars' ) );
+	  $this->render_a0_switch( 'wpa0_override_wp_avatars', 'override_wp_avatars', ! empty( $value ) );
+	  $this->render_field_description(
+		  __( 'Overrides the WordPress avatar with the Auth0 profile avatar. ', 'wp-auth0' )
+	  );
   }
 
-  public function render_fullcontact() {
-    $v = $this->options->get( 'fullcontact' );
-    $apikey = $this->options->get( 'fullcontact_apikey' );
-
-    $this->render_a0_switch( "wpa0_fullcontact", "fullcontact", !empty( $v ) );
-
-?>
-
-      <div class="subelement fullcontact <?php echo empty( $v ) ? 'hidden' : ''; ?>">
-        <label for="wpa0_fullcontact_key" id="wpa0_fullcontact_key_label">Enter your FullContact api key:</label>
-        <input type="text" id="wpa0_fullcontact_key" name="<?php echo $this->options->get_options_name(); ?>[fullcontact_apikey]" value="<?php echo $apikey; ?>" />
-      </div>
-
-      <div class="subelement">
-        <span class="description">
-          <?php echo __( 'Mark this if you want to enrich your users\' profiles with the data provided by FullContact. A valid api key is required. ', 'wp-auth0' ); ?>
-          <?php echo __( 'For more information, see our ', 'wp-auth0' ); ?>
-          <a target="_blank" href="https://auth0.com/docs/scenarios/mixpanel-fullcontact-salesforce#2-augment-user-profile-with-fullcontact-"><?php echo __( 'help page on FullContact integration with Auth0', 'wp-auth0' );?></a>
-        </span>
-      </div>
-    <?php
-  }
-
-  public function render_features_description() {
-?>
-
-    <p class=\"a0-step-text\"><?php echo self::FEATURES_DESCRIPTION; ?></p>
-
-    <?php
-  }
-
+	/**
+	 * Validate settings being saved
+	 *
+	 * @param array $old_options - options array before saving
+	 * @param array $input - options array after saving
+	 *
+	 * @return array
+	 */
   public function basic_validation( $old_options, $input ) {
-    $input['singlelogout'] = ( isset( $input['singlelogout'] ) ? $input['singlelogout'] : 0 );
-    $input['override_wp_avatars'] = ( isset( $input['override_wp_avatars'] ) ? $input['override_wp_avatars'] : 0 );
-
+    $input['singlelogout'] = ! empty( $input['singlelogout'] ) ? 1 : 0;
+    $input['override_wp_avatars'] = ! empty( $input['override_wp_avatars'] ) ? 1 : 0;
     return $input;
   }
 

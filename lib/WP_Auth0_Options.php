@@ -139,8 +139,14 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
 			// System
 			'version' => 1,
-			'metrics' => 1,
 			'last_step' => 1,
+			'migration_token_id' => null,
+			'use_lock_10' => true,
+			'jwt_auth_integration' => false,
+			'amplificator_title' => '',
+			'amplificator_subtitle' => '',
+			'connections' => array(),
+			'auth0js-cdn' => '//cdn.auth0.com/js/auth0/9.1/auth0.min.js',
 
 			// Basic
 			'domain' => '',
@@ -193,29 +199,21 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'social_facebook_key' => '',
 			'social_facebook_secret' => '',
 			'migration_ws' => false,
-
+			'migration_token' => null,
 			'migration_ips_filter' => false,
 			'migration_ips' => null,
-
+			'auth0_implicit_workflow' => false,
+			'default_login_redirection' => home_url(),
+			'requires_verified_email' => true,
 			'auto_login' => 0,
 			'auto_login_method' => '',
 			'ip_range_check' => 0,
 			'ip_ranges' => '',
-			'use_lock_10' => true,
-			'requires_verified_email' => true,
+			'valid_proxy_ip' => null,
 			'custom_signup_fields' => '',
 			'extra_conf' => '',
-			'auth0_implicit_workflow' => false,
-			'jwt_auth_integration' => false,
-			'migration_token' => null,
-			'migration_token_id' => null,
-			'valid_proxy_ip' => null,
-			'amplificator_title' => '',
-			'amplificator_subtitle' => '',
-			'connections' => array(),
-			'default_login_redirection' => home_url(),
 			'auth0_server_domain' => 'auth0.auth0.com',
-			'auth0js-cdn' => '//cdn.auth0.com/js/auth0/9.1/auth0.min.js',
+			'metrics' => 1,
 		);
 	}
 }

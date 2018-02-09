@@ -113,6 +113,15 @@ class WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Output a radio button
+	 *
+	 * @param string $id - input id attribute
+	 * @param string $input_name - input name attribute
+	 * @param string|integer|float $value - input value attribute
+	 * @param string $label - input label text
+	 * @param bool $selected - is it active?
+	 */
 	protected function render_radio_button( $id, $input_name, $value, $label = '', $selected = FALSE ) {
 		printf(
 			'<input type="radio" name="%s[%s]" id="%s" value="%s" %s> <label for="%s">%s</label>',
@@ -122,12 +131,12 @@ class WP_Auth0_Admin_Generic {
 			esc_attr( $value ),
 			checked( $selected, TRUE, FALSE ),
 			esc_attr( $id ),
-			sanitize_text_field( ! empty( $label ) ? $label : $value )
+			sanitize_text_field( ! empty( $label ) ? $label : ucfirst( $value ) )
 		);
 	}
 
 	/**
-	 * Output a stylized text field on the options page
+	 * Output a field description
 	 *
 	 * @param string $text - description text to display
 	 */

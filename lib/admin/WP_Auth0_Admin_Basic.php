@@ -4,14 +4,13 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
 	const BASIC_DESCRIPTION = 'Basic settings related to Auth0 credentials and basic WordPress integration.';
 
-	protected $actions_middlewares = array(
-		'basic_validation',
-	);
+	protected $actions_middlewares = array( 'basic_validation' );
 
+	/**
+	 * Sets up AJAX handler and settings field registration
+	 */
 	public function init() {
-
 		add_action( 'wp_ajax_auth0_delete_cache_transient', array( $this, 'auth0_delete_cache_transient' ) );
-
 		$this->init_option_section( '', 'basic', array(
 				array( 'id' => 'wpa0_domain', 'name' => 'Domain',
 				       'function' => 'render_domain' ),
@@ -99,10 +98,10 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
 	public function render_client_signing_algorithm() {
 		$curr_client_alg = $this->options->get( 'client_signing_algorithm',  WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG );
-		$this->render_radio_button( 'wpa0_client_signing_algorithm_h', 'client_signing_algorithm', 'HS256', '', (
+		$this->render_radio_button( 'wpa0_client_signing_algorithm_hs', 'client_signing_algorithm', 'HS256', '', (
 			'HS256' === $curr_client_alg
 		) );
-		$this->render_radio_button( 'wpa0_client_signing_algorithm_r', 'client_signing_algorithm', 'RS256', '', (
+		$this->render_radio_button( 'wpa0_client_signing_algorithm_rs', 'client_signing_algorithm', 'RS256', '', (
 			'RS256' === $curr_client_alg
 		) );
 
