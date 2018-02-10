@@ -57,10 +57,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	  $this->render_radio_button( 'wpa0_password_policy_ex', 'password_policy', 'excellent', '', 'excellent' === $value );
 	  $this->render_field_description(
 		  __( 'Password security policy used; for information on the levels, see our ', 'wp-auth0' ) .
-		  sprintf(
-		  	'<a target="_blank" href="https://auth0.com/docs/password-strength">%s</a>',
-			  __( 'help page on password strength', 'wp-auth0' )
-		  )
+		  $this->get_docs_link( 'password-strength', __( 'help page on password strength', 'wp-auth0' ) )
 	  );
   }
 
@@ -73,10 +70,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		$this->render_field_description(
 			__( 'Single Sign On (SSO) allows users to sign in once to multiple Clients in the same tenant. ', 'wp-auth0' ) .
 			__( 'For more details, see our ', 'wp-auth0' ) .
-			sprintf(
-				'<a target="_blank" href="https://auth0.com/docs/sso/single-sign-on">%s</a>',
-				__( 'help page on SSO', 'wp-auth0' )
-			)
+			$this->get_docs_link( 'sso/single-sign-on', __( 'help page on SSO', 'wp-auth0' ) )
 		);
 	}
 
@@ -89,10 +83,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		$this->render_field_description(
 			__( 'Single Logout (SLO) allows users to sign out of multiple Clients in the same tenant. ', 'wp-auth0' ) .
 			__( 'For more details, see our ', 'wp-auth0' ) .
-			sprintf(
-				'<a target="_blank" href="https://auth0.com/docs/sso/single-sign-on">%s</a>',
-				__( 'help page on SSO', 'wp-auth0' )
-			)
+			$this->get_docs_link( 'sso/single-sign-on', __( 'help page on SSO', 'wp-auth0' ) )
 		);
 	}
 
@@ -105,10 +96,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	  $this->render_field_description(
 		  __( 'Mark this if you want to enable multifactor authentication with Auth0 Guardian. ', 'wp-auth0' ) .
 		  __( 'For more details, see our ', 'wp-auth0' ) .
-		  sprintf(
-			  '<a target="_blank" href="https://auth0.com/docs/mfa">%s</a>',
-			  __( 'help page on MFA', 'wp-auth0' )
-		  ) .
+		  $this->get_docs_link( 'mfa', __( 'help page on MFA', 'wp-auth0' ) ) .
 		  __( 'You can enable other MFA providers from the ', 'wp-auth0' ) .
 		  $this->get_dashboard_link( 'multifactor' )
 	  );
@@ -143,9 +131,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 			__( 'Enriches your user profiles with the data provided by FullContact. ', 'wp-auth0' ) .
 			__( 'A valid FullContact API key is required. ', 'wp-auth0' ) .
 			__( 'For more details, see our ', 'wp-auth0' ) .
-			sprintf(
-				'<a target="_blank" href="https://auth0.com/docs/scenarios/mixpanel-fullcontact-salesforce'
-					. '#2-augment-user-profile-with-fullcontact-">%s</a>',
+			$this->get_docs_link(
+				'scenarios/mixpanel-fullcontact-salesforce',
 				__( 'help page on FullContact integration with Auth0', 'wp-auth0' )
 			)
 		);

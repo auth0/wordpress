@@ -46,11 +46,10 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * Render domain setting field
 	 */
 	public function render_domain() {
-		$this->render_text_field( 'wpa0_domain', 'domain', $this->options->get( 'domain' ) );
+		$this->render_text_field( 'wpa0_domain', 'domain', 'text', 'your-tenant.auth0.com' );
 		$this->render_field_description(
 			__( 'Your Auth0 domain, found in your Client settings in the ', 'wp-auth0' ) .
-			$this->get_dashboard_link( 'clients' ) .
-			__( ', like foo.auth0.com', 'wp-auth0' )
+			$this->get_dashboard_link( 'clients' )
 		);
 	}
 
@@ -58,7 +57,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * Render client_id settings field
 	 */
 	public function render_client_id() {
-		$this->render_text_field( 'wpa0_client_id', 'client_id', $this->options->get( 'client_id' ) );
+		$this->render_text_field( 'wpa0_client_id', 'client_id' );
 		$this->render_field_description(
 			__( 'Client ID, found in your Client settings in the ', 'wp-auth0' ) .
 			$this->get_dashboard_link( 'clients' )
@@ -69,14 +68,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * Render client_secret field (should never actually be displayed)
 	 */
 	public function render_client_secret() {
-		$this->render_text_field(
-			'wpa0_client_secret',
-			'client_secret',
-			'',
-			$this->options->get( 'client_secret', '' ) ? 'Not visible' : '',
-			'password'
-		);
-
+		$this->render_text_field( 'wpa0_client_secret', 'client_secret', 'password' );
 		$this->render_field_description(
 			__( 'Client Secret, found in your Client settings in the ', 'wp-auth0' ) .
 			$this->get_dashboard_link( 'clients' )
@@ -96,13 +88,16 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render client signing algorithm choices
+	 */
 	public function render_client_signing_algorithm() {
-		$curr_client_alg = $this->options->get( 'client_signing_algorithm',  WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG );
+		$value = $this->options->get( 'client_signing_algorithm',  WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG );
 		$this->render_radio_button( 'wpa0_client_signing_algorithm_hs', 'client_signing_algorithm', 'HS256', '', (
-			'HS256' === $curr_client_alg
+			'HS256' === $value
 		) );
 		$this->render_radio_button( 'wpa0_client_signing_algorithm_rs', 'client_signing_algorithm', 'RS256', '', (
-			'RS256' === $curr_client_alg
+			'RS256' === $value
 		) );
 
 		$this->render_field_description(
@@ -116,19 +111,11 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * Render cache_expiration and delete cache button
 	 */
 	public function render_cache_expiration() {
-		$this->render_text_field(
-			'wpa0_cache_expiration',
-			'cache_expiration',
-			$this->options->get( 'cache_expiration' ),
-			'',
-			'number'
-		);
-
+		$this->render_text_field( 'wpa0_cache_expiration', 'cache_expiration', 'number' );
 		printf(
 			' <input type="button" id="auth0_delete_cache_transient" value="%s" class="button button-secondary">',
 			__( 'Delete Cache', 'wp-auth0' )
 		);
-
 		$this->render_field_description( __( 'JWKS cache expiration in minutes; set to 0 for no caching', 'wp-auth0' ) );
 	}
 
@@ -136,20 +123,11 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * Render app_token field (should never actually be displayed)
 	 */
 	public function render_auth0_app_token() {
-		$this->render_text_field(
-			'wpa0_auth0_app_token',
-			'auth0_app_token',
-			'',
-			$this->options->get( 'auth0_app_token', '' ) ? 'Not visible' : '',
-			'password'
-		);
+		$this->render_text_field( 'wpa0_auth0_app_token', 'auth0_app_token', 'password' );
 
 		$this->render_field_description(
 			__( 'This token should be', 'wp-auth0' ) .
-			sprintf(
-				' <a href="https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually" target="_blank">%s</a> ',
-				__( 'generated manually', 'wp-auth0' )
-			) .
+			$this->get_docs_link( 'api/management/v2/tokens#get-a-token-manually', __( 'generated manually', 'wp-auth0' ) ) .
 			__( 'with the following scopes', 'wp-auth0' ) . ': ' .
 			'<br><code>' . implode( '</code>, <code>', WP_Auth0_Api_Client::ConsentRequiredScopes() ) . '</code>'
 		);
@@ -159,7 +137,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * Render api_audience
 	 */
 	public function render_api_audience() {
-		$this->render_text_field( 'wpa0_api_audience', 'api_audience', $this->options->get( 'api_audience' ) );
+		$this->render_text_field( 'wpa0_api_audience', 'api_audience' );
 		$this->render_field_description( __( 'API Identifier for the management API', 'wp-auth0' ) );
 	}
 

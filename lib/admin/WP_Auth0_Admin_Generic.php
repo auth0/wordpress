@@ -97,11 +97,18 @@ class WP_Auth0_Admin_Generic {
 	 *
 	 * @param string $id - input id attribute
 	 * @param string $input_name - input name attribute
-	 * @param string|integer|float $value - input value attribute
-	 * @param string $placeholder - input placeholder
 	 * @param string $type - input type attribute
+	 * @param string $placeholder - input placeholder
 	 */
-	protected function render_text_field( $id, $input_name, $value, $placeholder = '', $type = 'text' ) {
+	protected function render_text_field( $id, $input_name, $type = 'text', $placeholder = '' ) {
+		$value = $this->options->get( $input_name );
+
+		// Secure fields are not output by default; validation keeps last value if a new one is not entered
+		if ( 'password' === $type ) {
+			$placeholder = empty( $value ) ? 'Not visible' : '';
+			$value = '';
+		}
+
 		printf(
 			'<input type="%s" name="%s[%s]" id="%s" value="%s" placeholder="%s">',
 			esc_attr( $type ),
@@ -110,6 +117,23 @@ class WP_Auth0_Admin_Generic {
 			esc_attr( $id ),
 			esc_attr( $value ),
 			$placeholder ? esc_attr( $placeholder ) : ''
+		);
+	}
+
+	/**
+	 * Output a stylized textarea field on the options page
+	 *
+	 * @param string $id - input id attribute
+	 * @param string $input_name - input name attribute
+	 */
+	protected function render_textarea_field( $id, $input_name ) {
+		$value = $this->options->get( $input_name );
+		printf(
+			'<textarea name="%s[%s]" id="%s" rows="5" class="code">%s</textarea>',
+			esc_attr( $this->option_name ),
+			esc_attr( $input_name ),
+			esc_attr( $id ),
+			esc_textarea( $value )
 		);
 	}
 
@@ -141,24 +165,34 @@ class WP_Auth0_Admin_Generic {
 	 * @param string $text - description text to display
 	 */
 	protected function render_field_description( $text ) {
-		printf(
-			'<div class="subelement"><span class="description">%s</span></div>',
-			$text
-		);
+		printf( '<div class="subelement"><span class="description">%s</span></div>', $text );
 	}
 
 	/**
-	 * Output a translated dashboard URL
+	 * Output translated dashboard HTML link
 	 *
 	 * @param string $path - dashboard sub-section, if any
 	 *
 	 * @return string
 	 */
 	protected function get_dashboard_link( $path = '' ) {
-		return sprintf(
-			'<a href="https://manage.auth0.com/#/%s" target="_blank">%s</a>',
+		return sprintf( '<a href="https://manage.auth0.com/#/%s" target="_blank">%s</a>',
 			$path,
 			__( 'Auth0 dashboard', 'wp-auth0' )
 		);
+	}
+
+	/**
+	 * Output a docs HTML link
+	 *
+	 * @param string $path - docs sub-page, if any
+	 * @param string $text - link text, should be translated before passing
+	 *
+	 * @return string
+	 */
+	protected function get_docs_link( $path, $text = '' ) {
+		$path = '/' === $path[0] ? substr( $path, 1 ) : $path;
+		$text = empty( $text ) ? __( 'here', 'wp-auth0' ) : sanitize_text_field( $text );
+		return sprintf( '<a href="https://auth0.com/docs/%s" target="_blank">%s</a>',	$path, $text );
 	}
 }

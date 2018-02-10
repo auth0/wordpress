@@ -8,144 +8,168 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		'basic_validation',
 	);
 
+	/**
+	 * Sets up ettings field registration
+	 */
 	public function init() {
-
 		$this->init_option_section( '', 'appearance', array(
-
-				array( 'id' => 'wpa0_form_title', 'name' => 'Form Title', 'function' => 'render_form_title' ),
-				array( 'id' => 'wpa0_social_big_buttons', 'name' => 'Show big social buttons', 'function' => 'render_social_big_buttons' ),
-				array( 'id' => 'wpa0_icon_url', 'name' => 'Icon URL', 'function' => 'render_icon_url' ),
-				array( 'id' => 'wpa0_gravatar', 'name' => 'Enable Gravatar integration', 'function' => 'render_gravatar' ),
-				array( 'id' => 'wpa0_custom_css', 'name' => 'Customize the Login Widget CSS', 'function' => 'render_custom_css' ),
-				array( 'id' => 'wpa0_custom_js', 'name' => 'Customize the Login Widget with custom JS', 'function' => 'render_custom_js' ),
-				array( 'id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style' ),
-        array( 'id' => 'wpa0_primary_color', 'name' => 'Lock primary color', 'function' => 'render_primary_color' ),
-        array( 'id' => 'wpa0_language', 'name' => 'Lock Language', 'function' => 'render_language' ),
-				array( 'id' => 'wpa0_language_dictionary', 'name' => 'Lock Language Dictionary', 'function' => 'render_language_dictionary' ),
-
-			) );
+			array( 'id' => 'wpa0_form_title', 'name' => 'Form Title',
+			       'function' => 'render_form_title' ),
+			array( 'id' => 'wpa0_social_big_buttons', 'name' => 'Show big social buttons',
+			       'function' => 'render_social_big_buttons' ),
+			array( 'id' => 'wpa0_icon_url', 'name' => 'Icon URL',
+			       'function' => 'render_icon_url' ),
+			array( 'id' => 'wpa0_gravatar', 'name' => 'Enable Gravatar integration',
+			       'function' => 'render_gravatar' ),
+			array( 'id' => 'wpa0_custom_css', 'name' => 'Customize the Login Widget CSS',
+			       'function' => 'render_custom_css' ),
+			array( 'id' => 'wpa0_custom_js', 'name' => 'Customize the Login Widget with custom JS',
+			       'function' => 'render_custom_js' ),
+			array( 'id' => 'wpa0_username_style', 'name' => 'Username style',
+			       'function' => 'render_username_style' ),
+			array( 'id' => 'wpa0_primary_color', 'name' => 'Lock primary color',
+			       'function' => 'render_primary_color' ),
+			array( 'id' => 'wpa0_language', 'name' => 'Lock Language',
+			       'function' => 'render_language' ),
+			array( 'id' => 'wpa0_language_dictionary', 'name' => 'Lock Language Dictionary',
+			       'function' => 'render_language_dictionary' ),
+		) );
 	}
 
-	public function render_form_title() {
-		$v = $this->options->get( 'form_title' );
-?>
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[form_title]" id="wpa0_form_title" value="<?php echo esc_attr( $v ); ?>"/>
-      <div class="subelement">
-        <span class="description"><?php echo __( 'This is the title for the login widget', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
-	}
-
-  public function render_language() {
-    $v = $this->options->get( 'language' );
-?>
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[language]" id="wpa0_language" value="<?php echo esc_attr( $v ); ?>" />
-      <div class="subelement">
-        <span class="description"><?php echo __( 'This is the widget\'s language param.', 'wp-auth0' ); ?><a target="_blank" href="https://github.com/auth0/lock#ui-options"><?php echo __( 'More info', 'wp-auth0' ); ?></a></span>
-      </div>
-    <?php
-  }
-
-	public function render_primary_color() {
-    $v = $this->options->get( 'primary_color' );
-?>
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[primary_color]" id="wpa0_primary_color" value="<?php echo esc_attr( $v ); ?>" />
-      <div class="subelement">
-        <span class="description"><?php echo __( 'The primary color for Lock', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
-  }
-
-  public function render_language_dictionary() {
-    $v = $this->options->get( 'language_dictionary' );
-?>
-      <textarea name="<?php echo $this->options->get_options_name(); ?>[language_dictionary]" id="wpa0_language_dictionary"><?php echo esc_attr( $v ); ?></textarea>
-      <div class="subelement">
-        <span class="description"><?php echo __( 'This is the widget\'s languageDictionary param.', 'wp-auth0' ); ?><a target="_blank" href="https://github.com/auth0/lock#ui-options"><?php echo __( 'More info', 'wp-auth0' ); ?></a></span>
-      </div>
-    <?php
-  }
-
-	public function render_custom_css() {
-		$v = $this->options->get( 'custom_css' );
-?>
-      <textarea name="<?php echo $this->options->get_options_name(); ?>[custom_css]" id="wpa0_custom_css"><?php echo esc_attr( $v ); ?></textarea>
-      <div class="subelement">
-        <span class="description"><?php echo __( 'This should be a valid CSS to customize the Auth0 login widget. ', 'wp-auth0' ); ?><a target="_blank" href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget"><?php echo __( 'More info', 'wp-auth0' ); ?></a></span>
-      </div>
-    <?php
-	}
-
-	public function render_custom_js() {
-		$v = $this->options->get( 'custom_js' );
-?>
-      <textarea name="<?php echo $this->options->get_options_name(); ?>[custom_js]" id="wpa0_custom_js"><?php echo esc_attr( $v ); ?></textarea>
-      <div class="subelement">
-        <span class="description"><?php echo __( 'This should be a valid JS to customize the Auth0 login widget to, for example, add custom buttons. ', 'wp-auth0' ); ?><a target="_blank" href="https://auth0.com/docs/hrd#option-3-adding-custom-buttons-to-lock"><?php echo __( 'More info', 'wp-auth0' ); ?></a></span>
-      </div>
-    <?php
-	}
-
-	public function render_username_style() {
-		$v = $this->options->get( 'username_style' );
-?>
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[username_style]" id="wpa0_username_style_auto" value="" <?php echo esc_attr( $v ) == '' ? 'checked="true"' : ''; ?> />
-      <label for="wpa0_username_style_auto"><?php echo __( 'Auto', 'wp-auth0' ); ?></label>
-
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[username_style]" id="wpa0_username_style_email" value="email" <?php echo esc_attr( $v ) == 'email' ? 'checked="true"' : ''; ?> />
-      <label for="wpa0_username_style_email"><?php echo __( 'Email', 'wp-auth0' ); ?></label>
-
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[username_style]" id="wpa0_username_style_username" value="username" <?php echo esc_attr( $v ) == 'username' ? 'checked="true"' : ''; ?> />
-      <label for="wpa0_username_style_username"><?php echo __( 'Username', 'wp-auth0' ); ?></label>
-
-      <div class="subelement">
-        <span class="description">
-          <?php echo __( 'If you want to allow the user to use either email or password, set it to Auto.', 'wp-auth0' ); ?>
-          <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#usernamestyle-string-"><?php echo __( 'More info', 'wp-auth0' ); ?></a>
-        </span>
-      </div>
-    <?php
-	}
-
-	public function render_social_big_buttons() {
-		$v = absint( $this->options->get( 'social_big_buttons' ) );
-
-		$this->render_a0_switch( "wpa0_social_big_buttons", "social_big_buttons", 1 == $v );
-	}
-
-	public function render_gravatar() {
-		$v = absint( $this->options->get( 'gravatar' ) );
-
-		$this->render_a0_switch( "wpa0_gravatar", "gravatar", 1 == $v );
-?>
-
-      <div class="subelement">
-        <span class="description">
-          <?php echo __( 'Read more about the gravatar integration ', 'wp-auth0' ); ?>
-          <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization#gravatar-boolean-"><?php echo __( 'HERE', 'wp-auth0' ); ?></a></span>
-      </div>
-    <?php
-	}
-
-	public function render_icon_url() {
-		$v = $this->options->get( 'icon_url' );
-?>
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[icon_url]" id="wpa0_icon_url" value="<?php echo esc_attr( $v ); ?>"/>
-      <a target="_blank" href="javascript:void(0);" id="wpa0_choose_icon" class="button-secondary"><?php echo __( 'Choose Icon', 'wp-auth0' ); ?></a>
-      <div class="subelement">
-        <span class="description"><?php echo __( 'The icon should be 32x32 pixels!', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
-	}
-
+	/**
+	 * Render description at the top of the settings block
+	 */
 	public function render_appearance_description() {
-?>
-
-    <p class=\"a0-step-text\"><?php echo self::APPEARANCE_DESCRIPTION; ?></p>
-
-    <?php
+		printf( '<p class="a0-step-text">%s</p>', self::APPEARANCE_DESCRIPTION );
 	}
 
+	/**
+	 * Render form_title field
+	 */
+	public function render_form_title() {
+		$this->render_text_field( 'wpa0_form_title', 'form_title' );
+		$this->render_field_description( __( 'Title for the Auth0 login form', 'wp-auth0' ) );
+	}
+
+	/**
+	 * Render social_big_buttons
+	 */
+	public function render_social_big_buttons() {
+		$value = absint( $this->options->get( 'social_big_buttons' ) );
+		$this->render_a0_switch( 'wpa0_social_big_buttons', 'social_big_buttons', 1 == $value );
+		$this->render_field_description( __( 'Uses full-width social login buttons when activated', 'wp-auth0' ) );
+	}
+
+	/**
+	 * Render icon_url field and select button
+	 */
+	public function render_icon_url() {
+		$this->render_text_field( 'wpa0_icon_url', 'icon_url' );
+		printf(
+			' <button id="wpa0_choose_icon" class="button-secondary">%s</button>',
+			__( 'Choose Icon', 'wp-auth0' )
+		);
+		$this->render_field_description( __( 'Icon should be 32 pixels square', 'wp-auth0' ) );
+	}
+
+	/**
+	 * Render gravatar on/off switch
+	 */
+	public function render_gravatar() {
+		$value = absint( $this->options->get( 'gravatar' ) );
+		$this->render_a0_switch( 'wpa0_gravatar', 'gravatar', 1 == $value );
+		$this->render_field_description(
+			__( 'Read more about the gravatar integration on ', 'wp-auth0' ) .
+			$this->get_docs_link( 'libraries/lock/customization#gravatar-boolean-', __( ' this docs page', 'wp-auth0' ) )
+		);
+	}
+
+	/**
+	 * Render the custom CSS textarea
+	 */
+	public function render_custom_css() {
+		$this->render_textarea_field( 'wpa0_custom_css', 'custom_css' );
+		$this->render_field_description(
+			__( 'Valid CSS to customize the Auth0 login form. ', 'wp-auth0' ) .
+			sprintf(
+				'<a href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget">%s</a>',
+				__( 'More information here', 'wp-auth0' )
+			)
+		);
+	}
+
+	/**
+	 * Render the custom CSS textarea
+	 */
+	public function render_custom_js() {
+		$this->render_textarea_field( 'wpa0_custom_js', 'custom_js' );
+		$this->render_field_description(
+			__( 'Valid JS to customize the Auth0 login form. ', 'wp-auth0' ) .
+			$this->get_docs_link( 'hrd#option-3-adding-custom-buttons-to-lock', __( 'Example here', 'wp-auth0' ) )
+		);
+	}
+
+	/**
+	 * Render username style radio buttons
+	 */
+	public function render_username_style() {
+		$value = $this->options->get( 'username_style' );
+		$this->render_radio_button( 'wpa0_username_style_au', 'username_style', '', 'Auto', empty( $value ) );
+		$this->render_radio_button( 'wpa0_username_style_em', 'username_style', 'email', '', 'email' === $value );
+		$this->render_radio_button( 'wpa0_username_style_un', 'username_style', 'username', '', 'username' === $value );
+		$this->render_field_description(
+			__( 'To allow the user to use either email or username to login, set this to "Auto." ', 'wp-auth0' ) .
+			$this->get_docs_link(
+				'libraries/lock/customization#usernamestyle-string-',
+				__( 'More information here', 'wp-auth0'	)
+			)
+		);
+	}
+
+	/**
+	 * Render primary color field
+	 */
+	public function render_primary_color() {
+		$this->render_text_field( 'wpa0_primary_color', 'primary_color' );
+		$this->render_field_description( __( 'Primary color for the Auth0 login form', 'wp-auth0' ) );
+	}
+
+	/**
+	 * Render language field
+	 */
+	public function render_language() {
+		$this->render_text_field( 'wpa0_language', 'language' );
+		$this->render_field_description(
+			__( 'The language parameter for the Auth0 login form. ', 'wp-auth0' ) .
+			sprintf(
+				'<a href="https://github.com/auth0/lock#ui-options">%s</a>',
+				__( 'More information', 'wp-auth0' )
+			)
+		);
+	}
+
+	/**
+	 * Render the custom CSS textarea
+	 */
+	public function render_language_dictionary() {
+		$this->render_textarea_field( 'wpa0_custom_js', 'language_dictionary' );
+		$this->render_field_description(
+			__( 'The languageDictionary parameter for the Auth0 login form. ', 'wp-auth0' ) .
+			sprintf(
+				'<a href="https://github.com/auth0/lock#ui-options">%s</a>',
+				__( 'More information', 'wp-auth0' )
+			)
+		);
+	}
+
+	/**
+	 * Validate settings being saved
+	 *
+	 * @param array $old_options - options array before saving
+	 * @param array $input - options array after saving
+	 *
+	 * @return array
+	 */
 	public function basic_validation( $old_options, $input ) {
     $input['form_title'] = sanitize_text_field( $input['form_title'] );
 		$input['icon_url'] = esc_url( $input['icon_url'], array( 'http', 'https' ) );
@@ -156,21 +180,12 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
     if ( trim( $input['language_dictionary'] ) !== '' ) {
       if ( json_decode( $input['language_dictionary'] ) === null ) {
-        $error = __( 'The language dictionary parameter should be a valid json object.', 'wp-auth0' );
+        $error = __( 'The Appearance > Lock Language Dictionary parameter must be a valid JSON object.', 'wp-auth0' );
         $this->add_validation_error( $error );
         $input['language'] = $old_options['language'];
       }
     }
 
-		// if ( trim( $input['extra_conf'] ) !== '' ) {
-		//  if ( json_decode( $input['extra_conf'] ) === null ) {
-		//    $error = __( 'The Extra settings parameter should be a valid json object.', 'wp-auth0' );
-		//    $this->add_validation_error( $error );
-		//  }
-		// }
-
 		return $input;
 	}
-
-
 }
