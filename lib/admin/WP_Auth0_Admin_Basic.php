@@ -11,25 +11,32 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	public function init() {
 		add_action( 'wp_ajax_auth0_delete_cache_transient', array( $this, 'auth0_delete_cache_transient' ) );
 		$this->init_option_section( '', 'basic', array(
-				array( 'id' => 'wpa0_domain', 'name' => 'Domain',
+				array( 'id' => 'wpa0_domain',
+				       'name' => __( 'Domain', 'wp-auth0' ),
 				       'function' => 'render_domain' ),
-				array( 'id' => 'wpa0_client_id', 'name' => 'Client ID',
+				array( 'id' => 'wpa0_client_id',
+				       'name' => __( 'Client ID', 'wp-auth0' ),
 				       'function' => 'render_client_id' ),
-				array( 'id' => 'wpa0_client_secret', 'name' => 'Client Secret',
+				array( 'id' => 'wpa0_client_secret',
+				       'name' => __( 'Client Secret', 'wp-auth0' ),
 				       'function' => 'render_client_secret' ),
-				array( 'id' => 'wpa0_client_secret_b64_encoded', 'name' => 'Client Secret Base64 Encoded',
+				array( 'id' => 'wpa0_client_secret_b64_encoded',
+				       'name' => __( 'Client Secret Base64 Encoded', 'wp-auth0' ),
 				       'function' => 'render_client_secret_b64_encoded' ),
-				array( 'id' => 'wpa0_client_signing_algorithm', 'name' => 'Client Signing Algorithm',
+				array( 'id' => 'wpa0_client_signing_algorithm',
+				       'name' => __( 'Client Signing Algorithm', 'wp-auth0' ),
 				       'function' => 'render_client_signing_algorithm' ),
-				array( 'id' => 'wpa0_cache_expiration', 'name' => 'Cache Time (minutes)',
+				array( 'id' => 'wpa0_cache_expiration',
+				       'name' => __( 'Cache time (minutes)', 'wp-auth0' ),
 				       'function' => 'render_cache_expiration' ),
-				array( 'id' => 'wpa0_auth0_app_token', 'name' => 'API token',
+				array( 'id' => 'wpa0_auth0_app_token',
+				       'name' => __( 'API token', 'wp-auth0' ),
 				       'function' => 'render_auth0_app_token' ),
-				array( 'id' => 'wpa0_api_audience', 'name' => 'API Identifier (audience)',
-				       'function' => 'render_api_audience' ),
-				array( 'id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled',
+				array( 'id' => 'wpa0_login_enabled',
+				       'name' => __( 'WordPress login enabled', 'wp-auth0' ),
 				       'function' => 'render_allow_wordpress_login' ),
-				array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup',
+				array( 'id' => 'wpa0_allow_signup',
+				       'name' => __( 'Allow signups', 'wp-auth0' ),
 				       'function' => 'render_allow_signup' ),
 			) );
 	}
@@ -40,7 +47,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	public function render_domain() {
 		$this->render_text_field( 'wpa0_domain', 'domain', 'text', 'your-tenant.auth0.com' );
 		$this->render_field_description(
-			__( 'Your Auth0 domain, found in your Client settings in the ', 'wp-auth0' ) .
+			__( 'Auth0 Domain, found in your Client settings in the ', 'wp-auth0' ) .
 			$this->get_dashboard_link( 'clients' )
 		);
 	}
@@ -73,9 +80,9 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	public function render_client_secret_b64_encoded() {
 		$this->render_switch( 'wpa_client_secret_b64_encoded', 'client_secret_b64_encoded' );
 		$this->render_field_description(
-			__( 'Enable if your client secret is base64 enabled. ', 'wp-auth0' ) .
-			__( 'If you are not sure, check your Client settings in Auth0. ', 'wp-auth0' ) .
-			__( 'It will say below your client secret whether it is encoded or not', 'wp-auth0' )
+			__( 'Enable if your client secret is base64 enabled; ', 'wp-auth0' ) .
+			__( 'found below the Client Secret field in the ', 'wp-auth0' ) .
+			$this->get_dashboard_link( 'clients' )
 		);
 	}
 
@@ -92,8 +99,9 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		) );
 
 		$this->render_field_description(
-			sprintf( __( 'Default new Client value is %s. ', 'wp-auth0' ), WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG ) .
-			__( 'If you are not sure, check your Client > Advanced > OAuth settings in your ', 'wp-auth0' ) .
+			sprintf( __( 'Default new Client value is %s; ', 'wp-auth0' ), WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG ) .
+			__( 'found at Client > Show Advanced Settings > OAuth > "JsonWebToken Signature Algorithm" in your ',
+				'wp-auth0' ) .
 			$this->get_dashboard_link( 'clients' )
 		);
 	}
@@ -108,6 +116,15 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			__( 'Delete Cache', 'wp-auth0' )
 		);
 		$this->render_field_description( __( 'JWKS cache expiration in minutes; set to 0 for no caching', 'wp-auth0' ) );
+
+		if ( $domain = $this->options->get( 'domain' ) ) {
+			$this->render_field_description(
+				sprintf( '<a href="https://%s/.well-known/jwks.json" target="_blank">%s</a>',
+					$domain,
+					__( 'View your JWKS here', 'wp-auth0' )
+				)
+			);
+		}
 	}
 
 	/**
@@ -117,19 +134,11 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$this->render_text_field( 'wpa0_auth0_app_token', 'auth0_app_token', 'password' );
 
 		$this->render_field_description(
-			__( 'This token should be', 'wp-auth0' ) .
+			__( 'This token should be ', 'wp-auth0' ) .
 			$this->get_docs_link( 'api/management/v2/tokens#get-a-token-manually', __( 'generated manually', 'wp-auth0' ) ) .
-			__( 'with the following scopes', 'wp-auth0' ) . ': ' .
+			__( ' with the following scopes', 'wp-auth0' ) . ': ' .
 			'<br><code>' . implode( '</code>, <code>', WP_Auth0_Api_Client::ConsentRequiredScopes() ) . '</code>'
 		);
-	}
-
-	/**
-	 * Render api_audience
-	 */
-	public function render_api_audience() {
-		$this->render_text_field( 'wpa0_api_audience', 'api_audience' );
-		$this->render_field_description( __( 'API Identifier for the management API', 'wp-auth0' ) );
 	}
 
 	/**
@@ -138,7 +147,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	public function render_allow_wordpress_login() {
 		$this->render_switch( 'wpa0_wp_login_enabled', 'wordpress_login_enabled' );
 		$this->render_field_description(
-			__( 'Turn on to enable a link on wp-login.php pointing to the core login form', 'wp-auth0' )
+			__( 'Turn on to enable a link on wp-login.php pointing to the core login form; ', 'wp-auth0' ) .
+			__( 'this is typically only used while testing the plugin initially or on staging', 'wp-auth0' )
 		);
 	}
 
@@ -205,13 +215,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$input['auth0_app_token'] = ( ! empty( $input['auth0_app_token'] )
 			? $input['auth0_app_token']
 			: $old_options['auth0_app_token'] );
-
-		if ( ! empty( $input['domain'] ) ) {
-
-			$input['api_audience'] = ( ! empty( $input['api_audience'] )
-				? $input['api_audience']
-				: 'https://' . $input['domain'] . '/api/v2/' );
-		}
 
 		// If we have an app token, get and store the audience
 		if ( ! empty( $input['auth0_app_token'] ) ) {

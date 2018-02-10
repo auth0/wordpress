@@ -18,21 +18,29 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 */
   public function init() {
     $this->init_option_section( '', 'features', array(
-        array( 'id' => 'wpa0_password_policy', 'name' => 'Password Policy',
+        array( 'id' => 'wpa0_password_policy',
+               'name' => __( 'Password Policy', 'wp-auth0' ),
                'function' => 'render_password_policy' ),
-        array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)',
+        array( 'id' => 'wpa0_sso',
+               'name' => __( 'Single Sign On (SSO)', 'wp-auth0' ),
                'function' => 'render_sso' ),
-        array( 'id' => 'wpa0_singlelogout', 'name' => 'Single Logout',
+        array( 'id' => 'wpa0_singlelogout',
+               'name' => __( 'Single Logout (SLO)', 'wp-auth0' ),
                'function' => 'render_singlelogout' ),
-        array( 'id' => 'wpa0_mfa', 'name' => 'Multifactor Authentication (MFA)',
+        array( 'id' => 'wpa0_mfa',
+               'name' => __( 'Multifactor Authentication (MFA)', 'wp-auth0' ),
                'function' => 'render_mfa' ),
-        array( 'id' => 'wpa0_fullcontact', 'name' => 'FullContact integration',
+        array( 'id' => 'wpa0_fullcontact',
+               'name' => __( 'FullContact integration', 'wp-auth0' ),
                'function' => 'render_fullcontact' ),
-        array( 'id' => 'wpa0_geo', 'name' => 'Store geolocation',
+        array( 'id' => 'wpa0_geo',
+               'name' => __( 'Store geolocation', 'wp-auth0' ),
                'function' => 'render_geo' ),
-        array( 'id' => 'wpa0_income', 'name' => 'Store zipcode income',
+        array( 'id' => 'wpa0_income',
+               'name' => __( 'Store zipcode income', 'wp-auth0' ),
                'function' => 'render_income' ),
-        array( 'id' => 'wpa0_override_wp_avatars', 'name' => 'Override WordPress avatars',
+        array( 'id' => 'wpa0_override_wp_avatars',
+               'name' => __( 'Override WordPress avatars', 'wp-auth0' ),
                'function' => 'render_override_wp_avatars' ),
       ) );
   }
@@ -45,11 +53,14 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	  $this->render_radio_button( 'wpa0_password_policy_none', 'password_policy', '', 'None', empty( $value ) );
 	  $this->render_radio_button( 'wpa0_password_policy_low', 'password_policy', 'low', '', 'low' === $value );
 	  $this->render_radio_button( 'wpa0_password_policy_fair', 'password_policy', 'fair', '', 'fair' === $value );
-	  $this->render_radio_button( 'wpa0_password_policy_fair', 'password_policy', 'good', '', 'good' === $value );
+	  $this->render_radio_button( 'wpa0_password_policy_good', 'password_policy', 'good', '', 'good' === $value );
 	  $this->render_radio_button( 'wpa0_password_policy_ex', 'password_policy', 'excellent', '', 'excellent' === $value );
 	  $this->render_field_description(
 		  __( 'Password security policy used; for information on the levels, see our ', 'wp-auth0' ) .
-		  $this->get_docs_link( 'password-strength', __( 'help page on password strength', 'wp-auth0' ) )
+		  $this->get_docs_link(
+		  	'connections/database/password-strength',
+			  __( 'help page on password strength', 'wp-auth0' )
+		  )
 	  );
   }
 
@@ -59,9 +70,9 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	public function render_sso() {
 		$this->render_switch( 'wpa0_sso', 'sso' );
 		$this->render_field_description(
-			__( 'Single Sign On (SSO) allows users to sign in once to multiple Clients in the same tenant. ', 'wp-auth0' ) .
-			__( 'For more details, see our ', 'wp-auth0' ) .
-			$this->get_docs_link( 'sso/single-sign-on', __( 'help page on SSO', 'wp-auth0' ) )
+			__( 'SSO allows users to sign in once to multiple Clients in the same tenant; ', 'wp-auth0' ) .
+			__( 'for more details, see our ', 'wp-auth0' ) .
+			$this->get_docs_link( 'sso/current', __( 'help page on SSO', 'wp-auth0' ) )
 		);
 	}
 
@@ -71,9 +82,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	public function render_singlelogout() {
 		$this->render_switch( 'wpa0_singlelogout', 'singlelogout' );
 		$this->render_field_description(
-			__( 'Single Logout (SLO) allows users to sign out of multiple Clients in the same tenant. ', 'wp-auth0' ) .
-			__( 'For more details, see our ', 'wp-auth0' ) .
-			$this->get_docs_link( 'sso/single-sign-on', __( 'help page on SSO', 'wp-auth0' ) )
+			__( 'SLO allows users to sign out of multiple Clients in the same tenant', 'wp-auth0' )
 		);
 	}
 
@@ -83,9 +92,9 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function render_mfa() {
 	  $this->render_switch( 'wpa0_mfa', 'mfa' );
 	  $this->render_field_description(
-		  __( 'Mark this if you want to enable multifactor authentication with Auth0 Guardian. ', 'wp-auth0' ) .
-		  __( 'For more details, see our ', 'wp-auth0' ) .
-		  $this->get_docs_link( 'mfa', __( 'help page on MFA', 'wp-auth0' ) ) .
+		  __( 'Mark this if you want to enable multifactor authentication with Auth0 Guardian; ', 'wp-auth0' ) .
+		  __( 'for more details, see our ', 'wp-auth0' ) .
+		  $this->get_docs_link( 'multifactor-authentication', __( 'help page on MFA', 'wp-auth0' ) ) . '. ' .
 		  __( 'You can enable other MFA providers from the ', 'wp-auth0' ) .
 		  $this->get_dashboard_link( 'multifactor' )
 	  );
@@ -93,8 +102,6 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
 	/**
 	 * Render FullContact switch and API key field
-	 *
-	 * TODO: test me ... remove validation if not working
 	 */
 	public function render_fullcontact() {
 		$fullcontact_on = absint( $this->options->get( 'fullcontact' ) );
@@ -118,37 +125,31 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
 		$this->render_field_description(
 			__( 'Enriches your user profiles with the data provided by FullContact. ', 'wp-auth0' ) .
-			__( 'A valid FullContact API key is required. ', 'wp-auth0' ) .
-			__( 'For more details, see our ', 'wp-auth0' ) .
+			__( 'A valid FullContact API key is required; for more details, see our ', 'wp-auth0' ) .
 			$this->get_docs_link(
-				'scenarios/mixpanel-fullcontact-salesforce',
-				__( 'help page on FullContact integration with Auth0', 'wp-auth0' )
+				'monitoring/track-signups-enrich-user-profile-generate-leads',
+				__( 'help page on tracking signups', 'wp-auth0' )
 			)
 		);
 	}
 
 	/**
 	 * Render geolocation switch
-	 *
-	 * TODO: test me ... remove validation if not working
 	 */
   public function render_geo() {
 	  $this->render_switch( 'wpa0_geo_rule', 'geo_rule' );
 	  $this->render_field_description(
-		  __( 'Store geo location information based on your users IP in the user_metadata', 'wp-auth0' )
+		  __( 'Store geo location information based on your users IP in Auth0 user metadata', 'wp-auth0' )
 	  );
   }
 
 	/**
 	 * Render zipcode income switch
-	 *
-	 * TODO: test me ... remove validation if not working
 	 */
   public function render_income() {
 	  $this->render_switch( 'wpa0_income_rule', 'income_rule' );
 	  $this->render_field_description(
-		  __( 'Mark this if you want to store income data based on the zipcode (based on IP address). ', 'wp-auth0' ).
-		  __( 'Represents the median income of the users zipcode, based on last US census data. ', 'wp-auth0' )
+		  __( 'Store income data based on the zipcode of the IP address in Auth0 user metadata', 'wp-auth0' )
 	  );
   }
 
@@ -183,7 +184,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
       if ( false === WP_Auth0_Api_Client::update_client( $input['domain'], $input['auth0_app_token'], $input['client_id'], $input['sso'] == 1 ) ) {
 
         $error = __( 'There was an error updating your Auth0 App to enable SSO. To do it manually, turn it ', 'wp-auth0' );
-        $error .= '<a href="https://auth0.com/docs/sso/single-sign-on#1">HERE</a>.';
+        $error .= '<a href="https://auth0.com/docs/sso/current#1">HERE</a>.';
         $this->add_validation_error( $error );
 
       }

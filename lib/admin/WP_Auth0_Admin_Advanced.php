@@ -12,66 +12,93 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     'loginredirection_validation',
   );
 
-  public function __construct( WP_Auth0_Options_Generic $options, WP_Auth0_Routes $router ) {
+  public function __construct( WP_Auth0_Options $options, WP_Auth0_Routes $router ) {
     parent::__construct( $options );
     $this->router = $router;
   }
 
   public function init() {
     $advancedOptions = array(
-	    array( 'id' => 'wpa0_verified_email', 'name' => 'Requires verified email',
-	           'function' => 'render_verified_email' ),
-	    array( 'id' => 'wpa0_remember_users_session', 'name' => 'Remember users session',
-	           'function' => 'render_remember_users_session' ),
-	    array( 'id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL',
-	           'function' => 'render_default_login_redirection' ),
-      array( 'id' => 'wpa0_passwordless_enabled', 'name' => 'Use passwordless login',
+      array( 'id' => 'wpa0_verified_email',
+             'name' => __( 'Require verified email', 'wp-auth0' ),
+             'function' => 'render_verified_email' ),
+      array( 'id' => 'wpa0_remember_users_session',
+             'name' => __( 'Remember user session', 'wp-auth0' ),
+             'function' => 'render_remember_users_session' ),
+      array( 'id' => 'wpa0_default_login_redirection',
+             'name' => __( 'Login redirection URL', 'wp-auth0' ),
+             'function' => 'render_default_login_redirection' ),
+      array( 'id' => 'wpa0_passwordless_enabled',
+             'name' => __( 'Passwordless login', 'wp-auth0' ),
              'function' => 'render_passwordless_enabled' ),
-      array( 'id' => 'wpa0_passwordless_method', 'name' => 'Passwordless method',
+      array( 'id' => 'wpa0_passwordless_method',
+             'name' => __( 'Passwordless method', 'wp-auth0' ),
              'function' => 'render_passwordless_method' ),
-      array( 'id' => 'wpa0_force_https_callback', 'name' => 'Force HTTPS callback',
+      array( 'id' => 'wpa0_force_https_callback',
+             'name' => __( 'Force HTTPS callback', 'wp-auth0' ),
              'function' => 'render_force_https_callback' ),
-      array( 'id' => 'wpa0_cdn_url', 'name' => 'Lock JS CDN URL',
+      array( 'id' => 'wpa0_cdn_url',
+             'name' => __( 'Lock JS CDN URL', 'wp-auth0' ),
              'function' => 'render_cdn_url' ),
-      array( 'id' => 'wpa0_connections', 'name' => 'Connections',
+      array( 'id' => 'wpa0_connections',
+             'name' => __( 'Connections to show', 'wp-auth0' ),
              'function' => 'render_connections' ),
-      array( 'id' => 'wpa0_link_auth0_users', 'name' => 'Link users with same email',
+      array( 'id' => 'wpa0_link_auth0_users',
+             'name' => __( 'Link users with same email', 'wp-auth0' ),
              'function' => 'render_link_auth0_users' ),
-      array( 'id' => 'wpa0_social_twitter_key', 'name' => 'Twitter consumer key',
-             'function' => 'render_social_twitter_key' ),
-      array( 'id' => 'wpa0_social_twitter_secret', 'name' => 'Twitter consumer secret',
-             'function' => 'render_social_twitter_secret' ),
-      array( 'id' => 'wpa0_social_facebook_key', 'name' => 'Facebook app key',
-             'function' => 'render_social_facebook_key' ),
-      array( 'id' => 'wpa0_social_facebook_secret', 'name' => 'Facebook app secret',
-             'function' => 'render_social_facebook_secret' ),
-	    array( 'id' => 'wpa0_auto_provisioning', 'name' => 'Auto provisioning',
+	    array( 'id' => 'wpa0_auto_provisioning',
+	           'name' => __( 'Auto provisioning', 'wp-auth0' ),
 	           'function' => 'render_auto_provisioning' ),
-      array( 'id' => 'wpa0_migration_ws', 'name' => 'Users Migration',
+      array( 'id' => 'wpa0_migration_ws',
+             'name' => __( 'User migration', 'wp-auth0' ),
              'function' => 'render_migration_ws' ),
-      array( 'id' => 'wpa0_migration_ws_ips_filter', 'name' => 'Migration IPs Whitelist',
+      array( 'id' => 'wpa0_migration_ws_ips_filter',
+             'name' => __( 'Migration IPs whitelist', 'wp-auth0' ),
              'function' => 'render_migration_ws_ips_filter' ),
-      array( 'id' => 'wpa0_migration_ws_ips', 'name' => '',
+      array( 'id' => 'wpa0_migration_ws_ips',
+             'name' => 'IP addresses',
              'function' => 'render_migration_ws_ips' ),
-      array( 'id' => 'wpa0_auth0_implicit_workflow', 'name' => 'Auth0 Implicit flow',
+      array( 'id' => 'wpa0_auth0_implicit_workflow',
+             'name' => __( 'Implicit login flow', 'wp-auth0' ),
              'function' => 'render_auth0_implicit_workflow' ),
-      array( 'id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)',
+      array( 'id' => 'wpa0_auto_login',
+             'name' => __( 'Auto login', 'wp-auth0' ),
              'function' => 'render_auto_login' ),
-      array( 'id' => 'wpa0_auto_login_method', 'name' => 'Auto Login Method',
+      array( 'id' => 'wpa0_auto_login_method',
+             'name' => __( 'Auto login method', 'wp-auth0' ),
              'function' => 'render_auto_login_method' ),
-      array( 'id' => 'wpa0_ip_range_check', 'name' => 'Enable on IP Ranges',
+      array( 'id' => 'wpa0_ip_range_check',
+             'name' => __( 'Enable IP ranges', 'wp-auth0' ),
              'function' => 'render_ip_range_check' ),
-      array( 'id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges',
+      array( 'id' => 'wpa0_ip_ranges',
+             'name' => __( 'IP ranges', 'wp-auth0' ),
              'function' => 'render_ip_ranges' ),
-      array( 'id' => 'wpa0_valid_proxy_ip', 'name' => 'Valid Proxy IP',
+      array( 'id' => 'wpa0_valid_proxy_ip',
+             'name' => __( 'Valid proxy IP', 'wp-auth0' ),
              'function' => 'render_valid_proxy_ip' ),
-      array( 'id' => 'wpa0_custom_signup_fields', 'name' => 'Custom signup fields',
+      array( 'id' => 'wpa0_custom_signup_fields',
+             'name' => __( 'Custom signup fields', 'wp-auth0' ),
              'function' => 'render_custom_signup_fields' ),
-      array( 'id' => 'wpa0_extra_conf', 'name' => 'Extra settings',
-             'function' => 'render_extra_conf' ),
-      array( 'id' => 'wpa0_auth0_server_domain', 'name' => 'Auth0 server domain',
+	    array( 'id' => 'wpa0_extra_conf',
+	           'name' => __( 'Extra settings', 'wp-auth0' ),
+	           'function' => 'render_extra_conf' ),
+	    array( 'id' => 'wpa0_social_twitter_key',
+	           'name' => __( 'Twitter consumer key', 'wp-auth0' ),
+	           'function' => 'render_social_twitter_key' ),
+	    array( 'id' => 'wpa0_social_twitter_secret',
+	           'name' => __( 'Twitter consumer secret', 'wp-auth0' ),
+	           'function' => 'render_social_twitter_secret' ),
+	    array( 'id' => 'wpa0_social_facebook_key',
+	           'name' => __( 'Facebook app key', 'wp-auth0' ),
+	           'function' => 'render_social_facebook_key' ),
+	    array( 'id' => 'wpa0_social_facebook_secret',
+	           'name' => __( 'Facebook app secret', 'wp-auth0' ),
+	           'function' => 'render_social_facebook_secret' ),
+      array( 'id' => 'wpa0_auth0_server_domain',
+             'name' => __( 'Auth0 server domain', 'wp-auth0' ),
              'function' => 'render_auth0_server_domain' ),
-      array( 'id' => 'wpa0_metrics', 'name' => 'Anonymous data',
+      array( 'id' => 'wpa0_metrics',
+             'name' => __( 'Report anonymous data', 'wp-auth0' ),
              'function' => 'render_metrics' ),
     );
 
@@ -120,8 +147,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render Passwordless switch
 	 */
 	public function render_passwordless_enabled() {
-		$this->render_switch( 'wpa0_passwordless_enabled', 'passwordless_enabled' );
-		$this->render_field_description( __( 'Username and password login are not enabled when this is on ', 'wp-auth0' )	);
+		$this->render_switch( 'wpa0_passwordless_enabled', 'passwordless_enabled', 'wpa0_passwordless_method_magiclink' );
+		$this->render_field_description( __( 'Username and password login are not enabled when this is on', 'wp-auth0' )	);
 	}
 
 	/**
@@ -158,8 +185,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	public function render_force_https_callback() {
 		$this->render_switch( 'wpa0_force_https_callback', 'force_https_callback' );
 		$this->render_field_description(
-			__( 'Forces the plugin to use HTTPS for the callback URL when a site supports both. ', 'wp-auth0' ) .
-			__( 'If disabled, it will pick the protocol from the WordPress home URL. ', 'wp-auth0' )
+			__( 'Forces the plugin to use HTTPS for the callback URL when a site supports both; ', 'wp-auth0' ) .
+			__( 'if disabled, the protocol from the WordPress home URL will be used', 'wp-auth0' )
 		);
 	}
 
@@ -185,48 +212,23 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	public function render_connections() {
 		$this->render_text_field( 'wpa0_connections', 'lock_connections' );
 		$this->render_field_description(
-			__( 'Which connections the Auth0 login form should show; separate multiple with commas. ', 'wp-auth0' ) .
-			__( 'This is ignored when empty and is mandatory for passwordless with social mode. ', 'wp-auth0' )
+			__( 'Connections the Auth0 login form should show (separate multiple with commas). ', 'wp-auth0' ) .
+			__( 'If this is empty, all active connections will be shown. ', 'wp-auth0' ) .
+			__( 'Connections listed here must already be active under Connections in your ', 'wp-auth0' ) .
+			$this->get_dashboard_link() .
+			__( '; click on a Connection and use the "Name" field here. ', 'wp-auth0' ) .
+			__( 'This setting is mandatory for passwordless with social mode', 'wp-auth0' )
 		);
 	}
 
 	/**
-	 * Render link_aut0_users switch
+	 * Render link_auth0_users switch
 	 */
 	public function render_link_auth0_users() {
 		$this->render_switch( 'wpa0_link_auth0_users', 'link_auth0_users' );
 		$this->render_field_description(
-			__( 'Links accounts with the same e-mail address. ', 'wp-auth0' ) .
-			__( 'It will only occur if both e-mails are previously verified', 'wp-auth0' )
+			__( 'Links accounts with the same e-mail address (emails must be verified)', 'wp-auth0' )
 		);
-	}
-
-	/**
-	 * Render Twitter key field
-	 */
-	public function render_social_twitter_key() {
-		$this->render_social_key_field( 'wpa0_social_twitter_key', 'social_twitter_key' );
-	}
-
-	/**
-	 * Render Twitter secret field
-	 */
-	public function render_social_twitter_secret() {
-		$this->render_social_key_field( 'wpa0_social_twitter_secret', 'social_twitter_secret' );
-	}
-
-	/**
-	 * Render Facebook key field
-	 */
-	public function render_social_facebook_key() {
-		$this->render_social_key_field( 'wpa0_social_facebook_key', 'social_facebook_key' );
-	}
-
-	/**
-	 * Render Facebook secret field
-	 */
-	public function render_social_facebook_secret() {
-		$this->render_social_key_field( 'wpa0_social_facebook_secret', 'social_facebook_secret' );
 	}
 
 	/**
@@ -235,8 +237,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	public function render_auto_provisioning() {
 		$this->render_switch( 'wpa0_auto_provisioning', 'auto_provisioning' );
 		$this->render_field_description(
-			__( 'Enable this setting to create new users in the WordPress database when signups are off. ', 'wp-auth0' ) .
-			__( 'Users that are created in Auth0 and successfully log in will be added', 'wp-auth0' )
+			__( 'Create new users in the WordPress database when signups are off; ', 'wp-auth0' ) .
+			__( 'signups will not be allowed but successful Auth0 logins will add the user in WordPress', 'wp-auth0' )
 		);
 	}
 
@@ -252,7 +254,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			$this->render_field_description(
 				__( 'Users migration is enabled. ', 'wp-auth0' ) .
 				__( 'If you disable this setting, it must be re-enabled manually in the ', 'wp-auth0' ) .
-				$this->get_dashboard_link( 'connections' )
+				$this->get_dashboard_link()
 			);
 			$this->render_field_description( 'Security token:' );
 			printf(
@@ -265,7 +267,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			$this->render_field_description(
 				__( 'Users migration is disabled. ', 'wp-auth0' ) .
 				__( 'Enabling this exposes migration webservices but the Connection must be updated manually. ', 'wp-auth0' ) .
-				$this->get_docs_link( 'connections/database/migrating', __( 'More information here', 'wp-auth0' ) )
+				$this->get_docs_link( 'users/migrations/automatic', __( 'More information here', 'wp-auth0' ) )
 			);
 		}
 	}
@@ -274,7 +276,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render migration IP whitelist switch
 	 */
 	public function render_migration_ws_ips_filter() {
-		$this->render_switch( 'wpa0_auth0_migration_ips_filter', 'migration_ips_filter' );
+		$this->render_switch( 'wpa0_auth0_migration_ips_filter', 'migration_ips_filter', 'wpa0_auth0_migration_ips' );
 	}
 
 	/**
@@ -303,7 +305,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render auto-login switch
 	 */
 	public function render_auto_login() {
-		$this->render_switch( 'wpa0_auto_login', 'auto_login' );
+		$this->render_switch( 'wpa0_auto_login', 'auto_login', 'wpa0_auto_login_method' );
 		$this->render_field_description(
 			__( 'Send logins directly to a specific Connection, skipping the login page', 'wp-auth0' )
 		);
@@ -325,7 +327,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render IP range switch
 	 */
   public function render_ip_range_check() {
-    $this->render_switch( 'wpa0_ip_range_check', 'ip_range_check' );
+    $this->render_switch( 'wpa0_ip_range_check', 'ip_range_check', 'wpa0_ip_ranges' );
   }
 
 	/**
@@ -377,6 +379,38 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 ]</pre>'
 		);
+	}
+
+	/**
+	 * Render Twitter key field
+	 */
+	public function render_social_twitter_key() {
+		$this->render_social_key_field( 'wpa0_social_twitter_key', 'social_twitter_key' );
+		$this->render_field_description( __( 'Used for the Social Amplification Widget', 'wp-auth0' ) );
+	}
+
+	/**
+	 * Render Twitter secret field
+	 */
+	public function render_social_twitter_secret() {
+		$this->render_social_key_field( 'wpa0_social_twitter_secret', 'social_twitter_secret' );
+		$this->render_field_description( __( 'Used for the Social Amplification Widget', 'wp-auth0' ) );
+	}
+
+	/**
+	 * Render Facebook key field
+	 */
+	public function render_social_facebook_key() {
+		$this->render_social_key_field( 'wpa0_social_facebook_key', 'social_facebook_key' );
+		$this->render_field_description( __( 'Used for the Social Amplification Widget', 'wp-auth0' ) );
+	}
+
+	/**
+	 * Render Facebook secret field
+	 */
+	public function render_social_facebook_secret() {
+		$this->render_social_key_field( 'wpa0_social_facebook_secret', 'social_facebook_secret' );
+		$this->render_field_description( __( 'Used for the Social Amplification Widget', 'wp-auth0' ) );
 	}
 
 	/**
@@ -437,11 +471,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $input['force_https_callback'] = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
     $input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
 
-    if ( isset( $input['connections'] ) ) {
-      if ( isset( $input['connections']['social_twitter_key'] ) ) $input['connections']['social_twitter_key'] = sanitize_text_field( $input['connections']['social_twitter_key'] );
-      if ( isset( $input['connections']['social_twitter_secret'] ) ) $input['connections']['social_twitter_secret'] = sanitize_text_field( $input['connections']['social_twitter_secret'] );
-      if ( isset( $input['connections']['social_facebook_key'] ) ) $input['connections']['social_facebook_key'] = sanitize_text_field( $input['connections']['social_facebook_key'] );
-      if ( isset( $input['connections']['social_facebook_secret'] ) ) $input['connections']['social_facebook_secret'] = sanitize_text_field( $input['connections']['social_facebook_secret'] );
+    if ( ! empty( $input['connections'] ) ) {
+    	foreach ( array( 'twitter_key', 'twitter_secret', 'facebook_key', 'facebook_secret' ) as $key ) {
+		    $input['connections']['social_' . $key] = sanitize_text_field( $input['connections']['social_' . $key] );
+	    }
     }
 
     $input['migration_ips_filter'] =  ( ! empty( $input['migration_ips_filter'] ) ? 1 : 0 );

@@ -12,25 +12,35 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 */
 	public function init() {
 		$this->init_option_section( '', 'appearance', array(
-			array( 'id' => 'wpa0_form_title', 'name' => 'Form Title',
-			       'function' => 'render_form_title' ),
-			array( 'id' => 'wpa0_social_big_buttons', 'name' => 'Show big social buttons',
-			       'function' => 'render_social_big_buttons' ),
-			array( 'id' => 'wpa0_icon_url', 'name' => 'Icon URL',
+			array( 'id' => 'wpa0_icon_url',
+			       'name' => __( 'Icon URL', 'wp-auth0' ),
 			       'function' => 'render_icon_url' ),
-			array( 'id' => 'wpa0_gravatar', 'name' => 'Enable Gravatar integration',
+			array( 'id' => 'wpa0_form_title',
+			       'name' => __( 'Form title', 'wp-auth0' ),
+			       'function' => 'render_form_title' ),
+			array( 'id' => 'wpa0_social_big_buttons',
+			       'name' => __( 'Big social buttons', 'wp-auth0' ),
+			       'function' => 'render_social_big_buttons' ),
+			array( 'id' => 'wpa0_gravatar',
+			       'name' => __( 'Enable Gravatar integration', 'wp-auth0' ),
 			       'function' => 'render_gravatar' ),
-			array( 'id' => 'wpa0_custom_css', 'name' => 'Customize the Login Widget CSS',
+			array( 'id' => 'wpa0_custom_css',
+			       'name' => __( 'Login form CSS', 'wp-auth0' ),
 			       'function' => 'render_custom_css' ),
-			array( 'id' => 'wpa0_custom_js', 'name' => 'Customize the Login Widget with custom JS',
+			array( 'id' => 'wpa0_custom_js',
+			       'name' => __( 'Login form JS', 'wp-auth0' ),
 			       'function' => 'render_custom_js' ),
-			array( 'id' => 'wpa0_username_style', 'name' => 'Username style',
+			array( 'id' => 'wpa0_username_style',
+			       'name' => __( 'Login name style', 'wp-auth0' ),
 			       'function' => 'render_username_style' ),
-			array( 'id' => 'wpa0_primary_color', 'name' => 'Lock primary color',
+			array( 'id' => 'wpa0_primary_color',
+			       'name' => __( 'Primary color', 'wp-auth0' ),
 			       'function' => 'render_primary_color' ),
-			array( 'id' => 'wpa0_language', 'name' => 'Lock Language',
+			array( 'id' => 'wpa0_language',
+			       'name' => __( 'Language', 'wp-auth0' ),
 			       'function' => 'render_language' ),
-			array( 'id' => 'wpa0_language_dictionary', 'name' => 'Lock Language Dictionary',
+			array( 'id' => 'wpa0_language_dictionary',
+			       'name' => __( 'Language Dictionary', 'wp-auth0' ),
 			       'function' => 'render_language_dictionary' ),
 		) );
 	}
@@ -60,7 +70,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 			' <a id="wpa0_choose_icon" href="#wpa0_choose_icon" class="button-secondary">%s</a>',
 			__( 'Choose Icon', 'wp-auth0' )
 		);
-		$this->render_field_description( __( 'Icon should be 32 pixels square', 'wp-auth0' ) );
+		$this->render_field_description( __( 'Icon above the title on the Auth0 login form', 'wp-auth0' ) );
 	}
 
 	/**
@@ -69,8 +79,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	public function render_gravatar() {
 		$this->render_switch( 'wpa0_gravatar', 'gravatar' );
 		$this->render_field_description(
-			__( 'Read more about the gravatar integration on ', 'wp-auth0' ) .
-			$this->get_docs_link( 'libraries/lock/customization#gravatar-boolean-', __( ' this docs page', 'wp-auth0' ) )
+			__( 'Automatically display avatar on login form when email address is entered', 'wp-auth0' )
 		);
 	}
 
@@ -80,11 +89,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	public function render_custom_css() {
 		$this->render_textarea_field( 'wpa0_custom_css', 'custom_css' );
 		$this->render_field_description(
-			__( 'Valid CSS to customize the Auth0 login form. ', 'wp-auth0' ) .
-			sprintf(
-				'<a href="https://github.com/auth0/wp-auth0#can-i-customize-the-login-widget">%s</a>',
-				__( 'More information here', 'wp-auth0' )
-			)
+			__( 'Valid CSS to customize the Auth0 login form', 'wp-auth0' )
 		);
 	}
 
@@ -93,10 +98,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 */
 	public function render_custom_js() {
 		$this->render_textarea_field( 'wpa0_custom_js', 'custom_js' );
-		$this->render_field_description(
-			__( 'Valid JS to customize the Auth0 login form. ', 'wp-auth0' ) .
-			$this->get_docs_link( 'hrd#option-3-adding-custom-buttons-to-lock', __( 'Example here', 'wp-auth0' ) )
-		);
+		$this->render_field_description( __( 'Valid JS to customize the Auth0 login form; ', 'wp-auth0' ) );
 	}
 
 	/**
@@ -108,10 +110,10 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$this->render_radio_button( 'wpa0_username_style_em', 'username_style', 'email', '', 'email' === $value );
 		$this->render_radio_button( 'wpa0_username_style_un', 'username_style', 'username', '', 'username' === $value );
 		$this->render_field_description(
-			__( 'To allow the user to use either email or username to login, set this to "Auto." ', 'wp-auth0' ) .
+			__( 'To allow the user to use either email or username to login, leave this as "Auto;" ', 'wp-auth0' ) .
 			$this->get_docs_link(
 				'libraries/lock/customization#usernamestyle-string-',
-				__( 'More information here', 'wp-auth0'	)
+				__( 'more information here', 'wp-auth0'	)
 			)
 		);
 	}
@@ -121,7 +123,13 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 */
 	public function render_primary_color() {
 		$this->render_text_field( 'wpa0_primary_color', 'primary_color' );
-		$this->render_field_description( __( 'Primary color for the Auth0 login form', 'wp-auth0' ) );
+		$this->render_field_description(
+			__( 'Primary color for the Auth0 login form in hex format; ', 'wp-auth0' ) .
+			$this->get_docs_link(
+				'https://auth0.com/docs/libraries/lock/v11/configuration#primarycolor-string-',
+				__( 'more information here', 'wp-auth0'	)
+			)
+		);
 	}
 
 	/**
@@ -130,10 +138,10 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	public function render_language() {
 		$this->render_text_field( 'wpa0_language', 'language' );
 		$this->render_field_description(
-			__( 'The language parameter for the Auth0 login form. ', 'wp-auth0' ) .
+			__( 'The language parameter for the Auth0 login form; ', 'wp-auth0' ) .
 			sprintf(
-				'<a href="https://github.com/auth0/lock#ui-options">%s</a>',
-				__( 'More information', 'wp-auth0' )
+				'<a href="https://github.com/auth0/lock/tree/master/src/i18n" target="_blank">%s</a>',
+				__( 'available languages', 'wp-auth0' )
 			)
 		);
 	}
@@ -142,12 +150,12 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * Render the custom CSS textarea
 	 */
 	public function render_language_dictionary() {
-		$this->render_textarea_field( 'wpa0_custom_js', 'language_dictionary' );
+		$this->render_textarea_field( 'wpa0_language_dictionary', 'language_dictionary' );
 		$this->render_field_description(
-			__( 'The languageDictionary parameter for the Auth0 login form. ', 'wp-auth0' ) .
+			__( 'The languageDictionary parameter for the Auth0 login form; ', 'wp-auth0' ) .
 			sprintf(
-				'<a href="https://github.com/auth0/lock#ui-options">%s</a>',
-				__( 'More information', 'wp-auth0' )
+				'<a href="https://github.com/auth0/lock/blob/master/src/i18n/en.js" target="_blank">%s</a>',
+				__( 'all modifiable text', 'wp-auth0' )
 			)
 		);
 	}

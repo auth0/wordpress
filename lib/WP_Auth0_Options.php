@@ -156,7 +156,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'client_signing_algorithm' => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
 			'cache_expiration' => 1440,
 			'auth0_app_token' => null,
-			'api_audience' => null,
 			'wordpress_login_enabled' => true,
 
 			// Features
@@ -186,6 +185,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			// Advanced
 			'requires_verified_email' => true,
 			'remember_users_session' => false,
+			'default_login_redirection' => home_url(),
 			'passwordless_enabled' => false,
 			'passwordless_method' => 'magiclink',
 			'force_https_callback' => false,
@@ -194,17 +194,12 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'passwordless_cdn_url' => '//cdn.auth0.com/js/lock-passwordless-2.2.min.js',
 			'lock_connections' => '',
 			'link_auth0_users' => null,
-			'social_twitter_key' => '',
-			'social_twitter_secret' => '',
-			'social_facebook_key' => '',
-			'social_facebook_secret' => '',
 			'auto_provisioning' => false,
 			'migration_ws' => false,
 			'migration_token' => null,
 			'migration_ips_filter' => false,
 			'migration_ips' => null,
 			'auth0_implicit_workflow' => false,
-			'default_login_redirection' => home_url(),
 			'auto_login' => 0,
 			'auto_login_method' => '',
 			'ip_range_check' => 0,
@@ -212,8 +207,21 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'valid_proxy_ip' => null,
 			'custom_signup_fields' => '',
 			'extra_conf' => '',
+			'social_twitter_key' => '',
+			'social_twitter_secret' => '',
+			'social_facebook_key' => '',
+			'social_facebook_secret' => '',
 			'auth0_server_domain' => 'auth0.auth0.com',
 			'metrics' => 1,
+
+			//DASHBOARD
+			'chart_idp_type' => 'donut',
+			'chart_gender_type' => 'donut',
+			'chart_age_type' => 'donut',
+
+			'chart_age_from' => '10',
+			'chart_age_to' => '70',
+			'chart_age_step' => '5',
 		);
 	}
 }

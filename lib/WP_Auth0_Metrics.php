@@ -39,16 +39,16 @@ class WP_Auth0_Metrics {
 		}
 
 		if ( $this->a0_options->get( 'metrics' ) == 1 ) {
-?>
+			?>
       <script src="//cdn.auth0.com/js/m/metrics-1.min.js"></script>
       <script>
-	      if ( typeof Auth0Metrics === 'object' ) {
+      if ( typeof Auth0Metrics === 'object' ) {
             var a0metricsLib = new Auth0Metrics(
                 'auth0-for-wordpress',
-		            'https://dwh-tracking.it.auth0.com/dwh-metrics',
-		            'wp-plugin'
+                'https://dwh-tracking.it.auth0.com/dwh-metrics',
+                'wp-plugin'
             );
-	      }
+         }
 
         function metricsTrack(event, trackData, callback) {
           if (typeof(a0metricsLib) === 'undefined') {
@@ -73,15 +73,5 @@ class WP_Auth0_Metrics {
       </script>
     <?php
 		}
-		else {
-?>
-      <script>
-        function metricsTrack() {
-          // Metrics are disabled
-        }
-      </script>
-    <?php
-		}
 	}
-
 }

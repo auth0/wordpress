@@ -144,12 +144,12 @@ class WP_Auth0_Lock_Options {
 			$options_obj['dict'] = $settings['language'];
 		}
 
+		if ( empty( $settings['gravatar'] ) ) {
+			$options_obj['gravatar'] = null;
+		}
 		
 		if ( $this->_is_valid( $settings, 'social_big_buttons' ) ) {
 			$options_obj['socialBigButtons'] = $this->_get_boolean( $settings['social_big_buttons'] );
-		}
-		if ( $this->_is_valid( $settings, 'gravatar' ) ) {
-			$options_obj['gravatar'] = $this->_get_boolean( $settings['gravatar'] );
 		}
 		if ( $this->_is_valid( $settings, 'username_style' ) ) {
 			$options_obj['usernameStyle'] = $settings['username_style'];

@@ -35,20 +35,38 @@ jQuery(document).ready(function($) {
         media_frame.open();
     });
 
-    // Hide/Show login method depending on auto login
-    var $loginMethodField = $("#wpa0_auto_login_method").closest("tr");
-    var $autoLoginCheckbox = $("#wpa0_auto_login");
-    if (!$autoLoginCheckbox.prop("checked")) {
-        $loginMethodField.hide();
-    }
+    // Show/hide field for specific switches
+    $('[data-expand][data-expand!=""]').each( function() {
+        var $thisSwitch = $( this );
+        var $showFieldRow = $( '#' + $thisSwitch.attr( 'data-expand' ) ).closest( 'tr' );
 
-    $autoLoginCheckbox.change(function() {
-        if (!$autoLoginCheckbox.prop("checked")) {
-            $loginMethodField.hide();
-        } else {
-            $loginMethodField.show();
+        if ( $showFieldRow.length ) {
+            if ( ! $thisSwitch.prop( 'checked' ) ) {
+                $showFieldRow.hide();
+            }
+            $thisSwitch.change(function() {
+                if ( $( this ).prop( 'checked' ) ) {
+                    $showFieldRow.show();
+                } else {
+                    $showFieldRow.hide();
+                }
+            } );
         }
     });
+
+    // Persistent admin tab
+    if ( ! window.location.hash && 'function' === typeof window.localStorage.getItem ) {
+        window.location.hash = window.localStorage.getItem( 'Auth0WPSettingsTab' );
+    }
+
+    $( '.nav-tabs [role="tab"]' ).click( function () {
+        var $tabHref = $( this ).attr( 'href' );
+        window.location.hash = $tabHref;
+
+        if ( 'function' === typeof window.localStorage.setItem ) {
+            window.localStorage.setItem( 'Auth0WPSettingsTab', $tabHref );
+        }
+    } );
 
     // Clear cache button on Basic settings page
     var deleteCacheId = 'auth0_delete_cache_transient';

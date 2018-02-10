@@ -6,28 +6,40 @@ class WP_Auth0_Admin_Generic {
 	protected $option_name;
 	protected $description;
 	protected $textarea_rows = 4;
-
 	protected $actions_middlewares = array();
 
-	public function __construct( WP_Auth0_Options_Generic $options ) {
+	/**
+	 * WP_Auth0_Admin_Generic constructor.
+	 *
+	 * @param WP_Auth0_Options $options
+	 */
+	public function __construct( WP_Auth0_Options $options ) {
 		$this->options = $options;
 		$this->option_name = $options->get_options_name();
 	}
 
+	/**
+	 * Create settings sections and fields for all settings
+	 *
+	 * @param string $sectionName - settings section name
+	 * @param string $id - settings section id
+	 * @param array $settings - settings array of arrays containing an id, field name, and render function
+	 */
 	protected function init_option_section( $sectionName, $id, $settings ) {
 		$options_name = $this->option_name . '_' . strtolower( $id );
 
 		add_settings_section(
 			"wp_auth0_{$id}_settings_section",
-			__( $sectionName, 'wp-auth0' ),
-			array( $this, "render_description" ),
+			$sectionName,
+			array( $this, 'render_description' ),
 			$options_name
 		);
 
 		foreach ( $settings as $setting ) {
+
 			add_settings_field(
 				$setting['id'],
-				__( $setting['name'], 'wp-auth0' ),
+				$setting['name'],
 				array( $this, $setting['function'] ),
 				$options_name,
 				"wp_auth0_{$id}_settings_section",
@@ -45,6 +57,14 @@ class WP_Auth0_Admin_Generic {
 		}
 	}
 
+	/**
+	 * Activate validation middleware
+	 *
+	 * @param array $input - new data
+	 * @param null|array $old_options - options to overwrite
+	 *
+	 * @return mixed
+	 */
 	public function input_validator( $input, $old_options = null ) {
 		if ( empty( $old_options ) ) {
 			$old_options = $this->options->get_options();
@@ -57,13 +77,13 @@ class WP_Auth0_Admin_Generic {
 		return $input;
 	}
 
-	protected function add_validation_error( $error ) {
-		add_settings_error(
-			$this->option_name,
-			$this->option_name,
-			$error,
-			'error'
-		);
+	/**
+	 * Wrapper for add_settings_error()
+	 *
+	 * @param string $error_msg - translated error description
+	 */
+	protected function add_validation_error( $error_msg ) {
+		add_settings_error( $this->option_name, $this->option_name, $error_msg, 'error' );
 	}
 
 	protected function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {
@@ -73,7 +93,7 @@ class WP_Auth0_Admin_Generic {
 
 			try {
 
-				$operations = new WP_Auth0_Api_Operations( $this->options );
+				$operations = new WP_Auth0_Api_Operations( WP_Auth0_Options::Instance() );
 				$input[$key] = $operations->toggle_rule ( $this->options->get( 'auth0_app_token' ), ( is_null( $input[$key] ) ? $old_options[$key] : null ), $rule_name, $rule_script );
 
 			} catch ( Exception $e ) {
@@ -90,14 +110,17 @@ class WP_Auth0_Admin_Generic {
 	 *
 	 * @param string $id - input id attribute
 	 * @param string $input_name - input name attribute
+	 * @param string $expand_id - id of a field that should be hidden until this switch is active
 	 */
-	protected function render_switch( $id, $input_name ) {
+	protected function render_switch( $id, $input_name, $expand_id = '' ) {
 		$value = $this->options->get( $input_name );
 		printf(
-			'<div class="a0-switch"><input type="checkbox" name="%s[%s]" id="%s" value="1"%s><label for="%s"></label></div>',
+			'<div class="a0-switch"><input type="checkbox" name="%s[%s]" id="%s" data-expand="%s" value="1"%s>
+			<label for="%s"></label></div>',
 			esc_attr( $this->option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
+			! empty( $expand_id ) ? esc_attr( $expand_id ) : '',
 			checked( empty( $value ), FALSE, FALSE ),
 			esc_attr( $id )
 		);
@@ -117,7 +140,7 @@ class WP_Auth0_Admin_Generic {
 
 		// Secure fields are not output by default; validation keeps last value if a new one is not entered
 		if ( 'password' === $type ) {
-			$placeholder = empty( $value ) ? 'Not visible' : '';
+			$placeholder = ! empty( $value ) ? 'Not visible' : '';
 			$value = '';
 		}
 
@@ -195,7 +218,7 @@ class WP_Auth0_Admin_Generic {
 	 * @param string $text - description text to display
 	 */
 	protected function render_field_description( $text ) {
-		printf( '<div class="subelement"><span class="description">%s</span></div>', $text );
+		printf( '<div class="subelement"><span class="description">%s.</span></div>', $text );
 	}
 
 	/**
