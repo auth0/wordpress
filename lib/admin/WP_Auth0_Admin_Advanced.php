@@ -2,8 +2,8 @@
 
 class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
-  const ADVANCED_DESCRIPTION = 'Settings related to specific scenarios.';
-
+	protected $router;
+	protected $description = 'Settings related to specific scenarios.';
   protected $actions_middlewares = array(
     'basic_validation',
     'migration_ws_validation',
@@ -12,143 +12,356 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     'loginredirection_validation',
   );
 
-  protected $router;
-
   public function __construct( WP_Auth0_Options_Generic $options, WP_Auth0_Routes $router ) {
     parent::__construct( $options );
     $this->router = $router;
   }
 
   public function init() {
-
     $advancedOptions = array(
-
-      array( 'id' => 'wpa0_auto_provisioning', 'name' => 'Auto provisioning', 'function' => 'render_auto_provisioning' ),
-      array( 'id' => 'wpa0_passwordless_enabled', 'name' => 'Use passwordless login', 'function' => 'render_passwordless_enabled' ),
-      array( 'id' => 'wpa0_passwordless_method', 'name' => 'Use passwordless login', 'function' => 'render_passwordless_method' ),
-
-      array( 'id' => 'wpa0_force_https_callback', 'name' => 'Force HTTPS callback', 'function' => 'render_force_https_callback' ),
-
-      array( 'id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url' ),
-
-      array( 'id' => 'wpa0_connections', 'name' => 'Connections', 'function' => 'render_connections' ),
-
-      array( 'id' => 'wpa0_remember_users_session', 'name' => 'Remember users session', 'function' => 'render_remember_users_session' ),
-      array( 'id' => 'wpa0_link_auth0_users', 'name' => 'Link users with same email', 'function' => 'render_link_auth0_users' ),
-
-      array( 'id' => 'wpa0_social_twitter_key', 'name' => 'Twitter consumer key', 'function' => 'render_social_twitter_key' ),
-      array( 'id' => 'wpa0_social_twitter_secret', 'name' => 'Twitter consumer secret', 'function' => 'render_social_twitter_secret' ),
-
-      array( 'id' => 'wpa0_social_facebook_key', 'name' => 'Facebook app key', 'function' => 'render_social_facebook_key' ),
-      array( 'id' => 'wpa0_social_facebook_secret', 'name' => 'Facebook app secret', 'function' => 'render_social_facebook_secret' ),
-
-      array( 'id' => 'wpa0_migration_ws', 'name' => 'Users Migration', 'function' => 'render_migration_ws' ),
-      array( 'id' => 'wpa0_migration_ws_ips_filter', 'name' => 'Migration IPs Whitelist', 'function' => 'render_migration_ws_ips_filter' ),
-      array( 'id' => 'wpa0_migration_ws_ips', 'name' => '', 'function' => 'render_migration_ws_ips' ),
-      array( 'id' => 'wpa0_auth0_implicit_workflow', 'name' => 'Auth0 Implicit flow', 'function' => 'render_auth0_implicit_workflow' ),
-      array( 'id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL', 'function' => 'render_default_login_redirection' ),
-      array( 'id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email' ),
-      array( 'id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)', 'function' => 'render_auto_login' ),
-      array( 'id' => 'wpa0_auto_login_method', 'name' => 'Auto Login Method', 'function' => 'render_auto_login_method' ),
-      array( 'id' => 'wpa0_ip_range_check', 'name' => 'Enable on IP Ranges', 'function' => 'render_ip_range_check' ),
-      array( 'id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges', 'function' => 'render_ip_ranges' ),
-      array( 'id' => 'wpa0_valid_proxy_ip', 'name' => 'Valid Proxy IP', 'function' => 'render_valid_proxy_ip' ),
-      array( 'id' => 'wpa0_custom_signup_fields', 'name' => 'Custom signup fields', 'function' => 'render_custom_signup_fields' ),
-      array( 'id' => 'wpa0_extra_conf', 'name' => 'Extra settings', 'function' => 'render_extra_conf' ),
-      array( 'id' => 'wpa0_auth0_server_domain', 'name' => 'Auth0 server domain', 'function' => 'render_auth0_server_domain' ),
-      array( 'id' => 'wpa0_metrics', 'name' => 'Anonymous data', 'function' => 'render_metrics' ),
-
+	    array( 'id' => 'wpa0_verified_email', 'name' => 'Requires verified email',
+	           'function' => 'render_verified_email' ),
+	    array( 'id' => 'wpa0_remember_users_session', 'name' => 'Remember users session',
+	           'function' => 'render_remember_users_session' ),
+	    array( 'id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL',
+	           'function' => 'render_default_login_redirection' ),
+      array( 'id' => 'wpa0_passwordless_enabled', 'name' => 'Use passwordless login',
+             'function' => 'render_passwordless_enabled' ),
+      array( 'id' => 'wpa0_passwordless_method', 'name' => 'Passwordless method',
+             'function' => 'render_passwordless_method' ),
+      array( 'id' => 'wpa0_force_https_callback', 'name' => 'Force HTTPS callback',
+             'function' => 'render_force_https_callback' ),
+      array( 'id' => 'wpa0_cdn_url', 'name' => 'Lock JS CDN URL',
+             'function' => 'render_cdn_url' ),
+      array( 'id' => 'wpa0_connections', 'name' => 'Connections',
+             'function' => 'render_connections' ),
+      array( 'id' => 'wpa0_link_auth0_users', 'name' => 'Link users with same email',
+             'function' => 'render_link_auth0_users' ),
+      array( 'id' => 'wpa0_social_twitter_key', 'name' => 'Twitter consumer key',
+             'function' => 'render_social_twitter_key' ),
+      array( 'id' => 'wpa0_social_twitter_secret', 'name' => 'Twitter consumer secret',
+             'function' => 'render_social_twitter_secret' ),
+      array( 'id' => 'wpa0_social_facebook_key', 'name' => 'Facebook app key',
+             'function' => 'render_social_facebook_key' ),
+      array( 'id' => 'wpa0_social_facebook_secret', 'name' => 'Facebook app secret',
+             'function' => 'render_social_facebook_secret' ),
+	    array( 'id' => 'wpa0_auto_provisioning', 'name' => 'Auto provisioning',
+	           'function' => 'render_auto_provisioning' ),
+      array( 'id' => 'wpa0_migration_ws', 'name' => 'Users Migration',
+             'function' => 'render_migration_ws' ),
+      array( 'id' => 'wpa0_migration_ws_ips_filter', 'name' => 'Migration IPs Whitelist',
+             'function' => 'render_migration_ws_ips_filter' ),
+      array( 'id' => 'wpa0_migration_ws_ips', 'name' => '',
+             'function' => 'render_migration_ws_ips' ),
+      array( 'id' => 'wpa0_auth0_implicit_workflow', 'name' => 'Auth0 Implicit flow',
+             'function' => 'render_auth0_implicit_workflow' ),
+      array( 'id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)',
+             'function' => 'render_auto_login' ),
+      array( 'id' => 'wpa0_auto_login_method', 'name' => 'Auto Login Method',
+             'function' => 'render_auto_login_method' ),
+      array( 'id' => 'wpa0_ip_range_check', 'name' => 'Enable on IP Ranges',
+             'function' => 'render_ip_range_check' ),
+      array( 'id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges',
+             'function' => 'render_ip_ranges' ),
+      array( 'id' => 'wpa0_valid_proxy_ip', 'name' => 'Valid Proxy IP',
+             'function' => 'render_valid_proxy_ip' ),
+      array( 'id' => 'wpa0_custom_signup_fields', 'name' => 'Custom signup fields',
+             'function' => 'render_custom_signup_fields' ),
+      array( 'id' => 'wpa0_extra_conf', 'name' => 'Extra settings',
+             'function' => 'render_extra_conf' ),
+      array( 'id' => 'wpa0_auth0_server_domain', 'name' => 'Auth0 server domain',
+             'function' => 'render_auth0_server_domain' ),
+      array( 'id' => 'wpa0_metrics', 'name' => 'Anonymous data',
+             'function' => 'render_metrics' ),
     );
 
     if ( WP_Auth0_Configure_JWTAUTH::is_jwt_auth_enabled() ) {
-      $advancedOptions[] = array( 'id' => 'wpa0_jwt_auth_integration', 'name' => 'Enable JWT Auth integration', 'function' => 'render_jwt_auth_integration' );
+      $advancedOptions[] = array(
+      	'id' => 'wpa0_jwt_auth_integration',
+	      'name' => 'Enable JWT Auth integration',
+	      'function' => 'render_jwt_auth_integration'
+      );
     }
 
     $this->init_option_section( '', 'advanced', $advancedOptions );
   }
 
-  public function render_passwordless_method() {
-    $v = $this->options->get( 'passwordless_method' );
-?>
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social" value="social" <?php echo checked( $v, 'social', false ); ?>/><label for="wpa0_passwordless_method_social">Social</label>
+	/**
+	 * Render verified email switch
+	 */
+	public function render_verified_email() {
+		$this->render_switch( 'wpa0_verified_email', 'requires_verified_email' );
+		$this->render_field_description(
+			__( 'Require new users to verify their email before logging in. ', 'wp-auth0' ) .
+			__( 'This will disallow logins from social connections that do no provide email (like Twitter)', 'wp-auth0' )
+		);
+	}
 
-      <br>
+	/**
+	 * Render remember_users_session switch
+	 */
+	public function render_remember_users_session() {
+		$this->render_switch( 'wpa0_remember_users_session', 'remember_users_session' );
+		$this->render_field_description(
+			__( 'WordPress user sessions are, by default, two days. ', 'wp-auth0' ) .
+			__( 'Enabling this setting will extend the session to 14 days', 'wp-auth0' )
+		);
+	}
 
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_sms" value="sms" <?php echo checked( $v, 'sms', false ); ?>/><label for="wpa0_passwordless_method_sms">SMS</label>
+	/**
+	 * Render login redirect field
+	 */
+	public function render_default_login_redirection() {
+		$this->render_text_field( 'wpa0_default_login_redirection', 'default_login_redirection' );
+		$this->render_field_description( __( 'URL where successfully logged-in users are redirected to', 'wp-auth0' ) );
+	}
 
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social_sms" value="socialOrSms" <?php echo checked( $v, 'socialOrSms', false ); ?>/><label for="wpa0_passwordless_method_social_sms">Social or SMS</label>
+	/**
+	 * Render Passwordless switch
+	 */
+	public function render_passwordless_enabled() {
+		$this->render_switch( 'wpa0_passwordless_enabled', 'passwordless_enabled' );
+		$this->render_field_description( __( 'Username and password login are not enabled when this is on ', 'wp-auth0' )	);
+	}
 
-      <br>
+	/**
+	 * Render the Passwordless method options; only shows when passwordless_enabled is on
+	 */
+	public function render_passwordless_method() {
+		$value = $this->options->get( 'passwordless_method' );
+		$name = 'passwordless_method';
 
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_magiclink" value="magiclink" <?php echo checked( $v, 'magiclink', false ); ?>/><label for="wpa0_passwordless_method_magiclink">Magic Link</label>
+		$this->render_radio_button( 'wpa0_passwordless_method_magiclink', $name, 'magiclink',
+			'Magic link', ( empty( $value ) || 'magiclink' === $value ) );
+		$this->render_radio_button( 'wpa0_passwordless_method_social', $name, 'social',
+			'Social', 'social' === $value );
+		$this->render_radio_button( 'wpa0_passwordless_method_sms', $name, 'sms',
+			'SMS', 'sms' === $value );
+		$this->render_radio_button( 'wpa0_passwordless_method_social_sms', $name, 'socialOrSms',
+			'Social or SMS', 'socialOrSms' === $value );
+		$this->render_radio_button( 'wpa0_passwordless_method_social_magiclink', $name, 'socialOrMagiclink',
+			'Social or Magic Link', 'socialOrMagiclink' === $value );
+		$this->render_radio_button( 'wpa0_passwordless_method_emailcode', $name, 'emailcode',
+			'Email code', 'emailcode' === $value );
+		$this->render_radio_button( 'wpa0_passwordless_method_social_emailcode', $name, 'socialOrEmailcode',
+			'Social or Email Code', 'socialOrEmailcode' === $value );
 
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social_magiclink" value="socialOrMagiclink" <?php echo checked( $v, 'socialOrMagiclink', false ); ?>/><label for="wpa0_passwordless_method_social_magiclink">Social or Magic Link</label>
+		$this->render_field_description(
+			__( 'For more info about password policies, see the ', 'wp-auth0' ) .
+			$this->get_docs_link( 'password-strength', __( 'help page on password strength', 'wp-auth0' ) )
+		);
+	}
 
-      <br>
+	/**
+	 * Render force HTTPS switch
+	 */
+	public function render_force_https_callback() {
+		$this->render_switch( 'wpa0_force_https_callback', 'force_https_callback' );
+		$this->render_field_description(
+			__( 'Forces the plugin to use HTTPS for the callback URL when a site supports both. ', 'wp-auth0' ) .
+			__( 'If disabled, it will pick the protocol from the WordPress home URL. ', 'wp-auth0' )
+		);
+	}
 
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_emailcode" value="emailcode" <?php echo checked( $v, 'emailcode', false ); ?>/><label for="wpa0_passwordless_method_emailcode">Email Code</label>
+	/**
+	 * Render Lock CDN URL field; switches between fields based on passwordless being enabled or not
+	 */
+	public function render_cdn_url() {
+		$pwl_on = $this->options->get( 'passwordless_enabled' );
 
-      <input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social_emailcode" value="socialOrEmailcode" <?php echo checked( $v, 'socialOrEmailcode', false ); ?>/><label for="wpa0_passwordless_method_social_emailcode">Social or Email Code</label>
+		$this->render_text_field( 'wpa0_cdn_url', 'cdn_url', 'text', '',
+			( $pwl_on ? 'display:none' : '' ) );
+		$this->render_text_field( 'wpa0_passwordless_cdn_url', 'passwordless_cdn_url', 'text', '',
+			( $pwl_on ? '' : 'display:none' ) );
 
+		$this->render_field_description(
+			__( 'This should point to the latest widget JS available in the CDN and rarely needs to change', 'wp-auth0' )
+		);
+	}
 
+	/**
+	 * Render connections to show on Lock
+	 */
+	public function render_connections() {
+		$this->render_text_field( 'wpa0_connections', 'lock_connections' );
+		$this->render_field_description(
+			__( 'Which connections the Auth0 login form should show; separate multiple with commas. ', 'wp-auth0' ) .
+			__( 'This is ignored when empty and is mandatory for passwordless with social mode. ', 'wp-auth0' )
+		);
+	}
 
+	/**
+	 * Render link_aut0_users switch
+	 */
+	public function render_link_auth0_users() {
+		$this->render_switch( 'wpa0_link_auth0_users', 'link_auth0_users' );
+		$this->render_field_description(
+			__( 'Links accounts with the same e-mail address. ', 'wp-auth0' ) .
+			__( 'It will only occur if both e-mails are previously verified', 'wp-auth0' )
+		);
+	}
 
-      <div class="subelement">
-        <span class="description">
-          <?php echo __( 'For more info about the password policies check ', 'wp-auth0' ); ?>
-          <a target="_blank" href="https://auth0.com/docs/password-strength"><?php echo __( 'HERE', 'wp-auth0' ); ?></a>
-        </span>
-      </div>
-    <?php
+	/**
+	 * Render Twitter key field
+	 */
+	public function render_social_twitter_key() {
+		$this->render_social_key_field( 'wpa0_social_twitter_key', 'social_twitter_key' );
+	}
+
+	/**
+	 * Render Twitter secret field
+	 */
+	public function render_social_twitter_secret() {
+		$this->render_social_key_field( 'wpa0_social_twitter_secret', 'social_twitter_secret' );
+	}
+
+	/**
+	 * Render Facebook key field
+	 */
+	public function render_social_facebook_key() {
+		$this->render_social_key_field( 'wpa0_social_facebook_key', 'social_facebook_key' );
+	}
+
+	/**
+	 * Render Facebook secret field
+	 */
+	public function render_social_facebook_secret() {
+		$this->render_social_key_field( 'wpa0_social_facebook_secret', 'social_facebook_secret' );
+	}
+
+	/**
+	 * Render auto_provisioning switch
+	 */
+	public function render_auto_provisioning() {
+		$this->render_switch( 'wpa0_auto_provisioning', 'auto_provisioning' );
+		$this->render_field_description(
+			__( 'Enable this setting to create new users in the WordPress database when signups are off. ', 'wp-auth0' ) .
+			__( 'Users that are created in Auth0 and successfully log in will be added', 'wp-auth0' )
+		);
+	}
+
+	/**
+	 * Render migration WS switch and token field, if enabled
+	 */
+	public function render_migration_ws() {
+		$value = $this->options->get( 'migration_ws' );
+		$this->render_switch( 'wpa0_auth0_migration_ws', 'migration_ws' );
+
+		if ( $value ) {
+
+			$this->render_field_description(
+				__( 'Users migration is enabled. ', 'wp-auth0' ) .
+				__( 'If you disable this setting, it must be re-enabled manually in the ', 'wp-auth0' ) .
+				$this->get_dashboard_link( 'connections' )
+			);
+			$this->render_field_description( 'Security token:' );
+			printf(
+				'<textarea class="code" rows="%d" disabled>%s</textarea>',
+				$this->textarea_rows,
+				sanitize_text_field(  $this->options->get( 'migration_token' ) )
+			);
+		} else {
+
+			$this->render_field_description(
+				__( 'Users migration is disabled. ', 'wp-auth0' ) .
+				__( 'Enabling this exposes migration webservices but the Connection must be updated manually. ', 'wp-auth0' ) .
+				$this->get_docs_link( 'connections/database/migrating', __( 'More information here', 'wp-auth0' ) )
+			);
+		}
+	}
+
+	/**
+	 * Render migration IP whitelist switch
+	 */
+	public function render_migration_ws_ips_filter() {
+		$this->render_switch( 'wpa0_auth0_migration_ips_filter', 'migration_ips_filter' );
+	}
+
+	/**
+	 * Render migration IP whitelist field
+	 */
+	public function render_migration_ws_ips() {
+		$this->render_textarea_field( 'wpa0_auth0_migration_ips', 'migration_ips' );
+		$this->render_field_description(
+			__( 'Only requests from this IPs will be allowed to the migration WS. ', 'wp-auth0' ) .
+			__( 'Separate multiple IPs with commas', 'wp-auth0' )
+		);
+	}
+
+	/**
+	 * Render Implicit flow switch
+	 */
+	public function render_auth0_implicit_workflow() {
+		$this->render_switch( "wpa0_auth0_implicit_workflow", "auth0_implicit_workflow" );
+		$this->render_field_description(
+			__( 'Turns on implicit login flow. Your Client should be set to "Single Page App" in your ', 'wp-auth0' ) .
+			$this->get_dashboard_link( 'clients' )
+		);
+	}
+
+	/**
+	 * Render auto-login switch
+	 */
+	public function render_auto_login() {
+		$this->render_switch( 'wpa0_auto_login', 'auto_login' );
+		$this->render_field_description(
+			__( 'Send logins directly to a specific Connection, skipping the login page', 'wp-auth0' )
+		);
+	}
+
+	/**
+	 * Render auto-login method field
+	 */
+	public function render_auto_login_method() {
+		$this->render_text_field( 'wpa0_auto_login_method', 'auto_login_method' );
+		$this->render_field_description(
+			__( 'Find the method name to use under Connections > [Connection Type] in your ', 'wp-auth0' ) .
+			$this->get_dashboard_link( 'connections' ) .
+			__( '. Click the expand icon and use the value in the "Name" field (like "google-oauth2")', 'wp-auth0' )
+		);
+	}
+
+	/**
+	 * Render IP range switch
+	 */
+  public function render_ip_range_check() {
+    $this->render_switch( 'wpa0_ip_range_check', 'ip_range_check' );
   }
 
-  public function render_jwt_auth_integration() {
-    $v = absint( $this->options->get( 'jwt_auth_integration' ) );
-
-    $this->render_a0_switch( "wpa0_jwt_auth_integration", "jwt_auth_integration", 1 == $v );
-?>
-    <div class="subelement">
-      <span class="description"><?php echo __( 'This will enable the JWT Auth\'s Users Repository override.', 'wp-auth0' ); ?></span>
-    </div>
-  <?php
+	/**
+	 * Render IP range field
+	 */
+  public function render_ip_ranges() {
+	  $this->render_textarea_field( 'wpa0_ip_ranges', 'ip_ranges' );
+	  $this->render_field_description(
+		  __( 'Only one range per line! Range format should be as follows (spaces ignored): ', 'wp-auth0' ) .
+		  __( '<br><code>xx.xx.xx.xx - yy.yy.yy.yy</code>', 'wp-auth0' )
+	  );
   }
 
-  public function render_default_login_redirection() {
-    $v = $this->options->get( 'default_login_redirection' );
-?>
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[default_login_redirection]" id="wpa0_default_login_redirection" value="<?php echo esc_attr( $v ); ?>"/>
-      <div class="subelement">
-        <span class="description"><?php echo __( 'This is the URL that all users will be redirected to by default after login.', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
+	/**
+	 * Render proxy IP field
+	 */
+  public function render_valid_proxy_ip() {
+	  $this->render_text_field( 'wpa0_valid_proxy_ip', 'valid_proxy_ip' );
+	  $this->render_field_description(
+		  __( 'Whitelist for proxy and load balancer IPs to enable logins and migration webservices', 'wp-auth0' )
+	  );
   }
 
-  public function render_extra_conf() {
-    $v = $this->options->get( 'extra_conf' );
-?>
-
-    <textarea name="<?php echo $this->options->get_options_name(); ?>[extra_conf]" id="wpa0_extra_conf"><?php echo esc_attr( $v ); ?></textarea>
-    <div class="subelement">
-      <span class="description">
-        <?php echo __( 'This field is the Json that describes the options to call Lock with. It\'ll override any other option set here. See all the possible options ', 'wp-auth0' ); ?>
-        <a target="_blank" href="https://auth0.com/docs/libraries/lock/customization"><?php echo __( 'here', 'wp-auth0' ); ?></a>
-        <?php echo __( '(For example: {"disableResetAction": true }) ', 'wp-auth0' ); ?>
-      </span>
-    </div>
-    <?php
-  }
-
-  public function render_custom_signup_fields() {
-    $v = $this->options->get( 'custom_signup_fields' );
-?>
-
-    <textarea name="<?php echo $this->options->get_options_name(); ?>[custom_signup_fields]" id="wpa0_custom_signup_fields"><?php echo esc_attr( $v ); ?></textarea>
-    <div class="subelement">
-      <span class="description">
-        <?php echo __( 'This field is the Json that describes the custom signup fields for lock. It should be a valida json and allows the use of functions (for validation). More info', 'wp-auth0' ); ?>
-        <a target="_blank" href="https://auth0.com/docs/libraries/lock/v10/new-features#custom-sign-up-fields"><?php echo __( 'here', 'wp-auth0' ); ?></a>
-
-        <code><pre>[
+	/**
+	 * Render custom signup JSON field and example
+	 */
+	public function render_custom_signup_fields() {
+		$this->render_textarea_field( 'wpa0_custom_signup_fields', 'custom_signup_fields' );
+		$this->render_field_description(
+			__( 'JSON that describes custom signup fields in Auth0 login form; example below. ', 'wp-auth0' ) .
+			$this->get_docs_link(
+				'docs/libraries/lock/v10/new-features#custom-sign-up-fields',
+				__( 'More information here', 'wp-auth0' )
+			)
+		);
+		$this->render_field_description( '<pre>[
   {
     name: "address",                              // required
     placeholder: "enter your address",            // required
@@ -162,271 +375,57 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   {
     ... // more fields could be specified
   }
-]</pre></code>
-      </span>
-    </div>
-    <?php
-  }
+]</pre>'
+		);
+	}
 
-  public function render_link_auth0_users() {
-    $v = $this->options->get( 'link_auth0_users' );
+	/**
+	 * Render additional Lock configuration JSON field
+	 */
+	public function render_extra_conf() {
+		$this->render_textarea_field( 'wpa0_extra_conf', 'extra_conf' );
+		$this->render_field_description(
+			__( 'Valid JSON for Lock options configuration; will override all options set elsewhere. ', 'wp-auth0' ) .
+			$this->get_docs_link( 'libraries/lock/customization', 'See options and examples' )
+		);
+	}
 
-    $this->render_a0_switch( "wpa0_link_auth0_users", "link_auth0_users", ! empty( $v ) );
-?>
-      <div class="subelement">
-        <span class="description"><?php echo __( 'Links accounts with the same e-mail address. It will only occur if both e-mails are previously verified.', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
-  }
-
-  public function render_auto_provisioning() {
-    $v = $this->options->get( 'auto_provisioning' );
-
-    $this->render_a0_switch( "wpa0_auto_provisioning", "auto_provisioning", 1 == $v );
-?>
-
-      <div class="subelement">
-        <span class="description"><?php echo __( 'The plugin will automatically add new users if they do not exist in the WordPress database if the signups are enabled (enabling this setting will enable this behaviour when signups are disabled).', 'wp-auth0' ); ?></span>
-        </div>
-    <?php
-  }
-
-  public function render_passwordless_enabled() {
-    $v = $this->options->get( 'passwordless_enabled' );
-
-    $this->render_a0_switch( "wpa0_passwordless_enabled", "passwordless_enabled", 1 == $v );
-?>
-
-      <div class="subelement">
-        <span class="description"><?php echo __( 'This option will replace the login widget with Lock Passwordless (Username and password login will not be enabled).', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
-  }
-
-  public function render_force_https_callback() {
-    $v = $this->options->get( 'force_https_callback' );
-
-    $this->render_a0_switch( "wpa0_force_https_callback", "force_https_callback", 1 == $v );
-?>
-
-      <div class="subelement">
-        <span class="description"><?php echo __( 'This option forces the plugin to use HTTPS for the callback URL in those cases where it needs to support mixed HTTP and HTTPS pages. If disabled, it will pick the protocol from the WordPress home URL (configured under Settings > General).', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
-  }
-
-  public function render_remember_users_session() {
-    $v = $this->options->get( 'remember_users_session' );
-
-    $this->render_a0_switch( "wpa0_remember_users_session", "remember_users_session", 1 == $v );
-?>
-
-      <div class="subelement">
-        <span class="description"><?php echo __( 'Users session by default lives for two days. Enabling this setting will make the sessions be kept for 14 days.', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
-  }
-
-  public function render_migration_ws() {
-    $v = $this->options->get( 'migration_ws' );
-    $token = $this->options->get( 'migration_token' );
-
-    $this->render_a0_switch( "wpa0_auth0_migration_ws", "migration_ws", 1 == $v );
-
-    if ( $v ) {
-?>
-      <div class="subelement">
-        <span class="description"><?php echo __( 'Users migration is enabled. If you disable this setting, it can not be automatically enabled again, it needs to be done manually in the Auth0 dashboard.', 'wp-auth0' ); ?></span>
-        <br>
-        <span class="description"><?php echo __( 'Security token:', 'wp-auth0' ); ?></span>
-        <textarea class="code" disabled><?php echo $token; ?></textarea>
-      </div>
-    <?php
-    } else {
-?>
-      <div class="subelement">
-        <span class="description"><?php echo __( 'Users migration is disabled. Enabling it will expose the migration webservices but the connection needs to be updated manually on the Auth0 dashboard. More info about the migration process ', 'wp-auth0' ); ?><a target="_blank" href="https://auth0.com/docs/connections/database/migrating">HERE</a>.</span>
-      </div>
-    <?php
-    }
-
-  }
-
-  public function render_migration_ws_ips_filter() {
-    $v = $this->options->get( 'migration_ips_filter' );
-    $this->render_a0_switch( "wpa0_auth0_migration_ips_filter", "migration_ips_filter", 1 == $v );
-  }
-
-  public function render_migration_ws_ips() {
-	  $list = $this->options->get( 'migration_ips' );
-	  ?>
-	  <div class="subelement">
-		  <textarea name="<?php echo $this->options->get_options_name(); ?>[migration_ips]" id="wpa0_auth0_migration_ips"><?php echo $list; ?></textarea>
-		  <span class="description">
-	        <?php echo __( 'Only requests from this IPs will be allowed to the migration WS.', 'wp-auth0' ); ?>
-	        <?php echo __( 'Separate multiple IPs with commas.', 'wp-auth0' ); ?>
-        </span>
-	  </div>
-	  <?php
-  }
-
-  public function render_auth0_implicit_workflow() {
-    $v = absint( $this->options->get( 'auth0_implicit_workflow' ) );
-
-    $this->render_a0_switch( "wpa0_auth0_implicit_workflow", "auth0_implicit_workflow", 1 == $v );
-?>
-
-    <div class="subelement">
-      <span class="description"><?php echo __( 'Activate this option to change the login workflow and allow the plugin to work when the server doesn\'t have internet access.', 'wp-auth0' ); ?></span>
-    </div>
-    <?php
-  }
-
-  public function render_auto_login() {
-    $v = absint( $this->options->get( 'auto_login' ) );
-
-    $this->render_a0_switch( "wpa0_auto_login", "auto_login", 1 == $v );
-?>
-
-    <div class="subelement">
-      <span class="description"><?php echo __( 'Mark this to avoid the login page (you will have to select a single login provider)', 'wp-auth0' ); ?></span>
-    </div>
-    <?php
-  }
-
-  public function render_auto_login_method() {
-    $v = $this->options->get( 'auto_login_method' );
-?>
-    <input type="text" name="<?php echo $this->options->get_options_name(); ?>[auto_login_method]" id="wpa0_auto_login_method" value="<?php echo esc_attr( $v ); ?>"/>
-    <div class="subelement">
-      <span class="description"><?php echo __( 'To find the method name, log into Auth0 Dashboard, and navigate to: Connection -> [Connection Type] (eg. Social or Enterprise). Click the "down arrow" to expand the wanted method, and use the value in the "Name"-field. Example: google-oauth2', 'wp-auth0' ); ?></span>
-    </div>
-    <?php
-  }
-
-  public function render_ip_range_check() {
-    $v = absint( $this->options->get( 'ip_range_check' ) );
-
-    $this->render_a0_switch( "wpa0_ip_range_check", "ip_range_check", 1 == $v );
-  }
-
-  public function render_ip_ranges() {
-    $v = $this->options->get( 'ip_ranges' );
-?>
-    <textarea cols="25" name="<?php echo $this->options->get_options_name(); ?>[ip_ranges]" id="wpa0_ip_ranges"><?php echo esc_textarea( $v ); ?></textarea>
-    <div class="subelement">
-      <span class="description"><?php echo __( 'Only one range per line! Range format should be as follows (spaces will be trimmed):', 'wp-auth0' ); ?></span>
-      <code>xx.xx.xx.xx - yy.yy.yy.yy</code>
-    </div>
-    <?php
-  }
-
-  public function render_social_twitter_key() {
-    $v = $this->options->get_connection( 'social_twitter_key' );
-?>
-    <input type="text" name="<?php echo $this->options->get_options_name(); ?>[social_twitter_key]" id="wpa0_social_twitter_key" value="<?php echo esc_attr( $v ); ?>"/>
-    <?php
-  }
-  public function render_social_twitter_secret() {
-    $v = $this->options->get_connection( 'social_twitter_secret' );
-?>
-    <input type="text" name="<?php echo $this->options->get_options_name(); ?>[social_twitter_secret]" id="wpa0_social_twitter_secret" value="<?php echo esc_attr( $v ); ?>"/>
-    <?php
-  }
-
-  public function render_social_facebook_key() {
-    $v = $this->options->get_connection( 'social_facebook_key' );
-?>
-    <input type="text" name="<?php echo $this->options->get_options_name(); ?>[social_facebook_key]" id="wpa0_social_facebook_key" value="<?php echo esc_attr( $v ); ?>"/>
-    <?php
-  }
-  public function render_social_facebook_secret() {
-    $v = $this->options->get_connection( 'social_facebook_secret' );
-?>
-    <input type="text" name="<?php echo $this->options->get_options_name(); ?>[social_facebook_secret]" id="wpa0_social_facebook_secret" value="<?php echo esc_attr( $v ); ?>"/>
-    <?php
-  }
-
-  public function render_valid_proxy_ip() {
-    $v = $this->options->get( 'valid_proxy_ip' );
-?>
-    <input type="text" name="<?php echo $this->options->get_options_name(); ?>[valid_proxy_ip]" id="wpa0_valid_proxy_ip" value="<?php echo esc_attr( $v ); ?>"/>
-    <div class="subelement">
-      <span class="description"><?php echo __( ' If you are using a load balancer or a proxy, you will need to whitelist its IP in order to enable IP checks for logins or migration webservices.', 'wp-auth0' ); ?></span>
-    </div>
-    <?php
-  }
-
-  public function render_cdn_url() {
-    $passwordless_enabled = $this->options->get( 'passwordless_enabled' );
-    $cdn_url = $this->options->get( 'cdn_url' );
-    $passwordless_cdn_url = $this->options->get( 'passwordless_cdn_url' );
-?>
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[cdn_url]" id="wpa0_cdn_url" value="<?php echo esc_attr( $cdn_url ); ?>" style="<?php echo $passwordless_enabled ? 'display:none' : '' ?>"/>
-
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[wpa0_passwordless_cdn_url]" id="wpa0_passwordless_cdn_url" value="<?php echo esc_attr( $passwordless_cdn_url ); ?>" style="<?php echo $passwordless_enabled ? '' : 'display:none' ?>"/>
-
-      <div class="subelement">
-        <span class="description"><?php echo __( 'Point this to the latest widget available in the CDN', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
-  }
-
+	/**
+	 * Render Auth0 server domain field
+	 */
   public function render_auth0_server_domain() {
-    $v = $this->options->get( 'auth0_server_domain' );
-?>
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[auth0_server_domain]" id="wpa0_auth0_server_domain" value="<?php echo esc_attr( $v ); ?>" />
-
-      <div class="subelement">
-        <span class="description"><?php echo __( 'The Auth0 domain, it is used by the setup wizard to fetch your account information.', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
+	  $this->render_text_field( 'wpa0_auth0_server_domain', 'auth0_server_domain' );
+	  $this->render_field_description(
+	  	__( 'The Auth0 domain, it is used by the setup wizard to fetch your account information', 'wp-auth0' )
+	  );
   }
 
-  public function render_connections() {
-    $v = $this->options->get( 'lock_connections' );
-?>
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[lock_connections]" id="wpa0_connections" value="<?php echo esc_attr( $v ); ?>" />
-
-      <div class="subelement">
-        <span class="description"><?php echo __( 'This is used to select which connections should lock show. It is ignored when empty and is mandatory for passwordless with social mode.', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
-  }
-
+	/**
+	 * Render anonymous metrics switch
+	 */
   public function render_metrics() {
-    $v = absint( $this->options->get( 'metrics' ) );
-
-    $this->render_a0_switch( "wpa0_metrics", "metrics", 1 == $v );
-?>
-
-      <div class="subelement">
-        <span class="description">
-          <?php echo __( 'This plugin tracks anonymous usage data. Click to disable.', 'wp-auth0' ); ?>
-        </span>
-      </div>
-    <?php
+    $this->render_switch( 'wpa0_metrics', 'metrics' );
+	  $this->render_field_description(
+	  	__( 'Enables anonymous usage data reporting (WP, PHP, and plugin versions)', 'wp-auth0' )
+	  );
   }
 
-  public function render_verified_email() {
-    $v = absint( $this->options->get( 'requires_verified_email' ) );
+	/**
+	 * Render JWT integration switch
+	 */
+	public function render_jwt_auth_integration() {
+		$this->render_switch( 'wpa0_jwt_auth_integration', 'jwt_auth_integration' );
+		$this->render_field_description( __( 'This will enable the JWT Auth Users Repository override', 'wp-auth0' ) );
+	}
 
-    $this->render_a0_switch( "wpa0_verified_email", "requires_verified_email", 1 == $v );
-?>
-      <div class="subelement">
-        <span class="description"><?php echo __( 'Mark this if you require the user to have a verified email to login', 'wp-auth0' ); ?></span>
-      </div>
-    <?php
-  }
-
-  public function render_advanced_description() {
-?>
-
-    <p class=\"a0-step-text\"><?php echo self::ADVANCED_DESCRIPTION; ?></p>
-
-    <?php
-  }
-
+	/**
+	 * Validate settings being saved
+	 *
+	 * @param array $old_options - options array before saving
+	 * @param array $input - options array after saving
+	 *
+	 * @return array
+	 */
   public function basic_validation( $old_options, $input ) {
     $input['requires_verified_email'] = ( isset( $input['requires_verified_email'] ) ? $input['requires_verified_email'] : 0 );
     $input['auto_provisioning'] = ( isset( $input['auto_provisioning'] ) ? $input['auto_provisioning'] : 0 );
@@ -453,7 +452,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $input['lock_connections'] = trim( $input['lock_connections'] );
     $input['custom_signup_fields'] = trim( $input['custom_signup_fields'] );
 
-    if ( $input['passwordless_enabled'] && empty( $input['lock_connections'] ) && strpos( strtolower( $input['passwordless_method'] ), 'social' ) !== false ) {
+    if ( ! empty( $input['passwordless_enabled'] ) && empty( $input['lock_connections'] ) && strpos( strtolower( $input['passwordless_method'] ), 'social' ) !== false ) {
       $error = __( "Please complete the list of connections to be used by Lock in social mode.", "wp-auth0" );
       self::add_validation_error( $error );
     }
@@ -544,7 +543,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       'magiclink' => 'email',
       'emailcode' => 'email');
 
-    if ($input['passwordless_enabled'] && $input['passwordless_enabled'] != $old_options['passwordless_enabled']) {
+    if (! empty( $input['passwordless_enabled'] ) && $input['passwordless_enabled'] != $old_options['passwordless_enabled']) {
 
       // $check_if_enabled = explode(',', $input['lock_connections']);
 
@@ -615,5 +614,4 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     }
     return $input;
   }
-
 }

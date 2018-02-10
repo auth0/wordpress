@@ -2,8 +2,7 @@
 
 class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
-	const BASIC_DESCRIPTION = 'Basic settings related to Auth0 credentials and basic WordPress integration.';
-
+	protected $description = 'Basic settings related to Auth0 credentials and basic WordPress integration';
 	protected $actions_middlewares = array( 'basic_validation' );
 
 	/**
@@ -33,13 +32,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup',
 				       'function' => 'render_allow_signup' ),
 			) );
-	}
-
-	/**
-	 * Render description at the top of the settings block
-	 */
-	public function render_basic_description() {
-		printf( '<p class="a0-step-text">%s</p>', self::BASIC_DESCRIPTION );
 	}
 
 	/**
@@ -79,8 +71,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * Render client_secret_b64_encoded
 	 */
 	public function render_client_secret_b64_encoded() {
-		$value = absint( $this->options->get( 'client_secret_b64_encoded' ) );
-		$this->render_a0_switch( 'wpa_client_secret_b64_encoded', 'client_secret_b64_encoded', 1 == $value );
+		$this->render_switch( 'wpa_client_secret_b64_encoded', 'client_secret_b64_encoded' );
 		$this->render_field_description(
 			__( 'Enable if your client secret is base64 enabled. ', 'wp-auth0' ) .
 			__( 'If you are not sure, check your Client settings in Auth0. ', 'wp-auth0' ) .
@@ -145,8 +136,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * Render wordpress_login_enabled
 	 */
 	public function render_allow_wordpress_login() {
-		$value = absint( $this->options->get( 'wordpress_login_enabled' ) );
-		$this->render_a0_switch( 'wpa0_wp_login_enabled', 'wordpress_login_enabled', 1 == $value );
+		$this->render_switch( 'wpa0_wp_login_enabled', 'wordpress_login_enabled' );
 		$this->render_field_description(
 			__( 'Turn on to enable a link on wp-login.php pointing to the core login form', 'wp-auth0' )
 		);

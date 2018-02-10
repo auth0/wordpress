@@ -2,14 +2,13 @@
 
 class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
-	const APPEARANCE_DESCRIPTION = 'Settings related to the way the login widget is shown.';
-
+	protected $description = 'Settings related to the way the login widget is shown';
 	protected $actions_middlewares = array(
 		'basic_validation',
 	);
 
 	/**
-	 * Sets up ettings field registration
+	 * Sets up settings field registration
 	 */
 	public function init() {
 		$this->init_option_section( '', 'appearance', array(
@@ -37,13 +36,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Render description at the top of the settings block
-	 */
-	public function render_appearance_description() {
-		printf( '<p class="a0-step-text">%s</p>', self::APPEARANCE_DESCRIPTION );
-	}
-
-	/**
 	 * Render form_title field
 	 */
 	public function render_form_title() {
@@ -55,8 +47,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * Render social_big_buttons
 	 */
 	public function render_social_big_buttons() {
-		$value = absint( $this->options->get( 'social_big_buttons' ) );
-		$this->render_a0_switch( 'wpa0_social_big_buttons', 'social_big_buttons', 1 == $value );
+		$this->render_switch( 'wpa0_social_big_buttons', 'social_big_buttons' );
 		$this->render_field_description( __( 'Uses full-width social login buttons when activated', 'wp-auth0' ) );
 	}
 
@@ -66,7 +57,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	public function render_icon_url() {
 		$this->render_text_field( 'wpa0_icon_url', 'icon_url' );
 		printf(
-			' <button id="wpa0_choose_icon" class="button-secondary">%s</button>',
+			' <a id="wpa0_choose_icon" href="#wpa0_choose_icon" class="button-secondary">%s</a>',
 			__( 'Choose Icon', 'wp-auth0' )
 		);
 		$this->render_field_description( __( 'Icon should be 32 pixels square', 'wp-auth0' ) );
@@ -76,8 +67,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * Render gravatar on/off switch
 	 */
 	public function render_gravatar() {
-		$value = absint( $this->options->get( 'gravatar' ) );
-		$this->render_a0_switch( 'wpa0_gravatar', 'gravatar', 1 == $value );
+		$this->render_switch( 'wpa0_gravatar', 'gravatar' );
 		$this->render_field_description(
 			__( 'Read more about the gravatar integration on ', 'wp-auth0' ) .
 			$this->get_docs_link( 'libraries/lock/customization#gravatar-boolean-', __( ' this docs page', 'wp-auth0' ) )

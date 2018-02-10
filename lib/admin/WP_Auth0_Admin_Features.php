@@ -2,8 +2,7 @@
 
 class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
-  const FEATURES_DESCRIPTION = 'Settings related to specific features provided by the plugin.';
-
+  protected $description = 'Settings related to specific features provided by the plugin';
   protected $actions_middlewares = array(
     'basic_validation',
     'georule_validation',
@@ -39,13 +38,6 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   }
 
 	/**
-	 * Render description at the top of the settings block
-	 */
-	public function render_features_description() {
-		printf( '<p class="a0-step-text">%s</p>', self::FEATURES_DESCRIPTION );
-	}
-
-	/**
 	 * Render password_policy options
 	 */
   public function render_password_policy() {
@@ -65,8 +57,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render SSO switch
 	 */
 	public function render_sso() {
-		$value = absint( $this->options->get( 'sso' ) );
-		$this->render_a0_switch( 'wpa0_sso', 'sso', 1 == $value );
+		$this->render_switch( 'wpa0_sso', 'sso' );
 		$this->render_field_description(
 			__( 'Single Sign On (SSO) allows users to sign in once to multiple Clients in the same tenant. ', 'wp-auth0' ) .
 			__( 'For more details, see our ', 'wp-auth0' ) .
@@ -78,8 +69,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render SLO switch
 	 */
 	public function render_singlelogout() {
-		$value = absint( $this->options->get( 'singlelogout' ) );
-		$this->render_a0_switch( 'wpa0_singlelogout', 'singlelogout', 1 == $value );
+		$this->render_switch( 'wpa0_singlelogout', 'singlelogout' );
 		$this->render_field_description(
 			__( 'Single Logout (SLO) allows users to sign out of multiple Clients in the same tenant. ', 'wp-auth0' ) .
 			__( 'For more details, see our ', 'wp-auth0' ) .
@@ -91,8 +81,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render MFA switch
 	 */
   public function render_mfa() {
-	  $value = absint( $this->options->get( 'mfa' ) );
-	  $this->render_a0_switch( 'wpa0_mfa', 'mfa', ! empty( $value ) );
+	  $this->render_switch( 'wpa0_mfa', 'mfa' );
 	  $this->render_field_description(
 		  __( 'Mark this if you want to enable multifactor authentication with Auth0 Guardian. ', 'wp-auth0' ) .
 		  __( 'For more details, see our ', 'wp-auth0' ) .
@@ -110,7 +99,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	public function render_fullcontact() {
 		$fullcontact_on = absint( $this->options->get( 'fullcontact' ) );
 		$fullcontact_key = $this->options->get( 'fullcontact_apikey' );
-		$this->render_a0_switch( 'wpa0_fullcontact', 'fullcontact', ! empty( $fullcontact_on ) );
+		$this->render_switch( 'wpa0_fullcontact', 'fullcontact' );
 
 		$fullcontact_key_id = 'wpa0_fullcontact_key';
 		printf(
@@ -144,8 +133,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * TODO: test me ... remove validation if not working
 	 */
   public function render_geo() {
-	  $value = absint( $this->options->get( 'geo_rule' ) );
-	  $this->render_a0_switch( 'wpa0_geo_rule', 'geo_rule', ! empty( $value ) );
+	  $this->render_switch( 'wpa0_geo_rule', 'geo_rule' );
 	  $this->render_field_description(
 		  __( 'Store geo location information based on your users IP in the user_metadata', 'wp-auth0' )
 	  );
@@ -157,8 +145,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * TODO: test me ... remove validation if not working
 	 */
   public function render_income() {
-	  $value = absint( $this->options->get( 'income_rule' ) );
-	  $this->render_a0_switch( 'wpa0_income_rule', 'income_rule', ! empty( $value ) );
+	  $this->render_switch( 'wpa0_income_rule', 'income_rule' );
 	  $this->render_field_description(
 		  __( 'Mark this if you want to store income data based on the zipcode (based on IP address). ', 'wp-auth0' ).
 		  __( 'Represents the median income of the users zipcode, based on last US census data. ', 'wp-auth0' )
@@ -169,8 +156,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render avatar override switch
 	 */
   public function render_override_wp_avatars() {
-	  $value = absint( $this->options->get( 'override_wp_avatars' ) );
-	  $this->render_a0_switch( 'wpa0_override_wp_avatars', 'override_wp_avatars', ! empty( $value ) );
+	  $this->render_switch( 'wpa0_override_wp_avatars', 'override_wp_avatars' );
 	  $this->render_field_description(
 		  __( 'Overrides the WordPress avatar with the Auth0 profile avatar. ', 'wp-auth0' )
 	  );
