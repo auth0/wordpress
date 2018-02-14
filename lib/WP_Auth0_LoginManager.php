@@ -49,6 +49,7 @@ class WP_Auth0_LoginManager {
     $client_id = $this->a0_options->get( 'client_id' );
     $auto_login = absint( $this->a0_options->get( 'auto_login' ) );
 
+    // TODO: Address SLO using UL
     if ( $slo && isset( $_REQUEST['SLO'] ) ) {
       wp_redirect( $_REQUEST['redirect_to'] );
       die();
@@ -71,12 +72,13 @@ class WP_Auth0_LoginManager {
     }
   }
 
-  /**
-   * Login page handler for auth-login and SSO
-   *
-   * @see https://auth0.com/docs/api-auth/tutorials/silent-authentication
-   */
-  public function login_auto() {
+	/**
+	 * Login page handler for auto-login and SSO
+	 *
+	 * @see https://auth0.com/docs/api-auth/tutorials/silent-authentication
+	 * @see https://auth0.com/docs/sso/current
+	 */
+	public function login_auto() {
 
     if ( strtolower( $_SERVER['REQUEST_METHOD'] ) !== 'get' ) {
       return;
@@ -201,24 +203,20 @@ class WP_Auth0_LoginManager {
       } else {
         $this->redirect_login();
       }
-    } catch ( WP_Auth0_LoginFlowValidationException $e ) {
-
-      // Errors during the OAuth login flow
+    } catch (WP_Auth0_LoginFlowValidationException $e) {
       $this->die_on_login( $e->getMessage(), $e->getCode() );
-
-    } catch ( WP_Auth0_BeforeLoginException $e ) {
-
-      // Errors during the WordPress login flow
+    } catch (WP_Auth0_BeforeLoginException $e) {
       $this->die_on_login( $e->getMessage(), $e->getCode(), FALSE );
     }
   }
 
   /**
-   * Main login flow, Authorization Code Grant
+   * Authorization Code Grant login process
    *
    * @throws WP_Auth0_BeforeLoginException
    * @throws WP_Auth0_LoginFlowValidationException
    *
+   * @see https://auth0.com/docs/api-auth/grant/authorization-code
    * @see https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
    */
   public function redirect_login() {
