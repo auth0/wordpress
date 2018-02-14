@@ -206,15 +206,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			
 			'auth0_server_domain' => 'auth0.auth0.com',
 			'auth0js-cdn' => '//cdn.auth0.com/js/auth0/9.1/auth0.min.js',
-
-			//DASHBOARD
-			'chart_idp_type' => 'donut',
-			'chart_gender_type' => 'donut',
-			'chart_age_type' => 'donut',
-
-			'chart_age_from' => '10',
-			'chart_age_to' => '70',
-			'chart_age_step' => '5',
 		);
 	}
 }
