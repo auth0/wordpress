@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * TODO: Add deprecated notice with version removed
+ *
+ * Class WP_Auth0_Admin_Dashboard
+ */
 class WP_Auth0_Admin_Dashboard extends WP_Auth0_Admin_Generic {
 
 	const DASHBOARD_DESCRIPTION = 'Settings related to the dashboard widgets.';
@@ -9,6 +14,7 @@ class WP_Auth0_Admin_Dashboard extends WP_Auth0_Admin_Generic {
 	);
 
 	public function init() {
+		trigger_error( sprintf( __( 'Class %s is deprecated.', 'wp-auth0' ),__CLASS__ ), E_USER_DEPRECATED );
 
 		$this->init_option_section( '', 'dashboard', array(
 

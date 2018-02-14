@@ -23,7 +23,6 @@
 		    <li role="presentation"><a id="tab-features" href="#features" aria-controls="features" role="tab" data-toggle="tab">Features</a></li>
 			<li role="presentation"><a id="tab-appearance" href="#appearance" aria-controls="appearance" role="tab" data-toggle="tab">Appearance</a></li>
 		    <li role="presentation"><a id="tab-advanced" href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab">Advanced</a></li>
-		    <li role="presentation"><a id="tab-dashboard" href="#dashboard" aria-controls="dashboard" role="tab" data-toggle="tab">Dashboard</a></li>
 		    <li role="presentation"><a id="tab-help" href="#help" aria-controls="help" role="tab" data-toggle="tab">Help</a></li>
 		  </ul>
 		</div>
@@ -42,9 +41,6 @@
 		    </div>
 		    <div role="tabpanel" class="tab-pane row" id="advanced">
 					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_advanced' ); ?>
-		    </div>
-		    <div role="tabpanel" class="tab-pane row" id="dashboard">
-					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_dashboard' ); ?>
 		    </div>
 		    <div role="tabpanel" class="tab-pane row" id="help">
 
