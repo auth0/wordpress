@@ -1,6 +1,6 @@
 === PLUGIN_NAME ===
 Tags: PLUGIN_TAGS
-Tested up to: 4.9.2
+Tested up to: 4.9.4
 Requires at least: 3.8
 Requires PHP: 5.3
 License: MIT
@@ -155,6 +155,10 @@ Have in mind that all the "Extra settings" that we allow to set up in the plugin
 == Changelog ==
 
 [Complete CHANGELOG.md maintained on Github](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md)
+
+= 3.5.2 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#352-2018-01-26)
 
 = 3.5.1 =
 
