@@ -1,5 +1,34 @@
 # Change Log
 
+## [3.5.2](https://github.com/auth0/wp-auth0/tree/3.5.2) (2018-02-22)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.5.1...3.5.2)
+
+**Closed issues**
+- [Security] [URGENT] XSS injection error page [\#381](https://github.com/auth0/wp-auth0/issues/381)
+- Non-static method WP_Auth0_Api_Client::convertCertToPem() should not be called statically [\#380](https://github.com/auth0/wp-auth0/issues/380)
+- Notices in /lib/admin/WP_Auth0_Admin_Advanced.php [\#374](https://github.com/auth0/wp-auth0/issues/374)
+- SSO login failing when not using implicit flow [\#363](https://github.com/auth0/wp-auth0/issues/363)
+- "Override WordPress avatars" option doesn't appear to work with comments [\#355](https://github.com/auth0/wp-auth0/issues/355)
+- Change log is missing from readme.txt, the separate changelog file is not updated [\#346](https://github.com/auth0/wp-auth0/issues/346)
+- Uninstall doesn't remove all Auth0 database plugin entries [\#322](https://github.com/auth0/wp-auth0/issues/322)
+- Unable to save migration IPs whitelist [\#320](https://github.com/auth0/wp-auth0/issues/320)
+- Login plugin form name incorrect [\#269](https://github.com/auth0/wp-auth0/issues/269)
+
+**Changed**
+- Readme updates [\#392](https://github.com/auth0/wp-auth0/pull/392) ([joshcanhelp](https://github.com/joshcanhelp))
+- Changed error handling [\#384](https://github.com/auth0/wp-auth0/pull/384) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fixed SSO auto-login in Lock [\#394](https://github.com/auth0/wp-auth0/pull/394) ([joshcanhelp](https://github.com/joshcanhelp))
+- Renaming un-deprecated function [\#393](https://github.com/auth0/wp-auth0/pull/393) ([joshcanhelp](https://github.com/joshcanhelp))
+- Cleanup PR for 3.5.2 [\#391](https://github.com/auth0/wp-auth0/pull/391) ([joshcanhelp](https://github.com/joshcanhelp))
+- Improved setup wizard client create process [\#389](https://github.com/auth0/wp-auth0/pull/389) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deleting all added options and transients on uninstall [\#387](https://github.com/auth0/wp-auth0/pull/387) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fixed wrong title and icon for login widget [\#385](https://github.com/auth0/wp-auth0/pull/385) ([joshcanhelp](https://github.com/joshcanhelp))
+- XSS in error query vars [\#383](https://github.com/auth0/wp-auth0/pull/383) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fixed migration IPs being saved [\#382](https://github.com/auth0/wp-auth0/pull/382) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fixed get_avatar hooked function to account for other user identifiers [\#376](https://github.com/auth0/wp-auth0/pull/376) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [3.5.1](https://github.com/auth0/wp-auth0/tree/3.5.1) (2018-01-26)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.5.0...3.5.1)
 
