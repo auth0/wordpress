@@ -534,7 +534,7 @@ class WP_Auth0_Api_Client {
 		$response = wp_remote_post( $endpoint  , array(
 				'method' => 'PATCH',
 				'headers' => $headers,
-				'body' => json_encode( array_merge(array( 'sso' => boolval($sso)), $payload) )
+				'body' => json_encode( array_merge(array( 'sso' => (bool) $sso), $payload) )
 			) );
 
 		if ( $response instanceof WP_Error ) {
@@ -1064,7 +1064,7 @@ class WP_Auth0_Api_Client {
 
 	if ( false === ($secret = get_transient('WP_Auth0_JWKS_cache') ) ) {
 
-		$secret = [];
+		$secret = array();
 
 		$response = wp_remote_get( $endpoint, array() );
 
