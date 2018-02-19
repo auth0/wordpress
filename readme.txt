@@ -2,6 +2,7 @@
 Tags: PLUGIN_TAGS
 Tested up to: 4.9.2
 Requires at least: 3.8
+Requires PHP: 5.3
 License: MIT
 License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE.md
 Stable tag: trunk
