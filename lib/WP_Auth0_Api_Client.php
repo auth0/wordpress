@@ -1091,6 +1091,7 @@ class WP_Auth0_Api_Client {
 		if ($cache_expiration !== 0) {
 			set_transient( 'WP_Auth0_JWKS_cache', $secret, $cache_expiration * MINUTE_IN_SECONDS );
 		}
+
 	}
 
   return $secret;

@@ -98,6 +98,7 @@ class WP_Auth0_Lock_Options {
 	}
 
 	public function get_state_obj( $redirect_to = null ) {
+
 		$stateHandler = new WP_Auth0_State_Handler();
 		$stateObj = array(
 			'interim' => ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ),

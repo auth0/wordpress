@@ -13,7 +13,6 @@ define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 define( 'AUTH0_DB_VERSION', 17 );
 define( 'WPA0_VERSION', '3.5.2' );
 define( 'WPA0_CACHE_GROUP', 'wp_auth0' );
-define( 'WPA0_UUID_COOKIE', 'auth0_uuid' );
 
 /**
  * Main plugin class
@@ -521,19 +520,6 @@ if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
 		$name = str_replace(" ", "-", $name);
 
 		return $name;
-	}
-}
-
-if ( ! function_exists( 'get_auth0_uniqid' ) ) {
-	/**
-	 * Generate a pseudo-random ID (not cryptographically secure)
-	 *
-	 * @see https://stackoverflow.com/a/1846229/728480
-	 *
-	 * @return string
-	 */
-	function get_auth0_uniqid() {
-		return md5( uniqid( rand(), true ) );
 	}
 }
 

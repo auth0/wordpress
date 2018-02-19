@@ -41,44 +41,46 @@ class WP_Auth0_LoginManager {
     }
   }
 
+  /**
+   * Runs after core WP logout
+   */
   public function logout() {
     $this->end_session();
 
-    $sso = $this->a0_options->get( 'sso' );
-    $slo = $this->a0_options->get( 'singlelogout' );
-    $client_id = $this->a0_options->get( 'client_id' );
-    $auto_login = absint( $this->a0_options->get( 'auto_login' ) );
+    $logout_redirect = home_url();
 
-    // TODO: Address SLO using UL
-    if ( $slo && isset( $_REQUEST['SLO'] ) ) {
-      wp_redirect( $_REQUEST['redirect_to'] );
-      die();
+    if ( (bool) $this->a0_options->get( 'singlelogout' ) ) {
+      $logout_redirect = sprintf(
+        'https://%s/v2/logout?returnTo=%s&client_id=%s&auth0Client=%s',
+        $this->a0_options->get( 'domain' ),
+        urlencode( $logout_redirect ),
+        $this->a0_options->get( 'client_id' ),
+        base64_encode( json_encode( WP_Auth0_Api_Client::get_info_headers() ) )
+      );
     }
 
-    if ( $sso ) {
-      wp_redirect( 'https://' . $this->a0_options->get( 'domain' ) . '/v2/logout?federated&returnTo=' . urlencode( home_url() ) . '&client_id='.$client_id.'&auth0Client=' . base64_encode( json_encode( WP_Auth0_Api_Client::get_info_headers() ) ) );
-      die();
-    }
-
-    if ( $auto_login ) {
-      wp_redirect( home_url() );
-      die();
-    }
+    wp_redirect( $logout_redirect );
+    die();
   }
 
+  /**
+   * End the current PHP session, if there is one
+   *
+   * @see https://secure.php.net/manual/en/function.session-destroy.php
+   */
   public function end_session() {
     if ( session_id() ) {
       session_destroy();
     }
   }
 
-	/**
-	 * Login page handler for auto-login and SSO
-	 *
-	 * @see https://auth0.com/docs/api-auth/tutorials/silent-authentication
-	 * @see https://auth0.com/docs/sso/current
-	 */
-	public function login_auto() {
+  /**
+   * Login page handler for auto-login and SSO
+   *
+   * @see https://auth0.com/docs/api-auth/tutorials/silent-authentication
+   * @see https://auth0.com/docs/sso/current
+   */
+  public function login_auto() {
 
     if ( strtolower( $_SERVER['REQUEST_METHOD'] ) !== 'get' ) {
       return;
@@ -102,24 +104,19 @@ class WP_Auth0_LoginManager {
     $base_url = "https://{$this->a0_options->get( 'domain' )}/authorize";
     $base_url = add_query_arg( 'client_id', $this->a0_options->get( 'client_id' ), $base_url );
     $base_url = add_query_arg( 'auth0Client', WP_Auth0_Api_Client::get_info_headers(), $base_url );
+    $base_url = add_query_arg( 'scope', 'openid email email_verified nickname', $base_url );
+    $base_url = add_query_arg( 'response_type', 'code', $base_url );
+    $base_url = add_query_arg( 'redirect_uri', $this->a0_options->get_wp_auth0_url(), $base_url );
 
     // Build state param
-    $state_obj = array(
+    $state_arr = array(
       'interim' => false,
-      'uuid' => uniqid(),
+      'nonce' => uniqid(),
+      'redirect_to' => ! empty( $_GET['redirect_to'] ) && filter_var( $_GET['redirect_to'], FILTER_VALIDATE_URL )
+        ? esc_url( $_GET['redirect_to'] )
+        : $this->a0_options->get( 'default_login_redirection' )
     );
-
-    if ( ! empty( $_GET['redirect_to'] ) ) {
-      $state_obj[ 'redirect_to' ] = esc_url( $_GET['redirect_to'] );
-    }
-
-    $base_url = add_query_arg( 'state', base64_encode( json_encode( $state_obj ) ), $base_url );
-
-    // Options based on implicit login, redirect URL
-    $lock_options = new WP_Auth0_Lock10_Options();
-    $options = $lock_options->get_lock_options();
-
-    $base_url = add_query_arg( 'scope', $options[ 'auth' ][ 'params' ][ 'scope' ], $base_url );
+    $base_url = add_query_arg( 'state', base64_encode( json_encode( $state_arr ) ), $base_url );
 
     /*
      * Auto login redirect
@@ -135,11 +132,16 @@ class WP_Auth0_LoginManager {
       }
 
       // Where to redirect after success?
-      $auto_login_redirect = add_query_arg( 'redirect_uri', $options[ 'auth' ][ 'redirectUrl' ], $auto_login_redirect );
+      $auto_login_redirect = add_query_arg(
+        'redirect_uri',
+        $this->a0_options->get( 'default_login_redirection', FALSE ),
+        $auto_login_redirect
+      );
 
       // Auto-login connection
       $connection = apply_filters( 'auth0_get_auto_login_connection', $this->a0_options->get( 'auto_login_method' ) );
       $auto_login_redirect = add_query_arg( 'connection', trim( $connection ), $auto_login_redirect );
+
 
       wp_redirect( $auto_login_redirect );
       die();
