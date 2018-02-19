@@ -174,8 +174,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			'Social or Email Code', 'socialOrEmailcode' === $value );
 
 		$this->render_field_description(
-			__( 'For more info about password policies, see the ', 'wp-auth0' ) .
-			$this->get_docs_link( 'password-strength', __( 'help page on password strength', 'wp-auth0' ) )
+			__( 'You will need to enable the connections selected above in your ', 'wp-auth0' ) .
+      $this->get_dashboard_link( 'connections/passwordless' ) . '. ' .
+			__( 'For more information, see the ', 'wp-auth0' ) .
+			$this->get_docs_link( 'connections/passwordless', __( 'help page on passwordless', 'wp-auth0' ) )
 		);
 	}
 
