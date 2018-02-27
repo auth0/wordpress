@@ -12,6 +12,7 @@
 - Change log is missing from readme.txt, the separate changelog file is not updated [\#346](https://github.com/auth0/wp-auth0/issues/346)
 - Uninstall doesn't remove all Auth0 database plugin entries [\#322](https://github.com/auth0/wp-auth0/issues/322)
 - Unable to save migration IPs whitelist [\#320](https://github.com/auth0/wp-auth0/issues/320)
+- 3.2.16 throws errors if Error Log is empty [\#285](https://github.com/auth0/wp-auth0/issues/285)
 - Login plugin form name incorrect [\#269](https://github.com/auth0/wp-auth0/issues/269)
 
 **Changed**
@@ -19,6 +20,7 @@
 - Changed error handling [\#384](https://github.com/auth0/wp-auth0/pull/384) ([joshcanhelp](https://github.com/joshcanhelp))
 
 **Fixed**
+- Changing boolval() and array shorthand to PHP 5.3-compatable [\#402](https://github.com/auth0/wp-auth0/pull/402) ([joshcanhelp](https://github.com/joshcanhelp))
 - Fixed SSO auto-login in Lock [\#394](https://github.com/auth0/wp-auth0/pull/394) ([joshcanhelp](https://github.com/joshcanhelp))
 - Renaming un-deprecated function [\#393](https://github.com/auth0/wp-auth0/pull/393) ([joshcanhelp](https://github.com/joshcanhelp))
 - Cleanup PR for 3.5.2 [\#391](https://github.com/auth0/wp-auth0/pull/391) ([joshcanhelp](https://github.com/joshcanhelp))
