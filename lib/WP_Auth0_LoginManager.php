@@ -162,6 +162,12 @@ class WP_Auth0_LoginManager {
       return;
     }
 
+    // Check for valid state UUID
+    $state_decoded = json_decode( base64_decode( $this->query_vars( 'state' ) ), TRUE );
+    if ( empty( $state_decoded[ 'nonce' ] ) || ! WP_Auth0_State_Handler::validate( $state_decoded[ 'nonce' ] ) ) {
+      $this->die_on_login( __( 'Invalid state', 'wp-auth0' ) );
+    }
+
     try {
       if ( $this->query_vars( 'auth0' ) === 'implicit' ) {
         $this->implicit_login();
@@ -170,19 +176,11 @@ class WP_Auth0_LoginManager {
       }
     } catch (WP_Auth0_LoginFlowValidationException $e) {
 
-      $msg = __( 'There was a problem with your log in. ', 'wp-auth0' );
-      $msg .= ' '. $e->getMessage();
-      $msg .= '<br/><br/>';
-      $msg .= '<a href="' . wp_login_url() . '">' . __( '← Login', 'wp-auth0' ) . '</a>';
-      wp_die( $msg );
+      $this->die_on_login( $e->getMessage(), $e->getCode() );
 
     } catch (WP_Auth0_BeforeLoginException $e) {
 
-      $msg = __( 'You have logged in successfully, but there is a problem accessing this site. ', 'wp-auth0' );
-      $msg .= ' '. $e->getMessage();
-      $msg .= '<br/><br/>';
-      $msg .= '<a href="' . wp_logout_url() . '">' . __( '← Logout', 'wp-auth0' ) . '</a>';
-      wp_die( $msg );
+      $this->die_on_login( $e->getMessage(), $e->getCode(), FALSE );
 
     } catch (Exception $e) {
 
@@ -206,9 +204,7 @@ class WP_Auth0_LoginManager {
     }
 
     $code = $this->query_vars( 'code' );
-    $state = $this->query_vars( 'state' );
-
-    $stateFromGet = json_decode( base64_decode( $state ) );
+    $state_decoded = json_decode( base64_decode( $this->query_vars( 'state' ) ), TRUE );
 
     $domain = $this->a0_options->get( 'domain' );
 
@@ -265,12 +261,12 @@ class WP_Auth0_LoginManager {
 
       $userinfo = json_decode( $response['body'] );
       if ( $this->login_user( $userinfo, $data->id_token, $data->access_token ) ) {
-        if ( ! empty( $stateFromGet->interim ) ) {
+        if ( ! empty( $state_decoded->interim ) ) {
           include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
           exit();
         } else {
-          if ( ! empty( $stateFromGet->redirect_to ) && wp_login_url() !== $stateFromGet->redirect_to ) {
-            $redirectURL = $stateFromGet->redirect_to;
+          if ( ! empty( $state_decoded->redirect_to ) && wp_login_url() !== $state_decoded->redirect_to ) {
+            $redirectURL = $state_decoded->redirect_to;
           } else {
             $redirectURL = $this->a0_options->get( 'default_login_redirection' );
           }
@@ -535,6 +531,32 @@ class WP_Auth0_LoginManager {
     if ( isset( $wp_query->query_vars[$key] ) ) return $wp_query->query_vars[$key];
     if ( isset( $_REQUEST[$key] ) ) return $_REQUEST[$key];
     return null;
+  }
+
+  /**
+   * Die during login process with a message
+   *
+   * @param string $msg - translated error message to display
+   * @param string|int $code - error code, if given
+   * @param bool $login_link - TRUE for login link, FALSE for logout link
+   */
+  protected function die_on_login( $msg = '', $code = 0, $login_link = TRUE ) {
+
+    wp_die( sprintf(
+      '%s: %s [%s: %s]<br><br><a href="%s">%s</a>',
+      $login_link
+        ? __( 'There was a problem with your log in', 'wp-auth0' )
+        : __( 'You have logged in successfully, but there is a problem accessing this site', 'wp-auth0' ),
+      ! empty( $msg )
+        ? sanitize_text_field( $msg )
+        : __( 'Please see the site administrator', 'wp-auth0' ),
+      __( 'error code', 'wp-auth0' ),
+      $code ? sanitize_text_field( $code ) : __( 'unknown', 'wp-auth0' ),
+      $login_link ? wp_login_url() : wp_logout_url(),
+      $login_link
+        ? __( '← Login', 'wp-auth0' )
+        : __( '← Logout', 'wp-auth0' )
+    ) );
   }
 
 	/**
