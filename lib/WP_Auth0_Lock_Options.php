@@ -98,12 +98,11 @@ class WP_Auth0_Lock_Options {
 	}
 
 	public function get_state_obj( $redirect_to = null ) {
-		if ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ) {
-			$interim_login = true;
-		} else {
-			$interim_login = false;
-		}
-		$stateObj = array( "interim" => $interim_login, "uuid" =>uniqid() );
+		$stateHandler = new WP_Auth0_State_Handler();
+		$stateObj = array(
+			'interim' => ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ),
+			'nonce' => $stateHandler->issue()
+		);
 		if ( !empty( $redirect_to ) ) {
 			$stateObj["redirect_to"] = addslashes( $redirect_to );
 		}
