@@ -5,7 +5,7 @@ class WP_Auth0_State_Handler {
   /**
    * @var string
    */
-  protected $uniqid = '';
+  protected $uniqid;
 
   /**
    * @var string
