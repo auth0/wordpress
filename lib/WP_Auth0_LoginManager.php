@@ -66,19 +66,6 @@ class WP_Auth0_LoginManager {
       return;
     }
 
-    $current_user = get_currentauth0user();
-    $user_profile = $current_user->auth0_obj;
-
-    if ( empty( $user_profile ) ) {
-      return;
-    }
-
-    $lock_options = new WP_Auth0_Lock10_Options();
-    $cdn = $this->a0_options->get('auth0js-cdn');
-    $client_id = $this->a0_options->get( 'client_id' );
-    $domain = $this->a0_options->get( 'domain' );
-    $logout_url = wp_logout_url( get_permalink() ) . '&SLO=1';
-
     include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
   }
 

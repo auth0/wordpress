@@ -1,28 +1,29 @@
-<script id="auth0" src="<?php echo $cdn ?>"></script>
+<?php
+$current_user = get_currentauth0user();
+if ( empty( $current_user->auth0_obj ) ) {
+  return;
+}
+?>
+<script id="auth0" src="<?php echo esc_url( $this->a0_options->get('auth0js-cdn') ) ?>"></script>
 <script type="text/javascript">
 (function(){
 
-  var uuids = '<?php echo $user_profile->user_id; ?>';
   document.addEventListener("DOMContentLoaded", function() {
     if (typeof(auth0) === 'undefined') {
       return;
     }
 
     var webAuth = new auth0.WebAuth({
-      clientID:'<?php echo $client_id; ?>',
-      domain:'<?php echo $domain; ?>'
+      clientID:'<?php echo sanitize_text_field( $this->a0_options->get( 'client_id' ) ); ?>',
+      domain:'<?php echo sanitize_text_field( $this->a0_options->get( 'domain' ) ); ?>'
     });
 
-    var options = <?php echo json_encode( $lock_options->get_sso_options() ); ?>;
-    options.responseType = 'token id_token';
-    webAuth.checkSession(options, function (err, authResult) {
-      if (err !== null) {
-        if(err.error ==='login_required') {
-          window.location = '<?php echo html_entity_decode( $logout_url ); ?>';
+    webAuth.checkSession( { 'responseType' : 'token', 'redirectUri' : window.location.href }, function ( err ) {
+            if ( err && err.error ==='login_required' ) {
+                window.location = '<?php echo esc_url( wp_logout_url( get_permalink() ) . '&SLO=1' ); ?>';
+            }
         }
-      }
-    });
-
+    );
   });
 })();
 </script>
