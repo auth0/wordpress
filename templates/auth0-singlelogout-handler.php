@@ -1,6 +1,9 @@
 <?php
 $current_user = get_currentauth0user();
-if ( empty( $current_user->auth0_obj ) ) {
+$domain = $this->a0_options->get( 'domain' );
+$client_id = $this->a0_options->get( 'client_id' );
+
+if ( empty( $current_user->auth0_obj ) || empty( $domain ) || empty( $client_id ) ) {
   return;
 }
 ?>
@@ -14,8 +17,8 @@ if ( empty( $current_user->auth0_obj ) ) {
     }
 
     var webAuth = new auth0.WebAuth({
-      clientID:'<?php echo sanitize_text_field( $this->a0_options->get( 'client_id' ) ); ?>',
-      domain:'<?php echo sanitize_text_field( $this->a0_options->get( 'domain' ) ); ?>'
+      clientID:'<?php echo sanitize_text_field( $domain ); ?>',
+      domain:'<?php echo sanitize_text_field( $client_id ); ?>'
     });
 
     webAuth.checkSession( { 'responseType' : 'token', 'redirectUri' : window.location.href }, function ( err ) {
