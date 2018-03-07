@@ -31,16 +31,16 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
                'name' => __( 'Multifactor Authentication (MFA)', 'wp-auth0' ),
                'function' => 'render_mfa' ),
         array( 'id' => 'wpa0_fullcontact',
-               'name' => __( 'FullContact integration', 'wp-auth0' ),
+               'name' => __( 'FullContact Integration', 'wp-auth0' ),
                'function' => 'render_fullcontact' ),
         array( 'id' => 'wpa0_geo',
-               'name' => __( 'Store geolocation', 'wp-auth0' ),
+               'name' => __( 'Store Geolocation', 'wp-auth0' ),
                'function' => 'render_geo' ),
         array( 'id' => 'wpa0_income',
-               'name' => __( 'Store zipcode income', 'wp-auth0' ),
+               'name' => __( 'Store Zipcode Income', 'wp-auth0' ),
                'function' => 'render_income' ),
         array( 'id' => 'wpa0_override_wp_avatars',
-               'name' => __( 'Override WordPress avatars', 'wp-auth0' ),
+               'name' => __( 'Override WordPress Avatars', 'wp-auth0' ),
                'function' => 'render_override_wp_avatars' ),
       ) );
   }
@@ -82,7 +82,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	public function render_singlelogout() {
 		$this->render_switch( 'wpa0_singlelogout', 'singlelogout' );
 		$this->render_field_description(
-			__( 'SLO allows users to sign out of multiple Clients in the same tenant', 'wp-auth0' )
+			__( 'Single Logout logs users out of everything at once', 'wp-auth0' )
 		);
 	}
 
@@ -139,7 +139,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function render_geo() {
 	  $this->render_switch( 'wpa0_geo_rule', 'geo_rule' );
 	  $this->render_field_description(
-		  __( 'Store geo location information based on your users IP in Auth0 user metadata', 'wp-auth0' )
+		  __( 'Mark this if you want to store geolocation data based on the user\'s IP', 'wp-auth0' )
 	  );
   }
 
@@ -149,7 +149,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function render_income() {
 	  $this->render_switch( 'wpa0_income_rule', 'income_rule' );
 	  $this->render_field_description(
-		  __( 'Store income data based on the zipcode of the IP address in Auth0 user metadata', 'wp-auth0' )
+		  __( 'Mark this if you want to store projected income data based on the zipcode of the user\'s IP', 'wp-auth0' )
 	  );
   }
 
@@ -159,7 +159,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function render_override_wp_avatars() {
 	  $this->render_switch( 'wpa0_override_wp_avatars', 'override_wp_avatars' );
 	  $this->render_field_description(
-		  __( 'Overrides the WordPress avatar with the Auth0 profile avatar. ', 'wp-auth0' )
+		  __( 'Overrides the WordPress avatar with the Auth0 profile avatar', 'wp-auth0' )
 	  );
   }
 
