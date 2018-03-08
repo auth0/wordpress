@@ -6,6 +6,7 @@ class WP_Auth0_LoginManager {
   protected $default_role;
   protected $ignore_unverified_email;
   protected $users_repo;
+  protected $state;
 
   public function __construct( WP_Auth0_UsersRepo $users_repo, $a0_options = null, $default_role = null, $ignore_unverified_email = false ) {
 
@@ -149,9 +150,10 @@ class WP_Auth0_LoginManager {
       return;
     }
 
-    // Check for valid state UUID
-    $state_decoded = json_decode( base64_decode( $this->query_vars( 'state' ) ), TRUE );
-    if ( empty( $state_decoded[ 'nonce' ] ) || ! WP_Auth0_State_Handler::validate( $state_decoded[ 'nonce' ] ) ) {
+    // Check for valid state nonce
+    // See https://auth0.com/docs/protocols/oauth2/oauth-state
+    $state_decoded = $this->get_state();
+    if ( empty( $state_decoded->nonce ) || ! WP_Auth0_State_Handler::validate( $state_decoded->nonce ) ) {
       $this->die_on_login( __( 'Invalid state', 'wp-auth0' ) );
     }
 
@@ -191,7 +193,7 @@ class WP_Auth0_LoginManager {
     }
 
     $code = $this->query_vars( 'code' );
-    $state_decoded = json_decode( base64_decode( $this->query_vars( 'state' ) ), TRUE );
+    $state_decoded = $this->get_state();
 
     $domain = $this->a0_options->get( 'domain' );
 
@@ -294,7 +296,7 @@ class WP_Auth0_LoginManager {
   public function implicit_login() {
 
     $token = $_POST['token'];
-    $stateFromGet = json_decode( base64_decode( $_POST['state'] ) );
+    $state_decoded = $this->get_state();
 
     $secret = $this->a0_options->get_client_secret_as_key();
 
@@ -310,12 +312,12 @@ class WP_Auth0_LoginManager {
       $decodedToken->user_id = $decodedToken->sub;
 
       if ( $this->login_user( $decodedToken, $token, null ) ) {
-        if ( ! empty( $stateFromGet->interim ) ) {
+        if ( ! empty( $state_decoded->interim ) ) {
           include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
           exit();
         } else {
-          if ( ! empty( $stateFromGet->redirect_to ) && wp_login_url() !== $stateFromGet->redirect_to ) {
-            $redirectURL = $stateFromGet->redirect_to;
+          if ( ! empty( $state_decoded->redirect_to ) && wp_login_url() !== $state_decoded->redirect_to ) {
+            $redirectURL = $state_decoded->redirect_to;
           } else {
             $redirectURL = $this->a0_options->get( 'default_login_redirection' );
           }
@@ -518,6 +520,19 @@ class WP_Auth0_LoginManager {
     if ( isset( $wp_query->query_vars[$key] ) ) return $wp_query->query_vars[$key];
     if ( isset( $_REQUEST[$key] ) ) return $_REQUEST[$key];
     return null;
+  }
+
+  /**
+   * Get and store state returned from Auth0
+   *
+   * @return object|null
+   */
+  protected function get_state() {
+
+    if ( empty( $this->state ) ) {
+      $this->state = json_decode( base64_decode( $this->query_vars( 'state' ) ) );
+    }
+    return is_object( $this->state ) ? $this->state : null;
   }
 
   /**
