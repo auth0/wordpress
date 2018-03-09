@@ -27,8 +27,7 @@ We're happy to review and approve new filters and actions that help you integrat
 **Thank you in advance!**
 
 * All PRs must use the `dev` branch as a base
-* Change the least amount of code to achieve the goal; PRs with lots of whitespace changes and abstraction combined 
-with a feature add or bug fix are difficult to review and may be rejected
+* Change the least amount of code to achieve the goal; PRs with lots of whitespace changes and abstraction combined with a feature add or bug fix are difficult to review and may be rejected
 * Use the latest version of WordPress and turn `WP_DEBUG` on
 * If other plugins are installed during testing that might affect behavior, please list those in the PR description
 * Make sure to test against the lowest PHP version supported (see `Requires PHP:` [here](readme.txt#L5)) 
@@ -54,8 +53,7 @@ git clone https://github.com/joshcanhelp/auth0-wp-test.git ./wp-content/themes/a
 # Optional, clones the testing theme to assist with development
 ```
 
-The main requirement for testing, though, is using the latest version of WordPress with our minimum supported PHP 
-version. 
+The main requirement for testing, though, is using the latest version of WordPress with our minimum supported PHP version. 
 
 ### How to build the initial setup assets?
 
