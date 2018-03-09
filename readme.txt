@@ -36,11 +36,10 @@ Please see the Auth0 Docs site for [complete installation and configuration inst
 == Screenshots ==
 
 1. The new login page on WordPress
-2. The admin to configure the plugin
-3. The new plugin quick setup
-4. Get info about the supported enterprise connections
-5. Set up the Auth0 widgets
-6. Your home page with the login widget enabled
+2. Twenty Seventeen theme with login widget
+3. The admin to configure the plugin
+4. Set up Enterprise connections
+5. Set up the Auth0 widget
 
 == Technical Notes ==
 
@@ -55,10 +54,6 @@ Auth0 allows multiple authentication providers. You can have social providers li
 If the email was not verified and there is an account with that email in WordPress, the user will be presented with a page saying that the email was not verified and a link to "Re-send the verification email".
 
 For both scenarios you may configure in the WP admin whether is mandatory that the user has a verified email or not.
-
-= Accessing Profile Information =
-
-WordPress defines a function called `wp_get_current_user` to populate the global variable `current_user` with the logged in WP_User. Similarly we define `get_currentauth0userinfo` that populates `current_user` and `currentauth0_user` with the information of the [Normalized profile](https://docs.auth0.com/user-profile)
 
 = Enabling dual (Auth0 and WordPress) login =
 
@@ -145,6 +140,19 @@ To change the form_title in this case, you need to add the following attribute t
 We added a new field called "Extra settings" that allows you to add a json object with all the settings you want to configure.
 
 Have in mind that all the "Extra settings" that we allow to set up in the plugin settings page will be overridden.
+
+= My question is not covered here; what do I do? =
+
+All is not lost!
+
+* If you're setting up the plugin for the first time or having issues after an upgrade, please review the [configuration
+ page at auth0.com/docs](https://auth0.com/docs/cms/wordpress/configuration)
+* If you found a bug in the plugin code [submit an issue](https://github.com/auth0/wp-auth0/issues) or [create a pull
+request](https://github.com/auth0/wp-auth0/pulls) on [GitHub](https://github.com/auth0/wp-auth0/).
+* If you have questions about how to use Auth0 or the plugin, please [post on our community site](https://community
+.auth0.com/) or create a [support forum request here](https://wordpress.org/support/plugin/auth0).
+* You can also see additional documentation and answers on our [support site](https://support.auth0.com/). Customers on
+a paid Auth0 plan can submit trouble tickets for a fast response.
 
 == Changelog ==
 
