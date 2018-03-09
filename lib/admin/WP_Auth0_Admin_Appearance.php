@@ -46,6 +46,18 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 * Render icon_url field and select button
+	 */
+	public function render_icon_url() {
+		$this->render_text_field( 'wpa0_icon_url', 'icon_url' );
+		printf(
+			' <a id="wpa0_choose_icon" href="#wpa0_choose_icon" class="button-secondary">%s</a>',
+			__( 'Choose Icon', 'wp-auth0' )
+		);
+		$this->render_field_description( __( 'Icon above the title on the Auth0 login form', 'wp-auth0' ) );
+	}
+
+	/**
 	 * Render form_title field
 	 */
 	public function render_form_title() {
@@ -59,18 +71,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	public function render_social_big_buttons() {
 		$this->render_switch( 'wpa0_social_big_buttons', 'social_big_buttons' );
 		$this->render_field_description( __( 'Uses full-width social login buttons when activated', 'wp-auth0' ) );
-	}
-
-	/**
-	 * Render icon_url field and select button
-	 */
-	public function render_icon_url() {
-		$this->render_text_field( 'wpa0_icon_url', 'icon_url' );
-		printf(
-			' <a id="wpa0_choose_icon" href="#wpa0_choose_icon" class="button-secondary">%s</a>',
-			__( 'Choose Icon', 'wp-auth0' )
-		);
-		$this->render_field_description( __( 'Icon above the title on the Auth0 login form', 'wp-auth0' ) );
 	}
 
 	/**
@@ -94,11 +94,11 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Render the custom CSS textarea
+	 * Render the custom JS textarea
 	 */
 	public function render_custom_js() {
 		$this->render_textarea_field( 'wpa0_custom_js', 'custom_js' );
-		$this->render_field_description( __( 'Valid JS to customize the Auth0 login form; ', 'wp-auth0' ) );
+		$this->render_field_description( __( 'Valid JS to customize the Auth0 login form', 'wp-auth0' ) );
 	}
 
 	/**

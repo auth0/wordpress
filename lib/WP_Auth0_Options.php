@@ -164,16 +164,15 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'singlelogout' => false,
 			'mfa' => null,
 			'fullcontact' => null,
-			'fullcontact_rule' => null,
 			'fullcontact_apikey' => null,
 			'geo_rule' => null,
 			'income_rule' => null,
 			'override_wp_avatars' => true,
 
 			// Appearance
+			'icon_url' => '',
 			'form_title' => '',
 			'social_big_buttons' => false,
-			'icon_url' => '',
 			'gravatar' => true,
 			'custom_css' => '',
 			'custom_js' => '',
@@ -199,9 +198,9 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'migration_token' => null,
 			'migration_ips_filter' => false,
 			'migration_ips' => null,
-			'auth0_implicit_workflow' => false,
 			'auto_login' => 0,
 			'auto_login_method' => '',
+			'auth0_implicit_workflow' => false,
 			'ip_range_check' => 0,
 			'ip_ranges' => '',
 			'valid_proxy_ip' => null,
@@ -214,7 +213,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'auth0_server_domain' => 'auth0.auth0.com',
 			'metrics' => 1,
 
-			//DASHBOARD
+			// DASHBOARD
 			'chart_idp_type' => 'donut',
 			'chart_gender_type' => 'donut',
 			'chart_age_type' => 'donut',
