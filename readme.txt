@@ -128,6 +128,19 @@ All is not lost!
 * If you have questions about how to use Auth0 or the plugin, please [post on our community site](https://community.auth0.com/) or create a [support forum request here](https://wordpress.org/support/plugin/auth0).
 * You can also see additional documentation and answers on our [support site](https://support.auth0.com/). Customers on a paid Auth0 plan can [submit a trouble ticket](https://support.auth0.com/tickets) for a fast response.
 
+= My question is not covered here; what do I do? =
+
+All is not lost!
+
+* If you're setting up the plugin for the first time or having issues after an upgrade, please review the [configuration
+ page at auth0.com/docs](https://auth0.com/docs/cms/wordpress/configuration)
+* If you found a bug in the plugin code [submit an issue](https://github.com/auth0/wp-auth0/issues) or [create a pull
+request](https://github.com/auth0/wp-auth0/pulls) on [GitHub](https://github.com/auth0/wp-auth0/).
+* If you have questions about how to use Auth0 or the plugin, please [post on our community site](https://community
+.auth0.com/) or create a [support forum request here](https://wordpress.org/support/plugin/auth0).
+* You can also see additional documentation and answers on our [support site](https://support.auth0.com/). Customers on
+a paid Auth0 plan can submit trouble tickets for a fast response.
+
 == Changelog ==
 
 [Complete CHANGELOG.md maintained on Github](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md)
