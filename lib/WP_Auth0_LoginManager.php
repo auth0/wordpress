@@ -211,10 +211,10 @@ class WP_Auth0_LoginManager {
       // Not authorized
       WP_Auth0_ErrorManager::insert_auth0_error(
         __METHOD__ . ' L:' . __LINE__,
-        __( 'An oauth/token call triggered a 401 response from Auth0. ', 'wp-auth0' ) .
+        __( 'An /oauth/token call triggered a 401 response from Auth0. ', 'wp-auth0' ) .
           __( 'Please check the Client Secret saved in the Auth0 plugin settings. ', 'wp-auth0' )
       );
-      throw new WP_Auth0_LoginFlowValidationException( __( 'Not Authorized', 'wp-auth0' ), $exchange_resp_code );
+      throw new WP_Auth0_LoginFlowValidationException( __( 'Not Authorized', 'wp-auth0' ), 401 );
 
     } else if ( empty( $exchange_resp_body ) ) {
 
@@ -233,31 +233,39 @@ class WP_Auth0_LoginManager {
       // Look for clues as to what went wrong
       throw new WP_Auth0_LoginFlowValidationException(
         ! empty( $data->error_description ) ? $data->error_description : __( 'Unknown error', 'wp-auth0' ),
-        ( ! empty( $data->error ) ? $data->error : $exchange_resp_code )
+        ! empty( $data->error ) ? $data->error : $exchange_resp_code
       );
     }
 
+    // Decode our incoming ID token for the Auth0 user_id
     $decoded_token = JWT::decode(
       $data->id_token,
       $this->a0_options->get_client_secret_as_key(),
       array( $this->a0_options->get_client_signing_algorithm() )
     );
 
-    $userinfo_resp = WP_Auth0_Api_Client::get_user(
-      $this->a0_options->get( 'domain' ),
-      WP_Auth0_Api_Client::get_client_token(),
-      $decoded_token->sub
-    );
+    // Attempt to authenticate with the Management API
+    $client_credentials_token = WP_Auth0_Api_Client::get_client_token();
+    $userinfo_resp = null;
+
+    if ( $client_credentials_token ) {
+
+        $userinfo_resp = WP_Auth0_Api_Client::get_user(
+            $this->a0_options->get( 'domain' ),
+            $client_credentials_token,
+            $decoded_token->sub
+        );
+    }
 
     $userinfo_resp_code = (int) wp_remote_retrieve_response_code( $userinfo_resp );
     $userinfo_resp_body = wp_remote_retrieve_body( $userinfo_resp );
 
-    if ( $userinfo_resp instanceof WP_Error || 200 !== $userinfo_resp_code || empty( $userinfo_resp_body ) ) {
+    // Management API call failed
+    if ( 200 !== $userinfo_resp_code || empty( $userinfo_resp_body ) ) {
 
-      // Management API call failed
-      // TODO: fallback to /userinfo
+      // TODO: fallback to /userinfo with access token
+
       WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' => WP_Auth0_Api_Client::get_user()', $userinfo_resp );
-      error_log( $userinfo_resp->get_error_message() );
       throw new WP_Auth0_LoginFlowValidationException( __( 'Error getting user information', 'wp-auth0' ) );
     }
 
