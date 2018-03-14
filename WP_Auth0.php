@@ -124,13 +124,13 @@ class WP_Auth0 {
 	}
 
   /**
-   * Is the Auth0 plugin ready to proc
+   * Is the Auth0 plugin ready to process logins?
    *
    * @return bool
    */
   public static function ready() {
     $options = WP_Auth0_Options::Instance();
-    if ( ! $options->get( 'domain' ) || ! $options->get( 'client_id' ) || ! $options->get( 'client_id' ) ) {
+    if ( ! $options->get( 'domain' ) || ! $options->get( 'client_id' ) || ! $options->get( 'client_secret' ) ) {
       return FALSE;
     }
     return TRUE;
