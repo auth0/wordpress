@@ -231,10 +231,9 @@ class WP_Auth0_LoginManager {
     if ( empty( $data->access_token ) ) {
 
       // Look for clues as to what went wrong
-      throw new WP_Auth0_LoginFlowValidationException(
-        ! empty( $data->error_description ) ? $data->error_description : __( 'Unknown error', 'wp-auth0' ),
-        ! empty( $data->error ) ? $data->error : $exchange_resp_code
-      );
+      $e_message = ! empty( $data->error_description ) ? $data->error_description : __( 'Unknown error', 'wp-auth0' );
+      $e_code = ! empty( $data->error ) ? $data->error : $exchange_resp_code;
+      throw new WP_Auth0_LoginFlowValidationException( $e_message, $e_code );
     }
 
     // Decode our incoming ID token for the Auth0 user_id
@@ -266,7 +265,10 @@ class WP_Auth0_LoginManager {
       // TODO: fallback to /userinfo with access token
 
       WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' => WP_Auth0_Api_Client::get_user()', $userinfo_resp );
-      throw new WP_Auth0_LoginFlowValidationException( __( 'Error getting user information', 'wp-auth0' ) );
+      throw new WP_Auth0_LoginFlowValidationException(
+        __( 'Error getting user information', 'wp-auth0' ),
+        $userinfo_resp_code
+      );
     }
 
     $userinfo = json_decode( $userinfo_resp_body );
