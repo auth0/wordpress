@@ -69,6 +69,8 @@ class WP_Auth0 {
 
 		add_filter( 'plugin_action_links_' . $this->basename, array( $this, 'wp_add_plugin_settings_link' ) );
 
+		add_filter( 'pre_handle_404', array( $this, 'no_404_on_auth0' ) );
+
 		if ( isset( $_GET['message'] ) ) {
 			add_action( 'wp_footer', array( $this, 'a0_render_message' ) );
 		}
@@ -273,6 +275,19 @@ class WP_Auth0 {
 			</script>';
 		}
 	}
+
+  /**
+   * Do not send a 404 when processing Auth0 callbacks
+   *
+   * @param bool $short_circuit - existing value
+   *
+   * @return bool
+   *
+   * @see https://developer.wordpress.org/reference/hooks/pre_handle_404/
+   */
+	public function no_404_on_auth0( $short_circuit ) {
+	    return isset( $_REQUEST[ 'auth0' ] ) ? TRUE :  $short_circuit;
+    }
 
 	/**
 	 * Add settings link on plugin page.

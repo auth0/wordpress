@@ -27,11 +27,12 @@ class WP_Auth0_LoginManager {
     add_action( 'wp_login', array( $this, 'end_session' ) );
     add_action( 'login_init', array( $this, 'login_auto' ) );
     add_action( 'template_redirect', array( $this, 'init_auth0' ), 1 );
-    //add_action( 'wp_footer', array( $this, 'auth0_sso_footer' ) );
     add_action( 'wp_footer', array( $this, 'auth0_singlelogout_footer' ) );
-    add_filter( 'login_message', array( $this, 'auth0_sso_footer' ) );
+    //add_action( 'wp_footer', array( $this, 'auth0_sso_footer' ) );
+    //add_filter( 'login_message', array( $this, 'auth0_sso_footer' ) );
   }
 
+  // TODO: Deprecate and remove template
   public function auth0_sso_footer( $previous_html ) {
 
     echo $previous_html;
@@ -100,47 +101,45 @@ class WP_Auth0_LoginManager {
     }
   }
 
+  /**
+   * Handles redirects to Auth0 for SSO and auto-login for a single connection
+   */
   public function login_auto() {
-    $auto_login = absint( $this->a0_options->get( 'auto_login' ) );
+    $auto_login = $this->a0_options->get( 'auto_login', FALSE );
+    $sso_login = $this->a0_options->get( 'sso', FALSE );
 
-    if ( $auto_login && ( ! isset( $_GET['action'] ) || 'logout' !== $_GET['action'] ) && ! isset( $_GET['wle'] ) ) {
+    if (
+      // Nothing to do
+      ( ! $auto_login && ! $sso_login )
 
-      if ( strtolower( $_SERVER['REQUEST_METHOD'] ) !== 'get' ) {
-        return;
-      }
+      // Auth0 is not ready to process logins
+      || ! WP_Auth0::ready()
 
-      if ( $this->query_vars( 'auth0' ) !== null ) {
-        return;
-      }
+      // Do not redirect POST requests
+      || strtolower( $_SERVER['REQUEST_METHOD'] ) !== 'get'
 
-      $lock_options = new WP_Auth0_Lock10_Options();
-      $options = $lock_options->get_lock_options();
+      // Do not redirect login page override
+      || isset( $_GET['wle'] )
 
-      $stateObj = array( 'interim' => false, 'uuid' => uniqid() );
-      if ( isset( $_GET['redirect_to'] ) ) {
-        $stateObj['redirect_to'] = $_GET['redirect_to'];
-      }
-      $state = base64_encode( json_encode( $stateObj ) );
+      // Do not redirect log out action
+      || ( isset( $_GET['action'] ) && 'logout' === $_GET['action'] )
 
-      $connection = apply_filters( 'auth0_get_auto_login_connection', $this->a0_options->get( 'auto_login_method' ) );
-
-      $response_type = $lock_options->get_auth0_implicit_workflow() ? 'id_token' : 'code';
-
-      // Create the link to log in.
-      $login_url = "https://". $this->a0_options->get( 'domain' ) .
-        "/authorize?".
-        "scope=".urlencode($options["auth"]["params"]["scope"]) .
-        "&response_type=" . $response_type .
-        "&client_id=".$this->a0_options->get( 'client_id' ) .
-        "&redirect_uri=" . $options["auth"]["redirectUrl"] .
-        "&state=" . urlencode( $state ).
-        "&nonce=nonce" . // TODO add full nonce support
-        "&connection=". trim($connection) .
-        "&auth0Client=" . WP_Auth0_Api_Client::get_info_headers();
-
-      wp_redirect( $login_url );
-      die();
+      // Do not redirect Auth0 login processing
+      || null !== $this->query_vars( 'auth0' )
+    ) {
+      return;
     }
+
+    $login_url = $this->get_authorize_url();
+
+    if ( $auto_login ) {
+      $connection = $this->a0_options->get( 'auto_login_method' );
+      $connection = apply_filters( 'auth0_get_auto_login_connection', $connection );
+      $login_url = add_query_arg( 'connection', $connection, $login_url );
+    }
+
+    wp_redirect( $login_url );
+    die();
   }
 
   public function init_auth0() {
@@ -152,9 +151,12 @@ class WP_Auth0_LoginManager {
 
     // Catch any incoming errors and stop the login process
     // See https://auth0.com/docs/libraries/error-messages
-    if ( $this->query_vars( 'error_description' ) ) {
+    if ( ! empty( $_REQUEST['error'] ) ) {
       $error_msg = sanitize_text_field( $this->query_vars( 'error_description' ) );
-      $this->die_on_login( $error_msg ? $error_msg : sanitize_text_field( $this->query_vars( 'error' ) ) );
+      if ( empty( $error_msg ) ) {
+        $error_msg = sanitize_text_field( $_REQUEST['error'] );
+      }
+      $this->die_on_login( $error_msg );
     }
 
     // Check for valid state nonce
@@ -520,6 +522,37 @@ class WP_Auth0_LoginManager {
     if ( isset( $wp_query->query_vars[$key] ) ) return $wp_query->query_vars[$key];
     if ( isset( $_REQUEST[$key] ) ) return $_REQUEST[$key];
     return null;
+  }
+
+  /**
+   * Get a base authorize URL for handling HLP redirects
+   *
+   * @return string
+   */
+  protected function get_authorize_url() {
+
+    $query_params = array();
+    $is_implicit = (bool) $this->a0_options->get( 'auth0_implicit_workflow', FALSE );
+
+    $query_params[ 'client_id' ] = $this->a0_options->get( 'client_id' );
+    $query_params[ 'auth0Client' ] = base64_encode( json_encode( WP_Auth0_Api_Client::get_info_headers() ) );
+    $query_params[ 'scope' ] = $is_implicit ? 'openid email email_verified name nickname': 'openid';
+    $query_params[ 'response_type' ] = $is_implicit ? 'token': 'code';
+    $query_params[ 'redirect_uri' ] = $this->a0_options->get_wp_auth0_url( null, $is_implicit );
+
+    // Build state param
+    $state_handler = new WP_Auth0_State_Handler();
+    $state_arr = array(
+      'interim' => false,
+      'nonce' => $state_handler->issue(),
+      'redirect_to' => ! empty( $_GET['redirect_to'] )
+        ? esc_url( $_GET['redirect_to'] )
+        : $this->a0_options->get( 'default_login_redirection' )
+    );
+    $query_params[ 'state' ] = base64_encode( json_encode( $state_arr ) );
+
+    $base_url = 'https://' . $this->a0_options->get( 'domain' ) . '/authorize';
+    return add_query_arg( $query_params, $base_url );
   }
 
   /**
