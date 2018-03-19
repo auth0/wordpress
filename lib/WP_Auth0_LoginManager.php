@@ -35,7 +35,6 @@ class WP_Auth0_LoginManager {
    * Active when SLO is turned on in Auth0 settings
    */
   public function auth0_singlelogout_footer() {
-
     if ( is_user_logged_in() && $this->a0_options->get( 'singlelogout' ) ) {
       include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
     }
@@ -46,9 +45,8 @@ class WP_Auth0_LoginManager {
    */
   public function logout() {
     $this->end_session();
-
     $logout_redirect = home_url();
-
+    
     if ( (bool) $this->a0_options->get( 'singlelogout' ) ) {
       $logout_redirect = sprintf(
         'https://%s/v2/logout?returnTo=%s&client_id=%s&auth0Client=%s',
@@ -206,8 +204,12 @@ class WP_Auth0_LoginManager {
         $this->redirect_login();
       }
     } catch (WP_Auth0_LoginFlowValidationException $e) {
+
+      // Errors during the OAuth login flow
       $this->die_on_login( $e->getMessage(), $e->getCode() );
     } catch (WP_Auth0_BeforeLoginException $e) {
+
+      // Errors during the WordPress login flow
       $this->die_on_login( $e->getMessage(), $e->getCode(), FALSE );
     }
   }

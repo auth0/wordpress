@@ -107,7 +107,8 @@ class WP_Auth0_Lock10_Options {
 
     if ( !empty( $redirect_to ) ) {
       $stateObj["redirect_to"] = addslashes( $redirect_to );
-    } elseif ( isset( $_GET['redirect_to'] ) ) {
+    }
+    elseif ( isset( $_GET['redirect_to'] ) ) {
       $stateObj["redirect_to"] = addslashes( $_GET['redirect_to'] );
     }
 
