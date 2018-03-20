@@ -530,7 +530,9 @@ class WP_Auth0_LoginManager {
   protected function get_state() {
 
     if ( empty( $this->state ) ) {
-      $this->state = json_decode( base64_decode( $this->query_vars( 'state' ) ) );
+      $state_val = urldecode( $this->query_vars( 'state' ) );
+      $state_val = base64_decode( $state_val );
+      $this->state = json_decode( $state_val );
     }
     return is_object( $this->state ) ? $this->state : null;
   }

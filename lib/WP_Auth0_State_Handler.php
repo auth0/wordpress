@@ -21,7 +21,7 @@ class WP_Auth0_State_Handler {
    * WP_Auth0_State_Handler constructor.
    */
   public function __construct() {
-    $this->uniqid = self::generateNonce();
+    $this->uniqid = isset( $_COOKIE[ self::COOKIE_NAME ] ) ? $_COOKIE[ self::COOKIE_NAME ] : self::generateNonce();
   }
 
   /**
