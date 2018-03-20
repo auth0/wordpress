@@ -481,7 +481,25 @@ class WP_Auth0_LoginManager {
     }
   }
 
+  /**
+   * Deprecated to conform to OIDC standards
+   *
+   * @see https://auth0.com/docs/api-auth/intro#other-authentication-api-endpoints
+   *
+   * @deprecated 3.6.0
+   *
+   * @param string $username
+   * @param string $password
+   * @param string $connection
+   *
+   * @return bool
+   *
+   * @throws Exception
+   * @throws WP_Auth0_BeforeLoginException
+   * @throws WP_Auth0_LoginFlowValidationException
+   */
   public function login_with_credentials( $username, $password, $connection="Username-Password-Authentication" ) {
+    trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), E_USER_DEPRECATED ) );
 
     $domain = $this->a0_options->get( 'domain' );
     $client_id = $this->a0_options->get( 'client_id' );
@@ -564,10 +582,11 @@ class WP_Auth0_LoginManager {
   }
 
 	/**
-	 * DEPRECATED 3.5.0
 	 * Deprecated to improve the functionality and move to a new class
 	 *
 	 * @see \WP_Auth0_Email_Verification::render_die()
+	 *
+	 * @deprecated 3.5.0
 	 *
 	 * @param $userinfo
 	 * @param $id_token
