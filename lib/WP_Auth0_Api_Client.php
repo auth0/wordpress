@@ -66,7 +66,27 @@ class WP_Auth0_Api_Client {
 		}
 	}
 
+	/**
+	 * Deprecated to conform to OIDC standards
+	 *
+	 * @see https://auth0.com/docs/api-auth/intro#other-authentication-api-endpoints
+	 *
+	 * @deprecated 3.6.0
+	 *
+	 * @param $domain
+	 * @param $client_id
+	 * @param $username
+	 * @param $password
+	 * @param $connection
+	 * @param $scope
+	 *
+	 * @return array|bool|mixed|object
+	 */
 	public static function ro( $domain, $client_id, $username, $password, $connection, $scope ) {
+
+		$deprecation_msg = sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ );
+		trigger_error( $deprecation_msg, E_USER_DEPRECATED );
+		WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $deprecation_msg );
 
 		$endpoint = "https://$domain/";
 
