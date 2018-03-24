@@ -14,7 +14,7 @@ Please see the [Installation docs](https://auth0.com/docs/cms/wordpress/installa
 
 ## API authentication
 
-Please see the [JWT Authentication page on auth0.com/docs](https://auth0.com/docs/cms/wordpress/jwt-authentication) for more information. 
+Please see the [JWT Authentication docs](https://auth0.com/docs/cms/wordpress/jwt-authentication) for more information. 
 
 ## Extending the plugin
 
@@ -54,7 +54,6 @@ git clone https://github.com/joshcanhelp/auth0-wp-test.git ./wp-content/themes/a
 ```
 
 The main requirement for testing, though, is using the latest version of WordPress with our minimum supported PHP version. 
-
 
 ### How to build the initial setup assets?
 
