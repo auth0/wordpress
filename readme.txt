@@ -105,18 +105,15 @@ The Auth0 plugin transparently handles login information for your WordPress site
 
 = When I install this plugin, will existing users still be able to login? =
 
-Yes, either allowing the WordPress login form to be displayed or by migrating existing users. See the **Technical
-Notes** section above.
+Yes, either allowing the WordPress login form to be displayed or by migrating existing users. See the **Technical Notes** section above.
 
 = What authentication providers do you support? =
 
-See our [complete list of supported social and enterprise authentication providers](https://auth0
-.com/docs/identityproviders).
+See our [complete list of supported social and enterprise authentication providers](https://auth0.com/docs/identityproviders).
 
 = How can I set up the settings that are not provided in the settings page? =
 
-We added a new field called "Extra settings" that allows you to add a JSON object with all the settings you want to
-configure. For more information on what else can be configured, see the [Lock customization section in GitHub](https://github.com/auth0/lock#customization).
+We added a new field called "Extra settings" that allows you to add a JSON object with all the settings you want to configure. For more information on what else can be configured, see the [Lock customization section in GitHub](https://github.com/auth0/lock#customization).
 
 = Is this plugin compatible with WooCommerce? =
 
@@ -127,12 +124,9 @@ Yes, this plugin will override the default WooCommerce login forms with the Auth
 All is not lost!
 
 * If you're setting up the plugin for the first time or having issues with users logging in, please review the [configuration](https://auth0.com/docs/cms/wordpress/configuration) and [troubleshooting](https://auth0.com/docs/cms/wordpress/troubleshoot) pages at [auth0.com/docs](https://auth0.com/docs/cms/wordpress/).
-* If you found a bug in the plugin code [submit an issue](https://github.com/auth0/wp-auth0/issues) or [create a pull
-request](https://github.com/auth0/wp-auth0/pulls) on [GitHub](https://github.com/auth0/wp-auth0/).
-* If you have questions about how to use Auth0 or the plugin, please [post on our community site](https://community
-.auth0.com/) or create a [support forum request here](https://wordpress.org/support/plugin/auth0).
-* You can also see additional documentation and answers on our [support site](https://support.auth0.com/). Customers on
-a paid Auth0 plan can [submit a trouble ticket](https://support.auth0.com/tickets) for a fast response.
+* If you found a bug in the plugin code [submit an issue](https://github.com/auth0/wp-auth0/issues) or [create a pull request](https://github.com/auth0/wp-auth0/pulls) on [GitHub](https://github.com/auth0/wp-auth0/).
+* If you have questions about how to use Auth0 or the plugin, please [post on our community site](https://community.auth0.com/) or create a [support forum request here](https://wordpress.org/support/plugin/auth0).
+* You can also see additional documentation and answers on our [support site](https://support.auth0.com/). Customers on a paid Auth0 plan can [submit a trouble ticket](https://support.auth0.com/tickets) for a fast response.
 
 == Changelog ==
 
