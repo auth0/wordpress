@@ -7,11 +7,19 @@ class WP_Auth0_Lock10_Options {
   protected $signup_mode = false;
   protected $_scopes = 'openid email name nickname picture';
 
+  const PWL_CDN_URL = '//cdn.auth0.com/js/lock/11.5/lock.min.js';
+
+  /**
+   * WP_Auth0_Lock10_Options constructor.
+   *
+   * @param array $extended_settings - argument in renderAuth0Form(), used by shortcode and widget
+   */
   public function __construct( $extended_settings = array() ) {
     $this->wp_options = WP_Auth0_Options::Instance();
     $this->extended_settings = $extended_settings;
   }
 
+  // TODO: Deprecate - class name is set in a specific template
   public function get_lock_classname() {
     if ( $this->_get_boolean( $this->wp_options->get( 'passwordless_enabled' ) ) ) {
       return 'Auth0LockPasswordless';
@@ -20,10 +28,12 @@ class WP_Auth0_Lock10_Options {
     }
   }
 
+  // TODO: Deprecate - specific templates choose passwordless or not
   public function isPasswordlessEnable() {
     return $this->_get_boolean( $this->wp_options->get( 'passwordless_enabled' ) );
   }
 
+  // TODO: Deprecate - passwordless_method is no longer a valid way to load passwordless
   public function get_lock_show_method() {
     return 'show';
   }
@@ -50,7 +60,7 @@ class WP_Auth0_Lock10_Options {
   }
 
   public function can_show() {
-    return trim( $this->get_client_id() ) !== '' && trim( $this->get_domain() ) !== '';
+    return WP_Auth0::ready();
   }
 
   public function get_client_id() {
@@ -169,6 +179,8 @@ class WP_Auth0_Lock10_Options {
     }
     if ( $this->signup_mode ) {
       $options_obj["allowLogin"] = false;
+    } else if ( isset( $_GET['action'] ) && $_GET['action'] == 'register' ) {
+      $options_obj["allowLogin"] = true;
     }
     return $options_obj;
   }
