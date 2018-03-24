@@ -1,5 +1,4 @@
 <?php
-
 $lock_options = new WP_Auth0_Lock10_Options( $specialSettings );
 
 if ( ! $lock_options->can_show() ) {
@@ -14,22 +13,10 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'register' ) {
 }
 
 $extra_css = '';
-
-if ( $lock_options->isPasswordlessEnable() ) {
-  $extra_css = '.auth0-lock {margin-bottom: 50px;}';
-}
-
 $extra_css .= trim( apply_filters( 'auth0_login_css', '' ) );
 $extra_css .= trim( $lock_options->get_custom_css() );
 
-$custom_js = trim( $lock_options->get_custom_js() );
-
-if ( empty( $title ) ) {
-  $title = "Sign In";
-}
-
 $options = $lock_options->get_lock_options();
-
 ?>
 
 <div id="form-signin-wrapper" class="auth0-login">
@@ -41,7 +28,6 @@ $options = $lock_options->get_lock_options();
         <?php } else { ?>
             <div id="auth0-login-form"></div>
         <?php } ?>
-
         <?php if ( $lock_options->get_wordpress_login_enabled() && $canShowLegacyLogin ) { ?>
             <div id="extra-options">
                 <a href="?wle">Login with WordPress username</a>
@@ -50,13 +36,11 @@ $options = $lock_options->get_lock_options();
 
     </div>
 </div>
-
 <?php if ( !empty( $extra_css ) ) { ?>
     <style type="text/css">
         <?php echo $extra_css; ?>
     </style>
 <?php } ?>
-
 <script type="text/javascript">
 var ignore_sso = false;
 
@@ -68,29 +52,23 @@ document.cookie = '<?php
 
 document.addEventListener("DOMContentLoaded", function() {
 
-    var callback = null;
-
-    var options = <?php echo json_encode( $options ); ?>;
-
+    var options = {};
+    options = <?php echo json_encode( $options ); ?>;
     options.additionalSignUpFields = <?php echo $lock_options->get_custom_signup_fields(); ?>;
 
     if (!ignore_sso) {
-      var lock = new <?php echo $lock_options->get_lock_classname(); ?>('<?php echo $lock_options->get_client_id(); ?>', '<?php echo $lock_options->get_domain(); ?>', options);
+      var lock = new Auth0Lock(
+          '<?php echo $lock_options->get_client_id(); ?>',
+          '<?php echo $lock_options->get_domain(); ?>',
+          options
+      );
 
-      <?php if ( ! empty( $custom_js ) ) { ?>
-
-          <?php echo $custom_js;?>
-
-      <?php } ?>
-
-      function a0ShowLoginModal() {
-          lock.<?php echo $lock_options->get_lock_show_method(); ?>();
-      }
+      <?php echo $lock_options->get_custom_js(); ?>
 
       <?php if ( ! $lock_options->show_as_modal() ) { ?>
-          a0ShowLoginModal();
+        lock.show();
       <?php } else { ?>
-          jQuery('#a0LoginButton').click(a0ShowLoginModal);
+          jQuery('#a0LoginButton').click(lock.show);
       <?php } ?>
     }
 

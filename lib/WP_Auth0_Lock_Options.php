@@ -1,5 +1,5 @@
 <?php
-
+// TODO: Deprecate - previously used for passwordless
 class WP_Auth0_Lock_Options {
 
 	protected $wp_options;
