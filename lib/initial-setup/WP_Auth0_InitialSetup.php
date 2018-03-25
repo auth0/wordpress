@@ -87,12 +87,22 @@ class WP_Auth0_InitialSetup {
 		wp_enqueue_style( 'media' );
 	}
 
+	/**
+	 * Admin notice to appear if setup is incorrect or missing info
+	 *
+	 * @see init() method for this class
+	 */
 	public function notify_setup() {
-?>
-  		<div class="update-nag">
-        Auth0 for WordPress is not yet configured. Click <a href="<?php echo admin_url( 'admin.php?page=wpa0-setup' ); ?>">HERE</a> to configure the Auth0 for WordPress plugin using the Quick Setup Wizard.
-  		</div>
-  		<?php
+		?>
+    <div class="update-nag">
+		  <?php _e( 'Auth0 for WordPress is not yet configured. Configure this using the', 'wp-auth0' ); ?>
+		  <strong><a href="<?php echo admin_url( 'admin.php?page=wpa0-setup' ); ?>"><?php
+				  _e( 'Setup Wizard', 'wp-auth0' ); ?></a></strong>
+		  <?php _e( 'or follow the', 'wp-auth0' ); ?>
+		  <strong><a href="https://auth0.com/docs/cms/wordpress/configuration"><?php
+				  _e( 'configuration instructions here', 'wp-auth0' ); ?></a></strong>.
+    </div>
+		<?php
 	}
 
 	public function notify_error() {

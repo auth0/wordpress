@@ -62,57 +62,41 @@ class WP_Auth0_Admin {
 
 	public function init() {
 		add_action( 'admin_init', array( $this, 'init_admin' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ), 1 );
 	}
 
 	public function admin_enqueue() {
+
 		if ( ! isset( $_REQUEST['page'] ) || 'wpa0' !== $_REQUEST['page'] ) {
 			return;
 		}
 
-		$client_id = $this->a0_options->get( 'client_id' );
-		$secret = $this->a0_options->get( 'client_secret' );
-		$domain = $this->a0_options->get( 'domain' );
-
-		if ( empty( $client_id ) || empty( $secret ) || empty( $domain ) ) {
-			add_action( 'admin_notices', array( $this, 'create_account_message' ) );
-		}
-
-		$this->validate_required_api_scopes();
-
 		wp_enqueue_media();
-		wp_enqueue_script( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/js/admin.js' );
-		wp_enqueue_script( 'wpa0_async', WPA0_PLUGIN_URL . 'assets/lib/async.min.js' );
-		wp_enqueue_style( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/css/bootstrap.min.css' );
-		wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/js/bootstrap.min.js' );
-		wp_enqueue_style( 'wpa0_admin_initial_settup', WPA0_PLUGIN_URL . 'assets/css/initial-setup.css' );
+		wp_enqueue_script(
+			'wpa0_admin',
+			WPA0_PLUGIN_URL . 'assets/js/admin.js',
+			array( 'jquery' ),
+			WPA0_VERSION
+		);
+		wp_enqueue_script( 'wpa0_async', WPA0_PLUGIN_URL . 'assets/lib/async.min.js', FALSE, WPA0_VERSION );
+		wp_enqueue_style( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/css/bootstrap.min.css', FALSE, '3.3.5' );
+		wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/js/bootstrap.min.js', FALSE, '3.3.6' );
+		wp_enqueue_style(
+			'wpa0_admin_initial_setup',
+			WPA0_PLUGIN_URL . 'assets/css/initial-setup.css',
+			FALSE,
+			WPA0_VERSION
+		);
 		wp_enqueue_style( 'media' );
 
 		wp_localize_script( 'wpa0_admin', 'wpa0', array(
-				'media_title' => __( 'Choose your icon', 'wp-auth0' ),
-				'media_button' => __( 'Choose icon', 'wp-auth0' ),
-			) );
-	}
-
-	protected function validate_required_api_scopes() {
-		$app_token = $this->a0_options->get( 'auth0_app_token' );
-		if ( ! $app_token ) {
-			add_action( 'admin_notices', array( $this, 'cant_connect_to_auth0' ) );
-		}
-	}
-
-	public function cant_connect_to_auth0() {
-?>
-		<div id="message" class="error">
-			<p>
-				<strong>
-					<?php echo __( 'The current user is not authorized to manage the Auth0 account. You must be both a WordPress site administrator and a user known to Auth0 to control Auth0 from this settings page. Please see the', 'wp-auth0' ); ?>
-					<a href="https://auth0.com/docs/cms/wordpress/troubleshoot#the-settings-page-shows-me-this-warning-the-current-user-is-not-authorized-to-manage-the-auth0-account-"><?php echo __( 'documentation', 'wp-auth0' ); ?></a>
-					<?php echo __( 'for more information.', 'wp-auth0' ); ?>
-				</strong>
-			</p>
-		</div>
-		<?php
+			'media_title' => __( 'Choose your icon', 'wp-auth0' ),
+			'media_button' => __( 'Choose icon', 'wp-auth0' ),
+			'clear_cache_working' => __( 'Working ...', 'wp-auth0' ),
+			'clear_cache_done' => __( 'Done!', 'wp-auth0' ),
+			'clear_cache_nonce' => wp_create_nonce( 'auth0_delete_cache_transient' ),
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+		) );
 	}
 
 	public function init_admin() {
@@ -142,8 +126,11 @@ class WP_Auth0_Admin {
 		$this->sections['dashboard'] = new WP_Auth0_Admin_Dashboard( $this->a0_options );
 		$this->sections['dashboard']->init();
 
-		register_setting( $this->a0_options->get_options_name() . '_basic', $this->a0_options->get_options_name(), array( $this, 'input_validator' ) );
-
+		register_setting(
+			$this->a0_options->get_options_name() . '_basic',
+			$this->a0_options->get_options_name(),
+			array( $this, 'input_validator' )
+		);
 	}
 
 	public function input_validator( $input ) {
@@ -157,20 +144,6 @@ class WP_Auth0_Admin {
 		}
 
 		return $input;
-	}
-
-	public function create_account_message() {
-?>
-		<div id="message" class="updated">
-			<p>
-				<strong>
-					<?php echo __( 'In order to use this plugin, you need to first', 'wp-auth0' ); ?>
-					<a target="_blank" href="https://manage.auth0.com/#/applications"><?php echo __( 'create an application', 'wp-auth0' ); ?></a>
-					<?php echo __( ' on Auth0 and copy the information here.', 'wp-auth0' ); ?>
-				</strong>
-			</p>
-		</div>
-		<?php
 	}
 
 	protected function get_social_connection( $provider, $name, $icon ) {

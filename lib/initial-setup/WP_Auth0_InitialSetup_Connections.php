@@ -58,6 +58,9 @@ class WP_Auth0_InitialSetup_Connections {
     add_action( 'wp_ajax_a0_initial_setup_set_connection', array( $this, 'update_connection' ) );
   }
 
+	/**
+	 * TODO: Not using most of the variables here, remove and cleanup
+	 */
   public function render( $step ) {
     wp_enqueue_script( 'wpa0_async', WPA0_PLUGIN_URL . 'assets/lib/async.min.js' );
 

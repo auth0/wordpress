@@ -129,85 +129,91 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		return add_query_arg( 'action', 'logout', site_url( 'wp-login.php', 'login' ) );
 	}
 
+	/**
+	 * Default settings when plugin is installed or reset
+	 *
+	 * @return array
+	 */
 	protected function defaults() {
 		return array(
+
+			// System
 			'version' => 1,
-			'metrics' => 1,
 			'last_step' => 1,
-			'auto_login' => 0,
-			'auto_login_method' => '',
+			'migration_token_id' => null,
+			'use_lock_10' => true,
+			'jwt_auth_integration' => false,
+			'amplificator_title' => '',
+			'amplificator_subtitle' => '',
+			'connections' => array(),
+			'auth0js-cdn' => '//cdn.auth0.com/js/auth0/9.1/auth0.min.js',
+
+			// Basic
+			'domain' => '',
 			'client_id' => '',
 			'client_secret' => '',
+			'client_secret_b64_encoded' => null,
 			'client_signing_algorithm' => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
 			'cache_expiration' => 1440,
-			'client_secret_b64_encoded' => null,
-			'domain' => '',
-			'form_title' => '',
-			'icon_url' => '',
-			'ip_range_check' => 0,
-			'ip_ranges' => '',
-			'lock_connections' => '',
-			'passwordless_enabled' => false,
-			'passwordless_method' => 'magiclink',
-			'passwordless_cdn_url' => '//cdn.auth0.com/js/lock-passwordless-2.2.min.js',
-			'use_lock_10' => true,
-			'cdn_url' => '//cdn.auth0.com/js/lock/11.1/lock.min.js',
-			'cdn_url_legacy' => '//cdn.auth0.com/js/lock-9.2.min.js',
-			'requires_verified_email' => true,
+			'auth0_app_token' => null,
 			'wordpress_login_enabled' => true,
-			'primary_color' => '',
 
-			'language' => '',
-			'language_dictionary' => '',
-
-			'custom_signup_fields' => '',
-
-			'social_big_buttons' => false,
-			'username_style' => '',
-			'extra_conf' => '',
-			'custom_css' => '',
-			'custom_js' => '',
-			'auth0_implicit_workflow' => false,
+			// Features
+			'password_policy' => 'fair',
 			'sso' => false,
 			'singlelogout' => false,
-			'gravatar' => true,
-			'jwt_auth_integration' => false,
-			'auth0_app_token' => null,
-			'api_audience' => null,
 			'mfa' => null,
 			'fullcontact' => null,
-			'fullcontact_rule' => null,
 			'fullcontact_apikey' => null,
 			'geo_rule' => null,
 			'income_rule' => null,
-			'link_auth0_users' => null,
-			'remember_users_session' => false,
-
 			'override_wp_avatars' => true,
 
+			// Appearance
+			'icon_url' => '',
+			'form_title' => '',
+			'social_big_buttons' => false,
+			'gravatar' => true,
+			'custom_css' => '',
+			'custom_js' => '',
+			'username_style' => '',
+			'primary_color' => '',
+			'language' => '',
+			'language_dictionary' => '',
+
+			// Advanced
+			'requires_verified_email' => true,
+			'remember_users_session' => false,
+			'default_login_redirection' => home_url(),
+			'passwordless_enabled' => false,
+			'passwordless_method' => 'magiclink',
+			'force_https_callback' => false,
+			'cdn_url' => '//cdn.auth0.com/js/lock/11.1/lock.min.js',
+			'cdn_url_legacy' => '//cdn.auth0.com/js/lock-9.2.min.js',
+			'passwordless_cdn_url' => '//cdn.auth0.com/js/lock-passwordless-2.2.min.js',
+			'lock_connections' => '',
+			'link_auth0_users' => null,
+			'auto_provisioning' => false,
 			'migration_ws' => false,
 			'migration_token' => null,
-			'migration_token_id' => null,
 			'migration_ips_filter' => false,
 			'migration_ips' => null,
+			'auto_login' => 0,
+			'auto_login_method' => '',
+			'auth0_implicit_workflow' => false,
+			'ip_range_check' => 0,
+			'ip_ranges' => '',
 			'valid_proxy_ip' => null,
-
-			'amplificator_title' => '',
-			'amplificator_subtitle' => '',
-
-			'connections' => array(),
-
-			'password_policy' => 'fair',
-
-			'force_https_callback' => false,
-
-			'auto_provisioning' => false,
-			'default_login_redirection' => home_url(),
-			
+			'custom_signup_fields' => '',
+			'extra_conf' => '',
+			'social_twitter_key' => '',
+			'social_twitter_secret' => '',
+			'social_facebook_key' => '',
+			'social_facebook_secret' => '',
 			'auth0_server_domain' => 'auth0.auth0.com',
-			'auth0js-cdn' => '//cdn.auth0.com/js/auth0/9.1/auth0.min.js',
+			'metrics' => 1,
 
-			//DASHBOARD
+			// DASHBOARD
 			'chart_idp_type' => 'donut',
 			'chart_gender_type' => 'donut',
 			'chart_age_type' => 'donut',
