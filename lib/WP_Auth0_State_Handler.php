@@ -1,46 +1,88 @@
 <?php
 
-class WP_Auth0_State_Handler {
+final class WP_Auth0_State_Handler {
 
   /**
-   * @var string
-   */
-  protected $uniqid;
-
-  /**
+   * Cookie name used to store unique state value
+   *
    * @var string
    */
   const COOKIE_NAME = 'auth0_uniqid';
 
   /**
-   * @var int
+   *
    */
-  protected $cookieExpiresIn = MINUTE_IN_SECONDS;
+  const COOKIE_EXPIRES = MINUTE_IN_SECONDS;
 
   /**
-   * WP_Auth0_State_Handler constructor.
+   * Singleton class instance
+   *
+   * @var WP_Auth0_State_Handler|null
    */
-  public function __construct() {
-    $this->uniqid = isset( $_COOKIE[ self::COOKIE_NAME ] ) ? $_COOKIE[ self::COOKIE_NAME ] : self::generateNonce();
+  private static $_instance = null;
+
+  /**
+   * State nonce stored in a cookie
+   *
+   * @var string
+   */
+  private $_uniqid;
+
+  /**
+   * WP_Auth0_State_Handler constructor
+   * Private to prevent new instances of this class
+   */
+  private function __construct() {
+    $this->init();
   }
 
   /**
-   * Set the unique ID for state and return
+   * Private to prevent cloning
+   */
+  private function __clone() {}
+
+  /**
+   * Private to prevent serializing
+   */
+  private function __sleep() {}
+
+  /**
+   * Private to prevent unserializing
+   */
+  private function __wakeup() {}
+
+  /**
+   * Start-up process to make sure we have a unique ID stored
+   */
+  private function init() {
+    if ( isset( $_COOKIE[ self::COOKIE_NAME ] ) ) {
+      // Have a state cookie, don't want to generate a new one
+      $this->_uniqid = $_COOKIE[ self::COOKIE_NAME ];
+    } else {
+      // No state cookie, need to create one
+      $this->_uniqid = $this->generateNonce();
+    }
+  }
+
+  /**
+   * Get the internal instance of the singleton
+   *
+   * @return WP_Auth0_State_Handler
+   */
+  public static final function getInstance() {
+    if ( null === self::$_instance ) {
+      self::$_instance = new WP_Auth0_State_Handler();
+    }
+    return self::$_instance;
+  }
+
+  /**
+   * Return the unique ID used for state validation
    *
    * @return string
    */
-  public function issue() {
-    $this->store();
-    return $this->uniqid;
-  }
-
-  /**
-   * Set the state cookie value
-   *
-   * @return bool
-   */
-  protected function store() {
-    return setcookie( self::COOKIE_NAME, $this->uniqid, time() + $this->cookieExpiresIn );
+  public function get() {
+    return $this->_uniqid;
   }
 
   /**
@@ -50,10 +92,20 @@ class WP_Auth0_State_Handler {
    *
    * @return bool
    */
-  public static function validate( $state ) {
+  public function validate( $state ) {
     $valid = isset( $_COOKIE[ self::COOKIE_NAME ] ) ? $_COOKIE[ self::COOKIE_NAME ] === $state : FALSE;
-    self::reset();
+    $this->reset();
     return $valid;
+  }
+
+  /**
+   * Set the state cookie value
+   *
+   * @return bool
+   */
+  public function setCookie() {
+    $_COOKIE[ self::COOKIE_NAME ] = $this->_uniqid;
+    return setcookie( self::COOKIE_NAME, $this->_uniqid, time() + self::COOKIE_EXPIRES );
   }
 
   /**
@@ -61,7 +113,7 @@ class WP_Auth0_State_Handler {
    *
    * @return bool
    */
-  public static function reset() {
+  public function reset() {
     return setcookie( self::COOKIE_NAME, '', 0 );
   }
 
@@ -72,7 +124,7 @@ class WP_Auth0_State_Handler {
    *
    * @return string
    */
-  public static function generateNonce() {
+  public function generateNonce() {
     return md5( uniqid( rand(), true ) );
   }
 }
