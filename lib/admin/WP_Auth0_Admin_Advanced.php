@@ -2,7 +2,10 @@
 
 class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
+  // TODO: Deprecate
   const ADVANCED_DESCRIPTION = 'Settings related to specific scenarios.';
+
+  protected $_description;
 
   protected $actions_middlewares = array(
     'basic_validation',
@@ -14,9 +17,16 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
   protected $router;
 
+  /**
+   * WP_Auth0_Admin_Advanced constructor.
+   *
+   * @param WP_Auth0_Options_Generic $options
+   * @param WP_Auth0_Routes $router
+   */
   public function __construct( WP_Auth0_Options_Generic $options, WP_Auth0_Routes $router ) {
     parent::__construct( $options );
     $this->router = $router;
+    $this->_description = __( 'Settings related to specific scenarios.', 'wp-auth0' );
   }
 
   public function init() {
@@ -418,7 +428,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
       </div>
     <?php
   }
-
+  // TODO: Deprecate
   public function render_advanced_description() {
 ?>
 

@@ -2,11 +2,24 @@
 
 class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
+	// TODO: Deprecate
 	const BASIC_DESCRIPTION = 'Basic settings related to Auth0 credentials and basic WordPress integration.';
+
+	protected $_description;
 
 	protected $actions_middlewares = array(
 		'basic_validation',
 	);
+
+	/**
+	 * WP_Auth0_Admin_Basic constructor.
+	 *
+	 * @param WP_Auth0_Options_Generic $options
+	 */
+	public function __construct( WP_Auth0_Options_Generic $options ) {
+		parent::__construct( $options );
+		$this->_description = __( 'Basic settings related to the Auth0 integration.', 'wp-auth0' );
+	}
 
 	public function init() {
 
@@ -219,6 +232,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
     <?php
 	}
 
+	// TODO: Deprecate
 	public function render_basic_description() {
 ?>
 

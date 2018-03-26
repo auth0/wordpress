@@ -2,11 +2,24 @@
 
 class WP_Auth0_Admin_Dashboard extends WP_Auth0_Admin_Generic {
 
+	// TODO: Deprecate
 	const DASHBOARD_DESCRIPTION = 'Settings related to the dashboard widgets.';
+
+	protected $_description;
 
 	protected $actions_middlewares = array(
 		'basic_validation',
 	);
+
+	/**
+	 * WP_Auth0_Admin_Dashboard constructor.
+	 *
+	 * @param WP_Auth0_Options_Generic $options
+	 */
+	public function __construct( WP_Auth0_Options_Generic $options ) {
+		parent::__construct( $options );
+		$this->_description = __( 'Settings related to the dashboard widgets', 'wp-auth0' );
+	}
 
 	public function init() {
 
@@ -24,6 +37,7 @@ class WP_Auth0_Admin_Dashboard extends WP_Auth0_Admin_Generic {
 
 	}
 
+	// TODO: Deprecate
 	public function render_dashboard_description() {
 ?>
 
