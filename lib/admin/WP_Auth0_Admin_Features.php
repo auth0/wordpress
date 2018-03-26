@@ -2,7 +2,10 @@
 
 class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
+  // TODO: Deprecate
   const FEATURES_DESCRIPTION = 'Settings related to specific features provided by the plugin.';
+
+  protected $_description;
 
   protected $actions_middlewares = array(
     'basic_validation',
@@ -13,6 +16,16 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
     'fullcontact_validation',
     'mfa_validation',
   );
+
+  /**
+   * WP_Auth0_Admin_Features constructor.
+   *
+   * @param WP_Auth0_Options_Generic $options
+   */
+  public function __construct( WP_Auth0_Options_Generic $options ) {
+    parent::__construct( $options );
+    $this->_description = __( 'Settings related to specific features provided by the plugin.', 'wp-auth0' );
+  }
 
   public function init() {
 
@@ -155,7 +168,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
       </div>
     <?php
   }
-
+  // TODO: Deprecate
   public function render_features_description() {
 ?>
 
