@@ -3,7 +3,7 @@ class WP_Auth0_Api_Operations {
 
 	protected $a0_options;
 
-	public function __construct( WP_Auth0_Options $a0_options ) {
+	public function __construct( WP_Auth0_Options_Generic $a0_options ) {
 		$this->a0_options = $a0_options;
 	}
 
