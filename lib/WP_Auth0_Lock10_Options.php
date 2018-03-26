@@ -99,10 +99,9 @@ class WP_Auth0_Lock10_Options {
 
   public function get_state_obj( $redirect_to = null ) {
 
-    $stateHandler = new WP_Auth0_State_Handler();
     $stateObj = array(
       'interim' => ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ),
-      'nonce' => $stateHandler->issue()
+      'nonce' => WP_Auth0_State_Handler::getInstance()->get()
     );
 
     if ( !empty( $redirect_to ) ) {
