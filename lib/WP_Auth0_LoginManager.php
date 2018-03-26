@@ -160,7 +160,8 @@ class WP_Auth0_LoginManager {
     // Check for valid state nonce
     // See https://auth0.com/docs/protocols/oauth2/oauth-state
     $state_decoded = $this->get_state();
-    if ( empty( $state_decoded->nonce ) || ! WP_Auth0_State_Handler::validate( $state_decoded->nonce ) ) {
+    $state_nonce = isset( $state_decoded->nonce ) ? $state_decoded->nonce : '';
+    if ( ! WP_Auth0_State_Handler::getInstance()->validate( $state_nonce ) ) {
       $this->die_on_login( __( 'Invalid state', 'wp-auth0' ) );
     }
 
