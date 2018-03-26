@@ -120,6 +120,9 @@ class WP_Auth0 {
 
 		$this->check_signup_status();
 
+		// Store nonce value before headers are sent
+		WP_Auth0_State_Handler::getInstance()->setCookie();
+
 		WP_Auth0_Email_Verification::init();
 	}
 
