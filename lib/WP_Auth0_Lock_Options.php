@@ -100,7 +100,7 @@ class WP_Auth0_Lock_Options {
 	public function get_state_obj( $redirect_to = null ) {
 		$stateObj = array(
 			'interim' => ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ),
-			'nonce' => WP_Auth0_State_Handler::getInstance()->get()
+			'nonce' => WP_Auth0_Nonce_Handler::getInstance()->get()
 		);
 		if ( !empty( $redirect_to ) ) {
 			$stateObj["redirect_to"] = addslashes( $redirect_to );
