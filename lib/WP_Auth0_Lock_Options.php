@@ -226,7 +226,7 @@ class WP_Auth0_Lock_Options {
 		$options_obj = array_merge( $extraOptions, $options_obj, $extended_settings );
 
 		if ( ! $this->show_as_modal() ) {
-			$options_obj['container'] = 'auth0-login-form';
+			$options_obj['container'] = WPA0_AUTH0_LOGIN_FORM_ID;
 		}
 
 		if ( ! $this->is_registration_enabled() ) {
