@@ -7,7 +7,7 @@ class WP_Auth0_Dashboard_Plugins_Location extends WP_Auth0_Dashboard_Plugins_Gen
 
 	public function __construct() {
 		wp_enqueue_script( 'auth0-dashboard-gmaps-js', 'https://maps.googleapis.com/maps/api/js' );
-		wp_enqueue_script( 'auth0-markerclusterer', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/markerclusterer.js' );
+		wp_enqueue_script( 'auth0-markerclusterer', WPA0_PLUGIN_LIB_URL . 'markerclusterer.js' );
 	}
 
 	public function render() {

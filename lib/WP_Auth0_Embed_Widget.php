@@ -29,7 +29,7 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 	public function form( $instance ) {
 
 		wp_enqueue_media();
-		wp_enqueue_script( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/js/admin.js', array( 'jquery' ) );
+		wp_enqueue_script( 'wpa0_admin', WPA0_PLUGIN_JS_URL . 'admin.js', array( 'jquery' ) );
 		wp_enqueue_style( 'media' );
 		wp_localize_script( 'wpa0_admin', 'wpa0', array(
 				'media_title' => __( 'Choose your icon', 'wp-auth0' ),
@@ -40,18 +40,7 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 
-		$options = WP_Auth0_Options::Instance();
-		$client_id = $options->get( 'client_id' );
-
-		if ( trim( $client_id ) !== '' ) {
-
-			if ( WP_Auth0_Options::Instance()->get( 'passwordless_enabled' ) ) {
-				wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get( 'passwordless_cdn_url' ), 'jquery' );
-			} else {
-				wp_enqueue_script( 'wpa0_lock', WP_Auth0_Options::Instance()->get( 'cdn_url' ), 'jquery' );
-			}
-
-			echo $args['before_widget'];
+		if ( WP_Auth0::ready() ) {
 
 			$instance['show_as_modal'] = $this->showAsModal();
 			$instance['modal_trigger_name'] = isset( $instance['modal_trigger_name'] ) ? $instance['modal_trigger_name'] : 'Login';
@@ -59,11 +48,14 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 			if ( !isset( $instance['redirect_to'] ) || empty($instance['redirect_to']) ) {
 				$instance['redirect_to'] = home_url( $_SERVER["REQUEST_URI"] );
 			}
-			
+
+			echo $args['before_widget'];
 			require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
 			renderAuth0Form( false, $instance );
-
 			echo $args['after_widget'];
+
+		} else {
+			_e( 'Please check your Auth0 configuration', 'wp-auth0' );
 		}
 	}
 
