@@ -13,6 +13,7 @@ define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 define( 'AUTH0_DB_VERSION', 17 );
 define( 'WPA0_VERSION', '3.5.2' );
 define( 'WPA0_CACHE_GROUP', 'wp_auth0' );
+define( 'WPA0_STATE_COOKIE_NAME', 'auth0_state' );
 
 /**
  * Main plugin class
@@ -119,9 +120,6 @@ class WP_Auth0 {
 		$edit_profile->init();
 
 		$this->check_signup_status();
-
-		// Store nonce value before headers are sent
-		WP_Auth0_State_Handler::getInstance()->setCookie();
 
 		WP_Auth0_Email_Verification::init();
 	}

@@ -7,6 +7,7 @@ class WP_Auth0_LoginManager {
   protected $ignore_unverified_email;
   protected $users_repo;
   protected $state;
+  protected $state_decoded;
 
   public function __construct( WP_Auth0_UsersRepo $users_repo, $a0_options = null, $default_role = null, $ignore_unverified_email = false ) {
 
@@ -157,11 +158,9 @@ class WP_Auth0_LoginManager {
       $this->die_on_login( $error_msg ? $error_msg : sanitize_text_field( $this->query_vars( 'error' ) ) );
     }
 
-    // Check for valid state nonce
+    // Check for valid state nonce, set in WP_Auth0_Lock10_Options::get_state_obj()
     // See https://auth0.com/docs/protocols/oauth2/oauth-state
-    $state_decoded = $this->get_state();
-    $state_nonce = isset( $state_decoded->nonce ) ? $state_decoded->nonce : '';
-    if ( ! WP_Auth0_State_Handler::getInstance()->validate( $state_nonce ) ) {
+    if ( ! $this->validate_state() ) {
       $this->die_on_login( __( 'Invalid state', 'wp-auth0' ) );
     }
 
@@ -275,7 +274,7 @@ class WP_Auth0_LoginManager {
     $userinfo = json_decode( $userinfo_resp_body );
 
     if ( $this->login_user( $userinfo, $data->id_token, $data->access_token ) ) {
-      $state_decoded = $this->get_state();
+      $state_decoded = $this->get_state( TRUE );
       if ( ! empty( $state_decoded->interim ) ) {
         include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
       } else {
@@ -302,7 +301,7 @@ class WP_Auth0_LoginManager {
   public function implicit_login() {
 
     $token = $_POST['token'];
-    $state_decoded = $this->get_state();
+    $state_decoded = $this->get_state( TRUE );
 
     $secret = $this->a0_options->get_client_secret_as_key();
 
@@ -544,16 +543,41 @@ class WP_Auth0_LoginManager {
   /**
    * Get and store state returned from Auth0
    *
-   * @return object|null
+   * @param bool $decoded - `true` to return decoded state
+   *
+   * @return string|object|null
    */
-  protected function get_state() {
+  protected function get_state( $decoded = FALSE ) {
 
     if ( empty( $this->state ) ) {
-      $state_val = urldecode( $this->query_vars( 'state' ) );
+      // Get and store base64 encoded state
+      $state_val = $this->query_vars( 'state' );
+      $state_val = urldecode( $state_val );
+      $this->state = $state_val;
+
+      // Decode and store
       $state_val = base64_decode( $state_val );
-      $this->state = json_decode( $state_val );
+      $this->state_decoded = json_decode( $state_val );
     }
-    return is_object( $this->state ) ? $this->state : null;
+
+    if ( $decoded ) {
+      return is_object( $this->state_decoded ) ? $this->state_decoded : null;
+    } else {
+      return $this->state;
+    }
+  }
+
+  /**
+   * Check the state send back from Auth0 with the one stored in the user's browser
+   *
+   * @return bool
+   */
+  protected function validate_state() {
+    $valid = isset( $_COOKIE[ WPA0_STATE_COOKIE_NAME ] )
+      ? $_COOKIE[ WPA0_STATE_COOKIE_NAME ] === $this->get_state()
+      : FALSE;
+    setcookie( WPA0_STATE_COOKIE_NAME, '', 0, '/' );
+    return $valid;
   }
 
   /**
