@@ -1,40 +1,45 @@
 <?php
 function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = array() ) {
-	if ( is_user_logged_in() )
-		return;
+  if ( is_user_logged_in() ) {
+    return;
+  }
 
-	if ( !$canShowLegacyLogin || !isset( $_GET['wle'] ) ) {
+  if ( ! $canShowLegacyLogin || ! isset( $_GET['wle'] ) ) {
     $options = WP_Auth0_Options::Instance();
+    $lock_options = new WP_Auth0_Lock10_Options( $specialSettings );
+    $use_passwordless = $options->get('passwordless_enabled', FALSE );
+    $lock_cdn_url = $options->get( $use_passwordless ? 'passwordless_cdn_url' : 'cdn_url' );
 
-    if ( ! $options->get('passwordless_enabled', FALSE) ) {
-      wp_enqueue_script( 'wpa0_lock', $options->get('cdn_url'), array( 'jquery' ), FALSE );
-      require_once 'auth0-login-form-lock10.php';
-    } else {
-      $lock_options = new WP_Auth0_Lock10_Options( $specialSettings );
+    wp_enqueue_script( 'wpa0_lock', $lock_cdn_url, array( 'jquery' ), FALSE, TRUE );
+    wp_enqueue_script( 'js-cookie', WPA0_PLUGIN_LIB_URL . 'js.cookie.min.js', FALSE, '2.2.0', TRUE );
+    wp_enqueue_script( 'wpa0_lock_init', WPA0_PLUGIN_JS_URL . 'lock-init.js', array( 'jquery' ), WPA0_VERSION, TRUE );
+    wp_localize_script(
+      'wpa0_lock_init',
+      'wpAuth0LockGlobal',
+      array(
+        'settings' => $lock_options->get_lock_options(),
+        'ready' => WP_Auth0::ready(),
+        'domain' => $options->get( 'domain' ),
+        'clientId' => $options->get( 'client_id' ),
+        'stateCookieName' => WPA0_STATE_COOKIE_NAME,
+        'usePasswordless' => $use_passwordless,
+        'loginFormId' => WPA0_AUTH0_LOGIN_FORM_ID,
+        'showAsModal' => ! empty( $specialSettings['show_as_modal'] ),
+        'i18n' => array(
+          'notReadyText' => __( 'Auth0 is not configured', 'wp-auth0' ),
+          'cannotFindNodeText' => __( 'Auth0 cannot find node with id ', 'wp-auth0' ),
+          'modalButtonText' => ! empty ( $specialSettings['modal_trigger_name'] )
+            ? sanitize_text_field( $specialSettings['modal_trigger_name'] )
+            : __( 'Login', 'wp-auth0' ),
+        ),
+      )
+    );
 
-      // This is output in the footer so it can run after wp_head
-      wp_enqueue_script( 'wpa0_lock', $options->get('passwordless_cdn_url'), array( 'jquery' ), FALSE );
-      wp_enqueue_script( 'auth0-pwl', WPA0_PLUGIN_JS_URL . 'login-pwl.js', array( 'jquery' ), WPA0_VERSION, TRUE );
+    $login_tpl = apply_filters( 'auth0_login_form_tpl', 'auth0-login-form.php', $lock_options, $canShowLegacyLogin );
+    require $login_tpl;
 
-      // Set required global var
-      wp_localize_script(
-        'auth0-pwl',
-        'wpAuth0PwlGlobal',
-        array(
-          'i18n' => array(),
-          'lock' => array(
-            'options' => $lock_options->get_lock_options(),
-            'ready' => WP_Auth0::ready(),
-            'domain' => $options->get( 'domain' ),
-            'clientId' => $options->get( 'client_id' ),
-          ),
-        )
-      );
-
-      require_once 'auth0-login-form-pwl.php';
-    }
-	} else {
-		add_action( 'login_footer', array( 'WP_Auth0', 'render_back_to_auth0' ) );
-		add_action( 'woocommerce_after_customer_login_form', array( 'WP_Auth0', 'render_back_to_auth0' ) );
-	}
+  } else {
+    add_action( 'login_footer', array( 'WP_Auth0', 'render_back_to_auth0' ) );
+    add_action( 'woocommerce_after_customer_login_form', array( 'WP_Auth0', 'render_back_to_auth0' ) );
+  }
 }

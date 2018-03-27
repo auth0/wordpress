@@ -7,8 +7,6 @@ class WP_Auth0_Lock10_Options {
   protected $signup_mode = false;
   protected $_scopes = 'openid email name nickname picture';
 
-  const PWL_CDN_URL = '//cdn.auth0.com/js/lock/11.5/lock.min.js';
-
   /**
    * WP_Auth0_Lock10_Options constructor.
    *
@@ -233,18 +231,15 @@ class WP_Auth0_Lock10_Options {
     if ( isset( $this->extended_settings['redirect_to'] ) ) {
       $redirect_to = $this->extended_settings['redirect_to'];
     }
-    $state = $this->get_state_obj( $redirect_to );
-
-    $options_obj = $this->build_settings( $this->wp_options->get_options() );
-    $extended_settings = $this->build_settings( $extended_settings );
 
     $extraOptions = array(
       "auth"    => array(
-        "params" => array("state" => $state ),
+        "params" => array(
+          "state" => $this->get_state_obj( $redirect_to ),
+          "scope" => apply_filters( 'auth0_auth_param_scopes', $this->_scopes ),
+        ),
       ),
     );
-
-    $extraOptions["auth"]["params"]["scope"] = apply_filters( 'auth0_auth_param_scopes', $this->_scopes );
 
     if ( $this->get_auth0_implicit_workflow() ) {
       $extraOptions["auth"]["responseType"] = 'id_token';
@@ -255,10 +250,13 @@ class WP_Auth0_Lock10_Options {
       $extraOptions["auth"]["redirectUrl"] = $this->get_code_callback_url();
     }
 
+    $options_obj = $this->build_settings( $this->wp_options->get_options() );
+    $extended_settings = $this->build_settings( $extended_settings );
+
     $options_obj = array_replace_recursive( $extraOptions, $options_obj, $extended_settings );
 
     if ( ! $this->show_as_modal() ) {
-      $options_obj['container'] = 'auth0-login-form';
+      $options_obj['container'] = WPA0_AUTH0_LOGIN_FORM_ID;
     }
 
     if ( ! $this->is_registration_enabled() ) {
