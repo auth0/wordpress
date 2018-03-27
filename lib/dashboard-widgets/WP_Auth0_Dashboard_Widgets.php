@@ -184,15 +184,15 @@ class WP_Auth0_Dashboard_Widgets {
 			return;
 		}
 
-		wp_enqueue_style( 'auth0-dashboard-c3-css', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/c3/c3.min.css' );
-		wp_enqueue_style( 'auth0-dashboard-css', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/css/dashboard.css' );
+		wp_enqueue_style( 'auth0-dashboard-c3-css', WPA0_PLUGIN_LIB_URL . 'c3/c3.min.css' );
+		wp_enqueue_style( 'auth0-dashboard-css', WPA0_PLUGIN_CSS_URL . 'dashboard.css' );
 
-		wp_enqueue_script( 'auth0-dashboard-d3', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/d3/d3.min.js' );
-		wp_enqueue_script( 'auth0-dashboard-c3-js', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/c3/c3.min.js' );
-		wp_enqueue_script( 'auth0-lodash', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/lodash.min.js' );
+		wp_enqueue_script( 'auth0-dashboard-d3', WPA0_PLUGIN_LIB_URL . 'd3/d3.min.js' );
+		wp_enqueue_script( 'auth0-dashboard-c3-js', WPA0_PLUGIN_LIB_URL . 'c3/c3.min.js' );
+		wp_enqueue_script( 'auth0-lodash', WPA0_PLUGIN_LIB_URL . 'lodash.min.js' );
 
-		wp_enqueue_script( 'auth0-parallelcoordinates', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/parallelcoordinates.js' );
-		wp_enqueue_script( 'auth0-dualdimentionbars', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/lib/dualdimentionbars.js' );
+		wp_enqueue_script( 'auth0-parallelcoordinates', WPA0_PLUGIN_LIB_URL . 'parallelcoordinates.js' );
+		wp_enqueue_script( 'auth0-dualdimentionbars', WPA0_PLUGIN_LIB_URL . 'dualdimentionbars.js' );
 
 
 		$widgets = array(

@@ -44,7 +44,7 @@ class WP_Auth0_Settings_Section {
 		}
 
 		add_menu_page( __( 'Auth0', 'wp-auth0' ), __( 'Auth0', 'wp-auth0' ), 'manage_options', $main_menu,
-			( $show_initial_setup ? array( $this->initial_setup, 'render_setup_page' ) : array( $this->auth0_admin, 'render_settings_page' ) ), WP_Auth0::get_plugin_dir_url() . 'assets/img/a0icon.png', 85.55 );
+			( $show_initial_setup ? array( $this->initial_setup, 'render_setup_page' ) : array( $this->auth0_admin, 'render_settings_page' ) ), WPA0_PLUGIN_IMG_URL . 'a0icon.png', 85.55 );
 
 		if ( $show_initial_setup ) {
 			add_submenu_page( $main_menu, __( 'Auth0 for WordPress - Setup Wizard', 'wp-auth0' ), __( 'Setup Wizard', 'wp-auth0' ), 'manage_options', 'wpa0-setup', array( $this->initial_setup, 'render_setup_page' ) );
