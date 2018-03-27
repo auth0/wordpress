@@ -86,9 +86,9 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 				echo "<p>$amplificator_subtitle</p>";
 			}
 
-			wp_enqueue_style( 'auth0-aplificator-css', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/css/amplificator.css' );
+			wp_enqueue_style( 'auth0-aplificator-css', WPA0_PLUGIN_CSS_URL . 'amplificator.css' );
 
-			wp_register_script( 'auth0-aplificator-js', trailingslashit( plugin_dir_url( WPA0_PLUGIN_FILE ) ) . 'assets/js/amplificator.js' );
+			wp_register_script( 'auth0-aplificator-js', WPA0_PLUGIN_JS_URL . 'amplificator.js' );
 			wp_localize_script( 'auth0-aplificator-js', 'auth0_ajax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 			wp_enqueue_script( 'auth0-aplificator-js' );
 

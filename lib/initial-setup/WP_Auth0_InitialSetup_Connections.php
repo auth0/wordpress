@@ -59,7 +59,7 @@ class WP_Auth0_InitialSetup_Connections {
   }
 
   public function render( $step ) {
-    wp_enqueue_script( 'wpa0_async', WPA0_PLUGIN_URL . 'assets/lib/async.min.js' );
+    wp_enqueue_script( 'wpa0_async', WPA0_PLUGIN_LIB_URL . 'async.min.js' );
 
     $social_connections = array();
 
