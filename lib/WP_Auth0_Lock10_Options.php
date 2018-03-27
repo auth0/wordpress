@@ -101,7 +101,7 @@ class WP_Auth0_Lock10_Options {
 
     $stateObj = array(
       'interim' => ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ),
-      'nonce' => WP_Auth0_State_Handler::getInstance()->get()
+      'nonce' => WP_Auth0_Nonce_Handler::getInstance()->get()
     );
 
     if ( !empty( $redirect_to ) ) {
@@ -110,8 +110,6 @@ class WP_Auth0_Lock10_Options {
     elseif ( isset( $_GET['redirect_to'] ) ) {
       $stateObj["redirect_to"] = addslashes( $_GET['redirect_to'] );
     }
-
-    $stateObj["state"] = 'nonce';
 
     return base64_encode( json_encode( $stateObj ) );
   }
@@ -214,7 +212,7 @@ class WP_Auth0_Lock10_Options {
 
     unset( $options["authParams"] );
     $options["state"] = $this->get_state_obj( $redirect_to );
-    $options["nonce"] = 'nonce';
+    $options["nonce"] = WP_Auth0_Nonce_Handler::getInstance()->get();
 
     return $options;
   }

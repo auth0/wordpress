@@ -28,7 +28,7 @@ if ( empty( $title ) ) {
   $title = "Sign In";
 }
 
-$options = json_encode( $lock_options->get_lock_options() );
+$options = $lock_options->get_lock_options();
 
 ?>
 
@@ -59,11 +59,18 @@ $options = json_encode( $lock_options->get_lock_options() );
 
 <script type="text/javascript">
 var ignore_sso = false;
+
+document.cookie = '<?php
+  echo WPA0_STATE_COOKIE_NAME ?>=<?php
+  echo $options['auth']['params']['state'] ?>;max-age=<?php
+  echo WP_Auth0_Nonce_Handler::COOKIE_EXPIRES ?>;path=/';
+
+
 document.addEventListener("DOMContentLoaded", function() {
 
     var callback = null;
 
-    var options = <?php echo $options; ?>;
+    var options = <?php echo json_encode( $options ); ?>;
 
     options.additionalSignUpFields = <?php echo $lock_options->get_custom_signup_fields(); ?>;
     <?php if ( $lock_options->get_auth0_implicit_workflow() ) { ?>
