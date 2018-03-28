@@ -133,14 +133,6 @@ class WP_Auth0_Lock10_Options {
       $options_obj['language'] = $settings['language'];
     }
 
-   if ( isset( $settings['wpml_support'] ) && $settings['wpml_support'] == '0' ) {
-      $options_obj['wpml_support'] = null;
-   }
-
-   if ( isset( $settings['wpml_support'] ) && $settings['wpml_support'] == '1' ) {
-	$options_obj['language'] =  apply_filters( 'wpml_current_language', NULL );
-   }
-
     if (isset($settings['language_dictionary']) && !empty($settings['language_dictionary'])) {
       $options_obj['languageDictionary'] = json_decode($settings['language_dictionary'], true);
     }
