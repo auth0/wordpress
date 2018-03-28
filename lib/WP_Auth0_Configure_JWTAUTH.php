@@ -9,7 +9,6 @@ class WP_Auth0_Configure_JWTAUTH {
 	}
 
 	public function init() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
 		add_action( 'admin_action_wpauth0_configure_jwt', array( $this, 'setupjwt' ) );
 		add_action( 'plugins_loaded', array( $this, 'check_jwt_auth' ) );
 	}
@@ -32,14 +31,15 @@ class WP_Auth0_Configure_JWTAUTH {
 		<?php
 	}
 
+	// TODO: Deprecate
 	public function admin_enqueue() {
 		if ( ! isset( $_REQUEST['page'] ) || 'wpa0-jwt-auth' !== $_REQUEST['page'] ) {
 			return;
 		}
 		wp_enqueue_media();
-		wp_enqueue_style( 'wpa0_bootstrap', WPA0_PLUGIN_BS_URL . 'css/bootstrap.min.css', FALSE, '3.3.5' );
-		wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_BS_URL . 'js/bootstrap.min.js', array( 'jquery' ), '3.3.6' );
-		wp_enqueue_style( 'wpa0_admin_initial_settup', WPA0_PLUGIN_CSS_URL . 'initial-setup.css' );
+		wp_enqueue_style( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/css/bootstrap.min.css' );
+		wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/js/bootstrap.min.js' );
+		wp_enqueue_style( 'wpa0_admin_initial_settup', WPA0_PLUGIN_URL . 'assets/css/initial-setup.css' );
 		wp_enqueue_style( 'media' );
 	}
 
