@@ -156,7 +156,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'requires_verified_email' => true,
 			'wordpress_login_enabled' => true,
 			'primary_color' => '',
-
+			'wpml_support' => false,
 			'language' => '',
 			'language_dictionary' => '',
 

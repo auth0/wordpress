@@ -144,7 +144,12 @@ class WP_Auth0_Lock_Options {
 			$options_obj['dict'] = $settings['language'];
 		}
 
-		
+		if ( $this->_is_valid( $settings, 'wpml_support' ) ) {
+                        $options_obj['wpml_support'] = $this->_get_boolean( $settings['wpml_support'] );
+			if ($options_obj['wpml_support'] == true)
+				$options_obj['dict'] =  apply_filters( 'wpml_current_language', NULL );
+                }
+
 		if ( $this->_is_valid( $settings, 'social_big_buttons' ) ) {
 			$options_obj['socialBigButtons'] = $this->_get_boolean( $settings['social_big_buttons'] );
 		}
