@@ -98,7 +98,6 @@ class WP_Auth0 {
 		$auth0_admin->init();
 
 		$error_log = new WP_Auth0_ErrorLog();
-		$error_log->init();
 
 		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH( $this->a0_options );
 		$configure_jwt_auth->init();

@@ -65,27 +65,41 @@ class WP_Auth0_Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ), 1 );
 	}
 
+	/**
+	 * Enqueue scripts for all Auth0 wp-admin pages
+	 */
 	public function admin_enqueue() {
-		if ( ! isset( $_REQUEST['page'] ) || 'wpa0' !== $_REQUEST['page'] ) {
+		$wpa0_pages = [ 'wpa0', 'wpa0-errors', 'wpa0-users-export', 'wpa0-import-settings', 'wpa0-setup' ];
+		$wpa0_curr_page = ! empty( $_REQUEST['page'] ) ? $_REQUEST['page'] : '';
+		if ( ! in_array( $wpa0_curr_page, $wpa0_pages )  ) {
 			return;
 		}
 
 		if ( ! WP_Auth0::ready() ) {
 			add_action( 'admin_notices', array( $this, 'create_account_message' ) );
 		}
-
-		wp_enqueue_media();
-		wp_enqueue_script( 'wpa0_admin', WPA0_PLUGIN_JS_URL . 'admin.js', array( 'jquery' ), WPA0_VERSION );
-		wp_enqueue_script( 'wpa0_async', WPA0_PLUGIN_LIB_URL . 'async.min.js', FALSE, WPA0_VERSION );
-		wp_enqueue_style( 'wpa0_bootstrap', WPA0_PLUGIN_BS_URL . 'css/bootstrap.min.css', FALSE, '3.3.5' );
-		wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_BS_URL . 'js/bootstrap.min.js', array( 'jquery' ), '3.3.6' );
-		wp_enqueue_style( 'wpa0_admin_initial_settup', WPA0_PLUGIN_CSS_URL . 'initial-setup.css', FALSE, WPA0_VERSION );
-		wp_enqueue_style( 'media' );
-
-		wp_localize_script( 'wpa0_admin', 'wpa0', array(
+		
+		if ( 'wpa0' === $wpa0_curr_page ) {
+			wp_enqueue_script( 'wpa0_admin', WPA0_PLUGIN_JS_URL . 'admin.js', array( 'jquery' ), WPA0_VERSION );
+			wp_localize_script( 'wpa0_admin', 'wpa0', array(
 				'media_title' => __( 'Choose your icon', 'wp-auth0' ),
 				'media_button' => __( 'Choose icon', 'wp-auth0' ),
 			) );
+
+			wp_enqueue_script( 'wpa0_async', WPA0_PLUGIN_LIB_URL . 'async.min.js', FALSE, WPA0_VERSION );
+		}
+
+		wp_enqueue_media();
+		wp_enqueue_style( 'wpa0_bootstrap', WPA0_PLUGIN_BS_URL . 'css/bootstrap.min.css', FALSE, '3.3.5' );
+		wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_BS_URL . 'js/bootstrap.min.js', array( 'jquery' ), '3.3.6' );
+		wp_enqueue_style( 'wpa0_admin_initial_settup', WPA0_PLUGIN_CSS_URL . 'initial-setup.css', FALSE, WPA0_VERSION );
+
+		if ( 'wpa0-setup' === $wpa0_curr_page && isset( $_REQUEST['signup'] ) ) {
+			$cdn_url = $this->a0_options->get( 'cdn_url' );
+			wp_enqueue_script( 'wpa0_lock', $cdn_url, array( 'jquery' ) );
+		}
+
+		wp_enqueue_style( 'media' );
 	}
 
 	// TODO: Deprecate, not used
