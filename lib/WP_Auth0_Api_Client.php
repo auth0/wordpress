@@ -51,12 +51,8 @@ class WP_Auth0_Api_Client {
 				'client_secret_encoded' => $a0_options->get( 'client_secret_b64_encoded' ),
 				'connection' => $a0_options->get( 'db_connection_name' ),
 				'app_token' => $a0_options->get( 'auth0_app_token' ),
-				'audience' => $a0_options->get( 'api_audience' ),
+				'audience' => self::get_endpoint( 'api/v2/' ),
 			);
-
-			if ( empty( self::$connect_info[ 'audience' ] ) ) {
-				self::$connect_info[ 'audience' ] = self::get_endpoint( 'api/v2/' );
-			}
 		}
 
 		if ( empty( $opt ) ) {
