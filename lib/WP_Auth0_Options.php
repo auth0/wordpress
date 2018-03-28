@@ -135,7 +135,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	/**
-	 * Get as a string-separated string and parse to array
+	 * Get lock_connections as an array of strings
 	 *
 	 * @return array
 	 */
@@ -148,14 +148,14 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	/**
 	 * Add a new connection to the lock_connections setting
 	 *
-	 * @param string $add_conn - connection name to add
+	 * @param string $connection - connection name to add
 	 */
-	public function add_lock_connection( $add_conn ) {
+	public function add_lock_connection( $connection ) {
 		$connections = $this->get_lock_connections();
 
 		// Add if it doesn't exist already
-		if ( ! array_key_exists( $add_conn, $connections ) ) {
-			$connections[] = $add_conn;
+		if ( ! array_key_exists( $connection, $connections ) ) {
+			$connections[] = $connection;
 			$connections = implode( ',', $connections );
 			$this->set( 'lock_connections', $connections );
 		}
@@ -178,7 +178,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'amplificator_title' => '',
 			'amplificator_subtitle' => '',
 			'connections' => array(),
-			'auth0js-cdn' => '//cdn.auth0.com/js/auth0/9.1/auth0.min.js',
+			'auth0js-cdn' => 'https://cdn.auth0.com/js/auth0/9.1/auth0.min.js',
 
 			// Basic
 			'domain' => '',
@@ -220,9 +220,9 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'passwordless_enabled' => false,
 			'passwordless_method' => 'magiclink',
 			'force_https_callback' => false,
-			'cdn_url' => '//cdn.auth0.com/js/lock/11.1/lock.min.js',
-			'cdn_url_legacy' => '//cdn.auth0.com/js/lock-9.2.min.js',
-			'passwordless_cdn_url' => '//cdn.auth0.com/js/lock-passwordless-2.2.min.js',
+			'cdn_url' => 'https://cdn.auth0.com/js/lock/11.1/lock.min.js',
+			'cdn_url_legacy' => 'https://cdn.auth0.com/js/lock-9.2.min.js',
+			'passwordless_cdn_url' => 'https://cdn.auth0.com/js/lock-passwordless-2.2.min.js',
 			'lock_connections' => '',
 			'link_auth0_users' => null,
 			'auto_provisioning' => false,
