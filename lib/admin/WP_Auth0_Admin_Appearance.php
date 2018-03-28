@@ -175,17 +175,19 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	}
 
 	public function render_wpml_support() {
-		$v = absint( $this->options->get( 'wpml_support' ) );
+		if ( function_exists('icl_object_id') ) { 
+			$v = absint( $this->options->get( 'wpml_support' ) );
 
-		echo $this->render_a0_switch( "wpa0_wpml_support", "wpml_support", 1, 1 == $v );
-		?>
+			echo $this->render_a0_switch( "wpa0_wpml_support", "wpml_support", 1, 1 == $v );
+			?>
 
-      <div class="subelement">
-        <span class="description">
-          <?php echo __( 'Override the Lock Language by the current langugage of wpml in frontend', 'wp-auth0' ); ?>
-	</span>
-      </div>
-    <?php
+	      <div class="subelement">
+		<span class="description">
+		  <?php echo __( 'Override the Lock Language by the current langugage of wpml in frontend', 'wp-auth0' ); ?>
+		</span>
+	      </div>
+	    <?php
+		}
 	}
 
 
