@@ -187,10 +187,6 @@ class WP_Auth0_DBManager {
 				$options->set( 'auth0js-cdn', '//cdn.auth0.com/js/auth0/9.1/auth0.min.js' );
 			}
 
-			// Add API audience
-
-			$options->set( 'api_audience', 'https://' . $options->get( 'domain' ) . '/api/v2/' );
-
 			// Update app type and client grant
 
 			$client_grant_created = FALSE;
