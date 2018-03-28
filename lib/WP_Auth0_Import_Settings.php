@@ -18,15 +18,10 @@ class WP_Auth0_Import_Settings {
 	}
 
 	public function show_error() {
-?>
-		<div id="message" class="error">
-			<p>
-				<strong>
-					<?php echo $_REQUEST['error']; ?>
-				</strong>
-			</p>
-		</div>
-		<?php
+		printf(
+			'<div class="notice notice-error"><p><strong>%s</strong></p></div>',
+			sanitize_text_field( $_REQUEST['error'] )
+		);
 	}
 
 	public function render_import_settings_page() {
