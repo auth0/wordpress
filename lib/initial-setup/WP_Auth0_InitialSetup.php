@@ -37,15 +37,6 @@ class WP_Auth0_InitialSetup {
 				add_action( 'admin_notices', array( $this, 'notify_error' ) );
 			}
 		}
-		if ( ! isset( $_REQUEST['page'] ) || 'wpa0-setup' !== $_REQUEST['page'] ) {
-			$client_id = $this->a0_options->get( 'client_id' );
-			$client_secret = $this->a0_options->get( 'client_secret' );
-			$domain = $this->a0_options->get( 'domain' );
-
-			if ( ( ! $client_id ) || ( ! $client_secret ) || ( ! $domain ) ) {
-				add_action( 'admin_notices', array( $this, 'notify_setup' ) );
-			}
-		}
 
 		if ( isset( $_REQUEST['error'] ) && 'cant_create_client' == $_REQUEST['error'] ) {
 			add_action( 'admin_notices', array( $this, 'cant_create_client_message' ) );
@@ -87,20 +78,13 @@ class WP_Auth0_InitialSetup {
 		wp_enqueue_style( 'media' );
 	}
 
+	// TODO: Deprecate
 	public function notify_setup() {
-?>
-  		<div class="update-nag">
-        Auth0 for WordPress is not yet configured. Click <a href="<?php echo admin_url( 'admin.php?page=wpa0-setup' ); ?>">HERE</a> to configure the Auth0 for WordPress plugin using the Quick Setup Wizard.
-  		</div>
-  		<?php
+		// Not used
 	}
 
 	public function notify_error() {
-?>
-  		<div class="error">
-        <?php echo $_REQUEST['error']; ?>
-  		</div>
-  		<?php
+		printf( '<div class="notice notice-error">%s</div>', strip_tags( $_REQUEST['error'] ) );
 	}
 
 	public function render_setup_page() {
@@ -199,7 +183,6 @@ class WP_Auth0_InitialSetup {
 	}
 
 	public function rejected_message() {
-		$domain = $this->a0_options->get( 'domain' );
 ?>
       <div id="message" class="error">
         <p>
@@ -210,10 +193,10 @@ class WP_Auth0_InitialSetup {
       </div>
       <?php
 	}
+
 	public function access_denied() {
-		$domain = $this->a0_options->get( 'domain' );
 ?>
-  		<div id="message" class="error">
+  		<div class="notice notice-error">
   			<p>
   				<strong>
   					<?php echo __( 'Please create your Auth0 account first at ', 'wp-auth0' ); ?>
