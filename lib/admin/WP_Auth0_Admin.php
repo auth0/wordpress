@@ -70,15 +70,9 @@ class WP_Auth0_Admin {
 			return;
 		}
 
-		$client_id = $this->a0_options->get( 'client_id' );
-		$secret = $this->a0_options->get( 'client_secret' );
-		$domain = $this->a0_options->get( 'domain' );
-
-		if ( empty( $client_id ) || empty( $secret ) || empty( $domain ) ) {
+		if ( ! WP_Auth0::ready() ) {
 			add_action( 'admin_notices', array( $this, 'create_account_message' ) );
 		}
-
-		$this->validate_required_api_scopes();
 
 		wp_enqueue_media();
 		wp_enqueue_script( 'wpa0_admin', WPA0_PLUGIN_URL . 'assets/js/admin.js' );
@@ -94,25 +88,9 @@ class WP_Auth0_Admin {
 			) );
 	}
 
-	protected function validate_required_api_scopes() {
-		$app_token = $this->a0_options->get( 'auth0_app_token' );
-		if ( ! $app_token ) {
-			add_action( 'admin_notices', array( $this, 'cant_connect_to_auth0' ) );
-		}
-	}
-
+	// TODO: Deprecate, not used
 	public function cant_connect_to_auth0() {
-?>
-		<div id="message" class="error">
-			<p>
-				<strong>
-					<?php echo __( 'The current user is not authorized to manage the Auth0 account. You must be both a WordPress site administrator and a user known to Auth0 to control Auth0 from this settings page. Please see the', 'wp-auth0' ); ?>
-					<a href="https://auth0.com/docs/cms/wordpress/troubleshoot#the-settings-page-shows-me-this-warning-the-current-user-is-not-authorized-to-manage-the-auth0-account-"><?php echo __( 'documentation', 'wp-auth0' ); ?></a>
-					<?php echo __( 'for more information.', 'wp-auth0' ); ?>
-				</strong>
-			</p>
-		</div>
-		<?php
+		// Not used
 	}
 
 	public function init_admin() {
@@ -154,18 +132,20 @@ class WP_Auth0_Admin {
 		return $input;
 	}
 
+	/**
+	 * Show a message on all Auth0 admin pages when the plugin is not ready to process logins
+	 */
 	public function create_account_message() {
-?>
-		<div id="message" class="updated">
-			<p>
-				<strong>
-					<?php echo __( 'In order to use this plugin, you need to first', 'wp-auth0' ); ?>
-					<a target="_blank" href="https://manage.auth0.com/#/applications"><?php echo __( 'create an application', 'wp-auth0' ); ?></a>
-					<?php echo __( ' on Auth0 and copy the information here.', 'wp-auth0' ); ?>
-				</strong>
-			</p>
-		</div>
-		<?php
+		printf(
+			'<div class="update-nag">%s<strong><a href="%s">%s</a></strong>%s
+			<strong><a href="https://auth0.com/docs/cms/wordpress/installation#manual-setup" target="_blank">
+			%s</a></strong>.</div>',
+			__( 'Login by Auth0 is not yet configured. Please use the ', 'wp-auth0' ),
+			admin_url( 'admin.php?page=wpa0-setup' ),
+			__( 'Setup Wizard', 'wp-auth0' ),
+			__( ' or follow the ', 'wp-auth0' ),
+			__( 'Manual setup instructions', 'wp-auth0' )
+		);
 	}
 
 	protected function get_social_connection( $provider, $name, $icon ) {
