@@ -191,7 +191,6 @@ class WP_Auth0_LoginManager {
   public function redirect_login() {
 
     $domain = $this->a0_options->get( 'domain' );
-
     $client_id = $this->a0_options->get( 'client_id' );
     $client_secret = $this->a0_options->get( 'client_secret' );
 
@@ -243,30 +242,29 @@ class WP_Auth0_LoginManager {
 
     // Attempt to authenticate with the Management API
     $client_credentials_token = WP_Auth0_Api_Client::get_client_token();
-    $userinfo_resp = null;
+    $userinfo_resp_code = $userinfo_resp_body = null;
 
     if ( $client_credentials_token ) {
-
-        $userinfo_resp = WP_Auth0_Api_Client::get_user(
-            $this->a0_options->get( 'domain' ),
-            $client_credentials_token,
-            $decoded_token->sub
-        );
+      $userinfo_resp = WP_Auth0_Api_Client::get_user( $domain, $client_credentials_token, $decoded_token->sub );
+      $userinfo_resp_code = (int) wp_remote_retrieve_response_code( $userinfo_resp );
+      $userinfo_resp_body = wp_remote_retrieve_body( $userinfo_resp );
     }
 
-    $userinfo_resp_code = (int) wp_remote_retrieve_response_code( $userinfo_resp );
-    $userinfo_resp_body = wp_remote_retrieve_body( $userinfo_resp );
-
-    // Management API call failed
+    // Management API call failed, fallback to userinfo
     if ( 200 !== $userinfo_resp_code || empty( $userinfo_resp_body ) ) {
 
-      // TODO: fallback to /userinfo with access token
+      $userinfo_resp = WP_Auth0_Api_Client::get_user_info( $domain, $data->access_token );
+      $userinfo_resp_code = (int) wp_remote_retrieve_response_code( $userinfo_resp );
+      $userinfo_resp_body = wp_remote_retrieve_body( $userinfo_resp );
 
-      WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' => WP_Auth0_Api_Client::get_user()', $userinfo_resp );
-      throw new WP_Auth0_LoginFlowValidationException(
-        __( 'Error getting user information', 'wp-auth0' ),
-        $userinfo_resp_code
-      );
+      if ( 200 !== $userinfo_resp_code || empty( $userinfo_resp_body ) ) {
+
+        WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' L:' . __LINE__, $userinfo_resp );
+        throw new WP_Auth0_LoginFlowValidationException(
+          __( 'Error getting user information', 'wp-auth0' ),
+          $userinfo_resp_code
+        );
+      }
     }
 
     $userinfo = json_decode( $userinfo_resp_body );

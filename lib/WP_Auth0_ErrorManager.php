@@ -19,9 +19,12 @@ class WP_Auth0_ErrorManager {
 		} elseif ( $error instanceof Exception ) {
 			$code = $error->getCode();
 			$message = $error->getMessage();
+		} elseif ( is_array( $error ) && ! empty( $error['response'] ) ) {
+			$code = ! empty( $error['response']['code'] ) ? $error['response']['code'] : 'N/A';
+			$message = ! empty( $error['response']['message'] ) ? $error['response']['message'] : 'N/A';
 		} else {
 			$code = 'N/A';
-			$message = $error;
+			$message = is_object( $error ) || is_array( $error ) ? serialize( $error ) : $error;
 		}
 
 		$log = get_option( 'auth0_error_log' );
