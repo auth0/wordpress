@@ -32,8 +32,9 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 				array( 'id' => 'wpa0_custom_css', 'name' => 'Customize the Login Widget CSS', 'function' => 'render_custom_css' ),
 				array( 'id' => 'wpa0_custom_js', 'name' => 'Customize the Login Widget with custom JS', 'function' => 'render_custom_js' ),
 				array( 'id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style' ),
-        array( 'id' => 'wpa0_primary_color', 'name' => 'Lock primary color', 'function' => 'render_primary_color' ),
-        array( 'id' => 'wpa0_language', 'name' => 'Lock Language', 'function' => 'render_language' ),
+				array( 'id' => 'wpa0_primary_color', 'name' => 'Lock primary color', 'function' => 'render_primary_color' ),
+				array( 'id' => 'wpa0_language', 'name' => 'Lock Language', 'function' => 'render_language' ),
+			        array( 'id' => 'wpa0_wpml_support', 'name' => 'Support WPML', 'function' => 'render_wpml_support'),
 				array( 'id' => 'wpa0_language_dictionary', 'name' => 'Lock Language Dictionary', 'function' => 'render_language_dictionary' ),
 
 			) );
@@ -164,6 +165,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$input['icon_url'] = esc_url( $input['icon_url'], array( 'http', 'https' ) );
 		$input['social_big_buttons'] = ( isset( $input['social_big_buttons'] ) ? $input['social_big_buttons'] : 0 );
 		$input['gravatar'] = ( isset( $input['gravatar'] ) ? $input['gravatar'] : 0 );
+		$input['wpml_support'] = ( isset( $input['wpml_support'] ) ? $input['wpml_support'] : 0 );
     $input['language'] = sanitize_text_field( $input['language'] );
     $input['primary_color'] = sanitize_text_field( $input['primary_color'] );
 
@@ -183,6 +185,22 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		// }
 
 		return $input;
+	}
+
+	public function render_wpml_support() {
+		if ( function_exists('icl_object_id') ) { 
+			$v = absint( $this->options->get( 'wpml_support' ) );
+
+			echo $this->render_a0_switch( "wpa0_wpml_support", "wpml_support", 1, 1 == $v );
+			?>
+
+	      <div class="subelement">
+		<span class="description">
+		  <?php echo __( 'Override the Lock Language by the current langugage of wpml in frontend', 'wp-auth0' ); ?>
+		</span>
+	      </div>
+	    <?php
+		}
 	}
 
 

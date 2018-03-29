@@ -142,7 +142,6 @@ class WP_Auth0_Lock_Options {
 			$options_obj['dict'] = $settings['language'];
 		}
 
-		
 		if ( $this->_is_valid( $settings, 'social_big_buttons' ) ) {
 			$options_obj['socialBigButtons'] = $this->_get_boolean( $settings['social_big_buttons'] );
 		}

@@ -213,6 +213,10 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'language' => '',
 			'language_dictionary' => '',
 
+      //WPML
+      'wpml_support' => false,
+
+      
 			// Advanced
 			'requires_verified_email' => true,
 			'remember_users_session' => false,
