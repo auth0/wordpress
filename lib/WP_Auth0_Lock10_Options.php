@@ -99,21 +99,17 @@ class WP_Auth0_Lock10_Options {
 
   public function get_state_obj( $redirect_to = null ) {
 
-    if ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ) {
-      $interim_login = true;
-    } else {
-      $interim_login = false;
-    }
+    $stateObj = array(
+      'interim' => ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ),
+      'nonce' => WP_Auth0_Nonce_Handler::getInstance()->get()
+    );
 
-    $stateObj = array( "interim" => $interim_login, "uuid" =>uniqid() );
     if ( !empty( $redirect_to ) ) {
       $stateObj["redirect_to"] = addslashes( $redirect_to );
     }
     elseif ( isset( $_GET['redirect_to'] ) ) {
       $stateObj["redirect_to"] = addslashes( $_GET['redirect_to'] );
     }
-
-    $stateObj["state"] = 'nonce';
 
     return base64_encode( json_encode( $stateObj ) );
   }
@@ -173,7 +169,7 @@ class WP_Auth0_Lock10_Options {
       }
     }
     if ( $this->_is_valid( $settings, 'lock_connections' ) ) {
-      $options_obj['allowedConnections'] = explode( ",", $settings['lock_connections'] );
+      $options_obj['allowedConnections'] = $this->wp_options->get_lock_connections();
     }
     if ( isset( $settings['extra_conf'] ) && trim( $settings['extra_conf'] ) !== '' ) {
       $extra_conf_arr = json_decode( $settings['extra_conf'], true );
@@ -220,7 +216,7 @@ class WP_Auth0_Lock10_Options {
 
     unset( $options["authParams"] );
     $options["state"] = $this->get_state_obj( $redirect_to );
-    $options["nonce"] = 'nonce';
+    $options["nonce"] = WP_Auth0_Nonce_Handler::getInstance()->get();
 
     return $options;
   }

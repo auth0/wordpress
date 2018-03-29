@@ -31,22 +31,15 @@ This plugin gives WordPress a new Login Widget (powered by [Auth0](https://auth0
 
 == Installation ==
 
-Before you start, **make sure the admin user has a valid email that you own**, read the Technical Notes for more information.
-
-1. Install from the WordPress Store or upload the entire `wp-auth0` folder to the `/wp-content/plugins/` directory.
-1. Activate the plugin through the 'Plugins' menu in WordPress.
-1. Create an account in Auth0 (https://auth0.com) and add a new PHP Application. Copy the Client ID, Client Secret and Domain from the Settings of the Application.
-1. On the Settings of the Auth0 application change the Callback URL to be: `http://your-domain/index.php?auth0=1`. Using **TLS/SSL** is **recommended for production**.
-1. Go back to WordPress `Settings` - `Auth0 Settings` edit the *Domain*, *Client ID* and *Client Secret* with the ones you copied from Auth0 Dashboard.
+Please see the Auth0 Docs site for [complete installation and configuration instructions](https://auth0.com/docs/cms/wordpress/installation).
 
 == Screenshots ==
 
 1. The new login page on WordPress
-2. The admin to configure the plugin
-3. The new plugin quick setup
-4. Get info about the supported enterprise connections
-5. Set up the Auth0 widgets
-6. Your home page with the login widget enabled
+2. Twenty Seventeen theme with login widget
+3. The admin to configure the plugin
+4. Set up Enterprise connections
+5. Set up the Auth0 widget
 
 == Technical Notes ==
 
@@ -61,10 +54,6 @@ Auth0 allows multiple authentication providers. You can have social providers li
 If the email was not verified and there is an account with that email in WordPress, the user will be presented with a page saying that the email was not verified and a link to "Re-send the verification email".
 
 For both scenarios you may configure in the WP admin whether is mandatory that the user has a verified email or not.
-
-= Accessing Profile Information =
-
-WordPress defines a function called `wp_get_current_user` to populate the global variable `current_user` with the logged in WP_User. Similarly we define `get_currentauth0userinfo` that populates `current_user` and `currentauth0_user` with the information of the [Normalized profile](https://docs.auth0.com/user-profile)
 
 = Enabling dual (Auth0 and WordPress) login =
 
@@ -102,21 +91,13 @@ All the details about the parameters on the lock wiki (https://github.com/auth0/
 
 == Frequently Asked Questions ==
 
-= Is this plugin compatible with WooCommerce? =
-
-Yes, this plugin will override the default WooCommerce login forms with the Lock widget.
-
-= What should I do if I end up with two accounts for the same user? =
-
-Under some situations, you may end up with a user with two accounts. WordPress allows you to do merge users. You just delete one of the accounts and then attribute its contents to the user you want to merge with. Go to Users, select the account you want to delete, and in the confirmation dialog select another user to transfer the content.
-
-= Can I customize the Login Widget? =
+= Can I customize the Auth0 login form? =
 
 You can style the login form by adding your css on the "Customize the Login Widget CSS" Auth0 setting and the widget settings
 
     form a.a0-btn-small { background-color: red !important; }
 
-The Login Widget is Open Source. For more information about it: https://github.com/auth0/lock
+The Auth0 login form is called Lock and it's [open source on GitHub](https://github.com/auth0/lock).
 
 = Can I access the user profile information? =
 
@@ -124,33 +105,28 @@ The Auth0 plugin transparently handles login information for your WordPress site
 
 = When I install this plugin, will existing users still be able to login? =
 
-Yes. Read more about the requirements for that to happen in the Technical Notes.
+Yes, either allowing the WordPress login form to be displayed or by migrating existing users. See the **Technical Notes** section above.
 
 = What authentication providers do you support? =
 
-For a complete list look at https://docs.auth0.com/identityproviders
-
-= "This account does not have an email associated..." =
-
-If you get this error, make sure you are requesting the Email attribute from each provider in the Auth0 Dashboard under Connections -> Social (expand each provider). Take into account that not all providers return Email addresses for users (e.g. Twitter). If this happens, you can always add an Email address to any logged in user through the Auth0 Dashboard (or API). See Users -> Edit.
-
-= The form_title setting is ignored when I set up the dict setting =
-
-Internally, the plugin uses the dict setting to change the Auth0 widget title. When you set up the dict field it overrides the form_title one.
-
-To change the form_title in this case, you need to add the following attribute to the dict json:
-
-      {
-        signin:{
-            title: "The desired form title"
-        }
-      }
+See our [complete list of supported social and enterprise authentication providers](https://auth0.com/docs/identityproviders).
 
 = How can I set up the settings that are not provided in the settings page? =
 
-We added a new field called "Extra settings" that allows you to add a json object with all the settings you want to configure.
+We added a new field called "Extra settings" that allows you to add a JSON object with all the settings you want to configure. For more information on what else can be configured, see the [Lock customization section in GitHub](https://github.com/auth0/lock#customization).
 
-Have in mind that all the "Extra settings" that we allow to set up in the plugin settings page will be overridden.
+= Is this plugin compatible with WooCommerce? =
+
+Yes, this plugin will override the default WooCommerce login forms with the Auth0 login form.
+
+= My question is not covered here; what do I do? =
+
+All is not lost!
+
+* If you're setting up the plugin for the first time or having issues with users logging in, please review the [configuration](https://auth0.com/docs/cms/wordpress/configuration) and [troubleshooting](https://auth0.com/docs/cms/wordpress/troubleshoot) pages at [auth0.com/docs](https://auth0.com/docs/cms/wordpress/).
+* If you found a bug in the plugin code [submit an issue](https://github.com/auth0/wp-auth0/issues) or [create a pull request](https://github.com/auth0/wp-auth0/pulls) on [GitHub](https://github.com/auth0/wp-auth0/).
+* If you have questions about how to use Auth0 or the plugin, please [post on our community site](https://community.auth0.com/) or create a [support forum request here](https://wordpress.org/support/plugin/auth0).
+* You can also see additional documentation and answers on our [support site](https://support.auth0.com/). Customers on a paid Auth0 plan can [submit a trouble ticket](https://support.auth0.com/tickets) for a fast response.
 
 == Changelog ==
 

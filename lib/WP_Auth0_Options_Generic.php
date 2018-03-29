@@ -1,16 +1,16 @@
 <?php
 
 class WP_Auth0_Options_Generic {
-	protected $options_name = '';
+	protected $_options_name = '';
 	private $_opt = null;
 
 	public function get_options_name() {
-		return $this->options_name;
+		return $this->_options_name;
 	}
 
 	public function get_options() {
 		if ( empty( $this->_opt ) ) {
-			$options = get_option( $this->options_name, array() );
+			$options = get_option( $this->_options_name, array() );
 
 			if ( !is_array( $options ) )
 				$options = $this->defaults();
@@ -36,20 +36,20 @@ class WP_Auth0_Options_Generic {
 		$this->_opt = $options;
 
 		if ( $should_update ) {
-			update_option( $this->options_name, $options );
+			update_option( $this->_options_name, $options );
 		}
 	}
 
 	public function update_all() {
-		update_option( $this->options_name, $this->_opt );
+		update_option( $this->_options_name, $this->_opt );
 	}
 
 	public function save() {
 		$options = $this->get_options();
-		update_option( $this->options_name, $options );
+		update_option( $this->_options_name, $options );
 	}
 	public function delete() {
-		delete_option( $this->options_name );
+		delete_option( $this->_options_name );
 	}
 
 	protected function defaults() {

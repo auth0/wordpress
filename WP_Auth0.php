@@ -13,6 +13,7 @@ define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 define( 'AUTH0_DB_VERSION', 17 );
 define( 'WPA0_VERSION', '3.5.2' );
 define( 'WPA0_CACHE_GROUP', 'wp_auth0' );
+define( 'WPA0_STATE_COOKIE_NAME', 'auth0_state' );
 
 /**
  * Main plugin class
@@ -122,6 +123,19 @@ class WP_Auth0 {
 
 		WP_Auth0_Email_Verification::init();
 	}
+
+  /**
+   * Is the Auth0 plugin ready to process logins?
+   *
+   * @return bool
+   */
+  public static function ready() {
+    $options = WP_Auth0_Options::Instance();
+    if ( ! $options->get( 'domain' ) || ! $options->get( 'client_id' ) || ! $options->get( 'client_secret' ) ) {
+      return FALSE;
+    }
+    return TRUE;
+  }
 
 	/**
 	 * Checks it it should update the database connection no enable or disable signups and create or delete
@@ -240,10 +254,13 @@ class WP_Auth0 {
 	}
 
 	public function a0_register_query_vars( $qvars ) {
+		$qvars[] = 'error';
 		$qvars[] = 'error_description';
 		$qvars[] = 'a0_action';
 		$qvars[] = 'auth0';
+		$qvars[] = 'state';
 		$qvars[] = 'code';
+		$qvars[] = 'state';
 		return $qvars;
 	}
 
