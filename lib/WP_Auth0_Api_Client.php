@@ -260,17 +260,17 @@ class WP_Auth0_Api_Client {
 		return ! empty( $response->access_token ) ? $response->access_token : '';
 	}
 
+	/**
+	 * @param string $domain - tenant domain
+	 * @param string $access_token - access token with at least `openid` scope
+	 *
+	 * @return array|WP_Error
+	 */
 	public static function get_user_info( $domain, $access_token ) {
-
-		$endpoint = "https://$domain/";
-
-		$headers = self::get_info_headers();
-		$headers['Authorization'] = "Bearer $access_token";
-
-		return wp_remote_get( $endpoint . 'userinfo/' , array(
-				'headers' => $headers,
-			) );
-
+		return wp_remote_get(
+			self::get_endpoint( 'userinfo', $domain ),
+			array( 'headers' => self::get_headers( $access_token ) )
+		);
 	}
 
 	public static function search_users( $domain, $jwt, $q = "", $page = 0, $per_page = 100, $include_totals = false, $sort = "user_id:1" ) {

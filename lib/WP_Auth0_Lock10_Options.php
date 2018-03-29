@@ -4,8 +4,8 @@ class WP_Auth0_Lock10_Options {
 
   protected $wp_options;
   protected $extended_settings;
-
   protected $signup_mode = false;
+  protected $_scopes = 'openid email name nickname picture';
 
   public function __construct( $extended_settings = array() ) {
     $this->wp_options = WP_Auth0_Options::Instance();
@@ -187,12 +187,11 @@ class WP_Auth0_Lock10_Options {
   }
 
   public function get_sso_options() {
-    $options["scope"] = "openid email identities ";
+    $options["scope"] = $this->_scopes;
 
     if ( $this->get_auth0_implicit_workflow() ) {
       $options["responseType"] = 'id_token';
       $options["redirectUri"] = $this->get_implicit_callback_url();
-      $options["scope"] .= "name email picture nickname email_verified";
     } else {
       $options["responseType"] = 'code';
       $options["redirectUri"] = $this->get_code_callback_url();
@@ -233,11 +232,10 @@ class WP_Auth0_Lock10_Options {
       ),
     );
 
-    $extraOptions["auth"]["params"]["scope"] = "openid ";
+    $extraOptions["auth"]["params"]["scope"] = apply_filters( 'auth0_auth_param_scopes', $this->_scopes );
 
     if ( $this->get_auth0_implicit_workflow() ) {
-      $extraOptions["auth"]["params"]["scope"] .= "name email picture nickname email_verified";
-      $extraOptions["auth"]["responseType"] = 'token';
+      $extraOptions["auth"]["responseType"] = 'id_token';
       $extraOptions["auth"]["redirectUrl"] = $this->get_implicit_callback_url();
       $extraOptions["autoParseHash"] = false;
     } else {
