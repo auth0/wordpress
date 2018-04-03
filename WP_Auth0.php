@@ -6,6 +6,9 @@
  * Author: Auth0
  * Author URI: https://auth0.com
  */
+define( 'WPA0_VERSION', '3.5.2' );
+define( 'AUTH0_DB_VERSION', 18 );
+
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WPA0_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -14,11 +17,14 @@ define( 'WPA0_PLUGIN_CSS_URL', WPA0_PLUGIN_URL . 'assets/css/' );
 define( 'WPA0_PLUGIN_IMG_URL', WPA0_PLUGIN_URL . 'assets/img/' );
 define( 'WPA0_PLUGIN_LIB_URL', WPA0_PLUGIN_URL . 'assets/lib/' );
 define( 'WPA0_PLUGIN_BS_URL', WPA0_PLUGIN_URL . 'assets/bootstrap/' );
-define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
-define( 'AUTH0_DB_VERSION', 17 );
-define( 'WPA0_VERSION', '3.5.2' );
+
+define( 'WPA0_LOCK_CDN_URL', 'https://cdn.auth0.com/js/lock/11.5/lock.min.js' );
+define( 'WPA0_AUTH0_JS_CDN_URL', 'https://cdn.auth0.com/js/auth0/9.4/auth0.min.js' );
+
 define( 'WPA0_CACHE_GROUP', 'wp_auth0' );
 define( 'WPA0_STATE_COOKIE_NAME', 'auth0_state' );
+
+define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 
 /**
  * Main plugin class

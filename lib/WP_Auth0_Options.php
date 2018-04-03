@@ -178,7 +178,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'amplificator_title' => '',
 			'amplificator_subtitle' => '',
 			'connections' => array(),
-			'auth0js-cdn' => 'https://cdn.auth0.com/js/auth0/9.1/auth0.min.js',
+			'auth0js-cdn' => WPA0_AUTH0_JS_CDN_URL,
 
 			// Basic
 			'domain' => '',
@@ -218,11 +218,10 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'remember_users_session' => false,
 			'default_login_redirection' => home_url(),
 			'passwordless_enabled' => false,
-			'passwordless_method' => 'magiclink',
 			'force_https_callback' => false,
-			'cdn_url' => 'https://cdn.auth0.com/js/lock/11.1/lock.min.js',
+			'cdn_url' => WPA0_LOCK_CDN_URL,
 			'cdn_url_legacy' => 'https://cdn.auth0.com/js/lock-9.2.min.js',
-			'passwordless_cdn_url' => 'https://cdn.auth0.com/js/lock-passwordless-2.2.min.js',
+			'passwordless_cdn_url' => WPA0_LOCK_CDN_URL,
 			'lock_connections' => '',
 			'link_auth0_users' => null,
 			'auto_provisioning' => false,
