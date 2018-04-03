@@ -290,6 +290,56 @@ class WP_Auth0_DBManager {
 			}
 		}
 
+		// 3.6.0
+
+		if ( ( $this->current_db_version < 18 && 0 !== $this->current_db_version ) || 18 === $version_to_install ) {
+
+			// Migrate passwordless_method
+			if ( $options->get( 'passwordless_enabled', FALSE ) ) {
+				$pwl_method = $options->get( 'passwordless_method' );
+				switch ( $pwl_method ) {
+
+					// SMS passwordless just needs 'sms' as a connection
+					case 'sms' :
+						$options->set( 'lock_connections', 'sms' );
+						break;
+
+					// Social + SMS means there are existing social connections we want to keep
+					case 'socialOrSms' :
+						$options->add_lock_connection( 'sms' );
+						break;
+
+					// Email link passwordless just needs 'email' as a connection
+					case 'emailcode' :
+					case 'magiclink' :
+						$options->set( 'lock_connections', 'email' );
+						break;
+
+					// Social + Email means there are social connections be want to keep
+					case 'socialOrMagiclink' :
+					case 'socialOrEmailcode' :
+						$options->add_lock_connection( 'email' );
+						break;
+				}
+
+				// Need to set a special passwordlessMethod flag if using email code
+				if ( in_array( $pwl_method, array( 'emailcode', 'socialOrEmailcode' ) ) ) {
+					$lock_json = trim( $options->get( 'extra_conf' ) );
+					$lock_json_decoded = ! empty( $lock_json ) ? json_decode( $lock_json, TRUE ) : array();
+					$lock_json_decoded[ 'passwordlessMethod' ] = 'code';
+					$options->set( 'extra_conf', json_encode( $lock_json_decoded ) );
+				}
+			}
+
+			// Set passwordless_cdn_url to latest Lock
+			$options->set( 'passwordless_cdn_url', WPA0_LOCK_CDN_URL );
+
+			// Force passwordless_method to delete
+			$update_options = $options->get_options();
+			unset( $update_options[ 'passwordless_method' ] );
+			update_option( $options->get_options_name(), $update_options );
+		}
+
 		$this->current_db_version = AUTH0_DB_VERSION;
 		update_option( 'auth0_db_version', AUTH0_DB_VERSION );
 

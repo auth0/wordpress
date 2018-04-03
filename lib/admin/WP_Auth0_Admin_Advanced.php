@@ -11,7 +11,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     'basic_validation',
     'migration_ws_validation',
     'link_accounts_validation',
-    'connections_validation',
     'loginredirection_validation',
   );
 
@@ -28,7 +27,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $this->router = $router;
     $this->_description = __( 'Settings related to specific scenarios.', 'wp-auth0' );
   }
-
 
   /**
    * All settings in the Advanced tab
@@ -100,6 +98,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $this->init_option_section( '', 'advanced', $options );
   }
 
+  // TODO: Deprecate
   public function render_passwordless_method() {
     $v = $this->options->get( 'passwordless_method' );
 ?>
@@ -224,6 +223,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     <?php
   }
 
+  // TODO: Better description when on - social connections, passwordless setup in the dashboard
   public function render_passwordless_enabled() {
     $v = $this->options->get( 'passwordless_enabled' );
 
@@ -392,13 +392,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_cdn_url() {
-    $passwordless_enabled = $this->options->get( 'passwordless_enabled' );
     $cdn_url = $this->options->get( 'cdn_url' );
-    $passwordless_cdn_url = $this->options->get( 'passwordless_cdn_url' );
 ?>
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[cdn_url]" id="wpa0_cdn_url" value="<?php echo esc_attr( $cdn_url ); ?>" style="<?php echo $passwordless_enabled ? 'display:none' : '' ?>"/>
-
-      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[wpa0_passwordless_cdn_url]" id="wpa0_passwordless_cdn_url" value="<?php echo esc_attr( $passwordless_cdn_url ); ?>" style="<?php echo $passwordless_enabled ? '' : 'display:none' ?>"/>
+      <input type="text" name="<?php echo $this->options->get_options_name(); ?>[cdn_url]" id="wpa0_cdn_url" value="<?php echo esc_attr( $cdn_url ); ?>"/>
 
       <div class="subelement">
         <span class="description"><?php echo __( 'Point this to the latest widget available in the CDN', 'wp-auth0' ); ?></span>
@@ -487,11 +483,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $input['lock_connections'] = trim( $input['lock_connections'] );
     $input['custom_signup_fields'] = trim( $input['custom_signup_fields'] );
 
-    if ( $input['passwordless_enabled'] && empty( $input['lock_connections'] ) && strpos( strtolower( $input['passwordless_method'] ), 'social' ) !== false ) {
-      $error = __( "Please complete the list of connections to be used by Lock in social mode.", "wp-auth0" );
-      self::add_validation_error( $error );
-    }
-
     if ( trim( $input["extra_conf"] ) != '' ) {
       if ( json_decode( $input["extra_conf"] ) === null ) {
         $error = __( "The Extra settings parameter should be a valid json object", "wp-auth0" );
@@ -570,6 +561,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     return $this->rule_validation($old_options, $input, 'link_auth0_users', WP_Auth0_RulesLib::$link_accounts['name'] . '-' . get_auth0_curatedBlogName(), $link_script);
   }
 
+  // TODO: Deprecate
   public function connections_validation( $old_options, $input ) {
 
     $check_if_enabled = array();

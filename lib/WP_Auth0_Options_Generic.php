@@ -22,12 +22,23 @@ class WP_Auth0_Options_Generic {
 		return $this->_opt;
 	}
 
+	/**
+	 * Return a settings value
+	 *
+	 * @param string $key - settings key
+	 * @param null $default - what to return if a value is not set
+	 *
+	 * @return mixed
+	 */
 	public function get( $key, $default = null ) {
 		$options = $this->get_options();
+		$value = $default;
 
-		if ( !isset( $options[$key] ) )
-			return apply_filters( 'wp_auth0_get_option', $default, $key );
-		return apply_filters( 'wp_auth0_get_option', $options[$key], $key );
+		if ( isset( $options[$key] ) ) {
+			$value = $options[$key];
+		}
+
+		return apply_filters( 'wp_auth0_get_option', $value, $key );
 	}
 
 	public function set( $key, $value, $should_update = true ) {
