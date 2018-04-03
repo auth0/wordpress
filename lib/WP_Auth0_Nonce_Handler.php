@@ -123,9 +123,12 @@ final class WP_Auth0_Nonce_Handler {
    *
    * @see https://secure.php.net/manual/en/function.random-bytes.php
    *
+   * @param int $bytes - number of bytes to generate
+   *
    * @return string
    */
-  public function generateNonce() {
-    return function_exists( 'random_bytes' ) ? bin2hex( random_bytes( 32 ) ) : md5( uniqid( rand(), true ) );
+  public function generateNonce( $bytes = 32 ) {
+    $nonce_bytes = function_exists( 'random_bytes' ) ? random_bytes( $bytes ) : openssl_random_pseudo_bytes( $bytes );
+    return bin2hex( $nonce_bytes );
   }
 }
