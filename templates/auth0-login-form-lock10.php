@@ -73,58 +73,6 @@ document.addEventListener("DOMContentLoaded", function() {
     var options = <?php echo json_encode( $options ); ?>;
 
     options.additionalSignUpFields = <?php echo $lock_options->get_custom_signup_fields(); ?>;
-    <?php if ( $lock_options->get_auth0_implicit_workflow() ) { ?>
-
-        if (window.location.hash !== '' && window.location.hash.indexOf('id_token') !== -1) {
-          ignore_sso = true;
-          var hash = window.location.hash;
-          if (hash[0] === '#') {
-            hash = hash.slice(1);
-          }
-          var data = hash.split('&').reduce(function(p,c,i) {
-            var parts = c.split('=');
-            p[parts[0]] = parts[1]
-            return p;
-          }, {});
-
-          post('<?php echo site_url( 'index.php?auth0=implicit' ); ?>', {
-            token:data.id_token,
-            state:data.state
-          }, 'POST');
-        }
-
-        function post(path, params, method) {
-            method = method || "post"; // Set method to post by default if not specified.
-
-            // The rest of this code assumes you are not using a library.
-            // It can be made less wordy if you use one.
-            var form = document.createElement("form");
-            form.setAttribute("method", method);
-            form.setAttribute("action", path);
-
-            for(var key in params) {
-                if(params.hasOwnProperty(key)) {
-                    var hiddenField = document.createElement("input");
-                    hiddenField.setAttribute("type", "hidden");
-                    hiddenField.setAttribute("name", key);
-
-                    var value = params[key];
-
-                    if (typeof(value) === 'object') {
-                        value = JSON.stringify(value);
-                    }
-
-                    hiddenField.setAttribute("value", value);
-
-                    form.appendChild(hiddenField);
-                 }
-            }
-
-            document.body.appendChild(form);
-            form.submit();
-        }
-    
-    <?php } ?>
 
     if (!ignore_sso) {
       var lock = new <?php echo $lock_options->get_lock_classname(); ?>('<?php echo $lock_options->get_client_id(); ?>', '<?php echo $lock_options->get_domain(); ?>', options);
