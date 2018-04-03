@@ -142,12 +142,6 @@
 				metricsTrack('settings:'+matches[1], this.value);
 			}
 		});
-		jQuery('#wpa0_passwordless_cdn_url,#wpa0_cdn_url,#wpa0_connections').focusout(function(){
-			var matches = /\[([a-zA-Z0-9_-].*)\]/.exec(this.name);
-			if (matches[1]) {
-				metricsTrack('settings:'+matches[1], this.value);
-			}
-		});
 
 		jQuery('#wpa0_social_twitter_key,#wpa0_social_twitter_secret,#wpa0_social_facebook_key,#wpa0_social_facebook_secret').focusout(function(){
 			var matches = /\[([a-zA-Z0-9_-].*)\]/.exec(this.name);
@@ -197,21 +191,6 @@
 				jQuery('.subelement.fullcontact').addClass('hidden');
 			}
 		});
-		jQuery('#wpa0_passwordless_enabled').click(function() {
-			if (this.checked) {
-				jQuery('#wpa0_cdn_url').hide();
-				jQuery('#wpa0_passwordless_cdn_url').show();
-				jQuery('#wpa0_passwordless_method_social').parent().parent().show();
-			} else {
-				jQuery('#wpa0_passwordless_method_social').parent().parent().hide();
-				jQuery('#wpa0_passwordless_cdn_url').hide();
-				jQuery('#wpa0_cdn_url').show();
-			}
-		});
-		if (jQuery('#wpa0_passwordless_enabled:checked').length === 0) {
-			jQuery('#wpa0_passwordless_method_social').parent().parent().hide();
-		}
-
 	});
 
 	function confirmExit() {
