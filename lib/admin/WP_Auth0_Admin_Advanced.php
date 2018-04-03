@@ -303,6 +303,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	  <?php
   }
 
+  // TODO: Better documentation for when this should be used
   public function render_auth0_implicit_workflow() {
     $v = absint( $this->options->get( 'auth0_implicit_workflow' ) );
 

@@ -117,15 +117,11 @@ class WP_Auth0_LoginManager {
       $lock_options = new WP_Auth0_Lock10_Options();
       $options = $lock_options->get_lock_options();
 
-      $stateObj = array( 'interim' => false, 'uuid' => uniqid() );
-      if ( isset( $_GET['redirect_to'] ) ) {
-        $stateObj['redirect_to'] = $_GET['redirect_to'];
-      }
-      $state = base64_encode( json_encode( $stateObj ) );
-
       $connection = apply_filters( 'auth0_get_auto_login_connection', $this->a0_options->get( 'auto_login_method' ) );
 
       $response_type = $lock_options->get_auth0_implicit_workflow() ? 'id_token' : 'code';
+
+      $state = $lock_options->get_state_obj();
 
       // Create the link to log in.
       $login_url = "https://". $this->a0_options->get( 'domain' ) .
@@ -134,11 +130,12 @@ class WP_Auth0_LoginManager {
         "&response_type=" . $response_type .
         "&client_id=".$this->a0_options->get( 'client_id' ) .
         "&redirect_uri=" . $options["auth"]["redirectUrl"] .
-        "&state=" . urlencode( $state ).
-        "&nonce=nonce" . // TODO add full nonce support
+        "&state=" . urlencode( $state ) .
+        "&nonce=" . WP_Auth0_Nonce_Handler::getInstance()->get() .
         "&connection=". trim($connection) .
         "&auth0Client=" . WP_Auth0_Api_Client::get_info_headers();
 
+      setcookie( WPA0_STATE_COOKIE_NAME, $state, time() + WP_Auth0_Nonce_Handler::COOKIE_EXPIRES, '/' );
       wp_redirect( $login_url );
       die();
     }
@@ -297,47 +294,60 @@ class WP_Auth0_LoginManager {
    * @throws WP_Auth0_LoginFlowValidationException
    *
    * @see https://auth0.com/docs/api-auth/tutorials/implicit-grant
+   * @see /wp-content/plugins/auth0/assets/js/implicit-login.js
    */
   public function implicit_login() {
 
+    // Posted from the login page here
     $token = $_POST['token'];
-    $state_decoded = $this->get_state( TRUE );
-
-    $secret = $this->a0_options->get_client_secret_as_key();
 
     try {
-      // Decode the user
-      $decodedToken = JWT::decode( $token, $secret, array(  $this->a0_options->get_client_signing_algorithm() ) );
-
-      // validate that this JWT was made for us
-      if ( $this->a0_options->get( 'client_id' ) !== $decodedToken->aud ) {
-        throw new WP_Auth0_LoginFlowValidationException( 'This token is not intended for us.' );
-      }
-
-      $decodedToken->user_id = $decodedToken->sub;
-
-      if ( $this->login_user( $decodedToken, $token, null ) ) {
-        if ( ! empty( $state_decoded->interim ) ) {
-          include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
-          exit();
-        } else {
-          if ( ! empty( $state_decoded->redirect_to ) && wp_login_url() !== $state_decoded->redirect_to ) {
-            $redirectURL = $state_decoded->redirect_to;
-          } else {
-            $redirectURL = $this->a0_options->get( 'default_login_redirection' );
-          }
-
-          wp_safe_redirect( $redirectURL );
-          exit;
-        }
-      }
-
+      $decodedToken = JWT::decode(
+        $token,
+        $this->a0_options->get_client_secret_as_key(),
+        array(  $this->a0_options->get_client_signing_algorithm() )
+      );
     } catch( UnexpectedValueException $e ) {
       WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
-
       error_log( $e->getMessage() );
+      throw new WP_Auth0_LoginFlowValidationException();
+    }
 
-      throw new WP_Auth0_LoginFlowValidationException( );
+    // Validate that this JWT was made for us
+    if ( $this->a0_options->get( 'client_id' ) !== $decodedToken->aud ) {
+      throw new WP_Auth0_LoginFlowValidationException(
+        __( 'This token is not intended for us', 'wp-auth0' )
+      );
+    }
+
+    // Validate the nonce if one was included in the request (auto-login)
+    if ( $this->a0_options->get( 'auto_login' ) ) {
+      $nonce = isset( $decodedToken->nonce ) ? $decodedToken->nonce : null;
+      if ( ! WP_Auth0_Nonce_Handler::getInstance()->validate( $nonce ) ) {
+        throw new WP_Auth0_LoginFlowValidationException(
+          __( 'Invalid nonce', 'wp-auth0' )
+        );
+      }
+    }
+
+    // Legacy userinfo property
+    $decodedToken->user_id = $decodedToken->sub;
+
+    if ( $this->login_user( $decodedToken, $token, null ) ) {
+
+      // Validated in $this->init_auth0()
+      $state_decoded = $this->get_state( TRUE );
+
+      if ( ! empty( $state_decoded->interim ) ) {
+        include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
+      } else {
+        $redirect_to = ! empty( $state_decoded->redirect_to ) ? $state_decoded->redirect_to : null;
+        if ( ! $redirect_to || wp_login_url() === $redirect_to ) {
+          $redirect_to = $this->a0_options->get( 'default_login_redirection' );
+        }
+        wp_safe_redirect( $redirect_to );
+      }
+      exit;
     }
   }
 
