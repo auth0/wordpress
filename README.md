@@ -5,16 +5,12 @@ Login by Auth0
 
 Single Sign On for Enterprises + Social Login + User/Passwords. For all your WordPress instances. Powered by Auth0.
 
-Download and install <https://wordpress.org/plugins/auth0/>
-Documentation: <https://auth0.com/docs/cms/wordpress>
-
-## Important note on 3.5
-
-This is a major update that requires changes to your Auth0 Dashboard to be completed. You can save a new [API token](https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually) in your Basic settings in wp-admin before upgrading and the changes will be made automatically during the update. Otherwise, please review your [Client Advanced Settings](https://auth0.com/docs/cms/wordpress/configuration#client-setup), specifically your Grant Types, and [authorize your Client for the Management API](https://auth0.com/docs/cms/wordpress/configuration#authorize-the-client-for-the-management-api). 
+* [WordPress.org plugin page](https://wordpress.org/plugins/auth0/)
+* [Documentation (installation, configuration, more)](https://auth0.com/docs/cms/wordpress)
 
 ## Installation
 
-[Please see the Installation page on auth0.com/docs](https://auth0.com/docs/cms/wordpress/installation)
+Please see the [Installation docs](https://auth0.com/docs/cms/wordpress/installation) for detailed instructions.
 
 ## Extending the plugin
 
@@ -25,25 +21,7 @@ We're happy to review and approve new filters and actions that help you integrat
 
 ## API authentication
 
-This plugin provides the ability integrate with **wp-jwt-auth** plugin to authenticate api calls via a HTTP Authorization Header.
-
-This plugin will detect if you have wp-jwt-auth installed and active and will offer to configure it. Accepting this, will set up the client id, secret and the custom user repository.
-
-After the user logs in via Auth0 in your Api client (ie: using Lock in a mobile app) you will get a JWT (JSON Web Token). Then you need to send this token in a HTTP header in the following way:
-
-```
-Authorization: Bearer ##jwt##
-```
-
-For example:
-
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZW50IjoiVGhpcyBpcyB5b3VyIHVzZXIgSldUIHByb3ZpZGVkIGJ5IHRoZSBBdXRoMCBzZXJ2ZXIifQ.b47GoWoY_5n4jIyG0hPTLFEQtSegnVydcvl6gpWNeUE
-```
-
-This JWT should match with a registered user in your WP installation.
-
-You can use this feature with API's provided by plugins like **WP REST API (WP API)**.
+Please see the [JWT Authentication docs](https://auth0.com/docs/cms/wordpress/jwt-authentication) for more information.
 
 ## Contributing
 
