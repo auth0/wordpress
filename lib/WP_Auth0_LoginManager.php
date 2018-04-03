@@ -551,7 +551,7 @@ class WP_Auth0_LoginManager {
 
     if ( empty( $this->state ) ) {
       // Get and store base64 encoded state
-      $state_val = $this->query_vars( 'state' );
+      $state_val = $_REQUEST[ 'state' ];
       $state_val = urldecode( $state_val );
       $this->state = $state_val;
 

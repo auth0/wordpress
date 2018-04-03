@@ -345,26 +345,49 @@ class WP_Auth0 {
 
 	}
 
+	/**
+	 * Enqueue styles and scripts on the wp-login.php page if the plugin has been configured
+	 */
 	public function render_auth0_login_css() {
-		$client_id = WP_Auth0_Options::Instance()->get( 'client_id' );
-
-		if ( trim( $client_id ) === '' ) {
+		if ( ! WP_Auth0::ready() ) {
 			return;
 		}
-?>
-		<link rel='stylesheet' href='<?php echo plugins_url( 'assets/css/login.css', __FILE__ ); ?>' type='text/css' />
-	<?php
+
+		wp_enqueue_style( 'auth0', WPA0_PLUGIN_CSS_URL . 'login.css', FALSE, WPA0_VERSION );
+
+		if ( $this->a0_options->get( 'auth0_implicit_workflow' ) ) {
+			wp_enqueue_script( 'auth0-implicit', WPA0_PLUGIN_JS_URL . 'implicit-login.js', FALSE, WPA0_VERSION );
+			wp_localize_script( 'auth0-implicit', 'wpAuth0ImplicitGlobal', array(
+				'postUrl' => add_query_arg( 'auth0', 'implicit', site_url( 'index.php' ) ),
+			) );
+		}
 	}
 
+	/**
+	 * Output the Auth0 form on wp-login.php
+	 *
+	 * @hook filter:login_message
+	 *
+	 * @param $html
+	 *
+	 * @return string
+	 */
 	public function render_form( $html ) {
-		if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'lostpassword' ) || ! self::ready() ) {
+		// Do not show Auth0 form when ...
+		if (
+			// .. processing lost password
+			( isset( $_GET['action'] ) && $_GET['action'] == 'lostpassword' )
+			// ... handling an Auth0 callback
+			|| ! empty( $_GET[ 'auth0' ] )
+			// ... plugin is not configured
+			|| ! self::ready()
+		) {
 			return $html;
 		}
 
 		ob_start();
 		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
 		renderAuth0Form();
-
 		return ob_get_clean();
 	}
 
