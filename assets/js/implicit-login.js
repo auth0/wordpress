@@ -1,13 +1,14 @@
-document.addEventListener( 'DOMContentLoaded', function() {
-    if ( ! window.location.hash || window.location.hash.indexOf('id_token') < 0 ) {
+document.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if ( ! hash || hash.indexOf('id_token') < 0 ) {
         return;
     }
 
-    var hash = window.location.hash;
     if (hash[0] === '#') {
         hash = hash.slice(1);
     }
-    var data = hash.split('&').reduce(function(p,c) {
+
+    var data = hash.split('&').reduce(function( p, c ) {
         var parts = c.split('=');
         p[parts[0]] = parts[1];
         return p;
