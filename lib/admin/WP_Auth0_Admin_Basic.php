@@ -21,24 +21,36 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$this->_description = __( 'Basic settings related to the Auth0 integration.', 'wp-auth0' );
 	}
 
+	/**
+	 * All settings in the Basic tab
+	 *
+	 * @see \WP_Auth0_Admin::init_admin
+	 * @see \WP_Auth0_Admin_Generic::init_option_section
+	 */
 	public function init() {
-
-		/* ------------------------- BASIC ------------------------- */
 		add_action( 'wp_ajax_auth0_delete_cache_transient', array( $this, 'auth0_delete_cache_transient' ) );
 
-		$this->init_option_section( '', 'basic', array(
-
-				array( 'id' => 'wpa0_domain', 'name' => 'Domain', 'function' => 'render_domain' ),
-				array( 'id' => 'wpa0_client_id', 'name' => 'Client ID', 'function' => 'render_client_id' ),
-				array( 'id' => 'wpa0_client_secret', 'name' => 'Client Secret', 'function' => 'render_client_secret' ),
-				array( 'id' => 'wpa0_client_secret_b64_encoded', 'name' => 'Client Secret Base64 Encoded', 'function' => 'render_client_secret_b64_encoded' ),
-				array( 'id' => 'wpa0_client_signing_algorithm', 'name' => 'Client Signing Algorithm', 'function' => 'render_client_signing_algorithm' ),
-				array( 'id' => 'wpa0_cache_expiration', 'name' => 'Cache Time (minutes)', 'function' => 'render_cache_expiration' ),
-				array( 'id' => 'wpa0_auth0_app_token', 'name' => 'API token', 'function' => 'render_auth0_app_token' ),
-				array( 'id' => 'wpa0_login_enabled', 'name' => 'WordPress login enabled', 'function' => 'render_allow_wordpress_login' ),
-				array( 'id' => 'wpa0_allow_signup', 'name' => 'Allow signup', 'function' => 'render_allow_signup' ),
-
-			) );
+		$options = array(
+			array( 'name' => __( 'Domain', 'wp-auth0' ), 'opt' => 'domain',
+                'id' => 'wpa0_domain', 'function' => 'render_domain' ),
+			array( 'name' => __( 'Application ID', 'wp-auth0' ), 'opt' => 'client_id',
+                'id' => 'wpa0_client_id', 'function' => 'render_client_id' ),
+			array( 'name' => __( 'Application Secret', 'wp-auth0' ), 'opt' => 'client_secret',
+                'id' => 'wpa0_client_secret', 'function' => 'render_client_secret' ),
+			array( 'name' => __( 'Application Secret Base64 Encoded', 'wp-auth0' ), 'opt' => 'client_secret_b64_encoded',
+                'id' => 'wpa0_client_secret_b64_encoded', 'function' => 'render_client_secret_b64_encoded' ),
+			array( 'name' => __( 'Application Signing Algorithm', 'wp-auth0' ), 'opt' => 'client_signing_algorithm',
+                'id' => 'wpa0_client_signing_algorithm', 'function' => 'render_client_signing_algorithm' ),
+			array( 'name' => __( 'Cache Time (in minutes)', 'wp-auth0' ), 'opt' => 'cache_expiration',
+                'id' => 'wpa0_cache_expiration', 'function' => 'render_cache_expiration' ),
+			array( 'name' => __( 'API Token', 'wp-auth0' ), 'opt' => 'auth0_app_token',
+                'id' => 'wpa0_auth0_app_token', 'function' => 'render_auth0_app_token' ),
+			array( 'name' => __( 'WordPress Login Enabled', 'wp-auth0' ), 'opt' => 'wordpress_login_enabled',
+                'id' => 'wpa0_login_enabled', 'function' => 'render_allow_wordpress_login' ),
+			array( 'name' => __( 'Allow Signups', 'wp-auth0' ),
+                'id' => 'wpa0_allow_signup', 'function' => 'render_allow_signup' ),
+        );
+		$this->init_option_section( '', 'basic', $options );
 	}
 
 
