@@ -137,11 +137,6 @@ class WP_Auth0_Admin {
 		$this->sections['advanced'] = new WP_Auth0_Admin_Advanced( $this->a0_options, $this->router );
 		$this->sections['advanced']->init();
 
-		/* ------------------------- DASHBOARD ------------------------- */
-
-		$this->sections['dashboard'] = new WP_Auth0_Admin_Dashboard( $this->a0_options );
-		$this->sections['dashboard']->init();
-
 		register_setting( $this->a0_options->get_options_name() . '_basic', $this->a0_options->get_options_name(), array( $this, 'input_validator' ) );
 
 	}
