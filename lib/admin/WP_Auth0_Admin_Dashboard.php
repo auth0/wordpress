@@ -1,8 +1,7 @@
 <?php
-
+// TODO: Deprecate
 class WP_Auth0_Admin_Dashboard extends WP_Auth0_Admin_Generic {
 
-	// TODO: Deprecate
 	const DASHBOARD_DESCRIPTION = 'Settings related to the dashboard widgets.';
 
 	protected $_description;
