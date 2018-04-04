@@ -1,5 +1,5 @@
 <?php
-
+// TODO: Deprecate
 class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic {
 
 	protected $id = 'auth0_dashboard_widget_age';
