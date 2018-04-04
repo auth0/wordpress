@@ -98,9 +98,6 @@ class WP_Auth0 {
 		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH( $this->a0_options );
 		$configure_jwt_auth->init();
 
-		$dashboard_widgets = new WP_Auth0_Dashboard_Widgets( $this->a0_options, $this->db_manager );
-		$dashboard_widgets->init();
-
 		$woocommerce_override = new WP_Auth0_WooCommerceOverrides( $this );
 		$woocommerce_override->init();
 
@@ -436,7 +433,6 @@ class WP_Auth0 {
 		$paths[] = $path.'lib/exceptions/';
 		$paths[] = $path.'lib/wizard/';
 		$paths[] = $path.'lib/initial-setup/';
-		$paths[] = $path.'lib/dashboard-widgets/';
 		$paths[] = $path.'lib/twitter-api-php/';
 		$paths[] = $path.'lib/php-jwt/Exceptions/';
 		$paths[] = $path.'lib/php-jwt/Authentication/';

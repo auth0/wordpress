@@ -1,5 +1,5 @@
 <?php
-
+// TODO: Deprecate
 class WP_Auth0_Dashboard_Widgets {
 
 	protected $db_manager;
