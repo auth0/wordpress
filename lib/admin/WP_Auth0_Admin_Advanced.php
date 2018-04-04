@@ -29,52 +29,75 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $this->_description = __( 'Settings related to specific scenarios.', 'wp-auth0' );
   }
 
+
+  /**
+   * All settings in the Advanced tab
+   *
+   * @see \WP_Auth0_Admin::init_admin
+   * @see \WP_Auth0_Admin_Generic::init_option_section
+   */
   public function init() {
-
-    $advancedOptions = array(
-
-      array( 'id' => 'wpa0_auto_provisioning', 'name' => 'Auto provisioning', 'function' => 'render_auto_provisioning' ),
-      array( 'id' => 'wpa0_passwordless_enabled', 'name' => 'Use passwordless login', 'function' => 'render_passwordless_enabled' ),
-      array( 'id' => 'wpa0_passwordless_method', 'name' => 'Use passwordless login', 'function' => 'render_passwordless_method' ),
-
-      array( 'id' => 'wpa0_force_https_callback', 'name' => 'Force HTTPS callback', 'function' => 'render_force_https_callback' ),
-
-      array( 'id' => 'wpa0_cdn_url', 'name' => 'Widget URL', 'function' => 'render_cdn_url' ),
-
-      array( 'id' => 'wpa0_connections', 'name' => 'Connections', 'function' => 'render_connections' ),
-
-      array( 'id' => 'wpa0_remember_users_session', 'name' => 'Remember users session', 'function' => 'render_remember_users_session' ),
-      array( 'id' => 'wpa0_link_auth0_users', 'name' => 'Link users with same email', 'function' => 'render_link_auth0_users' ),
-
-      array( 'id' => 'wpa0_social_twitter_key', 'name' => 'Twitter consumer key', 'function' => 'render_social_twitter_key' ),
-      array( 'id' => 'wpa0_social_twitter_secret', 'name' => 'Twitter consumer secret', 'function' => 'render_social_twitter_secret' ),
-
-      array( 'id' => 'wpa0_social_facebook_key', 'name' => 'Facebook app key', 'function' => 'render_social_facebook_key' ),
-      array( 'id' => 'wpa0_social_facebook_secret', 'name' => 'Facebook app secret', 'function' => 'render_social_facebook_secret' ),
-
-      array( 'id' => 'wpa0_migration_ws', 'name' => 'Users Migration', 'function' => 'render_migration_ws' ),
-      array( 'id' => 'wpa0_migration_ws_ips_filter', 'name' => 'Migration IPs Whitelist', 'function' => 'render_migration_ws_ips_filter' ),
-      array( 'id' => 'wpa0_migration_ws_ips', 'name' => '', 'function' => 'render_migration_ws_ips' ),
-      array( 'id' => 'wpa0_auth0_implicit_workflow', 'name' => 'Auth0 Implicit flow', 'function' => 'render_auth0_implicit_workflow' ),
-      array( 'id' => 'wpa0_default_login_redirection', 'name' => 'Login redirection URL', 'function' => 'render_default_login_redirection' ),
-      array( 'id' => 'wpa0_verified_email', 'name' => 'Requires verified email', 'function' => 'render_verified_email' ),
-      array( 'id' => 'wpa0_auto_login', 'name' => 'Auto Login (no widget)', 'function' => 'render_auto_login' ),
-      array( 'id' => 'wpa0_auto_login_method', 'name' => 'Auto Login Method', 'function' => 'render_auto_login_method' ),
-      array( 'id' => 'wpa0_ip_range_check', 'name' => 'Enable on IP Ranges', 'function' => 'render_ip_range_check' ),
-      array( 'id' => 'wpa0_ip_ranges', 'name' => 'IP Ranges', 'function' => 'render_ip_ranges' ),
-      array( 'id' => 'wpa0_valid_proxy_ip', 'name' => 'Valid Proxy IP', 'function' => 'render_valid_proxy_ip' ),
-      array( 'id' => 'wpa0_custom_signup_fields', 'name' => 'Custom signup fields', 'function' => 'render_custom_signup_fields' ),
-      array( 'id' => 'wpa0_extra_conf', 'name' => 'Extra settings', 'function' => 'render_extra_conf' ),
-      array( 'id' => 'wpa0_auth0_server_domain', 'name' => 'Auth0 server domain', 'function' => 'render_auth0_server_domain' ),
-      array( 'id' => 'wpa0_metrics', 'name' => 'Anonymous data', 'function' => 'render_metrics' ),
-
+    $options = array(
+      array( 'name' => __( 'Require Verified Email', 'wp-auth0' ), 'opt' => 'requires_verified_email',
+        'id' => 'wpa0_verified_email', 'function' => 'render_verified_email' ),
+      array( 'name' => __( 'Remember User Session', 'wp-auth0' ), 'opt' => 'remember_users_session',
+        'id' => 'wpa0_remember_users_session', 'function' => 'render_remember_users_session' ),
+      array( 'name' => __( 'Login Redirection URL', 'wp-auth0' ), 'opt' => 'default_login_redirection',
+        'id' => 'wpa0_default_login_redirection', 'function' => 'render_default_login_redirection' ),
+      array( 'name' => __( 'Passwordless Login', 'wp-auth0' ), 'opt' => 'passwordless_enabled',
+        'id' => 'wpa0_passwordless_enabled', 'function' => 'render_passwordless_enabled' ),
+      array( 'name' => __( 'Force HTTPS Callback', 'wp-auth0' ), 'opt' => 'force_https_callback',
+        'id' => 'wpa0_force_https_callback', 'function' => 'render_force_https_callback' ),
+      array( 'name' => __( 'Lock JS CDN URL', 'wp-auth0' ), 'opt' => 'passwordless_enabled',
+        'id' => 'wpa0_cdn_url', 'function' => 'render_cdn_url' ),
+      array( 'name' => __( 'Connections to Show', 'wp-auth0' ), 'opt' => 'lock_connections',
+        'id' => 'wpa0_connections', 'function' => 'render_connections' ),
+      array( 'name' => __( 'Link Users with Same Email', 'wp-auth0' ), 'opt' => 'link_auth0_users',
+        'id' => 'wpa0_link_auth0_users', 'function' => 'render_link_auth0_users' ),
+      array( 'name' => __( 'Auto Provisioning', 'wp-auth0' ), 'opt' => 'auto_provisioning',
+        'id' => 'wpa0_auto_provisioning', 'function' => 'render_auto_provisioning' ),
+      array( 'name' => __( 'User Migration', 'wp-auth0' ), 'opt' => 'migration_ws',
+        'id' => 'wpa0_migration_ws', 'function' => 'render_migration_ws' ),
+      array( 'name' => __( 'Migration IPs Whitelist', 'wp-auth0' ), 'opt' => 'migration_ips_filter',
+        'id' => 'wpa0_migration_ws_ips_filter', 'function' => 'render_migration_ws_ips_filter' ),
+      array( 'name' => __( 'IP Addresses', 'wp-auth0' ), 'opt' => 'migration_ips_filter',
+        'id' => 'wpa0_migration_ws_ips', 'function' => 'render_migration_ws_ips' ),
+      array( 'name' => __( 'Auto Login', 'wp-auth0' ), 'opt' => 'auto_login',
+        'id' => 'wpa0_auto_login', 'function' => 'render_auto_login' ),
+      array( 'name' => __( 'Auto Login Method', 'wp-auth0' ), 'opt' => 'auto_login_method',
+        'id' => 'wpa0_auto_login_method', 'function' => 'render_auto_login_method' ),
+      array( 'name' => __( 'Implicit Login Flow', 'wp-auth0' ), 'opt' => 'auth0_implicit_workflow',
+        'id' => 'wpa0_auth0_implicit_workflow', 'function' => 'render_auth0_implicit_workflow' ),
+      array( 'name' => __( 'Enable IP Ranges', 'wp-auth0' ), 'opt' => 'ip_range_check',
+        'id' => 'wpa0_ip_range_check', 'function' => 'render_ip_range_check' ),
+      array( 'name' => __( 'IP Ranges', 'wp-auth0' ), 'opt' => 'ip_ranges',
+        'id' => 'wpa0_ip_ranges', 'function' => 'render_ip_ranges' ),
+      array( 'name' => __( 'Valid Proxy IP', 'wp-auth0' ), 'opt' => 'valid_proxy_ip',
+        'id' => 'wpa0_valid_proxy_ip', 'function' => 'render_valid_proxy_ip' ),
+      array( 'name' => __( 'Custom Signup Fields', 'wp-auth0' ), 'opt' => 'custom_signup_fields',
+        'id' => 'wpa0_custom_signup_fields', 'function' => 'render_custom_signup_fields' ),
+      array( 'name' => __( 'Extra Settings', 'wp-auth0' ), 'opt' => 'extra_conf',
+        'id' => 'wpa0_extra_conf', 'function' => 'render_extra_conf' ),
+      array( 'name' => __( 'Twitter Consumer Key', 'wp-auth0' ), 'opt' => 'social_twitter_key',
+        'id' => 'wpa0_social_twitter_key', 'function' => 'render_social_twitter_key' ),
+      array( 'name' => __( 'Twitter Consumer Secret', 'wp-auth0' ), 'opt' => 'social_twitter_secret',
+        'id' => 'wpa0_social_twitter_secret', 'function' => 'render_social_twitter_secret' ),
+      array( 'name' => __( 'Facebook App Key', 'wp-auth0' ), 'opt' => 'social_facebook_key',
+        'id' => 'wpa0_social_facebook_key', 'function' => 'render_social_facebook_key' ),
+      array( 'name' => __( 'Facebook App Secret', 'wp-auth0' ), 'opt' => 'social_facebook_secret',
+        'id' => 'wpa0_social_facebook_secret', 'function' => 'render_social_facebook_secret' ),
+      array( 'name' => __( 'Auth0 Server Domain', 'wp-auth0' ), 'opt' => 'auth0_server_domain',
+        'id' => 'wpa0_auth0_server_domain', 'function' => 'render_auth0_server_domain' ),
+      array( 'name' => __( 'Report Anonymous Data', 'wp-auth0' ), 'opt' => 'metrics',
+        'id' => 'wpa0_metrics', 'function' => 'render_metrics' ),
     );
 
     if ( WP_Auth0_Configure_JWTAUTH::is_jwt_auth_enabled() ) {
-      $advancedOptions[] = array( 'id' => 'wpa0_jwt_auth_integration', 'name' => 'Enable JWT Auth integration', 'function' => 'render_jwt_auth_integration' );
+      $options[] = array( 'name' => 'Enable JWT Auth Integration', 'opt' => 'jwt_auth_integration',
+        'id' => 'wpa0_jwt_auth_integration', 'function' => 'render_jwt_auth_integration' );
     }
 
-    $this->init_option_section( '', 'advanced', $advancedOptions );
+    $this->init_option_section( '', 'advanced', $options );
   }
 
   public function render_passwordless_method() {

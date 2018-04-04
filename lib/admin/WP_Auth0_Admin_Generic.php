@@ -19,24 +19,37 @@ class WP_Auth0_Admin_Generic {
 		$this->_option_name = $options->get_options_name();
 	}
 
-	protected function init_option_section( $sectionName, $id, $settings ) {
+	/**
+     * Add settings section and fields for each of the settings screen
+     *
+	 * @param string $section_name - name used for the settings section (usually empty)
+	 * @param string $id - settings screen id
+	 * @param array $options - array of settings fields
+	 */
+	protected function init_option_section( $section_name, $id, $options ) {
 		$options_name = $this->_option_name . '_' . strtolower( $id );
 
 		add_settings_section(
 			"wp_auth0_{$id}_settings_section",
-			$sectionName,
+			$section_name,
 			array( $this, 'render_description' ),
 			$options_name
 		);
 
-		foreach ( $settings as $setting ) {
+		$options = apply_filters( 'auth0_settings_fields', $options, $id );
+
+		foreach ($options as $setting ) {
 			add_settings_field(
 				$setting['id'],
-				__( $setting['name'], 'wp-auth0' ),
+				$setting['name'],
 				array( $this, $setting['function'] ),
 				$options_name,
 				"wp_auth0_{$id}_settings_section",
-				array( 'label_for' => $setting['id'] )
+				// TODO: Use this in render functions
+				array(
+					'label_for' => $setting['id'],
+					'opt_name' => isset( $setting['opt'] ) ? $setting['opt'] : null,
+				)
 			);
 		}
 	}
