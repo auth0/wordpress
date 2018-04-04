@@ -27,20 +27,32 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
     $this->_description = __( 'Settings related to specific features provided by the plugin.', 'wp-auth0' );
   }
 
+  /**
+   * All settings in the Features tab
+   *
+   * @see \WP_Auth0_Admin::init_admin
+   * @see \WP_Auth0_Admin_Generic::init_option_section
+   */
   public function init() {
-
-    $this->init_option_section( '', 'features', array(
-
-        array( 'id' => 'wpa0_password_policy', 'name' => 'Password Policy', 'function' => 'render_password_policy' ),
-        array( 'id' => 'wpa0_sso', 'name' => 'Single Sign On (SSO)', 'function' => 'render_sso' ),
-        array( 'id' => 'wpa0_singlelogout', 'name' => 'Single Logout', 'function' => 'render_singlelogout' ),
-        array( 'id' => 'wpa0_mfa', 'name' => 'Multifactor Authentication (MFA)', 'function' => 'render_mfa' ),
-        array( 'id' => 'wpa0_fullcontact', 'name' => 'FullContact integration', 'function' => 'render_fullcontact' ),
-        array( 'id' => 'wpa0_geo', 'name' => 'Store geolocation', 'function' => 'render_geo' ),
-        array( 'id' => 'wpa0_income', 'name' => 'Store zipcode income', 'function' => 'render_income' ),
-        array( 'id' => 'wpa0_override_wp_avatars', 'name' => 'Override WordPress avatars', 'function' => 'render_override_wp_avatars' ),
-
-      ) );
+    $options = array(
+      array( 'name' => __( 'Password Policy', 'wp-auth0' ), 'opt' => 'password_policy',
+        'id' => 'wpa0_password_policy', 'function' => 'render_password_policy' ),
+      array( 'name' => __( 'Single Sign On (SSO)', 'wp-auth0' ), 'opt' => 'sso',
+        'id' => 'wpa0_sso', 'function' => 'render_sso' ),
+      array( 'name' => __( 'Single Logout (SLO)', 'wp-auth0' ), 'opt' => 'singlelogout',
+        'id' => 'wpa0_singlelogout', 'function' => 'render_singlelogout' ),
+      array( 'name' => __( 'Multifactor Authentication (MFA)', 'wp-auth0' ), 'opt' => 'mfa',
+        'id' => 'wpa0_mfa', 'function' => 'render_mfa' ),
+      array( 'name' => __( 'FullContact Integration', 'wp-auth0' ), 'opt' => 'fullcontact',
+        'id' => 'wpa0_fullcontact', 'function' => 'render_fullcontact' ),
+      array( 'name' => __( 'Store Geolocation', 'wp-auth0' ), 'opt' => 'geo_rule',
+        'id' => 'wpa0_geo', 'function' => 'render_geo' ),
+      array( 'name' => __( 'Store Zipcode Income', 'wp-auth0' ), 'opt' => 'income_rule',
+        'id' => 'wpa0_income', 'function' => 'render_income' ),
+      array( 'name' => __( 'Override WordPress Avatars', 'wp-auth0' ), 'opt' => 'override_wp_avatars',
+        'id' => 'wpa0_override_wp_avatars', 'function' => 'render_override_wp_avatars' ),
+    );
+    $this->init_option_section( '', 'features', $options );
   }
 
   public function render_password_policy() {

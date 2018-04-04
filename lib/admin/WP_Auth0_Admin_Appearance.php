@@ -21,22 +21,36 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$this->_description = __( 'Settings related to the way the login widget is shown.', 'wp-auth0' );
 	}
 
+	/**
+	 * All settings in the Appearance tab
+	 *
+	 * @see \WP_Auth0_Admin::init_admin
+	 * @see \WP_Auth0_Admin_Generic::init_option_section
+	 */
 	public function init() {
-
-		$this->init_option_section( '', 'appearance', array(
-
-				array( 'id' => 'wpa0_form_title', 'name' => 'Form Title', 'function' => 'render_form_title' ),
-				array( 'id' => 'wpa0_social_big_buttons', 'name' => 'Show big social buttons', 'function' => 'render_social_big_buttons' ),
-				array( 'id' => 'wpa0_icon_url', 'name' => 'Icon URL', 'function' => 'render_icon_url' ),
-				array( 'id' => 'wpa0_gravatar', 'name' => 'Enable Gravatar integration', 'function' => 'render_gravatar' ),
-				array( 'id' => 'wpa0_custom_css', 'name' => 'Customize the Login Widget CSS', 'function' => 'render_custom_css' ),
-				array( 'id' => 'wpa0_custom_js', 'name' => 'Customize the Login Widget with custom JS', 'function' => 'render_custom_js' ),
-				array( 'id' => 'wpa0_username_style', 'name' => 'Username style', 'function' => 'render_username_style' ),
-        array( 'id' => 'wpa0_primary_color', 'name' => 'Lock primary color', 'function' => 'render_primary_color' ),
-        array( 'id' => 'wpa0_language', 'name' => 'Lock Language', 'function' => 'render_language' ),
-				array( 'id' => 'wpa0_language_dictionary', 'name' => 'Lock Language Dictionary', 'function' => 'render_language_dictionary' ),
-
-			) );
+		$options = array(
+			array( 'name' => __( 'Icon URL', 'wp-auth0' ), 'opt' => 'icon_url',
+				'id' => 'wpa0_icon_url', 'function' => 'render_icon_url' ),
+			array( 'name' => __( 'Form Title', 'wp-auth0' ), 'opt' => 'form_title',
+				'id' => 'wpa0_form_title', 'function' => 'render_form_title' ),
+			array( 'name' => __( 'Big Social Buttons', 'wp-auth0' ), 'opt' => 'social_big_buttons',
+				'id' => 'wpa0_social_big_buttons', 'function' => 'render_social_big_buttons' ),
+			array( 'name' => __( 'Enable Gravatar Integration', 'wp-auth0' ), 'opt' => 'gravatar',
+				'id' => 'wpa0_gravatar', 'function' => 'render_gravatar' ),
+			array( 'name' => __( 'Login Form CSS', 'wp-auth0' ), 'opt' => 'custom_css',
+				'id' => 'wpa0_custom_css', 'function' => 'render_custom_css' ),
+			array( 'name' => __( 'Login Form JS', 'wp-auth0' ), 'opt' => 'custom_js',
+				'id' => 'wpa0_custom_js', 'function' => 'render_custom_js' ),
+			array( 'name' => __( 'Login Name Style', 'wp-auth0' ), 'opt' => 'username_style',
+				'id' => 'wpa0_username_style', 'function' => 'render_username_style' ),
+			array( 'name' => __( 'Primary Color', 'wp-auth0' ), 'opt' => 'primary_color',
+				'id' => 'wpa0_primary_color', 'function' => 'render_primary_color' ),
+			array( 'name' => __( 'Language', 'wp-auth0' ), 'opt' => 'language',
+				'id' => 'wpa0_language', 'function' => 'render_language' ),
+			array( 'name' => __( 'Language Dictionary', 'wp-auth0' ), 'opt' => 'language_dictionary',
+				'id' => 'wpa0_language_dictionary', 'function' => 'render_language_dictionary' ),
+		);
+		$this->init_option_section( '', 'appearance', $options );
 	}
 
 	public function render_form_title() {

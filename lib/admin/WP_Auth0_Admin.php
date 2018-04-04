@@ -108,29 +108,23 @@ class WP_Auth0_Admin {
 	}
 
 	public function init_admin() {
-
-		/* ------------------------- BASIC ------------------------- */
-
 		$this->sections['basic'] = new WP_Auth0_Admin_Basic( $this->a0_options );
 		$this->sections['basic']->init();
-
-		/* ------------------------- Features ------------------------- */
 
 		$this->sections['features'] = new WP_Auth0_Admin_Features( $this->a0_options );
 		$this->sections['features']->init();
 
-		/* ------------------------- Appearance ------------------------- */
-
 		$this->sections['appearance'] = new WP_Auth0_Admin_Appearance( $this->a0_options );
 		$this->sections['appearance']->init();
-
-		/* ------------------------- ADVANCED ------------------------- */
 
 		$this->sections['advanced'] = new WP_Auth0_Admin_Advanced( $this->a0_options, $this->router );
 		$this->sections['advanced']->init();
 
-		register_setting( $this->a0_options->get_options_name() . '_basic', $this->a0_options->get_options_name(), array( $this, 'input_validator' ) );
-
+		register_setting(
+			$this->a0_options->get_options_name() . '_basic',
+			$this->a0_options->get_options_name(),
+			array( $this, 'input_validator' )
+		);
 	}
 
 	public function input_validator( $input ) {
