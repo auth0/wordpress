@@ -2,9 +2,11 @@
 class WP_Auth0_ErrorLog {
 
 	// TODO: Deprecate
-	public function init() {}
+	public function init() {
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
+	}
 
-  // TODO: Deprecate
+	// TODO: Deprecate
 	public function admin_enqueue() {
 		if ( ! isset( $_REQUEST['page'] ) || 'wpa0-errors' !== $_REQUEST['page'] ) {
 			return;
