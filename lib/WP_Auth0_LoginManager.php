@@ -150,9 +150,10 @@ class WP_Auth0_LoginManager {
 
     // Catch any incoming errors and stop the login process
     // See https://auth0.com/docs/libraries/error-messages
-    if ( $this->query_vars( 'error_description' ) ) {
+    if ( $this->query_vars( 'error' ) || $this->query_vars( 'error_description' ) ) {
       $error_msg = sanitize_text_field( $this->query_vars( 'error_description' ) );
-      $this->die_on_login( $error_msg ? $error_msg : sanitize_text_field( $this->query_vars( 'error' ) ) );
+      $error_code = sanitize_text_field( $this->query_vars( 'error' ) );
+      $this->die_on_login( $error_msg, $error_code );
     }
 
     // Check for valid state nonce, set in WP_Auth0_Lock10_Options::get_state_obj()
@@ -561,7 +562,7 @@ class WP_Auth0_LoginManager {
 
     if ( empty( $this->state ) ) {
       // Get and store base64 encoded state
-      $state_val = $_REQUEST[ 'state' ];
+      $state_val = isset( $_REQUEST[ 'state' ] ) ? $_REQUEST[ 'state' ] : '';
       $state_val = urldecode( $state_val );
       $this->state = $state_val;
 
