@@ -7,8 +7,8 @@
  * Author URI: https://auth0.com
  */
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
-define( 'WPA0_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
-define( 'WPA0_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
+define( 'WPA0_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'WPA0_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'WPA0_PLUGIN_JS_URL', WPA0_PLUGIN_URL . 'assets/js/' );
 define( 'WPA0_PLUGIN_CSS_URL', WPA0_PLUGIN_URL . 'assets/css/' );
 define( 'WPA0_PLUGIN_IMG_URL', WPA0_PLUGIN_URL . 'assets/img/' );
@@ -250,6 +250,7 @@ class WP_Auth0 {
 		}
 	}
 
+	// TODO: Deprecate
 	public static function get_plugin_dir_url() {
 		return WPA0_PLUGIN_URL;
 	}
