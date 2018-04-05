@@ -1,10 +1,13 @@
+/* global wpAuth0ImplicitGlobal */
+
 document.addEventListener('DOMContentLoaded', function() {
     var hash = window.location.hash;
-    if ( ! hash || hash.indexOf('id_token') < 0 ) {
+    if ( ! hash ) {
+        redirectWithoutQuery();
         return;
     }
 
-    if (hash[0] === '#') {
+    if ( hash[0] === '#' ) {
         hash = hash.slice(1);
     }
 
@@ -14,23 +17,44 @@ document.addEventListener('DOMContentLoaded', function() {
         return p;
     }, {});
 
-    var form = document.createElement('form');
-    form.setAttribute('method', 'post');
-    form.setAttribute('action', wpAuth0ImplicitGlobal.postUrl);
+    var form = document.createElement( 'form' );
+    form.setAttribute( 'method', 'post' );
+    form.setAttribute( 'action', wpAuth0ImplicitGlobal.postUrl );
 
-    var hiddenField = document.createElement('input');
-    hiddenField.setAttribute('type', 'hidden');
+    if ( data.hasOwnProperty( 'error' ) ) {
+        form.appendChild( createHiddenField( 'error', data.error ) );
+        form.appendChild( createHiddenField( 'error_description', data.error_description ) );
+    } else if ( data.hasOwnProperty( 'id_token' ) && data.hasOwnProperty( 'state' ) ) {
+        form.appendChild( createHiddenField( 'token', data.id_token ) );
+        form.appendChild( createHiddenField( 'state', data.state ) );
+    } else {
+        redirectWithoutQuery();
+        return;
+    }
 
-    var tokenField = hiddenField.cloneNode();
-    tokenField.setAttribute('name', 'token');
-    tokenField.setAttribute('value', data.id_token);
-    form.appendChild( tokenField );
-
-    var stateField = hiddenField.cloneNode();
-    stateField.setAttribute('name', 'state');
-    stateField.setAttribute('value', data.state);
-    form.appendChild( stateField );
-
-    document.body.appendChild(form);
+    document.body.appendChild( form );
     form.submit();
+
+    /**
+     * Redirect to current page without URL parameters
+     */
+    function redirectWithoutQuery() {
+        var redirectTo = window.location.href;
+        redirectTo = redirectTo.replace( window.location.search, '' );
+        window.location.replace( redirectTo );
+    }
+
+    /**
+     * Return a hidden field node with a specific name=value
+     *
+     * @param name
+     * @param value
+     */
+    function createHiddenField( name, value ) {
+        var newNode = document.createElement( 'input' );
+        newNode.setAttribute( 'type', 'hidden' );
+        newNode.setAttribute( 'name', name );
+        newNode.setAttribute( 'value', value );
+        return newNode;
+    }
 });
