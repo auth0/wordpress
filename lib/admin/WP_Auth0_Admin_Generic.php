@@ -28,9 +28,10 @@ class WP_Auth0_Admin_Generic {
 	 */
 	protected function init_option_section( $section_name, $id, $options ) {
 		$options_name = $this->_option_name . '_' . strtolower( $id );
+		$section_id = "wp_auth0_{$id}_settings_section";
 
 		add_settings_section(
-			"wp_auth0_{$id}_settings_section",
+			$section_id,
 			$section_name,
 			array( $this, 'render_description' ),
 			$options_name
@@ -39,13 +40,16 @@ class WP_Auth0_Admin_Generic {
 		$options = apply_filters( 'auth0_settings_fields', $options, $id );
 
 		foreach ($options as $setting ) {
+			$callback = function_exists( $setting['function'] )
+				? $setting['function']
+				: array( $this, $setting['function'] );
+
 			add_settings_field(
 				$setting['id'],
 				$setting['name'],
-				array( $this, $setting['function'] ),
+				$callback,
 				$options_name,
-				"wp_auth0_{$id}_settings_section",
-				// TODO: Use this in render functions
+				$section_id,
 				array(
 					'label_for' => $setting['id'],
 					'opt_name' => isset( $setting['opt'] ) ? $setting['opt'] : null,
@@ -133,7 +137,7 @@ class WP_Auth0_Admin_Generic {
 		printf(
 			'<div class="a0-switch"><input type="checkbox" name="%s[%s]" id="%s" data-expand="%s" value="1"%s>
 			<label for="%s"></label></div>',
-			esc_attr( $this->option_name ),
+			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			! empty( $expand_id ) ? esc_attr( $expand_id ) : '',
@@ -161,7 +165,7 @@ class WP_Auth0_Admin_Generic {
 		printf(
 			'<input type="%s" name="%s[%s]" id="%s" value="%s" placeholder="%s" style="%s">',
 			esc_attr( $type ),
-			esc_attr( $this->option_name ),
+			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			esc_attr( $value ),
@@ -179,7 +183,7 @@ class WP_Auth0_Admin_Generic {
 	protected function render_social_key_field( $id, $input_name ) {
 		printf(
 			'<input type="text" name="%s[%s]" id="wpa0_%s" value="%s">',
-			esc_attr( $this->option_name ),
+			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			esc_attr( $this->options->get_connection( $input_name ) )
@@ -196,10 +200,10 @@ class WP_Auth0_Admin_Generic {
 		$value = $this->options->get( $input_name );
 		printf(
 			'<textarea name="%s[%s]" id="%s" rows="%d" class="code">%s</textarea>',
-			esc_attr( $this->option_name ),
+			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
-			$this->textarea_rows,
+			$this->_textarea_rows,
 			esc_textarea( $value )
 		);
 	}
@@ -217,7 +221,7 @@ class WP_Auth0_Admin_Generic {
 		printf(
 			'<label for="%s"><input type="radio" name="%s[%s]" id="%s" value="%s" %s>&nbsp;%s</label>',
 			esc_attr( $id ),
-			esc_attr( $this->option_name ),
+			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			esc_attr( $value ),
@@ -239,13 +243,15 @@ class WP_Auth0_Admin_Generic {
 	 * Output translated dashboard HTML link
 	 *
 	 * @param string $path - dashboard sub-section, if any
+	 * @param bool $append_period - append a period and space to the output
 	 *
 	 * @return string
 	 */
-	protected function get_dashboard_link( $path = '' ) {
-		return sprintf( '<a href="https://manage.auth0.com/#/%s" target="_blank">%s</a>',
+	protected function get_dashboard_link( $path = '', $append_period = FALSE ) {
+		return sprintf( '<a href="https://manage.auth0.com/#/%s" target="_blank">%s</a>%s',
 			$path,
-			__( 'Auth0 dashboard', 'wp-auth0' )
+			__( 'Auth0 dashboard', 'wp-auth0' ),
+			$append_period ? '. ': ''
 		);
 	}
 
