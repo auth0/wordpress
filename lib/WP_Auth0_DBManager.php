@@ -323,12 +323,10 @@ class WP_Auth0_DBManager {
 				}
 
 				// Need to set a special passwordlessMethod flag if using email code
-				if ( in_array( $pwl_method, array( 'emailcode', 'socialOrEmailcode' ) ) ) {
-					$lock_json = trim( $options->get( 'extra_conf' ) );
-					$lock_json_decoded = ! empty( $lock_json ) ? json_decode( $lock_json, TRUE ) : array();
-					$lock_json_decoded[ 'passwordlessMethod' ] = 'code';
-					$options->set( 'extra_conf', json_encode( $lock_json_decoded ) );
-				}
+				$lock_json = trim( $options->get( 'extra_conf' ) );
+				$lock_json_decoded = ! empty( $lock_json ) ? json_decode( $lock_json, TRUE ) : array();
+				$lock_json_decoded[ 'passwordlessMethod' ] = strpos( $pwl_method, 'code' ) ? 'code' : 'link';
+				$options->set( 'extra_conf', json_encode( $lock_json_decoded ) );
 			}
 
 			// Set passwordless_cdn_url to latest Lock
