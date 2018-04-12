@@ -12,6 +12,8 @@ class WP_Auth0_ErrorManager {
 	 * @param string|WP_Error|Exception $error - error message string or discoverable error type
 	 */
 	public static function insert_auth0_error( $section, $error ) {
+		$code = 'unknown_code';
+		$message = __( 'Unknown error message', 'wp-auth0' );
 
 		if ( $error instanceof WP_Error ) {
 			$code = $error->get_error_code();
@@ -20,10 +22,13 @@ class WP_Auth0_ErrorManager {
 			$code = $error->getCode();
 			$message = $error->getMessage();
 		} elseif ( is_array( $error ) && ! empty( $error['response'] ) ) {
-			$code = ! empty( $error['response']['code'] ) ? $error['response']['code'] : 'N/A';
-			$message = ! empty( $error['response']['message'] ) ? $error['response']['message'] : 'N/A';
+			if ( ! empty( $error['response']['code'] ) ) {
+				$code = sanitize_text_field( $error['response']['code'] );
+			}
+			if ( ! empty( $error['response']['message'] ) ) {
+				$message = sanitize_text_field( $error['response']['message'] );
+			}
 		} else {
-			$code = 'N/A';
 			$message = is_object( $error ) || is_array( $error ) ? serialize( $error ) : $error;
 		}
 
