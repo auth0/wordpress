@@ -243,15 +243,13 @@ class WP_Auth0_Admin_Generic {
 	 * Output translated dashboard HTML link
 	 *
 	 * @param string $path - dashboard sub-section, if any
-	 * @param bool $append_period - append a period and space to the output
 	 *
 	 * @return string
 	 */
-	protected function get_dashboard_link( $path = '', $append_period = FALSE ) {
-		return sprintf( '<a href="https://manage.auth0.com/#/%s" target="_blank">%s</a>%s',
+	protected function get_dashboard_link( $path = '' ) {
+		return sprintf( '<a href="https://manage.auth0.com/#/%s" target="_blank">%s</a>',
 			$path,
-			__( 'Auth0 dashboard', 'wp-auth0' ),
-			$append_period ? '. ': ''
+			__( 'Auth0 dashboard', 'wp-auth0' )
 		);
 	}
 
