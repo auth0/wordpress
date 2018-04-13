@@ -141,7 +141,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
   public function render_default_login_redirection( $args ) {
     $this->render_text_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
-    $this->render_field_description( __( 'URL where successfully logged-in users are redirected to', 'wp-auth0' ) );
+    $this->render_field_description(
+      __( 'URL where successfully logged-in users are redirected when using the wp-login.php page. ', 'wp-auth0' ) .
+      __( 'This can be overridden with the <code>redirect_to</code> URL parameter', 'wp-auth0' )
+    );
   }
 
   public function render_extra_conf( $args ) {
@@ -155,7 +158,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_custom_signup_fields( $args ) {
     $this->render_textarea_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
-      __( 'Valid JSON for custom signup fields in the Auth0 signup form. ', 'wp-auth0' ) .
+      __( 'Valid JSON for additional signup fields in the Auth0 signup form. ', 'wp-auth0' ) .
       $this->get_docs_link(
         'libraries/lock/v11/configuration#additionalsignupfields-array-',
         __( 'More information and examples', 'wp-auth0' )
@@ -166,7 +169,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_link_auth0_users( $args ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
-      __( 'Links accounts with the same e-mail address (emails must be verified)', 'wp-auth0' )
+      __( 'Link accounts with the same verified e-mail address. ', 'wp-auth0' ) .
+      __( 'See the "Require Verified Email" setting above for more information on email verification', 'wp-auth0' )
     );
   }
 
@@ -181,11 +185,11 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_passwordless_enabled( $args ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
-      __( 'Turns on passwordless login (email or SMS) in the Auth0 form. ', 'wp-auth0' ) .
+      __( 'Turns on Passwordless login (email or SMS) in the Auth0 form. ', 'wp-auth0' ) .
       __( 'Passwordless connections are managed in the ', 'wp-auth0' ) .
       $this->get_dashboard_link( 'connections/passwordless' ) .
-      __( ' and at least one connection must be active for this to work. ', 'wp-auth0' ) .
-      __( 'Username and password login are not enabled when this is on', 'wp-auth0' )
+      __( ' and at least one must be active and enabled on this Application for this to work. ', 'wp-auth0' ) .
+      __( 'Username/password login is not enabled when Passwordless is on', 'wp-auth0' )
     );
   }
 
@@ -241,7 +245,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_migration_ws_ips( $args ) {
     $this->render_textarea_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
-      __( 'Only requests from this IPs will be allowed to the migration WS. ', 'wp-auth0' ) .
+      __( 'Only requests from these IPs will be allowed to access the migration webservice. ', 'wp-auth0' ) .
       __( 'Separate multiple IPs with commas', 'wp-auth0' )
     );
   }
@@ -251,7 +255,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $this->render_field_description(
       __( 'Turns on implicit login flow, which most sites will not need. ', 'wp-auth0' ) .
       __( 'Only enable this if outbound connections to auth0.com are disabled on your server. ', 'wp-auth0' ) .
-      __( 'Your Client should be set to "Single Page App" in your ', 'wp-auth0' ) .
+      __( 'Your Application should be set to "Single Page App" in your ', 'wp-auth0' ) .
       $this->get_dashboard_link( 'clients' ) .
       __( ' for this setting to work properly. ', 'wp-auth0' ) .
       __( 'This will limit profile changes and other functionality in the plugin', 'wp-auth0' )
@@ -268,8 +272,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_auto_login_method( $args ) {
     $this->render_text_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
-      __( 'Find the method name to use under Connections > [Connection Type] in your ', 'wp-auth0' ) .
-      $this->get_dashboard_link( 'connections', TRUE ) .
+      sprintf(
+          __( 'Find the method name to use under Connections > [Connection Type] in your %s. ', 'wp-auth0' ) .
+          $this->get_dashboard_link()
+      ) .
       __( 'Click the expand icon and use the value in the "Name" field (like "google-oauth2")', 'wp-auth0' )
     );
   }
@@ -340,7 +346,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_cdn_url( $args ) {
     $this->render_text_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
-      __( 'This should point to the latest widget JS available in the CDN and rarely needs to change', 'wp-auth0' )
+      __( 'This should point to the latest Lock JS available in the CDN and rarely needs to change', 'wp-auth0' )
     );
   }
 
@@ -352,14 +358,17 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_connections( $args ) {
-    $this->render_text_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
+    $this->render_text_field( $args[ 'label_for' ], $args[ 'opt_name' ], 'text', 'eg: "sms, google-oauth2, github"' );
     $this->render_field_description(
-      __( 'Connections the Auth0 login form should show (separate multiple with commas). ', 'wp-auth0' ) .
-      __( 'If this is empty, all active connections will be shown. ', 'wp-auth0' ) .
-      __( 'Connections listed here must already be active under Connections in your ', 'wp-auth0' ) .
-      $this->get_dashboard_link( 'connections/social', TRUE ) .
-      __( 'Click on a Connection and use the "Name" value in this field. ', 'wp-auth0' ) .
-      __( 'This can be used to specify which social, database, or passwordless connections are displayed', 'wp-auth0' )
+      __( 'Specify which Social, Database, or Passwordless connections to display in the Auth0 form. ', 'wp-auth0' ) .
+      __( 'If this is empty, all enabled connections for this Application will be shown. ', 'wp-auth0' ) .
+      __( 'Separate multiple connection names with a comma. ', 'wp-auth0' ) .
+      sprintf(
+          __( 'Connections listed here must already be active in your %s', 'wp-auth0' ),
+          $this->get_dashboard_link( 'connections/social' )
+      ) .
+      __( ' and enabled for this Application. ', 'wp-auth0' ) .
+      __( 'Click on a Connection and use the "Name" value in this field', 'wp-auth0' )
     );
   }
 
@@ -380,7 +389,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   public function render_verified_email( $args ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
-      __( 'Require new users to verify their email before logging in. ', 'wp-auth0' ) .
+      __( 'Require new users to both provide and verify their email before logging in. ', 'wp-auth0' ) .
+      __( 'An email is verified manually by an email from Auth0 or automatically by the provider. ', 'wp-auth0' ) .
       __( 'This will disallow logins from social connections that do not provide email (like Twitter)', 'wp-auth0' )
     );
   }
