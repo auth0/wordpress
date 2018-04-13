@@ -31,13 +31,7 @@ This plugin gives WordPress a new Login Widget (powered by [Auth0](https://auth0
 
 == Installation ==
 
-Before you start, **make sure the admin user has a valid email that you own**, read the Technical Notes for more information.
-
-1. Install from the WordPress Store or upload the entire `wp-auth0` folder to the `/wp-content/plugins/` directory.
-1. Activate the plugin through the 'Plugins' menu in WordPress.
-1. Create an account in Auth0 (https://auth0.com) and add a new PHP Application. Copy the Client ID, Client Secret and Domain from the Settings of the Application.
-1. On the Settings of the Auth0 application change the Callback URL to be: `http://your-domain/index.php?auth0=1`. Using **TLS/SSL** is **recommended for production**.
-1. Go back to WordPress `Settings` - `Auth0 Settings` edit the *Domain*, *Client ID* and *Client Secret* with the ones you copied from Auth0 Dashboard.
+Please see the Auth0 Docs site for [complete installation and configuration instructions](https://auth0.com/docs/cms/wordpress/installation).
 
 == Screenshots ==
 
