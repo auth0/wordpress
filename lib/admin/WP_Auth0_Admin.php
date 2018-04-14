@@ -84,6 +84,10 @@ class WP_Auth0_Admin {
 			wp_localize_script( 'wpa0_admin', 'wpa0', array(
 				'media_title' => __( 'Choose your icon', 'wp-auth0' ),
 				'media_button' => __( 'Choose icon', 'wp-auth0' ),
+				'clear_cache_working' => __( 'Working ...', 'wp-auth0' ),
+				'clear_cache_done' => __( 'Done!', 'wp-auth0' ),
+				'clear_cache_nonce' => wp_create_nonce( 'auth0_delete_cache_transient' ),
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
 			) );
 
 			wp_enqueue_script( 'wpa0_async', WPA0_PLUGIN_LIB_URL . 'async.min.js', FALSE, WPA0_VERSION );
