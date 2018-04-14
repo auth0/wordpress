@@ -134,12 +134,12 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     <?php
   }
 
-  public function render_jwt_auth_integration( $args = [] ) {
+  public function render_jwt_auth_integration( $args = array() ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description( __( 'This will enable the JWT Auth Users Repository override', 'wp-auth0' ) );
   }
 
-  public function render_default_login_redirection( $args = [] ) {
+  public function render_default_login_redirection( $args = array() ) {
     $this->render_text_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'URL where successfully logged-in users are redirected when using the wp-login.php page. ', 'wp-auth0' ) .
@@ -147,7 +147,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_extra_conf( $args = [] ) {
+  public function render_extra_conf( $args = array() ) {
     $this->render_textarea_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Valid JSON for Lock options configuration; will override all options set elsewhere. ', 'wp-auth0' ) .
@@ -155,7 +155,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_custom_signup_fields( $args = [] ) {
+  public function render_custom_signup_fields( $args = array() ) {
     $this->render_textarea_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Valid JSON for additional signup fields in the Auth0 signup form. ', 'wp-auth0' ) .
@@ -166,7 +166,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_link_auth0_users( $args = [] ) {
+  public function render_link_auth0_users( $args = array() ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Link accounts with the same verified e-mail address. ', 'wp-auth0' ) .
@@ -174,7 +174,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_auto_provisioning( $args = [] ) {
+  public function render_auto_provisioning( $args = array() ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Create new users in the WordPress database when signups are off. ', 'wp-auth0' ) .
@@ -182,7 +182,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_passwordless_enabled( $args = [] ) {
+  public function render_passwordless_enabled( $args = array() ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Turns on Passwordless login (email or SMS) in the Auth0 form. ', 'wp-auth0' ) .
@@ -193,7 +193,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_force_https_callback( $args = [] ) {
+  public function render_force_https_callback( $args = array() ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Forces the plugin to use HTTPS for the callback URL when a site supports both; ', 'wp-auth0' ) .
@@ -201,7 +201,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_remember_users_session( $args = [] ) {
+  public function render_remember_users_session( $args = array() ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'A user session by default is kept for two days. ', 'wp-auth0' ) .
@@ -209,7 +209,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_migration_ws( $args = [] ) {
+  public function render_migration_ws( $args = array() ) {
     $value = $this->options->get( $args[ 'opt_name' ] );
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
 
@@ -238,11 +238,11 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     }
   }
 
-  public function render_migration_ws_ips_filter( $args = [] ) {
+  public function render_migration_ws_ips_filter( $args = array() ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
   }
 
-  public function render_migration_ws_ips( $args = [] ) {
+  public function render_migration_ws_ips( $args = array() ) {
     $this->render_textarea_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Only requests from these IPs will be allowed to access the migration webservice. ', 'wp-auth0' ) .
@@ -250,7 +250,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_auth0_implicit_workflow( $args = [] ) {
+  public function render_auth0_implicit_workflow( $args = array() ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Turns on implicit login flow, which most sites will not need. ', 'wp-auth0' ) .
@@ -262,14 +262,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_auto_login( $args = [] ) {
+  public function render_auto_login( $args = array() ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Send logins directly to a specific Connection, skipping the login page', 'wp-auth0' )
     );
   }
 
-  public function render_auto_login_method( $args = [] ) {
+  public function render_auto_login_method( $args = array() ) {
     $this->render_text_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       sprintf(
@@ -280,11 +280,11 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_ip_range_check( $args = [] ) {
+  public function render_ip_range_check( $args = array() ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
   }
 
-  public function render_ip_ranges( $args = [] ) {
+  public function render_ip_ranges( $args = array() ) {
     $this->render_textarea_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Only one range per line! Range format should be as follows (spaces ignored): ', 'wp-auth0' ) .
@@ -292,7 +292,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_social_twitter_key( $args = [] ) {
+  public function render_social_twitter_key( $args = array() ) {
     $this->render_social_key_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Used for the Social Amplification Widget. ', 'wp-auth0' ) .
@@ -303,7 +303,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_social_twitter_secret( $args = [] ) {
+  public function render_social_twitter_secret( $args = array() ) {
     $this->render_social_key_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Used for the Social Amplification Widget. ', 'wp-auth0' ) .
@@ -314,7 +314,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_social_facebook_key( $args = [] ) {
+  public function render_social_facebook_key( $args = array() ) {
     $this->render_social_key_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Used for the Social Amplification Widget. ', 'wp-auth0' ) .
@@ -325,7 +325,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_social_facebook_secret( $args = [] ) {
+  public function render_social_facebook_secret( $args = array() ) {
     $this->render_social_key_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Used for the Social Amplification Widget. ', 'wp-auth0' ) .
@@ -336,28 +336,28 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
-  public function render_valid_proxy_ip( $args = [] ) {
+  public function render_valid_proxy_ip( $args = array() ) {
     $this->render_text_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Whitelist for proxy and load balancer IPs to enable logins and migration webservices', 'wp-auth0' )
     );
   }
 
-  public function render_cdn_url( $args = [] ) {
+  public function render_cdn_url( $args = array() ) {
     $this->render_text_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'This should point to the latest Lock JS available in the CDN and rarely needs to change', 'wp-auth0' )
     );
   }
 
-  public function render_auth0_server_domain( $args = [] ) {
+  public function render_auth0_server_domain( $args = array() ) {
     $this->render_text_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'The Auth0 domain used by the setup wizard to fetch your account information', 'wp-auth0' )
     );
   }
 
-  public function render_connections( $args = [] ) {
+  public function render_connections( $args = array() ) {
     $this->render_text_field( $args[ 'label_for' ], $args[ 'opt_name' ], 'text', 'eg: "sms, google-oauth2, github"' );
     $this->render_field_description(
       __( 'Specify which Social, Database, or Passwordless connections to display in the Auth0 form. ', 'wp-auth0' ) .
@@ -386,7 +386,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     <?php
   }
 
-  public function render_verified_email( $args = [] ) {
+  public function render_verified_email( $args = array() ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       __( 'Require new users to both provide and verify their email before logging in. ', 'wp-auth0' ) .
