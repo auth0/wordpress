@@ -85,7 +85,7 @@ jQuery(document).ready(function($) {
 
     function localStorageAvailable() {
         try {
-            var x = '__storage_test__';
+            var x = '__Auth0_localStorage_assertion__';
             window.localStorage.setItem(x, x);
             window.localStorage.removeItem(x);
             return true;
