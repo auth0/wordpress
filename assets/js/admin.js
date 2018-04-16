@@ -78,7 +78,7 @@ jQuery(document).ready(function($) {
     });
 
     // Persistent admin tab
-    if ( 'function' === typeof window.localStorage.getItem ) {
+    if ( localStorageAvailable() ) {
         window.location.hash = window.localStorage.getItem( 'Auth0WPSettingsTab' );
         $( '.nav-tabs [role="tab"]' ).click( function () {
             var tabHref = $( this ).attr( 'href' );
@@ -102,4 +102,16 @@ jQuery(document).ready(function($) {
             $deleteCacheButton.prop( 'disabled', false ).val( wpa0.clear_cache_done );
         }, 'json');
     } );
+
+    function localStorageAvailable() {
+        try {
+            var x = '__storage_test__';
+            window.localStorage.setItem(x, x);
+            window.localStorage.removeItem(x);
+            return true;
+        }
+        catch(e) {
+            return false;
+        }
+    }
 });
