@@ -239,7 +239,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_migration_ws_ips_filter( $args = array() ) {
-    $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
+    $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ], 'wpa0_migration_ws_ips' );
   }
 
   public function render_migration_ws_ips( $args = array() ) {
@@ -263,7 +263,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_auto_login( $args = array() ) {
-    $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
+    $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ], 'wpa0_auto_login_method' );
     $this->render_field_description(
       __( 'Send logins directly to a specific Connection, skipping the login page', 'wp-auth0' )
     );
@@ -281,7 +281,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
   }
 
   public function render_ip_range_check( $args = array() ) {
-    $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
+    $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ], 'wpa0_ip_ranges' );
   }
 
   public function render_ip_ranges( $args = array() ) {
