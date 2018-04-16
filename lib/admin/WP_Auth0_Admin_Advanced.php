@@ -273,7 +273,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     $this->render_text_field( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
       sprintf(
-          __( 'Find the method name to use under Connections > [Connection Type] in your %s. ', 'wp-auth0' ) .
+          __( 'Find the method name to use under Connections > [Connection Type] in your %s. ', 'wp-auth0' ),
           $this->get_dashboard_link()
       ) .
       __( 'Click the expand icon and use the value in the "Name" field (like "google-oauth2")', 'wp-auth0' )

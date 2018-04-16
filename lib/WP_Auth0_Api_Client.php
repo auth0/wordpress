@@ -1076,9 +1076,7 @@ class WP_Auth0_Api_Client {
 
 	$endpoint = "https://$domain/.well-known/jwks.json";
 
-    $cache_expiration = $a0_options->get('cache_expiration');
-
-	if ( false === ($secret = get_transient('WP_Auth0_JWKS_cache') ) ) {
+	if ( false === ($secret = get_transient(WPA0_JWKS_CACHE_TRANSIENT_NAME) ) ) {
 
 		$secret = array();
 
@@ -1104,8 +1102,8 @@ class WP_Auth0_Api_Client {
 			$secret[$key['kid']] = self::convertCertToPem($key['x5c'][0]);
 		}
 
-		if ($cache_expiration !== 0) {
-			set_transient( 'WP_Auth0_JWKS_cache', $secret, $cache_expiration * MINUTE_IN_SECONDS );
+		if ( $cache_expiration = $a0_options->get('cache_expiration') ) {
+			set_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME, $secret, $cache_expiration * MINUTE_IN_SECONDS );
 		}
 
 	}

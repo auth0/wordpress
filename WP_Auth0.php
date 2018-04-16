@@ -23,6 +23,7 @@ define( 'WPA0_AUTH0_JS_CDN_URL', 'https://cdn.auth0.com/js/auth0/9.4/auth0.min.j
 
 define( 'WPA0_CACHE_GROUP', 'wp_auth0' );
 define( 'WPA0_STATE_COOKIE_NAME', 'auth0_state' );
+define( 'WPA0_JWKS_CACHE_TRANSIENT_NAME', 'WP_Auth0_JWKS_cache' );
 
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 
@@ -433,7 +434,7 @@ class WP_Auth0 {
     delete_option( 'wp_auth0_grant_types_failed' );
     delete_option( 'wp_auth0_grant_types_success' );
 
-		delete_transient('WP_Auth0_JWKS_cache');
+		delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
 	}
 
 	private function autoloader( $class ) {
