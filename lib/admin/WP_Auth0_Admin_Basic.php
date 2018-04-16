@@ -33,13 +33,13 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$options = array(
 			array( 'name' => __( 'Domain', 'wp-auth0' ), 'opt' => 'domain',
 				'id' => 'wpa0_domain', 'function' => 'render_domain' ),
-			array( 'name' => __( 'Application ID', 'wp-auth0' ), 'opt' => 'client_id',
+			array( 'name' => __( 'Client ID', 'wp-auth0' ), 'opt' => 'client_id',
 				'id' => 'wpa0_client_id', 'function' => 'render_client_id' ),
-			array( 'name' => __( 'Application Secret', 'wp-auth0' ), 'opt' => 'client_secret',
+			array( 'name' => __( 'Client Secret', 'wp-auth0' ), 'opt' => 'client_secret',
 				'id' => 'wpa0_client_secret', 'function' => 'render_client_secret' ),
-			array( 'name' => __( 'Application Secret Encoded', 'wp-auth0' ), 'opt' => 'client_secret_b64_encoded',
+			array( 'name' => __( 'Client Secret Base64 Encoded', 'wp-auth0' ), 'opt' => 'client_secret_b64_encoded',
 				'id' => 'wpa0_client_secret_b64_encoded', 'function' => 'render_client_secret_b64_encoded' ),
-			array( 'name' => __( 'Application Signing Algorithm', 'wp-auth0' ), 'opt' => 'client_signing_algorithm',
+			array( 'name' => __( 'JWT Signature Algorithm', 'wp-auth0' ), 'opt' => 'client_signing_algorithm',
 				'id' => 'wpa0_client_signing_algorithm', 'function' => 'render_client_signing_algorithm' ),
 			array( 'name' => __( 'Cache Time (in minutes)', 'wp-auth0' ), 'opt' => 'cache_expiration',
 				'id' => 'wpa0_cache_expiration', 'function' => 'render_cache_expiration' ),
@@ -69,7 +69,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			'<br><br><code>' . implode( '</code> <code>', WP_Auth0_Api_Client::ConsentRequiredScopes() ) .
 			'</code><br><br>' . $this->get_docs_link(
 				'api/management/v2/tokens#get-a-token-manually',
-				__( 'More information on generating tokens', 'wp-auth0' )
+				__( 'More information on manually generating tokens', 'wp-auth0' )
 			)
 		);
 	}
@@ -141,7 +141,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$this->render_field_description(
 			__( 'Signups are currently ', 'wp-auth0' ) . '<b>' .
 			( $allow_signup ? __( 'enabled', 'wp-auth0' ) : __( 'disabled', 'wp-auth0' ) ) .
-			'</b>' . __( ' by the setting ' ) . $settings_text
+			'</b>' . __( ' by this setting ' ) . $settings_text
 		);
 	}
 
@@ -192,7 +192,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Turn on to enable a link on wp-login.php pointing to the core login form. ', 'wp-auth0' ) .
-			__( 'This is typically only used while testing the plugin initially or on staging', 'wp-auth0' )
+			__( 'This is typically only used while testing the plugin initially', 'wp-auth0' )
 		);
 	}
 
@@ -207,7 +207,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
 	public function auth0_delete_cache_transient() {
 		check_ajax_referer( 'auth0_delete_cache_transient' );
-		delete_transient( 'WP_Auth0_JWKS_cache' );
+		delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
 		die();
 	}
 
