@@ -85,7 +85,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	public function render_client_secret_b64_encoded( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Enable this if your Client Secret is base64 enabled. ', 'wp-auth0' ) .
+			__( 'Enable this if your Client Secret is base64 encoded. ', 'wp-auth0' ) .
 			__( 'This information is found below the Client Secret field in the ', 'wp-auth0' ) .
 			$this->get_dashboard_link( 'applications' )
 		);

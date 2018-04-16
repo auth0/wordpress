@@ -38,28 +38,8 @@ jQuery(document).ready(function($) {
         media_frame.open();
     });
 
-    function configureHideShowAutoLogin() {
-        // Hide/Show login method depending on auto login
-        var $loginMethodField = $("#wpa0_auto_login_method").closest("tr");
-        var $autoLoginCheckbox = $("#wpa0_auto_login");
-        if (!$autoLoginCheckbox.prop("checked")) {
-            $loginMethodField.hide();
-        }
-
-        $autoLoginCheckbox.change(function() {
-            if (!$autoLoginCheckbox.prop("checked")) {
-                $loginMethodField.hide();
-            } else {
-                $loginMethodField.show();
-            }
-
-        });
-    }
-
-    configureHideShowAutoLogin();
-
     // Show/hide field for specific switches
-    $('[data-expand][data-expand!=""]').each( function() {
+    $('[data-expand!=""]').each( function() {
         var $thisSwitch = $( this );
         var $showFieldRow = $( '#' + $thisSwitch.attr( 'data-expand' ) ).closest( 'tr' );
 
