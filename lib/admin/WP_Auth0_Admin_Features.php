@@ -197,7 +197,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function security_validation( $old_options, $input ) {
     $input['password_policy'] = ! empty( $input['password_policy'] ) ? $input['password_policy'] : null;
 
-    if ( $old_options['password_policy'] != $input['password_policy'] ) {
+    if ( $old_options['password_policy'] !== $input['password_policy'] ) {
       $domain = $input['domain'];
       $app_token = $input['auth0_app_token'];
       $connections = WP_Auth0_Api_Client::search_connection( $domain, $app_token, 'auth0' );
@@ -211,15 +211,9 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
       foreach ( $connections as $connection ) {
         if ( in_array( $input['client_id'], $connection->enabled_clients ) ) {
-          $connection->options->passwordPolicy = $input['password_policy'];
-          $connection_id = $connection->id;
+          $patch = array( 'options' => array( 'passwordPolicy' => $input['password_policy'] ) );
+          $update_resp = WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection->id, $patch );
 
-          // Only update the password policy via PATCH
-          unset( $connection->name );
-          unset( $connection->strategy );
-          unset( $connection->id );
-
-          $update_resp = WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection_id, $connection );
           if ( false === $update_resp ) {
             $this->add_validation_error(
               __( 'There was a problem updating the password policy. ', 'wp-auth0' ) .
