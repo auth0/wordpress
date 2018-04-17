@@ -42,8 +42,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
         'id' => 'wpa0_remember_users_session', 'function' => 'render_remember_users_session' ),
       array( 'name' => __( 'Login Redirection URL', 'wp-auth0' ), 'opt' => 'default_login_redirection',
         'id' => 'wpa0_default_login_redirection', 'function' => 'render_default_login_redirection' ),
-      array( 'name' => __( 'Passwordless Login', 'wp-auth0' ), 'opt' => 'passwordless_enabled',
-        'id' => 'wpa0_passwordless_enabled', 'function' => 'render_passwordless_enabled' ),
       array( 'name' => __( 'Connections to Show', 'wp-auth0' ), 'opt' => 'lock_connections',
         'id' => 'wpa0_connections', 'function' => 'render_connections' ),
       array( 'name' => __( 'Force HTTPS Callback', 'wp-auth0' ), 'opt' => 'force_https_callback',
@@ -182,6 +180,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
     );
   }
 
+  // TODO: Deprecate, moved to WP_Auth0_Admin_features
   public function render_passwordless_enabled( $args = array() ) {
     $this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
     $this->render_field_description(
