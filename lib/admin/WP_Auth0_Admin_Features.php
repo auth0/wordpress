@@ -79,7 +79,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
   public function render_sso( $args = array() ) {
     $this->render_switch( $args['label_for'], $args['opt_name'] );
     $this->render_field_description(
-      __( 'SSO allows users to sign in once to multiple Clients in the same tenant. ', 'wp-auth0' ) .
+      __( 'SSO allows users to sign in once to multiple Applications in the same tenant. ', 'wp-auth0' ) .
       __( 'Turning this on will attempt to automatically log a user in when they visit wp-login.php. ', 'wp-auth0' ) .
       __( 'This setting will not affect how shortcodes and widgets work. ', 'wp-auth0' ) .
       __( 'For more information, see our ', 'wp-auth0' ) .
@@ -101,7 +101,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
       sprintf(
         __( 'You can enable other MFA providers in the %s. ', 'wp-auth0' ),
         $this->get_dashboard_link( 'multifactor' )
-      ) . __( 'For more information, see our %s. ', 'wp-auth0' ) .
+      ) . __( 'For more information, see our ', 'wp-auth0' ) .
       $this->get_docs_link( 'multifactor-authentication', __( 'help page on MFA', 'wp-auth0' ) )
     );
   }
