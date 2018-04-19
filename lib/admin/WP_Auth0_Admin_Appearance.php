@@ -110,10 +110,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$this->render_radio_button( $id_attr . '_un', $opt_name, 'username', '', 'username' === $value );
 		$this->render_field_description(
 			__( 'To allow the user to use either email or username to login, leave this as "Auto." ', 'wp-auth0' ) .
-			$this->get_docs_link(
-				'libraries/lock/customization#usernamestyle-string-',
-				__( 'More information on this setting', 'wp-auth0'	)
-			)
+			__( 'Only database connections that require a username will allow username logins', 'wp-auth0' )
 		);
 	}
 
