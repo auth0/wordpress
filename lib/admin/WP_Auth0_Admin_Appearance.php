@@ -75,7 +75,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 			__( 'Primary color for the Auth0 login form in hex format. ', 'wp-auth0' ) .
 			$this->get_docs_link(
 				'libraries/lock/v11/configuration#primarycolor-string-',
-				__( 'More information this settings', 'wp-auth0'	)
+				__( 'More information on this settings', 'wp-auth0'	)
 			)
 		);
 	}
@@ -86,7 +86,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 			__( 'The languageDictionary parameter for the Auth0 login form. ', 'wp-auth0' ) .
 			sprintf(
 				'<a href="https://github.com/auth0/lock/blob/master/src/i18n/en.js" target="_blank">%s</a>',
-				__( 'List of all modifiable text', 'wp-auth0' )
+				__( 'List of all modifiable options', 'wp-auth0' )
 			)
 		);
 	}
@@ -125,7 +125,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	public function render_gravatar( $args = array() ) {
 		$this->render_switch( $args[ 'label_for' ], $args[ 'opt_name' ] );
 		$this->render_field_description(
-			__( 'Automatically display avatar on login form when email address is entered', 'wp-auth0' )
+			__( 'Automatically display an avatar (from Gravatar) on the Auth0 login form', 'wp-auth0' )
 		);
 	}
 
