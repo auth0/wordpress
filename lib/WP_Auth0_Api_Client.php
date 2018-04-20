@@ -147,25 +147,21 @@ class WP_Auth0_Api_Client {
 		return true;
 	}
 
+	/**
+	 * Get required telemetry header
+	 *
+	 * @return array
+	 */
 	public static function get_info_headers() {
-		global $wp_version;
-
-		$a0_options = WP_Auth0_Options::Instance();
-
-		if ( $a0_options->get( 'metrics' ) != 1 ) {
-			return array();
-		}
-
-		return array(
-			'Auth0-Client' => base64_encode( wp_json_encode( array(
-						'name' => 'wp-auth0',
-						'version' => WPA0_VERSION,
-						'environment' => array(
-							'PHP' => phpversion(),
-							'WordPress' => $wp_version,
-						)
-					) ) )
+		$header_value = array(
+			'name' => 'wp-auth0',
+			'version' => WPA0_VERSION,
+			'environment' => array(
+				'PHP' => phpversion(),
+				'WordPress' => get_bloginfo('version'),
+			),
 		);
+		return array( 'Auth0-Client' => base64_encode( wp_json_encode( $header_value ) ) );
 	}
 
 	/**
