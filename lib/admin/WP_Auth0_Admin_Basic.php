@@ -31,46 +31,76 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		add_action( 'wp_ajax_auth0_delete_cache_transient', array( $this, 'auth0_delete_cache_transient' ) );
 
 		$options = array(
-			array( 'name' => __( 'Domain', 'wp-auth0' ), 'opt' => 'domain',
-				'id' => 'wpa0_domain', 'function' => 'render_domain' ),
-			array( 'name' => __( 'Client ID', 'wp-auth0' ), 'opt' => 'client_id',
-				'id' => 'wpa0_client_id', 'function' => 'render_client_id' ),
-			array( 'name' => __( 'Client Secret', 'wp-auth0' ), 'opt' => 'client_secret',
-				'id' => 'wpa0_client_secret', 'function' => 'render_client_secret' ),
-			array( 'name' => __( 'Client Secret Base64 Encoded', 'wp-auth0' ), 'opt' => 'client_secret_b64_encoded',
-				'id' => 'wpa0_client_secret_b64_encoded', 'function' => 'render_client_secret_b64_encoded' ),
-			array( 'name' => __( 'JWT Signature Algorithm', 'wp-auth0' ), 'opt' => 'client_signing_algorithm',
-				'id' => 'wpa0_client_signing_algorithm', 'function' => 'render_client_signing_algorithm' ),
-			array( 'name' => __( 'Cache Time (in minutes)', 'wp-auth0' ), 'opt' => 'cache_expiration',
-				'id' => 'wpa0_cache_expiration', 'function' => 'render_cache_expiration' ),
-			array( 'name' => __( 'API Token', 'wp-auth0' ), 'opt' => 'auth0_app_token',
-				'id' => 'wpa0_auth0_app_token', 'function' => 'render_auth0_app_token' ),
-			array( 'name' => __( 'WordPress Login Enabled', 'wp-auth0' ), 'opt' => 'wordpress_login_enabled',
-				'id' => 'wpa0_login_enabled', 'function' => 'render_allow_wordpress_login' ),
-			array( 'name' => __( 'Allow Signups', 'wp-auth0' ),
-				'id' => 'wpa0_allow_signup', 'function' => 'render_allow_signup' ),
+			array(
+				'name'     => __( 'Domain', 'wp-auth0' ),
+				'opt'      => 'domain',
+				'id'       => 'wpa0_domain',
+				'function' => 'render_domain',
+			),
+			array(
+				'name'     => __( 'Client ID', 'wp-auth0' ),
+				'opt'      => 'client_id',
+				'id'       => 'wpa0_client_id',
+				'function' => 'render_client_id',
+			),
+			array(
+				'name'     => __( 'Client Secret', 'wp-auth0' ),
+				'opt'      => 'client_secret',
+				'id'       => 'wpa0_client_secret',
+				'function' => 'render_client_secret',
+			),
+			array(
+				'name'     => __( 'Client Secret Base64 Encoded', 'wp-auth0' ),
+				'opt'      => 'client_secret_b64_encoded',
+				'id'       => 'wpa0_client_secret_b64_encoded',
+				'function' => 'render_client_secret_b64_encoded',
+			),
+			array(
+				'name'     => __( 'JWT Signature Algorithm', 'wp-auth0' ),
+				'opt'      => 'client_signing_algorithm',
+				'id'       => 'wpa0_client_signing_algorithm',
+				'function' => 'render_client_signing_algorithm',
+			),
+			array(
+				'name'     => __( 'Cache Time (in minutes)', 'wp-auth0' ),
+				'opt'      => 'cache_expiration',
+				'id'       => 'wpa0_cache_expiration',
+				'function' => 'render_cache_expiration',
+			),
+			array(
+				'name'     => __( 'API Token', 'wp-auth0' ),
+				'opt'      => 'auth0_app_token',
+				'id'       => 'wpa0_auth0_app_token',
+				'function' => 'render_auth0_app_token',
+			),
+			array(
+				'name'     => __( 'WordPress Login Enabled', 'wp-auth0' ),
+				'opt'      => 'wordpress_login_enabled',
+				'id'       => 'wpa0_login_enabled',
+				'function' => 'render_allow_wordpress_login',
+			),
+			array(
+				'name'     => __( 'Allow Signups', 'wp-auth0' ),
+				'id'       => 'wpa0_allow_signup',
+				'function' => 'render_allow_signup',
+			),
 		);
 		$this->init_option_section( '', 'basic', $options );
 	}
 
+	public function render_domain( $args = array() ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'your-tenant.auth0.com' );
+		$this->render_field_description(
+			__( 'Auth0 Domain, found in your Application settings in the ', 'wp-auth0' ) .
+			$this->get_dashboard_link( 'applications' )
+		);
+	}
 
 	public function render_client_id( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Client ID, found in your Application settings in the ', 'wp-auth0' ) .
 			$this->get_dashboard_link( 'applications' )
-		);
-	}
-
-	public function render_auth0_app_token( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password' );
-		$this->render_field_description(
-			__( 'This token should include the following scopes: ', 'wp-auth0' ) .
-			'<br><br><code>' . implode( '</code> <code>', WP_Auth0_Api_Client::ConsentRequiredScopes() ) .
-			'</code><br><br>' . $this->get_docs_link(
-				'api/management/v2/tokens#get-a-token-manually',
-				__( 'More information on manually generating tokens', 'wp-auth0' )
-			)
 		);
 	}
 
@@ -91,8 +121,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		);
 	}
 
-	public function render_client_signing_algorithm( $args = array() ){
-		$value = $this->options->get( $args['opt_name'],  WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG );
+	public function render_client_signing_algorithm( $args = array() ) {
+		$value = $this->options->get( $args['opt_name'], WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG );
 		$this->render_radio_button( $args['label_for'] . '_hs', $args['opt_name'], 'HS256', '', 'HS256' === $value );
 		$this->render_radio_button( $args['label_for'] . '_rs', $args['opt_name'], 'RS256', '', 'RS256' === $value );
 		$this->render_field_description(
@@ -111,7 +141,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$this->render_field_description( __( 'JWKS cache expiration in minutes (use 0 for no caching)', 'wp-auth0' ) );
 		if ( $domain = $this->options->get( 'domain' ) ) {
 			$this->render_field_description(
-				sprintf( '<a href="https://%s/.well-known/jwks.json" target="_blank">%s</a>',
+				sprintf(
+					'<a href="https://%s/.well-known/jwks.json" target="_blank">%s</a>',
 					$domain,
 					__( 'View your JWKS here', 'wp-auth0' )
 				)
@@ -119,14 +150,17 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		}
 	}
 
-	public function render_domain( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'your-tenant.auth0.com' );
+	public function render_auth0_app_token( $args = array() ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password' );
 		$this->render_field_description(
-			__( 'Auth0 Domain, found in your Application settings in the ', 'wp-auth0' ) .
-			$this->get_dashboard_link( 'applications' )
+			__( 'This token should include the following scopes: ', 'wp-auth0' ) .
+			'<br><br><code>' . implode( '</code> <code>', WP_Auth0_Api_Client::ConsentRequiredScopes() ) .
+			'</code><br><br>' . $this->get_docs_link(
+				'api/management/v2/tokens#get-a-token-manually',
+				__( 'More information on manually generating tokens', 'wp-auth0' )
+			)
 		);
 	}
-
 
 	public function render_allow_signup() {
 		if ( is_multisite() ) {
@@ -145,49 +179,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		);
 	}
 
-	// TODO: Deprecate
-	public function render_allow_signup_regular_multisite() {
-		$allow_signup = $this->options->is_wp_registration_enabled();
-?>
-      <span class="description">
-        <?php echo __( 'Signup will be', 'wp-auth0' ); ?>
-
-        <?php if ( ! $allow_signup ) { ?>
-          <b><?php echo __( 'disabled', 'wp-auth0' ); ?></b>
-          <?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', 'wp-auth0' ); ?>
-        <?php } else { ?>
-          <b><?php echo __( 'enabled', 'wp-auth0' ); ?></b>
-          <?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', 'wp-auth0' ); ?>
-        <?php } ?>
-
-        <?php echo __( 'You can manage this setting on <code>Network Admin > Settings > Network Settings > Allow new registrations</code> (you need to set it up to <b>User accounts may be registered</b> or <b>Both sites and user accounts can be registered</b> depending on your preferences).', 'wp-auth0' ); ?>
-      </span>
-
-    <?php
-	}
-
-	// TODO: Deprecate
-	public function render_allow_signup_regular() {
-		$allow_signup = $this->options->is_wp_registration_enabled();
-?>
-      <span class="description">
-        <?php echo __( 'Signup will be', 'wp-auth0' ); ?>
-
-        <?php if ( ! $allow_signup ) { ?>
-          <b><?php echo __( 'disabled', 'wp-auth0' ); ?></b>
-          <?php echo __( ' because it is enabled by the setting "Anyone can register" in the WordPress General Settings.', 'wp-auth0' ); ?>
-        <?php } else { ?>
-          <b><?php echo __( 'enabled', 'wp-auth0' ); ?></b>
-          <?php echo __( ' because it is enabled by the setting "Anyone can register" in the WordPress General Settings.', 'wp-auth0' ); ?>
-        <?php } ?>
-
-        <?php echo __( 'You can manage this setting on <code>Settings > General > Membership</code>, Anyone can register', 'wp-auth0' ); ?>
-	       <a href="<?php echo admin_url( 'options-general.php' ) ?>" target="_blank"><?php _e( 'here', 'wp-auth0' ) ?></a>.
-      </span>
-
-    <?php
-	}
-
 	public function render_allow_wordpress_login( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
@@ -197,12 +188,55 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	}
 
 	// TODO: Deprecate
+	public function render_allow_signup_regular_multisite() {
+		$allow_signup = $this->options->is_wp_registration_enabled();
+?>
+	  <span class="description">
+		<?php echo __( 'Signup will be', 'wp-auth0' ); ?>
+
+		<?php if ( ! $allow_signup ) { ?>
+		  <b><?php echo __( 'disabled', 'wp-auth0' ); ?></b>
+			<?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', 'wp-auth0' ); ?>
+		<?php } else { ?>
+		  <b><?php echo __( 'enabled', 'wp-auth0' ); ?></b>
+			<?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', 'wp-auth0' ); ?>
+		<?php } ?>
+
+		<?php echo __( 'You can manage this setting on <code>Network Admin > Settings > Network Settings > Allow new registrations</code> (you need to set it up to <b>User accounts may be registered</b> or <b>Both sites and user accounts can be registered</b> depending on your preferences).', 'wp-auth0' ); ?>
+	  </span>
+
+	<?php
+	}
+
+	// TODO: Deprecate
+	public function render_allow_signup_regular() {
+		$allow_signup = $this->options->is_wp_registration_enabled();
+?>
+	  <span class="description">
+		<?php echo __( 'Signup will be', 'wp-auth0' ); ?>
+
+		<?php if ( ! $allow_signup ) { ?>
+		  <b><?php echo __( 'disabled', 'wp-auth0' ); ?></b>
+			<?php echo __( ' because it is enabled by the setting "Anyone can register" in the WordPress General Settings.', 'wp-auth0' ); ?>
+		<?php } else { ?>
+		  <b><?php echo __( 'enabled', 'wp-auth0' ); ?></b>
+			<?php echo __( ' because it is enabled by the setting "Anyone can register" in the WordPress General Settings.', 'wp-auth0' ); ?>
+		<?php } ?>
+
+		<?php echo __( 'You can manage this setting on <code>Settings > General > Membership</code>, Anyone can register', 'wp-auth0' ); ?>
+		   <a href="<?php echo admin_url( 'options-general.php' ); ?>" target="_blank"><?php _e( 'here', 'wp-auth0' ); ?></a>.
+	  </span>
+
+	<?php
+	}
+
+	// TODO: Deprecate
 	public function render_basic_description() {
 ?>
 
-    <p class=\"a0-step-text\"><?php echo self::BASIC_DESCRIPTION; ?></p>
+	<p class=\"a0-step-text\"><?php echo self::BASIC_DESCRIPTION; ?></p>
 
-    <?php
+	<?php
 	}
 
 	public function auth0_delete_cache_transient() {
@@ -217,7 +251,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			return $input;
 		}
 
-		$input['client_id'] = sanitize_text_field( $input['client_id'] );
+		$input['client_id']        = sanitize_text_field( $input['client_id'] );
 		$input['cache_expiration'] = absint( $input['cache_expiration'] );
 
 		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] )
