@@ -3,8 +3,11 @@
 class WP_Auth0_Admin_Generic {
 
 	protected $options;
+
 	protected $_option_name;
+
 	protected $_description;
+
 	protected $_textarea_rows = 4;
 
 	protected $actions_middlewares = array();
@@ -15,20 +18,20 @@ class WP_Auth0_Admin_Generic {
 	 * @param WP_Auth0_Options_Generic $options
 	 */
 	public function __construct( WP_Auth0_Options_Generic $options ) {
-		$this->options = $options;
+		$this->options      = $options;
 		$this->_option_name = $options->get_options_name();
 	}
 
 	/**
-     * Add settings section and fields for each of the settings screen
-     *
+	 * Add settings section and fields for each of the settings screen
+	 *
 	 * @param string $section_name - name used for the settings section (usually empty)
 	 * @param string $id - settings screen id
-	 * @param array $options - array of settings fields
+	 * @param array  $options - array of settings fields
 	 */
 	protected function init_option_section( $section_name, $id, $options ) {
 		$options_name = $this->_option_name . '_' . strtolower( $id );
-		$section_id = "wp_auth0_{$id}_settings_section";
+		$section_id   = "wp_auth0_{$id}_settings_section";
 
 		add_settings_section(
 			$section_id,
@@ -39,7 +42,7 @@ class WP_Auth0_Admin_Generic {
 
 		$options = apply_filters( 'auth0_settings_fields', $options, $id );
 
-		foreach ($options as $setting ) {
+		foreach ( $options as $setting ) {
 			$callback = function_exists( $setting['function'] )
 				? $setting['function']
 				: array( $this, $setting['function'] );
@@ -52,7 +55,7 @@ class WP_Auth0_Admin_Generic {
 				$section_id,
 				array(
 					'label_for' => $setting['id'],
-					'opt_name' => isset( $setting['opt'] ) ? $setting['opt'] : null,
+					'opt_name'  => isset( $setting['opt'] ) ? $setting['opt'] : null,
 				)
 			);
 		}
@@ -94,35 +97,34 @@ class WP_Auth0_Admin_Generic {
 	}
 
 	protected function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {
-		$input[$key] = ( isset( $input[$key] ) ? $input[$key] : null );
+		$input[ $key ] = ( isset( $input[ $key ] ) ? $input[ $key ] : null );
 
-		if ( ( $input[$key] !== null && $old_options[$key] === null ) || ( $input[$key] === null && $old_options[$key] !== null ) ) {
+		if ( ( $input[ $key ] !== null && $old_options[ $key ] === null ) || ( $input[ $key ] === null && $old_options[ $key ] !== null ) ) {
 
 			try {
 
-				$operations = new WP_Auth0_Api_Operations( $this->options );
-				$input[$key] = $operations->toggle_rule ( $this->options->get( 'auth0_app_token' ), ( is_null( $input[$key] ) ? $old_options[$key] : null ), $rule_name, $rule_script );
+				$operations    = new WP_Auth0_Api_Operations( $this->options );
+				$input[ $key ] = $operations->toggle_rule( $this->options->get( 'auth0_app_token' ), ( is_null( $input[ $key ] ) ? $old_options[ $key ] : null ), $rule_name, $rule_script );
 
 			} catch ( Exception $e ) {
 				$this->add_validation_error( $e->getMessage() );
-				$input[$key] = null;
+				$input[ $key ] = null;
 			}
 		}
 
 		return $input;
 	}
 
-
 	// TODO: Deprecate
 	protected function render_a0_switch( $id, $name, $value, $checked ) {
 ?>
 
-    <div class="a0-switch">
-      <input type="checkbox" name="<?php echo $this->_option_name; ?>[<?php echo $name; ?>]" id="<?php echo $id; ?>" value="<?php echo $value; ?>" <?php echo checked( $checked ); ?>/>
-      <label for="<?php echo $id; ?>"></label>
-    </div>
+	<div class="a0-switch">
+	  <input type="checkbox" name="<?php echo $this->_option_name; ?>[<?php echo $name; ?>]" id="<?php echo $id; ?>" value="<?php echo $value; ?>" <?php echo checked( $checked ); ?>/>
+	  <label for="<?php echo $id; ?>"></label>
+	</div>
 
-    <?php
+	<?php
 	}
 
 	/**
@@ -141,7 +143,7 @@ class WP_Auth0_Admin_Generic {
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			! empty( $expand_id ) ? esc_attr( $expand_id ) : '',
-			checked( empty( $value ), FALSE, FALSE ),
+			checked( empty( $value ), false, false ),
 			esc_attr( $id )
 		);
 	}
@@ -160,7 +162,7 @@ class WP_Auth0_Admin_Generic {
 		// Secure fields are not output by default; validation keeps last value if a new one is not entered
 		if ( 'password' === $type ) {
 			$placeholder = ! empty( $value ) ? 'Not visible' : '';
-			$value = '';
+			$value       = '';
 		}
 		printf(
 			'<input type="%s" name="%s[%s]" id="%s" value="%s" placeholder="%s" style="%s">',
@@ -211,13 +213,13 @@ class WP_Auth0_Admin_Generic {
 	/**
 	 * Output a radio button
 	 *
-	 * @param string $id - input id attribute
-	 * @param string $input_name - input name attribute
+	 * @param string               $id - input id attribute
+	 * @param string               $input_name - input name attribute
 	 * @param string|integer|float $value - input value attribute
-	 * @param string $label - input label text
-	 * @param bool $selected - is it active?
+	 * @param string               $label - input label text
+	 * @param bool                 $selected - is it active?
 	 */
-	protected function render_radio_button( $id, $input_name, $value, $label = '', $selected = FALSE ) {
+	protected function render_radio_button( $id, $input_name, $value, $label = '', $selected = false ) {
 		printf(
 			'<label for="%s"><input type="radio" name="%s[%s]" id="%s" value="%s" %s>&nbsp;%s</label>',
 			esc_attr( $id ),
@@ -225,7 +227,7 @@ class WP_Auth0_Admin_Generic {
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			esc_attr( $value ),
-			checked( $selected, TRUE, FALSE ),
+			checked( $selected, true, false ),
 			sanitize_text_field( ! empty( $label ) ? $label : ucfirst( $value ) )
 		);
 	}
@@ -247,7 +249,8 @@ class WP_Auth0_Admin_Generic {
 	 * @return string
 	 */
 	protected function get_dashboard_link( $path = '' ) {
-		return sprintf( '<a href="https://manage.auth0.com/#/%s" target="_blank">%s</a>',
+		return sprintf(
+			'<a href="https://manage.auth0.com/#/%s" target="_blank">%s</a>',
 			$path,
 			__( 'Auth0 dashboard', 'wp-auth0' )
 		);
@@ -264,7 +267,6 @@ class WP_Auth0_Admin_Generic {
 	protected function get_docs_link( $path, $text = '' ) {
 		$path = '/' === $path[0] ? substr( $path, 1 ) : $path;
 		$text = empty( $text ) ? __( 'here', 'wp-auth0' ) : sanitize_text_field( $text );
-		return sprintf( '<a href="https://auth0.com/docs/%s" target="_blank">%s</a>',	$path, $text );
+		return sprintf( '<a href="https://auth0.com/docs/%s" target="_blank">%s</a>', $path, $text );
 	}
-
 }
