@@ -102,43 +102,34 @@ class WP_Auth0_LoginManager {
 	 * Redirect to a specific connection designated in Settings > Advanced
 	 */
 	public function login_auto() {
-		$auto_login = absint( $this->a0_options->get( 'auto_login' ) );
-
-		if ( $auto_login && ( ! isset( $_GET['action'] ) || 'logout' !== $_GET['action'] ) && ! isset( $_GET['wle'] ) ) {
-
-			if ( strtolower( $_SERVER['REQUEST_METHOD'] ) !== 'get' ) {
-				return;
-			}
-
-			if ( $this->query_vars( 'auth0' ) !== null ) {
-				return;
-			}
-
-			$lock_options = new WP_Auth0_Lock10_Options();
-			$options      = $lock_options->get_lock_options();
-
-			$connection = apply_filters( 'auth0_get_auto_login_connection', $this->a0_options->get( 'auto_login_method' ) );
-
-			$response_type = $lock_options->get_auth0_implicit_workflow() ? 'id_token' : 'code';
-
-			$state = $lock_options->get_state_obj();
-
-			// Create the link to log in.
-			$login_url = 'https://' . $this->a0_options->get( 'domain' ) .
-						'/authorize?' .
-						'scope=' . rawurlencode( $options['auth']['params']['scope'] ) .
-						'&response_type=' . $response_type .
-						'&client_id=' . $this->a0_options->get( 'client_id' ) .
-						'&redirect_uri=' . $options['auth']['redirectUrl'] .
-						'&state=' . rawurlencode( $state ) .
-						'&nonce=' . WP_Auth0_Nonce_Handler::getInstance()->get() .
-						'&connection=' . trim( $connection ) .
-						'&auth0Client=' . WP_Auth0_Api_Client::get_info_headers();
-
-			setcookie( WPA0_STATE_COOKIE_NAME, $state, time() + WP_Auth0_Nonce_Handler::COOKIE_EXPIRES, '/' );
-			wp_redirect( $login_url );
-			exit;
+		if (
+			// Nothing to do
+			( ! $this->a0_options->get( 'auto_login', FALSE ) )
+			// Auth0 is not ready to process logins
+			|| ! WP_Auth0::ready()
+			// Do not redirect POST requests
+			|| strtolower( $_SERVER['REQUEST_METHOD'] ) !== 'get'
+			// Do not redirect login page override
+			|| isset( $_GET['wle'] )
+			// Do not redirect log out action
+			|| ( isset( $_GET['action'] ) && 'logout' === $_GET['action'] )
+			// Do not redirect Auth0 login processing
+			|| null !== $this->query_vars( 'auth0' )
+			// Do not redirect if already authenticated
+			|| is_user_logged_in()
+		) {
+			return;
 		}
+
+		$connection = apply_filters( 'auth0_get_auto_login_connection', $this->a0_options->get( 'auto_login_method' ) );
+		$auth_params = self::get_authorize_params( $connection );
+
+		$auth_url = 'https://' . $this->a0_options->get( 'domain' ) . '/authorize';
+		$auth_url = add_query_arg( array_map( 'rawurlencode', $auth_params ), $auth_url );
+
+		setcookie( WPA0_STATE_COOKIE_NAME, $auth_params['state'], time() + WP_Auth0_Nonce_Handler::COOKIE_EXPIRES, '/' );
+		wp_redirect( $auth_url );
+		exit;
 	}
 
 	/**
@@ -156,8 +147,8 @@ class WP_Auth0_LoginManager {
 		// Catch any incoming errors and stop the login process.
 		// See https://auth0.com/docs/libraries/error-messages for more info.
 		if ( $this->query_vars( 'error' ) || $this->query_vars( 'error_description' ) ) {
-			$error_msg  = sanitize_text_field( $this->query_vars( 'error_description' ) );
-			$error_code = sanitize_text_field( $this->query_vars( 'error' ) );
+			$error_msg  = sanitize_text_field( rawurldecode( $_REQUEST[ 'error_description' ] ) );
+			$error_code = sanitize_text_field( $_REQUEST[ 'error' ]  );
 			$this->die_on_login( $error_msg, $error_code );
 		}
 
@@ -332,13 +323,11 @@ class WP_Auth0_LoginManager {
 		}
 
 		// Validate the nonce if one was included in the request if using auto-login.
-		if ( $this->a0_options->get( 'auto_login' ) ) {
-			$nonce = isset( $decoded_token->nonce ) ? $decoded_token->nonce : null;
-			if ( ! WP_Auth0_Nonce_Handler::getInstance()->validate( $nonce ) ) {
-				throw new WP_Auth0_LoginFlowValidationException(
-					__( 'Invalid nonce', 'wp-auth0' )
-				);
-			}
+		$nonce = isset( $decoded_token->nonce ) ? $decoded_token->nonce : null;
+		if ( ! WP_Auth0_Nonce_Handler::getInstance()->validate( $nonce ) ) {
+			throw new WP_Auth0_LoginFlowValidationException(
+				__( 'Invalid nonce', 'wp-auth0' )
+			);
 		}
 
 		// Populate legacy userinfo property.
@@ -585,6 +574,68 @@ class WP_Auth0_LoginManager {
 		if ( session_id() ) {
 			session_destroy();
 		}
+	}
+
+	/**
+	 * Get and filter the scope used for access and ID tokens
+	 *
+	 * @param string $context - how are the scopes being used?
+	 *
+	 * @return string
+	 */
+	public static function get_userinfo_scope( $context = '' ) {
+		return apply_filters( 'auth0_auth_token_scope', 'openid email name nickname picture', $context );
+	}
+
+	/**
+	 * Get a base authorize URL for handling HLP redirects.
+	 *
+	 * @param null|string $connection - specific connection to use, pass null to use all enabled.
+	 * @param null|string $redirect_to - URL to redirect upon successful authentication.
+	 *
+	 * @return array
+	 */
+	public static function get_authorize_params( $connection = null, $redirect_to = null ) {
+		$params = array();
+		$options = WP_Auth0_Options::Instance();
+		$lock_options = new WP_Auth0_Lock10_Options();
+		$is_implicit = (bool) $options->get( 'auth0_implicit_workflow', FALSE );
+		$nonce = WP_Auth0_Nonce_Handler::getInstance()->get();
+
+		$params[ 'client_id' ] = $options->get( 'client_id' );
+		$params[ 'scope' ] = self::get_userinfo_scope( 'authorize_url' );
+		$params[ 'response_type' ] = $is_implicit ? 'id_token': 'code';
+		$params[ 'redirect_uri' ] = $is_implicit
+			? $lock_options->get_implicit_callback_url()
+			: $options->get_wp_auth0_url( null, $is_implicit );
+
+		if ( $is_implicit ) {
+			$params[ 'nonce' ] = $nonce;
+		}
+
+		if ( ! empty( $connection ) ) {
+			$params[ 'connection' ] = $connection;
+		}
+
+		// Get the telemetry header.
+		$telemetry = WP_Auth0_Api_Client::get_info_headers();
+		$params[ 'auth0Client' ] = $telemetry[ 'Auth0-Client' ];
+
+		// Where should the user be redirected after logging in?
+		if ( empty( $redirect_to ) && ! empty( $_GET['redirect_to'] ) ) {
+			$redirect_to = $_GET['redirect_to'];
+		} elseif ( empty( $redirect_to ) ) {
+			$redirect_to = $options->get( 'default_login_redirection' );
+		}
+
+		// State parameter, checked during login callback.
+		$params[ 'state' ] = base64_encode( json_encode( array(
+			'interim' => false,
+			'nonce' => $nonce,
+			'redirect_to' => filter_var( $redirect_to, FILTER_SANITIZE_URL ),
+		) ) );
+
+		return $params;
 	}
 
 	/**

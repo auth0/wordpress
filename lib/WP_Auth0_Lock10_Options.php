@@ -5,7 +5,6 @@ class WP_Auth0_Lock10_Options {
   protected $wp_options;
   protected $extended_settings;
   protected $signup_mode = false;
-  protected $_scopes = 'openid email name nickname picture';
 
   /**
    * WP_Auth0_Lock10_Options constructor.
@@ -133,7 +132,7 @@ class WP_Auth0_Lock10_Options {
   }
 
   public function get_sso_options() {
-    $options["scope"] = $this->_scopes;
+    $options["scope"] = WP_Auth0_LoginManager::get_userinfo_scope( 'sso' );
 
     if ( $this->get_auth0_implicit_workflow() ) {
       $options["responseType"] = 'id_token';
@@ -172,7 +171,7 @@ class WP_Auth0_Lock10_Options {
       "auth"    => array(
         "params" => array(
           "state" => $this->get_state_obj( $redirect_to ),
-          "scope" => apply_filters( 'auth0_auth_param_scopes', $this->_scopes ),
+          "scope" => WP_Auth0_LoginManager::get_userinfo_scope( 'lock' ),
         ),
       ),
     );
@@ -181,6 +180,7 @@ class WP_Auth0_Lock10_Options {
       $extraOptions["auth"]["responseType"] = 'id_token';
       $extraOptions["auth"]["redirectUrl"] = $this->get_implicit_callback_url();
       $extraOptions["autoParseHash"] = false;
+      $extraOptions["auth"]["params"]["nonce"] = WP_Auth0_Nonce_Handler::getInstance()->get();
     } else {
       $extraOptions["auth"]["responseType"] = 'code';
       $extraOptions["auth"]["redirectUrl"] = $this->get_code_callback_url();
