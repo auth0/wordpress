@@ -12,7 +12,7 @@ final class WP_Auth0_Nonce_Handler {
   /**
    *
    */
-  const COOKIE_EXPIRES = MINUTE_IN_SECONDS;
+  const COOKIE_EXPIRES = HOUR_IN_SECONDS;
 
   /**
    * Singleton class instance

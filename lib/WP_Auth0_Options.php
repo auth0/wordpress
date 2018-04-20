@@ -103,12 +103,13 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 * Get the main site URL for Auth0 processing
 	 *
 	 * @param string|null $protocol - forced URL protocol, use default if empty
+	 * @param bool $implicit - use the implicit flow in the callback
 	 *
 	 * @return string
 	 */
-	public function get_wp_auth0_url( $protocol = null ) {
+	public function get_wp_auth0_url( $protocol = null, $implicit = false ) {
 		$site_url = site_url( 'index.php', $protocol );
-		return add_query_arg( 'auth0', '1', $site_url );
+		return add_query_arg( 'auth0', ( $implicit ? 'implicit' : '1' ), $site_url );
 	}
 
 	/**
