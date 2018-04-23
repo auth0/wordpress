@@ -1,22 +1,20 @@
 <?php
 class WP_Auth0_ErrorLog {
 
-	// TODO: Deprecate
+	/**
+	 * @deprecated 3.6.0 - Not needed, handled in WP_Auth0_Admin::admin_enqueue()
+	 */
 	public function init() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
-	// TODO: Deprecate
+	/**
+	 * @deprecated 3.6.0 - Not needed, handled in WP_Auth0_Admin::admin_enqueue()
+	 */
 	public function admin_enqueue() {
-		if ( ! isset( $_REQUEST['page'] ) || 'wpa0-errors' !== $_REQUEST['page'] ) {
-			return;
-		}
-
-		wp_enqueue_media();
-		wp_enqueue_style( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/css/bootstrap.min.css' );
-		wp_enqueue_script( 'wpa0_bootstrap', WPA0_PLUGIN_URL . 'assets/bootstrap/js/bootstrap.min.js' );
-		wp_enqueue_style( 'wpa0_admin_initial_settup', WPA0_PLUGIN_URL . 'assets/css/initial-setup.css' );
-		wp_enqueue_style( 'media' );
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	public function render_settings_page() {
