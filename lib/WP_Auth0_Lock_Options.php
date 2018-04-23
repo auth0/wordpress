@@ -1,5 +1,10 @@
 <?php
-// TODO: Deprecate - previously used for passwordless
+
+/**
+ * Class WP_Auth0_Lock_Options.
+ *
+ * @deprecated 3.6.0 - Outdated, use WP_Auth0_Lock10_Options
+ */
 class WP_Auth0_Lock_Options {
 
 	protected $wp_options;
@@ -7,7 +12,16 @@ class WP_Auth0_Lock_Options {
 
 	protected $signup_mode = false;
 
+	/**
+	 * WP_Auth0_Lock_Options constructor.
+	 *
+	 * @deprecated 3.6.0 - Outdated, use WP_Auth0_Lock10_Options
+	 *
+	 * @param array $extended_settings
+	 */
 	public function __construct( $extended_settings = array() ) {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Class %s is deprecated.', 'wp-auth0' ), __CLASS__ ), E_USER_DEPRECATED );
 		$this->wp_options = WP_Auth0_Options::Instance();
 		$this->extended_settings = $extended_settings;
 	}
