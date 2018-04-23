@@ -67,9 +67,12 @@ class WP_Auth0_InitialSetup {
 		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
-	// TODO: Deprecate
+	/**
+	 * @deprecated 3.6.0 - Duplicate functionality, replaced by WP_Auth0_Admin::create_account_message()
+	 */
 	public function notify_setup() {
-		// Not used
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	public function notify_error() {
