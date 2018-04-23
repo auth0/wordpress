@@ -1,12 +1,25 @@
 <?php
-// TODO: Deprecate
+/**
+ * Class WP_Auth0_Dashboard_Plugins_IdP
+ *
+ * @deprecated 3.6.0 - Not supporting dashboard widgets
+ */
 class WP_Auth0_Dashboard_Plugins_IdP extends WP_Auth0_Dashboard_Plugins_Generic {
 
 	protected $id = 'auth0_dashboard_widget_idp';
 	protected $name = 'Auth0 - Identity Providers';
 	protected $type;
 
+	/**
+	 * WP_Auth0_Dashboard_Plugins_IdP constructor.
+	 *
+	 * @deprecated 3.6.0 - Not supporting dashboard widgets
+	 *
+	 * @param WP_Auth0_Options $a0_options
+	 */
 	public function __construct( WP_Auth0_Options $a0_options ) {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->a0_options = $a0_options;
 		$this->type = $this->a0_options->get( 'chart_idp_type' );
 	}

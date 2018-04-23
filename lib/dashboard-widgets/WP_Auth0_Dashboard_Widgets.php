@@ -1,5 +1,9 @@
 <?php
-// TODO: Deprecate
+/**
+ * Class WP_Auth0_Dashboard_Widgets
+ *
+ * @deprecated 3.6.0 - Not supporting dashboard widgets
+ */
 class WP_Auth0_Dashboard_Widgets {
 
 	protected $db_manager;
@@ -7,7 +11,14 @@ class WP_Auth0_Dashboard_Widgets {
 
 	const UNKNOWN_KEY = 'unknown';
 
+	/**
+	 * WP_Auth0_Dashboard_Widgets constructor.
+	 *
+	 * @deprecated 3.6.0 - Not supporting dashboard widgets
+	 */
 	public function __construct( WP_Auth0_Options $a0_options, WP_Auth0_DBManager $db_manager ) {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->db_manager = $db_manager;
 		$this->a0_options = $a0_options;
 	}
