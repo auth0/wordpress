@@ -2,7 +2,7 @@
 /**
  * Class WP_Auth0_Dashboard_Plugins_Age
  *
- * @deprecated 3.6.0 - Not supporting dashboard widgets
+ * @deprecated 3.6.0 - The plugin no longer supports the dashboard widgets functionality.
  */
 class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic {
 
@@ -13,13 +13,13 @@ class WP_Auth0_Dashboard_Plugins_Age extends WP_Auth0_Dashboard_Plugins_Generic 
 	/**
 	 * WP_Auth0_Dashboard_Plugins_Age constructor.
 	 *
-	 * @deprecated 3.6.0 - Not supporting dashboard widgets
+	 * @deprecated 3.6.0 - The plugin no longer supports the dashboard widgets functionality.
 	 *
 	 * @param WP_Auth0_Options $a0_options
 	 */
 	public function __construct( WP_Auth0_Options $a0_options ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		trigger_error( sprintf( __( 'Class %s is deprecated.', 'wp-auth0' ), __CLASS__ ), E_USER_DEPRECATED );
 		$this->a0_options = $a0_options;
 		$this->type = $this->a0_options->get( 'chart_age_type' );
 	}

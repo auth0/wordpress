@@ -2,7 +2,7 @@
 /**
  * Class WP_Auth0_Dashboard_Plugins_Signups
  *
- * @deprecated 3.6.0 - Not supporting dashboard widgets
+ * @deprecated 3.6.0 - The plugin no longer supports the dashboard widgets functionality.
  */
 class WP_Auth0_Dashboard_Plugins_Signups extends WP_Auth0_Dashboard_Plugins_Generic {
 
@@ -12,11 +12,11 @@ class WP_Auth0_Dashboard_Plugins_Signups extends WP_Auth0_Dashboard_Plugins_Gene
 	/**
 	 * WP_Auth0_Dashboard_Plugins_Signups constructor.
 	 *
-	 * @deprecated 3.6.0 - Not supporting dashboard widgets
+	 * @deprecated 3.6.0 - The plugin no longer supports the dashboard widgets functionality.
 	 */
 	public function __construct() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		trigger_error( sprintf( __( 'Class %s is deprecated.', 'wp-auth0' ), __CLASS__ ), E_USER_DEPRECATED );
 	}
 
 	protected function gettype( $user ) {
