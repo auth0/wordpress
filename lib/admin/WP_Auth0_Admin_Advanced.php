@@ -452,7 +452,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * @deprecated 3.6.0 - Passwordless method is determined by tenant or Connections setting
+	 * @deprecated 3.6.0 - Passwordless method is determined by activating them for this Application.
 	 */
 	public function render_passwordless_method() {
 		// phpcs:ignore
@@ -460,7 +460,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
+	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description().
 	 */
 	public function render_advanced_description() {
 		// phpcs:ignore
@@ -583,7 +583,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * @deprecated 3.6.0 - The setting this validated, passwordless_method, has been removed
+	 * @deprecated 3.6.0 - This method validated the `passwordless_method` option, which has been removed.
 	 */
 	public function connections_validation( $old_options, $input ) {
 		// phpcs:ignore
