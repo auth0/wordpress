@@ -259,8 +259,14 @@ class WP_Auth0 {
 		}
 	}
 
-	// TODO: Deprecate
+	/**
+	 * @deprecated 3.6.0 - Use WPA0_PLUGIN_URL constant
+	 *
+	 * @return string
+	 */
 	public static function get_plugin_dir_url() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return WPA0_PLUGIN_URL;
 	}
 

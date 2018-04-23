@@ -19,11 +19,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		return get_site_option( 'users_can_register', 0 ) == 1;
 	}
 
-	// TODO: Deprecate, not used
-	public function get_enabled_connections() {
-		return array( 'facebook', 'twitter', 'google-oauth2' );
-	}
-
 	public function set_connection( $key, $value ) {
 		$options = $this->get_options();
 		$options['connections'][$key] = $value;
@@ -251,5 +246,16 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'chart_age_to' => '70',
 			'chart_age_step' => '5',
 		);
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Social connections are no longer set during initial setup so this data is no longer needed. 
+	 *
+	 * @return array
+	 */
+	public function get_enabled_connections() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		return array( 'facebook', 'twitter', 'google-oauth2' );
 	}
 }
