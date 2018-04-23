@@ -2,8 +2,10 @@
 
 class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
-	// TODO: Deprecate
-	const BASIC_DESCRIPTION = 'Basic settings related to Auth0 credentials and basic WordPress integration.';
+	/**
+	 * @deprecated 3.6.0 - Use $this->_description instead
+	 */
+	const BASIC_DESCRIPTION = '';
 
 	protected $_description;
 
@@ -187,56 +189,29 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		);
 	}
 
-	// TODO: Deprecate
+	/**
+	 * @deprecated 3.6.0 - Should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
+	 */
 	public function render_allow_signup_regular_multisite() {
-		$allow_signup = $this->options->is_wp_registration_enabled();
-?>
-	  <span class="description">
-		<?php echo __( 'Signup will be', 'wp-auth0' ); ?>
-
-		<?php if ( ! $allow_signup ) { ?>
-		  <b><?php echo __( 'disabled', 'wp-auth0' ); ?></b>
-			<?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', 'wp-auth0' ); ?>
-		<?php } else { ?>
-		  <b><?php echo __( 'enabled', 'wp-auth0' ); ?></b>
-			<?php echo __( ' because it is enabled by the setting "Allow new registrations" in the Network Admin.', 'wp-auth0' ); ?>
-		<?php } ?>
-
-		<?php echo __( 'You can manage this setting on <code>Network Admin > Settings > Network Settings > Allow new registrations</code> (you need to set it up to <b>User accounts may be registered</b> or <b>Both sites and user accounts can be registered</b> depending on your preferences).', 'wp-auth0' ); ?>
-	  </span>
-
-	<?php
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
-	// TODO: Deprecate
+	/**
+	 * @deprecated 3.6.0 - Should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
+	 */
 	public function render_allow_signup_regular() {
-		$allow_signup = $this->options->is_wp_registration_enabled();
-?>
-	  <span class="description">
-		<?php echo __( 'Signup will be', 'wp-auth0' ); ?>
-
-		<?php if ( ! $allow_signup ) { ?>
-		  <b><?php echo __( 'disabled', 'wp-auth0' ); ?></b>
-			<?php echo __( ' because it is enabled by the setting "Anyone can register" in the WordPress General Settings.', 'wp-auth0' ); ?>
-		<?php } else { ?>
-		  <b><?php echo __( 'enabled', 'wp-auth0' ); ?></b>
-			<?php echo __( ' because it is enabled by the setting "Anyone can register" in the WordPress General Settings.', 'wp-auth0' ); ?>
-		<?php } ?>
-
-		<?php echo __( 'You can manage this setting on <code>Settings > General > Membership</code>, Anyone can register', 'wp-auth0' ); ?>
-		   <a href="<?php echo admin_url( 'options-general.php' ); ?>" target="_blank"><?php _e( 'here', 'wp-auth0' ); ?></a>.
-	  </span>
-
-	<?php
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
-	// TODO: Deprecate
+	/**
+	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
+	 */
 	public function render_basic_description() {
-?>
-
-	<p class=\"a0-step-text\"><?php echo self::BASIC_DESCRIPTION; ?></p>
-
-	<?php
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 
 	public function auth0_delete_cache_transient() {

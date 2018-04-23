@@ -1,5 +1,9 @@
 <?php
-// TODO: Deprecate
+/**
+ * Class WP_Auth0_Dashboard_Plugins_Generic
+ *
+ * @deprecated 3.6.0 - Not supporting dashboard widgets
+ */
 class WP_Auth0_Dashboard_Plugins_Generic {
 
 	protected function gettype( $user ) {

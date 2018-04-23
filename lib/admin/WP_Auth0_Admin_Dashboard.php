@@ -1,5 +1,10 @@
 <?php
-// TODO: Deprecate
+
+/**
+ * Class WP_Auth0_Admin_Dashboard
+ *
+ * @deprecated 3.6.0 - Not supporting dashboard widgets
+ */
 class WP_Auth0_Admin_Dashboard extends WP_Auth0_Admin_Generic {
 
 	const DASHBOARD_DESCRIPTION = 'Settings related to the dashboard widgets.';
@@ -13,9 +18,13 @@ class WP_Auth0_Admin_Dashboard extends WP_Auth0_Admin_Generic {
 	/**
 	 * WP_Auth0_Admin_Dashboard constructor.
 	 *
+	 * @deprecated 3.6.0 - Not supporting dashboard widgets
+	 *
 	 * @param WP_Auth0_Options_Generic $options
 	 */
 	public function __construct( WP_Auth0_Options_Generic $options ) {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		parent::__construct( $options );
 		$this->_description = __( 'Settings related to the dashboard widgets', 'wp-auth0' );
 	}
@@ -62,7 +71,6 @@ class WP_Auth0_Admin_Dashboard extends WP_Auth0_Admin_Generic {
 
 	}
 
-	// TODO: Deprecate
 	public function render_dashboard_description() {
 ?>
 
