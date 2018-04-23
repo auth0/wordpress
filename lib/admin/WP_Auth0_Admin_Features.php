@@ -2,8 +2,10 @@
 
 class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
-	// TODO: Deprecate
-	const FEATURES_DESCRIPTION = 'Settings related to specific features provided by the plugin.';
+	/**
+	 * @deprecated 3.6.0 - Use $this->_description instead
+	 */
+	const FEATURES_DESCRIPTION = '';
 
 	protected $_description;
 
@@ -198,13 +200,13 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		);
 	}
 
-	// TODO: Deprecate
+	/**
+	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
+	 */
 	public function render_features_description() {
-	?>
-
-	<p class=\"a0-step-text\"><?php echo self::FEATURES_DESCRIPTION; ?></p>
-
-	<?php
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 
 	public function basic_validation( $old_options, $input ) {

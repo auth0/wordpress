@@ -248,9 +248,12 @@ class WP_Auth0_Admin {
 		wp_enqueue_style( 'media' );
 	}
 
-	// TODO: Deprecate, not used
+	/**
+	 * @deprecated 3.6.0 - Handled empty auth0_app_token notification, not needed
+	 */
 	public function cant_connect_to_auth0() {
-		// Not used
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	public function init_admin() {

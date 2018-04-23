@@ -690,7 +690,7 @@ class WP_Auth0_LoginManager {
 	 */
 	public function login_with_credentials( $username, $password, $connection = 'Username-Password-Authentication' ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), E_USER_DEPRECATED ) );
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$domain    = $this->a0_options->get( 'domain' );
 		$client_id = $this->a0_options->get( 'client_id' );
 		$secret    = $this->a0_options->get_client_secret_as_key();

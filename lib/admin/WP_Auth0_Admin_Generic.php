@@ -115,16 +115,13 @@ class WP_Auth0_Admin_Generic {
 		return $input;
 	}
 
-	// TODO: Deprecate
+	/**
+	 * @deprecated 3.6.0 - Use WP_Auth0_Admin_Generic::render_switch() instead
+	 */
 	protected function render_a0_switch( $id, $name, $value, $checked ) {
-?>
-
-	<div class="a0-switch">
-	  <input type="checkbox" name="<?php echo $this->_option_name; ?>[<?php echo $name; ?>]" id="<?php echo $id; ?>" value="<?php echo $value; ?>" <?php echo checked( $checked ); ?>/>
-	  <label for="<?php echo $id; ?>"></label>
-	</div>
-
-	<?php
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		$this->render_switch( $id, $name );
 	}
 
 	/**

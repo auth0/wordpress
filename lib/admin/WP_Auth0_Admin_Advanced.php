@@ -2,8 +2,10 @@
 
 class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
-	// TODO: Deprecate
-	const ADVANCED_DESCRIPTION = 'Settings related to specific scenarios.';
+	/**
+	 * @deprecated 3.6.0 - Use $this->_description instead
+	 */
+	const ADVANCED_DESCRIPTION = '';
 
 	protected $_description;
 
@@ -441,61 +443,29 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$this->render_field_description( __( 'This will enable the JWT Auth Users Repository override', 'wp-auth0' ) );
 	}
 
-	// TODO: Deprecate, moved to WP_Auth0_Admin_features
-	public function render_passwordless_enabled( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Turns on Passwordless login (email or SMS) in the Auth0 form. ', 'wp-auth0' ) .
-			__( 'Passwordless connections are managed in the ', 'wp-auth0' ) .
-			$this->get_dashboard_link( 'connections/passwordless' ) .
-			__( ' and at least one must be active and enabled on this Application for this to work. ', 'wp-auth0' ) .
-			__( 'Username/password login is not enabled when Passwordless is on', 'wp-auth0' )
-		);
+	/**
+	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Features::render_passwordless_enabled()
+	 */
+	public function render_passwordless_enabled() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
-	// TODO: Deprecate
+	/**
+	 * @deprecated 3.6.0 - Passwordless method is determined by tenant or Connections setting
+	 */
 	public function render_passwordless_method() {
-		$v = $this->options->get( 'passwordless_method' );
-		?>
-		<input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social" value="social" <?php echo checked( $v, 'social', false ); ?>/><label for="wpa0_passwordless_method_social">Social</label>
-
-		<br>
-
-		<input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_sms" value="sms" <?php echo checked( $v, 'sms', false ); ?>/><label for="wpa0_passwordless_method_sms">SMS</label>
-
-		<input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social_sms" value="socialOrSms" <?php echo checked( $v, 'socialOrSms', false ); ?>/><label for="wpa0_passwordless_method_social_sms">Social or SMS</label>
-
-		<br>
-
-		<input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_magiclink" value="magiclink" <?php echo checked( $v, 'magiclink', false ); ?>/><label for="wpa0_passwordless_method_magiclink">Magic Link</label>
-
-		<input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social_magiclink" value="socialOrMagiclink" <?php echo checked( $v, 'socialOrMagiclink', false ); ?>/><label for="wpa0_passwordless_method_social_magiclink">Social or Magic Link</label>
-
-		<br>
-
-		<input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_emailcode" value="emailcode" <?php echo checked( $v, 'emailcode', false ); ?>/><label for="wpa0_passwordless_method_emailcode">Email Code</label>
-
-		<input type="radio" name="<?php echo $this->options->get_options_name(); ?>[passwordless_method]" id="wpa0_passwordless_method_social_emailcode" value="socialOrEmailcode" <?php echo checked( $v, 'socialOrEmailcode', false ); ?>/><label for="wpa0_passwordless_method_social_emailcode">Social or Email Code</label>
-
-
-
-
-		<div class="subelement">
-		<span class="description">
-			<?php echo __( 'For more info about the password policies check ', 'wp-auth0' ); ?>
-			<a target="_blank" href="https://auth0.com/docs/password-strength"><?php echo __( 'HERE', 'wp-auth0' ); ?></a>
-		</span>
-		</div>
-		<?php
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
-	// TODO: Deprecate
+	/**
+	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
+	 */
 	public function render_advanced_description() {
-		?>
-
-		<p class=\"a0-step-text\"><?php echo self::ADVANCED_DESCRIPTION; ?></p>
-
-		<?php
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 
 	public function basic_validation( $old_options, $input ) {
@@ -612,50 +582,12 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		return $this->rule_validation( $old_options, $input, 'link_auth0_users', WP_Auth0_RulesLib::$link_accounts['name'] . '-' . get_auth0_curatedBlogName(), $link_script );
 	}
 
-	// TODO: Deprecate
+	/**
+	 * @deprecated 3.6.0 - The setting this validated, passwordless_method, has been removed
+	 */
 	public function connections_validation( $old_options, $input ) {
-
-		$check_if_enabled         = array();
-		$passwordless_connections = array(
-			'sms'       => 'sms',
-			'magiclink' => 'email',
-			'emailcode' => 'email',
-		);
-
-		if ( $input['passwordless_enabled'] && $input['passwordless_enabled'] != $old_options['passwordless_enabled'] ) {
-
-			foreach ( $passwordless_connections as $alias => $name ) {
-				if ( strpos( $input['passwordless_method'], $alias ) !== false ) {
-					$check_if_enabled[] = $name;
-				}
-			}
-		} elseif ( $input['passwordless_method'] != $old_options['passwordless_method'] ) {
-
-			foreach ( $passwordless_connections as $name ) {
-				if ( strpos( $input['passwordless_method'], $name ) !== false ) {
-					$check_if_enabled[] = $name;
-				}
-			}
-		}
-
-		if ( ! empty( $check_if_enabled ) ) {
-
-			$response            = WP_Auth0_Api_Client::search_connection( $input['domain'], $input['auth0_app_token'] );
-			$enabled_connections = array();
-			foreach ( $response as $connection ) {
-				if ( in_array( $input['client_id'], $connection->enabled_clients ) ) {
-					$enabled_connections[] = $connection->strategy;
-				}
-			}
-
-			$matching = array_intersect( $enabled_connections, $check_if_enabled );
-
-			if ( array_diff( $matching, $check_if_enabled ) !== array_diff( $check_if_enabled, $matching ) ) {
-				$error = __( 'The passwordless connection is not enabled. Please go to the Auth0 Dashboard and configure it.', 'wp-auth0' );
-				$this->add_validation_error( $error );
-			}
-		}
-
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return $input;
 	}
 

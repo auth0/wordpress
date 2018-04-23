@@ -2,8 +2,10 @@
 
 class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
-	// TODO: Deprecate
-	const APPEARANCE_DESCRIPTION = 'Settings related to the way the login widget is shown.';
+	/**
+	 * @deprecated 3.6.0 - Use $this->_description instead
+	 */
+	const APPEARANCE_DESCRIPTION = '';
 
 	protected $_description;
 
@@ -175,13 +177,13 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		);
 	}
 
-	// TODO: Deprecate
+	/**
+	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
+	 */
 	public function render_appearance_description() {
-?>
-
-	<p class=\"a0-step-text\"><?php echo self::APPEARANCE_DESCRIPTION; ?></p>
-
-	<?php
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 
 	public function basic_validation( $old_options, $input ) {
