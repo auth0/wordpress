@@ -1,17 +1,37 @@
 {
     "name": "auth0/wp-auth0",
+    "description": "WordPress Plugin for Auth0",
+    "homepage": "https://auth0.com/wordpress",
+    "license": "GPLv2",
+    "require": {
+        "php": "^5.3 || ^7.0"
+    },
     "require-dev": {
-        "phpmd/phpmd": "@stable",
-        "sebastian/phpcpd": "*",
-        "sebastian/phpdcd": "*",
-        "squizlabs/php_codesniffer": "2.*",
-        "pdepend/pdepend" : "2.1.0",
-        "mayflower/php-codebrowser": "~1.1"
+        "squizlabs/php_codesniffer": "^3.2",
+        "wimg/php-compatibility": "^8.1",
+        "wp-coding-standards/wpcs": "^0.14.1"
     },
     "authors": [
         {
             "name": "Auth0",
             "email": "support@auth0.com"
+        },
+        {
+            "name": "Josh Cunningham",
+            "email": "josh@joshcanhelp.com"
         }
-    ]
+    ],
+    "support": {
+        "forum": "https://community.auth0.com/tags/wordpress",
+        "source": "https://github.com/auth0/wp-auth0",
+        "issues": "https://github.com/auth0/wp-auth0/issues",
+        "docs": "https://auth0.com/docs/cms/wordpress"
+    },
+    "minimum-stability": "stable",
+    "scripts": {
+        "phpcs": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs --standard=phpcs-ruleset.xml",
+        "phpcbf": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml",
+        "compat": "./vendor/bin/phpcs ./ --standard=PHPCompatibility --runtime-set testVersion 5.3 --extensions=php --ignore=/vendor/*",
+        "sniffs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -e"
+    }
 }
