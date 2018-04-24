@@ -96,7 +96,8 @@ class WP_Auth0_LoginManager {
     }
 
     if ( $sso ) {
-      wp_redirect( 'https://' . $this->a0_options->get( 'domain' ) . '/v2/logout?federated&returnTo=' . urlencode( home_url() ) . '&client_id='.$client_id.'&auth0Client=' . base64_encode( json_encode( WP_Auth0_Api_Client::get_info_headers() ) ) );
+      $telemetry = WP_Auth0_Api_Client::get_info_headers();
+      wp_redirect( 'https://' . $this->a0_options->get( 'domain' ) . '/v2/logout?federated&returnTo=' . urlencode( home_url() ) . '&client_id='.$client_id.'&auth0Client=' . $telemetry[ 'Auth0-Client' ] );
       die();
     }
 
@@ -139,6 +140,7 @@ class WP_Auth0_LoginManager {
       $response_type = $lock_options->get_auth0_implicit_workflow() ? 'id_token' : 'code';
 
       // Create the link to log in.
+      $telemetry = WP_Auth0_Api_Client::get_info_headers();
       $login_url = "https://". $this->a0_options->get( 'domain' ) .
         "/authorize?".
         "scope=".urlencode($options["auth"]["params"]["scope"]) .
@@ -148,7 +150,7 @@ class WP_Auth0_LoginManager {
         "&state=" . urlencode( $state ).
         "&nonce=nonce" . // TODO add full nonce support
         "&connection=". trim($connection) .
-        "&auth0Client=" . WP_Auth0_Api_Client::get_info_headers();
+        "&auth0Client=" . $telemetry[ 'Auth0-Client' ];
 
       wp_redirect( $login_url );
       die();
