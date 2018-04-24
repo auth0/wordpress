@@ -228,7 +228,7 @@ class WP_Auth0_DBManager {
 			} else {
 				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, sprintf(
 					__( 'Unable to automatically create Client Grant. Please go to your Auth0 Dashboard '
-					    . 'and authorize your Client %s for management API scopes %s.',
+					    . 'and authorize your Application %s for management API scopes %s.',
 						'wp-auth0' ),
 					$options->get( 'client_id' ),
 					implode( ', ', WP_Auth0_Api_Client::get_required_scopes() )
@@ -282,7 +282,7 @@ class WP_Auth0_DBManager {
 			} else {
 				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, sprintf(
 					__( 'Unable to automatically update Client Grant Type. Please go to your Auth0 Dashboard '
-					    . 'and add Client Credentials to your Client settings > Advanced > Grant Types for ID %s ',
+					    . 'and add Client Credentials to your Application settings > Advanced > Grant Types for ID %s ',
 						'wp-auth0' ),
 					$options->get( 'client_id' )
 				) );
@@ -376,9 +376,9 @@ class WP_Auth0_DBManager {
 					<p><strong>2.</strong>
 						<a href="https://auth0.com/docs/cms/wordpress/configuration#client-setup"
 						   target="_blank"><?php
-							_e( 'Review your Client advanced settings', 'wp-auth0' ) ?></a>,
+							_e( 'Review your Application advanced settings', 'wp-auth0' ) ?></a>,
 						<?php _e( 'specifically the Grant Types, and ', 'wp-auth0' ) ?>
-						<a href="https://auth0.com/docs/cms/wordpress/configuration#authorize-the-client-for-the-management-api"
+						<a href="https://auth0.com/docs/cms/wordpress/configuration#authorize-the-application-for-the-management-api"
 						   target="_blank"><?php
 							_e( 'authorize your client for the Management API', 'wp-auth0' ) ?></a>
 						<?php _e( 'to manually complete the setup.', 'wp-auth0' ) ?>

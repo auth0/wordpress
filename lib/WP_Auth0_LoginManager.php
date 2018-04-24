@@ -293,8 +293,8 @@ class WP_Auth0_LoginManager {
 	}
 
 	/**
-	 * Secondary login flow, Implicit Grant
-	 * Client should be of type "Single Page App" for this flow
+	 * Secondary login flow, Implicit Grant.
+	 * Application type must be set to "Single Page App" to use this flow.
 	 *
 	 * @throws WP_Auth0_LoginFlowValidationException - OAuth login flow errors.
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
