@@ -95,6 +95,15 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$this->init_option_section( '', 'appearance', $options );
 	}
 
+	/**
+	 * Render form field and description for the `icon_url` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_icon_url( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		printf( ' <a id="wpa0_choose_icon" class="button-secondary">%s</a>', __( 'Choose Icon', 'wp-auth0' ) );
@@ -104,16 +113,43 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `form_title` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_form_title( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description( __( 'Title used on the Auth0 login form', 'wp-auth0' ) );
 	}
 
+	/**
+	 * Render form field and description for the `social_big_buttons` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_social_big_buttons( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description( __( 'Use large social login buttons on the Auth0 login form', 'wp-auth0' ) );
 	}
 
+	/**
+	 * Render form field and description for the `gravatar` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_gravatar( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
@@ -121,16 +157,43 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `custom_css` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_custom_css( $args = array() ) {
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description( __( 'Valid CSS to customize the Auth0 login form', 'wp-auth0' ) );
 	}
 
+	/**
+	 * Render form field and description for the `custom_js` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_custom_js( $args = array() ) {
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description( __( 'Valid JS to customize the Auth0 login form', 'wp-auth0' ) );
 	}
 
+	/**
+	 * Render form field and description for the `username_style` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_username_style( $args = array() ) {
 		$opt_name = $args['opt_name'];
 		$id_attr  = $args['label_for'];
@@ -144,6 +207,15 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `primary_color` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_primary_color( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
@@ -155,6 +227,15 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `language` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_language( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
@@ -166,6 +247,15 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `language_dictionary` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_language_dictionary( $args = array() ) {
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
@@ -175,15 +265,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 				__( 'List of all modifiable options', 'wp-auth0' )
 			)
 		);
-	}
-
-	/**
-	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
-	 */
-	public function render_appearance_description() {
-		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 
 	public function basic_validation( $old_options, $input ) {
@@ -202,5 +283,14 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 			}
 		}
 		return $input;
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
+	 */
+	public function render_appearance_description() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 }
