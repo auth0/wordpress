@@ -17,43 +17,6 @@ class WP_Auth0_Lock10_Options {
     $this->extended_settings = $extended_settings;
   }
 
-  /**
-   * @deprecated 3.6.0 - Not used, determined in wp-content/plugins/auth0/assets/js/lock-init.js
-   *
-   * @return string
-   */
-  public function get_lock_classname() {
-    // phpcs:ignore
-    trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-    if ( $this->_get_boolean( $this->wp_options->get( 'passwordless_enabled' ) ) ) {
-      return 'Auth0LockPasswordless';
-    } else {
-      return 'Auth0Lock';
-    }
-  }
-
-  /**
-   * @deprecated 3.6.0 - Not used
-   *
-   * @return bool
-   */
-  public function isPasswordlessEnable() {
-    // phpcs:ignore
-    trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-    return $this->_get_boolean( $this->wp_options->get( 'passwordless_enabled' ) );
-  }
-
-  /**
-   * @deprecated 3.6.0 - Not used, invalid way to display Passwordless in new library
-   *
-   * @return string
-   */
-  public function get_lock_show_method() {
-    // phpcs:ignore
-    trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-    return 'show';
-  }
-
   public function get_code_callback_url() {
     $protocol = $this->_get_boolean( $this->wp_options->get( 'force_https_callback' ) ) ? 'https' : null;
     return $this->wp_options->get_wp_auth0_url( $protocol );
@@ -67,39 +30,6 @@ class WP_Auth0_Lock10_Options {
     return $this->_get_boolean( $this->wp_options->get( 'sso' ) );
   }
 
-  /**
-   * @deprecated 3.6.0 - Not used, use WP_Auth0_Options::Instance->get( 'custom_css' ) instead
-   *
-   * @return string
-   */
-  public function get_custom_css() {
-    // phpcs:ignore
-    trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-    return $this->wp_options->get( 'custom_css' );
-  }
-
-  /**
-   * @deprecated 3.6.0 - Not used, use WP_Auth0_Options::Instance->get( 'custom_js' ) instead
-   *
-   * @return string
-   */
-  public function get_custom_js() {
-    // phpcs:ignore
-    trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-    return $this->wp_options->get( 'custom_js' );
-  }
-
-  /**
-   * @deprecated 3.6.0 - Not used, call WP_Auth0::ready() instead
-   *
-   * @return string
-   */
-  public function can_show() {
-    // phpcs:ignore
-    trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-    return WP_Auth0::ready();
-  }
-
   public function get_client_id() {
     return $this->wp_options->get( 'client_id' );
   }
@@ -108,41 +38,8 @@ class WP_Auth0_Lock10_Options {
     return $this->wp_options->get( 'domain' );
   }
 
-  /**
-   * @deprecated 3.6.0 - Not used, use WP_Auth0_Options::Instance->get( 'cdn_url' ) instead
-   *
-   * @return string
-   */
-  public function get_cdn_url() {
-    // phpcs:ignore
-    trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-    return $this->wp_options->get( 'cdn_url' );
-  }
-
-  /**
-   * @deprecated 3.6.0 - Not used, use (bool) WP_Auth0_Options::Instance->get( 'wordpress_login_enabled' ) instead
-   *
-   * @return string
-   */
-  public function get_wordpress_login_enabled() {
-    // phpcs:ignore
-    trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-    return $this->_get_boolean( $this->wp_options->get( 'wordpress_login_enabled' ) );
-  }
-
   public function get_auth0_implicit_workflow() {
     return $this->_get_boolean( $this->wp_options->get( 'auth0_implicit_workflow' ) );
-  }
-
-  /**
-   * @deprecated 3.6.0 - Not used
-   *
-   * @param bool $enabled - disallow logins?
-   */
-  public function set_signup_mode( $enabled ) {
-    // phpcs:ignore
-    trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-    $this->signup_mode = $enabled;
   }
 
   public function is_registration_enabled() {
@@ -151,21 +48,6 @@ class WP_Auth0_Lock10_Options {
 
   public function show_as_modal() {
     return isset( $this->extended_settings['show_as_modal'] ) && $this->extended_settings['show_as_modal'];
-  }
-
-  /**
-   * @deprecated 3.6.0 - Not used
-   *
-   * @return mixed|string
-   */
-  public function modal_button_name() {
-    // phpcs:ignore
-    trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-    $name = 'Login';
-    if ( isset( $this->extended_settings['modal_trigger_name'] ) && $this->extended_settings['modal_trigger_name'] != '' ) {
-      $name = $this->extended_settings['modal_trigger_name'];
-    }
-    return $name;
   }
 
   public function get_state_obj( $redirect_to = null ) {
@@ -250,34 +132,6 @@ class WP_Auth0_Lock10_Options {
     return $options_obj;
   }
 
-  /**
-   * @deprecated 3.6.0 - Not used
-   *
-   * @return mixed|string
-   */
-  public function get_custom_signup_fields() {
-    // phpcs:ignore
-    trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-    $fields = $this->wp_options->get('custom_signup_fields');
-
-    if (trim($fields) === '') {
-      return "[]";
-    }
-
-    return $fields;
-  }
-
-  /**
-   * @deprecated 3.6.0 - Not used
-   *
-   * @return mixed|string
-   */
-  public function has_custom_signup_fields() {
-    // phpcs:ignore
-    trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-    return $this->wp_options->get('custom_signup_fields');
-  }
-
   public function get_sso_options() {
     $options["scope"] = $this->_scopes;
 
@@ -347,4 +201,150 @@ class WP_Auth0_Lock10_Options {
 
     return $options_obj;
   }
+
+	/**
+	 * @deprecated 3.6.0 - Not used, determined in wp-content/plugins/auth0/assets/js/lock-init.js.
+	 *
+	 * @return string
+	 */
+	public function get_lock_classname() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		if ( $this->_get_boolean( $this->wp_options->get( 'passwordless_enabled' ) ) ) {
+			return 'Auth0LockPasswordless';
+		} else {
+			return 'Auth0Lock';
+		}
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Replaced with WP_Auth0_Options::Instance()->get( 'passwordless_enabled' ).
+	 *
+	 * @return bool
+	 */
+	public function isPasswordlessEnable() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		return $this->_get_boolean( $this->wp_options->get( 'passwordless_enabled' ) );
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Not used, invalid way to display Passwordless in Lock 11.2.
+	 *
+	 * @return string
+	 */
+	public function get_lock_show_method() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		return 'show';
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Not used, use WP_Auth0_Options::Instance->get( 'custom_css' ) instead.
+	 *
+	 * @return string
+	 */
+	public function get_custom_css() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		return $this->wp_options->get( 'custom_css' );
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Not used, use WP_Auth0_Options::Instance->get( 'custom_js' ) instead.
+	 *
+	 * @return string
+	 */
+	public function get_custom_js() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		return $this->wp_options->get( 'custom_js' );
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Not used, call WP_Auth0::ready() instead.
+	 *
+	 * @return string
+	 */
+	public function can_show() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		return WP_Auth0::ready();
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Not used, use WP_Auth0_Options::Instance->get( 'cdn_url' ) instead.
+	 *
+	 * @return string
+	 */
+	public function get_cdn_url() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		return $this->wp_options->get( 'cdn_url' );
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Not used, use (bool) WP_Auth0_Options::Instance->get( 'wordpress_login_enabled' ) instead.
+	 *
+	 * @return string
+	 */
+	public function get_wordpress_login_enabled() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		return $this->_get_boolean( $this->wp_options->get( 'wordpress_login_enabled' ) );
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Not used, $this->signup_mode is never changed.
+	 *
+	 * @param bool $enabled - disallow logins?
+	 */
+	public function set_signup_mode( $enabled ) {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		$this->signup_mode = $enabled;
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Not used, value and default are passed to wp_localize_script() in templates/login-form.php.
+	 *
+	 * @return mixed|string
+	 */
+	public function modal_button_name() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		$name = 'Login';
+		if ( isset( $this->extended_settings['modal_trigger_name'] ) && $this->extended_settings['modal_trigger_name'] != '' ) {
+			$name = $this->extended_settings['modal_trigger_name'];
+		}
+		return $name;
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Not used, use WP_Auth0_Options::Instance()->get('custom_signup_fields') instead.
+	 *
+	 * @return mixed|string
+	 */
+	public function get_custom_signup_fields() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		$fields = $this->wp_options->get('custom_signup_fields');
+
+		if (trim($fields) === '') {
+			return "[]";
+		}
+
+		return $fields;
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Not used, use WP_Auth0_Options::Instance()->get('custom_signup_fields') instead.
+	 *
+	 * @return mixed|string
+	 */
+	public function has_custom_signup_fields() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		return $this->wp_options->get('custom_signup_fields');
+	}
 }
