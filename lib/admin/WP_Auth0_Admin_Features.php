@@ -101,6 +101,15 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		$this->init_option_section( '', 'features', $options );
 	}
 
+	/**
+	 * Render form field and description for the `password_policy` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_password_policy( $args = array() ) {
 		$opt_name = $args['opt_name'];
 		$id_attr  = $args['label_for'];
@@ -121,6 +130,15 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `sso` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_sso( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
@@ -132,6 +150,15 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `singlelogout` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_singlelogout( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
@@ -139,6 +166,15 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `passwordless_enabled` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_passwordless_enabled( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
@@ -150,6 +186,15 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `mfa` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_mfa( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
@@ -162,6 +207,15 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `fullcontact` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_fullcontact( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_fullcontact_key' );
 		$this->render_field_description(
@@ -175,10 +229,28 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `fullcontact_apikey` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_fullcontact_apikey( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 	}
 
+	/**
+	 * Render form field and description for the `geo_rule` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_geo( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
@@ -186,6 +258,15 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `income_rule` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_income( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
@@ -193,20 +274,20 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `override_wp_avatars` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_override_wp_avatars( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Overrides the WordPress avatar with the Auth0 profile avatar', 'wp-auth0' )
 		);
-	}
-
-	/**
-	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
-	 */
-	public function render_features_description() {
-		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 
 	public function basic_validation( $old_options, $input ) {
@@ -307,5 +388,14 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		$income_script = WP_Auth0_RulesLib::$income['script'];
 		$income_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $income_script );
 		return $this->rule_validation( $old_options, $input, 'income_rule', WP_Auth0_RulesLib::$income['name'] . '-' . get_auth0_curatedBlogName(), $income_script );
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
+	 */
+	public function render_features_description() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 }

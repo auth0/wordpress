@@ -90,6 +90,15 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$this->init_option_section( '', 'basic', $options );
 	}
 
+	/**
+	 * Render form field and description for the `domain` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_domain( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'your-tenant.auth0.com' );
 		$this->render_field_description(
@@ -98,6 +107,15 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `client_id` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_client_id( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
@@ -106,6 +124,15 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `client_secret` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_client_secret( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password' );
 		$this->render_field_description(
@@ -114,6 +141,15 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `client_secret_b64_encoded` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_client_secret_b64_encoded( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
@@ -123,6 +159,15 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `client_signing_algorithm` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_client_signing_algorithm( $args = array() ) {
 		$value = $this->options->get( $args['opt_name'], WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG );
 		$this->render_radio_button( $args['label_for'] . '_hs', $args['opt_name'], 'HS256', '', 'HS256' === $value );
@@ -134,6 +179,15 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `cache_expiration` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_cache_expiration( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'number' );
 		printf(
@@ -152,6 +206,15 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		}
 	}
 
+	/**
+	 * Render form field and description for the `auth0_app_token` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_auth0_app_token( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password' );
 		$this->render_field_description(
@@ -164,6 +227,30 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Render form field and description for the `wordpress_login_enabled` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_allow_wordpress_login( $args = array() ) {
+		$this->render_switch( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Turn on to enable a link on wp-login.php pointing to the core login form. ', 'wp-auth0' ) .
+			__( 'This is typically only used while testing the plugin initially', 'wp-auth0' )
+		);
+	}
+
+	/**
+	 * Render description for the `wpa0_allow_signup` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
 	public function render_allow_signup() {
 		if ( is_multisite() ) {
 			$settings_text = __(
@@ -179,39 +266,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			( $allow_signup ? __( 'enabled', 'wp-auth0' ) : __( 'disabled', 'wp-auth0' ) ) .
 			'</b>' . __( ' by this setting ' ) . $settings_text
 		);
-	}
-
-	public function render_allow_wordpress_login( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Turn on to enable a link on wp-login.php pointing to the core login form. ', 'wp-auth0' ) .
-			__( 'This is typically only used while testing the plugin initially', 'wp-auth0' )
-		);
-	}
-
-	/**
-	 * @deprecated 3.6.0 - Should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
-	 */
-	public function render_allow_signup_regular_multisite() {
-		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-	}
-
-	/**
-	 * @deprecated 3.6.0 - Should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
-	 */
-	public function render_allow_signup_regular() {
-		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-	}
-
-	/**
-	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
-	 */
-	public function render_basic_description() {
-		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 
 	public function auth0_delete_cache_transient() {
@@ -274,5 +328,30 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		}
 
 		return $input;
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
+	 */
+	public function render_allow_signup_regular_multisite() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
+	 */
+	public function render_allow_signup_regular() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
+	 */
+	public function render_basic_description() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 }

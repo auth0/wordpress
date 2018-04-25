@@ -116,15 +116,6 @@ class WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * @deprecated 3.6.0 - Use WP_Auth0_Admin_Generic::render_switch() instead
-	 */
-	protected function render_a0_switch( $id, $name, $value, $checked ) {
-		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		$this->render_switch( $id, $name );
-	}
-
-	/**
 	 * Output a stylized switch on the options page
 	 *
 	 * @param string $id - input id attribute
@@ -265,5 +256,14 @@ class WP_Auth0_Admin_Generic {
 		$path = '/' === $path[0] ? substr( $path, 1 ) : $path;
 		$text = empty( $text ) ? __( 'here', 'wp-auth0' ) : sanitize_text_field( $text );
 		return sprintf( '<a href="https://auth0.com/docs/%s" target="_blank">%s</a>', $path, $text );
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Use WP_Auth0_Admin_Generic::render_switch() instead
+	 */
+	protected function render_a0_switch( $id, $name, $value, $checked ) {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		$this->render_switch( $id, $name );
 	}
 }
