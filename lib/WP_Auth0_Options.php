@@ -242,7 +242,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'social_facebook_key' => '',
 			'social_facebook_secret' => '',
 			'auth0_server_domain' => 'auth0.auth0.com',
-			'metrics' => 1,
 
 			// Dashboard
 			'chart_idp_type' => 'donut',

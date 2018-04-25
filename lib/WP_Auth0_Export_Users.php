@@ -30,11 +30,6 @@ class WP_Auth0_Export_Users {
 	    <script type="text/javascript">
 	        jQuery(document).ready(function($) {
 	            $('<option>').val('a0_users_export').text('Export users profile').appendTo("select[name='action']");
-              $('#doaction').click(function(){
-                if ($("select[name='action']").val() === 'a0_users_export') {
-                  metricsTrack('export:users');
-                }
-              });
 	        });
 	    </script>
 	    <?php

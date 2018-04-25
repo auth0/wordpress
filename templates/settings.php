@@ -110,15 +110,6 @@
 
 <script type="text/javascript">
 
-	function presubmit() {
-		metricsTrack('settings:save');
-		return true;
-	}
-
-	function onToggleConnection(connection, enabled) {
-	  metricsTrack('settings:'+connection+':'+(enabled ? 'on' : 'off'));
-	}
-
 	document.addEventListener("DOMContentLoaded", function() {
 		var tab = (window.location.hash || 'features').replace('#','');
 
@@ -128,26 +119,6 @@
 
 		jQuery('.nav-tabs a').click(function (e) {
 			checkTab(jQuery(this).attr('aria-controls'));
-		})
-
-		jQuery('input[type=checkbox]').change(function(){
-			var matches = /\[([a-zA-Z0-9_-].*)\]/.exec(this.name);
-			if (matches[1]) {
-				metricsTrack('settings:'+matches[1]+':'+(this.checked ? 'on' : 'off'));
-			}
-		});
-		jQuery('input[type=radio]').change(function(){
-			var matches = /\[([a-zA-Z0-9_-].*)\]/.exec(this.name);
-			if (matches[1]) {
-				metricsTrack('settings:'+matches[1], this.value);
-			}
-		});
-
-		jQuery('#wpa0_social_twitter_key,#wpa0_social_twitter_secret,#wpa0_social_facebook_key,#wpa0_social_facebook_secret').focusout(function(){
-			var matches = /\[([a-zA-Z0-9_-].*)\]/.exec(this.name);
-			if (matches[1]) {
-				metricsTrack('settings:'+matches[1]+":"+(this.value === "" ? 'off' : 'on'));
-			}
 		});
 
 		var q = async.queue(function (task, callback) {
