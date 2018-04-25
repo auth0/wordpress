@@ -180,12 +180,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'id'       => 'wpa0_auth0_server_domain',
 				'function' => 'render_auth0_server_domain',
 			),
-			array(
-				'name'     => __( 'Report Anonymous Data', 'wp-auth0' ),
-				'opt'      => 'metrics',
-				'id'       => 'wpa0_metrics',
-				'function' => 'render_metrics',
-			),
 		);
 
 		if ( WP_Auth0_Configure_JWTAUTH::is_jwt_auth_enabled() ) {
@@ -427,6 +421,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	// TODO: Deprecate
 	public function render_metrics() {
 		$v = absint( $this->options->get( 'metrics' ) );
 
@@ -510,7 +505,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$input['passwordless_enabled']      = ( isset( $input['passwordless_enabled'] ) ? $input['passwordless_enabled'] : 0 ) == 1;
 		$input['jwt_auth_integration']      = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
 		$input['auth0_implicit_workflow']   = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
-		$input['metrics']                   = ( isset( $input['metrics'] ) ? $input['metrics'] : 0 );
 		$input['force_https_callback']      = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
 		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
 

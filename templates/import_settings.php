@@ -72,13 +72,4 @@
     e.preventDefault()
     jQuery(this).tab('show')
   })
-
-  function presubmit_import() {
-    metricsTrack('import:settings');
-    return true;
-  }
-  function presubmit_export() {
-    metricsTrack('settings:settings');
-    return true;
-  }
 </script>

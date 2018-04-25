@@ -28,24 +28,3 @@ if ( !$migration_ws_enabled ) {
 
 	</div>
 </div>
-<script type="text/javascript">
-
-document.addEventListener("DOMContentLoaded", function() {
-
-  metricsTrack('initial-setup:step2:open');
-
-});
-
-function onClick(connection) {
-  metricsTrack('initial-setup:step2:view:' + connection);
-}
-
-function next() {
-  metricsTrack('initial-setup:step2:next');
-}
-
-function gotodashboard() {
-  metricsTrack('initial-setup:step2:dashboard');
-}
-
-</script>
