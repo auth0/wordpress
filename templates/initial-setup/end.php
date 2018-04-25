@@ -15,18 +15,3 @@
     </div>
   </div>
 </div>
-
-
-<script type="text/javascript">
-
-document.addEventListener("DOMContentLoaded", function() {
-
-  metricsTrack('initial-setup:step4:open');
-
-});
-
-function onNext() {
-  metricsTrack('initial-setup:step4:next');
-}
-
-</script>

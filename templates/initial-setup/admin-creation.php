@@ -42,20 +42,3 @@
     </div>
   </div>
 </div>
-<script type="text/javascript">
-
-document.addEventListener("DOMContentLoaded", function() {
-
-  metricsTrack('initial-setup:step3:open');
-
-});
-
-function onNext() {
-  metricsTrack('initial-setup:step3:create-admin');
-}
-
-function onSkip() {
-  metricsTrack('initial-setup:step3:skip');
-}
-
-</script>

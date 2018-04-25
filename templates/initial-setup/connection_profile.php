@@ -143,24 +143,12 @@
   var force_manual = false;
 
   document.addEventListener("DOMContentLoaded", function() {
-    metricsTrack('initial-setup:step1:open');
-
     var url = 'https://sandbox.it.auth0.com/api/run/wptest/wp-auth0-ping?domain=<?php echo urlencode( get_bloginfo( 'url' ) ); ?>';
 
     jQuery.ajax(url).done(function(response) {
       force_automatic = true;
-      metricsTrack('initial-setup:step1:ping:automatic');
-    }).fail(function( jqXHR, textStatus ) {
-      metricsTrack('initial-setup:step1:ping:manual');
     });
 
-  });
-
-  jQuery('.a0-button.submit').click(function(e){
-    e.preventDefault();
-    metricsTrack('initial-setup:step1:' + jQuery('#profile-type').val() + ":" + (with_token ? 'token' : 'consent'), function() {
-      jQuery('#profile-form').submit();
-    } );
   });
 
   jQuery('.profile .a0-button').click(function(e){

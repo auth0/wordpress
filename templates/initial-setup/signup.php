@@ -12,13 +12,6 @@
 <div id="lock-wrapper"></div>
 
 <script type="text/javascript">
-
-document.addEventListener("DOMContentLoaded", function() {
-
-  metricsTrack('initial-setup:singup:open');
-
-});
-
 var lock = new Auth0Lock('zEYfpoFzUMEzilhkHilcWoNkrFfJ3hAI', 'auth0.auth0.com');
 
 lock.showSignup({

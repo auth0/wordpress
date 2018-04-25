@@ -17,11 +17,3 @@
 
 	</div>
 </div>
-
-
-<script type="text/javascript">
-	function presubmit() {
-		metricsTrack('bulk_export:users');
-		return true;
-	}
-</script>

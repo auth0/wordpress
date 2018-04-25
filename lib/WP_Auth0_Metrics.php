@@ -1,5 +1,5 @@
 <?php
-
+// TODO: Deprecate
 class WP_Auth0_Metrics {
 
 	protected $a0_options;
@@ -9,7 +9,6 @@ class WP_Auth0_Metrics {
 	}
 
 	public function init() {
-		add_action( 'admin_footer', array( $this, 'render' ) );
 	}
 
 	public function render() {
