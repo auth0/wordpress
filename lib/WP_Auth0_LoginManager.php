@@ -148,7 +148,7 @@ class WP_Auth0_LoginManager {
 		// See https://auth0.com/docs/libraries/error-messages for more info.
 		if ( $this->query_vars( 'error' ) || $this->query_vars( 'error_description' ) ) {
 			$error_msg  = sanitize_text_field( rawurldecode( $_REQUEST[ 'error_description' ] ) );
-			$error_code = sanitize_text_field( $_REQUEST[ 'error' ]  );
+			$error_code = sanitize_text_field( rawurldecode( $_REQUEST[ 'error' ] ) );
 			$this->die_on_login( $error_msg, $error_code );
 		}
 
@@ -584,13 +584,15 @@ class WP_Auth0_LoginManager {
 	 * @return string
 	 */
 	public static function get_userinfo_scope( $context = '' ) {
-		return apply_filters( 'auth0_auth_token_scope', 'openid email name nickname picture', $context );
+		$default_scope = array( 'openid', 'email', 'name', 'nickname', 'picture' );
+		$filtered_scope = apply_filters( 'auth0_auth_token_scope', $default_scope, $context );
+		return implode( ' ', $filtered_scope );
 	}
 
 	/**
-	 * Get a base authorize URL for handling HLP redirects.
+	 * Get authorize URL parameters for handling Universal Login Page redirects.
 	 *
-	 * @param null|string $connection - specific connection to use, pass null to use all enabled.
+	 * @param null|string $connection - a specific connection to use; pass null to use all enabled connections.
 	 * @param null|string $redirect_to - URL to redirect upon successful authentication.
 	 *
 	 * @return array
@@ -607,7 +609,7 @@ class WP_Auth0_LoginManager {
 		$params[ 'response_type' ] = $is_implicit ? 'id_token': 'code';
 		$params[ 'redirect_uri' ] = $is_implicit
 			? $lock_options->get_implicit_callback_url()
-			: $options->get_wp_auth0_url( null, $is_implicit );
+			: $options->get_wp_auth0_url( null );
 
 		if ( $is_implicit ) {
 			$params[ 'nonce' ] = $nonce;
