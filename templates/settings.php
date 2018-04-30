@@ -19,50 +19,46 @@
 	    <?php settings_errors(); ?>
 
 	    <ul class="nav nav-tabs" role="tablist">
-		    <li role="presentation"><a id="tab-basic" href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Basic</a></li>
-		    <li role="presentation"><a id="tab-features" href="#features" aria-controls="features" role="tab" data-toggle="tab">Features</a></li>
-			<li role="presentation"><a id="tab-appearance" href="#appearance" aria-controls="appearance" role="tab" data-toggle="tab">Appearance</a></li>
-		    <li role="presentation"><a id="tab-advanced" href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab">Advanced</a></li>
-		    <li role="presentation"><a id="tab-help" href="#help" aria-controls="help" role="tab" data-toggle="tab">Help</a></li>
+		    <?php foreach ( array( 'basic', 'features', 'appearance', 'advanced', 'help' ) as $tab ) : ?>
+		      <li role="presentation"><a id="tab-<?php echo $tab ?>" href="#<?php echo $tab ?>" aria-controls="<?php
+			      echo $tab ?>" role="tab" data-toggle="tab"><?php echo ucfirst( $tab ) ?></a></li>
+		    <?php endforeach; ?>
 		  </ul>
 		</div>
-		<form action="options.php" method="post" onsubmit="return presubmit();">
+		<form action="options.php" method="post" id="js-a0-settings-form" class="a0-settings-form">
 			<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_basic' ); ?>
 
 		  <div class="tab-content">
-		    <div role="tabpanel" class="tab-pane row" id="basic">
-					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_basic' ); ?>
-		    </div>
-		    <div role="tabpanel" class="tab-pane row active" id="features">
-					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_features' ); ?>
-		    </div>
-		    <div role="tabpanel" class="tab-pane row" id="appearance">
-					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_appearance' ); ?>
-		    </div>
-		    <div role="tabpanel" class="tab-pane row" id="advanced">
-					<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_advanced' ); ?>
-		    </div>
+			  <?php foreach ( array( 'basic', 'features', 'appearance', 'advanced' ) as $tab ) : ?>
+				  <div role="tabpanel" class="tab-pane row" id="<?php echo $tab ?>">
+					  <?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_' . $tab ); ?>
+				  </div>
+			  <?php endforeach; ?>
+
 		    <div role="tabpanel" class="tab-pane row" id="help">
 
-					<p>Thank you for installing the <a href="https://auth0.com/wordpress">Auth0 WordPress Plugin</a>.</p>
+					<p>Thank you for installing <a href="https://auth0.com/wordpress" target="_blank">Login by Auth0</a>! Auth0 is a powerful identity solution that that secures billions of logins every month. In addition to the options here, there are many more features available in the <a href="https://manage.auth0.com" target="_blank">Auth0 dashboard</a>, including:</p>
 
-					<p>This plugin allows you to connect your WP instance to many login solutions. If you have many users commenting or buying products from you, then our social connectors will help. They will let users log in using things like Twitter, Google or Facebook. We also support many enterprise login systems like Active Directory.</p>
+			    <ul class="list">
+				    <li>Many social and enterprise <a href="https://auth0.com/docs/identityproviders" target="_blank">login connections</a></li>
+				    <li><a href="https://auth0.com/docs/connections/passwordless" target="_blank">Passwordless login connections</a></li>
+				    <li><a href="https://auth0.com/docs/anomaly-detection" target="_blank">Anomaly detection</a></li>
+				    <li>Profile enrichment, app integrations, and other custom user management tasks using <a href="https://auth0.com/docs/rules/current" target="_blank">Rules</a></li>
+			    </ul>
 
-					<p>Auth0 is a powerful solution and besides the options you see here on your WordPress instance, there are many more things you can do on your <a href="https://manage.auth0.com">Auth0 dashboard</a>. The dashboard allows you to enable more authentication providers and activate advanced features like running javascript snippets on a login event to do things like record activity or send an email. But don't worry, if you just want to enable social logins for your site, you can safely stay within the options here.</p>
-
-					<p>If you're having any issues - please contact us. We have a variety of channels to help you:<p>
+			    <p>If you have any issues or questions, we provide a variety of channels to assist:<p>
 
 					<ul class="list">
-						<li>We have a lot of documentation at <a href="https://auth0.com/docs">our help website</a></li>
-						<li>Our <a href="https://ask.auth0.com">forums</a> where you can look the discussion threads or open a new one asking for help.</li>
-						<li>Our <a href="https://support.auth0.com">support center</a> to open a support ticket.</li>
-						<li>For more information on Auth0, see <a href="https://auth0.com/blog">our blog</a></li>
+				    <li>If you're setting up the plugin for the first time or having issues after an upgrade, please review the <a href="https://auth0.com/docs/cms/wordpress/configuration" target="_blank">plugin configuration page</a> to make sure your Application is setup correctly.</li>
+				    <li>If you have questions about how to use Auth0 or the plugin, please <a href="https://community.auth0.com/tags/wordpress" target="_blank">search our community site</a> and create a post (tagged "WordPress") if you don't find what you're looking for.</li>
+				    <li>If you find a bug in the plugin code, <a href="https://github.com/auth0/wp-auth0/issues" target="_blank">submit an issue</a> or <a href="https://github.com/auth0/wp-auth0/pulls" target="_blank">create a pull request</a> on Github.</li>
+				    <li>You can see additional documentation and answers on our <a href="https://support.auth0.com/" target="_blank">support site</a>. Customers on a paid Auth0 plan can submit trouble tickets for a quick response.</li>
 					</ul>
 
 					<div class="a0-feedback">
 						<div>
 
-							<h2>Please give us your feedback, how is the Auth0 WP plugin working for you?</h2>
+							<h2>How is the Auth0 WP plugin working for you?</h2>
 
 							<div>
 								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_1" value="1" />
@@ -86,7 +82,7 @@
 
 						<div>
 							<h2>What one thing would you change?</h2>
-							<textarea id="feedback_text" placeholder="Please feel free to be as brief or detailed as you like"></textarea>
+							<textarea id="feedback_text" placeholder="Be as brief or detailed as you like!"></textarea>
 						</div>
 
 						<div>
@@ -111,15 +107,6 @@
 <script type="text/javascript">
 
 	document.addEventListener("DOMContentLoaded", function() {
-		var tab = (window.location.hash || 'features').replace('#','');
-
-		checkTab(tab);
-
-		jQuery('#tab-'+tab).tab('show');
-
-		jQuery('.nav-tabs a').click(function (e) {
-			checkTab(jQuery(this).attr('aria-controls'));
-		});
 
 		var q = async.queue(function (task, callback) {
 
@@ -178,13 +165,5 @@
 		jQuery.post(url, data, function(response) {
 			jQuery('.a0-feedback').html('<h2 class="message">Done! Thank you for your feedback.</h2>')
 		});
-	}
-
-	function checkTab(tab) {
-		if (tab == 'help') {
-			jQuery('#submit').hide();
-		} else {
-			jQuery('#submit').show();
-		}
 	}
 </script>
