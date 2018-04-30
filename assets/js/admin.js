@@ -6,7 +6,7 @@ jQuery(document).ready(function($) {
         event.preventDefault();
         //If the frame already exists, reopen it
         if (typeof(media_frame)!=="undefined")
-         media_frame.close();
+            media_frame.close();
 
         var related_control_id = 'wpa0_icon_url';
         if (typeof($(this).attr('related')) != 'undefined' &&
@@ -57,17 +57,37 @@ jQuery(document).ready(function($) {
         }
     });
 
-    // Persistent admin tab
-    if ( localStorageAvailable() ) {
-        window.location.hash = window.localStorage.getItem( 'Auth0WPSettingsTab' );
-        $( '.nav-tabs [role="tab"]' ).click( function () {
-            var tabHref = $( this ).attr( 'href' );
-            window.location.hash = tabHref;
-            window.localStorage.setItem( 'Auth0WPSettingsTab', tabHref );
-        } );
+    /*
+    Admin settings tab switching
+     */
+    var currentTab;
+    if ( localStorageAvailable() && window.localStorage.getItem( 'Auth0WPSettingsTab' ) ) {
+        // Previous tab being used
+        currentTab = window.localStorage.getItem( 'Auth0WPSettingsTab' );
+    } else {
+        // Default tab if no saved tab was found
+        currentTab = 'features';
     }
 
-    // Clear cache button on Basic settings page
+    // Uses the Bootstrap tab plugin
+    $('#tab-' + currentTab).tab('show');
+
+    // Controls whether the submit button is showing or not
+    var $settingsForm = $( '#js-a0-settings-form' );
+    $settingsForm.attr( 'data-tab-showing', currentTab );
+
+    // Set the tab showing on the form and persist the tab
+    $( '.nav-tabs [role="tab"]' ).click( function () {
+        var tabHref = $( this ).attr( 'aria-controls' );
+        $settingsForm.attr( 'data-tab-showing', tabHref );
+        if ( localStorageAvailable() ) {
+            window.localStorage.setItem( 'Auth0WPSettingsTab', tabHref );
+        }
+    } );
+
+    /*
+    Clear cache button on Basic settings page
+     */
     var deleteCacheId = 'auth0_delete_cache_transient';
     var $deleteCacheButton = $( '#' + deleteCacheId );
     $deleteCacheButton.click( function(e) {
@@ -83,6 +103,11 @@ jQuery(document).ready(function($) {
         }, 'json');
     } );
 
+    /**
+     * Can we use localStorage?
+     *
+     * @returns {boolean}
+     */
     function localStorageAvailable() {
         try {
             var x = '__Auth0_localStorage_assertion__';
