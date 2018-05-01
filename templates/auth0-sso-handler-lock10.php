@@ -1,3 +1,8 @@
+<?php
+$lock_options = new WP_Auth0_Lock10_Options();
+$client_id = $lock_options->get_client_id();
+$domain    = $lock_options->get_domain();
+?>
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function() {
   if (typeof(ignore_sso) !== 'undefined' && ignore_sso) {
