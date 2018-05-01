@@ -409,11 +409,13 @@ class WP_Auth0_LoginManager {
 					}
 				}
 
-				wp_update_user( array(
-					'ID'          => $user->data->ID,
-					'user_email'  => $userinfo->email,
-					'description' => $description,
-				) );
+				wp_update_user(
+					array(
+						'ID'          => $user->data->ID,
+						'user_email'  => $userinfo->email,
+						'description' => $description,
+					)
+				);
 			}
 
 			$this->users_repo->update_auth0_object( $user->data->ID, $userinfo );
@@ -498,8 +500,8 @@ class WP_Auth0_LoginManager {
 	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/wp_logout
 	 */
 	public function logout() {
-		$is_sso = (bool) $this->a0_options->get( 'sso' );
-		$is_slo = (bool) $this->a0_options->get( 'singlelogout' );
+		$is_sso        = (bool) $this->a0_options->get( 'sso' );
+		$is_slo        = (bool) $this->a0_options->get( 'singlelogout' );
 		$is_auto_login = (bool) $this->a0_options->get( 'auto_login' );
 
 		// Redirected here after checkSession in the footer (templates/auth0-singlelogout-handler.php).
@@ -516,18 +518,18 @@ class WP_Auth0_LoginManager {
 		// If SSO is in use, redirect to Auth0 to logout there as well.
 		if ( $is_sso ) {
 			$telemetry_headers = WP_Auth0_Api_Client::get_info_headers();
-			$redirect_url = sprintf(
+			$redirect_url      = sprintf(
 				'https://%s/v2/logout?returnTo=%s&client_id=%s&auth0Client=%s',
 				$this->a0_options->get( 'domain' ),
 				rawurlencode( home_url() ),
 				$this->a0_options->get( 'client_id' ),
-				$telemetry_headers[ 'Auth0-Client' ]
+				$telemetry_headers['Auth0-Client']
 			);
 			wp_redirect( $redirect_url );
 			exit;
 		}
 
-		// If auto-login is in use, cannot redirect back to login page
+		// If auto-login is in use, cannot redirect back to login page.
 		if ( $is_auto_login ) {
 			wp_redirect( home_url() );
 			exit;
@@ -550,7 +552,7 @@ class WP_Auth0_LoginManager {
 
 		// No need to checkSession if already logged in.
 		// URL parameter `no_sso` is set to skip checkSession.
-		if ( is_user_logged_in() || ! empty( $_GET[ 'no_sso' ] ) || ! $this->a0_options->get( 'sso' ) ) {
+		if ( is_user_logged_in() || ! empty( $_GET['no_sso'] ) || ! $this->a0_options->get( 'sso' ) ) {
 			return $previous_html;
 		}
 
