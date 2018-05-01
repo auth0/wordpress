@@ -491,71 +491,79 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Complete the logout process based on settings.
 	 * Hooked to `wp_logout` action.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
 	 * @see WP_Auth0_LoginManager::init()
+	 *
+	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/wp_logout
 	 */
 	public function logout() {
-		$this->end_session();
+		$is_sso = (bool) $this->a0_options->get( 'sso' );
+		$is_slo = (bool) $this->a0_options->get( 'singlelogout' );
+		$is_auto_login = (bool) $this->a0_options->get( 'auto_login' );
 
-		$sso        = $this->a0_options->get( 'sso' );
-		$slo        = $this->a0_options->get( 'singlelogout' );
-		$client_id  = $this->a0_options->get( 'client_id' );
-		$auto_login = absint( $this->a0_options->get( 'auto_login' ) );
-
-		if ( $slo && isset( $_REQUEST['SLO'] ) && isset( $_REQUEST['redirect_to'] ) ) {
-			wp_redirect( $_REQUEST['redirect_to'] );
+		// Redirected here after checkSession in the footer (templates/auth0-singlelogout-handler.php).
+		if ( $is_slo && isset( $_REQUEST['SLO'] ) ) {
+			if ( ! empty( $_REQUEST['redirect_to'] ) && filter_var( $_REQUEST['redirect_to'], FILTER_VALIDATE_URL ) ) {
+				$redirect_url = $_REQUEST['redirect_to'];
+			} else {
+				$redirect_url = home_url();
+			}
+			wp_redirect( $redirect_url );
 			exit;
 		}
 
-		if ( $sso ) {
-			wp_redirect(
-				'https://' . $this->a0_options->get( 'domain' ) .
-				'/v2/logout?federated&returnTo=' . rawurlencode( home_url() ) . '&client_id=' . $client_id .
-				'&auth0Client=' . base64_encode( wp_json_encode( WP_Auth0_Api_Client::get_info_headers() ) )
+		// If SSO is in use, redirect to Auth0 to logout there as well.
+		if ( $is_sso ) {
+			$telemetry_headers = WP_Auth0_Api_Client::get_info_headers();
+			$redirect_url = sprintf(
+				'https://%s/v2/logout?returnTo=%s&client_id=%s&auth0Client=%s',
+				$this->a0_options->get( 'domain' ),
+				rawurlencode( home_url() ),
+				$this->a0_options->get( 'client_id' ),
+				$telemetry_headers[ 'Auth0-Client' ]
 			);
+			wp_redirect( $redirect_url );
 			exit;
 		}
 
-		if ( $auto_login ) {
+		// If auto-login is in use, cannot redirect back to login page
+		if ( $is_auto_login ) {
 			wp_redirect( home_url() );
 			exit;
 		}
 	}
 
 	/**
+	 *
 	 * Outputs JS on wp-login.php to log a user in if an Auth0 session is found.
 	 * Hooked to `login_message` filter.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
 	 * @param string $previous_html - HTML passed into the login_message filter.
 	 *
 	 * @see WP_Auth0_LoginManager::init()
+	 *
+	 * @return mixed
 	 */
 	public function auth0_sso_footer( $previous_html ) {
 
-		// TODO: Filter handling is incorrect here!
-		echo $previous_html;
-
-		if ( is_user_logged_in() ) {
-			return;
+		// No need to checkSession if already logged in.
+		// URL parameter `no_sso` is set to skip checkSession.
+		if ( is_user_logged_in() || ! empty( $_GET[ 'no_sso' ] ) || ! $this->a0_options->get( 'sso' ) ) {
+			return $previous_html;
 		}
 
-		$lock_options = new WP_Auth0_Lock10_Options();
-
-		$sso = $lock_options->get_sso();
-
-		if ( $sso ) {
-			$client_id = $lock_options->get_client_id();
-			$domain    = $lock_options->get_domain();
-			$cdn       = $this->a0_options->get( 'auth0js-cdn' );
-
-			wp_enqueue_script( 'wpa0_auth0js', $cdn );
-			include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler-lock10.php';
-		}
+		wp_enqueue_script( 'wpa0_auth0js', $this->a0_options->get( 'auth0js-cdn' ) );
+		ob_start();
+		include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler-lock10.php';
+		return $previous_html . ob_get_clean();
 	}
 
 	/**
 	 * Outputs JS on all pages to log a user out if no Auth0 session is found.
 	 * Hooked to `wp_footer` action.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
 	 * @see WP_Auth0_LoginManager::init()
 	 */
@@ -567,8 +575,6 @@ class WP_Auth0_LoginManager {
 
 	/**
 	 * End the PHP session.
-	 *
-	 * TODO: Remove, not necessary!
 	 */
 	public function end_session() {
 		if ( session_id() ) {
@@ -717,7 +723,7 @@ class WP_Auth0_LoginManager {
 					: __( 'Please see the site administrator', 'wp-auth0' ),
 				__( 'error code', 'wp-auth0' ),
 				$code ? sanitize_text_field( $code ) : __( 'unknown', 'wp-auth0' ),
-				$login_link ? wp_login_url() : wp_logout_url(),
+				$login_link ? add_query_arg( 'no_sso', 1, wp_login_url() ) : wp_logout_url(),
 				$login_link
 					? __( '← Login', 'wp-auth0' )
 					: __( '← Logout', 'wp-auth0' )
