@@ -2,6 +2,8 @@
 
 class WP_Auth0_Lock10_Options {
 
+  const LOCK_GLOBAL_JS_VAR_NAME = 'wpAuth0LockGlobal';
+
   protected $wp_options;
   protected $extended_settings;
   protected $signup_mode = false;
