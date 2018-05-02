@@ -15,7 +15,7 @@ function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = array()
     wp_enqueue_script( 'wpa0_lock_init', WPA0_PLUGIN_JS_URL . 'lock-init.js', array( 'jquery' ), WPA0_VERSION, TRUE );
     wp_localize_script(
       'wpa0_lock_init',
-      'wpAuth0LockGlobal',
+      WP_Auth0_Lock10_Options::LOCK_GLOBAL_JS_VAR_NAME,
       array(
         'settings' => $lock_options->get_lock_options(),
         'ready' => WP_Auth0::ready(),
