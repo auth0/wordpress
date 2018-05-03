@@ -577,6 +577,8 @@ class WP_Auth0_LoginManager {
 
 	/**
 	 * End the PHP session.
+   *
+   * TODO: Deprecate
 	 */
 	public function end_session() {
 		if ( session_id() ) {
