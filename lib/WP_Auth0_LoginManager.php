@@ -551,8 +551,8 @@ class WP_Auth0_LoginManager {
 	public function auth0_sso_footer( $previous_html ) {
 
 		// No need to checkSession if already logged in.
-		// URL parameter `no_sso` is set to skip checkSession.
-		if ( is_user_logged_in() || ! empty( $_GET['no_sso'] ) || ! $this->a0_options->get( 'sso' ) ) {
+		// URL parameter `skip_sso` is set to skip checkSession.
+		if ( is_user_logged_in() || isset( $_GET['skip_sso'] ) || ! $this->a0_options->get( 'sso' ) ) {
 			return $previous_html;
 		}
 
@@ -725,7 +725,7 @@ class WP_Auth0_LoginManager {
 					: __( 'Please see the site administrator', 'wp-auth0' ),
 				__( 'error code', 'wp-auth0' ),
 				$code ? sanitize_text_field( $code ) : __( 'unknown', 'wp-auth0' ),
-				$login_link ? add_query_arg( 'no_sso', 1, wp_login_url() ) : wp_logout_url(),
+				$login_link ? add_query_arg( 'skip_sso', '', wp_login_url() ) : wp_logout_url(),
 				$login_link
 					? __( '← Login', 'wp-auth0' )
 					: __( '← Logout', 'wp-auth0' )
