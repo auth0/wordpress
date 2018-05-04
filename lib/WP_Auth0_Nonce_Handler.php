@@ -1,134 +1,185 @@
 <?php
+/**
+ * Contains WP_Auth0_Nonce_Handler.
+ *
+ * @package WP-Auth0
+ */
 
-final class WP_Auth0_Nonce_Handler {
+/**
+ * Class WP_Auth0_Nonce_Handler for generating and storing nonce-type values.
+ */
+class WP_Auth0_Nonce_Handler {
 
-  /**
-   * Cookie name used to store nonce
-   *
-   * @var string
-   */
-  const COOKIE_NAME = 'auth0_nonce';
+	/**
+	 * Cookie name used for storage and verification.
+	 *
+	 * @var string
+	 */
+	const NONCE_COOKIE_NAME = 'auth0_nonce';
 
-  /**
-   *
-   */
-  const COOKIE_EXPIRES = HOUR_IN_SECONDS;
+	/**
+	 * Time, in seconds, for the cookie to last.
+	 * Added to time() to determine expiration time.
+	 *
+	 * @var integer
+	 */
+	const COOKIE_EXPIRES = HOUR_IN_SECONDS;
 
-  /**
-   * Singleton class instance
-   *
-   * @var WP_Auth0_Nonce_Handler|null
-   */
-  private static $_instance = null;
+	/**
+	 * Singleton class instance.
+	 *
+	 * @var WP_Auth0_Nonce_Handler|null
+	 */
+	protected static $_instance = null;
 
-  /**
-   * Nonce stored in a cookie
-   *
-   * @var string
-   */
-  private $_uniqid;
+	/**
+	 * Unique ID used as a nonce or salting.
+	 *
+	 * @var string
+	 */
+	private $unique;
 
-  /**
-   * WP_Auth0_Nonce_Handler constructor
-   * Private to prevent new instances of this class
-   */
-  private function __construct() {
-    $this->init();
-  }
+	/**
+	 * Private to prevent cloning.
+	 */
+	private function __clone() {}
 
-  /**
-   * Private to prevent cloning
-   */
-  private function __clone() {}
+	/**
+	 * Private to prevent unserializing.
+	 */
+	private function __wakeup() {}
 
-  /**
-   * Private to prevent serializing
-   */
-  private function __sleep() {}
+	/**
+	 * WP_Auth0_Nonce_Handler constructor.
+	 * Private to prevent new instances of this class.
+	 */
+	private function __construct() {
+		$this->init();
+	}
 
-  /**
-   * Private to prevent unserializing
-   */
-  private function __wakeup() {}
+	/**
+	 * Start-up process to make sure we have something stored.
+	 */
+	protected function init() {
+		if ( defined( static::NONCE_COOKIE_NAME ) && isset( $_COOKIE[ static::NONCE_COOKIE_NAME ] ) ) {
+			// Have a cookie, don't want to generate a new one.
+			$this->unique = $_COOKIE[ static::NONCE_COOKIE_NAME ];
+		} else {
+			// No cookie, need to create one.
+			$this->unique = $this->generate_unique();
+		}
+	}
 
-  /**
-   * Start-up process to make sure we have a nonce stored
-   */
-  private function init() {
-    if ( isset( $_COOKIE[ self::COOKIE_NAME ] ) ) {
-      // Have a nonce cookie, don't want to generate a new one
-      $this->_uniqid = $_COOKIE[ self::COOKIE_NAME ];
-    } else {
-      // No nonce cookie, need to create one
-      $this->_uniqid = $this->generateNonce();
-    }
-  }
+	/**
+	 * Get the internal instance of the singleton.
+	 *
+	 * @return WP_Auth0_State_Handler|WP_Auth0_Nonce_Handler
+	 */
+	final public static function get_instance() {
+		if ( is_null( static::$_instance ) ) {
+			static::$_instance = new static();
+		}
+		return static::$_instance;
+	}
 
-  /**
-   * Get the internal instance of the singleton
-   *
-   * @return WP_Auth0_Nonce_Handler
-   */
-  public static final function getInstance() {
-    if ( null === self::$_instance ) {
-      self::$_instance = new WP_Auth0_Nonce_Handler();
-    }
-    return self::$_instance;
-  }
+	/**
+	 * Get the unique value.
+	 *
+	 * @return string
+	 */
+	public function get_unique() {
+		return $this->unique;
+	}
 
-  /**
-   * Return the unique ID used for nonce validation
-   *
-   * @return string
-   */
-  public function get() {
-    return $this->_uniqid;
-  }
+	/**
+	 * Return the cookie expiration time to set.
+	 *
+	 * @return integer
+	 */
+	public function get_cookie_exp() {
+		return time() + self::COOKIE_EXPIRES;
+	}
 
-  /**
-   * Check if the stored nonce matches a specific value
-   *
-   * @param string $nonce - the nonce to validate against the stored value
-   *
-   * @return bool
-   */
-  public function validate( $nonce ) {
-    $valid = isset( $_COOKIE[ self::COOKIE_NAME ] ) ? $_COOKIE[ self::COOKIE_NAME ] === $nonce : FALSE;
-    $this->reset();
-    return $valid;
-  }
+	/**
+	 * Set the cookie value to verify.
+	 *
+	 * @param mixed $value - null to use uniqid or any other valid cookie value.
+	 *
+	 * @return bool
+	 */
+	public function set_cookie( $value = null ) {
+		if ( is_null( $value ) ) {
+			$value = $this->unique;
+		}
+		return $this->handle_cookie( $this->get_storage_cookie_name(), $value, $this->get_cookie_exp() );
+	}
 
-  /**
-   * Set the nonce cookie value
-   *
-   * @return bool
-   */
-  public function setCookie() {
-    $_COOKIE[ self::COOKIE_NAME ] = $this->_uniqid;
-    return setcookie( self::COOKIE_NAME, $this->_uniqid, time() + self::COOKIE_EXPIRES, '/' );
-  }
+	/**
+	 * Validate a received value against the stored value.
+	 *
+	 * @param string $value - value to validate against what was stored.
+	 *
+	 * @return bool
+	 */
+	public function validate( $value ) {
+		$cookie_name = $this->get_storage_cookie_name();
+		$valid       = isset( $_COOKIE[ $cookie_name ] ) ? $_COOKIE[ $cookie_name ] === $value : false;
+		$this->reset();
+		return $valid;
+	}
 
-  /**
-   * Reset the nonce cookie value
-   *
-   * @return bool
-   */
-  public function reset() {
-    return setcookie( self::COOKIE_NAME, '', 0 );
-  }
+	/**
+	 * Reset/delete a cookie.
+	 *
+	 * @return bool
+	 */
+	public function reset() {
+		return $this->handle_cookie( $this->get_storage_cookie_name(), '', 0 );
+	}
 
-  /**
-   * Generate a random ID
-   * If using on PHP 7, it will be cryptographically secure
-   *
-   * @see https://secure.php.net/manual/en/function.random-bytes.php
-   *
-   * @param int $bytes - number of bytes to generate
-   *
-   * @return string
-   */
-  public function generateNonce( $bytes = 32 ) {
-    $nonce_bytes = function_exists( 'random_bytes' ) ? random_bytes( $bytes ) : openssl_random_pseudo_bytes( $bytes );
-    return bin2hex( $nonce_bytes );
-  }
+	/**
+	 * Generate a unique value to use.
+	 * If using on PHP 7, it will be cryptographically secure.
+	 *
+	 * @see https://secure.php.net/manual/en/function.random-bytes.php
+	 *
+	 * @param int $bytes - number of bytes to generate.
+	 *
+	 * @return string
+	 */
+	public function generate_unique( $bytes = 32 ) {
+		$nonce_bytes = function_exists( 'random_bytes' )
+			// phpcs:ignore
+			? random_bytes( $bytes )
+			: openssl_random_pseudo_bytes( $bytes );
+		return bin2hex( $nonce_bytes );
+	}
+
+	/**
+	 * Set or delete a cookie value.
+	 *
+	 * @param string $cookie_name - name of the cookie to set.
+	 * @param mixed  $cookie_value - value to set for the cookie.
+	 * @param int    $cookie_exp - cookie expiration, pass any value less than now to delete the cookie.
+	 *
+	 * @return bool
+	 */
+	protected function handle_cookie( $cookie_name, $cookie_value, $cookie_exp ) {
+		if ( $cookie_exp <= time() ) {
+			unset( $_COOKIE[ $cookie_name ] );
+			$cookie_exp = 0;
+		} else {
+			$_COOKIE[ $cookie_name ] = $cookie_value;
+		}
+		return setcookie( $cookie_name, $cookie_value, $cookie_exp, '/' );
+	}
+
+	/**
+	 * Get the name of the cookie to store.
+	 *
+	 * @return string
+	 */
+	protected function get_storage_cookie_name() {
+		return static::NONCE_COOKIE_NAME;
+	}
 }

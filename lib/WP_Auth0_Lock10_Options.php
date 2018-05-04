@@ -55,7 +55,7 @@ class WP_Auth0_Lock10_Options {
 
     $stateObj = array(
       'interim' => ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ),
-      'nonce' => WP_Auth0_Nonce_Handler::getInstance()->get()
+      'nonce' => WP_Auth0_State_Handler::get_instance()->get_unique()
     );
 
     if ( !empty( $redirect_to ) ) {
@@ -154,7 +154,7 @@ class WP_Auth0_Lock10_Options {
 
     unset( $options["authParams"] );
     $options["state"] = $this->get_state_obj( $redirect_to );
-    $options["nonce"] = WP_Auth0_Nonce_Handler::getInstance()->get();
+    $options["nonce"] = WP_Auth0_Nonce_Handler::get_instance()->get_unique();
 
     return $options;
   }
@@ -182,7 +182,7 @@ class WP_Auth0_Lock10_Options {
       $extraOptions["auth"]["responseType"] = 'id_token';
       $extraOptions["auth"]["redirectUrl"] = $this->get_implicit_callback_url();
       $extraOptions["autoParseHash"] = false;
-      $extraOptions["auth"]["params"]["nonce"] = WP_Auth0_Nonce_Handler::getInstance()->get();
+      $extraOptions["auth"]["params"]["nonce"] = WP_Auth0_Nonce_Handler::get_instance()->get_unique();
     } else {
       $extraOptions["auth"]["responseType"] = 'code';
       $extraOptions["auth"]["redirectUrl"] = $this->get_code_callback_url();
