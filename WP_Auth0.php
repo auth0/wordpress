@@ -23,7 +23,6 @@ define( 'WPA0_AUTH0_JS_CDN_URL', 'https://cdn.auth0.com/js/auth0/9.4/auth0.min.j
 
 define( 'WPA0_AUTH0_LOGIN_FORM_ID', 'auth0-login-form' );
 define( 'WPA0_CACHE_GROUP', 'wp_auth0' );
-define( 'WPA0_STATE_COOKIE_NAME', 'auth0_state' );
 define( 'WPA0_JWKS_CACHE_TRANSIENT_NAME', 'WP_Auth0_JWKS_cache' );
 
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
@@ -126,10 +125,6 @@ class WP_Auth0 {
 		$edit_profile->init();
 
 		$this->check_signup_status();
-
-		if ( $this->a0_options->get( 'auto_login' ) ) {
-			WP_Auth0_Nonce_Handler::getInstance()->setCookie();
-		}
 
 		WP_Auth0_Email_Verification::init();
 	}
