@@ -21,6 +21,10 @@ jQuery(document).ready(function ($) {
     // Set state cookie to verify during callback
     Cookies.set( opts.stateCookieName, opts.settings.auth.params.state );
 
+    if ( opts.settings.auth.params.nonce ) {
+        Cookies.set( opts.nonceCookieName, opts.settings.auth.params.nonce );
+    }
+
     // Set Lock to standard or Passwordless
     var Lock = opts.usePasswordless
         ? new Auth0LockPasswordless( opts.clientId, opts.domain, opts.settings )
