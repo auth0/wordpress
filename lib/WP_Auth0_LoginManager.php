@@ -232,9 +232,13 @@ class WP_Auth0_LoginManager {
 			throw new WP_Auth0_LoginFlowValidationException( $e_message, $e_code );
 		}
 
+		$access_token = $data->access_token;
+		$id_token = $data->id_token;
+		$refresh_token = isset( $data->refresh_token ) ? $data->refresh_token : null;
+
 		// Decode the incoming ID token for the Auth0 user.
 		$decoded_token = JWT::decode(
-			$data->id_token,
+			$id_token,
 			$this->a0_options->get_client_secret_as_key(),
 			array( $this->a0_options->get_client_signing_algorithm() )
 		);
@@ -251,7 +255,7 @@ class WP_Auth0_LoginManager {
 		// Management API call failed, fallback to userinfo.
 		if ( 200 !== $userinfo_resp_code || empty( $userinfo_resp_body ) ) {
 
-			$userinfo_resp      = WP_Auth0_Api_Client::get_user_info( $domain, $data->access_token );
+			$userinfo_resp      = WP_Auth0_Api_Client::get_user_info( $domain, $access_token );
 			$userinfo_resp_code = (int) wp_remote_retrieve_response_code( $userinfo_resp );
 			$userinfo_resp_body = wp_remote_retrieve_body( $userinfo_resp );
 
@@ -267,7 +271,7 @@ class WP_Auth0_LoginManager {
 
 		$userinfo = json_decode( $userinfo_resp_body );
 
-		if ( $this->login_user( $userinfo, $data->id_token, $data->access_token ) ) {
+		if ( $this->login_user( $userinfo, $id_token, $access_token, $refresh_token ) ) {
 			$state_decoded = $this->get_state( true );
 			if ( ! empty( $state_decoded->interim ) ) {
 				include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
@@ -293,8 +297,6 @@ class WP_Auth0_LoginManager {
 	 * @link https://auth0.com/docs/api-auth/tutorials/implicit-grant
 	 *
 	 * @see /wp-content/plugins/auth0/assets/js/implicit-login.js
-	 *
-	 * TODO: Add a WP nonce!
 	 */
 	public function implicit_login() {
 		if ( empty( $_POST['token'] ) ) {
@@ -302,11 +304,11 @@ class WP_Auth0_LoginManager {
 		}
 
 		// Posted from the login page to the callback URL.
-		$token = sanitize_text_field( wp_unslash( $_POST['token'] ) );
+		$id_token = sanitize_text_field( wp_unslash( $_POST['token'] ) );
 
 		try {
 			$decoded_token = JWT::decode(
-				$token,
+				$id_token,
 				$this->a0_options->get_client_secret_as_key(),
 				array( $this->a0_options->get_client_signing_algorithm() )
 			);
@@ -333,7 +335,7 @@ class WP_Auth0_LoginManager {
 		// Populate legacy userinfo property.
 		$decoded_token->user_id = $decoded_token->sub;
 
-		if ( $this->login_user( $decoded_token, $token, null ) ) {
+		if ( $this->login_user( $decoded_token, $id_token ) ) {
 
 			// Validated above in $this->init_auth0().
 			$state_decoded = $this->get_state( true );
@@ -355,15 +357,16 @@ class WP_Auth0_LoginManager {
 	 * Attempts to log the user in and create a new user, if possible/needed.
 	 *
 	 * @param object $userinfo - Auth0 profile of the user.
-	 * @param string $id_token - user's ID token returned from Auth0.
-	 * @param string $access_token - user's access token returned from Auth0; not provided when using implicit_login().
+	 * @param null|string $id_token - user's ID token if returned from Auth0.
+	 * @param null|string $access_token - user's access token if returned from Auth0.
+	 * @param null|string $refresh_token - user's refresh token if returned from Auth0.
 	 *
 	 * @return bool
 	 *
 	 * @throws WP_Auth0_LoginFlowValidationException - OAuth login flow errors.
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
 	 */
-	public function login_user( $userinfo, $id_token, $access_token ) {
+	public function login_user( $userinfo, $id_token = null, $access_token = null, $refresh_token = null ) {
 		// Check that the user has a verified email, if required.
 		if ( ! $this->ignore_unverified_email && $this->a0_options->get( 'requires_verified_email' ) ) {
 			if ( empty( $userinfo->email ) ) {
@@ -420,7 +423,7 @@ class WP_Auth0_LoginManager {
 
 			$this->users_repo->update_auth0_object( $user->data->ID, $userinfo );
 			$user = apply_filters( 'auth0_get_wp_user', $user, $userinfo );
-			$this->do_login( $user, $userinfo, false, $id_token, $access_token );
+			$this->do_login( $user, $userinfo, false, $id_token, $access_token, $refresh_token );
 			return true;
 		} else {
 
@@ -435,7 +438,7 @@ class WP_Auth0_LoginManager {
 					$this->ignore_unverified_email
 				);
 				$user    = get_user_by( 'id', $user_id );
-				$this->do_login( $user, $userinfo, true, $id_token, $access_token );
+				$this->do_login( $user, $userinfo, true, $id_token, $access_token, $refresh_token );
 			} catch ( WP_Auth0_CouldNotCreateUserException $e ) {
 
 				throw new WP_Auth0_LoginFlowValidationException( $e->getMessage() );
@@ -460,12 +463,13 @@ class WP_Auth0_LoginManager {
 	 * @param object $user - the WP user object, such as returned by get_user_by().
 	 * @param object $userinfo - the Auth0 profile of the user.
 	 * @param bool   $is_new - `true` if the user was created in the WordPress database, `false` if not.
-	 * @param string $id_token - user's ID token returned from Auth0.
-	 * @param string $access_token - user's access token returned from Auth0; not provided when using implicit_login().
+   * @param null|string $id_token - user's ID token if returned from Auth0, otherwise null.
+   * @param null|string $access_token - user's access token if returned from Auth0, otherwise null.
+   * @param null|string $refresh_token - user's refresh token if returned from Auth0, otherwise null.
 	 *
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
 	 */
-	private function do_login( $user, $userinfo, $is_new, $id_token, $access_token ) {
+	private function do_login( $user, $userinfo, $is_new, $id_token, $access_token, $refresh_token ) {
 		$remember_users_session = $this->a0_options->get( 'remember_users_session' );
 
 		try {
@@ -487,7 +491,7 @@ class WP_Auth0_LoginManager {
 
 		wp_set_auth_cookie( $user->ID, $remember_users_session, $secure_cookie );
 		do_action( 'wp_login', $user->user_login, $user );
-		do_action( 'auth0_user_login', $user->ID, $userinfo, $is_new, $id_token, $access_token );
+		do_action( 'auth0_user_login', $user->ID, $userinfo, $is_new, $id_token, $access_token, $refresh_token );
 	}
 
 	/**
@@ -594,8 +598,8 @@ class WP_Auth0_LoginManager {
 	 * @return string
 	 */
 	public static function get_userinfo_scope( $context = '' ) {
-		$default_scope = array( 'openid', 'email', 'name', 'nickname', 'picture' );
-		$filtered_scope = apply_filters( 'auth0_auth_token_scope', $default_scope, $context );
+		$default_scope = array( 'openid', 'email', 'profile' );
+		$filtered_scope = apply_filters( 'auth0_auth_scope', $default_scope, $context );
 		return implode( ' ', $filtered_scope );
 	}
 
