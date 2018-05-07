@@ -193,6 +193,10 @@ class WP_Auth0_Lock10_Options {
 
     $options_obj = array_replace_recursive( $extraOptions, $options_obj, $extended_settings );
 
+    if ( ! $this->wp_options->is_wp_registration_enabled() && ! isset( $options_obj["allowSignUp"] )) {
+      $options_obj["allowSignUp"] = false;
+    }
+
     if ( ! $this->show_as_modal() ) {
       $options_obj['container'] = WPA0_AUTH0_LOGIN_FORM_ID;
     }
