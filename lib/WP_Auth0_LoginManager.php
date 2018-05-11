@@ -184,7 +184,7 @@ class WP_Auth0_LoginManager {
 		// Exchange authorization code for an access token.
 		$exchange_resp = WP_Auth0_Api_Client::get_token(
 			$domain, $client_id, $client_secret, 'authorization_code', array(
-				'redirect_uri' => home_url(),
+				'redirect_uri' => $this->a0_options->get_wp_auth0_url(),
 				'code'         => $this->query_vars( 'code' ),
 			)
 		);
