@@ -5,7 +5,14 @@
   <div class="container-fluid">
     <div class="row">
       <h1><?php _e( "Step 1: Choose your account type", "wp-auth0" ); ?></h1>
-      <p class="a0-step-text"><?php _e( "Users can log in within their own credentials - social like Google or Facebook, or name/password -  or use their employee credentials through an enterprise connection. Use either or both, and you'll increase your WordPress site's security and gather data about your visitors. For more information and help on the Auth0 WordPress plugin please visit", "wp-auth0" ); ?> <a href="https://auth0.com/docs/cms" target="_blank">our help documentation</a> </p>
+      <p class="a0-step-text"><?php _e( "Users can log in within their own credentials - social like Google or Facebook, or username and password -  or use their employee credentials through an enterprise connection. Use either or both and you'll increase your WordPress site's security and consolidate identity data.", "wp-auth0" ); ?></p><br>
+        <p><?php
+          _e( 'For more information on installation and configuration, including manual steps, please see the' );
+          printf(
+              ' <strong><a href="https://auth0.com/docs/cms/wordpress" target="_blank">%s</a></strong>',
+              __( 'documentation pages here' )
+          );
+          ?>.</p>
     </div>
     <div class="row">
       <div class="a0-step-text a0-message a0-warning">
@@ -16,6 +23,12 @@
         <a class="a0-button default pull-right" target="_blank" href="https://auth0.com/signup" >Sign up for free</a>
 
       </div>
+        <div class="a0-step-text a0-message a0-tip">
+            <b><?php echo _e( 'Pro Tip' ); ?>:</b>
+					<?php echo _e( 'Already set up another WordPress instance with Auth0? ' ); ?>
+            <a href="admin.php?page=wpa0-import-settings"><?php echo _e( 'Click here' ); ?></a>
+					<?php echo _e( ' to save time and import that site\'s SSO settings.' ); ?>
+        </div>
     </div>
     <div class="a0-profiles row">
       <form action="options.php" method="POST" id="profile-form">
@@ -66,14 +79,14 @@
                 <div class="a0-message a0-warning multiline">
 
                   <b>Note:</b>
-                  <?php _e( 'For this plugin to work, your server/host needs an inbound connection from auth0.com, as Auth0 needs to fetch some information to complete the process. If this website is not accessible from the internet, it will require manual intervention to configure the api token.', 'wp-auth0' ); ?>
+                  <?php _e( 'For this plugin to work, your server/host needs an inbound connection from auth0.com, as Auth0 needs to fetch some information to complete the process. If this website is not accessible from the internet, it will require manual intervention to configure the API token.', 'wp-auth0' ); ?>
 
                 </div>
 
               </div>
               <div class="modal-footer">
                 <a class="a0-button primary" href="#" id="manuallySetToken">Manual Setup (no Internet access)</a>
-                <a class="a0-button primary submit" href="#">Automatic setup</a>
+                <a class="a0-button primary submit" href="#" id="automaticSetup">Automatic setup</a>
               </div>
             </div>
           </div>
@@ -90,15 +103,15 @@
                 <p>
                   <?php _e( 'To complete the plugin\'s initial setup, you will need to enter your tenant Domain:', 'wp-auth0' ); ?>
                 </p>
-                <input type="text" name="domain" placeholder="youraccount.auth0.com" />
+                <input type="text" name="domain" placeholder="youraccount.auth0.com" required>
                 <br><br>
                 <p>
-                  <?php _e( 'And manually create an api token with the', 'wp-auth0' ); ?>
+                  <?php _e( 'And manually create an API token with the', 'wp-auth0' ); ?>
                   <a href="https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually" target="_blank">
 	                  <?php echo __( 'token generator', 'wp-auth0' ); ?></a>
                   <?php _e( ' and paste it here:', 'wp-auth0' ); ?>
                 </p>
-                <input type="text" name="apitoken" autocomplete="off" />
+                <input type="password" name="apitoken" autocomplete="off" required>
                 <p>
                   <small>
                     Scopes required:
@@ -125,51 +138,26 @@
       </form>
     </div>
 
-    <div class="a0-message a0-tip row">
-      <b><?php echo _e( 'Pro Tip' ); ?>:</b>
-      <?php echo _e( 'Already set up another WordPress instance with Auth0? ' ); ?>
-      <a href="admin.php?page=wpa0-import-settings"><?php echo _e( 'Click here' ); ?></a>
-      <?php echo _e( ' to save time and import that site\'s SSO settings.' ); ?>
-    </div>
-
   </div>
 </div>
 
 
 <script type="text/javascript">
-  var with_token = false;
-
-  var force_automatic = false;
-  var force_manual = false;
-
-  document.addEventListener("DOMContentLoaded", function() {
-    var url = 'https://sandbox.it.auth0.com/api/run/wptest/wp-auth0-ping?domain=<?php echo urlencode( get_bloginfo( 'url' ) ); ?>';
-
-    jQuery.ajax(url).done(function(response) {
-      force_automatic = true;
-    });
-
-  });
-
   jQuery('.profile .a0-button').click(function(e){
     e.preventDefault();
     jQuery('#profile-type').val(jQuery(this).val());
-
-    if (force_automatic && !force_manual) {
-      jQuery('.a0-button.submit').click();
-    } else if (force_manual && !force_automatic) {
-      jQuery('#manuallySetToken').click();
-    } else {
-      jQuery('#connectionSelectedModal').modal();
-    }
-
-    return false;
+    jQuery('#connectionSelectedModal').modal();
   });
+
   jQuery('#manuallySetToken').click(function(e){
     e.preventDefault();
-    with_token = true;
     jQuery('#enterTokenModal').modal();
     jQuery('#connectionSelectedModal').modal('hide');
     return false;
+  });
+
+  jQuery('#automaticSetup').click(function(e){
+    e.preventDefault();
+    jQuery('#profile-form').submit();
   });
 </script>

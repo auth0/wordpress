@@ -215,7 +215,7 @@ class WP_Auth0_Admin {
 			return;
 		}
 
-		if ( ! WP_Auth0::ready() ) {
+		if ( ! WP_Auth0::ready() && 'wpa0-setup' !== $_REQUEST['page'] ) {
 			add_action( 'admin_notices', array( $this, 'create_account_message' ) );
 		}
 
