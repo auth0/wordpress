@@ -26,8 +26,8 @@
 
         <div class="row">
           <div class="a0-admin-creation col-sm-6 col-xs-10">
-            <input type="text" id="admin-email" value="<?php echo $current_user->user_email; ?>" disabled />
-            <input type="password" id="admin-password" name="admin-password" placeholder="Password" value="" />
+            <input type="text" id="admin-email" value="<?php echo $current_user->user_email; ?>" disabled>
+            <input type="password" id="admin-password" name="admin-password" placeholder="Password" value="" required>
           </div>
         </div>
 
