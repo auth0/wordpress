@@ -436,27 +436,50 @@ class WP_Auth0 {
 		delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
 	}
 
+	/**
+	 * Look for a class within a specific set of paths.
+	 *
+	 * @param string $class - Class name to look for.
+	 *
+	 * @return bool
+	 */
 	private function autoloader( $class ) {
-		$path = WPA0_PLUGIN_DIR;
-		$paths = array();
-		$exts = array( '.php', '.class.php' );
+		$source_dir = WPA0_PLUGIN_DIR . 'lib/';
 
-		$paths[] = $path.'lib/';
-		$paths[] = $path.'lib/admin/';
-		$paths[] = $path.'lib/exceptions/';
-		$paths[] = $path.'lib/wizard/';
-		$paths[] = $path.'lib/initial-setup/';
-		$paths[] = $path.'lib/twitter-api-php/';
-		$paths[] = $path.'lib/php-jwt/Exceptions/';
-		$paths[] = $path.'lib/php-jwt/Authentication/';
-		$paths[] = $path;
+		// Catch non-name-spaced classes that still need auto-loading.
+		switch ( $class ) {
+			case 'TwitterAPIExchange':
+				require_once $source_dir . 'twitter-api-php/' . $class . '.php';
+				return true;
 
-		foreach ( $paths as $p ) {
-			foreach ( $exts as $ext ) {
-				if ( file_exists( $p.$class.$ext ) ) {
-					require_once $p.$class.$ext;
-					return true;
-				}
+			case 'JWT':
+				require_once $source_dir . 'php-jwt/Authentication/' . $class . '.php';
+				return true;
+
+			case 'BeforeValidException':
+			case 'ExpiredException':
+			case 'SignatureInvalidException':
+				require_once $source_dir . 'php-jwt/Exceptions/'  . $class . '.php';
+				return true;
+		}
+
+		// Anything that's not part of the above and not name-spaced can be skipped.
+		if ( 0 !== strpos( $class, 'WP_Auth0' ) ) {
+			return false;
+		}
+
+		$paths = array(
+			$source_dir,
+			$source_dir . 'admin/',
+			$source_dir . 'exceptions/',
+			$source_dir . 'wizard/',
+			$source_dir . 'initial-setup/',
+		);
+
+		foreach ( $paths as $path ) {
+			if ( file_exists( $path . $class . '.php' ) ) {
+				require_once $path . $class . '.php';
+				return true;
 			}
 		}
 
