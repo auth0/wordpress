@@ -43,7 +43,6 @@ class WP_Auth0_DBManager {
 		$client_secret = $options->get( 'client_secret' );
 		$domain = $options->get( 'domain' );
 		$sso = $options->get( 'sso' );
-
 		$cdn_url = $options->get( 'cdn_url' );
 
 		if ( $this->current_db_version <= 7 ) {
@@ -69,17 +68,6 @@ class WP_Auth0_DBManager {
 		}
 
 		if ( $this->current_db_version < 10 ) {
-
-			if ($options->get('use_lock_10') === null) {
-
-				if ( strpos( $cdn_url, '10.' ) === false ) {
-					$options->set('use_lock_10', false);
-				} else {
-					$options->set('use_lock_10', true);
-				}
-
-			}
-
 			$dict = $options->get('dict');
 
 			if (!empty($dict))
@@ -94,16 +82,6 @@ class WP_Auth0_DBManager {
 					$options->set('language_dictionary', $dict);
 				}
 
-			}
-
-		}
-
-		if ( $this->current_db_version < 12 ) {
-
-			if ( strpos( $cdn_url, '10.' ) === false ) {
-				$options->set('use_lock_10', false);
-			} else {
-				$options->set('use_lock_10', true);
 			}
 
 		}
@@ -130,8 +108,6 @@ class WP_Auth0_DBManager {
 		// 3.4.0
 
 		if ( $this->current_db_version < 15 || 15 === $version_to_install  ) {
-
-			$options->set('use_lock_10', true);
 			$options->set('cdn_url', '//cdn.auth0.com/js/lock/11.1/lock.min.js');
 			$options->set('auth0js-cdn', '//cdn.auth0.com/js/auth0/9.1/auth0.min.js');
 			$options->set('cache_expiration', 1440);

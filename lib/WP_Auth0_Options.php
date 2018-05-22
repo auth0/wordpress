@@ -170,7 +170,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'version' => 1,
 			'last_step' => 1,
 			'migration_token_id' => null,
-			'use_lock_10' => true,
 			'jwt_auth_integration' => false,
 			'amplificator_title' => '',
 			'amplificator_subtitle' => '',
