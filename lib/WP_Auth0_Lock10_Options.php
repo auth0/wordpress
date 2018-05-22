@@ -136,11 +136,10 @@ class WP_Auth0_Lock10_Options {
   public function get_sso_options() {
     $options["scope"] = WP_Auth0_LoginManager::get_userinfo_scope( 'sso' );
 
+    $options["responseType"] = 'token id_token';
     if ( $this->get_auth0_implicit_workflow() ) {
-      $options["responseType"] = 'id_token';
       $options["redirectUri"] = $this->get_implicit_callback_url();
     } else {
-      $options["responseType"] = 'code';
       $options["redirectUri"] = $this->get_code_callback_url();
     }
 

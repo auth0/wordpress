@@ -132,6 +132,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
 	/**
 	 * Render form field and description for the `sso` option.
+	 * If SSO is off, the SLO setting will be hidden and turned off as well.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
@@ -140,7 +141,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_sso( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
+		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_singlelogout' );
 		$this->render_field_description(
 			__( 'SSO allows users to sign in once to multiple Applications in the same tenant. ', 'wp-auth0' ) .
 			__( 'Turning this on will attempt to automatically log a user in when they visit wp-login.php. ', 'wp-auth0' ) .
@@ -291,24 +292,48 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	}
 
 	public function basic_validation( $old_options, $input ) {
+		// SLO will be turned off in WP_Auth0_Admin_Features::sso_validation() if SSO is not on.
 		$input['singlelogout']        = ( isset( $input['singlelogout'] ) ? $input['singlelogout'] : 0 );
 		$input['override_wp_avatars'] = ( isset( $input['override_wp_avatars'] ) ? $input['override_wp_avatars'] : 0 );
 
 		return $input;
 	}
 
+	/**
+	 * Update the Auth0 Application if SSO is turned on and disable SLO if it is turned off.
+	 *
+	 * @param array $old_options - option values before saving.
+	 * @param array $input - new option values being saved.
+	 *
+	 * @return array
+	 */
 	public function sso_validation( $old_options, $input ) {
 		$input['sso'] = ( isset( $input['sso'] ) ? $input['sso'] : 0 );
+		$is_sso = ! empty( $input['sso'] );
 
-		if ( $old_options['sso'] != $input['sso'] && 1 == $input['sso'] ) {
-			if ( false === WP_Auth0_Api_Client::update_client( $input['domain'], $input['auth0_app_token'], $input['client_id'], $input['sso'] == 1 ) ) {
-
-				$error  = __( 'There was an error updating your Auth0 App to enable SSO. To do it manually, turn it ', 'wp-auth0' );
-				$error .= '<a href="https://auth0.com/docs/sso/single-sign-on#1">HERE</a>.';
-				$this->add_validation_error( $error );
-
+		if ( $old_options['sso'] !== $input['sso'] && $is_sso ) {
+			$app_update_failed = true;
+			$app_token = WP_Auth0_Api_Client::get_client_token();
+			if ( $app_token ) {
+				$update_result = WP_Auth0_Api_Client::update_client( $input['domain'], $app_token, $input['client_id'], true );
+				if ( $update_result ) {
+					$app_update_failed = false;
+				}
+			}
+			if ( $app_update_failed ) {
+				$this->add_validation_error(
+					__( 'The SSO setting for your Application could not be updated automatically. ', 'wp-auth0' ) .
+					__( 'Check that "Use Auth0 instead of the IdP to do Single Sign On" is turned on in the ', 'wp-auth0' ) .
+					$this->get_dashboard_link( 'applications/' . $input['client_id'] . '/settings' )
+				);
 			}
 		}
+
+		if ( ! $is_sso ) {
+			// SLO does not function without SSO.
+			unset( $input['singlelogout'] );
+		}
+
 		return $input;
 	}
 

@@ -18,17 +18,12 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   var options = <?php echo json_encode( $lock_options->get_sso_options() ); ?>;
-  options.responseType = 'token id_token';
-  webAuth.checkSession(options
-  , function (err, authResult) {
+  webAuth.checkSession(options, function (err, authResult) {
       if (typeof(authResult) === 'undefined') {
         return;
       }
 
-      if (typeof(authResult.code) !== 'undefined') {
-        window.location = '<?php echo WP_Auth0_Options::Instance()->get_wp_auth0_url(); ?>&code='
-            + authResult.code + '&state=' + authResult.state;
-      } else if (typeof(authResult.idToken) !== 'undefined') {
+      if (authResult.idToken) {
         jQuery(document).ready(function($){
           var $form=$(document.createElement('form')).css({display:'none'}).attr("method","POST").attr("action","<?php
             echo add_query_arg( 'auth0', 'implicit', site_url( 'index.php' ) ); ?>");
