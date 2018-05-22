@@ -176,6 +176,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'amplificator_subtitle' => '',
 			'connections' => array(),
 			'auth0js-cdn' => WPA0_AUTH0_JS_CDN_URL,
+			'auth0_table' => false,
 
 			// Basic
 			'domain' => '',

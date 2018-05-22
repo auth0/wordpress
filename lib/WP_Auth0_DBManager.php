@@ -22,7 +22,7 @@ class WP_Auth0_DBManager {
 	}
 
 	public function check_update() {
-		if ( $this->current_db_version !== AUTH0_DB_VERSION ) {
+		if ( $this->current_db_version && $this->current_db_version !== AUTH0_DB_VERSION ) {
 			$this->install_db();
 		}
 	}
@@ -43,12 +43,6 @@ class WP_Auth0_DBManager {
 		$client_secret = $options->get( 'client_secret' );
 		$domain = $options->get( 'domain' );
 		$sso = $options->get( 'sso' );
-
-		if ($this->current_db_version === 0) {
-			$options->set('auth0_table', false);
-		} elseif($options->get('auth0_table') === null) {
-			$options->set('auth0_table', true);
-		}
 
 		$cdn_url = $options->get( 'cdn_url' );
 
@@ -218,13 +212,12 @@ class WP_Auth0_DBManager {
 				delete_option( 'wp_auth0_client_grant_failed' );
 				update_option( 'wp_auth0_client_grant_success', 1 );
 
-				if ( 409 !== $client_grant_created[ 'statusCode' ] ) {
+				if ( 409 !== $client_grant_created->statusCode ) {
 					WP_Auth0_ErrorManager::insert_auth0_error(
 						__METHOD__,
 						'Client Grant has been successfully created!'
 					);
 				}
-
 			} else {
 				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, sprintf(
 					__( 'Unable to automatically create Client Grant. Please go to your Auth0 Dashboard '
