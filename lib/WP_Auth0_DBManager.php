@@ -108,8 +108,8 @@ class WP_Auth0_DBManager {
 		// 3.4.0
 
 		if ( $this->current_db_version < 15 || 15 === $version_to_install  ) {
-			$options->set('cdn_url', '//cdn.auth0.com/js/lock/11.1/lock.min.js');
-			$options->set('auth0js-cdn', '//cdn.auth0.com/js/auth0/9.1/auth0.min.js');
+			$options->set('cdn_url', WPA0_LOCK_CDN_URL);
+			$options->set('auth0js-cdn', WPA0_AUTH0_JS_CDN_URL);
 			$options->set('cache_expiration', 1440);
 
 			// Update Client
@@ -150,11 +150,11 @@ class WP_Auth0_DBManager {
 			// Update Lock and Auth versions
 
 			if ( '//cdn.auth0.com/js/lock/11.0.0/lock.min.js' === $options->get( 'cdn_url' ) ) {
-				$options->set( 'cdn_url', '//cdn.auth0.com/js/lock/11.1/lock.min.js' );
+				$options->set( 'cdn_url', WPA0_LOCK_CDN_URL );
 			}
 
 			if ( '//cdn.auth0.com/js/auth0/9.0.0/auth0.min.js' === $options->get( 'auth0js-cdn' ) ) {
-				$options->set( 'auth0js-cdn', '//cdn.auth0.com/js/auth0/9.1/auth0.min.js' );
+				$options->set( 'auth0js-cdn', WPA0_AUTH0_JS_CDN_URL );
 			}
 
 			// Update app type and client grant
