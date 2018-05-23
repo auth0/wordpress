@@ -21,8 +21,8 @@ if ( !$migration_ws_enabled ) {
 
 		<div class="row">
 			<div class="a0-buttons">
-			<a onclick="gotodashboard()" href="https://manage.auth0.com/#/applications/<?php echo $client_id; ?>/connections" class="a0-button primary" target="_blank"><?php _e( "Auth0 Dashboard", "wp-auth0" ); ?></a>
-			<a onclick="onNext()" href="<?php echo admin_url( "admin.php?page=wpa0-setup&step={$next_step}&profile=social" ); ?>" class="a0-button primary">Next</a>
+			<a href="https://manage.auth0.com/#/applications/<?php echo $client_id; ?>/connections" class="a0-button primary" target="_blank"><?php _e( "Auth0 Dashboard", "wp-auth0" ); ?></a>
+			<a href="<?php echo admin_url( "admin.php?page=wpa0-setup&step={$next_step}&profile=social" ); ?>" class="a0-button primary">Next</a>
 		</div>
     </div>
 
