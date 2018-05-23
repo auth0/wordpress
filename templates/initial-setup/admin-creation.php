@@ -22,7 +22,7 @@
       <?php } ?>
 
 
-      <form action="options.php" method="POST" onsubmit="onNext()">
+      <form action="options.php" method="POST">
 
         <div class="row">
           <div class="a0-admin-creation col-sm-6 col-xs-10">
@@ -34,7 +34,7 @@
         <div class="a0-buttons">
           <input type="hidden" name="action" value="wpauth0_callback_step3_social" />
           <input type="submit" class="a0-button primary" value="Submit" />
-          <a onclick="onSkip()" href="<?php echo admin_url( 'admin.php?page=wpa0-setup&step=4&profile=social' ); ?>"class="a0-button link"><?php _e( "Skip this step", "wp-auth0" ); ?></a>
+          <a href="<?php echo admin_url( 'admin.php?page=wpa0-setup&step=4&profile=social' ); ?>"class="a0-button link"><?php _e( "Skip this step", "wp-auth0" ); ?></a>
         </div>
 
       </form>
