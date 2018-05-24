@@ -240,6 +240,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Turn on to enable a link on wp-login.php pointing to the core login form. ', 'wp-auth0' ) .
+			__( 'Logins and signups using the WordPress form will NOT be pushed to Auth0. ', 'wp-auth0' ) .
 			__( 'This is typically only used while testing the plugin initially', 'wp-auth0' )
 		);
 	}
