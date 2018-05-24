@@ -311,27 +311,33 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		$input['sso'] = ( isset( $input['sso'] ) ? $input['sso'] : 0 );
 		$is_sso = ! empty( $input['sso'] );
 
-		if ( $old_options['sso'] !== $input['sso'] && $is_sso ) {
-			$app_update_failed = true;
-			$app_token = WP_Auth0_Api_Client::get_client_token();
-			if ( $app_token ) {
-				$update_result = WP_Auth0_Api_Client::update_client( $input['domain'], $app_token, $input['client_id'], true );
-				if ( $update_result ) {
-					$app_update_failed = false;
-				}
-			}
-			if ( $app_update_failed ) {
-				$this->add_validation_error(
-					__( 'The SSO setting for your Application could not be updated automatically. ', 'wp-auth0' ) .
-					__( 'Check that "Use Auth0 instead of the IdP to do Single Sign On" is turned on in the ', 'wp-auth0' ) .
-					$this->get_dashboard_link( 'applications/' . $input['client_id'] . '/settings' )
-				);
-			}
+		// SLO does not function without SSO so turn off SLO if SSO is off.
+		if ( ! $is_sso ) {
+			unset( $input['singlelogout'] );
 		}
 
-		if ( ! $is_sso ) {
-			// SLO does not function without SSO.
-			unset( $input['singlelogout'] );
+		// If SSO is off or nothing was changed, exit early.
+		if ( ! $is_sso || $old_options['sso'] === $input['sso'] ) {
+			return $input;
+		}
+
+		$app_update_success = false;
+		$app_token = WP_Auth0_Api_Client::get_client_token();
+		if ( $app_token ) {
+			$update_result = WP_Auth0_Api_Client::update_client(
+				$input['domain'],
+				$app_token,
+				$input['client_id'],
+				true
+			);
+			$app_update_success = (bool) $update_result;
+		}
+		if ( ! $app_update_success ) {
+			$this->add_validation_error(
+				__( 'The SSO setting for your Application could not be updated automatically. ', 'wp-auth0' ) .
+				__( 'Check that "Use Auth0 instead of the IdP to do Single Sign On" is turned on in the ', 'wp-auth0' ) .
+				$this->get_dashboard_link( 'applications/' . $input['client_id'] . '/settings' )
+			);
 		}
 
 		return $input;
