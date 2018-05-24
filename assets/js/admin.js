@@ -5,8 +5,9 @@ jQuery(document).ready(function($) {
     $(document).on('click', '#wpa0_choose_icon', function(event) {
         event.preventDefault();
         //If the frame already exists, reopen it
-        if (typeof(media_frame)!=="undefined")
+        if (typeof(media_frame)!=="undefined") {
             media_frame.close();
+        }
 
         var related_control_id = 'wpa0_icon_url';
         if (typeof($(this).attr('related')) != 'undefined' &&
@@ -31,7 +32,6 @@ jQuery(document).ready(function($) {
         media_frame.on('select', function() {
             var attachment = media_frame.state().get('selection').first().toJSON();
             $('#'+related_control_id).val(attachment.url);
-            console.log($('#'+related_control_id));
         });
 
         //Open modal
@@ -61,7 +61,9 @@ jQuery(document).ready(function($) {
     Admin settings tab switching
      */
     var currentTab;
-    if ( localStorageAvailable() && window.localStorage.getItem( 'Auth0WPSettingsTab' ) ) {
+    if ( window.location.hash ) {
+        currentTab = window.location.hash.replace( '#', '' );
+    } else if ( localStorageAvailable() && window.localStorage.getItem( 'Auth0WPSettingsTab' ) ) {
         // Previous tab being used
         currentTab = window.localStorage.getItem( 'Auth0WPSettingsTab' );
     } else {
@@ -78,6 +80,7 @@ jQuery(document).ready(function($) {
 
     // Set the tab showing on the form and persist the tab
     $( '.nav-tabs [role="tab"]' ).click( function () {
+        window.location.hash = '';
         var tabHref = $( this ).attr( 'aria-controls' );
         $settingsForm.attr( 'data-tab-showing', tabHref );
         if ( localStorageAvailable() ) {
@@ -102,6 +105,34 @@ jQuery(document).ready(function($) {
             $deleteCacheButton.prop( 'disabled', false ).val( wpa0.clear_cache_done );
         }, 'json');
     } );
+
+    /*
+    Initial setup
+     */
+    $('.js-a0-setup-input').keydown(function(e){
+        if(13 === e.keyCode) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    $('.js-a0-select-setup').click(function (e) {
+        e.preventDefault();
+        $('#profile-type').val($(this).attr('data-profile-type'));
+        $('#connectionSelectedModal').modal();
+    });
+
+    $('#manuallySetToken').click(function (e) {
+        e.preventDefault();
+        $('#enterTokenModal').modal();
+        $('#connectionSelectedModal').modal('hide');
+        return false;
+    });
+
+    $('#automaticSetup').click(function (e) {
+        e.preventDefault();
+        $('#profile-form').submit();
+    });
 
     /**
      * Can we use localStorage?
