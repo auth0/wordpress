@@ -209,7 +209,7 @@ class WP_Auth0_Admin {
 	 * Enqueue scripts for all Auth0 wp-admin pages
 	 */
 	public function admin_enqueue() {
-		$wpa0_pages     = [ 'wpa0', 'wpa0-errors', 'wpa0-users-export', 'wpa0-import-settings', 'wpa0-setup' ];
+		$wpa0_pages     = array( 'wpa0', 'wpa0-errors', 'wpa0-users-export', 'wpa0-import-settings', 'wpa0-setup' );
 		$wpa0_curr_page = ! empty( $_REQUEST['page'] ) ? $_REQUEST['page'] : '';
 		if ( ! in_array( $wpa0_curr_page, $wpa0_pages ) ) {
 			return;
