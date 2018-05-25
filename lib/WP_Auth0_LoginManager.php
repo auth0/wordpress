@@ -260,6 +260,11 @@ class WP_Auth0_LoginManager {
 
 		$userinfo = json_decode( $userinfo_resp_body );
 
+		// Populate sub property, if not provided.
+		if ( ! isset( $userinfo->sub ) ) {
+			$userinfo->sub = $userinfo->user_id;
+		}
+
 		if ( $this->login_user( $userinfo, $id_token, $access_token, $refresh_token ) ) {
 			$state_decoded = $this->get_state();
 			if ( ! empty( $state_decoded->interim ) ) {
@@ -321,8 +326,15 @@ class WP_Auth0_LoginManager {
 			);
 		}
 
-		// Populate legacy userinfo property.
-		$decoded_token->user_id = $decoded_token->sub;
+		// Remove unneeded ID token attributes.
+		foreach ( array( 'iss', 'aud', 'iat', 'exp', 'nonce', 'clientID' ) as $attr ) {
+			unset( $decoded_token->$attr );
+		}
+
+		// Populate legacy user_id property, if not provided.
+		if ( ! isset( $decoded_token->user_id ) ) {
+			$decoded_token->user_id = $decoded_token->sub;
+		}
 
 		if ( $this->login_user( $decoded_token, $id_token ) ) {
 
