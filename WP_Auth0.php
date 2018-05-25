@@ -558,3 +558,11 @@ if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
 
 $a0_plugin = new WP_Auth0();
 $a0_plugin->init();
+
+/*
+ * Beta plugin deactivation
+ */
+
+// Passwordless beta testing - https://github.com/auth0/wp-auth0/issues/400
+remove_filter( 'login_message', 'wp_auth0_pwl_plugin_login_message_before', 5 );
+remove_filter( 'login_message', 'wp_auth0_pwl_plugin_login_message_after', 6 );
