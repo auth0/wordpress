@@ -272,7 +272,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	public function auth0_delete_cache_transient() {
 		check_ajax_referer( 'auth0_delete_cache_transient' );
 		delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
-		die();
+		exit;
 	}
 
 	public function basic_validation( $old_options, $input ) {
