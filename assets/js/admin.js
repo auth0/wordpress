@@ -110,6 +110,7 @@ jQuery(document).ready(function($) {
     Initial setup
      */
     $('.js-a0-setup-input').keydown(function(e){
+        // Do not submit the form if the enter key is pressed.
         if(13 === e.keyCode) {
             e.preventDefault();
             return false;
@@ -126,7 +127,6 @@ jQuery(document).ready(function($) {
         e.preventDefault();
         $('#enterTokenModal').modal();
         $('#connectionSelectedModal').modal('hide');
-        return false;
     });
 
     $('#automaticSetup').click(function (e) {
