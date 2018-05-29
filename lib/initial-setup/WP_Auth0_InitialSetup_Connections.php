@@ -159,7 +159,7 @@ class WP_Auth0_InitialSetup_Connections {
     try {
       $input = $operations->social_validation( $this->a0_options->get( 'auth0_app_token' ), $old_input, $input, $provider_name, isset( $provider['options'] ) ? $provider['options'] : null );
     } catch ( Exception $e ) {
-      die( $e->getMessage() );
+      exit( $e->getMessage() );
     }
 
     foreach ( $input as $key => $value ) {
@@ -191,7 +191,7 @@ class WP_Auth0_InitialSetup_Connections {
       try {
         $input = $operations->social_validation( $this->a0_options->get( 'auth0_app_token' ), $old_input, $input, $provider_name, $provider['options'] );
       } catch ( Exception $e ) {
-        die( $e->getMessage() );
+        exit( $e->getMessage() );
       }
     }
 

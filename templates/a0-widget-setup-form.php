@@ -5,7 +5,6 @@ $modal_trigger_name = isset( $instance[ 'modal_trigger_name' ] ) ? $instance[ 'm
 $form_title = isset( $instance[ 'form_title' ] ) ? $instance[ 'form_title' ] : '';
 $social_big_buttons = isset( $instance[ 'social_big_buttons' ] ) ? $instance[ 'social_big_buttons' ] : '';
 $gravatar = isset( $instance[ 'gravatar' ] ) ? $instance[ 'gravatar' ] : '';
-$show_icon = isset( $instance[ 'show_icon' ] ) ? $instance[ 'show_icon' ] : '';
 $icon_url = isset( $instance[ 'icon_url' ] ) ? $instance[ 'icon_url' ] : '';
 $dict = isset( $instance[ 'dict' ] ) ? $instance[ 'dict' ] : '';
 $extra_conf = isset( $instance[ 'extra_conf' ] ) ? $instance[ 'extra_conf' ] : '';

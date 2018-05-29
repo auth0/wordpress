@@ -16,7 +16,7 @@ class WP_Auth0_Amplificator {
 
 	public function share() {
 		if ( ! isset( $_POST['provider'] ) ) {
-			wp_die();
+			exit;
 		}
 
 		$provider = $_POST['provider'];
@@ -27,7 +27,7 @@ class WP_Auth0_Amplificator {
 		case 'twitter': $this->_share_twitter( $page_url ); break;
 		}
 
-		wp_die();
+		exit;
 	}
 
 	public function get_share_text( $provider, $page_url ) {
