@@ -541,9 +541,9 @@ if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
 
     // WordPress can have a blank site title, which will cause initial client creation to fail
     if ( empty( $name ) ) {
-	    $name = parse_url( home_url(), PHP_URL_HOST );
+	    $name = wp_parse_url( home_url(), PHP_URL_HOST );
 
-	    if ( $port = parse_url( home_url(), PHP_URL_PORT ) ) {
+	    if ( $port = wp_parse_url( home_url(), PHP_URL_PORT ) ) {
 		    $name .= ':' . $port;
 	    }
     }

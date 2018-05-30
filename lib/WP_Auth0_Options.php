@@ -85,12 +85,12 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 * @return array
 	 */
 	public function get_web_origins() {
-		$home_url_parsed = parse_url( home_url() );
+		$home_url_parsed = wp_parse_url( home_url() );
 		$home_url_origin = ! empty( $home_url_parsed[ 'path' ] )
 			? str_replace( $home_url_parsed[ 'path' ], '', home_url() )
 			: home_url();
 
-		$site_url_parsed = parse_url( site_url() );
+		$site_url_parsed = wp_parse_url( site_url() );
 		$site_url_origin = ! empty( $site_url_parsed[ 'path' ] )
 			? str_replace( $site_url_parsed[ 'path' ], '', site_url() )
 			: site_url();
