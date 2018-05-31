@@ -113,13 +113,7 @@ class WP_Auth0_DBManager {
 			$options->set('cache_expiration', 1440);
 
 			// Update Client
-			if (!empty($client_id) && !empty($domain)) {
-				$payload = array(
-					'cross_origin_auth' => true,
-					'cross_origin_loc' => $options->get_cross_origin_loc(),
-					'web_origins' => $options->get_web_origins(),
-				);
-				WP_Auth0_Api_Client::update_client($domain, $app_token, $client_id, $sso, $payload);
+			if (WP_Auth0::ready()) {
 				$options->set('client_signing_algorithm', 'HS256');
 			}
 		}
@@ -164,15 +158,6 @@ class WP_Auth0_DBManager {
 
 				$payload = array(
 					'app_type' => 'regular_web',
-					'callbacks' => array(
-						$options->get_wp_auth0_url(),
-						wp_login_url()
-					),
-
-					// Duplicate of DB version 15 upgrade to account for site_url() changes
-					'cross_origin_auth' => true,
-					'cross_origin_loc' => $options->get_cross_origin_loc(),
-					'web_origins' => $options->get_web_origins(),
 				);
 
 				// Update the WP-created client
