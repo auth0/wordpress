@@ -1,6 +1,6 @@
 === PLUGIN_NAME ===
 Tags: PLUGIN_TAGS
-Tested up to: 4.9.4
+Tested up to: 4.9.6
 Requires at least: 3.8
 Requires PHP: 5.3
 License: MIT
@@ -141,9 +141,13 @@ All is not lost!
 
 [Complete CHANGELOG.md maintained on Github](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md)
 
+= 3.6.0 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#360-2018-06-05)
+
 = 3.5.2 =
 
-[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#352-2018-01-26)
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#352-2018-02-22)
 
 = 3.5.1 =
 
