@@ -1,5 +1,102 @@
 # Change Log
 
+## [3.6.0](https://github.com/auth0/wp-auth0/tree/3.6.0) (2018-06-05)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.5.2...3.6.0)
+
+
+
+**NOTES**
+
+- Passwordless was reconfigured completely to use the combined Lock library (currently hard-coded to 11.5). All current settings will be migrated to the new configuration so your login process should not change. Lock initiation has also been refactored to improve maintainability and adhere to WordPress standards. 
+- The Setup Wizard has been adjusted to more clearly explain the process and options available. This only affects new installations using the Setup Wizard for configuration.
+- The settings page has been rearranged and improved overall. New settings descriptions have also been added along with links to documentation, where appropriate.
+- State validation was added to both login flows; nonce validation was added to sites using Implicit flow. 
+- OIDC compliant Applications should now function as expected (though this setting is not yet activated by default on installation). OpenID Connect login is now possible by turning off the Client Credentials grant for your WordPress Application. 
+- Dashboard widgets have been removed. This can easily be added back as a plugin, if needed. Please [contact support](https://support.auth0.com/) if you need assistance with this. 
+- A number of new hooks have been added, please see our [docs page on extension](https://auth0.com/docs/cms/wordpress/extending) for a complete inventory with examples. This includes the ability to support refresh tokens. 
+- Federated logout has been removed. 
+
+
+**Closed issues**
+
+- Expose a configurable toggle that allows Users to state if federated logout should be used [\#471](https://github.com/auth0/wp-auth0/issues/471)
+- Updating to 3.5.2 - Fatal error: Uncaught Error: Cannot use object of type stdClass as array in /app/wp-content/plugins/auth0/lib/WP_Auth0_DBManager.php on line 225 [\#464](https://github.com/auth0/wp-auth0/issues/464)
+- Autoloader performance issue [\#461](https://github.com/auth0/wp-auth0/issues/461)
+- Bad request does not raise error [\#432](https://github.com/auth0/wp-auth0/issues/432)
+- Widget URL changes don't save when you are using passwordless [\#430](https://github.com/auth0/wp-auth0/issues/430)
+- Deprecate `oauth/ro` endpoint [\#410](https://github.com/auth0/wp-auth0/issues/410)
+- Handling errors [\#403](https://github.com/auth0/wp-auth0/issues/403)
+- Fallback /api/v2/users/{id} to /userinfo [\#401](https://github.com/auth0/wp-auth0/issues/401)
+- CORS errors [\#400](https://github.com/auth0/wp-auth0/issues/400)
+- Provide Resend verification email only for DB connections [\#345](https://github.com/auth0/wp-auth0/issues/345)
+- SSO disabled, Single Logout enabled causes users to get logged out automatically a few seconds after logging in [\#336](https://github.com/auth0/wp-auth0/issues/336)
+- French translation  : html characters [\#309](https://github.com/auth0/wp-auth0/issues/309)
+- "Invalid authorization code": Access token is requested twice in a row, breaking the login flow [\#305](https://github.com/auth0/wp-auth0/issues/305)
+- Make state work after SSO login [\#302](https://github.com/auth0/wp-auth0/issues/302)
+- Is there a way to use Refresh Tokens and Wordpress? [\#296](https://github.com/auth0/wp-auth0/issues/296)
+- Only decode the payload before user profile fetch in login manager [\#283](https://github.com/auth0/wp-auth0/issues/283)
+- redirect callback errors [\#280](https://github.com/auth0/wp-auth0/issues/280)
+- Linked Users won't be able to login using implicit flow and pipeline 2 [\#272](https://github.com/auth0/wp-auth0/issues/272)
+- Normalize use of shortcode and widget [\#260](https://github.com/auth0/wp-auth0/issues/260)
+- Wrong z-index on modal error message in manual setup [\#252](https://github.com/auth0/wp-auth0/issues/252)
+- Logout does not work when Wordpress is locked down (private site) [\#39](https://github.com/auth0/wp-auth0/issues/39)
+
+**Added**
+
+- Adding refresh token support; adjusting default scope [\#456](https://github.com/auth0/wp-auth0/pull/456) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add code quality tools, improved composer.json [\#454](https://github.com/auth0/wp-auth0/pull/454) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add /userinfo fallback during login [\#423](https://github.com/auth0/wp-auth0/pull/423) ([joshcanhelp](https://github.com/joshcanhelp))
+- State handling during login process for both types [\#406](https://github.com/auth0/wp-auth0/pull/406) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Changed**
+
+- Change token exchange redirect URL to match what was sent for auth code [\#463](https://github.com/auth0/wp-auth0/pull/463) ([joshcanhelp](https://github.com/joshcanhelp))
+- Hide the signup tab if registrations are turned off [\#460](https://github.com/auth0/wp-auth0/pull/460) ([joshcanhelp](https://github.com/joshcanhelp))
+- New class for state handling; set cookie for implicit nonce [\#458](https://github.com/auth0/wp-auth0/pull/458) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change auto-login action [\#449](https://github.com/auth0/wp-auth0/pull/449) ([joshcanhelp](https://github.com/joshcanhelp))
+- Require telemetry for API calls [\#441](https://github.com/auth0/wp-auth0/pull/441) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change Appearance tab settings output [\#439](https://github.com/auth0/wp-auth0/pull/439) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change Feature settings output [\#436](https://github.com/auth0/wp-auth0/pull/436) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change Basic settings field display; better admin UX [\#433](https://github.com/auth0/wp-auth0/pull/433) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change how Advanced admin settings fields are output [\#429](https://github.com/auth0/wp-auth0/pull/429) ([joshcanhelp](https://github.com/joshcanhelp))
+- Setting titles and option names [\#427](https://github.com/auth0/wp-auth0/pull/427) ([joshcanhelp](https://github.com/joshcanhelp))
+- Clean up admin notices [\#421](https://github.com/auth0/wp-auth0/pull/421) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change asset enqueuing [\#419](https://github.com/auth0/wp-auth0/pull/419) ([joshcanhelp](https://github.com/joshcanhelp))
+- Improve WP_Auth0_Options [\#418](https://github.com/auth0/wp-auth0/pull/418) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Deprecated**
+
+- Deprecate 2 lookup methods [\#446](https://github.com/auth0/wp-auth0/pull/446) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecating wp-admin settings-related methods + classes [\#445](https://github.com/auth0/wp-auth0/pull/445) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecating unused Lock Options classes and methods [\#444](https://github.com/auth0/wp-auth0/pull/444) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecating admin_enqueue functions [\#443](https://github.com/auth0/wp-auth0/pull/443) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate oauth/ro endpoint [\#413](https://github.com/auth0/wp-auth0/pull/413) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Removed**
+
+- Remove wp-admin click tracking [\#451](https://github.com/auth0/wp-auth0/pull/451) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove dashboard widgets [\#428](https://github.com/auth0/wp-auth0/pull/428) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove and migrate Passwordless setting [\#425](https://github.com/auth0/wp-auth0/pull/425) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove api_audience settings field [\#422](https://github.com/auth0/wp-auth0/pull/422) ([joshcanhelp](https://github.com/joshcanhelp))
+- Removing dashboard widgets [\#397](https://github.com/auth0/wp-auth0/pull/397) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+
+- Correcting input field height on settings pages for IE [\#472](https://github.com/auth0/wp-auth0/pull/472) ([joshcanhelp](https://github.com/joshcanhelp))
+- Save sub or user_id if not provided; remove extemporaneous ID token attributes [\#469](https://github.com/auth0/wp-auth0/pull/469) ([joshcanhelp](https://github.com/joshcanhelp))
+- Improve Setup Wizard [\#468](https://github.com/auth0/wp-auth0/pull/468) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix install and DB update errors [\#467](https://github.com/auth0/wp-auth0/pull/467) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix SLO redirect, SLO on when SSO off, SSO setting not pushed to dashboard [\#466](https://github.com/auth0/wp-auth0/pull/466) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fixed auto-loader to skip non-WP-Auth0 classes [\#465](https://github.com/auth0/wp-auth0/pull/465) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix empty path notice on initial setup [\#457](https://github.com/auth0/wp-auth0/pull/457) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix logout process [\#453](https://github.com/auth0/wp-auth0/pull/453) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix help tab text and settings tab UX [\#452](https://github.com/auth0/wp-auth0/pull/452) ([joshcanhelp](https://github.com/joshcanhelp))
+- Only show email verification resend for DB connections [\#447](https://github.com/auth0/wp-auth0/pull/447) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix Passwordless handling; update Lock instantiation [\#434](https://github.com/auth0/wp-auth0/pull/434) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix Implicit login handling [\#426](https://github.com/auth0/wp-auth0/pull/426) ([joshcanhelp](https://github.com/joshcanhelp))
+- Admin settings refactor - WP_Auth0_Admin_Generic [\#416](https://github.com/auth0/wp-auth0/pull/416) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix Login Process Error Handling [\#409](https://github.com/auth0/wp-auth0/pull/409) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [3.5.2](https://github.com/auth0/wp-auth0/tree/3.5.2) (2018-02-22)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.5.1...3.5.2)
 

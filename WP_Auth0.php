@@ -2,11 +2,11 @@
 /**
  * Plugin Name: PLUGIN_NAME
  * Description: PLUGIN_DESCRIPTION
- * Version: 3.5.2
+ * Version: 3.6.0
  * Author: Auth0
  * Author URI: https://auth0.com
  */
-define( 'WPA0_VERSION', '3.5.2' );
+define( 'WPA0_VERSION', '3.6.0' );
 define( 'AUTH0_DB_VERSION', 18 );
 
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
