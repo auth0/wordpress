@@ -1,4 +1,4 @@
-/* global jQuery, wpa0 */
+/* global jQuery, wpa0, wp */
 jQuery(document).ready(function($) {
     //uploading files variable
     var media_frame;
@@ -31,7 +31,7 @@ jQuery(document).ready(function($) {
         // Set the frame callback
         media_frame.on('select', function() {
             var attachment = media_frame.state().get('selection').first().toJSON();
-            $('#'+related_control_id).val(attachment.url);
+            $('#'+related_control_id).val(attachment.url).change();
         });
 
         //Open modal

@@ -1,7 +1,4 @@
 <?php
-
-$show_as_modal = $this->showAsModal();
-$modal_trigger_name = isset( $instance[ 'modal_trigger_name' ] ) ? $instance[ 'modal_trigger_name' ] : '';
 $form_title = isset( $instance[ 'form_title' ] ) ? $instance[ 'form_title' ] : '';
 $social_big_buttons = isset( $instance[ 'social_big_buttons' ] ) ? $instance[ 'social_big_buttons' ] : '';
 $gravatar = isset( $instance[ 'gravatar' ] ) ? $instance[ 'gravatar' ] : '';
@@ -12,16 +9,16 @@ $custom_css = isset( $instance[ 'custom_css' ] ) ? $instance[ 'custom_css' ] : '
 $custom_js = isset( $instance[ 'custom_js' ] ) ? $instance[ 'custom_js' ] : '';
 $redirect_to = isset( $instance[ 'redirect_to' ] ) ? $instance[ 'redirect_to' ] : '';
 
-?>
-
-<? if($show_as_modal) { ?>
+if( $this->showAsModal() ) :
+	$modal_trigger_name = isset( $instance[ 'modal_trigger_name' ] ) ? $instance[ 'modal_trigger_name' ] : '';
+	?>
     <p>
         <label for="<?php echo $this->get_field_id( 'modal_trigger_name' ); ?>"><?php _e( 'Button text' ); ?></label>
         <input class="widefat" id="<?php echo $this->get_field_id( 'modal_trigger_name' ); ?>"
                name="<?php echo $this->get_field_name( 'modal_trigger_name' ); ?>"
                type="text" value="<?php echo esc_attr( $modal_trigger_name ); ?>" />
     </p>
-<? } ?>
+<?php endif; ?>
 <p>
     <label for="<?php echo $this->get_field_id( 'form_title' ); ?>"><?php _e( 'Form title:' ); ?></label>
     <input class="widefat" id="<?php echo $this->get_field_id( 'form_title' ); ?>"
@@ -37,7 +34,7 @@ $redirect_to = isset( $instance[ 'redirect_to' ] ) ? $instance[ 'redirect_to' ] 
 <p>
     <label><?php _e( 'Show big social buttons:' ); ?></label>
     <br>
-    <div class="radio-wrapper" style="text-align: center;">
+    <div class="radio-wrapper">
         <input id="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>_yes"
                name="<?php echo $this->get_field_name( 'social_big_buttons' ); ?>"
                type="radio" value="1" <?php echo esc_attr( $social_big_buttons ) == 1 ? 'checked="true"' : ''; ?> />
@@ -57,7 +54,7 @@ $redirect_to = isset( $instance[ 'redirect_to' ] ) ? $instance[ 'redirect_to' ] 
 <p>
     <label><?php _e( 'Enable Gravatar integration:' ); ?></label>
     <br>
-    <div class="radio-wrapper" style="text-align: center;">
+    <div class="radio-wrapper">
         <input id="<?php echo $this->get_field_id( 'gravatar' ); ?>_yes"
                name="<?php echo $this->get_field_name( 'gravatar' ); ?>"
                type="radio" value="1" <?php echo esc_attr( $gravatar ) == 1 ? 'checked="true"' : ''; ?> />
@@ -76,7 +73,7 @@ $redirect_to = isset( $instance[ 'redirect_to' ] ) ? $instance[ 'redirect_to' ] 
 
 </p>
 <p>
-    <label for="<?php echo $this->get_field_id( 'icon_url' ); ?>"><?php _e( 'Icon Url:' ); ?></label>
+    <label for="<?php echo $this->get_field_id( 'icon_url' ); ?>"><?php _e( 'Icon URL:' ); ?></label>
     <input type="text" id="<?php echo $this->get_field_id( 'icon_url' ); ?>"
            name="<?php echo $this->get_field_name( 'icon_url' ); ?>"
            value="<?php echo $icon_url; ?>"/>
@@ -97,7 +94,7 @@ $redirect_to = isset( $instance[ 'redirect_to' ] ) ? $instance[ 'redirect_to' ] 
         </span><br>
         <span class="description">
             <i><b><?php echo __( 'Note', 'wp-auth0' ); ?>:</b>
-                <?php echo __( 'This will override the "Form title" setting', 'wp-auth0' ); ?>
+                <?php echo __( 'This can override the "Form title" setting', 'wp-auth0' ); ?>
             </i>
         </span>
     </span>

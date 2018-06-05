@@ -7,11 +7,11 @@ class WP_Auth0_Popup_Widget extends WP_Auth0_Embed_Widget {
 	}
 
 	protected function getWidgetName() {
-		return "Auth0 Lock Popup";
+		return __( 'Auth0 Popup Login', 'wp-auth0' );
 	}
 
 	protected function getWidgetDescription() {
-		return "Shows a button that once clicked will open Auth0 Lock Popup";
+		return __( 'Shows a button to pop up an Auth0 login form in your sidebar', 'wp-auth0' );
 	}
 
 	protected function showAsModal() {
