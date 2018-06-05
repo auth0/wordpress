@@ -555,7 +555,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	public function render_social_twitter_key( $args = array() ) {
 		$this->render_social_key_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Used for the Social Amplification Widget. ', 'wp-auth0' ) .
+			__( 'Twitter app key for the Social Amplification Widget. ', 'wp-auth0' ) .
+			__( 'The app used here needs to have "read" and "write" permissions. ', 'wp-auth0' ) .
 			$this->get_docs_link(
 				'connections/social/twitter#2-get-your-consumer-key-and-consumer-secret',
 				__( 'Instructions here', 'wp-auth0' )
@@ -575,7 +576,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	public function render_social_twitter_secret( $args = array() ) {
 		$this->render_social_key_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Used for the Social Amplification Widget. ', 'wp-auth0' ) .
+			__( 'Secret for the app above. ', 'wp-auth0' ) .
 			$this->get_docs_link(
 				'connections/social/twitter#2-get-your-consumer-key-and-consumer-secret',
 				__( 'Instructions here', 'wp-auth0' )
@@ -595,6 +596,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	public function render_social_facebook_key( $args = array() ) {
 		$this->render_social_key_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
+			__( 'Facebook app key for the Social Amplification Widget. ', 'wp-auth0' ) .
+			__( 'The app used here needs to have "publish_actions" permission. ', 'wp-auth0' ) .
 			__( 'Used for the Social Amplification Widget. ', 'wp-auth0' ) .
 			$this->get_docs_link(
 				'connections/social/facebook#5-get-your-app-id-and-app-secret',
@@ -615,7 +618,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	public function render_social_facebook_secret( $args = array() ) {
 		$this->render_social_key_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Used for the Social Amplification Widget. ', 'wp-auth0' ) .
+			__( 'Secret for the app above. ', 'wp-auth0' ) .
 			$this->get_docs_link(
 				'connections/social/facebook#5-get-your-app-id-and-app-secret',
 				__( 'Instructions here', 'wp-auth0' )

@@ -15,11 +15,11 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 	}
 
 	protected function getWidgetName() {
-		return 'Auth0 Lock Embed';
+		return __( 'Auth0 Login', 'wp-auth0' );
 	}
 
 	protected function getWidgetDescription() {
-		return 'Shows Auth0 Lock Embed in your sidebar';
+		return __( 'Shows Auth0 login form in your sidebar', 'wp-auth0' );
 	}
 
 	protected function showAsModal() {
@@ -27,14 +27,9 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 	}
 
 	public function form( $instance ) {
-
 		wp_enqueue_media();
-		wp_enqueue_script( 'wpa0_admin', WPA0_PLUGIN_JS_URL . 'admin.js', array( 'jquery' ), WPA0_VERSION );
+		wp_enqueue_script( 'wpa0_admin' );
 		wp_enqueue_style( 'media' );
-		wp_localize_script( 'wpa0_admin', 'wpa0', array(
-				'media_title' => __( 'Choose your icon', 'wp-auth0' ),
-				'media_button' => __( 'Choose icon', 'wp-auth0' ),
-			) );
 		require WPA0_PLUGIN_DIR . 'templates/a0-widget-setup-form.php';
 	}
 
