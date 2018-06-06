@@ -6,7 +6,7 @@ if ( empty( $current_user->auth0_obj ) ) {
 
 $logout_url = wp_logout_url();
 $logout_url = html_entity_decode( $logout_url );
-$logout_url = add_query_arg( 'redirect_to', get_permalink(), $logout_url );
+$logout_url = add_query_arg( 'redirect_to', ( get_the_ID() ? get_permalink() : wp_login_url() ), $logout_url );
 $logout_url = add_query_arg( 'SLO', 1, $logout_url );
 ?>
 <script id="auth0" src="<?php echo esc_url( $this->a0_options->get('auth0js-cdn') ) ?>"></script>
