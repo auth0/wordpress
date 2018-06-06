@@ -80,6 +80,7 @@ class WP_Auth0_LoginManager {
 		add_filter( 'login_message', array( $this, 'auth0_sso_footer' ) );
 		add_action( 'wp_footer', array( $this, 'auth0_singlelogout_footer' ) );
 		add_action( 'admin_footer', array( $this, 'auth0_singlelogout_footer' ) );
+		add_action( 'login_footer', array( $this, 'auth0_singlelogout_footer' ) );
 		add_action( 'wp_login', array( $this, 'end_session' ) );
 	}
 
