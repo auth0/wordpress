@@ -23,7 +23,10 @@ $logout_url = add_query_arg( 'SLO', 1, $logout_url );
       domain:'<?php echo sanitize_text_field( $this->a0_options->get( 'domain' ) ); ?>'
     });
 
-    var sloOptions = { 'responseType' : 'token id_token', 'redirectUri' : '<?php echo home_url() ?>' };
+    var sloOptions = {
+        'responseType' : 'token id_token',
+        'redirectUri' : '<?php echo $this->a0_options->get_wp_auth0_url( null ) ?>'
+    };
     webAuth.checkSession( sloOptions, function ( err ) {
             if ( err && err.error && 'login_required' === err.error ) {
                 window.location = '<?php echo $logout_url ?>';
