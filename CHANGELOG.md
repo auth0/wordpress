@@ -1,9 +1,18 @@
 # Change Log
 
+## [3.6.1](https://github.com/auth0/wp-auth0/tree/3.6.1) (2018-06-07)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.6.0...3.6.1)
+
+**Closed issues**
+- No versions in Wordpress plugin repo [\#478](https://github.com/auth0/wp-auth0/issues/478)
+- Javascript error loading Customize [\#476](https://github.com/auth0/wp-auth0/issues/476)
+
+**Fixed**
+- Fix SLO callback URL  [\#479](https://github.com/auth0/wp-auth0/pull/479) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix Customizer failing after upgrade; fix widget settings [\#477](https://github.com/auth0/wp-auth0/pull/477) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [3.6.0](https://github.com/auth0/wp-auth0/tree/3.6.0) (2018-06-05)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.5.2...3.6.0)
-
-
 
 **NOTES**
 

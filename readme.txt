@@ -141,6 +141,10 @@ All is not lost!
 
 [Complete CHANGELOG.md maintained on Github](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md)
 
+= 3.6.1 =
+
+[Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#361-2018-06-07)
+
 = 3.6.0 =
 
 [Details](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#360-2018-06-05)
