@@ -58,6 +58,19 @@ jQuery(document).ready(function($) {
     });
 
     /*
+    Import and Export settings tabs
+     */
+    $('.js-a0-upload-toggle').click(function(){
+        $('#js-a0-upload-file').toggle();
+        $('#js-a0-paste-json').toggle();
+    });
+
+    $('.js-a0-import-export-tabs').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+
+    /*
     Admin settings tab switching
      */
     var currentTab;
@@ -79,7 +92,7 @@ jQuery(document).ready(function($) {
     $settingsForm.attr( 'data-tab-showing', currentTab );
 
     // Set the tab showing on the form and persist the tab
-    $( '.nav-tabs [role="tab"]' ).click( function () {
+    $( '.js-a0-settings-tabs' ).click( function () {
         window.location.hash = '';
         var tabHref = $( this ).attr( 'aria-controls' );
         $settingsForm.attr( 'data-tab-showing', tabHref );
