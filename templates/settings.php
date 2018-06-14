@@ -21,7 +21,7 @@
 	    <ul class="nav nav-tabs" role="tablist">
 		    <?php foreach ( array( 'basic', 'features', 'appearance', 'advanced', 'help' ) as $tab ) : ?>
 		      <li role="presentation"><a id="tab-<?php echo $tab ?>" href="#<?php echo $tab ?>" aria-controls="<?php
-			      echo $tab ?>" role="tab" data-toggle="tab"><?php echo ucfirst( $tab ) ?></a></li>
+			      echo $tab ?>" role="tab" data-toggle="tab" class="js-a0-settings-tabs"><?php echo ucfirst( $tab ) ?></a></li>
 		    <?php endforeach; ?>
 		  </ul>
 		</div>

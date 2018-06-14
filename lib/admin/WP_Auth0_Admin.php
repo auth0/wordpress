@@ -238,7 +238,7 @@ class WP_Auth0_Admin {
 			add_action( 'admin_notices', array( $this, 'create_account_message' ) );
 		}
 
-		if ( in_array( $wpa0_curr_page, array( 'wpa0', 'wpa0-setup' ) ) ) {
+		if ( in_array( $wpa0_curr_page, array( 'wpa0', 'wpa0-setup', 'wpa0-import-settings' ) ) ) {
 			wp_enqueue_script( 'wpa0_admin' );
 			wp_enqueue_script( 'wpa0_async' );
 		}
