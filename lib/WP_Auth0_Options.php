@@ -23,14 +23,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		$this->set( 'connections', $options['connections'] );
 	}
 
-	public function get_connection( $key, $default = null ) {
-		$options = $this->get_options();
-
-		if ( !isset( $options['connections'][$key] ) )
-			return apply_filters( 'wp_auth0_get_option', $default, $key );
-		return apply_filters( 'wp_auth0_get_option', $options['connections'][$key], $key );
-	}
-
 	public function get_default($key) {
 		$defaults = $this->defaults();
 		return $defaults[$key];

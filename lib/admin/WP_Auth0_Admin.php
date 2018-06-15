@@ -284,15 +284,9 @@ class WP_Auth0_Admin {
 	}
 
 	public function input_validator( $input ) {
-
-		$old_options = $this->a0_options->get_options();
-
-		$input['connections'] = $old_options['connections'];
-
 		foreach ( $this->sections as $name => $section ) {
-			$input = $section->input_validator( $input, $old_options );
+			$input = $section->input_validator( $input );
 		}
-
 		return $input;
 	}
 

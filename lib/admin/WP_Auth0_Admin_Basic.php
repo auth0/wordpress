@@ -324,7 +324,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			$this->add_validation_error( __( 'You need to specify a client id', 'wp-auth0' ) );
 		}
 
-		if ( empty( $input['client_secret'] ) && empty( $old_options['client_secret'] ) ) {
+		if ( empty( $input['client_secret'] ) ) {
 			$this->add_validation_error( __( 'You need to specify a client secret', 'wp-auth0' ) );
 		}
 
