@@ -27,7 +27,7 @@ jQuery(document).ready(function ($) {
 
     // Look for additional fields to display
     if ( typeof wpAuth0LockGlobalFields === 'object' ) {
-        opts.settings.additionalSignUpFields = wpAuth0LockGlobalFields;
+       opts.settings.additionalSignUpFields = wpAuth0LockGlobalFields;
     }
 
     // Set Lock to standard or Passwordless
