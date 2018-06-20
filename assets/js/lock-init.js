@@ -1,4 +1,4 @@
-/* globals jQuery, console, Cookies, wpAuth0LockGlobal, Auth0Lock, Auth0LockPasswordless */
+/* globals jQuery, console, Cookies, wpAuth0LockGlobal, wpAuth0LockGlobalFields, Auth0Lock, Auth0LockPasswordless */
 jQuery(document).ready(function ($) {
     var opts = wpAuth0LockGlobal;
     var loginForm = $( '#' + opts.loginFormId );
@@ -23,6 +23,11 @@ jQuery(document).ready(function ($) {
 
     if ( opts.settings.auth.params.nonce ) {
         Cookies.set( opts.nonceCookieName, opts.settings.auth.params.nonce );
+    }
+
+    // Look for additional fields to display
+    if ( wpAuth0LockGlobalFields ) {
+        opts.settings.additionalSignUpFields = wpAuth0LockGlobalFields;
     }
 
     // Set Lock to standard or Passwordless

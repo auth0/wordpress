@@ -25,12 +25,13 @@ $custom_js = (string) trim( $auth0_options->get( 'custom_js' ) );
 $custom_signup_fields = (string) trim( $auth0_options->get( 'custom_signup_fields' ) );
 
 if ( $custom_js || $custom_signup_fields ) {
-  printf(
-    '<script type="text/javascript">document.addEventListener("DOMContentLoaded", function() {%s %s});</script>',
-    $custom_js ? $custom_js . ';' : '',
-    $custom_signup_fields
-      ? WP_Auth0_Lock10_Options::LOCK_GLOBAL_JS_VAR_NAME . '.settings.additionalSignUpFields=' . $custom_signup_fields
-      : ''
-  );
+  echo '<script type="text/javascript">';
+  if ( $custom_js ) {
+    echo 'document.addEventListener("DOMContentLoaded", function() {' . $custom_js . '});';
+  }
+  if ( $custom_signup_fields ) {
+    echo 'var ' . WP_Auth0_Lock10_Options::LOCK_GLOBAL_JS_VAR_NAME . 'Fields=' . $custom_signup_fields . ';';
+  }
+  echo '</script>';
 }
 ?>
