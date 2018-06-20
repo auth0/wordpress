@@ -204,6 +204,10 @@ class WP_Auth0_Lock10_Options {
       $options_obj['disableSignupAction'] = true;
     }
 
+    if ( function_exists( 'login_header' ) && isset( $_GET['action'] ) && 'register' === $_GET['action'] ) {
+      $options_obj['initialScreen'] = 'signUp';
+    }
+
     return $options_obj;
   }
 
