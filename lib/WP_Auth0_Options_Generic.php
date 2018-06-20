@@ -94,7 +94,7 @@ class WP_Auth0_Options_Generic {
 	 *
 	 * @return string
 	 */
-	public function get_constant_name($key ) {
+	public function get_constant_name( $key ) {
 		return 'AUTH0_ENV_' . strtoupper( $key );
 	}
 

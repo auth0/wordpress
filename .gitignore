@@ -8,3 +8,4 @@ wp-phptidy.php
 /account_cleanup/vendor/
 /vendor/
 /rules/
+composer.lock
