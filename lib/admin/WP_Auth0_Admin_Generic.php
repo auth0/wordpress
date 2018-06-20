@@ -81,12 +81,12 @@ class WP_Auth0_Admin_Generic {
 	public function input_validator( $input, $old_options = null ) {
 		$constant_keys = $this->options->get_all_constant_keys();
 
-		// No options to save, get defaults.
+		// No options saved previously, get defaults as fallback.
 		if ( empty( $old_options ) ) {
 			$old_options = $this->options->get_options();
 		}
 
-		// Set input as constant overrides to pass validation.
+		// Look for and set constant overrides so validation is still possible.
 		foreach ( $constant_keys as $opt_key ) {
 			$input[$opt_key] = $this->options->get_constant_val( $opt_key );
 		}
@@ -96,7 +96,7 @@ class WP_Auth0_Admin_Generic {
 			$input = $this->$action( $old_options, $input );
 		}
 
-		// Remove constant overrides from value to save.
+		// Remove constant overrides so they are not saved to the database.
 		foreach ( $constant_keys as $opt_key ) {
 			unset( $input[$opt_key] );
 		}
@@ -237,16 +237,18 @@ class WP_Auth0_Admin_Generic {
 	 * @param string|integer|float $value - input value attribute
 	 * @param string               $label - input label text
 	 * @param bool                 $selected - is it active?
+	 * @param bool                 $disabled - is it disabled?
 	 */
-	protected function render_radio_button( $id, $input_name, $value, $label = '', $selected = false ) {
+	protected function render_radio_button( $id, $input_name, $value, $label = '', $selected = false, $disabled = false ) {
 		printf(
-			'<label for="%s"><input type="radio" name="%s[%s]" id="%s" value="%s" %s>&nbsp;%s</label>',
+			'<label for="%s"><input type="radio" name="%s[%s]" id="%s" value="%s" %s%s>&nbsp;%s</label>',
 			esc_attr( $id ),
 			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			esc_attr( $value ),
 			checked( $selected, true, false ),
+			$disabled ? ' disabled' : '',
 			sanitize_text_field( ! empty( $label ) ? $label : ucfirst( $value ) )
 		);
 	}

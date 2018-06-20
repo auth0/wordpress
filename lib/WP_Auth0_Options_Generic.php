@@ -56,7 +56,7 @@ class WP_Auth0_Options_Generic {
 	}
 
 	/**
-	 * Return a settings value from a constant or database storage and filter on output.
+	 * Return a filtered settings value or default.
 	 *
 	 * @param string $key - Settings key to get.
 	 * @param mixed $default - Default value to return if not found.
@@ -72,7 +72,7 @@ class WP_Auth0_Options_Generic {
 	}
 
 	/**
-	 * Return a connection settings value from a constant or database storage and filter on output.
+	 * Return a filtered connection settings value or default.
 	 *
 	 * @param string $key - Connection option key to look for.
 	 * @param mixed $default - Default value to return if not found.
