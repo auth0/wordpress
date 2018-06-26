@@ -99,6 +99,18 @@ class WP_Auth0_Options_Generic {
 	}
 
 	/**
+	 * Does a certain option pull from a constant?
+	 *
+	 * @param string $key - Option key to check.
+	 *
+	 * @return boolean
+	 */
+	public function has_constant_val( $key ) {
+		$setting_const = $this->get_constant_name( $key );
+		return defined( $setting_const );
+	}
+
+	/**
 	 * Get the value of an overriding constant if one is set, return null if not.
 	 *
 	 * @param string $key - Option key to look for.
@@ -115,7 +127,7 @@ class WP_Auth0_Options_Generic {
 	 * @return array
 	 */
 	public function get_all_constant_keys() {
-		return ! empty( $this->constant_opts ) ? array_keys( $this->constant_opts ) : array();
+		return array_keys( $this->constant_opts );
 	}
 
 	/**
@@ -130,13 +142,15 @@ class WP_Auth0_Options_Generic {
 	public function set( $key, $value, $should_update = true ) {
 		$options = $this->get_options();
 
-		if ( null === $this->get_constant_val( $key ) ) {
-			$options[$key] = $value;
-			$this->_opt = $options;
+		if ( null !== $this->get_constant_val( $key ) ) {
+			return;
+		}
 
-			if ( $should_update ) {
-				$this->update_all();
-			}
+		$options[$key] = $value;
+		$this->_opt = $options;
+
+		if ( $should_update ) {
+			$this->update_all();
 		}
 	}
 

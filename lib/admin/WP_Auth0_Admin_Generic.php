@@ -146,16 +146,18 @@ class WP_Auth0_Admin_Generic {
 	 */
 	protected function render_switch( $id, $input_name, $expand_id = '' ) {
 		$value = $this->options->get( $input_name );
-		$field_is_const = $this->render_const_notice( $input_name );
+		if ( $field_is_const = $this->options->has_constant_val( $input_name ) ) {
+			$this->render_const_notice( $input_name );
+		}
 		printf(
-			'<div class="a0-switch"><input type="checkbox" name="%s[%s]" id="%s" data-expand="%s" value="1"%s%s>
+			'<div class="a0-switch"><input type="checkbox" name="%s[%s]" id="%s" data-expand="%s" value="1" %s %s>
 			<label for="%s"></label></div>',
 			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			! empty( $expand_id ) ? esc_attr( $expand_id ) : '',
 			checked( empty( $value ), false, false ),
-			$field_is_const ? ' disabled' : '',
+			$field_is_const ? 'disabled' : '',
 			esc_attr( $id )
 		);
 	}
@@ -177,9 +179,11 @@ class WP_Auth0_Admin_Generic {
 			$placeholder = ! empty( $value ) ? 'Not visible' : '';
 			$value       = '';
 		}
-		$field_is_const = $this->render_const_notice( $input_name );
+		if ( $field_is_const = $this->options->has_constant_val( $input_name ) ) {
+			$this->render_const_notice( $input_name );
+		}
 		printf(
-			'<input type="%s" name="%s[%s]" id="%s" value="%s" placeholder="%s" style="%s"%s>',
+			'<input type="%s" name="%s[%s]" id="%s" value="%s" placeholder="%s" style="%s" %s>',
 			esc_attr( $type ),
 			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
@@ -187,7 +191,7 @@ class WP_Auth0_Admin_Generic {
 			esc_attr( $value ),
 			$placeholder ? esc_attr( $placeholder ) : '',
 			$style ? esc_attr( $style ) : '',
-			$field_is_const ? ' disabled' : ''
+			$field_is_const ? 'disabled' : ''
 		);
 	}
 
@@ -198,14 +202,16 @@ class WP_Auth0_Admin_Generic {
 	 * @param string $input_name - input name attribute
 	 */
 	protected function render_social_key_field( $id, $input_name ) {
-		$field_is_const = $this->render_const_notice( $input_name );
+		if ( $field_is_const = $this->options->has_constant_val( $input_name ) ) {
+			$this->render_const_notice( $input_name );
+		}
 		printf(
-			'<input type="text" name="%s[connections][%s]" id="wpa0_%s" value="%s"%s>',
+			'<input type="text" name="%s[connections][%s]" id="wpa0_%s" value="%s" %s>',
 			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			esc_attr( $this->options->get_connection( $input_name ) ),
-			$field_is_const ? ' disabled' : ''
+			$field_is_const ? 'disabled' : ''
 		);
 	}
 
@@ -217,14 +223,16 @@ class WP_Auth0_Admin_Generic {
 	 */
 	protected function render_textarea_field( $id, $input_name ) {
 		$value = $this->options->get( $input_name );
-		$field_is_const = $this->render_const_notice( $input_name );
+		if ( $field_is_const = $this->options->has_constant_val( $input_name ) ) {
+			$this->render_const_notice( $input_name );
+		}
 		printf(
-			'<textarea name="%s[%s]" id="%s" rows="%d" class="code"%s>%s</textarea>',
+			'<textarea name="%s[%s]" id="%s" rows="%d" class="code" %s>%s</textarea>',
 			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			$this->_textarea_rows,
-			$field_is_const ? ' disabled' : '',
+			$field_is_const ? 'disabled' : '',
 			esc_textarea( $value )
 		);
 	}
@@ -241,14 +249,14 @@ class WP_Auth0_Admin_Generic {
 	 */
 	protected function render_radio_button( $id, $input_name, $value, $label = '', $selected = false, $disabled = false ) {
 		printf(
-			'<label for="%s"><input type="radio" name="%s[%s]" id="%s" value="%s" %s%s>&nbsp;%s</label>',
+			'<label for="%s"><input type="radio" name="%s[%s]" id="%s" value="%s" %s %s>&nbsp;%s</label>',
 			esc_attr( $id ),
 			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			esc_attr( $value ),
 			checked( $selected, true, false ),
-			$disabled ? ' disabled' : '',
+			$disabled ? 'disabled' : '',
 			sanitize_text_field( ! empty( $label ) ? $label : ucfirst( $value ) )
 		);
 	}
@@ -257,19 +265,15 @@ class WP_Auth0_Admin_Generic {
 	 * Check if the setting is provided by a constant and indicate.
 	 *
 	 * @param string $input_name - Input name for the field, used as option key.
-	 *
-	 * @return bool
 	 */
 	protected function render_const_notice( $input_name ) {
-		$setting_const = $this->options->get_constant_name( $input_name );
-		if ( $field_is_const = defined( $setting_const ) ) {
+		if ( $this->options->has_constant_val( $input_name ) ) {
 			printf(
 				'<p><span class="description">%s <code>%s</code></span></p>',
 				__( 'Value is set in the constant ', 'wp-auth0' ),
-				$setting_const
+				$this->options->get_constant_name( $input_name )
 			);
 		}
-		return $field_is_const;
 	}
 
 	/**

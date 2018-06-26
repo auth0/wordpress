@@ -198,7 +198,9 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$opt_name = $args['opt_name'];
 		$id_attr  = $args['label_for'];
 		$value    = $this->options->get( $opt_name );
-		$disabled = $this->render_const_notice( $opt_name );
+		if ( $disabled = $this->options->has_constant_val( $opt_name ) ) {
+			$this->render_const_notice( $opt_name );
+		}
 		$this->render_radio_button( $id_attr . '_au', $opt_name, '', 'Auto', empty( $value ), $disabled );
 		$this->render_radio_button( $id_attr . '_em', $opt_name, 'email', '', 'email' === $value, $disabled );
 		$this->render_radio_button( $id_attr . '_un', $opt_name, 'username', '', 'username' === $value, $disabled );
