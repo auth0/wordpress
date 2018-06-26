@@ -160,11 +160,31 @@ class WP_Auth0_LoginManager {
 
 			// Errors encountered during the OAuth login flow.
 			$this->die_on_login( $e->getMessage(), $e->getCode() );
-
 		} catch ( WP_Auth0_BeforeLoginException $e ) {
 
 			// Errors encountered during the WordPress login flow.
 			$this->die_on_login( $e->getMessage(), $e->getCode(), false );
+		} catch ( DomainException $e ) {
+
+			// JWT:decode error - Algorithm was not provided.
+			$this->die_on_login( __( 'Invalid ID token (no algorithm)', 'wp-auth0' ), $e->getCode(), false );
+		} catch ( SignatureInvalidException $e ) {
+
+			// JWT:decode error - Provided JWT was invalid because the signature verification failed.
+			$this->die_on_login( __( 'Invalid ID token (failed signature validation)', 'wp-auth0' ), $e->getCode(), false );
+		} catch ( BeforeValidException $e ) {
+
+			// JWT:decode error - Provided JWT is trying to be used before it's eligible as defined by 'nbf'.
+			// JWT:decode error - Provided JWT is trying to be used before it's been created as defined by 'iat'.
+			$this->die_on_login( __( 'Invalid ID token (used too early)', 'wp-auth0' ), $e->getCode(), false );
+		} catch ( ExpiredException $e ) {
+
+			// JWT:decode error - Provided JWT has since expired, as defined by the 'exp' claim.
+			$this->die_on_login( __( 'Expired ID token', 'wp-auth0' ), $e->getCode(), false );
+		} catch ( UnexpectedValueException $e ) {
+
+			// JWT:decode error - Provided JWT was invalid.
+			$this->die_on_login( __( 'Invalid ID token', 'wp-auth0' ), $e->getCode(), false );
 		}
 	}
 
