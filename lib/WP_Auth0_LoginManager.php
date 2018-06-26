@@ -171,7 +171,7 @@ class WP_Auth0_LoginManager {
 		} catch ( SignatureInvalidException $e ) {
 
 			// JWT:decode error - Provided JWT was invalid because the signature verification failed.
-			$this->die_on_login( __( 'Invalid ID token (failed signature validation)', 'wp-auth0' ), $e->getCode(), false );
+			$this->die_on_login( __( 'Invalid ID token (failed signature verification)', 'wp-auth0' ), $e->getCode(), false );
 		} catch ( BeforeValidException $e ) {
 
 			// JWT:decode error - Provided JWT is trying to be used before it's eligible as defined by 'nbf'.
