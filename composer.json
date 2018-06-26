@@ -34,6 +34,6 @@
         "phpcbf": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml",
         "compat": "./vendor/bin/phpcs ./ --standard=PHPCompatibility --runtime-set testVersion 5.3 --extensions=php --ignore=/vendor/,/tests/",
         "sniffs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -e",
-        "test": "./vendor/bin/phpunit --process-isolation --colors=always"
+        "test": "./vendor/bin/phpunit --coverage-text"
     }
 }

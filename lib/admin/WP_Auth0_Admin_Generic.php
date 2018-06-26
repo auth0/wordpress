@@ -79,26 +79,15 @@ class WP_Auth0_Admin_Generic {
 	 * @return array
 	 */
 	public function input_validator( $input, $old_options = null ) {
-		$constant_keys = $this->options->get_all_constant_keys();
 
 		// No options saved previously, get defaults as fallback.
 		if ( empty( $old_options ) ) {
 			$old_options = $this->options->get_options();
 		}
 
-		// Look for and set constant overrides so validation is still possible.
-		foreach ( $constant_keys as $opt_key ) {
-			$input[$opt_key] = $this->options->get_constant_val( $opt_key );
-		}
-
 		// Loop through setting validation methods and run.
 		foreach ( $this->actions_middlewares as $action ) {
 			$input = $this->$action( $old_options, $input );
-		}
-
-		// Remove constant overrides so they are not saved to the database.
-		foreach ( $constant_keys as $opt_key ) {
-			unset( $input[$opt_key] );
 		}
 
 		return $input;

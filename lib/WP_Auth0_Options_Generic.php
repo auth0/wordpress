@@ -12,9 +12,8 @@ class WP_Auth0_Options_Generic {
 	public function __construct() {
 		$option_keys = array_keys( $this->defaults() );
 		foreach ( $option_keys as $key ) {
-			$const_name = $this->get_constant_name( $key );
-			if ( defined( $const_name ) ) {
-				$this->constant_opts[$key] = constant( $const_name );
+			if ( 'connections' !== $key && NULL !== $this->get_constant_val( $key ) ) {
+				$this->constant_opts = $this->set_opts_array_constant_val( $this->constant_opts, $key );
 			}
 		}
 	}
@@ -47,7 +46,7 @@ class WP_Auth0_Options_Generic {
 
 			// Check for constant overrides and replace.
 			if ( ! empty( $this->constant_opts ) ) {
-				$options = array_merge( $options, $this->constant_opts );
+				$options = array_replace_recursive( $options, $this->constant_opts );
 			}
 
 			$this->_opt = $options;
@@ -118,7 +117,8 @@ class WP_Auth0_Options_Generic {
 	 * @return string|null
 	 */
 	public function get_constant_val( $key ) {
-		return isset( $this->constant_opts[$key] ) ? $this->constant_opts[$key] : null;
+		$constant_name = $this->get_constant_name( $key );
+		return defined( $constant_name ) ? constant( $constant_name ) : null;
 	}
 
 	/**
@@ -136,26 +136,58 @@ class WP_Auth0_Options_Generic {
 	 *
 	 * @param string $key - Option key name to update.
 	 * @param mixed $value - Value to update with.
-	 *
 	 * @param bool $should_update
+	 *
+	 * @return bool
 	 */
 	public function set( $key, $value, $should_update = true ) {
 		$options = $this->get_options();
 
 		if ( null !== $this->get_constant_val( $key ) ) {
-			return;
+			return FALSE;
 		}
 
 		$options[$key] = $value;
 		$this->_opt = $options;
 
 		if ( $should_update ) {
-			$this->update_all();
+			return $this->update_all();
 		}
+		return TRUE;
+	}
+
+	/**
+	 * Set a connection setting value.
+	 *
+	 * @param string $key - Option key to set.
+	 * @param mixed $value - Value to use.
+	 */
+	public function set_connection( $key, $value ) {
+		$options = $this->get_options();
+		$options['connections'][$key] = $value;
+		$this->set( 'connections', $options['connections'] );
+	}
+
+	/**
+	 * Set an value for an options array properly depending on whether the key is a connection or not.
+	 *
+	 * @param array $opts - The options array to modify;
+	 * @param string $key - The key to check.
+	 *
+	 * @return array
+	 */
+	public function set_opts_array_constant_val( $opts, $key ) {
+		if ( 0 === strpos( $key, 'social_twitter_' ) || 0 === strpos( $key, 'social_facebook_' ) ) {
+			// Setting option is a connection setting.
+			$opts['connections'][$key] = $this->get_constant_val( $key );
+		} else {
+			$opts[$key] = $this->get_constant_val( $key );
+		}
+		return $opts;
 	}
 
 	public function update_all() {
-		update_option( $this->_options_name, $this->_opt );
+		return update_option( $this->_options_name, $this->_opt );
 	}
 
 	public function save() {

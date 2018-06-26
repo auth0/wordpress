@@ -16,13 +16,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		return is_multisite() ? users_can_register_signup_filter() : get_site_option( 'users_can_register' );
 	}
 
-	public function set_connection( $key, $value ) {
-		$options = $this->get_options();
-		$options['connections'][$key] = $value;
-
-		$this->set( 'connections', $options['connections'] );
-	}
-
 	public function get_default($key) {
 		$defaults = $this->defaults();
 		return $defaults[$key];
