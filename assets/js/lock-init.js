@@ -26,7 +26,7 @@ jQuery(document).ready(function ($) {
     }
 
     // Look for additional fields to display
-    if ( wpAuth0LockGlobalFields ) {
+    if ( typeof wpAuth0LockGlobalFields === 'object' ) {
         opts.settings.additionalSignUpFields = wpAuth0LockGlobalFields;
     }
 
