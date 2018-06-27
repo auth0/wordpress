@@ -9,7 +9,8 @@
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.2",
         "wimg/php-compatibility": "^8.1",
-        "wp-coding-standards/wpcs": "^0.14.1"
+        "wp-coding-standards/wpcs": "^0.14.1",
+        "phpunit/phpunit": "^6"
     },
     "authors": [
         {
@@ -31,7 +32,8 @@
     "scripts": {
         "phpcs": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs --standard=phpcs-ruleset.xml",
         "phpcbf": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml",
-        "compat": "./vendor/bin/phpcs ./ --standard=PHPCompatibility --runtime-set testVersion 5.3 --extensions=php --ignore=/vendor/*",
-        "sniffs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -e"
+        "compat": "./vendor/bin/phpcs ./ --standard=PHPCompatibility --runtime-set testVersion 5.3 --extensions=php --ignore=/vendor/,/tests/",
+        "sniffs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -e",
+        "test": "./vendor/bin/phpunit --coverage-text"
     }
 }

@@ -82,7 +82,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 
-		$client_id = WP_Auth0_Options::Instance()->get( 'client_id' );
+		$client_id = $this->options->get( 'client_id' );
 
 		$current_user = get_currentauth0user();
 		$user_profile = $current_user->auth0_obj;

@@ -279,18 +279,36 @@ class WP_Auth0_Admin {
 		register_setting(
 			$this->a0_options->get_options_name() . '_basic',
 			$this->a0_options->get_options_name(),
-			array( $this, 'input_validator' )
+			array(
+				'sanitize_callback' => array( $this, 'input_validator' )
+			)
 		);
 	}
 
 	public function input_validator( $input ) {
+		$constant_keys = $this->a0_options->get_all_constant_keys();
 
-		$old_options = $this->a0_options->get_options();
-
-		$input['connections'] = $old_options['connections'];
+		// Look for and set constant overrides so validation is still possible.
+		foreach ( $constant_keys as $opt_key ) {
+			$input = $this->a0_options->set_opts_array_constant_val( $input, $opt_key );
+		}
 
 		foreach ( $this->sections as $name => $section ) {
-			$input = $section->input_validator( $input, $old_options );
+			$input = $section->input_validator( $input );
+		}
+
+		// Remove constant overrides so they are not saved to the database.
+		foreach ( $constant_keys as $opt_key ) {
+			if ( 'connections' === $opt_key ) {
+				// Connections is an array and removing it would delete all saved settings within.
+				continue;
+			} elseif ( 0 === strpos( $opt_key, 'social_' ) && NULL !== $this->a0_options->get_constant_val( $opt_key ) ) {
+				// This is a connections setting and there is a constant value set.
+				$input['connections'][$opt_key] = '';
+			} else {
+				// Regular settings value to remove.
+				$input[$opt_key] = '';
+			}
 		}
 
 		return $input;
