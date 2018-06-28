@@ -31,8 +31,8 @@ document.addEventListener("DOMContentLoaded", function() {
           var $input2=$(document.createElement('input')).attr('name','state').val(authResult.state);
           $form.append($input).append($input2);
           $("body").append($form);
-          Cookies.set( '<?php echo WP_Auth0_State_Handler::STATE_COOKIE_NAME ?>', authResult.state );
-          Cookies.set( '<?php echo WP_Auth0_Nonce_Handler::NONCE_COOKIE_NAME ?>', authResult.idTokenPayload.nonce );
+          Cookies.set( '<?php echo WP_Auth0_State_Handler::get_storage_cookie_name() ?>', authResult.state );
+          Cookies.set( '<?php echo WP_Auth0_Nonce_Handler::get_storage_cookie_name() ?>', authResult.idTokenPayload.nonce );
           $form.submit();
         });
       }
