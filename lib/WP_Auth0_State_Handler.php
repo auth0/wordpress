@@ -29,7 +29,7 @@ final class WP_Auth0_State_Handler extends WP_Auth0_Nonce_Handler {
 	 *
 	 * @return string
 	 */
-	protected function get_storage_cookie_name() {
-		return self::STATE_COOKIE_NAME;
+	public static function get_storage_cookie_name() {
+		return apply_filters( 'auth0_state_cookie_name', self::STATE_COOKIE_NAME );
 	}
 }
