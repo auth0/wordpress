@@ -1,5 +1,24 @@
 # Change Log
 
+## [3.6.2](https://github.com/auth0/wp-auth0/tree/3.6.2) (2018-06-29)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.6.1...3.6.2)
+
+**Closed issues**
+- `auth0_state` cookie and Pantheon [\#494](https://github.com/auth0/wp-auth0/issues/494)
+- Question: Way to visit directly to Sign Up tab? [\#489](https://github.com/auth0/wp-auth0/issues/489)
+- Custom Fields  [\#487](https://github.com/auth0/wp-auth0/issues/487)
+- TypeError: jQuery(...).tab is not a function [\#484](https://github.com/auth0/wp-auth0/issues/484)
+- Error - auth0 cannot find node with id "auth0-login-form" [\#483](https://github.com/auth0/wp-auth0/issues/483)
+
+**Added**
+- Add a filter for nonce and state cookie names [\#495](https://github.com/auth0/wp-auth0/pull/495) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add error handling for JWT decode [\#492](https://github.com/auth0/wp-auth0/pull/492) ([joshcanhelp](https://github.com/joshcanhelp))
+- Show signup tab if action=register on wp-login.php page [\#490](https://github.com/auth0/wp-auth0/pull/490) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix missing signup fields [\#491](https://github.com/auth0/wp-auth0/pull/491) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix import-export tabs not working [\#486](https://github.com/auth0/wp-auth0/pull/486) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [3.6.1](https://github.com/auth0/wp-auth0/tree/3.6.1) (2018-06-07)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.6.0...3.6.1)
 
