@@ -3,7 +3,7 @@
 Login by Auth0
 ====
 
-Single Sign On for Enterprises + Social Login + User/Passwords. For all your WordPress instances. Powered by Auth0.
+Single Sign On for Enterprises + Social Login + User/Passwords + Passwordless. For all your WordPress instances. Powered by Auth0.
 
 * [WordPress.org plugin page](https://wordpress.org/plugins/auth0/)
 * [Documentation (installation, configuration, more)](https://auth0.com/docs/cms/wordpress)
@@ -30,7 +30,10 @@ We're happy to review and approve new filters and actions that help you integrat
 * Change the least amount of code to achieve the goal; PRs with lots of whitespace changes and abstraction combined with a feature add or bug fix are difficult to review and may be rejected
 * Use the latest version of WordPress and turn `WP_DEBUG` on
 * If other plugins are installed during testing that might affect behavior, please list those in the PR description
-* Make sure to test against the lowest PHP version supported (see `Requires PHP:` [here](readme.txt#L5)) 
+* Run the [Composer](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx) code quality scripts on the files changed:
+    * `composer compat` to check for PHP version compatibility (currently 5.3), ignore files that you have not modified
+    * `composer phpcbf-path ./path/to/file/changed.php` to clean up whitespace
+    * `composer phpcs-path ./path/to/file/changed.php` to find other potential issues
 
 ### How to install and configure WordPress for testing
 
@@ -53,20 +56,22 @@ git clone https://github.com/joshcanhelp/auth0-wp-test.git ./wp-content/themes/a
 # Optional, clones the testing theme to assist with development
 ```
 
+For a more complete script, [see this Gist](https://gist.github.com/joshcanhelp/50f66002643ece68f01bf5f94e1abe56).
+
 The main requirement for testing, though, is using the latest version of WordPress with our minimum supported PHP version. 
 
-### How to build the initial setup assets?
+### CSS pre-processing
 
-You need to install the stylus tool and run this command (inside /assets/css):
+You need to install the stylus tool and run this command (from the plugin root):
 
 ```
-$ stylus -c -o initial-setup.css initial-setup/main.styl
+$ stylus -c -o assets/css/initial-setup.css assets/css/initial-setup/main.styl
 ```
 
 To watch and auto-compile it while working:
 
 ```
-$ stylus -w -o initial-setup.css initial-setup/main.styl
+$ stylus -cw -o assets/css/initial-setup.css assets/css/initial-setup/main.styl
 ```
 
 ## Issue Reporting
