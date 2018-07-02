@@ -29,9 +29,11 @@
     },
     "minimum-stability": "stable",
     "scripts": {
-        "phpcs": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs --standard=phpcs-ruleset.xml",
-        "phpcbf": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml",
-        "compat": "./vendor/bin/phpcs ./ --standard=PHPCompatibility --runtime-set testVersion 5.3 --extensions=php --ignore=/vendor/*",
+        "compat": "./vendor/bin/phpcs --standard=phpcs-compat-ruleset.xml .",
+        "phpcs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -s .",
+        "phpcs-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs --standard=phpcs-ruleset.xml -s",
+        "phpcbf": "./vendor/bin/phpcbf --standard=phpcs-ruleset.xml .",
+        "phpcbf-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml",
         "sniffs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -e"
     }
 }
