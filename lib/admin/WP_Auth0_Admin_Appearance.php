@@ -3,6 +3,7 @@
 class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Use $this->_description instead
 	 */
 	const APPEARANCE_DESCRIPTION = '';
@@ -286,6 +287,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
 	 */
 	public function render_appearance_description() {

@@ -3,6 +3,7 @@
 class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Use $this->_description instead
 	 */
 	const BASIC_DESCRIPTION = '';
@@ -332,6 +333,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
 	 */
 	public function render_allow_signup_regular_multisite() {
@@ -340,6 +342,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
 	 */
 	public function render_allow_signup_regular() {
@@ -348,6 +351,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
 	 */
 	public function render_basic_description() {

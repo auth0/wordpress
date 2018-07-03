@@ -1,9 +1,9 @@
 <div class="wrap">
 
 	<?php screen_icon(); ?>
-	<h2><?php _e( "Auth0 for WordPress - Setup Wizard (step $step)", "wp-auth0" ); ?></h2>
+	<h2><?php _e( "Auth0 for WordPress - Setup Wizard (step $step)", 'wp-auth0' ); ?></h2>
 
-	<p>This will create a new database connections, expose 2 endpoints and will pupulate the custom scripts to call this endpoints to migrate the users to auth0. the users will not be changed in wordpress.</p>
+	<p>This will create a new database connections, expose 2 endpoints and will pupulate the custom scripts to call this endpoints to migrate the users to auth0. the users will not be changed in WordPress.</p>
 
 	<form action="options.php" method="POST">
 		<input type="hidden" name="action" value="wpauth0_callback_step5" />
@@ -24,7 +24,7 @@
 			GEO: <input type="checkbox" name="geo_rule" id="wpa0_geo_rule" value="1" <?php echo is_null( $geo ) ? '' : 'checked'; ?>/>
 			<div class="subelement">
 				<span class="description">
-					<?php echo __( 'Mark this if you want to store geo location information based on your users IP in the user_metadata', 'wp-auth0' );?>
+					<?php echo __( 'Mark this if you want to store geo location information based on your users IP in the user_metadata', 'wp-auth0' ); ?>
 				</span>
 			</div>
 		</div>
@@ -52,7 +52,7 @@
 				<span class="description">
 					<?php echo __( 'Mark this if you want to hydrate your users profile with the data provided by FullContact. A valid api key is requiere.', 'wp-auth0' ); ?>
 					<?php echo __( 'More info ', 'wp-auth0' ); ?>
-					<a href="https://auth0.com/docs/scenarios/fullcontact"><?php echo __( 'HERE', 'wp-auth0' );?></a>
+					<a href="https://auth0.com/docs/scenarios/fullcontact"><?php echo __( 'HERE', 'wp-auth0' ); ?></a>
 				</span>
 			</div>
 		</div>

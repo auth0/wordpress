@@ -243,8 +243,8 @@ class WP_Auth0_LoginManager {
 			throw new WP_Auth0_LoginFlowValidationException( $e_message, $exchange_resp_code );
 		}
 
-		$access_token = $data->access_token;
-		$id_token = $data->id_token;
+		$access_token  = $data->access_token;
+		$id_token      = $data->id_token;
 		$refresh_token = isset( $data->refresh_token ) ? $data->refresh_token : null;
 
 		// Decode the incoming ID token for the Auth0 user.
@@ -379,7 +379,7 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Attempts to log the user in and create a new user, if possible/needed.
 	 *
-	 * @param object $userinfo - Auth0 profile of the user.
+	 * @param object      $userinfo - Auth0 profile of the user.
 	 * @param null|string $id_token - user's ID token if returned from Auth0.
 	 * @param null|string $access_token - user's access token if returned from Auth0.
 	 * @param null|string $refresh_token - user's refresh token if returned from Auth0.
@@ -483,12 +483,12 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Does all actions required to log the user in to WordPress, invoking hooks as necessary
 	 *
-	 * @param object $user - the WP user object, such as returned by get_user_by().
-	 * @param object $userinfo - the Auth0 profile of the user.
-	 * @param bool   $is_new - `true` if the user was created in the WordPress database, `false` if not.
-   * @param null|string $id_token - user's ID token if returned from Auth0, otherwise null.
-   * @param null|string $access_token - user's access token if returned from Auth0, otherwise null.
-   * @param null|string $refresh_token - user's refresh token if returned from Auth0, otherwise null.
+	 * @param object      $user - the WP user object, such as returned by get_user_by().
+	 * @param object      $userinfo - the Auth0 profile of the user.
+	 * @param bool        $is_new - `true` if the user was created in the WordPress database, `false` if not.
+	 * @param null|string $id_token - user's ID token if returned from Auth0, otherwise null.
+	 * @param null|string $access_token - user's access token if returned from Auth0, otherwise null.
+	 * @param null|string $refresh_token - user's refresh token if returned from Auth0, otherwise null.
 	 *
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
 	 */
@@ -620,7 +620,7 @@ class WP_Auth0_LoginManager {
 	 * @return string
 	 */
 	public static function get_userinfo_scope( $context = '' ) {
-		$default_scope = array( 'openid', 'email', 'profile' );
+		$default_scope  = array( 'openid', 'email', 'profile' );
 		$filtered_scope = apply_filters( 'auth0_auth_scope', $default_scope, $context );
 		return implode( ' ', $filtered_scope );
 	}

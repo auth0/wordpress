@@ -37,13 +37,13 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 
 		if ( WP_Auth0::ready() ) {
 
-			$instance['show_as_modal'] = $this->showAsModal();
+			$instance['show_as_modal']      = $this->showAsModal();
 			$instance['modal_trigger_name'] = isset( $instance['modal_trigger_name'] )
 				? $instance['modal_trigger_name']
 				: __( 'Login', 'wp-auth0' );
 
-			if ( !isset( $instance['redirect_to'] ) || empty($instance['redirect_to']) ) {
-				$instance['redirect_to'] = home_url( $_SERVER["REQUEST_URI"] );
+			if ( ! isset( $instance['redirect_to'] ) || empty( $instance['redirect_to'] ) ) {
+				$instance['redirect_to'] = home_url( $_SERVER['REQUEST_URI'] );
 			}
 
 			echo $args['before_widget'];

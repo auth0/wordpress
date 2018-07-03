@@ -10,7 +10,7 @@ class WP_Auth0_InitialSetup_Consent {
 
 	public function __construct( WP_Auth0_Options $a0_options ) {
 		$this->a0_options = $a0_options;
-		$this->domain = $this->a0_options->get( 'auth0_server_domain' );
+		$this->domain     = $this->a0_options->get( 'auth0_server_domain' );
 	}
 
 	public function render( $step ) {
@@ -30,7 +30,7 @@ class WP_Auth0_InitialSetup_Consent {
 			exit;
 		}
 
-		$this->a0_options->set( "account_profile" , $this->state );
+		$this->a0_options->set( 'account_profile', $this->state );
 
 		$name = get_auth0_curatedBlogName();
 		$this->consent_callback( $name );
@@ -57,7 +57,7 @@ class WP_Auth0_InitialSetup_Consent {
 	}
 
 	protected function parse_token_domain( $token ) {
-		$parts = explode( '.', $token );
+		$parts   = explode( '.', $token );
 		$payload = json_decode( JWT::urlsafeB64Decode( $parts[1] ) );
 		return trim( str_replace( array( '/api/v2', 'https://' ), '', $payload->aud ), ' /' );
 	}
@@ -67,15 +67,17 @@ class WP_Auth0_InitialSetup_Consent {
 			return null;
 		}
 
-		$code = $_REQUEST['code'];
+		$code         = $_REQUEST['code'];
 		$callback_url = urlencode( admin_url( 'admin.php?page=wpa0-setup&step=2' ) );
 
 		$client_id = get_bloginfo( 'url' );
 
-		$response = WP_Auth0_Api_Client::get_token( $this->domain, $client_id, null, 'authorization_code', array(
+		$response = WP_Auth0_Api_Client::get_token(
+			$this->domain, $client_id, null, 'authorization_code', array(
 				'redirect_uri' => home_url(),
-				'code' => $code,
-			) );
+				'code'         => $code,
+			)
+		);
 
 		$obj = json_decode( $response['body'] );
 
@@ -88,7 +90,7 @@ class WP_Auth0_InitialSetup_Consent {
 
 	public function consent_callback( $name ) {
 
-		$domain = $this->a0_options->get( 'domain' );
+		$domain    = $this->a0_options->get( 'domain' );
 		$app_token = $this->a0_options->get( 'auth0_app_token' );
 		$client_id = trim( $this->a0_options->get( 'client_id' ) );
 
@@ -118,8 +120,8 @@ class WP_Auth0_InitialSetup_Consent {
 		 * Create Connection
 		 */
 
-		$db_connection_name = 'DB-' . get_auth0_curatedBlogName();
-		$connection_exists = false;
+		$db_connection_name    = 'DB-' . get_auth0_curatedBlogName();
+		$connection_exists     = false;
 		$connection_pwd_policy = null;
 
 		$connections = WP_Auth0_Api_Client::search_connection( $domain, $app_token );
@@ -130,17 +132,16 @@ class WP_Auth0_InitialSetup_Consent {
 				if ( $connection->strategy === 'auth0' && $should_create_and_update_connection ) {
 
 					if ( $db_connection_name === $connection->name ) {
-						$connection_exists = $connection->id;
+						$connection_exists     = $connection->id;
 						$connection_pwd_policy = ( isset( $connection->options ) && isset( $connection->options->passwordPolicy ) ) ? $connection->options->passwordPolicy : null;
 					} else {
 						$enabled_clients = array_diff( $connection->enabled_clients, array( $client_id ) );
 						WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection->id, array( 'enabled_clients' => array_values( $enabled_clients ) ) );
 					}
-
 				} elseif ( $connection->strategy !== 'auth0' ) {
-					$this->a0_options->set_connection( "social_{$connection->name}" , 1 );
-					$this->a0_options->set_connection( "social_{$connection->name}_key" , isset( $connection->options->client_id ) ? $connection->options->client_id : null );
-					$this->a0_options->set_connection( "social_{$connection->name}_secret" , isset( $connection->options->client_secret ) ? $connection->options->client_secret : null );
+					$this->a0_options->set_connection( "social_{$connection->name}", 1 );
+					$this->a0_options->set_connection( "social_{$connection->name}_key", isset( $connection->options->client_id ) ? $connection->options->client_id : null );
+					$this->a0_options->set_connection( "social_{$connection->name}_secret", isset( $connection->options->client_secret ) ? $connection->options->client_secret : null );
 				}
 			}
 		}
@@ -149,28 +150,32 @@ class WP_Auth0_InitialSetup_Consent {
 
 			if ( $connection_exists === false ) {
 
-				$secret = $this->a0_options->get_client_secret_as_key(true);
-				$token_id = uniqid();
-				$migration_token = JWT::encode( array( 'scope' => 'migration_ws', 'jti' => $token_id ), $secret );
+				$secret             = $this->a0_options->get_client_secret_as_key( true );
+				$token_id           = uniqid();
+				$migration_token    = JWT::encode(
+					array(
+						'scope' => 'migration_ws',
+						'jti'   => $token_id,
+					), $secret
+				);
 				$migration_token_id = $token_id;
 
 				$operations = new WP_Auth0_Api_Operations( $this->a0_options );
-				$response = $operations->create_wordpress_connection( $this->a0_options->get( 'auth0_app_token' ), $this->hasInternetConnection, $this->a0_options->get( 'password_policy' ), $migration_token );
+				$response   = $operations->create_wordpress_connection( $this->a0_options->get( 'auth0_app_token' ), $this->hasInternetConnection, $this->a0_options->get( 'password_policy' ), $migration_token );
 
-				$this->a0_options->set( "migration_ws" , $this->hasInternetConnection );
-				$this->a0_options->set( "migration_token" , $migration_token );
-				$this->a0_options->set( "migration_token_id" , $migration_token_id );
-				$this->a0_options->set( "db_connection_enabled" , $response ? 1 : 0 );
-				$this->a0_options->set( "db_connection_id" , $response );
+				$this->a0_options->set( 'migration_ws', $this->hasInternetConnection );
+				$this->a0_options->set( 'migration_token', $migration_token );
+				$this->a0_options->set( 'migration_token_id', $migration_token_id );
+				$this->a0_options->set( 'db_connection_enabled', $response ? 1 : 0 );
+				$this->a0_options->set( 'db_connection_id', $response );
 
 			} else {
 
-				$this->a0_options->set( "db_connection_enabled" , 1 );
-				$this->a0_options->set( "db_connection_id" , $connection_exists );
-				$this->a0_options->set( "password_policy" , $connection_pwd_policy );
+				$this->a0_options->set( 'db_connection_enabled', 1 );
+				$this->a0_options->set( 'db_connection_id', $connection_exists );
+				$this->a0_options->set( 'password_policy', $connection_pwd_policy );
 
 			}
-
 		}
 
 		/*
@@ -179,7 +184,7 @@ class WP_Auth0_InitialSetup_Consent {
 
 		$grant_response = WP_Auth0_Api_Client::create_client_grant( $app_token, $client_id );
 
-		if ( FALSE === $grant_response ) {
+		if ( false === $grant_response ) {
 			wp_redirect( admin_url( 'admin.php?page=wpa0&error=cant_create_client_grant' ) );
 			exit;
 		}

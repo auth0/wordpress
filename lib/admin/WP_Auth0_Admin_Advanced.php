@@ -3,6 +3,7 @@
 class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Use $this->_description instead
 	 */
 	const ADVANCED_DESCRIPTION = '';
@@ -641,7 +642,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			__( 'The Auth0 domain used by the setup wizard to fetch your account information', 'wp-auth0' )
 		);
 	}
-	
+
 	/**
 	 * Render form field and description for the `jwt_auth_integration` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
@@ -795,6 +796,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Features::render_passwordless_enabled()
 	 */
 	public function render_passwordless_enabled() {
@@ -803,6 +805,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Passwordless method is determined by activating them for this Application.
 	 */
 	public function render_passwordless_method() {
@@ -811,6 +814,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - This feature was removed so this option is unused.
 	 */
 	public function render_metrics() {
@@ -819,6 +823,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description().
 	 */
 	public function render_advanced_description() {

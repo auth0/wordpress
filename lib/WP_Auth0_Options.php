@@ -3,10 +3,10 @@
 class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
 	protected static $_instance = null;
-	protected $_options_name = 'wp_auth0_settings';
+	protected $_options_name    = 'wp_auth0_settings';
 
 	public static function Instance() {
-		if ( null=== self::$_instance ) {
+		if ( null === self::$_instance ) {
 			self::$_instance = new WP_Auth0_Options;
 		}
 		return self::$_instance;
@@ -17,8 +17,8 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	public function set_connection( $key, $value ) {
-		$options = $this->get_options();
-		$options['connections'][$key] = $value;
+		$options                        = $this->get_options();
+		$options['connections'][ $key ] = $value;
 
 		$this->set( 'connections', $options['connections'] );
 	}
@@ -26,14 +26,15 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	public function get_connection( $key, $default = null ) {
 		$options = $this->get_options();
 
-		if ( !isset( $options['connections'][$key] ) )
+		if ( ! isset( $options['connections'][ $key ] ) ) {
 			return apply_filters( 'wp_auth0_get_option', $default, $key );
-		return apply_filters( 'wp_auth0_get_option', $options['connections'][$key], $key );
+		}
+		return apply_filters( 'wp_auth0_get_option', $options['connections'][ $key ], $key );
 	}
 
-	public function get_default($key) {
+	public function get_default( $key ) {
 		$defaults = $this->defaults();
-		return $defaults[$key];
+		return $defaults[ $key ];
 	}
 
 	/**
@@ -54,8 +55,8 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 */
 	public function get_client_secret_as_key( $legacy = false ) {
 		return $this->convert_client_secret_to_key(
-			$this->get('client_secret', ''),
-			$this->get('client_secret_b64_encoded', false),
+			$this->get( 'client_secret', '' ),
+			$this->get( 'client_secret_b64_encoded', false ),
 			( $legacy ? false : $this->get_client_signing_algorithm() === 'RS256' ),
 			$this->get( 'domain' )
 		);
@@ -65,8 +66,8 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 * Convert a client_secret value into a JWT key
 	 *
 	 * @param string $secret - client_secret value
-	 * @param bool $is_encoded - is the client_secret base64 encoded?
-	 * @param bool $is_RS256 - if true, use RS256; if false, use HS256
+	 * @param bool   $is_encoded - is the client_secret base64 encoded?
+	 * @param bool   $is_RS256 - if true, use RS256; if false, use HS256
 	 * @param string $domain - tenant domain
 	 *
 	 * @return array|bool|mixed|string
@@ -86,13 +87,13 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 */
 	public function get_web_origins() {
 		$home_url_parsed = wp_parse_url( home_url() );
-		$home_url_origin = ! empty( $home_url_parsed[ 'path' ] )
-			? str_replace( $home_url_parsed[ 'path' ], '', home_url() )
+		$home_url_origin = ! empty( $home_url_parsed['path'] )
+			? str_replace( $home_url_parsed['path'], '', home_url() )
 			: home_url();
 
 		$site_url_parsed = wp_parse_url( site_url() );
-		$site_url_origin = ! empty( $site_url_parsed[ 'path' ] )
-			? str_replace( $site_url_parsed[ 'path' ], '', site_url() )
+		$site_url_origin = ! empty( $site_url_parsed['path'] )
+			? str_replace( $site_url_parsed['path'], '', site_url() )
 			: site_url();
 
 		return $home_url_origin === $site_url_origin
@@ -104,7 +105,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 * Get the main site URL for Auth0 processing
 	 *
 	 * @param string|null $protocol - forced URL protocol, use default if empty
-	 * @param bool $implicit - use the implicit flow in the callback
+	 * @param bool        $implicit - use the implicit flow in the callback
 	 *
 	 * @return string
 	 */
@@ -153,7 +154,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		// Add if it doesn't exist already
 		if ( ! array_key_exists( $connection, $connections ) ) {
 			$connections[] = $connection;
-			$connections = implode( ',', $connections );
+			$connections   = implode( ',', $connections );
 			$this->set( 'lock_connections', $connections );
 		}
 	}
@@ -167,88 +168,89 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		return array(
 
 			// System
-			'version' => 1,
-			'last_step' => 1,
-			'migration_token_id' => null,
-			'jwt_auth_integration' => false,
-			'connections' => array(),
-			'auth0js-cdn' => WPA0_AUTH0_JS_CDN_URL,
+			'version'                   => 1,
+			'last_step'                 => 1,
+			'migration_token_id'        => null,
+			'jwt_auth_integration'      => false,
+			'connections'               => array(),
+			'auth0js-cdn'               => WPA0_AUTH0_JS_CDN_URL,
 
 			// Basic
-			'domain' => '',
-			'client_id' => '',
-			'client_secret' => '',
+			'domain'                    => '',
+			'client_id'                 => '',
+			'client_secret'             => '',
 			'client_secret_b64_encoded' => null,
-			'client_signing_algorithm' => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
-			'cache_expiration' => 1440,
-			'auth0_app_token' => null,
-			'wordpress_login_enabled' => true,
+			'client_signing_algorithm'  => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
+			'cache_expiration'          => 1440,
+			'auth0_app_token'           => null,
+			'wordpress_login_enabled'   => true,
 
 			// Features
-			'password_policy' => 'fair',
-			'sso' => false,
-			'singlelogout' => false,
-			'mfa' => null,
-			'fullcontact' => null,
-			'fullcontact_apikey' => null,
-			'geo_rule' => null,
-			'income_rule' => null,
-			'override_wp_avatars' => true,
+			'password_policy'           => 'fair',
+			'sso'                       => false,
+			'singlelogout'              => false,
+			'mfa'                       => null,
+			'fullcontact'               => null,
+			'fullcontact_apikey'        => null,
+			'geo_rule'                  => null,
+			'income_rule'               => null,
+			'override_wp_avatars'       => true,
 
 			// Appearance
-			'icon_url' => '',
-			'form_title' => '',
-			'social_big_buttons' => false,
-			'gravatar' => true,
-			'custom_css' => '',
-			'custom_js' => '',
-			'username_style' => '',
-			'primary_color' => '',
-			'language' => '',
-			'language_dictionary' => '',
+			'icon_url'                  => '',
+			'form_title'                => '',
+			'social_big_buttons'        => false,
+			'gravatar'                  => true,
+			'custom_css'                => '',
+			'custom_js'                 => '',
+			'username_style'            => '',
+			'primary_color'             => '',
+			'language'                  => '',
+			'language_dictionary'       => '',
 
 			// Advanced
-			'requires_verified_email' => true,
-			'remember_users_session' => false,
+			'requires_verified_email'   => true,
+			'remember_users_session'    => false,
 			'default_login_redirection' => home_url(),
-			'passwordless_enabled' => false,
-			'force_https_callback' => false,
-			'cdn_url' => WPA0_LOCK_CDN_URL,
-			'cdn_url_legacy' => 'https://cdn.auth0.com/js/lock-9.2.min.js',
-			'passwordless_cdn_url' => WPA0_LOCK_CDN_URL,
-			'lock_connections' => '',
-			'link_auth0_users' => null,
-			'auto_provisioning' => false,
-			'migration_ws' => false,
-			'migration_token' => null,
-			'migration_ips_filter' => false,
-			'migration_ips' => null,
-			'auto_login' => 0,
-			'auto_login_method' => '',
-			'auth0_implicit_workflow' => false,
-			'ip_range_check' => 0,
-			'ip_ranges' => '',
-			'valid_proxy_ip' => null,
-			'custom_signup_fields' => '',
-			'extra_conf' => '',
-			'social_twitter_key' => '',
-			'social_twitter_secret' => '',
-			'social_facebook_key' => '',
-			'social_facebook_secret' => '',
-			'auth0_server_domain' => 'auth0.auth0.com',
+			'passwordless_enabled'      => false,
+			'force_https_callback'      => false,
+			'cdn_url'                   => WPA0_LOCK_CDN_URL,
+			'cdn_url_legacy'            => 'https://cdn.auth0.com/js/lock-9.2.min.js',
+			'passwordless_cdn_url'      => WPA0_LOCK_CDN_URL,
+			'lock_connections'          => '',
+			'link_auth0_users'          => null,
+			'auto_provisioning'         => false,
+			'migration_ws'              => false,
+			'migration_token'           => null,
+			'migration_ips_filter'      => false,
+			'migration_ips'             => null,
+			'auto_login'                => 0,
+			'auto_login_method'         => '',
+			'auth0_implicit_workflow'   => false,
+			'ip_range_check'            => 0,
+			'ip_ranges'                 => '',
+			'valid_proxy_ip'            => null,
+			'custom_signup_fields'      => '',
+			'extra_conf'                => '',
+			'social_twitter_key'        => '',
+			'social_twitter_secret'     => '',
+			'social_facebook_key'       => '',
+			'social_facebook_secret'    => '',
+			'auth0_server_domain'       => 'auth0.auth0.com',
 
 			// Dashboard
-			'chart_idp_type' => 'donut',
-			'chart_gender_type' => 'donut',
-			'chart_age_type' => 'donut',
-			'chart_age_from' => '10',
-			'chart_age_to' => '70',
-			'chart_age_step' => '5',
+			'chart_idp_type'            => 'donut',
+			'chart_gender_type'         => 'donut',
+			'chart_age_type'            => 'donut',
+			'chart_age_from'            => '10',
+			'chart_age_to'              => '70',
+			'chart_age_step'            => '5',
 		);
 	}
 
 	/**
-	 * @deprecated 3.6.0 - Social connections are no longer set during initial setup so this data is no longer needed. 
+	 *
+	 * @deprecated 3.6.0 - Social connections are no longer set during initial setup so this data is no longer needed.
 	 *
 	 * @return array
 	 */

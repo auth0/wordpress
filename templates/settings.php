@@ -8,51 +8,54 @@
 			<h1><?php _e( 'Auth0 WordPress Plugin Settings', 'wp-auth0' ); ?></h1>
 
 			<div class="row a0-message a0-warning manage">
-				For your Auth0 dashboard with more settings and connection options click <a target="_blank" href="https://manage.auth0.com/#/clients/<?php echo WP_Auth0_Options::Instance()->get('client_id'); ?>/connections">here</a>.
+				For your Auth0 dashboard with more settings and connection options click <a target="_blank" href="https://manage.auth0.com/#/clients/<?php echo WP_Auth0_Options::Instance()->get( 'client_id' ); ?>/connections">here</a>.
 			</div>
 
-	    <?php if ( count( get_settings_errors() ) == 0 && isset( $_GET['settings-updated'] ) ) { ?>
-	        <div id="message" class="updated">
-	            <p><strong><?php _e( 'Settings saved.' ) ?></strong></p>
-	        </div>
-	    <?php } ?>
-	    <?php settings_errors(); ?>
+		<?php if ( count( get_settings_errors() ) == 0 && isset( $_GET['settings-updated'] ) ) { ?>
+			<div id="message" class="updated">
+				<p><strong><?php _e( 'Settings saved.' ); ?></strong></p>
+			</div>
+		<?php } ?>
+		<?php settings_errors(); ?>
 
-	    <ul class="nav nav-tabs" role="tablist">
-		    <?php foreach ( array( 'basic', 'features', 'appearance', 'advanced', 'help' ) as $tab ) : ?>
-		      <li role="presentation"><a id="tab-<?php echo $tab ?>" href="#<?php echo $tab ?>" aria-controls="<?php
-			      echo $tab ?>" role="tab" data-toggle="tab" class="js-a0-settings-tabs"><?php echo ucfirst( $tab ) ?></a></li>
-		    <?php endforeach; ?>
+		<ul class="nav nav-tabs" role="tablist">
+			<?php foreach ( array( 'basic', 'features', 'appearance', 'advanced', 'help' ) as $tab ) : ?>
+			  <li role="presentation"><a id="tab-<?php echo $tab; ?>" href="#<?php echo $tab; ?>" aria-controls="
+															<?php
+															echo $tab
+															?>
+				  " role="tab" data-toggle="tab" class="js-a0-settings-tabs"><?php echo ucfirst( $tab ); ?></a></li>
+			<?php endforeach; ?>
 		  </ul>
 		</div>
 		<form action="options.php" method="post" id="js-a0-settings-form" class="a0-settings-form">
 			<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_basic' ); ?>
 
 		  <div class="tab-content">
-			  <?php foreach ( array( 'basic', 'features', 'appearance', 'advanced' ) as $tab ) : ?>
-				  <div role="tabpanel" class="tab-pane row" id="<?php echo $tab ?>">
+				<?php foreach ( array( 'basic', 'features', 'appearance', 'advanced' ) as $tab ) : ?>
+				  <div role="tabpanel" class="tab-pane row" id="<?php echo $tab; ?>">
 					  <?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_' . $tab ); ?>
 				  </div>
-			  <?php endforeach; ?>
+				<?php endforeach; ?>
 
-		    <div role="tabpanel" class="tab-pane row" id="help">
+			<div role="tabpanel" class="tab-pane row" id="help">
 
 					<p>Thank you for installing <a href="https://auth0.com/wordpress" target="_blank">Login by Auth0</a>! Auth0 is a powerful identity solution that that secures billions of logins every month. In addition to the options here, there are many more features available in the <a href="https://manage.auth0.com" target="_blank">Auth0 dashboard</a>, including:</p>
 
-			    <ul class="list">
-				    <li>Many social and enterprise <a href="https://auth0.com/docs/identityproviders" target="_blank">login connections</a></li>
-				    <li><a href="https://auth0.com/docs/connections/passwordless" target="_blank">Passwordless login connections</a></li>
-				    <li><a href="https://auth0.com/docs/anomaly-detection" target="_blank">Anomaly detection</a></li>
-				    <li>Profile enrichment, app integrations, and other custom user management tasks using <a href="https://auth0.com/docs/rules/current" target="_blank">Rules</a></li>
-			    </ul>
+				<ul class="list">
+					<li>Many social and enterprise <a href="https://auth0.com/docs/identityproviders" target="_blank">login connections</a></li>
+					<li><a href="https://auth0.com/docs/connections/passwordless" target="_blank">Passwordless login connections</a></li>
+					<li><a href="https://auth0.com/docs/anomaly-detection" target="_blank">Anomaly detection</a></li>
+					<li>Profile enrichment, app integrations, and other custom user management tasks using <a href="https://auth0.com/docs/rules/current" target="_blank">Rules</a></li>
+				</ul>
 
-			    <p>If you have any issues or questions, we provide a variety of channels to assist:<p>
+				<p>If you have any issues or questions, we provide a variety of channels to assist:<p>
 
 					<ul class="list">
-				    <li>If you're setting up the plugin for the first time or having issues after an upgrade, please review the <a href="https://auth0.com/docs/cms/wordpress/configuration" target="_blank">plugin configuration page</a> to make sure your Application is setup correctly.</li>
-				    <li>If you have questions about how to use Auth0 or the plugin, please <a href="https://community.auth0.com/tags/wordpress" target="_blank">search our community site</a> and create a post (tagged "WordPress") if you don't find what you're looking for.</li>
-				    <li>If you find a bug in the plugin code, <a href="https://github.com/auth0/wp-auth0/issues" target="_blank">submit an issue</a> or <a href="https://github.com/auth0/wp-auth0/pulls" target="_blank">create a pull request</a> on Github.</li>
-				    <li>You can see additional documentation and answers on our <a href="https://support.auth0.com/" target="_blank">support site</a>. Customers on a paid Auth0 plan can submit trouble tickets for a quick response.</li>
+					<li>If you're setting up the plugin for the first time or having issues after an upgrade, please review the <a href="https://auth0.com/docs/cms/wordpress/configuration" target="_blank">plugin configuration page</a> to make sure your Application is setup correctly.</li>
+					<li>If you have questions about how to use Auth0 or the plugin, please <a href="https://community.auth0.com/tags/wordpress" target="_blank">search our community site</a> and create a post (tagged "WordPress") if you don't find what you're looking for.</li>
+					<li>If you find a bug in the plugin code, <a href="https://github.com/auth0/wp-auth0/issues" target="_blank">submit an issue</a> or <a href="https://github.com/auth0/wp-auth0/pulls" target="_blank">create a pull request</a> on Github.</li>
+					<li>You can see additional documentation and answers on our <a href="https://support.auth0.com/" target="_blank">support site</a>. Customers on a paid Auth0 plan can submit trouble tickets for a quick response.</li>
 					</ul>
 
 					<div class="a0-feedback">
@@ -92,7 +95,7 @@
 						</div>
 					</div>
 
-		    </div>
+			</div>
 		  </div>
 
 			<div class="row">
@@ -152,7 +155,7 @@
 	});
 
 	function confirmExit() {
-    return "There are some pending actions. if you leave the page now, some connection will not be updated.";
+	return "There are some pending actions. if you leave the page now, some connection will not be updated.";
 	}
 
 	function send_feedback() {

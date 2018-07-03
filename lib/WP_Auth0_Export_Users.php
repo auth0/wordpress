@@ -15,6 +15,7 @@ class WP_Auth0_Export_Users {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Not needed, handled in WP_Auth0_Admin::admin_enqueue()
 	 */
 	public function admin_enqueue() {
@@ -24,15 +25,16 @@ class WP_Auth0_Export_Users {
 
 	public function a0_add_users_export() {
 		$screen = get_current_screen();
-		if ( $screen->id != "users" )   // Only add to users.php page
+		if ( $screen->id != 'users' ) {   // Only add to users.php page
 			return;
-?>
-	    <script type="text/javascript">
-	        jQuery(document).ready(function($) {
-	            $('<option>').val('a0_users_export').text('Export users profile').appendTo("select[name='action']");
-	        });
-	    </script>
-	    <?php
+		}
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$('<option>').val('a0_users_export').text('Export users profile').appendTo("select[name='action']");
+			});
+		</script>
+		<?php
 	}
 
 	public function render_export_users() {
@@ -46,28 +48,28 @@ class WP_Auth0_Export_Users {
 
 		$users = $this->db_manager->get_auth0_users( $user_ids );
 
-		echo $this->process_str( "email", true );
-		echo $this->process_str( "nickname", true );
-		echo $this->process_str( "name", true );
-		echo $this->process_str( "givenname", true );
-		echo $this->process_str( "gender", true );
-		echo $this->process_numeric( "age", true );
-		echo $this->process_numeric( "latitude", true );
-		echo $this->process_numeric( "longitude", true );
-		echo $this->process_numeric( "zipcode", true );
-		echo $this->process_numeric( "income", true );
-		echo $this->process_numeric( "country_code", true );
-		echo $this->process_numeric( "country_name", true );
-		echo $this->process_str( "idp", true );
-		echo $this->process_str( "created_at", true );
-		echo $this->process_str( "last_login", true );
-		echo $this->process_numeric( "logins_count", false );
+		echo $this->process_str( 'email', true );
+		echo $this->process_str( 'nickname', true );
+		echo $this->process_str( 'name', true );
+		echo $this->process_str( 'givenname', true );
+		echo $this->process_str( 'gender', true );
+		echo $this->process_numeric( 'age', true );
+		echo $this->process_numeric( 'latitude', true );
+		echo $this->process_numeric( 'longitude', true );
+		echo $this->process_numeric( 'zipcode', true );
+		echo $this->process_numeric( 'income', true );
+		echo $this->process_numeric( 'country_code', true );
+		echo $this->process_numeric( 'country_name', true );
+		echo $this->process_str( 'idp', true );
+		echo $this->process_str( 'created_at', true );
+		echo $this->process_str( 'last_login', true );
+		echo $this->process_numeric( 'logins_count', false );
 		echo "\n";
 
 		global $wpdb;
 
 		foreach ( $users as $user ) {
-			$profile = new WP_Auth0_UserProfile(  get_user_meta( $user->ID, $wpdb->prefix.'auth0_obj', true ) );
+			$profile = new WP_Auth0_UserProfile( get_user_meta( $user->ID, $wpdb->prefix . 'auth0_obj', true ) );
 
 			echo $this->process_str( $profile->get_email(), true );
 			echo $this->process_str( $profile->get_nickname(), true );
@@ -102,10 +104,10 @@ class WP_Auth0_Export_Users {
 	}
 
 	protected function process_str( $attr, $coma ) {
-		return ( !empty( $attr ) ? '"'.$attr.'"' : '' ). ( $coma ? ',' : '' );
+		return ( ! empty( $attr ) ? '"' . $attr . '"' : '' ) . ( $coma ? ',' : '' );
 	}
 
 	protected function process_numeric( $attr, $coma ) {
-		return ( !empty( $attr ) ? $attr : '' ). ( $coma ? ',' : '' );
+		return ( ! empty( $attr ) ? $attr : '' ) . ( $coma ? ',' : '' );
 	}
 }
