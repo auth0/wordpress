@@ -3,6 +3,7 @@
 class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Use $this->_description instead
 	 */
 	const FEATURES_DESCRIPTION = '';
@@ -309,7 +310,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 */
 	public function sso_validation( $old_options, $input ) {
 		$input['sso'] = ( isset( $input['sso'] ) ? $input['sso'] : 0 );
-		$is_sso = ! empty( $input['sso'] );
+		$is_sso       = ! empty( $input['sso'] );
 
 		// SLO does not function without SSO so turn off SLO if SSO is off.
 		if ( ! $is_sso ) {
@@ -322,9 +323,9 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		}
 
 		$app_update_success = false;
-		$app_token = WP_Auth0_Api_Client::get_client_token();
+		$app_token          = WP_Auth0_Api_Client::get_client_token();
 		if ( $app_token ) {
-			$update_result = WP_Auth0_Api_Client::update_client(
+			$update_result      = WP_Auth0_Api_Client::update_client(
 				$input['domain'],
 				$app_token,
 				$input['client_id'],
@@ -422,6 +423,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
 	 */
 	public function render_features_description() {

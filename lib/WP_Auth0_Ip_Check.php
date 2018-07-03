@@ -16,19 +16,17 @@ class WP_Auth0_Ip_Check {
 	public function get_ips_by_domain( $domain ) {
 		if ( strpos( $domain, 'au.auth0.com' ) !== false ) {
 			return $this->valid_webtask_ips['au'];
-		}
-		elseif ( strpos( $domain, 'eu.auth0.com' ) !== false ) {
+		} elseif ( strpos( $domain, 'eu.auth0.com' ) !== false ) {
 			return $this->valid_webtask_ips['eu'];
-		}
-		elseif ( strpos( $domain, 'auth0.com' ) !== false ) {
+		} elseif ( strpos( $domain, 'auth0.com' ) !== false ) {
 			return $this->valid_webtask_ips['us'];
 		}
 		return null;
 	}
 
-  public function get_ip_by_region($region) {
-    return $this->valid_webtask_ips[$region];
-  }
+	public function get_ip_by_region( $region ) {
+		return $this->valid_webtask_ips[ $region ];
+	}
 
 	protected function get_request_ip() {
 		$valid_proxy_ip = $this->a0_options->get( 'valid_proxy_ip' );
@@ -45,7 +43,7 @@ class WP_Auth0_Ip_Check {
 	}
 
 	protected function process_ip_list( $ip_list ) {
-		$raw = explode( ",", $ip_list );
+		$raw = explode( ',', $ip_list );
 
 		$ranges = array();
 		foreach ( $raw as $r ) {
@@ -54,19 +52,19 @@ class WP_Auth0_Ip_Check {
 			if ( count( $d ) < 2 ) {
 				$ranges[] = array(
 					'from' => trim( $d[0] ),
-					'to' => trim( $d[0] ),
+					'to'   => trim( $d[0] ),
 				);
 			} else {
 				$ranges[] = array(
 					'from' => trim( $d[0] ),
-					'to' => trim( $d[1] ),
+					'to'   => trim( $d[1] ),
 				);
 			}
 		}
 		return $ranges;
 	}
 	public function connection_is_valid( $valid_ips ) {
-		$ip = $this->get_request_ip();
+		$ip              = $this->get_request_ip();
 		$valid_ip_ranges = $this->process_ip_list( $valid_ips );
 
 		foreach ( $valid_ip_ranges as $range ) {
@@ -99,7 +97,7 @@ class WP_Auth0_Ip_Check {
 
 	private function validate_ip() {
 		$ranges = $this->get_ranges();
-		$ip = $_SERVER['REMOTE_ADDR'];
+		$ip     = $_SERVER['REMOTE_ADDR'];
 
 		foreach ( $ranges as $range ) {
 			$in_range = $this->in_range( $ip, $range );
@@ -113,8 +111,8 @@ class WP_Auth0_Ip_Check {
 
 	private function in_range( $ip, $range ) {
 		$from = ip2long( $range['from'] );
-		$to = ip2long( $range['to'] );
-		$ip = ip2long( $ip );
+		$to   = ip2long( $range['to'] );
+		$ip   = ip2long( $ip );
 
 		return $ip >= $from && $ip <= $to;
 	}
@@ -132,12 +130,12 @@ class WP_Auth0_Ip_Check {
 			if ( count( $d ) < 2 ) {
 				$ranges[] = array(
 					'from' => trim( $d[0] ),
-					'to' => trim( $d[0] ),
+					'to'   => trim( $d[0] ),
 				);
 			} else {
 				$ranges[] = array(
 					'from' => trim( $d[0] ),
-					'to' => trim( $d[1] ),
+					'to'   => trim( $d[1] ),
 				);
 			}
 		}

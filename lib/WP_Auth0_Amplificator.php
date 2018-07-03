@@ -23,8 +23,12 @@ class WP_Auth0_Amplificator {
 		$page_url = $_POST['page_url'];
 
 		switch ( $provider ) {
-		case 'facebook': $this->_share_facebook( $page_url ); break;
-		case 'twitter': $this->_share_twitter( $page_url ); break;
+			case 'facebook':
+				$this->_share_facebook( $page_url );
+				break;
+			case 'twitter':
+				$this->_share_twitter( $page_url );
+				break;
 		}
 
 		exit;
@@ -48,7 +52,7 @@ class WP_Auth0_Amplificator {
 
 				$share_text = urlencode( $this->get_share_text( 'facebook', $page_url ) );
 
-				$url = "https://graph.facebook.com/{$identity->user_id}/feed?message={$share_text}&access_token={$identity->access_token}";
+				$url      = "https://graph.facebook.com/{$identity->user_id}/feed?message={$share_text}&access_token={$identity->access_token}";
 				$response = wp_remote_post( $url );
 
 				$message = '';
@@ -68,10 +72,12 @@ class WP_Auth0_Amplificator {
 					}
 				}
 
-				echo json_encode( array(
+				echo json_encode(
+					array(
 						'success' => $success,
-						'message' => $message
-					) );
+						'message' => $message,
+					)
+				);
 
 				return;
 			}
@@ -89,16 +95,18 @@ class WP_Auth0_Amplificator {
 				$share_text = $this->get_share_text( 'twitter', $page_url );
 
 				$settings = array(
-					'consumer_key' => $this->a0_options->get_connection( 'social_twitter_key' ),
-					'consumer_secret' => $this->a0_options->get_connection( 'social_twitter_secret' ),
-					'oauth_access_token' => $identity->access_token,
-					'oauth_access_token_secret' => $identity->access_token_secret
+					'consumer_key'              => $this->a0_options->get_connection( 'social_twitter_key' ),
+					'consumer_secret'           => $this->a0_options->get_connection( 'social_twitter_secret' ),
+					'oauth_access_token'        => $identity->access_token,
+					'oauth_access_token_secret' => $identity->access_token_secret,
 				);
 
-				$twitter = new TwitterAPIExchange( $settings );
-				$response = json_decode( $twitter->buildOauth( 'https://api.twitter.com/1.1/statuses/update.json', 'POST' )
+				$twitter  = new TwitterAPIExchange( $settings );
+				$response = json_decode(
+					$twitter->buildOauth( 'https://api.twitter.com/1.1/statuses/update.json', 'POST' )
 					->setPostfields( array( 'status' => $share_text ) )
-					->performRequest() );
+					->performRequest()
+				);
 
 				$message = '';
 				$success = ( ! isset( $response->errors ) );
@@ -110,11 +118,12 @@ class WP_Auth0_Amplificator {
 					}
 				}
 
-
-				echo json_encode( array(
+				echo json_encode(
+					array(
 						'success' => $success,
-						'message' => $message
-					) );
+						'message' => $message,
+					)
+				);
 
 				return;
 			}

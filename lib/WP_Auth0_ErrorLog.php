@@ -2,6 +2,7 @@
 class WP_Auth0_ErrorLog {
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Not needed, handled in WP_Auth0_Admin::admin_enqueue()
 	 */
 	public function init() {
@@ -10,6 +11,7 @@ class WP_Auth0_ErrorLog {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Not needed, handled in WP_Auth0_Admin::admin_enqueue()
 	 */
 	public function admin_enqueue() {
@@ -19,7 +21,7 @@ class WP_Auth0_ErrorLog {
 
 	public function render_settings_page() {
 
-		$data = get_option('auth0_error_log', array());
+		$data = get_option( 'auth0_error_log', array() );
 
 		include WPA0_PLUGIN_DIR . 'templates/a0-error-log.php';
 	}
