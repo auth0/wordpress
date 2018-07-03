@@ -1,9 +1,9 @@
 <div class="wrap">
 
 	<?php screen_icon(); ?>
-	<h2><?php _e( "Auth0 for WordPress - Setup Wizard (step $step)", "wp-auth0" ); ?></h2>
+	<h2><?php _e( "Auth0 for WordPress - Setup Wizard (step $step)", 'wp-auth0' ); ?></h2>
 
-	<p>This will create a new database connections, expose 2 endpoints and will pupulate the custom scripts to call this endpoints to migrate the users to auth0. the users will not be changed in wordpress.</p>
+	<p>This will create a new database connections, expose 2 endpoints and will pupulate the custom scripts to call this endpoints to migrate the users to auth0. the users will not be changed in WordPress.</p>
 
 	<form action="options.php" method="POST">
 
@@ -12,7 +12,7 @@
 			<span class="description"><?php echo __( 'Mark this to expose a WS in order to easy the users migration process.', 'wp-auth0' ); ?></span>
 			<span class="description"><?php echo __( 'Security token:', 'wp-auth0' ); ?><code><?php echo $token; ?></code></span>
 			<p>
-				This action will create a new Database connection with the custom scrits required to import your Wordpress Users.
+				This action will create a new Database connection with the custom scrits required to import your WordPress Users.
 			</p>
 		</div>
 

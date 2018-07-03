@@ -259,6 +259,7 @@ class WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Use WP_Auth0_Admin_Generic::render_switch() instead
 	 */
 	protected function render_a0_switch( $id, $name, $value, $checked ) {

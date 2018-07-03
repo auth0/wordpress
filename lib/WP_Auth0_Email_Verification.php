@@ -40,10 +40,12 @@ class WP_Auth0_Email_Verification {
 				esc_js( $user_id ),
 				esc_js( wp_create_nonce( self::RESEND_NONCE_ACTION ) ),
 				esc_js( __( 'Something went wrong; please login and try again.', 'wp-auth0' ) ),
-				esc_js( sprintf(
-					__( 'Email successfully re-sent to %s!', 'wp-auth0' ),
-					$userinfo->email
-				) ),
+				esc_js(
+					sprintf(
+						__( 'Email successfully re-sent to %s!', 'wp-auth0' ),
+						$userinfo->email
+					)
+				),
 				'//code.jquery.com/jquery-1.12.4.js',
 				WPA0_PLUGIN_URL . 'assets/js/die-with-verify-email.js?ver=' . WPA0_VERSION
 			);

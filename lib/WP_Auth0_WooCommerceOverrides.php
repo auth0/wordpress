@@ -17,7 +17,7 @@ class WP_Auth0_WooCommerceOverrides {
 		$this->override_woocommerce_login_form( $html );
 
 		if ( isset( $_GET['wle'] ) ) {
-			echo "<style>.woocommerce-checkout .woocommerce-info{display:block;}</style>";
+			echo '<style>.woocommerce-checkout .woocommerce-info{display:block;}</style>';
 		}
 	}
 

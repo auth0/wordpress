@@ -24,7 +24,7 @@ class WP_Auth0_Configure_JWTAUTH {
 	}
 
 	public function notify_jwt() {
-?>
+		?>
 		<div class="update-nag">
 			JWT Auth installed. To configure it to work the Auth0 plugin, click <a href="admin.php?page=wpa0-jwt-auth">HERE</a>
 		</div>
@@ -32,6 +32,7 @@ class WP_Auth0_Configure_JWTAUTH {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Not needed, handled in WP_Auth0_Admin::admin_enqueue()
 	 */
 	public function admin_enqueue() {

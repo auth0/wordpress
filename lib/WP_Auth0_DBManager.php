@@ -5,14 +5,14 @@ class WP_Auth0_DBManager {
 	protected $current_db_version = null;
 	protected $a0_options;
 
-	public function __construct($a0_options) {
+	public function __construct( $a0_options ) {
 		$this->a0_options = $a0_options;
 	}
 
 	public function init() {
-		$this->current_db_version = (int)get_option( 'auth0_db_version', 0 );
-		if ($this->current_db_version === 0) {
-			$this->current_db_version = (int)get_site_option( 'auth0_db_version', 0 );
+		$this->current_db_version = (int) get_option( 'auth0_db_version', 0 );
+		if ( $this->current_db_version === 0 ) {
+			$this->current_db_version = (int) get_site_option( 'auth0_db_version', 0 );
 		}
 
 		add_action( 'plugins_loaded', array( $this, 'check_update' ) );
@@ -29,7 +29,7 @@ class WP_Auth0_DBManager {
 
 	public function install_db( $version_to_install = null, $app_token = '' ) {
 
-		wp_cache_set( 'doing_db_update', TRUE, WPA0_CACHE_GROUP );
+		wp_cache_set( 'doing_db_update', true, WPA0_CACHE_GROUP );
 
 		$options = WP_Auth0_Options::Instance();
 
@@ -37,28 +37,29 @@ class WP_Auth0_DBManager {
 			$app_token = $options->get( 'auth0_app_token' );
 		}
 
-		$connection_id = $options->get( 'db_connection_id' );
+		$connection_id   = $options->get( 'db_connection_id' );
 		$migration_token = $options->get( 'migration_token' );
-		$client_id = $options->get( 'client_id' );
-		$client_secret = $options->get( 'client_secret' );
-		$domain = $options->get( 'domain' );
-		$sso = $options->get( 'sso' );
-		$cdn_url = $options->get( 'cdn_url' );
+		$client_id       = $options->get( 'client_id' );
+		$client_secret   = $options->get( 'client_secret' );
+		$domain          = $options->get( 'domain' );
+		$sso             = $options->get( 'sso' );
+		$cdn_url         = $options->get( 'cdn_url' );
 
 		if ( $this->current_db_version <= 7 ) {
 			if ( $options->get( 'db_connection_enabled' ) ) {
 
 				$operations = new WP_Auth0_Api_Operations( $options );
 
-				if ( !empty( $app_token ) &&
-					!empty( $connection_id ) &&
-					!empty( $migration_token ) ) {
+				if ( ! empty( $app_token ) &&
+					! empty( $connection_id ) &&
+					! empty( $migration_token ) ) {
 
 					$operations->update_wordpress_connection(
 						$app_token,
 						$connection_id,
 						$options->get( 'password_policy' ),
-						$migration_token );
+						$migration_token
+					);
 				}
 			}
 		}
@@ -68,68 +69,60 @@ class WP_Auth0_DBManager {
 		}
 
 		if ( $this->current_db_version < 10 ) {
-			$dict = $options->get('dict');
+			$dict = $options->get( 'dict' );
 
-			if (!empty($dict))
-			{
+			if ( ! empty( $dict ) ) {
 
-				if (json_decode($dict) === null)
-				{
-					$options->set('language', $dict);
+				if ( json_decode( $dict ) === null ) {
+					$options->set( 'language', $dict );
+				} else {
+					$options->set( 'language_dictionary', $dict );
 				}
-				else
-				{
-					$options->set('language_dictionary', $dict);
-				}
-
 			}
-
 		}
 
 		if ( $this->current_db_version < 13 ) {
-			$ips = $options->get('migration_ips');
+			$ips    = $options->get( 'migration_ips' );
 			$oldips = '138.91.154.99,54.221.228.15,54.183.64.135,54.67.77.38,54.67.15.170,54.183.204.205,54.173.21.107,54.85.173.28';
 
-			$ipCheck = new WP_Auth0_Ip_Check($options);
+			$ipCheck = new WP_Auth0_Ip_Check( $options );
 
 			if ( $ips === $oldips ) {
-				$options->set('migration_ips', $ipCheck->get_ip_by_region('us'));
+				$options->set( 'migration_ips', $ipCheck->get_ip_by_region( 'us' ) );
 			}
 		}
 
-		if ( $this->current_db_version < 14 && is_null($options->get('client_secret_b64_encoded' ))) {
-			if ( $options->get('client_id' )) {
-				$options->set('client_secret_b64_encoded', true);
+		if ( $this->current_db_version < 14 && is_null( $options->get( 'client_secret_b64_encoded' ) ) ) {
+			if ( $options->get( 'client_id' ) ) {
+				$options->set( 'client_secret_b64_encoded', true );
 			} else {
-				$options->set('client_secret_b64_encoded', false);
+				$options->set( 'client_secret_b64_encoded', false );
 			}
 		}
-		
-		// 3.4.0
 
-		if ( $this->current_db_version < 15 || 15 === $version_to_install  ) {
-			$options->set('cdn_url', WPA0_LOCK_CDN_URL);
-			$options->set('auth0js-cdn', WPA0_AUTH0_JS_CDN_URL);
-			$options->set('cache_expiration', 1440);
+		// 3.4.0
+		if ( $this->current_db_version < 15 || 15 === $version_to_install ) {
+			$options->set( 'cdn_url', WPA0_LOCK_CDN_URL );
+			$options->set( 'auth0js-cdn', WPA0_AUTH0_JS_CDN_URL );
+			$options->set( 'cache_expiration', 1440 );
 
 			// Update Client
-			if (WP_Auth0::ready()) {
-				$options->set('client_signing_algorithm', 'HS256');
+			if ( WP_Auth0::ready() ) {
+				$options->set( 'client_signing_algorithm', 'HS256' );
 			}
 		}
 
 		// App token needed for following updates
-
 		$decoded_token = null;
 		if ( ! empty( $app_token ) ) {
 
 			$token_parts = explode( '.', $app_token );
 
 			try {
-				$header = json_decode( JWT::urlsafeB64Decode( $token_parts[0] ) );
+				$header        = json_decode( JWT::urlsafeB64Decode( $token_parts[0] ) );
 				$decoded_token = JWT::decode(
 					$app_token,
-					$options->convert_client_secret_to_key( $client_secret, FALSE, 'RS256' === $header->alg, $domain ),
+					$options->convert_client_secret_to_key( $client_secret, false, 'RS256' === $header->alg, $domain ),
 					array( $header->alg )
 				);
 			} catch ( Exception $e ) {
@@ -138,11 +131,9 @@ class WP_Auth0_DBManager {
 		}
 
 		// 3.5.0
-
 		if ( ( $this->current_db_version < 16 && 0 !== $this->current_db_version ) || 16 === $version_to_install ) {
 
 			// Update Lock and Auth versions
-
 			if ( '//cdn.auth0.com/js/lock/11.0.0/lock.min.js' === $options->get( 'cdn_url' ) ) {
 				$options->set( 'cdn_url', WPA0_LOCK_CDN_URL );
 			}
@@ -152,8 +143,7 @@ class WP_Auth0_DBManager {
 			}
 
 			// Update app type and client grant
-
-			$client_grant_created = FALSE;
+			$client_grant_created = false;
 			if ( $decoded_token ) {
 
 				$payload = array(
@@ -180,23 +170,26 @@ class WP_Auth0_DBManager {
 					);
 				}
 			} else {
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, sprintf(
-					__( 'Unable to automatically create Client Grant. Please go to your Auth0 Dashboard '
-					    . 'and authorize your Application %s for management API scopes %s.',
-						'wp-auth0' ),
-					$options->get( 'client_id' ),
-					implode( ', ', WP_Auth0_Api_Client::get_required_scopes() )
-				) );
+				WP_Auth0_ErrorManager::insert_auth0_error(
+					__METHOD__, sprintf(
+						__(
+							'Unable to automatically create Client Grant. Please go to your Auth0 Dashboard '
+							. 'and authorize your Application %s for management API scopes %s.',
+							'wp-auth0'
+						),
+						$options->get( 'client_id' ),
+						implode( ', ', WP_Auth0_Api_Client::get_required_scopes() )
+					)
+				);
 				update_option( 'wp_auth0_client_grant_failed', 1 );
 			}
 		}
 
 		// 3.5.1
-
 		if ( ( $this->current_db_version < 17 && 0 !== $this->current_db_version ) || 17 === $version_to_install ) {
 
-			$grant_types_updated = FALSE;
-			$payload = array();
+			$grant_types_updated = false;
+			$payload             = array();
 
 			// Need a valid app token to update audience and client grant
 			if ( $decoded_token ) {
@@ -207,20 +200,19 @@ class WP_Auth0_DBManager {
 
 					if ( is_array( $get_client_resp->grant_types ) ) {
 
-						if ( FALSE === array_search( 'client_credentials', $get_client_resp->grant_types ) ) {
-							$payload[ 'grant_types' ] = $get_client_resp->grant_types;
-							$payload[ 'grant_types' ][] = 'client_credentials';
+						if ( false === array_search( 'client_credentials', $get_client_resp->grant_types ) ) {
+							$payload['grant_types']   = $get_client_resp->grant_types;
+							$payload['grant_types'][] = 'client_credentials';
 						} else {
-							$grant_types_updated = TRUE;
+							$grant_types_updated = true;
 						}
-
 					} else {
 
-						$payload[ 'grant_types' ] = WP_Auth0_Api_Client::get_client_grant_types();
+						$payload['grant_types'] = WP_Auth0_Api_Client::get_client_grant_types();
 					}
 
 					if ( ! empty( $payload ) ) {
-						$client_updated = WP_Auth0_Api_Client::update_client( $domain, $app_token, $client_id, $sso, $payload );
+						$client_updated      = WP_Auth0_Api_Client::update_client( $domain, $app_token, $client_id, $sso, $payload );
 						$grant_types_updated = ! empty( $client_updated );
 					}
 				}
@@ -234,52 +226,55 @@ class WP_Auth0_DBManager {
 					'Client Grant Types have been successfully updated!'
 				);
 			} else {
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, sprintf(
-					__( 'Unable to automatically update Client Grant Type. Please go to your Auth0 Dashboard '
-					    . 'and add Client Credentials to your Application settings > Advanced > Grant Types for ID %s ',
-						'wp-auth0' ),
-					$options->get( 'client_id' )
-				) );
+				WP_Auth0_ErrorManager::insert_auth0_error(
+					__METHOD__, sprintf(
+						__(
+							'Unable to automatically update Client Grant Type. Please go to your Auth0 Dashboard '
+							. 'and add Client Credentials to your Application settings > Advanced > Grant Types for ID %s ',
+							'wp-auth0'
+						),
+						$options->get( 'client_id' )
+					)
+				);
 				update_option( 'wp_auth0_grant_types_failed', 1 );
 			}
 		}
 
 		// 3.6.0
-
 		if ( ( $this->current_db_version < 18 && 0 !== $this->current_db_version ) || 18 === $version_to_install ) {
 
 			// Migrate passwordless_method
-			if ( $options->get( 'passwordless_enabled', FALSE ) ) {
+			if ( $options->get( 'passwordless_enabled', false ) ) {
 				$pwl_method = $options->get( 'passwordless_method' );
 				switch ( $pwl_method ) {
 
 					// SMS passwordless just needs 'sms' as a connection
-					case 'sms' :
+					case 'sms':
 						$options->set( 'lock_connections', 'sms' );
 						break;
 
 					// Social + SMS means there are existing social connections we want to keep
-					case 'socialOrSms' :
+					case 'socialOrSms':
 						$options->add_lock_connection( 'sms' );
 						break;
 
 					// Email link passwordless just needs 'email' as a connection
-					case 'emailcode' :
-					case 'magiclink' :
+					case 'emailcode':
+					case 'magiclink':
 						$options->set( 'lock_connections', 'email' );
 						break;
 
 					// Social + Email means there are social connections be want to keep
-					case 'socialOrMagiclink' :
-					case 'socialOrEmailcode' :
+					case 'socialOrMagiclink':
+					case 'socialOrEmailcode':
 						$options->add_lock_connection( 'email' );
 						break;
 				}
 
 				// Need to set a special passwordlessMethod flag if using email code
-				$lock_json = trim( $options->get( 'extra_conf' ) );
-				$lock_json_decoded = ! empty( $lock_json ) ? json_decode( $lock_json, TRUE ) : array();
-				$lock_json_decoded[ 'passwordlessMethod' ] = strpos( $pwl_method, 'code' ) ? 'code' : 'link';
+				$lock_json                               = trim( $options->get( 'extra_conf' ) );
+				$lock_json_decoded                       = ! empty( $lock_json ) ? json_decode( $lock_json, true ) : array();
+				$lock_json_decoded['passwordlessMethod'] = strpos( $pwl_method, 'code' ) ? 'code' : 'link';
 				$options->set( 'extra_conf', json_encode( $lock_json_decoded ) );
 			}
 
@@ -288,14 +283,14 @@ class WP_Auth0_DBManager {
 
 			// Force passwordless_method to delete
 			$update_options = $options->get_options();
-			unset( $update_options[ 'passwordless_method' ] );
+			unset( $update_options['passwordless_method'] );
 			update_option( $options->get_options_name(), $update_options );
 		}
 
 		$this->current_db_version = AUTH0_DB_VERSION;
 		update_option( 'auth0_db_version', AUTH0_DB_VERSION );
 
-		wp_cache_set( 'doing_db_update', FALSE, WPA0_CACHE_GROUP );
+		wp_cache_set( 'doing_db_update', false, WPA0_CACHE_GROUP );
 	}
 
 	/**
@@ -315,29 +310,40 @@ class WP_Auth0_DBManager {
 			} else {
 				?>
 				<div class="notice notice-error">
-					<p><strong><?php _e( 'IMPORTANT!', 'wp-auth0' ) ?></strong></p>
-					<p><?php
+					<p><strong><?php _e( 'IMPORTANT!', 'wp-auth0' ); ?></strong></p>
+					<p>
+					<?php
 						printf(
 							__( 'WP-Auth0 has upgraded to %s but could not complete the upgrade in your Auth0 dashboard.', 'wp-auth0' ),
 							WPA0_VERSION
-						); ?>
-						<?php _e( 'This can be fixed one of 2 ways:', 'wp-auth0' ) ?></p>
+						);
+					?>
+						<?php _e( 'This can be fixed one of 2 ways:', 'wp-auth0' ); ?></p>
 					<p><strong>1.</strong>
-						<a href="https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually" target="_blank"><?php
-							_e( 'Create a new Management API token', 'wp-auth0' ) ?></a>
-						<?php _e( 'and save it in the Auth0 > Settings > Basic tab > API Token field.', 'wp-auth0' ) ?>
-						<?php _e( 'This will run the update process again.', 'wp-auth0' ) ?></p>
+						<a href="https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually" target="_blank">
+						<?php
+							_e( 'Create a new Management API token', 'wp-auth0' )
+						?>
+							</a>
+						<?php _e( 'and save it in the Auth0 > Settings > Basic tab > API Token field.', 'wp-auth0' ); ?>
+						<?php _e( 'This will run the update process again.', 'wp-auth0' ); ?></p>
 					<p><strong>2.</strong>
 						<a href="https://auth0.com/docs/cms/wordpress/configuration#client-setup"
-						   target="_blank"><?php
-							_e( 'Review your Application advanced settings', 'wp-auth0' ) ?></a>,
-						<?php _e( 'specifically the Grant Types, and ', 'wp-auth0' ) ?>
+						   target="_blank">
+						   <?php
+							_e( 'Review your Application advanced settings', 'wp-auth0' )
+							?>
+							</a>,
+						<?php _e( 'specifically the Grant Types, and ', 'wp-auth0' ); ?>
 						<a href="https://auth0.com/docs/cms/wordpress/configuration#authorize-the-application-for-the-management-api"
-						   target="_blank"><?php
-							_e( 'authorize your client for the Management API', 'wp-auth0' ) ?></a>
-						<?php _e( 'to manually complete the setup.', 'wp-auth0' ) ?>
+						   target="_blank">
+						   <?php
+							_e( 'authorize your client for the Management API', 'wp-auth0' )
+							?>
+							</a>
+						<?php _e( 'to manually complete the setup.', 'wp-auth0' ); ?>
 					</p>
-					<p><?php _e( 'This banner will disappear once the process is complete.', 'wp-auth0' ) ?></p>
+					<p><?php _e( 'This banner will disappear once the process is complete.', 'wp-auth0' ); ?></p>
 				</div>
 				<?php
 			}
@@ -350,16 +356,20 @@ class WP_Auth0_DBManager {
 	 */
 	public function notice_successful_client_grant() {
 
-		if ( ! get_option( 'wp_auth0_client_grant_success' )) {
+		if ( ! get_option( 'wp_auth0_client_grant_success' ) ) {
 			return;
 		}
 		?>
 		<div class="notice notice-success">
-			<p><?php
+			<p>
+			<?php
 				_e( 'As a part of this upgrade, a Client Grant was created for the Auth0 Management API.', 'wp-auth0' );
-				?><br><?php
+			?>
+				<br>
+				<?php
 				_e( 'Please check the plugin error log for any additional instructions to complete the upgrade.', 'wp-auth0' );
-			?><br><a href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ) ?>">
+				?>
+			<br><a href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>">
 					<strong><?php _e( 'Error Log', 'wp-auth0' ); ?></strong></a></p>
 		</div>
 		<?php
@@ -377,8 +387,11 @@ class WP_Auth0_DBManager {
 		}
 		?>
 		<div class="notice notice-success">
-			<p><?php
-				_e( 'As a part of this upgrade, your Client Grant Types have been updated, if needed.', 'wp-auth0' ); ?></p>
+			<p>
+			<?php
+				_e( 'As a part of this upgrade, your Client Grant Types have been updated, if needed.', 'wp-auth0' );
+			?>
+				</p>
 		</div>
 		<?php
 		delete_option( 'wp_auth0_grant_types_success' );
@@ -387,10 +400,10 @@ class WP_Auth0_DBManager {
 	protected function migrate_users_data() {
 		global $wpdb;
 
-		$wpdb->auth0_user = $wpdb->prefix.'auth0_user';
+		$wpdb->auth0_user = $wpdb->prefix . 'auth0_user';
 
 		$sql = 'SELECT a.*
-				FROM ' . $wpdb->auth0_user .' a
+				FROM ' . $wpdb->auth0_user . ' a
 				JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id;';
 
 		$userRows = $wpdb->get_results( $sql );
@@ -404,11 +417,11 @@ class WP_Auth0_DBManager {
 
 		$repo = new WP_Auth0_UsersRepo( $this->a0_options );
 
-		foreach ($userRows as $row) {
-			$auth0_id = get_user_meta( $row->wp_id, $wpdb->prefix.'auth0_id', true);
+		foreach ( $userRows as $row ) {
+			$auth0_id = get_user_meta( $row->wp_id, $wpdb->prefix . 'auth0_id', true );
 
-			if (!$auth0_id) {
-				$repo->update_auth0_object( $row->wp_id, WP_Auth0_Serializer::unserialize($row->auth0_obj) );
+			if ( ! $auth0_id ) {
+				$repo->update_auth0_object( $row->wp_id, WP_Auth0_Serializer::unserialize( $row->auth0_obj ) );
 			}
 		}
 	}
@@ -416,15 +429,16 @@ class WP_Auth0_DBManager {
 	public function get_auth0_users( $user_ids = null ) {
 		global $wpdb;
 
-		if ($user_ids === null) {
-			$query = array( 'meta_key' => $wpdb->prefix.'auth0_id' );
-		}
-		else {
-			$query = array( 'meta_query' => array(
-        'key' => $wpdb->prefix.'auth0_id',
-        'value' => $user_ids,
-        'compare' => 'IN',
-			) );
+		if ( $user_ids === null ) {
+			$query = array( 'meta_key' => $wpdb->prefix . 'auth0_id' );
+		} else {
+			$query = array(
+				'meta_query' => array(
+					'key'     => $wpdb->prefix . 'auth0_id',
+					'value'   => $user_ids,
+					'compare' => 'IN',
+				),
+			);
 		}
 		$query['blog_id'] = 0;
 

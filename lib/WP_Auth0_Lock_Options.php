@@ -22,7 +22,7 @@ class WP_Auth0_Lock_Options {
 	public function __construct( $extended_settings = array() ) {
 		// phpcs:ignore
 		trigger_error( sprintf( __( 'Class %s is deprecated.', 'wp-auth0' ), __CLASS__ ), E_USER_DEPRECATED );
-		$this->wp_options = WP_Auth0_Options::Instance();
+		$this->wp_options        = WP_Auth0_Options::Instance();
 		$this->extended_settings = $extended_settings;
 	}
 
@@ -45,7 +45,7 @@ class WP_Auth0_Lock_Options {
 	public function get_code_callback_url() {
 		$protocol = $this->_get_boolean( $this->wp_options->get( 'force_https_callback' ) ) ? 'https' : null;
 		return $this->wp_options->get_wp_auth0_url( $protocol );
-  }
+	}
 
 	public function get_implicit_callback_url() {
 		return wp_login_url();
@@ -110,13 +110,12 @@ class WP_Auth0_Lock_Options {
 	public function get_state_obj( $redirect_to = null ) {
 		$stateObj = array(
 			'interim' => ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ),
-			'nonce' => WP_Auth0_State_Handler::get_instance()->get_unique()
+			'nonce'   => WP_Auth0_State_Handler::get_instance()->get_unique(),
 		);
-		if ( !empty( $redirect_to ) ) {
-			$stateObj["redirect_to"] = addslashes( $redirect_to );
-		}
-		elseif ( isset( $_GET['redirect_to'] ) ) {
-			$stateObj["redirect_to"] = addslashes( $_GET['redirect_to'] );
+		if ( ! empty( $redirect_to ) ) {
+			$stateObj['redirect_to'] = addslashes( $redirect_to );
+		} elseif ( isset( $_GET['redirect_to'] ) ) {
+			$stateObj['redirect_to'] = addslashes( $_GET['redirect_to'] );
 		}
 
 		return base64_encode( json_encode( $stateObj ) );
@@ -127,7 +126,7 @@ class WP_Auth0_Lock_Options {
 	}
 
 	protected function _is_valid( $array, $key ) {
-		return isset( $array[$key] ) && trim( $array[$key] ) !== '';
+		return isset( $array[ $key ] ) && trim( $array[ $key ] ) !== '';
 	}
 
 	protected function build_settings( $settings ) {
@@ -137,22 +136,21 @@ class WP_Auth0_Lock_Options {
 			$options_obj['dict'] = array(
 				'signin' => array(
 					'title' => $settings['form_title'],
-				)
+				),
 			);
 
-		} 
+		}
 
 		if ( isset( $settings['language_dictionary'] ) && trim( $settings['language_dictionary'] ) !== '' ) {
 			if ( $oDict = json_decode( $settings['language_dictionary'], true ) ) {
 				$options_obj['dict'] = $oDict;
-			} 
+			}
 		}
 
 		if ( isset( $settings['language'] ) && trim( $settings['language'] ) !== '' ) {
 			$options_obj['dict'] = $settings['language'];
 		}
 
-		
 		if ( $this->_is_valid( $settings, 'social_big_buttons' ) ) {
 			$options_obj['socialBigButtons'] = $this->_get_boolean( $settings['social_big_buttons'] );
 		}
@@ -173,10 +171,10 @@ class WP_Auth0_Lock_Options {
 		}
 		if ( isset( $settings['extra_conf'] ) && trim( $settings['extra_conf'] ) !== '' ) {
 			$extra_conf_arr = json_decode( $settings['extra_conf'], true );
-			$options_obj = array_merge( $extra_conf_arr, $options_obj );
+			$options_obj    = array_merge( $extra_conf_arr, $options_obj );
 		}
 		if ( $this->signup_mode ) {
-			$options_obj["mode"] = "signup";
+			$options_obj['mode'] = 'signup';
 		}
 		return $options_obj;
 	}
@@ -184,15 +182,15 @@ class WP_Auth0_Lock_Options {
 	public function get_sso_options() {
 		$options = $this->get_lock_options();
 
-		$options["scope"] = "openid email identities ";
+		$options['scope'] = 'openid email identities ';
 
 		if ( $this->get_auth0_implicit_workflow() ) {
-			$options["callbackOnLocationHash"] = true;
-			$options["callbackURL"] = $this->get_implicit_callback_url();
-			$options["scope"] .= "name email nickname email_verified identities";
+			$options['callbackOnLocationHash'] = true;
+			$options['callbackURL']            = $this->get_implicit_callback_url();
+			$options['scope']                 .= 'name email nickname email_verified identities';
 		} else {
-			$options["callbackOnLocationHash"] = false;
-			$options["callbackURL"] = $this->get_code_callback_url();
+			$options['callbackOnLocationHash'] = false;
+			$options['callbackURL']            = $this->get_code_callback_url();
 		}
 
 		$redirect_to = null;
@@ -200,11 +198,11 @@ class WP_Auth0_Lock_Options {
 		if ( isset( $_GET['redirect_to'] ) ) {
 			$redirect_to = $_GET['redirect_to'];
 		} else {
-			$redirect_to = home_url( $_SERVER["REQUEST_URI"] );
+			$redirect_to = home_url( $_SERVER['REQUEST_URI'] );
 		}
 
-		unset( $options["authParams"] );
-		$options["state"] = $this->get_state_obj( $redirect_to );
+		unset( $options['authParams'] );
+		$options['state'] = $this->get_state_obj( $redirect_to );
 
 		return $options;
 
@@ -212,8 +210,12 @@ class WP_Auth0_Lock_Options {
 
 	public function get_lock_options() {
 		$extended_settings = $this->extended_settings;
-		if ( isset( $extended_settings['show_as_modal'] ) ) unset( $extended_settings['show_as_modal'] );
-		if ( isset( $extended_settings['modal_trigger_name'] ) ) unset( $extended_settings['modal_trigger_name'] );
+		if ( isset( $extended_settings['show_as_modal'] ) ) {
+			unset( $extended_settings['show_as_modal'] );
+		}
+		if ( isset( $extended_settings['modal_trigger_name'] ) ) {
+			unset( $extended_settings['modal_trigger_name'] );
+		}
 
 		$redirect_to = null;
 		if ( isset( $this->extended_settings['redirect_to'] ) ) {
@@ -221,20 +223,20 @@ class WP_Auth0_Lock_Options {
 		}
 		$state = $this->get_state_obj( $redirect_to );
 
-		$options_obj = $this->build_settings( $this->wp_options->get_options() );
+		$options_obj       = $this->build_settings( $this->wp_options->get_options() );
 		$extended_settings = $this->build_settings( $extended_settings );
 
 		$extraOptions = array(
-			"authParams"    => array( "state" => $state ),
+			'authParams' => array( 'state' => $state ),
 		);
 
-		$extraOptions["authParams"]["scope"] = "openid ";
+		$extraOptions['authParams']['scope'] = 'openid ';
 
 		if ( $this->get_auth0_implicit_workflow() ) {
-			$extraOptions["authParams"]["scope"] .= "name email nickname email_verified identities";
+			$extraOptions['authParams']['scope'] .= 'name email nickname email_verified identities';
 		} else {
-			$extraOptions["responseType"] = 'code';
-			$extraOptions["callbackURL"] = $this->get_code_callback_url();
+			$extraOptions['responseType'] = 'code';
+			$extraOptions['callbackURL']  = $this->get_code_callback_url();
 		}
 
 		$options_obj = array_merge( $extraOptions, $options_obj, $extended_settings );
