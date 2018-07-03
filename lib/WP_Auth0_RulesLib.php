@@ -4,7 +4,7 @@ class WP_Auth0_RulesLib {
 
 	public static $disable_social_signup = array(
 
-		'name' => 'Disable-Social-Signup-Do-Not-Rename',
+		'name'   => 'Disable-Social-Signup-Do-Not-Rename',
 		'script' => "
 function (user, context, callback) {
 
@@ -44,11 +44,12 @@ function (user, context, callback) {
   // else it is a non social login or it is not a signup
   callback(null, user, context);
 }
-" );
-  
+		",
+	);
+
 	public static $link_accounts = array(
 
-		'name' => 'Account-Linking-Do-Not-Rename',
+		'name'   => 'Account-Linking-Do-Not-Rename',
 		'script' => "
 function (user, context, callback) {
 
@@ -111,12 +112,12 @@ function (user, context, callback) {
       callback(null, user, context);
     }
   });
-}"
+}",
 	);
 
-  public static $guardian_MFA = array(
-    'name' => 'Multifactor-Guardian-Do-Not-Rename',
-    'script' => "
+	public static $guardian_MFA = array(
+		'name'   => 'Multifactor-Guardian-Do-Not-Rename',
+		'script' => "
 function (user, context, callback) {
   var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
   // run only for the specified clients
@@ -130,11 +131,11 @@ function (user, context, callback) {
     // }
   }
   callback(null, user, context);
-}"
-  );
+}",
+	);
 
 	public static $google_MFA = array(
-		'name' => 'Multifactor-Google-Authenticator-Do-Not-Rename',
+		'name'   => 'Multifactor-Google-Authenticator-Do-Not-Rename',
 		'script' => "
 function (user, context, callback) {
   var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
@@ -151,11 +152,11 @@ function (user, context, callback) {
     // }
   }
   callback(null, user, context);
-}"
+}",
 	);
 
 	public static $geo = array(
-		'name' => 'Store-Geo-Location-Do-Not-Rename',
+		'name'   => 'Store-Geo-Location-Do-Not-Rename',
 		'script' => "
 function (user, context, callback) {
 
@@ -174,11 +175,11 @@ function (user, context, callback) {
     .catch(function(err){
       callback(err);
     });
-}"
+}",
 	);
 
 	public static $fullcontact = array(
-		'name' => 'Enrich-profile-with-FullContact-Do-Not-Rename',
+		'name'   => 'Enrich-profile-with-FullContact-Do-Not-Rename',
 		'script' => "
 function (user, context, callback) {
 
@@ -221,11 +222,11 @@ function (user, context, callback) {
       callback(null, user, context);
     }
   });
-}"
+}",
 	);
 
 	public static $income = array(
-		'name' => 'Enrich-profile-with-Zipcode-Income-Do-Not-Rename',
+		'name'   => 'Enrich-profile-with-Zipcode-Income-Do-Not-Rename',
 		'script' => "
 function (user, context, callback) {
 
@@ -277,6 +278,6 @@ function (user, context, callback) {
           callback(null, user, context);
         }
     }
-}"
+}",
 	);
 }

@@ -256,6 +256,7 @@ class WP_Auth0_Admin {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - This method displayed an empty auth0_app_token notification, which is not necessary.
 	 */
 	public function cant_connect_to_auth0() {

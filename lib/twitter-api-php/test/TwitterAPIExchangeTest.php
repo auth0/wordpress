@@ -7,300 +7,291 @@
  *
  * @note This test account is not actively monitored so you gain nothing by hi-jacking it :-)
  */
-class TwitterAPIExchangeTest extends \PHPUnit_Framework_TestCase
-{
-    /**
-     * @var string
-     */
-    const CONSUMER_KEY = 'VXD22AD9kcNyNgsfW6cwkWRkw';
+class TwitterAPIExchangeTest extends \PHPUnit_Framework_TestCase {
 
-    /**
-     * @var string
-     */
-    const CONSUMER_SECRET = 'y0k3z9Y46V0DMAKGe4Az2aDtqNt9aXjg3ssCMCldUheGBT0YL9';
+	/**
+	 *
+	 * @var string
+	 */
+	const CONSUMER_KEY = 'VXD22AD9kcNyNgsfW6cwkWRkw';
 
-    /**
-     * @var string
-     */
-    const OAUTH_ACCESS_TOKEN = '3232926711-kvMvNK5mFJlUFzCdtw3ryuwZfhIbLJtPX9e8E3Y';
+	/**
+	 *
+	 * @var string
+	 */
+	const CONSUMER_SECRET = 'y0k3z9Y46V0DMAKGe4Az2aDtqNt9aXjg3ssCMCldUheGBT0YL9';
 
-    /**
-     * @var string
-     */
-    const OAUTH_ACCESS_TOKEN_SECRET = 'EYrFp0lfNajBslYV3WgAGmpHqYZvvNxP5uxxSq8Dbs1wa';
+	/**
+	 *
+	 * @var string
+	 */
+	const OAUTH_ACCESS_TOKEN = '3232926711-kvMvNK5mFJlUFzCdtw3ryuwZfhIbLJtPX9e8E3Y';
 
-    /**
-     * @var \TwitterAPIExchange
-     */
-    protected $exchange;
+	/**
+	 *
+	 * @var string
+	 */
+	const OAUTH_ACCESS_TOKEN_SECRET = 'EYrFp0lfNajBslYV3WgAGmpHqYZvvNxP5uxxSq8Dbs1wa';
 
-    /**
-     * @var int Stores a tweet id (for /update) to be deleted later (by /destroy)
-     */
-    private static $tweetId;
+	/**
+	 *
+	 * @var \TwitterAPIExchange
+	 */
+	protected $exchange;
 
-    /**
-     * @var int Stores uploaded media id
-     */
-    private static $mediaId;
+	/**
+	 *
+	 * @var int Stores a tweet id (for /update) to be deleted later (by /destroy)
+	 */
+	private static $tweetId;
 
-    /**
-     * {@inheritDoc}
-     */
-    public function setUp()
-    {
-        $settings  = array();
+	/**
+	 *
+	 * @var int Stores uploaded media id
+	 */
+	private static $mediaId;
 
-        /** Because I'm lazy... **/
-        $reflector = new \ReflectionClass($this);
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setUp() {
+		$settings = array();
 
-        foreach ($reflector->getConstants() as $key => $value)
-        {
-            $settings[strtolower($key)] = $value;
-        }
+		/** Because I'm lazy... */
+		$reflector = new \ReflectionClass( $this );
 
-        $this->exchange = new \TwitterAPIExchange($settings);
-    }
+		foreach ( $reflector->getConstants() as $key => $value ) {
+			$settings[ strtolower( $key ) ] = $value;
+		}
 
-    /**
-     * GET statuses/mentions_timeline
-     *
-     * @see https://dev.twitter.com/rest/reference/get/statuses/mentions_timeline
-     */
-    public function testStatusesMentionsTimeline()
-    {
-        $url    = 'https://api.twitter.com/1.1/statuses/mentions_timeline.json';
-        $method = 'GET';
-        $params = '?max_id=595150043381915648';
+		$this->exchange = new \TwitterAPIExchange( $settings );
+	}
 
-        $data     = $this->exchange->request($url, $method, $params);
-        $expected = "@j7php Test mention";
+	/**
+	 * GET statuses/mentions_timeline
+	 *
+	 * @see https://dev.twitter.com/rest/reference/get/statuses/mentions_timeline
+	 */
+	public function testStatusesMentionsTimeline() {
+		$url    = 'https://api.twitter.com/1.1/statuses/mentions_timeline.json';
+		$method = 'GET';
+		$params = '?max_id=595150043381915648';
 
-        $this->assertContains($expected, $data);
-    }
+		$data     = $this->exchange->request( $url, $method, $params );
+		$expected = '@j7php Test mention';
 
-    /**
-     * GET statuses/user_timeline
-     *
-     * @see https://dev.twitter.com/rest/reference/get/statuses/user_timeline
-     */
-    public function testStatusesUserTimeline()
-    {
-        $url    = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
-        $method = 'GET';
-        $params = '?user_id=3232926711';
+		$this->assertContains( $expected, $data );
+	}
 
-        $data     = $this->exchange->request($url, $method, $params);
-        $expected = "Test Tweet";
+	/**
+	 * GET statuses/user_timeline
+	 *
+	 * @see https://dev.twitter.com/rest/reference/get/statuses/user_timeline
+	 */
+	public function testStatusesUserTimeline() {
+		$url    = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
+		$method = 'GET';
+		$params = '?user_id=3232926711';
 
-        $this->assertContains($expected, $data);
-    }
+		$data     = $this->exchange->request( $url, $method, $params );
+		$expected = 'Test Tweet';
 
-    /**
-     * GET statuses/home_timeline
-     *
-     * @see https://dev.twitter.com/rest/reference/get/statuses/home_timeline
-     */
-    public function testStatusesHomeTimeline()
-    {
-        $url    = 'https://api.twitter.com/1.1/statuses/home_timeline.json';
-        $method = 'GET';
-        $params = '?user_id=3232926711&max_id=595155660494471168';
+		$this->assertContains( $expected, $data );
+	}
 
-        $data     = $this->exchange->request($url, $method, $params);
-        $expected = "Test Tweet";
+	/**
+	 * GET statuses/home_timeline
+	 *
+	 * @see https://dev.twitter.com/rest/reference/get/statuses/home_timeline
+	 */
+	public function testStatusesHomeTimeline() {
+		$url    = 'https://api.twitter.com/1.1/statuses/home_timeline.json';
+		$method = 'GET';
+		$params = '?user_id=3232926711&max_id=595155660494471168';
 
-        $this->assertContains($expected, $data);
-    }
+		$data     = $this->exchange->request( $url, $method, $params );
+		$expected = 'Test Tweet';
 
-    /**
-     * GET statuses/retweets_of_me
-     *
-     * @see https://dev.twitter.com/rest/reference/get/statuses/retweets_of_me
-     */
-    public function testStatusesRetweetsOfMe()
-    {
-        $url    = 'https://api.twitter.com/1.1/statuses/retweets_of_me.json';
-        $method = 'GET';
+		$this->assertContains( $expected, $data );
+	}
 
-        $data     = $this->exchange->request($url, $method);
-        $expected = 'travis CI and tests';
+	/**
+	 * GET statuses/retweets_of_me
+	 *
+	 * @see https://dev.twitter.com/rest/reference/get/statuses/retweets_of_me
+	 */
+	public function testStatusesRetweetsOfMe() {
+		$url    = 'https://api.twitter.com/1.1/statuses/retweets_of_me.json';
+		$method = 'GET';
 
-        $this->assertContains($expected, $data);
-    }
+		$data     = $this->exchange->request( $url, $method );
+		$expected = 'travis CI and tests';
 
-    /**
-     * GET statuses/retweets/:id
-     *
-     * @see https://api.twitter.com/1.1/statuses/retweets/:id.json
-     */
-    public function testStatusesRetweetsOfId()
-    {
-        $url    = 'https://api.twitter.com/1.1/statuses/retweets/595155660494471168.json';
-        $method = 'GET';
+		$this->assertContains( $expected, $data );
+	}
 
-        $data     = $this->exchange->request($url, $method);
-        $expected = 'travis CI and tests';
+	/**
+	 * GET statuses/retweets/:id
+	 *
+	 * @see https://api.twitter.com/1.1/statuses/retweets/:id.json
+	 */
+	public function testStatusesRetweetsOfId() {
+		$url    = 'https://api.twitter.com/1.1/statuses/retweets/595155660494471168.json';
+		$method = 'GET';
 
-        $this->assertContains($expected, $data);
-    }
+		$data     = $this->exchange->request( $url, $method );
+		$expected = 'travis CI and tests';
 
-    /**
-     * GET Statuses/Show/:id
-     *
-     * @see https://dev.twitter.com/rest/reference/get/statuses/show/:id
-     */
-    public function testStatusesShowId()
-    {
-        $url    = 'https://api.twitter.com/1.1/statuses/show.json';
-        $method = 'GET';
-        $params = '?id=595155660494471168';
+		$this->assertContains( $expected, $data );
+	}
 
-        $data     = $this->exchange->request($url, $method, $params);
-        $expected = 'travis CI and tests';
+	/**
+	 * GET Statuses/Show/:id
+	 *
+	 * @see https://dev.twitter.com/rest/reference/get/statuses/show/:id
+	 */
+	public function testStatusesShowId() {
+		$url    = 'https://api.twitter.com/1.1/statuses/show.json';
+		$method = 'GET';
+		$params = '?id=595155660494471168';
 
-        $this->assertContains($expected, $data);
-    }
+		$data     = $this->exchange->request( $url, $method, $params );
+		$expected = 'travis CI and tests';
 
-    /**
-     * POST media/upload
-     *
-     * @see https://dev.twitter.com/rest/reference/post/media/upload
-     *
-     * @note Uploaded unattached media files will be available for attachment to a tweet for 60 minutes
-     */
-    public function testMediaUpload()
-    {
-        $file = file_get_contents(__DIR__ . '/img.png');
-        $data = base64_encode($file);
+		$this->assertContains( $expected, $data );
+	}
 
-        $url    = 'https://upload.twitter.com/1.1/media/upload.json';
-        $method = 'POST';
-        $params = array(
-            'media_data' => $data
-        );
+	/**
+	 * POST media/upload
+	 *
+	 * @see https://dev.twitter.com/rest/reference/post/media/upload
+	 *
+	 * @note Uploaded unattached media files will be available for attachment to a tweet for 60 minutes
+	 */
+	public function testMediaUpload() {
+		$file = file_get_contents( __DIR__ . '/img.png' );
+		$data = base64_encode( $file );
 
-        $data     = $this->exchange->request($url, $method, $params);
-        $expected = 'image\/png';
+		$url    = 'https://upload.twitter.com/1.1/media/upload.json';
+		$method = 'POST';
+		$params = array(
+			'media_data' => $data,
+		);
 
-        $this->assertContains($expected, $data);
+		$data     = $this->exchange->request( $url, $method, $params );
+		$expected = 'image\/png';
 
-        /** Store the media id for later **/
-        $data = @json_decode($data, true);
+		$this->assertContains( $expected, $data );
 
-        $this->assertArrayHasKey('media_id', is_array($data) ? $data : array());
+		/** Store the media id for later */
+		$data = @json_decode( $data, true );
 
-        self::$mediaId = $data['media_id'];
-    }
+		$this->assertArrayHasKey( 'media_id', is_array( $data ) ? $data : array() );
 
-    /**
-     * POST statuses/update
-     *
-     * @see https://dev.twitter.com/rest/reference/post/statuses/update
-     */
-    public function testStatusesUpdate()
-    {
-        if (!self::$mediaId)
-        {
-            $this->fail('Cannot /update status because /upload failed');
-        }
+		self::$mediaId = $data['media_id'];
+	}
 
-        $url    = 'https://api.twitter.com/1.1/statuses/update.json';
-        $method = 'POST';
-        $params = array(
-            'status' => 'TEST TWEET TO BE DELETED' . rand(),
-            'media_ids' => self::$mediaId
-        );
+	/**
+	 * POST statuses/update
+	 *
+	 * @see https://dev.twitter.com/rest/reference/post/statuses/update
+	 */
+	public function testStatusesUpdate() {
+		if ( ! self::$mediaId ) {
+			$this->fail( 'Cannot /update status because /upload failed' );
+		}
 
-        $data     = $this->exchange->request($url, $method, $params);
-        $expected = 'TEST TWEET TO BE DELETED';
+		$url    = 'https://api.twitter.com/1.1/statuses/update.json';
+		$method = 'POST';
+		$params = array(
+			'status'    => 'TEST TWEET TO BE DELETED' . rand(),
+			'media_ids' => self::$mediaId,
+		);
 
-        $this->assertContains($expected, $data);
+		$data     = $this->exchange->request( $url, $method, $params );
+		$expected = 'TEST TWEET TO BE DELETED';
 
-        /** Store the tweet id for testStatusesDestroy() **/
-        $data = @json_decode($data, true);
+		$this->assertContains( $expected, $data );
 
-        $this->assertArrayHasKey('id_str', is_array($data) ? $data : array());
+		/** Store the tweet id for testStatusesDestroy() */
+		$data = @json_decode( $data, true );
 
-        self::$tweetId = $data['id_str'];
+		$this->assertArrayHasKey( 'id_str', is_array( $data ) ? $data : array() );
 
-        /** We've done this now, yay **/
-        self::$mediaId = null;
-    }
+		self::$tweetId = $data['id_str'];
 
-    /**
-     * POST statuses/destroy/:id
-     *
-     * @see https://dev.twitter.com/rest/reference/post/statuses/destroy/:id
-     */
-    public function testStatusesDestroy()
-    {
-        if (!self::$tweetId)
-        {
-            $this->fail('Cannot /destroy status because /update failed');
-        }
+		/** We've done this now, yay */
+		self::$mediaId = null;
+	}
 
-        $url    = sprintf('https://api.twitter.com/1.1/statuses/destroy/%d.json', self::$tweetId);
-        $method = 'POST';
-        $params = array(
-            'id' => self::$tweetId
-        );
+	/**
+	 * POST statuses/destroy/:id
+	 *
+	 * @see https://dev.twitter.com/rest/reference/post/statuses/destroy/:id
+	 */
+	public function testStatusesDestroy() {
+		if ( ! self::$tweetId ) {
+			$this->fail( 'Cannot /destroy status because /update failed' );
+		}
 
-        $data     = $this->exchange->request($url, $method, $params);
-        $expected = 'TEST TWEET TO BE DELETED';
+		$url    = sprintf( 'https://api.twitter.com/1.1/statuses/destroy/%d.json', self::$tweetId );
+		$method = 'POST';
+		$params = array(
+			'id' => self::$tweetId,
+		);
 
-        $this->assertContains($expected, $data);
+		$data     = $this->exchange->request( $url, $method, $params );
+		$expected = 'TEST TWEET TO BE DELETED';
 
-        /** We've done this now, yay **/
-        self::$tweetId = null;
-    }
+		$this->assertContains( $expected, $data );
 
-    /**
-     * GET search/tweets
-     *
-     * @see https://dev.twitter.com/rest/reference/get/search/tweets
-     */
-    public function testCanSearchWithHashTag()
-    {
-        $url    = 'https://api.twitter.com/1.1/search/tweets.json';
-        $method = 'GET';
-        $params = '?q=#twitter';
+		/** We've done this now, yay */
+		self::$tweetId = null;
+	}
 
-        $data = $this->exchange->request($url, $method, $params);
-        $data = (array)@json_decode($data, true);
+	/**
+	 * GET search/tweets
+	 *
+	 * @see https://dev.twitter.com/rest/reference/get/search/tweets
+	 */
+	public function testCanSearchWithHashTag() {
+		$url    = 'https://api.twitter.com/1.1/search/tweets.json';
+		$method = 'GET';
+		$params = '?q=#twitter';
 
-        $this->assertNotCount(1, $data);
-    }
+		$data = $this->exchange->request( $url, $method, $params );
+		$data = (array) @json_decode( $data, true );
 
-    /**
-     * Test to check that options passed to curl do not cause any issues
-     */
-    public function testAdditionalCurlOptions()
-    {
-        $url    = 'https://api.twitter.com/1.1/search/tweets.json';
-        $method = 'GET';
-        $params = '?q=#twitter';
+		$this->assertNotCount( 1, $data );
+	}
 
-        $data = $this->exchange->request($url, $method, $params, array(CURLOPT_ENCODING => ''));
-        $data = (array)@json_decode($data, true);
+	/**
+	 * Test to check that options passed to curl do not cause any issues
+	 */
+	public function testAdditionalCurlOptions() {
+		$url    = 'https://api.twitter.com/1.1/search/tweets.json';
+		$method = 'GET';
+		$params = '?q=#twitter';
 
-        $this->assertNotCount(1, $data);
-    }
+		$data = $this->exchange->request( $url, $method, $params, array( CURLOPT_ENCODING => '' ) );
+		$data = (array) @json_decode( $data, true );
 
-    /**
-     * Apparently users/lookup was not working with a POST
-     *
-     * @see https://github.com/J7mbo/twitter-api-php/issues/70
-     */
-    public function testIssue70()
-    {
-        $url    = 'https://api.twitter.com/1.1/users/lookup.json';
-        $method = 'POST';
-        $params = array(
-            'screen_name' => 'lifehacker'
-        );
+		$this->assertNotCount( 1, $data );
+	}
 
-        $data = $this->exchange->request($url, $method, $params);
-        $this->assertContains('created_at', $data);
-    }
+	/**
+	 * Apparently users/lookup was not working with a POST
+	 *
+	 * @see https://github.com/J7mbo/twitter-api-php/issues/70
+	 */
+	public function testIssue70() {
+		$url    = 'https://api.twitter.com/1.1/users/lookup.json';
+		$method = 'POST';
+		$params = array(
+			'screen_name' => 'lifehacker',
+		);
+
+		$data = $this->exchange->request( $url, $method, $params );
+		$this->assertContains( 'created_at', $data );
+	}
 }

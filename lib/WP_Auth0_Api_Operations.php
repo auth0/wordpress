@@ -8,20 +8,20 @@ class WP_Auth0_Api_Operations {
 	}
 
 	public function disable_signup_wordpress_connection( $app_token, $disable_signup ) {
-		$domain = $this->a0_options->get( 'domain' );
+		$domain    = $this->a0_options->get( 'domain' );
 		$client_id = $this->a0_options->get( 'client_id' );
 
 		$connections = WP_Auth0_Api_Client::search_connection( $domain, $app_token, 'auth0' );
 
-		if ($connections === false) {
+		if ( $connections === false ) {
 			return;
 		}
 
 		foreach ( $connections as $connection ) {
 
-			if ( in_array( $client_id, $connection->enabled_clients ) ) { 
+			if ( in_array( $client_id, $connection->enabled_clients ) ) {
 				$connection->options->disable_signup = $disable_signup;
-				$connection_id = $connection->id;
+				$connection_id                       = $connection->id;
 
 				unset( $connection->name );
 				unset( $connection->strategy );
@@ -41,7 +41,7 @@ class WP_Auth0_Api_Operations {
 
 		if ( isset( $connection->options ) ) {
 			if ( isset( $connection->options->enabledDatabaseCustomization ) && isset( $connection->options->requires_username ) ) {
-				if ( ! $connection->options->enabledDatabaseCustomization || !$connection->options->requires_username ) {
+				if ( ! $connection->options->enabledDatabaseCustomization || ! $connection->options->requires_username ) {
 					return;
 				}
 			}
@@ -53,7 +53,7 @@ class WP_Auth0_Api_Operations {
 		$get_user_script = str_replace( '{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$get_user_script );
 		$get_user_script = str_replace( '{THE_WS_URL}', site_url( 'index.php?a0_action=migration-ws-get-user' ), $get_user_script );
 
-		$connection->options->customScripts->login = $login_script;
+		$connection->options->customScripts->login    = $login_script;
 		$connection->options->customScripts->get_user = $get_user_script;
 
 		unset( $connection->name );
@@ -66,24 +66,25 @@ class WP_Auth0_Api_Operations {
 
 	public function create_wordpress_connection( $app_token, $migration_enabled, $password_policy = '', $migration_token = null ) {
 
-		$domain = $this->a0_options->get( 'domain' );
-		$client_id = $this->a0_options->get( 'client_id' );
+		$domain             = $this->a0_options->get( 'domain' );
+		$client_id          = $this->a0_options->get( 'client_id' );
 		$db_connection_name = 'DB-' . get_auth0_curatedBlogName();
 
 		$body = array(
-			'name' => $db_connection_name,
-			'strategy' => 'auth0',
-			'options' => array(
+			'name'            => $db_connection_name,
+			'strategy'        => 'auth0',
+			'options'         => array(
 				'passwordPolicy' => $password_policy,
 			),
 			'enabled_clients' => array(
-				$client_id
-			) );
+				$client_id,
+			),
+		);
 
 		if ( $migration_enabled ) {
 
 			$ipCheck = new WP_Auth0_Ip_Check();
-			$ips = $ipCheck->get_ips_by_domain( $domain );
+			$ips     = $ipCheck->get_ips_by_domain( $domain );
 
 			if ( $ips ) {
 				$this->a0_options->set( 'migration_ips', $ips );
@@ -101,25 +102,25 @@ class WP_Auth0_Api_Operations {
 
 			$body['options'] = array(
 				'enabledDatabaseCustomization' => true,
-				"requires_username" => true,
-				'import_mode' => true,
-				'passwordPolicy' => $password_policy,
-				"brute_force_protection" => true,
-				"validation"  => array(
-					"username" => array(
-	          "min" => 1,
-	          "max" => 100,
-	        ),
-        ),
-				'customScripts' => array(
-					'login' => $login_script,
-					'get_user' => $get_user_script
-				)
+				'requires_username'            => true,
+				'import_mode'                  => true,
+				'passwordPolicy'               => $password_policy,
+				'brute_force_protection'       => true,
+				'validation'                   => array(
+					'username' => array(
+						'min' => 1,
+						'max' => 100,
+					),
+				),
+				'customScripts'                => array(
+					'login'    => $login_script,
+					'get_user' => $get_user_script,
+				),
 			);
 
 		}
 
-		$this->a0_options->set( "db_connection_name", $db_connection_name );
+		$this->a0_options->set( 'db_connection_name', $db_connection_name );
 
 		$response = WP_Auth0_Api_Client::create_connection( $domain, $app_token, $body );
 
@@ -129,7 +130,7 @@ class WP_Auth0_Api_Operations {
 
 		}
 
-		$connections = WP_Auth0_Api_Client::search_connection( $domain, $app_token, 'auth0' );
+		$connections   = WP_Auth0_Api_Client::search_connection( $domain, $app_token, 'auth0' );
 		$db_connection = null;
 
 		$migration_connection_id = $response->id;
@@ -140,9 +141,11 @@ class WP_Auth0_Api_Operations {
 
 				$enabled_clients = array_diff( $db_connection->enabled_clients, array( $client_id ) );
 
-				WP_Auth0_Api_Client::update_connection( $domain, $app_token, $db_connection->id, array(
-						'enabled_clients' => array_values( $enabled_clients )
-					) );
+				WP_Auth0_Api_Client::update_connection(
+					$domain, $app_token, $db_connection->id, array(
+						'enabled_clients' => array_values( $enabled_clients ),
+					)
+				);
 			}
 		}
 
@@ -161,32 +164,31 @@ class WP_Auth0_Api_Operations {
 	 * - If exists, it will remove the client_id and if there is no other client_id it will delete the connection.
 	 */
 	public function social_validation( $app_token, $old_options, $input, $strategy, $connection_options ) {
-		$domain = $this->a0_options->get( 'domain' );
+		$domain    = $this->a0_options->get( 'domain' );
 		$client_id = $this->a0_options->get( 'client_id' );
 
 		$main_key = "social_$strategy";
 
-		$input[$main_key] = ( isset( $input[$main_key] ) ? $input[$main_key]  : 0 );
-		$input["{$main_key}_key"] = ( empty( $input["{$main_key}_key"] ) ? null  : trim( $input["{$main_key}_key"] ) );
-		$input["{$main_key}_secret"] = ( empty( $input["{$main_key}_secret"] ) ? null  : trim( $input["{$main_key}_secret"] ) );
+		$input[ $main_key ]            = ( isset( $input[ $main_key ] ) ? $input[ $main_key ] : 0 );
+		$input[ "{$main_key}_key" ]    = ( empty( $input[ "{$main_key}_key" ] ) ? null : trim( $input[ "{$main_key}_key" ] ) );
+		$input[ "{$main_key}_secret" ] = ( empty( $input[ "{$main_key}_secret" ] ) ? null : trim( $input[ "{$main_key}_secret" ] ) );
 
 		if (
-			$old_options[$main_key] != $input[$main_key] ||
-			$old_options["{$main_key}_key"] != $input["{$main_key}_key"] ||
-			$old_options["{$main_key}_secret"] != $input["{$main_key}_secret"]
+			$old_options[ $main_key ] != $input[ $main_key ] ||
+			$old_options[ "{$main_key}_key" ] != $input[ "{$main_key}_key" ] ||
+			$old_options[ "{$main_key}_secret" ] != $input[ "{$main_key}_secret" ]
 		) {
 
 			$connections = WP_Auth0_Api_Client::search_connection( $domain, $app_token, $strategy );
 
 			// if ( ! $connections ) {
-			//  $error = __( 'There was an error searching your active social connections.', 'wp-auth0' );
-			//  $this->add_validation_error( $error );
+			// $error = __( 'There was an error searching your active social connections.', 'wp-auth0' );
+			// $this->add_validation_error( $error );
 			//
-			//  $input[$main_key] = 0;
+			// $input[$main_key] = 0;
 			//
-			//  return $input;
+			// return $input;
 			// }
-
 			$selected_connection = null;
 
 			foreach ( $connections as $connection ) {
@@ -194,15 +196,15 @@ class WP_Auth0_Api_Operations {
 					$selected_connection = $connection;
 					break;
 				} elseif ( ! $selected_connection && count( $connection->enabled_clients ) == 0 ) {
-					$selected_connection = $connection;
+					$selected_connection                    = $connection;
 					$selected_connection->enabled_clients[] = $client_id;
 				} elseif ( $connection->name == 'facebook' ) {
-					$selected_connection = $connection;
+					$selected_connection                    = $connection;
 					$selected_connection->enabled_clients[] = $client_id;
 				}
 			}
 			if ( $selected_connection === null && count( $connections ) === 1 ) {
-				$selected_connection = $connections[0];
+				$selected_connection                    = $connections[0];
 				$selected_connection->enabled_clients[] = $client_id;
 			}
 
@@ -210,112 +212,112 @@ class WP_Auth0_Api_Operations {
 				$connection_options = array();
 			}
 
-			if ( $input[$main_key] ) {
+			if ( $input[ $main_key ] ) {
 
 				if ( $selected_connection &&
-					( empty( $selected_connection->options->client_id ) || ( empty( $input["{$main_key}_key"]) && empty($old_input["{$main_key}_key"])) || $selected_connection->options->client_id === $input["{$main_key}_key"] ) &&
-					( empty($selected_connection->options->client_secret) || (empty($input["{$main_key}_secret"]) && empty($old_input["{$main_key}_secret"])) || $selected_connection->options->client_secret === $input["{$main_key}_secret"] ) ) {
+					( empty( $selected_connection->options->client_id ) || ( empty( $input[ "{$main_key}_key" ] ) && empty( $old_input[ "{$main_key}_key" ] ) ) || $selected_connection->options->client_id === $input[ "{$main_key}_key" ] ) &&
+					( empty( $selected_connection->options->client_secret ) || ( empty( $input[ "{$main_key}_secret" ] ) && empty( $old_input[ "{$main_key}_secret" ] ) ) || $selected_connection->options->client_secret === $input[ "{$main_key}_secret" ] ) ) {
 
 					$data = array(
-						'options' => $connection_options,
-						'enabled_clients' => $connection->enabled_clients
+						'options'         => $connection_options,
+						'enabled_clients' => $connection->enabled_clients,
 					);
 
-					if ( !empty($input["{$main_key}_key"]) && !empty($input["{$main_key}_secret"]) ) {
-						$data['options']['client_id'] = $input["{$main_key}_key"];
-						$data['options']['client_secret'] = $input["{$main_key}_secret"];
+					if ( ! empty( $input[ "{$main_key}_key" ] ) && ! empty( $input[ "{$main_key}_secret" ] ) ) {
+						$data['options']['client_id']     = $input[ "{$main_key}_key" ];
+						$data['options']['client_secret'] = $input[ "{$main_key}_secret" ];
 					}
 
-					$response = WP_Auth0_Api_Client::update_connection($domain, $app_token, $selected_connection->id, $data);
+					$response = WP_Auth0_Api_Client::update_connection( $domain, $app_token, $selected_connection->id, $data );
 
 					if ( false === $response ) {
 						$error = __( 'There was an error updating your social connection', 'wp-auth0' );
 						throw new Exception( $error );
 
-						$input[$main_key] = 0;
+						$input[ $main_key ] = 0;
 
 						return $input;
 					}
-				} elseif ( $selected_connection && !empty($selected_connection->options->client_id) && !empty($selected_connection->options->client_secret)
-					&& !empty($input["{$main_key}_key"]) && !empty($input["{$main_key}_secret"]) ) {
+				} elseif ( $selected_connection && ! empty( $selected_connection->options->client_id ) && ! empty( $selected_connection->options->client_secret )
+					&& ! empty( $input[ "{$main_key}_key" ] ) && ! empty( $input[ "{$main_key}_secret" ] ) ) {
 
-					$input["{$main_key}_key"] = $selected_connection->options->client_id;
-					$input["{$main_key}_secret"] = $selected_connection->options->client_secret;
+					$input[ "{$main_key}_key" ]    = $selected_connection->options->client_id;
+					$input[ "{$main_key}_secret" ] = $selected_connection->options->client_secret;
 
 					$error = 'The connection has already setted an api key and secret and can not be overrided. Please update them from the <a href="https://manage.auth0.com/#/connections/social">Auth0 dashboard</a>';
 					throw new Exception( $error );
 
 					$data = array(
-						'options' => array_merge($connection_options, array(
-								"client_id" => $input["{$main_key}_key"],
-								"client_secret" => $input["{$main_key}_secret"],
-							) ),
-						'enabled_clients' => $connection->enabled_clients
+						'options'         => array_merge(
+							$connection_options, array(
+								'client_id'     => $input[ "{$main_key}_key" ],
+								'client_secret' => $input[ "{$main_key}_secret" ],
+							)
+						),
+						'enabled_clients' => $connection->enabled_clients,
 					);
 
-					$response = WP_Auth0_Api_Client::update_connection($domain, $app_token, $selected_connection->id, $data);
+					$response = WP_Auth0_Api_Client::update_connection( $domain, $app_token, $selected_connection->id, $data );
 
 					if ( false === $response ) {
 						$error = __( 'There was an error updating your social connection', 'wp-auth0' );
 						throw new Exception( $error );
 
-						$input[$main_key] = 0;
+						$input[ $main_key ] = 0;
 
 						return $input;
 					}
-
 				} elseif ( ! $selected_connection ) {
 
 					$data = array(
-						'name' => $strategy,
-						'strategy' => $strategy,
+						'name'            => $strategy,
+						'strategy'        => $strategy,
 						'enabled_clients' => array( $client_id ),
-						'options' => array_merge($connection_options, array(
-								"client_id" => $input["{$main_key}_key"],
-								"client_secret" => $input["{$main_key}_secret"],
-							) ),
+						'options'         => array_merge(
+							$connection_options, array(
+								'client_id'     => $input[ "{$main_key}_key" ],
+								'client_secret' => $input[ "{$main_key}_secret" ],
+							)
+						),
 					);
 
-					if ( false === WP_Auth0_Api_Client::create_connection($domain, $app_token, $data) ) {
+					if ( false === WP_Auth0_Api_Client::create_connection( $domain, $app_token, $data ) ) {
 						$error = __( 'There was an error creating your social connection', 'wp-auth0' );
 						throw new Exception( $error );
 
-						$input[$main_key] = 0;
+						$input[ $main_key ] = 0;
 
 						return $input;
 					}
 				}
-
-			}
-			else {
-				if ($selected_connection) {
+			} else {
+				if ( $selected_connection ) {
 					$data['enabled_clients'] = array();
-					foreach ($selected_connection->enabled_clients as $client) {
-						if ($client != $client_id) {
+					foreach ( $selected_connection->enabled_clients as $client ) {
+						if ( $client != $client_id ) {
 							$data['enabled_clients'][] = $client;
 						}
 					}
 
-					if ( false === $a = WP_Auth0_Api_Client::update_connection($domain, $app_token, $selected_connection->id, $data) ) {
+					if ( false === $a = WP_Auth0_Api_Client::update_connection( $domain, $app_token, $selected_connection->id, $data ) ) {
 						$error = __( 'There was an error disabling your social connection for this app.', 'wp-auth0' );
 						throw new Exception( $error );
-						$input[$main_key] = 1;
+						$input[ $main_key ] = 1;
 					}
 				}
 			}
-
 		}
 
 		return $input;
 	}
 
-	//$input['geo_rule'] = ( isset( $input['geo_rule'] ) ? $input['geo_rule'] : 0 );
-	//$enable = ($old_options['geo_rule'] == null && 1 == $input['geo_rule'])
-	public function toggle_rule($app_token, $rule_id, $rule_name, $rule_script) {
-		
+	// $input['geo_rule'] = ( isset( $input['geo_rule'] ) ? $input['geo_rule'] : 0 );
+	// $enable = ($old_options['geo_rule'] == null && 1 == $input['geo_rule'])
+	public function toggle_rule( $app_token, $rule_id, $rule_name, $rule_script ) {
+
 		$domain = $this->a0_options->get( 'domain' );
-		
-		if (is_null($rule_id)) {
+
+		if ( is_null( $rule_id ) ) {
 			$rule = WP_Auth0_Api_Client::create_rule( $domain, $app_token, $rule_name, $rule_script );
 
 			if ( $rule === false ) {
@@ -324,9 +326,8 @@ class WP_Auth0_Api_Operations {
 			} else {
 				return $rule->id;
 			}
-		}
-		else {
-			if ( false === WP_Auth0_Api_Client::delete_rule($domain, $app_token, $rule_id) ) {
+		} else {
+			if ( false === WP_Auth0_Api_Client::delete_rule( $domain, $app_token, $rule_id ) ) {
 				$error = __( 'There was an error deleting the Auth0 rule. You can do it manually from your Auth0 dashboard.', 'wp-auth0' );
 				throw new Exception( $error );
 			}

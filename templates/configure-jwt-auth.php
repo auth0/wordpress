@@ -6,7 +6,7 @@
 
 		<h1><?php _e( 'JWT Auth authentication', 'wp-auth0' ); ?></h1>
 
-		<?php if ( !$ready ) { ?>
+		<?php if ( ! $ready ) { ?>
 			<form action="options.php" method="post">
 				<input type="hidden" name="action" value="wpauth0_configure_jwt" />
 				<p class="a0-step-text">This action will override the JWT Auth configuration and will enable it to authenticate users using the Auth0 JWT.<br>Do you want to continue?</p>
