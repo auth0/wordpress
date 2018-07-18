@@ -7,6 +7,9 @@ class WP_Auth0_Api_Operations {
 		$this->a0_options = $a0_options;
 	}
 
+	/**
+	 * TODO: Deprecate, no longer used
+	 */
 	public function disable_signup_wordpress_connection( $app_token, $disable_signup ) {
 		$domain    = $this->a0_options->get( 'domain' );
 		$client_id = $this->a0_options->get( 'client_id' );

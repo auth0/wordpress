@@ -124,8 +124,6 @@ class WP_Auth0 {
 		$edit_profile = new WP_Auth0_EditProfile( $this->db_manager, $users_repo, $this->a0_options );
 		$edit_profile->init();
 
-		$this->check_signup_status();
-
 		WP_Auth0_Email_Verification::init();
 	}
 
@@ -143,6 +141,8 @@ class WP_Auth0 {
 	}
 
 	/**
+	 * TODO: Deprecate, no longer used
+	 *
 	 * Checks it it should update the database connection no enable or disable signups and create or delete
 	 * the rule that will disable social signups.
 	 */
