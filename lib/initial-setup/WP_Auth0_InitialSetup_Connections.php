@@ -27,16 +27,85 @@ class WP_Auth0_InitialSetup_Connections {
 	}
 
 	/**
-	 * TODO: Remove when self::update_connection() is removed
+	 * TODO: Deprecate when self::update_connection() is deprecated
 	 */
 	protected function toggle_db() {
+
+		$domain        = $this->a0_options->get( 'domain' );
+		$app_token     = $this->a0_options->get( 'auth0_app_token' );
+		$connection_id = $this->a0_options->get( 'db_connection_id' );
+		$client_id     = $this->a0_options->get( 'client_id' );
+
+		$connection = WP_Auth0_Api_Client::get_connection( $domain, $app_token, $connection_id );
+
+		$enabled_clients = array();
+
+		if ( $_POST['enabled'] === 'true' ) {
+			$enabled_clients   = $connection->enabled_clients;
+			$enabled_clients[] = $client_id;
+		} else {
+			$enabled_clients = array_diff( $connection->enabled_clients, array( $client_id ) );
+		}
+
+		$connection->enabled_clients = array_values( $enabled_clients );
+
+		unset( $connection->name );
+		unset( $connection->strategy );
+		unset( $connection->id );
+
+		WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection_id, $connection );
+
+		$this->a0_options->set( 'db_connection_enabled', $_POST['enabled'] === 'true' ? 1 : 0 );
+
 		exit;
 	}
 
 	/**
-	 * TODO: Remove when self::update_connection() is removed
+	 * TODO: Deprecate when self::update_connection() is deprecated
 	 */
 	protected function toggle_social( $provider_name ) {
+
+		$provider_options = array(
+			'facebook'      => array(
+				'public_profile'  => true,
+				'email'           => true,
+				'user_birthday'   => true,
+				'publish_actions' => true,
+			),
+			'twitter'       => array(
+				'profile' => true,
+			),
+			'google-oauth2' => array(
+				'google_plus' => true,
+				'email'       => true,
+				'profile'     => true,
+			),
+		);
+
+		$input     = array();
+		$old_input = array();
+
+		$operations = new WP_Auth0_Api_Operations( $this->a0_options );
+
+		$old_input[ "social_{$provider_name}" ]        = $this->a0_options->get_connection( "social_{$provider_name}" );
+		$old_input[ "social_{$provider_name}_key" ]    = $this->a0_options->get_connection( "social_{$provider_name}_key" );
+		$old_input[ "social_{$provider_name}_secret" ] = $this->a0_options->get_connection( "social_{$provider_name}_secret" );
+
+		$input[ "social_{$provider_name}" ]        = ( $_POST['enabled'] === 'true' );
+		$input[ "social_{$provider_name}_key" ]    = $this->a0_options->get_connection( "social_{$provider_name}_key" );
+		$input[ "social_{$provider_name}_secret" ] = $this->a0_options->get_connection( "social_{$provider_name}_secret" );
+
+		try {
+			$options = isset( $provider_options[ $provider_name ] ) ? $provider_options[ $provider_name ] : null;
+			$input   = $operations->social_validation( $this->a0_options->get( 'auth0_app_token' ), $old_input, $input, $provider_name, $options );
+		} catch ( Exception $e ) {
+			exit( $e->getMessage() );
+		}
+
+		foreach ( $input as $key => $value ) {
+			$this->a0_options->set_connection( $key, $value );
+		}
+
 		exit;
 	}
 
