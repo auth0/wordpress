@@ -138,10 +138,6 @@ class WP_Auth0_InitialSetup_Consent {
 						$enabled_clients = array_diff( $connection->enabled_clients, array( $client_id ) );
 						WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection->id, array( 'enabled_clients' => array_values( $enabled_clients ) ) );
 					}
-				} elseif ( $connection->strategy !== 'auth0' ) {
-					$this->a0_options->set_connection( "social_{$connection->name}", 1 );
-					$this->a0_options->set_connection( "social_{$connection->name}_key", isset( $connection->options->client_id ) ? $connection->options->client_id : null );
-					$this->a0_options->set_connection( "social_{$connection->name}_secret", isset( $connection->options->client_secret ) ? $connection->options->client_secret : null );
 				}
 			}
 		}
