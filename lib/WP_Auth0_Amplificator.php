@@ -35,7 +35,7 @@ class WP_Auth0_Amplificator {
 	}
 
 	public function get_share_text( $provider, $page_url ) {
-		$message = $this->a0_options->get_connection( "social_{$provider}_message" );
+		$message = $this->a0_options->get( "social_{$provider}_message" );
 
 		$message = str_replace( '%page_url%', $page_url, $message );
 		$message = str_replace( '%site_url%', home_url(), $message );
@@ -95,8 +95,8 @@ class WP_Auth0_Amplificator {
 				$share_text = $this->get_share_text( 'twitter', $page_url );
 
 				$settings = array(
-					'consumer_key'              => $this->a0_options->get_connection( 'social_twitter_key' ),
-					'consumer_secret'           => $this->a0_options->get_connection( 'social_twitter_secret' ),
+					'consumer_key'              => $this->a0_options->get( 'social_twitter_key' ),
+					'consumer_secret'           => $this->a0_options->get( 'social_twitter_secret' ),
 					'oauth_access_token'        => $identity->access_token,
 					'oauth_access_token_secret' => $identity->access_token_secret,
 				);

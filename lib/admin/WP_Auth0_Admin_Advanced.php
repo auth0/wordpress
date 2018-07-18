@@ -554,7 +554,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_social_twitter_key( $args = array() ) {
-		$this->render_social_key_field( $args['label_for'], $args['opt_name'] );
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Twitter app key for the Social Amplification Widget. ', 'wp-auth0' ) .
 			__( 'The app used here needs to have "read" and "write" permissions. ', 'wp-auth0' ) .
@@ -575,7 +575,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_social_twitter_secret( $args = array() ) {
-		$this->render_social_key_field( $args['label_for'], $args['opt_name'] );
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Secret for the app above. ', 'wp-auth0' ) .
 			$this->get_docs_link(
@@ -595,7 +595,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_social_facebook_key( $args = array() ) {
-		$this->render_social_key_field( $args['label_for'], $args['opt_name'] );
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Facebook app key for the Social Amplification Widget. ', 'wp-auth0' ) .
 			__( 'The app used here needs to have "publish_actions" permission. ', 'wp-auth0' ) .
@@ -617,7 +617,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_social_facebook_secret( $args = array() ) {
-		$this->render_social_key_field( $args['label_for'], $args['opt_name'] );
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Secret for the app above. ', 'wp-auth0' ) .
 			$this->get_docs_link(
@@ -667,20 +667,17 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$input['force_https_callback']      = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
 		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
 
-		if ( isset( $input['connections'] ) ) {
-			if ( isset( $input['connections']['social_twitter_key'] ) ) {
-				$input['connections']['social_twitter_key'] = sanitize_text_field( $input['connections']['social_twitter_key'] );
-			}
-			if ( isset( $input['connections']['social_twitter_secret'] ) ) {
-				$input['connections']['social_twitter_secret'] = sanitize_text_field( $input['connections']['social_twitter_secret'] );
-			}
-			if ( isset( $input['connections']['social_facebook_key'] ) ) {
-				$input['connections']['social_facebook_key'] = sanitize_text_field( $input['connections']['social_facebook_key'] );
-			}
-			if ( isset( $input['connections']['social_facebook_secret'] ) ) {
-				$input['connections']['social_facebook_secret'] = sanitize_text_field( $input['connections']['social_facebook_secret'] );
-			}
-		}
+		$input['social_twitter_key'] = isset( $input['social_twitter_key'] ) ?
+			sanitize_text_field( $input['social_twitter_key'] ) : '';
+
+		$input['social_twitter_secret'] = isset( $input['social_twitter_secret'] ) ?
+			sanitize_text_field( $input['social_twitter_secret'] ) : '';
+
+		$input['social_facebook_key'] = isset( $input['social_facebook_key'] ) ?
+			sanitize_text_field( $input['social_facebook_key'] ) : '';
+
+		$input['social_facebook_secret'] = isset( $input['social_facebook_secret'] ) ?
+			sanitize_text_field( $input['social_facebook_secret'] ) : '';
 
 		$input['migration_ips_filter'] = ( ! empty( $input['migration_ips_filter'] ) ? 1 : 0 );
 		$input['migration_ips']        = sanitize_text_field( $input['migration_ips'] );

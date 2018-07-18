@@ -1,9 +1,13 @@
+<?php
+$options   = WP_Auth0_Options::Instance();
+$next_step = $options->get( 'migration_ws' ) ? 4 : 3;
+?>
 <div class="a0-wrap">
 
 	<?php
 	require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php';
 
-	if ( ! $migration_ws_enabled ) {
+	if ( ! $options->get( 'migration_ws' ) ) {
 		require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/steps.php';
 	}
 	?>
@@ -22,9 +26,7 @@
 		<div class="row">
 			<div class="a0-buttons">
 			<a href="https://manage.auth0.com/#/applications/
-			<?php
-			echo $client_id;
-			?>
+			<?php echo $options->get( 'client_id' ); ?>
 			/connections" class="a0-button primary" target="_blank">
 			<?php
 			  _e( 'Auth0 Dashboard', 'wp-auth0' );

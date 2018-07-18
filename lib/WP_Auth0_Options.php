@@ -23,6 +23,9 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		$this->set( 'connections', $options['connections'] );
 	}
 
+	/**
+	 * TODO: Deprecate
+	 */
 	public function get_connection( $key, $default = null ) {
 		$options = $this->get_options();
 
@@ -172,7 +175,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'last_step'                 => 1,
 			'migration_token_id'        => null,
 			'jwt_auth_integration'      => false,
-			'connections'               => array(),
 			'auth0js-cdn'               => WPA0_AUTH0_JS_CDN_URL,
 
 			// Basic

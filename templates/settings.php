@@ -24,7 +24,7 @@
 															<?php
 															echo $tab
 															?>
-				  " role="tab" data-toggle="tab" class="js-a0-settings-tabs"><?php echo ucfirst( $tab ); ?></a></li>
+		  " role="tab" data-toggle="tab" class="js-a0-settings-tabs"><?php echo ucfirst( $tab ); ?></a></li>
 			<?php endforeach; ?>
 		  </ul>
 		</div>
@@ -108,56 +108,6 @@
 </div>
 
 <script type="text/javascript">
-
-	document.addEventListener("DOMContentLoaded", function() {
-
-		var q = async.queue(function (task, callback) {
-
-			var data = {
-				action: 'a0_initial_setup_set_connection',
-				connection: task.connection,
-				enabled: task.enabled
-			};
-
-			onToggleConnection(task.connection, task.enabled);
-
-			jQuery.post(ajaxurl, data, function(response) {
-				callback();
-			});
-
-		}, 1);
-
-		q.drain = function() {
-			window.onbeforeunload = null;
-			jQuery('#connections .loading').fadeOut();
-		}
-
-		jQuery('.connection .a0-switch input').click(function(e) {
-
-			var data = {
-				connection: e.target.value,
-				enabled: e.target.checked
-			};
-
-			q.push(data);
-			jQuery('#connections .loading').fadeIn();
-			window.onbeforeunload = confirmExit;
-
-		});
-
-		jQuery('#wpa0_fullcontact').click(function() {
-			if (this.checked) {
-				jQuery('.subelement.fullcontact').removeClass('hidden');
-			} else {
-				jQuery('.subelement.fullcontact').addClass('hidden');
-			}
-		});
-	});
-
-	function confirmExit() {
-	return "There are some pending actions. if you leave the page now, some connection will not be updated.";
-	}
-
 	function send_feedback() {
 		var url = 'https://sandbox.it.auth0.com/api/run/wptest/wp-auth0-slack?webtask_no_cache=1';
 		var data = {
