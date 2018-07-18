@@ -2,6 +2,9 @@
 
 class WP_Auth0_RulesLib {
 
+	/**
+	 * TODO: Deprecate, no longer used
+	 */
 	public static $disable_social_signup = array(
 
 		'name'   => 'Disable-Social-Signup-Do-Not-Rename',
