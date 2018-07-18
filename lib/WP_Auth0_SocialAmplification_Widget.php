@@ -91,12 +91,12 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 			$supportedProviders = array( 'facebook', 'twitter' );
 			$enabledProviders   = array();
 
-			$social_facebook_key = $this->options->get_connection( 'social_facebook_key' );
+			$social_facebook_key = $this->options->get( 'social_facebook_key' );
 			if ( ! empty( $social_facebook_key ) ) {
 				$enabledProviders[] = 'facebook';
 			}
 
-			$social_twitter_key = $this->options->get_connection( 'social_twitter_key' );
+			$social_twitter_key = $this->options->get( 'social_twitter_key' );
 			if ( ! empty( $social_twitter_key ) ) {
 				$enabledProviders[] = 'twitter';
 			}
