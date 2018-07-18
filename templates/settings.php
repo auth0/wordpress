@@ -19,13 +19,18 @@
 		<?php settings_errors(); ?>
 
 		<ul class="nav nav-tabs" role="tablist">
-			<?php foreach ( array( 'basic', 'features', 'appearance', 'advanced', 'help' ) as $tab ) : ?>
-			  <li role="presentation"><a id="tab-<?php echo $tab; ?>" href="#<?php echo $tab; ?>" aria-controls="
-															<?php
-															echo $tab
-															?>
-		  " role="tab" data-toggle="tab" class="js-a0-settings-tabs"><?php echo ucfirst( $tab ); ?></a></li>
-			<?php endforeach; ?>
+			<?php
+			foreach ( array( 'basic', 'features', 'appearance', 'advanced', 'help' ) as $tab ) {
+				printf(
+					'<li role="presentation"><a id="tab-%s" href="#%s" aria-controls="%s" role="tab" data-toggle="tab" 
+              class="js-a0-settings-tabs">%s</a></li>',
+					esc_attr( $tab ),
+					esc_attr( $tab ),
+					esc_attr( $tab ),
+					ucfirst( sanitize_text_field( $tab ) )
+				);
+			}
+			?>
 		  </ul>
 		</div>
 		<form action="options.php" method="post" id="js-a0-settings-form" class="a0-settings-form">
