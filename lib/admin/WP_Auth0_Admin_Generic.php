@@ -165,22 +165,6 @@ class WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Output a stylized social key text field on the options page
-	 *
-	 * @param string $id - input id attribute
-	 * @param string $input_name - input name attribute
-	 */
-	protected function render_social_key_field( $id, $input_name ) {
-		printf(
-			'<input type="text" name="%s[%s]" id="wpa0_%s" value="%s">',
-			esc_attr( $this->_option_name ),
-			esc_attr( $input_name ),
-			esc_attr( $id ),
-			esc_attr( $this->options->get_connection( $input_name ) )
-		);
-	}
-
-	/**
 	 * Output a stylized textarea field on the options page
 	 *
 	 * @param string $id - input id attribute
