@@ -156,6 +156,8 @@ class WP_Auth0_Api_Operations {
 	}
 
 	/**
+	 * TODO: Deprecate when self::update_connection() is deprecated
+	 *
 	 * This function will sync and update the connection setting with auth0
 	 * First it checks if there is any connection with this strategy enabled for the app.
 	 * - If exists, it checks if it has the facebook keys, in this case will ignore WP setting and will update the WP settings
