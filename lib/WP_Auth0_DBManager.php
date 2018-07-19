@@ -287,6 +287,21 @@ class WP_Auth0_DBManager {
 			update_option( $options->get_options_name(), $update_options );
 		}
 
+		// 3.7.0
+		if ( ( $this->current_db_version < 19 && 0 !== $this->current_db_version ) || 19 === $version_to_install ) {
+			// Need to move settings values from child array to main array.
+			$connection_settings = $options->get( 'connections' );
+			if ( is_array( $connection_settings ) && ! empty( $connection_settings ) ) {
+				foreach ( $connection_settings as $setting => $value ) {
+					// If the setting is empty or if the main array has a value, skip.
+					if ( empty( $value ) || $options->get( $setting ) ) {
+						continue;
+					}
+					$options->set( $setting, $value );
+				}
+			}
+		}
+
 		$this->current_db_version = AUTH0_DB_VERSION;
 		update_option( 'auth0_db_version', AUTH0_DB_VERSION );
 
