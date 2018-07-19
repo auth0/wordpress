@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="WP-Auth0" namespace="WPAuth0\CS\Standard">
-    <description>A custom coding standard for WP-Auth0</description>
+    <description>A custom compatibility standard for WP-Auth0</description>
 
     <!-- Internal tool, will be removed -->
     <exclude-pattern>/account_cleanup/*</exclude-pattern>
@@ -11,6 +11,9 @@
 
     <!-- Dev tools only, currently -->
     <exclude-pattern>/vendor/*</exclude-pattern>
+
+    <!-- No need to compat-test tests -->
+    <exclude-pattern>/tests/*</exclude-pattern>
 
     <!-- Deprecated so no changes needed -->
     <exclude-pattern>/lib/admin/WP_Auth0_Admin_Dashboard.php</exclude-pattern>
