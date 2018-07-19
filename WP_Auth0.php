@@ -7,7 +7,7 @@
  * Author URI: https://auth0.com
  */
 define( 'WPA0_VERSION', '3.6.2' );
-define( 'AUTH0_DB_VERSION', 18 );
+define( 'AUTH0_DB_VERSION', 19 );
 
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
