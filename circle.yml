@@ -15,9 +15,10 @@ test:
     - composer global require "phpunit/phpunit=5.7.*"
     - |
       composer global require wp-coding-standards/wpcs
-      phpcs --standard=phpcs-ruleset.xml --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
+      composer global require wimg/php-compatibility
+      phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs,$HOME/.composer/vendor/wimg/php-compatibility
   override:
-    - phpcs
+    - phpcs --standard=$HOME/wp-auth0/phpcs-compat-ruleset.xml $HOME/wp-auth0 -pn -d memory_limit=-1
     - |
       rm -rf $WP_TESTS_DIR $WP_CORE_DIR
       bash bin/install-wp-tests.sh wordpress_test ubuntu '' 127.0.0.1 3.8
@@ -34,7 +35,7 @@ test:
       phpunit
       WP_MULTISITE=1 phpunit
     - |
-      phpenv global 7.0.17
+      phpenv global 5.3.29
       rm -rf $WP_TESTS_DIR $WP_CORE_DIR
       bash bin/install-wp-tests.sh wordpress_test ubuntu '' 127.0.0.1 latest
       phpunit
