@@ -26,7 +26,7 @@ class testWPAuth0Options extends TestCase {
 		$this->assertEquals( 'wp_auth0_settings', $opts->get_options_name() );
 
 		// Make sure the number of options has not changed unintentionally.
-		$this->assertEquals( 67, count( $opts->get_options() ) );
+		$this->assertEquals( 66, count( $opts->get_options() ) );
 	}
 
 	/**
