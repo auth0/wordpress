@@ -46,4 +46,3 @@ test:
       bash bin/install-wp-tests.sh wordpress_test ubuntu '' 127.0.0.1 latest
       phpunit
       WP_MULTISITE=1 phpunit
-      
