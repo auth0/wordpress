@@ -15,6 +15,7 @@ test:
     - composer global require "phpunit/phpunit=5.7.*"
     - |
       composer global require wp-coding-standards/wpcs
+      composer global require wimg/php-compatibility
       phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
   override:
     - phpcs --standard=$HOME/wp-auth0/phpcs-compat-ruleset.xml $HOME/wp-auth0 -pn -d memory_limit=-1
