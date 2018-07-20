@@ -30,7 +30,7 @@
     },
     "minimum-stability": "stable",
     "scripts": {
-        "compat": "./vendor/bin/phpcs --standard=phpcs-compat-ruleset.xml .",
+        "compat": "./vendor/bin/phpcs --standard=phpcs-compat-ruleset.xml -n .",
         "phpcs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -s .",
         "phpcs-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs --standard=phpcs-ruleset.xml -s",
         "phpcbf": "./vendor/bin/phpcbf --standard=phpcs-ruleset.xml .",
