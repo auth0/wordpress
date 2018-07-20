@@ -193,6 +193,7 @@ class JWT {
 			default:
 				$hash = hash_hmac( $algorithm, $msg, $key, true );
 				if ( function_exists( 'hash_equals' ) ) {
+					// phpcs:ignore
 					return hash_equals( $signature, $hash );
 				}
 				$len = min( self::safeStrlen( $signature ), self::safeStrlen( $hash ) );
@@ -221,6 +222,7 @@ class JWT {
 			 * to specify that large ints (like Steam Transaction IDs) should be treated as
 			 * strings, rather than the PHP default behaviour of converting them to floats.
 			 */
+			// phpcs:ignore
 			$obj = json_decode( $input, false, 512, JSON_BIGINT_AS_STRING );
 		} else {
 			/** Not all servers will support that, however, so for older versions we must
