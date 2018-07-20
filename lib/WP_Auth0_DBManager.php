@@ -5,7 +5,7 @@ class WP_Auth0_DBManager {
 	protected $current_db_version = null;
 	protected $a0_options;
 
-	public function __construct( $a0_options ) {
+	public function __construct( WP_Auth0_Options $a0_options ) {
 		$this->a0_options = $a0_options;
 	}
 
@@ -31,7 +31,7 @@ class WP_Auth0_DBManager {
 
 		wp_cache_set( 'doing_db_update', true, WPA0_CACHE_GROUP );
 
-		$options = WP_Auth0_Options::Instance();
+		$options = $this->a0_options;
 
 		if ( empty( $app_token ) ) {
 			$app_token = $options->get( 'auth0_app_token' );
