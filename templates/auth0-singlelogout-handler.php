@@ -20,7 +20,7 @@ $logout_url = add_query_arg( 'SLO', 1, $logout_url );
 
 	var webAuth = new auth0.WebAuth({
 	  clientID:'<?php echo sanitize_text_field( $this->a0_options->get( 'client_id' ) ); ?>',
-	  domain:'<?php echo sanitize_text_field( $this->a0_options->get( 'domain' ) ); ?>'
+	  domain:'<?php echo sanitize_text_field( $this->a0_options->get_auth_domain() ); ?>'
 	});
 
 	var sloOptions = {

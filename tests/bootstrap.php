@@ -29,3 +29,12 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';
+
+spl_autoload_register(
+	function( $className ) {
+			$fileName = stream_resolve_include_path( 'traits/' . $className . '.php' );
+		if ( false !== $fileName ) {
+			include $fileName;
+		}
+	}
+);

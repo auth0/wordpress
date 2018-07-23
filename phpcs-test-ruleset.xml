@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<ruleset name="WP-Auth0" namespace="WPAuth0\CS\Standard">
+    <description>A custom coding standard for WP-Auth0 tests</description>
+
+    <!-- Tests only -->
+    <include-pattern>/tests/*</include-pattern>
+
+    <config name="testVersion" value="5.6-"/>
+    <config name="showProgress" value="1"/>
+    <config name="extensions" value="php"/>
+
+    <arg name="colors"/>
+
+    <rule ref="Generic.CodeAnalysis"/>
+    <rule ref="Generic.Commenting.Todo"/>
+    <rule ref="PHPCompatibility"/>
+    <rule ref="WordPress-Docs"/>
+    <rule ref="WordPress-Core">
+        <exclude name="WordPress.Files.FileName"/>
+        <exclude name="WordPress.NamingConventions.ValidVariableName.NotSnakeCase"/>
+        <exclude name="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid"/>
+        <exclude name="Squiz.Commenting.FileComment.Missing"/>
+    </rule>
+</ruleset>

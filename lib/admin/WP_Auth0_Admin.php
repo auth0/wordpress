@@ -125,22 +125,6 @@ class WP_Auth0_Admin {
 	}
 
 	public function render_settings_page() {
-
-		$domain = $this->a0_options->get( 'domain' );
-		$parts  = explode( '.', $domain );
-
-		$tenant = $parts[0];
-
-		if ( strpos( $domain, 'au.auth0.com' ) !== false ) {
-			$tenant .= '@au';
-		} elseif ( strpos( $domain, 'eu.auth0.com' ) !== false ) {
-			$tenant .= '@eu';
-		} elseif ( strpos( $domain, 'auth0.com' ) !== false ) {
-			$tenant .= '@us';
-		}
-
-		$options = $this->a0_options;
-
 		include WPA0_PLUGIN_DIR . 'templates/settings.php';
 	}
 }

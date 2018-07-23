@@ -8,6 +8,9 @@
     <!-- Not currently checking JS or CSS -->
     <exclude-pattern>/assets/*</exclude-pattern>
 
+    <!-- Tests have their own ruleset (different PHP version) -->
+    <exclude-pattern>/tests/*</exclude-pattern>
+
     <!-- Dev tools only, currently -->
     <exclude-pattern>/vendor/*</exclude-pattern>
 
