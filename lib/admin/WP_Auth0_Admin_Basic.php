@@ -41,6 +41,12 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				'function' => 'render_domain',
 			),
 			array(
+				'name'     => __( 'Custom Domain', 'wp-auth0' ),
+				'opt'      => 'custom_domain',
+				'id'       => 'wpa0_custom_domain',
+				'function' => 'render_custom_domain',
+			),
+			array(
 				'name'     => __( 'Client ID', 'wp-auth0' ),
 				'opt'      => 'client_id',
 				'id'       => 'wpa0_client_id',
@@ -105,6 +111,23 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$this->render_field_description(
 			__( 'Auth0 Domain, found in your Application settings in the ', 'wp-auth0' ) .
 			$this->get_dashboard_link( 'applications' )
+		);
+	}
+
+	/**
+	 * Render form field and description for the `custom_domain` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_custom_domain( $args = array() ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'login.yourdomain.com' );
+		$this->render_field_description(
+			__( 'Custom login domain. ', 'wp-auth0' ) .
+			$this->get_docs_link( 'custom-domains', __( 'More information here', 'wp-auth0' ) )
 		);
 	}
 
@@ -318,7 +341,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		}
 
 		if ( empty( $input['domain'] ) ) {
-			$this->add_validation_error( __( 'You need to specify domain', 'wp-auth0' ) );
+			$this->add_validation_error( __( 'You need to specify a domain', 'wp-auth0' ) );
 		}
 
 		if ( empty( $input['client_id'] ) ) {

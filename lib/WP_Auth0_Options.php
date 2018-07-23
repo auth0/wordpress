@@ -139,6 +139,19 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	/**
+	 * Get the authentication domain.
+	 *
+	 * @return string
+	 */
+	public function get_auth_domain() {
+		$domain = $this->get( 'custom_domain' );
+		if ( empty( $domain ) ) {
+			$domain = $this->get( 'domain' );
+		}
+		return $domain;
+	}
+
+	/**
 	 * Get lock_connections as an array of strings
 	 *
 	 * @return array
@@ -182,6 +195,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
 			// Basic
 			'domain'                    => '',
+			'custom_domain'             => '',
 			'client_id'                 => '',
 			'client_secret'             => '',
 			'client_secret_b64_encoded' => null,
