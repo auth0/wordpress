@@ -11,10 +11,11 @@ class WP_Auth0_Lock10_Options {
 	/**
 	 * WP_Auth0_Lock10_Options constructor.
 	 *
-	 * @param array $extended_settings - argument in renderAuth0Form(), used by shortcode and widget
+	 * @param array                 $extended_settings Argument in renderAuth0Form(), used by shortcode and widget.
+	 * @param null|WP_Auth0_Options $opts WP_Auth0_Options instance.
 	 */
-	public function __construct( $extended_settings = array() ) {
-		$this->wp_options        = WP_Auth0_Options::Instance();
+	public function __construct( $extended_settings = array(), $opts = null ) {
+		$this->wp_options        = ! empty( $opts ) ? $opts : WP_Auth0_Options::Instance();
 		$this->extended_settings = $extended_settings;
 	}
 
@@ -36,7 +37,7 @@ class WP_Auth0_Lock10_Options {
 	}
 
 	public function get_domain() {
-		return $this->wp_options->get( 'domain' );
+		return $this->wp_options->get_auth_domain();
 	}
 
 	public function get_auth0_implicit_workflow() {
@@ -188,6 +189,14 @@ class WP_Auth0_Lock10_Options {
 		} else {
 			$extraOptions['auth']['responseType'] = 'code';
 			$extraOptions['auth']['redirectUrl']  = $this->get_code_callback_url();
+		}
+
+		if ( $this->wp_options->get( 'custom_domain' ) ) {
+			$tenant_region                        = WP_Auth0::get_tenant_region( $this->wp_options->get( 'domain' ) );
+			$extraOptions['configurationBaseUrl'] = sprintf(
+				'https://cdn%s.auth0.com',
+				( 'us' === $tenant_region ? '' : '.' . $tenant_region )
+			);
 		}
 
 		$options_obj       = $this->build_settings( $this->wp_options->get_options() );

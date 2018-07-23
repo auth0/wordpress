@@ -142,6 +142,46 @@ class WP_Auth0 {
 	}
 
 	/**
+	 * Get the tenant region based on a domain.
+	 *
+	 * @param string $domain Tenant domain.
+	 *
+	 * @return string
+	 */
+	public static function get_tenant_region( $domain ) {
+
+		if ( empty( $domain ) ) {
+			$options = WP_Auth0_Options::Instance();
+			$domain  = $options->get( 'domain' );
+		}
+
+		if ( false !== strpos( $domain, 'au.auth0.com' ) ) {
+			return 'au';
+		} elseif ( false !== strpos( $domain, 'eu.auth0.com' ) ) {
+			return 'eu';
+		}
+		return 'us';
+	}
+
+	/**
+	 * Get the full tenant name with region.
+	 *
+	 * @param null|string $domain Tenant domain.
+	 *
+	 * @return string
+	 */
+	public static function get_tenant( $domain = null ) {
+
+		if ( empty( $domain ) ) {
+			$options = WP_Auth0_Options::Instance();
+			$domain  = $options->get( 'domain' );
+		}
+
+		$parts = explode( '.', $domain );
+		return $parts[0] . '@' . self::get_tenant_region( $domain );
+	}
+
+	/**
 	 * TODO: Deprecate, no longer used
 	 *
 	 * Checks it it should update the database connection no enable or disable signups and create or delete

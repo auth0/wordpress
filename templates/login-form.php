@@ -19,7 +19,7 @@ function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = array()
 			array(
 				'settings'        => $lock_options->get_lock_options(),
 				'ready'           => WP_Auth0::ready(),
-				'domain'          => $options->get( 'domain' ),
+				'domain'          => $lock_options->get_domain(),
 				'clientId'        => $options->get( 'client_id' ),
 				'stateCookieName' => WP_Auth0_State_Handler::get_storage_cookie_name(),
 				'nonceCookieName' => WP_Auth0_Nonce_Handler::get_storage_cookie_name(),

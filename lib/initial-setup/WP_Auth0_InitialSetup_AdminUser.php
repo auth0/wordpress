@@ -9,10 +9,6 @@ class WP_Auth0_InitialSetup_AdminUser {
 	}
 
 	public function render( $step ) {
-		$client_id    = $this->a0_options->get( 'client_id' );
-		$domain       = $this->a0_options->get( 'domain' );
-		$current_user = wp_get_current_user();
-		$error        = isset( $_REQUEST['result'] ) && $_REQUEST['result'] === 'error';
 		include WPA0_PLUGIN_DIR . 'templates/initial-setup/admin-creation.php';
 	}
 
@@ -27,7 +23,7 @@ class WP_Auth0_InitialSetup_AdminUser {
 			'connection' => $this->a0_options->get( 'db_connection_name' ),
 		);
 
-		$admin_user = WP_Auth0_Api_Client::signup_user( $this->a0_options->get( 'domain' ), $data );
+		$admin_user = WP_Auth0_Api_Client::signup_user( $this->a0_options->get_auth_domain(), $data );
 
 		if ( $admin_user === false ) {
 			wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=3&profile=social&result=error' ) );
