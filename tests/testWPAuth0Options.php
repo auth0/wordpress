@@ -2,19 +2,21 @@
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class testWPAuth0Options
+ * Class TestWPAuth0Options
  */
-class testWPAuth0Options extends TestCase {
+class TestWPAuth0Options extends TestCase {
 
+	use SetUpTestDb;
+
+	/**
+	 * Test string to use.
+	 */
 	const FILTER_TEST_STRING = '__filter_test__';
 
-	public function setUp() {
-		global $wpdb;
-		$wpdb->suppress_errors = false;
-		$wpdb->show_errors     = true;
-		$wpdb->db_connect();
-		ini_set( 'display_errors', 1 );
-	}
+	/**
+	 * DB settings name.
+	 */
+	const OPTIONS_NAME = 'wp_auth0_settings';
 
 	/**
 	 * Test the basic options functionality.
@@ -23,10 +25,10 @@ class testWPAuth0Options extends TestCase {
 		$opts = new WP_Auth0_Options();
 
 		// Make sure the settings name did not change.
-		$this->assertEquals( 'wp_auth0_settings', $opts->get_options_name() );
+		$this->assertEquals( self::OPTIONS_NAME, $opts->get_options_name() );
 
 		// Make sure the number of options has not changed unintentionally.
-		$this->assertEquals( 66, count( $opts->get_options() ) );
+		$this->assertEquals( 67, count( $opts->get_options() ) );
 	}
 
 	/**
@@ -47,6 +49,7 @@ class testWPAuth0Options extends TestCase {
 		$opts = new WP_Auth0_Options();
 
 		add_filter(
+			// phpcs:ignore
 			'wp_auth0_get_option', function( $value, $key ) {
 				return $key . self::FILTER_TEST_STRING;
 			}, 10, 2

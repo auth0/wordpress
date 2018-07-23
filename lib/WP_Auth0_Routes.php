@@ -65,7 +65,7 @@ class WP_Auth0_Routes {
 	protected function coo_fallback() {
 		$cdn          = $this->a0_options->get( 'auth0js-cdn' );
 		$client_id    = $this->a0_options->get( 'client_id' );
-		$domain       = $this->a0_options->get( 'domain' );
+		$domain       = $this->a0_options->get_auth_domain();
 		$protocol     = $this->a0_options->get( 'force_https_callback', false ) ? 'https' : null;
 		$redirect_uri = $this->a0_options->get_wp_auth0_url( $protocol );
 		echo <<<EOT

@@ -2,24 +2,17 @@
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class testWPAuth0Options
+ * Class TestWPAuth0DbMigrations.
+ * Tests for database upgrade processes.
  */
-class testWPAuth0DbMigrations extends TestCase {
+class TestWPAuth0DbMigrations extends TestCase {
 
-	const FILTER_TEST_STRING = '__filter_test__';
-
-	public function setUp() {
-		global $wpdb;
-		$wpdb->suppress_errors = false;
-		$wpdb->show_errors     = true;
-		$wpdb->db_connect();
-		ini_set( 'display_errors', 1 );
-	}
+	use setUpTestDb;
 
 	/**
 	 * Test the basic options functionality.
 	 */
-	public function testDefaultOptionsBehavior() {
+	public function testV19Update() {
 		$opts = new WP_Auth0_Options();
 
 		$initial_connections = [
@@ -36,7 +29,7 @@ class testWPAuth0DbMigrations extends TestCase {
 		$saved_connections = $opts->get( 'connections' );
 		$this->assertEquals( $initial_connections, $saved_connections );
 
-		// Run the migration for v19
+		// Run the migration for v19.
 		update_option( 'auth0_db_version', 18 );
 		$db_manager = new WP_Auth0_DBManager( $opts );
 		$db_manager->init();
@@ -50,5 +43,4 @@ class testWPAuth0DbMigrations extends TestCase {
 			$this->assertEquals( $initial_connections[ $key ], $opts->get( $key ) );
 		}
 	}
-
 }

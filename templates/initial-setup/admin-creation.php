@@ -1,3 +1,7 @@
+<?php
+$error        = isset( $_REQUEST['result'] ) && $_REQUEST['result'] === 'error';
+$current_user = wp_get_current_user();
+?>
 <div class="a0-wrap">
 
 	<?php require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'; ?>

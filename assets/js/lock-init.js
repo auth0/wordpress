@@ -31,9 +31,9 @@ jQuery(document).ready(function ($) {
     }
 
     // Set Lock to standard or Passwordless
-    var Lock = opts.usePasswordless
-        ? new Auth0LockPasswordless( opts.clientId, opts.domain, opts.settings )
-        : new Auth0Lock( opts.clientId, opts.domain, opts.settings );
+    var Lock = opts.usePasswordless ?
+        new Auth0LockPasswordless( opts.clientId, opts.domain, opts.settings ) :
+        new Auth0Lock( opts.clientId, opts.domain, opts.settings );
 
     // Check if we're showing as a modal, can be used in shortcodes and widgets
     if ( opts.showAsModal ) {

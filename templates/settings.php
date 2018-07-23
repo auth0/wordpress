@@ -177,7 +177,7 @@
 		var url = 'https://sandbox.it.auth0.com/api/run/wptest/wp-auth0-slack?webtask_no_cache=1';
 		var data = {
 			"score": jQuery('.feedback_calification:checked').val(),
-			"account": '<?php echo $tenant; ?>',
+			"account": '<?php echo WP_Auth0::get_tenant(); ?>',
 			"feedback": jQuery('#feedback_text').val()
 		};
 		var successMsg = "<?php _e( 'Done! Thank you for your feedback.', 'wp-auth0' ); ?>";

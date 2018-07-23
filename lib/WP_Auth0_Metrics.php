@@ -22,18 +22,7 @@ class WP_Auth0_Metrics {
 			return;
 		}
 
-		$domain = $this->a0_options->get( 'domain' );
-		$parts  = explode( '.', $domain );
-
-		$tenant = $parts[0];
-
-		if ( strpos( $domain, 'au.auth0.com' ) !== false ) {
-			$tenant .= '@au';
-		} elseif ( strpos( $domain, 'eu.auth0.com' ) !== false ) {
-			$tenant .= '@eu';
-		} elseif ( strpos( $domain, 'auth0.com' ) !== false ) {
-			$tenant .= '@us';
-		}
+		$tenant = WP_Auth0::get_tenant();
 
 		if ( $this->a0_options->get( 'metrics' ) == 1 ) {
 			?>
