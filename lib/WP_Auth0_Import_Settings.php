@@ -53,30 +53,72 @@ class WP_Auth0_Import_Settings {
 					unlink( $movefile['file'] );
 
 					if ( empty( $settings_json ) ) {
-						exit( wp_redirect( admin_url( 'admin.php?page=wpa0-import-settings&error=' . urlencode( 'The settings file is empty.' ) ) ) );
+						exit(
+							wp_redirect(
+								admin_url(
+									'admin.php?page=wpa0-import-settings&error=' .
+									rawurlencode( __( 'The settings file is empty.', 'wp-auth0' ) )
+								)
+							)
+						);
 					}
 
 					$settings = json_decode( $settings_json, true );
 
 					if ( empty( $settings ) ) {
-						exit( wp_redirect( admin_url( 'admin.php?page=wpa0-import-settings&error=' . urlencode( 'The settings file is not valid.' ) ) ) );
+						exit(
+							wp_redirect(
+								admin_url(
+									'admin.php?page=wpa0-import-settings&error=' .
+									rawurlencode( __( 'The settings file is not valid.', 'wp-auth0' ) )
+								)
+							)
+						);
 					}
 				} else {
-					exit( wp_redirect( admin_url( 'admin.php?page=wpa0-import-settings&error=' . urlencode( $movefile['error'] ) ) ) );
+					exit(
+						wp_redirect(
+							admin_url(
+								'admin.php?page=wpa0-import-settings&error=' .
+								rawurlencode( $movefile['error'] )
+							)
+						)
+					);
 				}
 			} else {
 				switch ( $_FILES['settings-file']['error'] ) {
 					case 1:
 					case 2:
-						exit( wp_redirect( admin_url( 'admin.php?page=wpa0-import-settings&error=' . urlencode( 'The file you are uploading is too big.' ) ) ) );
+						exit(
+							wp_redirect(
+								admin_url(
+									'admin.php?page=wpa0-import-settings&error=' .
+									rawurlencode( __( 'The file you are uploading is too big.', 'wp-auth0' ) )
+								)
+							)
+						);
 					break;
 					case 3:
-						exit( wp_redirect( admin_url( 'admin.php?page=wpa0-import-settings&error=' . urlencode( 'There was an error uploading the file.' ) ) ) );
+						exit(
+							wp_redirect(
+								admin_url(
+									'admin.php?page=wpa0-import-settings&error=' .
+									rawurlencode( __( 'There was an error uploading the file.', 'wp-auth0' ) )
+								)
+							)
+						);
 					break;
 					case 6:
 					case 7:
 					case 8:
-						exit( wp_redirect( admin_url( 'admin.php?page=wpa0-import-settings&error=' . urlencode( 'There was an error importing your settings, please try again.' ) ) ) );
+						exit(
+							wp_redirect(
+								admin_url(
+									'admin.php?page=wpa0-import-settings&error=' .
+									rawurlencode( __( 'There was an error importing your settings, please try again.', 'wp-auth0' ) )
+								)
+							)
+						);
 					break;
 				}
 			}
@@ -84,13 +126,27 @@ class WP_Auth0_Import_Settings {
 			$settings_json = trim( stripslashes( $_POST['settings-json'] ) );
 
 			if ( empty( $settings_json ) ) {
-				exit( wp_redirect( admin_url( 'admin.php?page=wpa0-import-settings&error=' . urlencode( 'Please upload the Auth0 for WordPress setting file or copy the content.' ) ) ) );
+				exit(
+					wp_redirect(
+						admin_url(
+							'admin.php?page=wpa0-import-settings&error=' .
+							rawurlencode( __( 'Please upload the Auth0 for WordPress setting file or copy the content.', 'wp-auth0' ) )
+						)
+					)
+				);
 			}
 
 			$settings = json_decode( $settings_json, true );
 
 			if ( empty( $settings ) ) {
-				exit( wp_redirect( admin_url( 'admin.php?page=wpa0-import-settings&error=' . urlencode( 'The settings json is not valid.' ) ) ) );
+				exit(
+					wp_redirect(
+						admin_url(
+							'admin.php?page=wpa0-import-settings&error=' .
+							rawurlencode( __( 'The settings json is not valid.', 'wp-auth0' ) )
+						)
+					)
+				);
 			}
 		}
 

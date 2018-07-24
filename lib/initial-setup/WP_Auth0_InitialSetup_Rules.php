@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * TODO: Deprecate, not used
+ */
 class WP_Auth0_InitialSetup_Rules {
 
 	protected $a0_options;

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * TODO: Deprecate, not used
+ */
 class WP_Auth0_InitialSetup_Migration {
 
 	protected $a0_options;

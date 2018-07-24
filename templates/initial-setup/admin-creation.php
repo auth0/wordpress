@@ -21,19 +21,18 @@
 
 		<?php } ?>
 
-
 	  <form action="options.php" method="POST">
 
 		<div class="row">
 		  <div class="a0-admin-creation col-sm-6 col-xs-10">
-			<input type="text" id="admin-email" value="<?php echo $current_user->user_email; ?>" disabled>
-			<input type="password" id="admin-password" name="admin-password" placeholder="Password" value="" required>
+			<input type="text" id="admin-email" value="<?php echo esc_attr( $current_user->user_email ); ?>" disabled>
+			<input type="password" id="admin-password" name="admin-password" placeholder="<?php _e( 'Password', 'wp-auth0' ); ?>" value="" required>
 		  </div>
 		</div>
 
 		<div class="a0-buttons">
 		  <input type="hidden" name="action" value="wpauth0_callback_step3_social" />
-		  <input type="submit" class="a0-button primary" value="Submit" />
+		  <input type="submit" class="a0-button primary" value="<?php _e( 'Submit', 'wp-auth0' ); ?>" />
 		  <a href="<?php echo admin_url( 'admin.php?page=wpa0-setup&step=4&profile=social' ); ?>"class="a0-button link"><?php _e( 'Skip this step', 'wp-auth0' ); ?></a>
 		</div>
 

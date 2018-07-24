@@ -5,6 +5,7 @@
  * Version: 3.6.2
  * Author: Auth0
  * Author URI: https://auth0.com
+ * Text Domain: wp-auth0
  */
 define( 'WPA0_VERSION', '3.6.2' );
 define( 'AUTH0_DB_VERSION', 19 );
@@ -489,6 +490,9 @@ class WP_Auth0 {
 	}
 }
 
+$a0_plugin = new WP_Auth0();
+$a0_plugin->init();
+
 if ( ! function_exists( 'get_auth0userinfo' ) ) {
 	function get_auth0userinfo( $user_id ) {
 
@@ -558,8 +562,14 @@ if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
 	}
 }
 
-$a0_plugin = new WP_Auth0();
-$a0_plugin->init();
+/*
+ * Localization
+ */
+
+function wp_auth0_load_plugin_textdomain() {
+	load_plugin_textdomain( 'wp-auth0', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'plugins_loaded', 'wp_auth0_load_plugin_textdomain' );
 
 /*
  * Beta plugin deactivation
