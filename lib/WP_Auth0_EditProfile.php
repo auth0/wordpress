@@ -137,7 +137,8 @@ class WP_Auth0_EditProfile {
 		<label><?php _e( 'Delete Auth0 data' ); ?></label>
 	  </th>
 	  <td>
-		<input type="button" onclick="DeleteAuth0Data(event);" name="auth0_delete_data" id="auth0_delete_data" value="Delete Auth0 Data" class="button button-secondary" />
+		<input type="button" onclick="DeleteAuth0Data(event);" name="auth0_delete_data" id="auth0_delete_data"
+					 value="<?php _e( 'Delete Auth0 Data', 'wp-auth0' ); ?>" class="button button-secondary" />
 	  </td>
 	</tr>
 	</table>
@@ -150,11 +151,13 @@ class WP_Auth0_EditProfile {
 		'user_id': '<?php echo $_GET['user_id']; ?>'
 	  };
 
+	  var successMsg = "<?php _e( 'Done!', 'wp-auth0' ); ?>";
+
 	  jQuery('#auth0_delete_data').attr('disabled', 'true');
 
 	  jQuery.post('<?php echo admin_url( 'admin-ajax.php' ); ?>', data, function(response) {
 
-		jQuery('#auth0_delete_data').val('Done!').attr('disabled', 'true');
+		jQuery('#auth0_delete_data').val(successMsg).attr('disabled', 'true');
 
 	  }, 'json');
 
@@ -177,7 +180,8 @@ class WP_Auth0_EditProfile {
 		<label><?php _e( 'Delete MFA Provider' ); ?></label>
 	  </th>
 	  <td>
-		<input type="button" onclick="DeleteMFA(event);" name="auth0_delete_mfa" id="auth0_delete_mfa" value="Delete MFA" class="button button-secondary" />
+		<input type="button" onclick="DeleteMFA(event);" name="auth0_delete_mfa" id="auth0_delete_mfa"
+					 value="<?php _e( 'Delete MFA' ); ?>" class="button button-secondary" />
 	  </td>
 	</tr>
 	</table>
@@ -190,11 +194,13 @@ class WP_Auth0_EditProfile {
 		'user_id': '<?php echo $_GET['user_id']; ?>'
 	  };
 
+	var successMsg = "<?php _e( 'Done!', 'wp-auth0' ); ?>";
+
 	  jQuery('#auth0_delete_mfa').attr('disabled', 'true');
 
 	  jQuery.post('<?php echo admin_url( 'admin-ajax.php' ); ?>', data, function(response) {
 
-		jQuery('#auth0_delete_mfa').val('Done!').attr('disabled', 'true');
+		jQuery('#auth0_delete_mfa').val(successMsg).attr('disabled', 'true');
 
 	  }, 'json');
 
@@ -278,7 +284,8 @@ class WP_Auth0_EditProfile {
 							  .insertAfter(emailElement);
 			  emailElement.attr("type", "hidden");
 
-			  $('<span class="description">You can\'t change your email here if you logged in using a social connection.</span>').insertAfter(newEmailElement);
+			  var errorMsg = "<?php _e( 'You cannot change your email here if you logged in using a social connection.', 'wp-auth0' ); ?>";
+			  $('<span class="description">' + errorMsg + '</span>').insertAfter(newEmailElement);
 			}
 		  });
 		</script>
@@ -328,7 +335,7 @@ class WP_Auth0_EditProfile {
 			}
 
 			if ( ! is_email( $_POST['email'] ) ) {
-				$errors->add( 'user_email', __( '<strong>ERROR</strong>: The email address isn&#8217;t correct.', 'wp-auth0' ), array( 'form-field' => 'email' ) );
+				$errors->add( 'user_email', __( '<strong>ERROR</strong>: The email address is not correct.', 'wp-auth0' ), array( 'form-field' => 'email' ) );
 				return false;
 			}
 

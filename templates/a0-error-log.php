@@ -7,10 +7,10 @@
 	<table class="a0-table widefat">
 		<thead>
 			<tr>
-				<th>Date</th>
-				<th>Section</th>
-				<th>Error code</th>
-				<th>Message</th>
+				<th><?php _e( 'Date', 'wp-auth0' ); ?></th>
+				<th><?php _e( 'Section', 'wp-auth0' ); ?></th>
+				<th><?php _e( 'Error code', 'wp-auth0' ); ?></th>
+				<th><?php _e( 'Message', 'wp-auth0' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -18,7 +18,7 @@
 	if ( empty( $data ) ) {
 		?>
 	<tr>
-		<td class="message" colspan="4">No errors.</td>
+		<td class="message" colspan="4"><?php _e( 'No errors', 'wp-auth0' ); ?></td>
 	</tr>
 		<?php
 	}
