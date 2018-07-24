@@ -11,7 +11,7 @@
 	<p class="a0-step-text"><?php _e( 'Adjust the plugin settings from the WordPress dashboard, and visit the Auth0 dashboard to change how users log in, add connections, enable multi-factor authentication, and more.', 'wp-auth0' ); ?></p>
 
 	<div class="a0-buttons extra-space">
-	  <a href="<?php echo admin_url( 'admin.php?page=wpa0' ); ?>" class="a0-button primary">GO TO PLUGIN SETTINGS</a>
+	  <a href="<?php echo admin_url( 'admin.php?page=wpa0' ); ?>" class="a0-button primary"><?php _e( 'GO TO PLUGIN SETTINGS', 'wp-auth0' ); ?></a>
 	</div>
   </div>
 </div>

@@ -131,21 +131,21 @@ EOT;
 
 		try {
 			if ( empty( $authorization ) ) {
-				throw new Exception( 'Unauthorized: missing authorization header' );
+				throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ) );
 			}
 
 			$token = JWT::decode( $authorization, $secret, array( 'HS256' ) );
 
 			if ( $token->jti != $token_id ) {
-				throw new Exception( 'Invalid token id' );
+				throw new Exception( __( 'Invalid token ID', 'wp-auth0' ) );
 			}
 
 			if ( ! isset( $_POST['username'] ) ) {
-				throw new Exception( 'username is required' );
+				throw new Exception( __( 'Username is required', 'wp-auth0' ) );
 			}
 
 			if ( ! isset( $_POST['password'] ) ) {
-				throw new Exception( 'password is required' );
+				throw new Exception( __( 'Password is required', 'wp-auth0' ) );
 			}
 
 			$username = $_POST['username'];
@@ -155,7 +155,7 @@ EOT;
 
 			if ( $user instanceof WP_Error ) {
 				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' => wp_authenticate()', $user );
-				$user = array( 'error' => 'invalid credentials' );
+				$user = array( 'error' => __( 'Invalid credentials', 'wp-auth0' ) );
 			} else {
 				if ( $user instanceof WP_User ) {
 					unset( $user->data->user_pass );
@@ -195,17 +195,17 @@ EOT;
 
 		try {
 			if ( empty( $authorization ) ) {
-				throw new Exception( 'Unauthorized: missing authorization header' );
+				throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ) );
 			}
 
 			$token = JWT::decode( $authorization, $secret, array( 'HS256' ) );
 
 			if ( $token->jti != $token_id ) {
-				throw new Exception( 'Invalid token id' );
+				throw new Exception( __( 'Invalid token ID', 'wp-auth0' ) );
 			}
 
 			if ( ! isset( $_POST['username'] ) ) {
-				throw new Exception( 'username is required' );
+				throw new Exception( __( 'Username is required', 'wp-auth0' ) );
 			}
 
 			$username = $_POST['username'];
@@ -218,11 +218,11 @@ EOT;
 
 			if ( $user instanceof WP_Error ) {
 				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $user->get_error_message() );
-				$user = array( 'error' => 'invalid credentials' );
+				$user = array( 'error' => __( 'Invalid credentials', 'wp-auth0' ) );
 			} else {
 
 				if ( ! $user instanceof WP_User ) {
-					$user = array( 'error' => 'invalid credentials' );
+					$user = array( 'error' => __( 'Invalid credentials', 'wp-auth0' ) );
 				} else {
 					unset( $user->data->user_pass );
 					$user = apply_filters( 'auth0_migration_ws_authenticated', $user );

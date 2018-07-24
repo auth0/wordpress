@@ -173,8 +173,7 @@ class WP_Auth0_DBManager {
 				WP_Auth0_ErrorManager::insert_auth0_error(
 					__METHOD__, sprintf(
 						__(
-							'Unable to automatically create Client Grant. Please go to your Auth0 Dashboard '
-							. 'and authorize your Application %s for management API scopes %s.',
+							'Unable to automatically create Client Grant. Please go to your Auth0 Dashboard and authorize your Application %1$s for management API scopes %2$s.',
 							'wp-auth0'
 						),
 						$options->get( 'client_id' ),
@@ -223,14 +222,13 @@ class WP_Auth0_DBManager {
 				update_option( 'wp_auth0_grant_types_success', 1 );
 				WP_Auth0_ErrorManager::insert_auth0_error(
 					__METHOD__,
-					'Client Grant Types have been successfully updated!'
+					__( 'Client Grant Types have been successfully updated!', 'wp-auth0' )
 				);
 			} else {
 				WP_Auth0_ErrorManager::insert_auth0_error(
 					__METHOD__, sprintf(
 						__(
-							'Unable to automatically update Client Grant Type. Please go to your Auth0 Dashboard '
-							. 'and add Client Credentials to your Application settings > Advanced > Grant Types for ID %s ',
+							'Unable to automatically update Client Grant Type. Please go to your Auth0 Dashboard and add Client Credentials to your Application settings > Advanced > Grant Types for ID %s ',
 							'wp-auth0'
 						),
 						$options->get( 'client_id' )

@@ -60,14 +60,14 @@ class WP_Auth0_Amplificator {
 				if ( ! $success ) {
 					$body = json_decode( $response['body'] );
 					if ( $body->error->code == 506 ) {
-						$message = 'Facebook does not allow to share the same content twice.';
+						$message = __( 'Facebook does not allow to share the same content twice.', 'wp-auth0' );
 					} else {
 						if ( isset( $body->error->error_user_msg ) ) {
 							$message = $body->error->error_user_msg;
 						} elseif ( isset( $body->error->message ) ) {
 							$message = $body->error->message;
 						} else {
-							$message = 'An error has occurred.';
+							$message = __( 'An error has occurred.', 'wp-auth0' );
 						}
 					}
 				}
@@ -112,7 +112,7 @@ class WP_Auth0_Amplificator {
 				$success = ( ! isset( $response->errors ) );
 				if ( ! $success ) {
 					if ( $response->errors[0]->code == 187 ) {
-						$message = 'Twitter does not allow to share the same content twice.';
+						$message = __( 'Twitter does not allow to share the same content twice.', 'wp-auth0' );
 					} else {
 						$message = $response->errors[0]->message;
 					}

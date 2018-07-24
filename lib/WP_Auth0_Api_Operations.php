@@ -156,7 +156,7 @@ class WP_Auth0_Api_Operations {
 	}
 
 	/**
-	 * TODO: Deprecate when self::update_connection() is deprecated
+	 * TODO: Deprecate when WP_Auth0_InitialSetup_Connections::toggle_social() is deprecated
 	 *
 	 * This function will sync and update the connection setting with auth0
 	 * First it checks if there is any connection with this strategy enabled for the app.
@@ -249,7 +249,10 @@ class WP_Auth0_Api_Operations {
 					$input[ "{$main_key}_key" ]    = $selected_connection->options->client_id;
 					$input[ "{$main_key}_secret" ] = $selected_connection->options->client_secret;
 
-					$error = 'The connection has already setted an api key and secret and can not be overrided. Please update them from the <a href="https://manage.auth0.com/#/connections/social">Auth0 dashboard</a>';
+					$error  = __( 'The connection has already set an API key and secret and can not be overridden. ', 'wp-auth0' );
+					$error .= '<a href="https://manage.auth0.com/#/connections/social">' .
+						__( 'Please update them in the Auth0 dashboard. ', 'wp-auth0' ) . '</a>';
+
 					throw new Exception( $error );
 
 					$data = array(
