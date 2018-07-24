@@ -35,7 +35,7 @@ We're happy to review and approve new filters and actions that help you integrat
 	* `composer compat` to check for PHP version compatibility (currently 5.3; required by CI)
 	* `composer phpcs-tests` to run code standard checks on test files (required by CI)
 	* `composer phpcs-path ./path/to/file/changed.php` to find other potential issues (not required by CI currently)
-	* `composer test` to run all tests (required by CI; see "Testing" section below)
+	* `composer test` to run all tests (required by CI; see [Testing](#testing) below)
 
 ### How to install and configure WordPress for testing
 
@@ -68,41 +68,39 @@ All new features and functionality should also include unit tests coverage. The 
 
 WordPress testing is a bit different from typical testing in PHP, mainly because of the need for a working database. To run tests locally, you'll need to install the test suite, which is [covered here](https://make.wordpress.org/cli/handbook/plugin-unit-tests/#running-tests-locally). Run this install command:
 
-```
+```bash
 bin/install-wp-tests.sh wordpress_test root '' localhost latest
 ```
 
 ... changing the options for your local setup. Once that completes succesfully, you can run the Composer script:
 
-```
+```bash
 composer test
 ```
 
 ... to run all tests or:
 
-```
+```bash
 composer test-path ./tests/testFiletoRun.php
 ```
 
 ... to run a specific test. 
 
-Tests are run as isolated processes and, if database functions are used, should `use` the `SetUpTestDb` trait. See an example of this in the `TestWPAuth0Options` class. 
-
-Please note that we are in the early stages of adding testing to this plugin so feedback on the current setup, including any problems you're having setting it up, are welcome and encouraged in the Issues tab. 
+Please note that we are in the early stages of adding testing to this plugin so feedback on the current setup, including any problems you're having setting it up, are welcome and encouraged in the [Issues](https://github.com/auth0/wp-auth0/issues) tab. 
 
 
 ### CSS pre-processing
 
 You need to install the stylus tool and run this command (from the plugin root):
 
-```
-$ stylus -c -o assets/css/initial-setup.css assets/css/initial-setup/main.styl
+```bash
+stylus -c -o assets/css/initial-setup.css assets/css/initial-setup/main.styl
 ```
 
 To watch and auto-compile it while working:
 
-```
-$ stylus -cw -o assets/css/initial-setup.css assets/css/initial-setup/main.styl
+```bash
+stylus -cw -o assets/css/initial-setup.css assets/css/initial-setup/main.styl
 ```
 
 ## Issue Reporting
