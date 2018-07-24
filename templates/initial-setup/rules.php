@@ -3,7 +3,10 @@
 	<?php screen_icon(); ?>
 	<h2><?php _e( "Auth0 for WordPress - Setup Wizard (step $step)", 'wp-auth0' ); ?></h2>
 
-	<p>This will create a new database connections, expose 2 endpoints and will pupulate the custom scripts to call this endpoints to migrate the users to auth0. the users will not be changed in WordPress.</p>
+	<p>
+		<?php _e( 'This will create a new database connections, expose 2 endpoints, and populate the custom scripts to call this endpoints to migrate the users to Auth0.', 'wp-auth0' ); ?>
+		<?php _e( 'The users will not be changed in WordPress.', 'wp-auth0' ); ?>
+	</p>
 
 	<form action="options.php" method="POST">
 		<input type="hidden" name="action" value="wpauth0_callback_step5" />

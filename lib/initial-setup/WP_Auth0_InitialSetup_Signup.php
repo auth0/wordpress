@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * TODO: Remove usage and deprecate, not used
+ */
 class WP_Auth0_InitialSetup_Signup {
 
 	protected $a0_options;

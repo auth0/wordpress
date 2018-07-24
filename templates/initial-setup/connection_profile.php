@@ -23,7 +23,7 @@
 	  <div class="a0-step-text a0-message a0-warning">
 
 		<b>Important:</b>
-		<?php _e( 'To continue you need an Auth0 account, don\'t have one yet?', 'wp-auth0' ); ?>
+		<?php _e( 'To continue you need an Auth0 account.', 'wp-auth0' ); ?>
 
 		<a class="a0-button default pull-right" target="_blank" href="https://auth0.com/signup" >
 			<?php _e( 'Sign up for free', 'wp-auth0' ); ?>
@@ -51,7 +51,7 @@
 			<p><?php _e( 'Allow users to login using social, username and password, or passwordless connections.', 'wp-auth0' ); ?></p>
 
 			<div class="a0-buttons">
-			  <input type="submit" value="Standard" name="type" data-profile-type="social" class="a0-button primary js-a0-select-setup"/>
+			  <input type="submit" value="<?php _e( 'Standard', 'wp-auth0' ); ?>" name="type" data-profile-type="social" class="a0-button primary js-a0-select-setup"/>
 			</div>
 		  </div>
 		</div>
@@ -65,7 +65,7 @@
 			<p><?php _e( "Secure this WordPress instance with your organization's login system, like ActiveDirectory", 'wp-auth0' ); ?></p>
 
 			<div class="a0-buttons">
-			  <input type="submit" value="Enterprise" data-profile-type="enterprise" name="type" class="a0-button primary js-a0-select-setup"/>
+			  <input type="submit" value="<?php _e( 'Enterprise', 'wp-auth0' ); ?>" data-profile-type="enterprise" name="type" class="a0-button primary js-a0-select-setup"/>
 			</div>
 		  </div>
 		</div>
@@ -76,7 +76,9 @@
 		  <div class="modal-dialog" role="document">
 			<div class="modal-content">
 			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-dismiss="modal" aria-label="<?php _e( 'Close', 'wp-auth0' ); ?>">
+					<span aria-hidden="true">&times;</span>
+				</button>
 				<h4 class="modal-title" id="connectionSelectedModalLabel"><?php _e( 'Important', 'wp-auth0' ); ?></h4>
 			  </div>
 			  <div class="modal-body no-padding-bottom">
@@ -113,7 +115,9 @@
 		  <div class="modal-dialog" role="document">
 			<div class="modal-content">
 			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-dismiss="modal" aria-label="<?php _e( 'Close', 'wp-auth0' ); ?>">
+					<span aria-hidden="true">&times;</span>
+				</button>
 				<h4 class="modal-title" id="enterTokenModalModalLabel"><?php _e( 'Important', 'wp-auth0' ); ?></h4>
 			  </div>
 			  <div class="modal-body">
@@ -150,7 +154,7 @@
 				</p>
 			  </div>
 			  <div class="modal-footer">
-				<input type="submit" class="a0-button primary" value="Continue"/>
+				<input type="submit" class="a0-button primary" value="<?php _e( 'Continue', 'wp-auth0' ); ?>"/>
 			  </div>
 			</div>
 		  </div>

@@ -13,5 +13,5 @@ if ( empty( $title ) ) {
 	}
 </style>
 <div id="extra-options">
-	<a href="?">← Back to <?php echo $title; ?> login</a>
+	<a href="?"><?php printf( _e( '← Back to %s login', 'wp-auth0' ), $title ); ?></a>
 </div>

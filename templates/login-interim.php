@@ -6,6 +6,6 @@
 		<html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
 	<!--<![endif]-->
 	<body class="login interim-login-success">
-		You are connected
+		<?php _e( 'You are connected', 'wp-auth0' ); ?>
 	</body>
 </html>
