@@ -39,7 +39,7 @@ jQuery(document).ready(function($) {
     });
 
     // Show/hide field for specific switches
-    $('[data-expand!=""]').each( function() {
+    $('[data-expand][data-expand!=""]').each( function() {
         var $thisSwitch = $( this );
         var $showFieldRow = $( '#' + $thisSwitch.attr( 'data-expand' ).trim() ).closest( 'tr' );
 

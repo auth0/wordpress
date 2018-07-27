@@ -149,18 +149,8 @@ class WP_Auth0 {
 	 * @return string
 	 */
 	public static function get_tenant_region( $domain ) {
-
-		if ( empty( $domain ) ) {
-			$options = WP_Auth0_Options::Instance();
-			$domain  = $options->get( 'domain' );
-		}
-
-		if ( false !== strpos( $domain, 'au.auth0.com' ) ) {
-			return 'au';
-		} elseif ( false !== strpos( $domain, 'eu.auth0.com' ) ) {
-			return 'eu';
-		}
-		return 'us';
+		preg_match( '/^[\w\d\-_0-9]+\.([\w\d\-_0-9]*)[\.]*auth0\.com$/', $domain, $matches );
+		return !empty($matches[1]) ? $matches[1] : 'us';
 	}
 
 	/**
