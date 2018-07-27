@@ -37,7 +37,7 @@
         "phpcbf": "./vendor/bin/phpcbf --standard=phpcs-ruleset.xml .",
         "phpcbf-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml",
         "sniffs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -e",
-        "test": "./vendor/bin/phpunit --coverage-text --colors",
-        "test-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpunit --coverage-text --colors"
+        "test": "./vendor/bin/phpunit --coverage-text",
+        "test-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpunit"
     }
 }
