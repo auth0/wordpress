@@ -35,6 +35,7 @@
         "phpcs-tests": "./vendor/bin/phpcs --standard=phpcs-test-ruleset.xml -s ./tests/",
         "phpcs-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs --standard=phpcs-ruleset.xml -s",
         "phpcbf": "./vendor/bin/phpcbf --standard=phpcs-ruleset.xml .",
+        "phpcbf-tests": "./vendor/bin/phpcbf --standard=phpcs-test-ruleset.xml -s ./tests/",
         "phpcbf-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml",
         "sniffs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -e",
         "test": "./vendor/bin/phpunit --coverage-text",
