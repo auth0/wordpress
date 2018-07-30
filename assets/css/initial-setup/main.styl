@@ -23,7 +23,9 @@
   .a0-wrap {  
     font-family:'avenir roman';
     margin-left:-10px;
-    
+    padding-left: 2%;
+    padding-right: 2%;
+
     a, .link {
       color:aText;
     }
@@ -114,6 +116,12 @@
         margin-left: 25px;
       }
     }
+
+    code {
+      background: #f1f1f1;
+      color: #777;
+      line-height: 2em;
+    }
     
     textarea.code {
       font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
@@ -144,6 +152,11 @@
     
     form {
       margin:0;
+
+      [disabled] {
+        font-size: 0.9em;
+        margin: 0.3em;
+      }
     }
     
     .container-fluid {
