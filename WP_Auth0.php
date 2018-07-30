@@ -150,7 +150,7 @@ class WP_Auth0 {
 	 */
 	public static function get_tenant_region( $domain ) {
 		preg_match( '/^[\w\d\-_0-9]+\.([\w\d\-_0-9]*)[\.]*auth0\.com$/', $domain, $matches );
-		return !empty($matches[1]) ? $matches[1] : 'us';
+		return ! empty( $matches[1] ) ? $matches[1] : 'us';
 	}
 
 	/**
