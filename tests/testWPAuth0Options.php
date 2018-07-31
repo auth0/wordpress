@@ -1,4 +1,11 @@
 <?php
+/**
+ * Contains Class TestWPAuth0Options.
+ *
+ * @package WP-Auth0
+ * @since 3.7.0
+ */
+
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -140,37 +147,5 @@ class TestWPAuth0Options extends TestCase {
 		// Now delete again and make sure it's gone.
 		$this->assertTrue( $opts->delete() );
 		$this->assertFalse( get_option( $opts->get_options_name() ) );
-	}
-
-	/**
-	 * Test that default getting works.
-	 */
-	public function testDefaults() {
-		$opts_defaults     = self::getMethod( 'WP_Auth0_Options', 'defaults' );
-		$opts              = new WP_Auth0_Options();
-		$opts_defaults_val = $opts_defaults->invoke( $opts );
-		$this->assertCount( self::DEFAULT_OPTIONS_COUNT, $opts_defaults_val );
-		$this->assertEquals( $opts->get_defaults(), $opts_defaults_val );
-		$this->assertEquals( $opts->get_defaults( true ), array_keys( $opts_defaults_val ) );
-
-		$opts_defaults     = self::getMethod( 'WP_Auth0_Options_Generic', 'defaults' );
-		$opts              = new WP_Auth0_Options_Generic();
-		$opts_defaults_val = $opts_defaults->invoke( $opts );
-		$this->assertEmpty( $opts_defaults_val );
-	}
-
-	/**
-	 * Create a public version of a protected method.
-	 *
-	 * @param string $class - Class to use.
-	 * @param string $method - Method to reflect.
-	 *
-	 * @return ReflectionMethod
-	 */
-	protected static function getMethod( $class, $method ) {
-		$class  = new ReflectionClass( $class );
-		$method = $class->getMethod( $method );
-		$method->setAccessible( true );
-		return $method;
 	}
 }

@@ -2,7 +2,7 @@
 /**
  * PHPUnit bootstrap file
  *
- * @package Auth0
+ * @package WP-Auth0
  */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
@@ -31,10 +31,10 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 require $_tests_dir . '/includes/bootstrap.php';
 
 spl_autoload_register(
-	function( $className ) {
-			$fileName = stream_resolve_include_path( 'traits/' . $className . '.php' );
-		if ( false !== $fileName ) {
-			include $fileName;
+	function( $class_name ) {
+			$file_name = stream_resolve_include_path( 'traits/' . $class_name . '.php' );
+		if ( false !== $file_name ) {
+			include $file_name;
 		}
 	}
 );

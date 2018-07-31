@@ -124,14 +124,18 @@ class WP_Auth0_Admin_Generic {
 	 */
 	protected function render_switch( $id, $input_name, $expand_id = '' ) {
 		$value = $this->options->get( $input_name );
+		if ( $field_is_const = $this->options->has_constant_val( $input_name ) ) {
+			$this->render_const_notice( $input_name );
+		}
 		printf(
-			'<div class="a0-switch"><input type="checkbox" name="%s[%s]" id="%s" data-expand="%s" value="1"%s>
+			'<div class="a0-switch"><input type="checkbox" name="%s[%s]" id="%s" data-expand="%s" value="1" %s %s>
 			<label for="%s"></label></div>',
 			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			! empty( $expand_id ) ? esc_attr( $expand_id ) : '',
 			checked( empty( $value ), false, false ),
+			$field_is_const ? 'disabled' : '',
 			esc_attr( $id )
 		);
 	}
@@ -147,20 +151,25 @@ class WP_Auth0_Admin_Generic {
 	 */
 	protected function render_text_field( $id, $input_name, $type = 'text', $placeholder = '', $style = '' ) {
 		$value = $this->options->get( $input_name );
+
 		// Secure fields are not output by default; validation keeps last value if a new one is not entered
 		if ( 'password' === $type ) {
 			$placeholder = ! empty( $value ) ? 'Not visible' : '';
 			$value       = '';
 		}
+		if ( $field_is_const = $this->options->has_constant_val( $input_name ) ) {
+			$this->render_const_notice( $input_name );
+		}
 		printf(
-			'<input type="%s" name="%s[%s]" id="%s" value="%s" placeholder="%s" style="%s">',
+			'<input type="%s" name="%s[%s]" id="%s" value="%s" placeholder="%s" style="%s" %s>',
 			esc_attr( $type ),
 			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			esc_attr( $value ),
 			$placeholder ? esc_attr( $placeholder ) : '',
-			$style ? esc_attr( $style ) : ''
+			$style ? esc_attr( $style ) : '',
+			$field_is_const ? 'disabled' : ''
 		);
 	}
 
@@ -172,36 +181,48 @@ class WP_Auth0_Admin_Generic {
 	 */
 	protected function render_textarea_field( $id, $input_name ) {
 		$value = $this->options->get( $input_name );
+		if ( $field_is_const = $this->options->has_constant_val( $input_name ) ) {
+			$this->render_const_notice( $input_name );
+		}
 		printf(
-			'<textarea name="%s[%s]" id="%s" rows="%d" class="code">%s</textarea>',
+			'<textarea name="%s[%s]" id="%s" rows="%d" class="code" %s>%s</textarea>',
 			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
 			esc_attr( $id ),
 			$this->_textarea_rows,
+			$field_is_const ? 'disabled' : '',
 			esc_textarea( $value )
 		);
 	}
 
 	/**
-	 * Output a radio button
+	 * Output one or many radio buttons associated to the same option key.
 	 *
-	 * @param string               $id - input id attribute
-	 * @param string               $input_name - input name attribute
-	 * @param string|integer|float $value - input value attribute
-	 * @param string               $label - input label text
-	 * @param bool                 $selected - is it active?
+	 * @param array            $buttons - Array of buttons to output; items can be strings or arrays with "label" and "value" keys.
+	 * @param string           $id - Input ID attribute.
+	 * @param string           $input_name - Option name saved to the options array.
+	 * @param int|float|string $curr_value - Current option value.
 	 */
-	protected function render_radio_button( $id, $input_name, $value, $label = '', $selected = false ) {
-		printf(
-			'<label for="%s"><input type="radio" name="%s[%s]" id="%s" value="%s" %s>&nbsp;%s</label>',
-			esc_attr( $id ),
-			esc_attr( $this->_option_name ),
-			esc_attr( $input_name ),
-			esc_attr( $id ),
-			esc_attr( $value ),
-			checked( $selected, true, false ),
-			sanitize_text_field( ! empty( $label ) ? $label : ucfirst( $value ) )
-		);
+	protected function render_radio_buttons( array $buttons, $id, $input_name, $curr_value ) {
+		if ( $field_is_const = $this->options->has_constant_val( $input_name ) ) {
+			$this->render_const_notice( $input_name );
+		}
+		foreach ( $buttons as $index => $button ) {
+			$id_attr = $id . '_' . $index;
+			$label   = is_array( $button ) ? $button['label'] : ucfirst( $button );
+			$value   = is_array( $button ) ? $button['value'] : $button;
+			printf(
+				'<label for="%s"><input type="radio" name="%s[%s]" id="%s" value="%s" %s %s>&nbsp;%s</label>',
+				esc_attr( $id_attr ),
+				esc_attr( $this->_option_name ),
+				esc_attr( $input_name ),
+				esc_attr( $id_attr ),
+				esc_attr( $value ),
+				checked( $value === $curr_value, true, false ),
+				$field_is_const ? 'disabled' : '',
+				sanitize_text_field( $label )
+			);
+		}
 	}
 
 	/**
@@ -211,6 +232,21 @@ class WP_Auth0_Admin_Generic {
 	 */
 	protected function render_field_description( $text ) {
 		printf( '<div class="subelement"><span class="description">%s.</span></div>', $text );
+	}
+
+	/**
+	 * Check if the setting is provided by a constant and indicate.
+	 *
+	 * @param string $input_name - Input name for the field, used as option key.
+	 */
+	protected function render_const_notice( $input_name ) {
+		if ( $this->options->has_constant_val( $input_name ) ) {
+			printf(
+				'<p><span class="description">%s <code>%s</code></span></p>',
+				__( 'Value is set in the constant ', 'wp-auth0' ),
+				$this->options->get_constant_name( $input_name )
+			);
+		}
 	}
 
 	/**
