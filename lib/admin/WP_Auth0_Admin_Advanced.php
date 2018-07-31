@@ -769,27 +769,53 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		return $this->rule_validation( $old_options, $input, 'link_auth0_users', WP_Auth0_RulesLib::$link_accounts['name'] . '-' . get_auth0_curatedBlogName(), $link_script );
 	}
 
+	/**
+	 * Validate the URL used to redirect users after a successful login.
+	 *
+	 * @param array $old_options - Previously-saved options.
+	 * @param array $input - Options to save.
+	 *
+	 * @return array
+	 */
 	public function loginredirection_validation( $old_options, $input ) {
+		$input['default_login_redirection'] = strtolower( $input['default_login_redirection'] );
+
+		// No change so no validation needed.
+		if ( $input['default_login_redirection'] === $old_options['default_login_redirection'] ) {
+			return $input;
+		}
+
 		$home_url = home_url();
 
+		// Set the default redirection URL to be the homepage.
 		if ( empty( $input['default_login_redirection'] ) ) {
 			$input['default_login_redirection'] = $home_url;
-		} else {
-			if ( strpos( $input['default_login_redirection'], $home_url ) !== 0 ) {
-				if ( strpos( $input['default_login_redirection'], 'http' ) === 0 ) {
-					$input['default_login_redirection'] = $home_url;
-					$error                              = __( "The 'Login redirect URL' cannot point to a foreign page.", 'wp-auth0' );
-					$this->add_validation_error( $error );
-				}
-			}
-
-			if ( strpos( $input['default_login_redirection'], 'action=logout' ) !== false ) {
-				$input['default_login_redirection'] = $home_url;
-
-				$error = __( "The 'Login redirect URL' cannot point to the logout page. ", 'wp-auth0' );
-				$this->add_validation_error( $error );
-			}
+			return $input;
 		}
+
+		$home_url_host     = wp_parse_url( $home_url, PHP_URL_HOST );
+		$redirect_url_host = wp_parse_url( $input['default_login_redirection'], PHP_URL_HOST );
+
+		// Same host name so it's safe to redirect.
+		if ( $redirect_url_host === $home_url_host ) {
+			return $input;
+		}
+
+		// The redirect can be a subdomain of the home_url or vice versa.
+		$min_host = min( strlen( $redirect_url_host ), strlen( $home_url_host ) );
+		if ( substr( $redirect_url_host, -$min_host ) === substr( $home_url_host, -$min_host ) ) {
+			return $input;
+		}
+
+		// If we get here, the redirect URL is a page outside of the WordPress install.
+		$error = __( 'Advanced > "Login Redirection URL" cannot point to another site.', 'wp-auth0' );
+		$this->add_validation_error( $error );
+
+		// Either revert to the previous (validated) value or set as the homepage.
+		$input['default_login_redirection'] = ! empty( $old_options['default_login_redirection'] ) ?
+			$old_options['default_login_redirection'] :
+			$home_url;
+
 		return $input;
 	}
 
