@@ -1,4 +1,11 @@
 <?php
+/**
+ * Contains Class TestWPAuth0Helpers.
+ *
+ * @package WP-Auth0
+ * @since 3.7.0
+ */
+
 use PHPUnit\Framework\TestCase;
 
 /**
