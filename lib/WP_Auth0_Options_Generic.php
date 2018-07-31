@@ -176,6 +176,9 @@ class WP_Auth0_Options_Generic {
 	 * @return bool
 	 */
 	public function update_all() {
+		foreach ( $this->get_all_constant_keys() as $key ) {
+			unset( $this->_opts[ $key ] );
+		}
 		return update_option( $this->_options_name, $this->_opts );
 	}
 

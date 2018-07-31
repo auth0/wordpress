@@ -1,4 +1,10 @@
 <?php
+/**
+ * Contains Trait DomDocumentHelpers.
+ *
+ * @package WP-Auth0
+ * @since 3.7.0
+ */
 
 /**
  * Trait DomDocumentHelpers.

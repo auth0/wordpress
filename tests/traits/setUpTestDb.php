@@ -1,4 +1,10 @@
 <?php
+/**
+ * Contains Trait SetUpTestDb.
+ *
+ * @package WP-Auth0
+ * @since 3.7.0
+ */
 
 /**
  * Trait SetUpTestDb.

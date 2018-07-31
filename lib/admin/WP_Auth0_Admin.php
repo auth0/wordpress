@@ -97,12 +97,29 @@ class WP_Auth0_Admin {
 		);
 	}
 
-	public function input_validator( $input ) {
+	/**
+	 * Main validator for settings page inputs.
+	 * Delegates validation to settings sections in self::init_admin().
+	 *
+	 * @param array $input - Incoming array of settings fields to validate.
+	 *
+	 * @return mixed
+	 */
+	public function input_validator( array $input ) {
+		$constant_keys = $this->a0_options->get_all_constant_keys();
 
-		$old_options = $this->a0_options->get_options();
+		// Look for and set constant overrides so validation is still possible.
+		foreach ( $constant_keys as $key ) {
+			$input[ $key ] = $this->a0_options->get_constant_val( $key );
+		}
 
 		foreach ( $this->sections as $name => $section ) {
-			$input = $section->input_validator( $input, $old_options );
+			$input = $section->input_validator( $input );
+		}
+
+		// Remove constant overrides so they are not saved to the database.
+		foreach ( $constant_keys as $key ) {
+			unset( $input[ $key ] );
 		}
 
 		return $input;

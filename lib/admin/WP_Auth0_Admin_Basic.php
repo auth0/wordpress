@@ -193,9 +193,13 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_client_signing_algorithm( $args = array() ) {
-		$value = $this->options->get( $args['opt_name'], WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG );
-		$this->render_radio_button( $args['label_for'] . '_hs', $args['opt_name'], 'HS256', '', 'HS256' === $value );
-		$this->render_radio_button( $args['label_for'] . '_rs', $args['opt_name'], 'RS256', '', 'RS256' === $value );
+		$curr_value = $this->options->get( $args['opt_name'] ) ?: WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG;
+		$this->render_radio_buttons(
+			array( 'HS256', 'RS256' ),
+			$args['label_for'],
+			$args['opt_name'],
+			$curr_value
+		);
 		$this->render_field_description(
 			__( 'This value can be found the Application settings in the ' ) .
 			$this->get_dashboard_link( 'applications' ) .

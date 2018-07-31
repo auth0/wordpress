@@ -1,17 +1,41 @@
 <?php
+/**
+ * Contains Class TestConstantSettings.
+ *
+ * @package WP-Auth0
+ * @since 3.7.0
+ */
+
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class TestLockOptions.
- * Tests that Lock options output expected values based on given conditions.
+ * Class TestConstantSettings.
+ * Tests that constant-defined settings work as expected.
  */
 class TestConstantSettings extends TestCase {
 
 	use setUpTestDb;
 
+	use domDocumentHelpers;
+
+	/**
+	 * Test string to use.
+	 */
 	const FILTER_TEST_STRING = '__filter_test__';
 
+	/**
+	 * Default constant setting prefix.
+	 *
+	 * @see WP_Auth0_Options_Generic::get_constant_name()
+	 */
 	const DEFAULT_CONSTANT_PREFIX = 'AUTH0_ENV_';
+
+	/**
+	 * Notice text for a field with a constant value set.
+	 *
+	 * @see WP_Auth0_Admin_Generic::render_const_notice()
+	 */
+	const CONSTANT_NOTICE_TEXT = 'Value is set in the constant';
 
 	/**
 	 * Test that setting a constant will store the constant key.
@@ -96,6 +120,7 @@ class TestConstantSettings extends TestCase {
 		$db_options = get_option( $opts->get_options_name() );
 		$this->assertEquals( $expected_val_2, $db_options[ $opt_name ] );
 	}
+
 	/**
 	 * Test that options cannot be set when a constant is present.
 	 */
@@ -114,5 +139,51 @@ class TestConstantSettings extends TestCase {
 		$result = $opts->set( $opt_name, rand(), false );
 		$this->assertFalse( $result );
 		$this->assertNotEquals( $expected_val, $opts->get( $opt_name ) );
+	}
+
+	/**
+	 * Test that commonly-overridden settings will show a notice.
+	 */
+	public function testConstantSettingNoticeBasic() {
+		$opts  = new WP_Auth0_Options();
+		$admin = new WP_Auth0_Admin_Basic( $opts );
+
+		$fields = [
+			[
+				'opt_name'        => 'domain',
+				'label_for'       => 'wpa0_domain',
+				'render_function' => 'render_domain',
+			],
+			[
+				'opt_name'        => 'client_id',
+				'label_for'       => 'wpa0_client_id',
+				'render_function' => 'render_client_id',
+			],
+			[
+				'opt_name'        => 'client_secret',
+				'label_for'       => 'wpa0_client_secret',
+				'render_function' => 'render_client_secret',
+			],
+			[
+				'opt_name'        => 'auth0_app_token',
+				'label_for'       => 'wpa0_auth0_app_token',
+				'render_function' => 'render_auth0_app_token',
+			],
+		];
+
+		foreach ( $fields as $field ) {
+			$constant_name = self::DEFAULT_CONSTANT_PREFIX . strtoupper( $field['opt_name'] );
+			$override_val  = self::FILTER_TEST_STRING . rand();
+			define( $constant_name, $override_val );
+
+			ob_start();
+			$admin->{$field['render_function']}( $field );
+			$field_html = ob_get_clean();
+
+			$input = $this->getDomListFromTagName( $field_html, 'input' );
+			$this->assertTrue( $input->item( 0 )->hasAttribute( 'disabled' ) );
+			$this->assertNotFalse( strpos( $field_html, self::CONSTANT_NOTICE_TEXT ) );
+			$this->assertNotFalse( strpos( $field_html, $constant_name ) );
+		}
 	}
 }

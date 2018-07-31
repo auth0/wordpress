@@ -19,9 +19,9 @@ test:
       phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs,$HOME/.composer/vendor/wimg/php-compatibility
   override:
     - phpcs --standard=$HOME/wp-auth0/phpcs-compat-ruleset.xml $HOME/wp-auth0 -pn -d memory_limit=-1
-    - phpcs --standard=$HOME/wp-auth0/phpcs-test-ruleset.xml $HOME/wp-auth0/tests -pn -d memory_limit=-1
     - phpcbf --standard=$HOME/wp-auth0/phpcs-ruleset.xml $HOME/wp-auth0 -p -d memory_limit=-1
-    - phpcbf --standard=$HOME/wp-auth0/phpcs-test-ruleset.xml $HOME/wp-auth0 -p -d memory_limit=-1
+    - phpcs --standard=$HOME/wp-auth0/phpcs-test-ruleset.xml $HOME/wp-auth0/tests -pn -d memory_limit=-1
+    - phpcbf --standard=$HOME/wp-auth0/phpcs-test-ruleset.xml $HOME/wp-auth0/tests -p -d memory_limit=-1
     - |
       rm -rf $WP_TESTS_DIR $WP_CORE_DIR
       bash bin/install-wp-tests.sh wordpress_test ubuntu '' 127.0.0.1 3.8
