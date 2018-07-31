@@ -112,14 +112,21 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_password_policy( $args = array() ) {
-		$opt_name = $args['opt_name'];
-		$id_attr  = $args['label_for'];
-		$curr_val = $this->options->get( $opt_name );
-
-		$this->render_radio_button( $id_attr . '_none', $opt_name, '', 'None', empty( $curr_val ) );
-		foreach ( array( 'low', 'fair', 'good', 'excellent' ) as $val ) {
-			$this->render_radio_button( $id_attr . '_' . $val, $opt_name, $val, '', $val === $curr_val );
-		}
+		$this->render_radio_buttons(
+			array(
+				array(
+					'label' => 'None',
+					'value' => '',
+				),
+				'low',
+				'fair',
+				'good',
+				'excellent',
+			),
+			$args['label_for'],
+			$args['opt_name'],
+			$this->options->get( $args['opt_name'], 'fair' )
+		);
 		$this->render_field_description(
 			__( 'Password security policy for the database connection used by this application. ', 'wp-auth0' ) .
 			__( 'Changing the policy here will change it for all other applications using this database. ', 'wp-auth0' ) .
