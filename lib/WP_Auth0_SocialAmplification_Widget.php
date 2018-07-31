@@ -102,8 +102,10 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 			}
 
 			$providers = array();
-			foreach ( $user_profile->identities as $identity ) {
-				$providers[] = $identity->provider;
+			if ( ! empty( $user_profile->identities ) ) {
+				foreach ( $user_profile->identities as $identity ) {
+					$providers[] = $identity->provider;
+				}
 			}
 
 			$providers = array_intersect( array_unique( $providers ), $supportedProviders );
