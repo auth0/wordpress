@@ -479,7 +479,7 @@ class WP_Auth0_Api_Client {
 			'app_type'            => 'regular_web',
 
 			'callbacks'           => array(
-				$options->get_wp_auth0_url(),
+				site_url(),
 				wp_login_url(),
 			),
 
@@ -492,8 +492,8 @@ class WP_Auth0_Api_Client {
 
 			// A set of URLs that are valid to redirect to after logout from Auth0
 			'allowed_logout_urls' => array(
-				$options->get_logout_url(),
 				home_url(),
+				wp_login_url(),
 			),
 
 			'grant_types'         => self::get_client_grant_types(),
