@@ -1,5 +1,5 @@
 <?php
-
+// TODO: Deprecate
 class WP_Auth0_Referer_Check {
 	public static function init() {
 		if ( ! WP_Auth0_Options::Instance()->get( 'redirect_referer' ) ) {
