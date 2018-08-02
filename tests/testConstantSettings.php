@@ -47,8 +47,12 @@ class TestConstantSettings extends TestCase {
 		define( self::DEFAULT_CONSTANT_PREFIX . 'CLIENT_SECRET', rand() );
 
 		// Make sure we have the right number of overrides.
-		$opts = new WP_Auth0_Options();
-		$this->assertCount( 3, $opts->get_all_constant_keys() );
+		$opts          = new WP_Auth0_Options();
+		$constant_keys = $opts->get_all_constant_keys();
+		$this->assertCount( 3, $constant_keys );
+		$this->assertContains( 'domain', $constant_keys );
+		$this->assertContains( 'client_id', $constant_keys );
+		$this->assertContains( 'client_secret', $constant_keys );
 	}
 
 	/**
@@ -182,8 +186,8 @@ class TestConstantSettings extends TestCase {
 
 			$input = $this->getDomListFromTagName( $field_html, 'input' );
 			$this->assertTrue( $input->item( 0 )->hasAttribute( 'disabled' ) );
-			$this->assertNotFalse( strpos( $field_html, self::CONSTANT_NOTICE_TEXT ) );
-			$this->assertNotFalse( strpos( $field_html, $constant_name ) );
+			$this->assertContains( self::CONSTANT_NOTICE_TEXT, $field_html );
+			$this->assertContains( $constant_name, $field_html );
 		}
 	}
 }

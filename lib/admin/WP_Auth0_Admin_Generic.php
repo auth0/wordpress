@@ -240,13 +240,11 @@ class WP_Auth0_Admin_Generic {
 	 * @param string $input_name - Input name for the field, used as option key.
 	 */
 	protected function render_const_notice( $input_name ) {
-		if ( $this->options->has_constant_val( $input_name ) ) {
-			printf(
-				'<p><span class="description">%s <code>%s</code></span></p>',
-				__( 'Value is set in the constant ', 'wp-auth0' ),
-				$this->options->get_constant_name( $input_name )
-			);
-		}
+		printf(
+			'<p><span class="description">%s <code>%s</code></span></p>',
+			__( 'Value is set in the constant ', 'wp-auth0' ),
+			$this->options->get_constant_name( $input_name )
+		);
 	}
 
 	/**
