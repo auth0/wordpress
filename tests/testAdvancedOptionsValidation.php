@@ -1,4 +1,11 @@
 <?php
+/**
+ * Contains Class TestAdvancedOptionsValidation.
+ *
+ * @package WP-Auth0
+ * @since 3.7.0
+ */
+
 use PHPUnit\Framework\TestCase;
 
 /**
