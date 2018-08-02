@@ -778,23 +778,24 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @return array
 	 */
 	public function loginredirection_validation( $old_options, $input ) {
-		$input['default_login_redirection'] = strtolower( $input['default_login_redirection'] );
+		$new_redirect_url = strtolower( $input['default_login_redirection'] );
+		$old_redirect_url = strtolower( $old_options['default_login_redirection'] );
 
 		// No change so no validation needed.
-		if ( $input['default_login_redirection'] === $old_options['default_login_redirection'] ) {
+		if ( $new_redirect_url === $old_redirect_url ) {
 			return $input;
 		}
 
 		$home_url = home_url();
 
 		// Set the default redirection URL to be the homepage.
-		if ( empty( $input['default_login_redirection'] ) ) {
+		if ( empty( $new_redirect_url ) ) {
 			$input['default_login_redirection'] = $home_url;
 			return $input;
 		}
 
 		$home_url_host     = wp_parse_url( $home_url, PHP_URL_HOST );
-		$redirect_url_host = wp_parse_url( $input['default_login_redirection'], PHP_URL_HOST );
+		$redirect_url_host = wp_parse_url( $new_redirect_url, PHP_URL_HOST );
 
 		// Same host name so it's safe to redirect.
 		if ( $redirect_url_host === $home_url_host ) {
