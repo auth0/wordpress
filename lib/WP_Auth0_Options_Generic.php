@@ -76,8 +76,7 @@ class WP_Auth0_Options_Generic {
 	 * @return string|null
 	 */
 	public function get_constant_val( $key ) {
-		$constant_name = $this->get_constant_name( $key );
-		return defined( $constant_name ) ? constant( $constant_name ) : null;
+		return $this->has_constant_val( $key ) ? constant( $this->get_constant_name( $key ) ) : null;
 	}
 
 	/**
