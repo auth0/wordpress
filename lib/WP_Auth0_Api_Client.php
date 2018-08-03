@@ -479,7 +479,7 @@ class WP_Auth0_Api_Client {
 			'app_type'            => 'regular_web',
 
 			'callbacks'           => array(
-				site_url(),
+				$options->get_wp_auth0_url(),
 				wp_login_url(),
 			),
 
