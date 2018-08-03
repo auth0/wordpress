@@ -1,14 +1,25 @@
+<?php
+$opts          = WP_Auth0_Options::Instance();
+$constant_keys = $opts->get_all_constant_keys();
+?>
 <div class="a0-wrap settings">
 
-  <?php require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'; ?>
+	<?php require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'; ?>
 
   <div class="container-fluid">
 
 	<div class="row">
 	  <h1><?php _e( 'Import and Export Settings', 'wp-auth0' ); ?></h1>
-	  <p class="a0-step-text top-margin no-bottom-margin">
+	  <p class="a0-step-text top-margin">
 			<?php _e( 'You can import and export your Auth0 WordPress plugin settings here. ', 'wp-auth0' ); ?>
-			<?php _e( 'This allows you to either backup the data, or to move your settings to a new WordPress instance.', 'wp-auth0' ); ?></p>
+			<?php _e( 'This allows you to either backup the data, or to move your settings to a new WordPress instance.', 'wp-auth0' ); ?>
+		</p>
+		<?php if ( ! empty( $constant_keys ) ) : ?>
+			<p class="a0-step-text top-margin no-bottom-margin">
+				<strong><?php _e( 'Please note:', 'wp-auth0' ); ?></strong>
+				<?php _e( 'Settings stored in constants cannot be exported or imported.', 'wp-auth0' ); ?>
+			</p>
+		<?php endif; ?>
 	</div>
 	<div class="row">
 

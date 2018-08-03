@@ -70,7 +70,7 @@ class WP_Auth0_UsersRepo {
 
 	public function create( $userinfo, $token, $access_token = null, $role = null, $ignore_unverified_email = false ) {
 
-		// If the user doesn't exist we need to either create a new one, or asign him to an existing one
+		// If the user doesn't exist we need to either create a new one, or assign them to an existing one
 		$isDatabaseUser = false;
 
 		if ( isset( $userinfo->identities ) ) {
@@ -93,12 +93,14 @@ class WP_Auth0_UsersRepo {
 		// a user to join with. The isDatabase is because we don't want to allow database
 		// user creation if there is an existing one with no verified email
 		$shouldJoinUser = ( isset( $userinfo->email ) // if a0 user has email
-			&& ( ( $ignore_unverified_email || ( isset( $userinfo->email_verified ) && $userinfo->email_verified ) ) // and it is verifed (or we should ignore verification)
+			&& ( ( $ignore_unverified_email || ( isset( $userinfo->email_verified ) && $userinfo->email_verified ) ) // and it is verified (or we should ignore verification)
 				|| ! $isDatabaseUser // or it is not a database user (we can trust the email is valid)
 			)
 		); // if true, we can join the a0 user with the wp one
 
-		$joinUser = get_user_by( 'email', $userinfo->email );
+		if ( ! empty( $userinfo->email ) ) {
+			$joinUser = get_user_by( 'email', $userinfo->email );
+		}
 
 		$auto_provisioning = WP_Auth0_Options::Instance()->get( 'auto_provisioning' );
 		$allow_signup      = WP_Auth0_Options::Instance()->is_wp_registration_enabled() || $auto_provisioning;
