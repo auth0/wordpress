@@ -360,7 +360,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				$this->get_dashboard_link()
 			);
 			$this->render_field_description( 'Security token:' );
-			$this->render_const_notice( 'migration_token' );
+			if ( $this->options->has_constant_val( 'migration_token' ) ) {
+				$this->render_const_notice( 'migration_token' );
+			}
 			printf(
 				'<textarea class="code" rows="%d" disabled>%s</textarea>',
 				$this->_textarea_rows,

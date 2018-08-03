@@ -64,7 +64,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			$this->get( 'client_secret', '' ),
 			$this->get( 'client_secret_b64_encoded', false ),
 			( $legacy ? false : $this->get_client_signing_algorithm() === 'RS256' ),
-			$this->get( 'domain' )
+			$this->get_auth_domain()
 		);
 	}
 
