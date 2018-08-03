@@ -165,7 +165,7 @@ class WP_Auth0_Import_Settings {
 		header( "Content-Disposition: attachment; filename=auth0_for_wordpress_settings-$name.json" );
 		header( 'Pragma: no-cache' );
 
-		$settings = $this->a0_options->get_options();
+		$settings = get_option( $this->a0_options->get_options_name() );
 		echo json_encode( $settings );
 		exit;
 	}
