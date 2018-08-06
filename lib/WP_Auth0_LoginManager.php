@@ -143,6 +143,12 @@ class WP_Auth0_LoginManager {
 			$this->die_on_login( $error_msg, $error_code );
 		}
 
+		// No need to process a login if the user is already logged in and there is no error.
+		if ( is_user_logged_in() ) {
+			wp_redirect( $this->a0_options->get( 'default_login_redirection' ) );
+			exit;
+		}
+
 		// Check for valid state nonce, set in WP_Auth0_Lock10_Options::get_state_obj().
 		// See https://auth0.com/docs/protocols/oauth2/oauth-state for more info.
 		$state_returned = isset( $_REQUEST['state'] ) ? rawurldecode( $_REQUEST['state'] ) : null;
