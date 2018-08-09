@@ -103,6 +103,7 @@ class WP_Auth0 {
 		$auth0_admin->init();
 
 		$error_log = new WP_Auth0_ErrorLog();
+		$error_log->init();
 
 		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH( $this->a0_options );
 		$configure_jwt_auth->init();
@@ -450,12 +451,15 @@ class WP_Auth0 {
 	public function deactivate() {
 		flush_rewrite_rules();
 	}
+
 	public static function uninstall() {
 		$a0_options = WP_Auth0_Options::Instance();
 		$a0_options->delete();
 
+		$error_log = new WP_Auth0_ErrorLog();
+		$error_log->delete();
+
 		delete_option( 'auth0_db_version' );
-		delete_option( 'auth0_error_log' );
 
 		delete_option( 'widget_wp_auth0_popup_widget' );
 		delete_option( 'widget_wp_auth0_widget' );
