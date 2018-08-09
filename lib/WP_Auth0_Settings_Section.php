@@ -31,24 +31,21 @@ class WP_Auth0_Settings_Section {
 			exit;
 		}
 
-		$client_id     = $this->a0_options->get( 'client_id' );
-		$client_secret = $this->a0_options->get( 'client_secret' );
-		$domain        = $this->a0_options->get( 'domain' );
-
-		$show_initial_setup = ( ( ! $client_id ) || ( ! $client_secret ) || ( ! $domain ) );
-
-		$main_menu = 'wpa0';
-
-		if ( $show_initial_setup ) {
-			$main_menu = 'wpa0-setup';
-		}
+		$main_menu = ! WP_Auth0::ready() ? 'wpa0-setup' : 'wpa0';
 
 		add_menu_page(
-			__( 'Auth0', 'wp-auth0' ), __( 'Auth0', 'wp-auth0' ), 'manage_options', $main_menu,
-			( $show_initial_setup ? array( $this->initial_setup, 'render_setup_page' ) : array( $this->auth0_admin, 'render_settings_page' ) ), WPA0_PLUGIN_IMG_URL . 'a0icon.png', 85.55
+			__( 'Auth0', 'wp-auth0' ),
+			__( 'Auth0', 'wp-auth0' ),
+			'manage_options',
+			$main_menu,
+			! WP_Auth0::ready() ?
+				array( $this->initial_setup, 'render_setup_page' ) :
+				array( $this->auth0_admin, 'render_settings_page' ),
+			WPA0_PLUGIN_IMG_URL . 'a0icon.png',
+			85.55
 		);
 
-		if ( $show_initial_setup ) {
+		if ( ! WP_Auth0::ready() ) {
 			add_submenu_page( $main_menu, __( 'Auth0 for WordPress - Setup Wizard', 'wp-auth0' ), __( 'Setup Wizard', 'wp-auth0' ), 'manage_options', 'wpa0-setup', array( $this->initial_setup, 'render_setup_page' ) );
 			add_submenu_page( $main_menu, __( 'Settings', 'wp-auth0' ), __( 'Settings', 'wp-auth0' ), 'manage_options', 'wpa0', array( $this->auth0_admin, 'render_settings_page' ) );
 		} else {
@@ -68,6 +65,7 @@ class WP_Auth0_Settings_Section {
 		}
 	}
 
+	// TODO: deprecate
 	public function redirect_to_help() {
 
 	}
