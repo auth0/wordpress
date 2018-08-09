@@ -65,7 +65,7 @@ class TestConstantSettings extends TestCase {
 		$this->assertEquals( self::DEFAULT_CONSTANT_PREFIX . 'DOMAIN', $opts->get_constant_name( $opt_name ) );
 
 		add_filter(
-			'wp_auth0_settings_constant_prefix', function( $prefix ) {
+			'auth0_settings_constant_prefix', function( $prefix ) {
 				return '__TEST_PREFIX_' . $prefix;
 			}, 10, 2
 		);
