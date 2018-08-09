@@ -52,7 +52,8 @@ class WP_Auth0_Options_Generic {
 	 * @return string
 	 */
 	public function get_constant_name( $key ) {
-		$constant_prefix = apply_filters( 'wp_auth0_settings_constant_prefix', 'AUTH0_ENV_' );
+		// NOTE: the add_filter call must load before WP_Auth0::init() so it cannot be used in a theme.
+		$constant_prefix = apply_filters( 'auth0_settings_constant_prefix', 'AUTH0_ENV_' );
 		return $constant_prefix . strtoupper( $key );
 	}
 
