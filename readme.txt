@@ -1,6 +1,6 @@
 === PLUGIN_NAME ===
 Tags: PLUGIN_TAGS
-Tested up to: 4.9.6
+Tested up to: 4.9.8
 Requires at least: 3.8
 Requires PHP: 5.3
 License: MIT
