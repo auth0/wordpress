@@ -114,15 +114,13 @@ class WP_Auth0_LoginManager {
 		$connection  = apply_filters( 'auth0_get_auto_login_connection', $this->a0_options->get( 'auto_login_method' ) );
 		$auth_params = self::get_authorize_params( $connection );
 
-		$auth_url = 'https://' . $this->a0_options->get_auth_domain() . '/authorize';
-		$auth_url = add_query_arg( array_map( 'rawurlencode', $auth_params ), $auth_url );
-
 		WP_Auth0_State_Handler::get_instance()->set_cookie( $auth_params['state'] );
 
 		if ( isset( $auth_params['nonce'] ) ) {
 			WP_Auth0_Nonce_Handler::get_instance()->set_cookie();
 		}
 
+		$auth_url = self::build_authorize_url( $auth_params );
 		wp_redirect( $auth_url );
 		exit;
 	}
@@ -577,6 +575,7 @@ class WP_Auth0_LoginManager {
 				$this->a0_options->get( 'client_id' ),
 				$telemetry_headers['Auth0-Client']
 			);
+			$redirect_url      = apply_filters( 'auth0_logout_url', $redirect_url );
 			wp_redirect( $redirect_url );
 			exit;
 		}
@@ -702,7 +701,20 @@ class WP_Auth0_LoginManager {
 			)
 		);
 
-		return $params;
+		return apply_filters( 'auth0_authorize_url_params', $params, $connection, $redirect_to );
+	}
+
+	/**
+	 * Build a link to the tenant's authorize page.
+	 *
+	 * @param array $params - URL parameters to append.
+	 *
+	 * @return string
+	 */
+	public static function build_authorize_url( array $params = array() ) {
+		$auth_url = 'https://' . WP_Auth0_Options::Instance()->get_auth_domain() . '/authorize';
+		$auth_url = add_query_arg( array_map( 'rawurlencode', $params ), $auth_url );
+		return apply_filters( 'auth0_authorize_url', $auth_url, $params );
 	}
 
 	/**
