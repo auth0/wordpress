@@ -1,5 +1,36 @@
 # Change Log
 
+## [3.7.0](https://github.com/auth0/wp-auth0/tree/3.7.0) (2018-08-13)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.6.2...3.7.0)
+
+**Closed issues**
+- Optionally load client ID, secret and domain from environment [\#480](https://github.com/auth0/wp-auth0/issues/480)
+- Allow login redirect URL to point to an in-network domain for multi-site [\#459](https://github.com/auth0/wp-auth0/issues/459)
+
+**Added**
+- Add new IP addresses and tests for WP_Auth0_Ip_Check [\#513](https://github.com/auth0/wp-auth0/pull/513) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add constant settings support [\#509](https://github.com/auth0/wp-auth0/pull/509) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add translation ability [\#507](https://github.com/auth0/wp-auth0/pull/507) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add more info to Contributing section, including tests [\#506](https://github.com/auth0/wp-auth0/pull/506) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add custom domain support with tests; add compat test to Circle CI [\#505](https://github.com/auth0/wp-auth0/pull/505) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add testing suite, initial tests, and CircleCI [\#503](https://github.com/auth0/wp-auth0/pull/503) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add code quality tools and contrib instructions [\#498](https://github.com/auth0/wp-auth0/pull/498) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Changed**
+- Update new Application creation URLs [\#514](https://github.com/auth0/wp-auth0/pull/514) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add support for subdomains and different scheme URLs for redirect [\#512](https://github.com/auth0/wp-auth0/pull/512) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update wordpress.org readme [\#500](https://github.com/auth0/wp-auth0/pull/500) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Removed**
+- Remove account cleanup tool [\#510](https://github.com/auth0/wp-auth0/pull/510) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove connection settings [\#502](https://github.com/auth0/wp-auth0/pull/502) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove signup disabling [\#501](https://github.com/auth0/wp-auth0/pull/501) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix login processing if already logged in [\#518](https://github.com/auth0/wp-auth0/pull/518) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix PHP notice for Amplificator widget [\#511](https://github.com/auth0/wp-auth0/pull/511) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix whitespace [\#499](https://github.com/auth0/wp-auth0/pull/499) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [3.6.2](https://github.com/auth0/wp-auth0/tree/3.6.2) (2018-06-29)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.6.1...3.6.2)
 
