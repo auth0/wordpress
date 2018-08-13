@@ -7,9 +7,10 @@
         "php": "^5.3 || ^7.0"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^3.2",
-        "wimg/php-compatibility": "^8.1",
-        "wp-coding-standards/wpcs": "^0.14.1"
+        "phpcompatibility/php-compatibility": "^8.1",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
+        "wp-coding-standards/wpcs": "^0.14.1",
+        "phpunit/phpunit": "5.7.*"
     },
     "authors": [
         {
@@ -29,9 +30,15 @@
     },
     "minimum-stability": "stable",
     "scripts": {
-        "phpcs": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs --standard=phpcs-ruleset.xml",
-        "phpcbf": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml",
-        "compat": "./vendor/bin/phpcs ./ --standard=PHPCompatibility --runtime-set testVersion 5.3 --extensions=php --ignore=/vendor/*",
-        "sniffs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -e"
+        "compat": "./vendor/bin/phpcs --standard=phpcs-compat-ruleset.xml .",
+        "phpcs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -s .",
+        "phpcs-tests": "./vendor/bin/phpcs --standard=phpcs-test-ruleset.xml -s ./tests/",
+        "phpcs-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs --standard=phpcs-ruleset.xml -s",
+        "phpcbf": "./vendor/bin/phpcbf --standard=phpcs-ruleset.xml .",
+        "phpcbf-tests": "./vendor/bin/phpcbf --standard=phpcs-test-ruleset.xml -s ./tests/",
+        "phpcbf-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml",
+        "sniffs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -e",
+        "test": "./vendor/bin/phpunit --coverage-text",
+        "test-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpunit"
     }
 }

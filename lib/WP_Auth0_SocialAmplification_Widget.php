@@ -7,7 +7,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 	protected $options;
 
 	public static function set_context( WP_Auth0_DBManager $db_manager, WP_Auth0_Amplificator $social_amplificator ) {
-		self::$db_manager = $db_manager;
+		self::$db_manager          = $db_manager;
 		self::$social_amplificator = $social_amplificator;
 	}
 
@@ -40,8 +40,8 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		$fields = array(
-			'amplificator_title' => __( 'Widget title', 'wp-auth0' ),
-			'amplificator_subtitle' => __( 'Widget subtitle', 'wp-auth0' ),
+			'amplificator_title'     => __( 'Widget title', 'wp-auth0' ),
+			'amplificator_subtitle'  => __( 'Widget subtitle', 'wp-auth0' ),
 			'social_twitter_message' => __( 'Twitter message', 'wp-auth0' ),
 		);
 
@@ -75,8 +75,8 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
 	public function update( $new_instance, $old_instance ) {
 		$new_instance['social_twitter_message'] = sanitize_text_field( $new_instance['social_twitter_message'] );
-		$new_instance['amplificator_title'] = sanitize_text_field( $new_instance['amplificator_title'] );
-		$new_instance['amplificator_subtitle'] = sanitize_text_field( $new_instance['amplificator_subtitle'] );
+		$new_instance['amplificator_title']     = sanitize_text_field( $new_instance['amplificator_title'] );
+		$new_instance['amplificator_subtitle']  = sanitize_text_field( $new_instance['amplificator_subtitle'] );
 		return $new_instance;
 	}
 
@@ -87,23 +87,25 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 		$current_user = get_currentauth0user();
 		$user_profile = $current_user->auth0_obj;
 
-		if ( trim( $client_id ) != "" && $user_profile ) {
+		if ( trim( $client_id ) != '' && $user_profile ) {
 			$supportedProviders = array( 'facebook', 'twitter' );
-			$enabledProviders = array();
+			$enabledProviders   = array();
 
-			$social_facebook_key = $this->options->get_connection( 'social_facebook_key' );
-			if ( !empty( $social_facebook_key ) ) {
+			$social_facebook_key = $this->options->get( 'social_facebook_key' );
+			if ( ! empty( $social_facebook_key ) ) {
 				$enabledProviders[] = 'facebook';
 			}
 
-			$social_twitter_key = $this->options->get_connection( 'social_twitter_key' );
-			if ( !empty( $social_twitter_key ) ) {
+			$social_twitter_key = $this->options->get( 'social_twitter_key' );
+			if ( ! empty( $social_twitter_key ) ) {
 				$enabledProviders[] = 'twitter';
 			}
 
 			$providers = array();
-			foreach ( $user_profile->identities as $identity ) {
-				$providers[] = $identity->provider;
+			if ( ! empty( $user_profile->identities ) ) {
+				foreach ( $user_profile->identities as $identity ) {
+					$providers[] = $identity->provider;
+				}
 			}
 
 			$providers = array_intersect( array_unique( $providers ), $supportedProviders );
@@ -121,7 +123,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 			}
 
 			wp_enqueue_style( 'auth0-aplificator-css', WPA0_PLUGIN_CSS_URL . 'amplificator.css' );
-			wp_enqueue_script( 'auth0-aplificator-js', WPA0_PLUGIN_JS_URL . 'amplificator.js', array( 'jquery' ), WPA0_VERSION  );
+			wp_enqueue_script( 'auth0-aplificator-js', WPA0_PLUGIN_JS_URL . 'amplificator.js', array( 'jquery' ), WPA0_VERSION );
 			wp_localize_script( 'auth0-aplificator-js', 'auth0_ajax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 
 			$current_page_url = self::current_page_url();
@@ -175,7 +177,7 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
 	protected static function current_page_url() {
 
-		return home_url( $_SERVER["REQUEST_URI"] );
+		return home_url( $_SERVER['REQUEST_URI'] );
 	}
 
 }

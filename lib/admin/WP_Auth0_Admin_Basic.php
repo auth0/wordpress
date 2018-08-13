@@ -3,6 +3,7 @@
 class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Use $this->_description instead
 	 */
 	const BASIC_DESCRIPTION = '';
@@ -38,6 +39,12 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				'opt'      => 'domain',
 				'id'       => 'wpa0_domain',
 				'function' => 'render_domain',
+			),
+			array(
+				'name'     => __( 'Custom Domain', 'wp-auth0' ),
+				'opt'      => 'custom_domain',
+				'id'       => 'wpa0_custom_domain',
+				'function' => 'render_custom_domain',
 			),
 			array(
 				'name'     => __( 'Client ID', 'wp-auth0' ),
@@ -108,6 +115,23 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 * Render form field and description for the `custom_domain` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_custom_domain( $args = array() ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'login.yourdomain.com' );
+		$this->render_field_description(
+			__( 'Custom login domain. ', 'wp-auth0' ) .
+			$this->get_docs_link( 'custom-domains', __( 'More information here', 'wp-auth0' ) )
+		);
+	}
+
+	/**
 	 * Render form field and description for the `client_id` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
@@ -169,9 +193,13 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_client_signing_algorithm( $args = array() ) {
-		$value = $this->options->get( $args['opt_name'], WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG );
-		$this->render_radio_button( $args['label_for'] . '_hs', $args['opt_name'], 'HS256', '', 'HS256' === $value );
-		$this->render_radio_button( $args['label_for'] . '_rs', $args['opt_name'], 'RS256', '', 'RS256' === $value );
+		$curr_value = $this->options->get( $args['opt_name'] ) ?: WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG;
+		$this->render_radio_buttons(
+			array( 'HS256', 'RS256' ),
+			$args['label_for'],
+			$args['opt_name'],
+			$curr_value
+		);
 		$this->render_field_description(
 			__( 'This value can be found the Application settings in the ' ) .
 			$this->get_dashboard_link( 'applications' ) .
@@ -317,7 +345,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		}
 
 		if ( empty( $input['domain'] ) ) {
-			$this->add_validation_error( __( 'You need to specify domain', 'wp-auth0' ) );
+			$this->add_validation_error( __( 'You need to specify a domain', 'wp-auth0' ) );
 		}
 
 		if ( empty( $input['client_id'] ) ) {
@@ -332,6 +360,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
 	 */
 	public function render_allow_signup_regular_multisite() {
@@ -340,6 +369,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
 	 */
 	public function render_allow_signup_regular() {
@@ -348,6 +378,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
 	 */
 	public function render_basic_description() {

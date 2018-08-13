@@ -3,6 +3,7 @@
 class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Use $this->_description instead
 	 */
 	const APPEARANCE_DESCRIPTION = '';
@@ -195,12 +196,19 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_username_style( $args = array() ) {
-		$opt_name = $args['opt_name'];
-		$id_attr  = $args['label_for'];
-		$value    = $this->options->get( $opt_name );
-		$this->render_radio_button( $id_attr . '_au', $opt_name, '', 'Auto', empty( $value ) );
-		$this->render_radio_button( $id_attr . '_em', $opt_name, 'email', '', 'email' === $value );
-		$this->render_radio_button( $id_attr . '_un', $opt_name, 'username', '', 'username' === $value );
+		$this->render_radio_buttons(
+			array(
+				array(
+					'label' => 'Auto',
+					'value' => '',
+				),
+				'email',
+				'username',
+			),
+			$args['label_for'],
+			$args['opt_name'],
+			$this->options->get( $args['opt_name'], '' )
+		);
 		$this->render_field_description(
 			__( 'To allow the user to use either email or username to login, leave this as "Auto." ', 'wp-auth0' ) .
 			__( 'Only database connections that require a username will allow username logins', 'wp-auth0' )
@@ -286,6 +294,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
 	 */
 	public function render_appearance_description() {

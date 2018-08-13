@@ -110,7 +110,7 @@ class WP_Auth0_LoginManager {
 		$connection  = apply_filters( 'auth0_get_auto_login_connection', $this->a0_options->get( 'auto_login_method' ) );
 		$auth_params = self::get_authorize_params( $connection );
 
-		$auth_url = 'https://' . $this->a0_options->get( 'domain' ) . '/authorize';
+		$auth_url = 'https://' . $this->a0_options->get_auth_domain() . '/authorize';
 		$auth_url = add_query_arg( array_map( 'rawurlencode', $auth_params ), $auth_url );
 
 		WP_Auth0_State_Handler::get_instance()->set_cookie( $auth_params['state'] );
@@ -141,6 +141,12 @@ class WP_Auth0_LoginManager {
 			$error_msg  = sanitize_text_field( rawurldecode( $_REQUEST['error_description'] ) );
 			$error_code = sanitize_text_field( rawurldecode( $_REQUEST['error'] ) );
 			$this->die_on_login( $error_msg, $error_code );
+		}
+
+		// No need to process a login if the user is already logged in and there is no error.
+		if ( is_user_logged_in() ) {
+			wp_redirect( $this->a0_options->get( 'default_login_redirection' ) );
+			exit;
 		}
 
 		// Check for valid state nonce, set in WP_Auth0_Lock10_Options::get_state_obj().
@@ -198,6 +204,7 @@ class WP_Auth0_LoginManager {
 	 */
 	public function redirect_login() {
 		$domain             = $this->a0_options->get( 'domain' );
+		$auth_domain        = $this->a0_options->get_auth_domain();
 		$client_id          = $this->a0_options->get( 'client_id' );
 		$client_secret      = $this->a0_options->get( 'client_secret' );
 		$userinfo_resp_code = null;
@@ -205,7 +212,7 @@ class WP_Auth0_LoginManager {
 
 		// Exchange authorization code for an access token.
 		$exchange_resp = WP_Auth0_Api_Client::get_token(
-			$domain, $client_id, $client_secret, 'authorization_code', array(
+			$auth_domain, $client_id, $client_secret, 'authorization_code', array(
 				'redirect_uri' => $this->a0_options->get_wp_auth0_url(),
 				'code'         => $this->query_vars( 'code' ),
 			)
@@ -243,8 +250,8 @@ class WP_Auth0_LoginManager {
 			throw new WP_Auth0_LoginFlowValidationException( $e_message, $exchange_resp_code );
 		}
 
-		$access_token = $data->access_token;
-		$id_token = $data->id_token;
+		$access_token  = $data->access_token;
+		$id_token      = $data->id_token;
 		$refresh_token = isset( $data->refresh_token ) ? $data->refresh_token : null;
 
 		// Decode the incoming ID token for the Auth0 user.
@@ -266,7 +273,7 @@ class WP_Auth0_LoginManager {
 		// Management API call failed, fallback to userinfo.
 		if ( 200 !== $userinfo_resp_code || empty( $userinfo_resp_body ) ) {
 
-			$userinfo_resp      = WP_Auth0_Api_Client::get_user_info( $domain, $access_token );
+			$userinfo_resp      = WP_Auth0_Api_Client::get_user_info( $auth_domain, $access_token );
 			$userinfo_resp_code = (int) wp_remote_retrieve_response_code( $userinfo_resp );
 			$userinfo_resp_body = wp_remote_retrieve_body( $userinfo_resp );
 
@@ -379,7 +386,7 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Attempts to log the user in and create a new user, if possible/needed.
 	 *
-	 * @param object $userinfo - Auth0 profile of the user.
+	 * @param object      $userinfo - Auth0 profile of the user.
 	 * @param null|string $id_token - user's ID token if returned from Auth0.
 	 * @param null|string $access_token - user's access token if returned from Auth0.
 	 * @param null|string $refresh_token - user's refresh token if returned from Auth0.
@@ -436,7 +443,7 @@ class WP_Auth0_LoginManager {
 				}
 
 				wp_update_user(
-					array(
+					(object) array(
 						'ID'          => $user->data->ID,
 						'user_email'  => $userinfo->email,
 						'description' => $description,
@@ -483,12 +490,12 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Does all actions required to log the user in to WordPress, invoking hooks as necessary
 	 *
-	 * @param object $user - the WP user object, such as returned by get_user_by().
-	 * @param object $userinfo - the Auth0 profile of the user.
-	 * @param bool   $is_new - `true` if the user was created in the WordPress database, `false` if not.
-   * @param null|string $id_token - user's ID token if returned from Auth0, otherwise null.
-   * @param null|string $access_token - user's access token if returned from Auth0, otherwise null.
-   * @param null|string $refresh_token - user's refresh token if returned from Auth0, otherwise null.
+	 * @param object      $user - the WP user object, such as returned by get_user_by().
+	 * @param object      $userinfo - the Auth0 profile of the user.
+	 * @param bool        $is_new - `true` if the user was created in the WordPress database, `false` if not.
+	 * @param null|string $id_token - user's ID token if returned from Auth0, otherwise null.
+	 * @param null|string $access_token - user's access token if returned from Auth0, otherwise null.
+	 * @param null|string $refresh_token - user's refresh token if returned from Auth0, otherwise null.
 	 *
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
 	 */
@@ -547,7 +554,7 @@ class WP_Auth0_LoginManager {
 			$telemetry_headers = WP_Auth0_Api_Client::get_info_headers();
 			$redirect_url      = sprintf(
 				'https://%s/v2/logout?returnTo=%s&client_id=%s&auth0Client=%s',
-				$this->a0_options->get( 'domain' ),
+				$this->a0_options->get_auth_domain(),
 				rawurlencode( home_url() ),
 				$this->a0_options->get( 'client_id' ),
 				$telemetry_headers['Auth0-Client']
@@ -620,7 +627,7 @@ class WP_Auth0_LoginManager {
 	 * @return string
 	 */
 	public static function get_userinfo_scope( $context = '' ) {
-		$default_scope = array( 'openid', 'email', 'profile' );
+		$default_scope  = array( 'openid', 'email', 'profile' );
 		$filtered_scope = apply_filters( 'auth0_auth_scope', $default_scope, $context );
 		return implode( ' ', $filtered_scope );
 	}

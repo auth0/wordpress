@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<ruleset name="WP-Auth0" namespace="WPAuth0\CS\Standard">
+    <description>A custom coding standard for WP-Auth0 tests</description>
+
+    <config name="testVersion" value="5.6-"/>
+    <config name="showProgress" value="1"/>
+
+    <arg name="colors"/>
+
+    <rule ref="Generic.CodeAnalysis"/>
+    <rule ref="Generic.Commenting.Todo"/>
+    <rule ref="PHPCompatibility"/>
+    <rule ref="WordPress-Docs"/>
+    <rule ref="WordPress-Core">
+        <exclude name="WordPress.Files.FileName"/>
+        <exclude name="WordPress.NamingConventions.ValidFunctionName"/>
+    </rule>
+    <rule ref="WordPress.VIP.DirectDatabaseQuery"/>
+    <rule ref="WordPress.VIP.SlowDBQuery"/>
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array" value="wp-auth0" />
+        </properties>
+    </rule>
+
+</ruleset>

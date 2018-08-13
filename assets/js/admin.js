@@ -39,9 +39,9 @@ jQuery(document).ready(function($) {
     });
 
     // Show/hide field for specific switches
-    $('[data-expand!=""]').each( function() {
+    $('[data-expand][data-expand!=""]').each( function() {
         var $thisSwitch = $( this );
-        var $showFieldRow = $( '#' + $thisSwitch.attr( 'data-expand' ) ).closest( 'tr' );
+        var $showFieldRow = $( '#' + $thisSwitch.attr( 'data-expand' ).trim() ).closest( 'tr' );
 
         if ( $showFieldRow.length ) {
             if ( ! $thisSwitch.prop( 'checked' ) ) {
@@ -94,7 +94,7 @@ jQuery(document).ready(function($) {
     // Set the tab showing on the form and persist the tab
     $( '.js-a0-settings-tabs' ).click( function () {
         window.location.hash = '';
-        var tabHref = $( this ).attr( 'aria-controls' );
+        var tabHref = $( this ).attr( 'aria-controls' ).trim();
         $settingsForm.attr( 'data-tab-showing', tabHref );
         if ( localStorageAvailable() ) {
             window.localStorage.setItem( 'Auth0WPSettingsTab', tabHref );

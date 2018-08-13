@@ -6,193 +6,6 @@ class WP_Auth0_Admin {
 
 	protected $router;
 
-	protected $providers = array(
-		array(
-			'provider' => 'facebook',
-			'name'     => 'Facebook',
-			'icon'     => 'Facebook',
-			'options'  => array(
-				'public_profile'  => true,
-				'email'           => true,
-				'user_birthday'   => true,
-				'publish_actions' => true,
-			),
-		),
-		array(
-			'provider' => 'twitter',
-			'name'     => 'Twitter',
-			'icon'     => 'Twitter',
-			'options'  => array(
-				'profile' => true,
-			),
-		),
-		array(
-			'provider' => 'google-oauth2',
-			'name'     => 'Google +',
-			'icon'     => 'Google',
-			'options'  => array(
-				'google_plus' => true,
-				'email'       => true,
-				'profile'     => true,
-			),
-		),
-		array(
-			'provider' => 'windowslive',
-			'name'     => 'Microsoft Accounts',
-			'icon'     => 'Windows LiveID',
-		),
-		array(
-			'provider' => 'yahoo',
-			'name'     => 'Yahoo',
-			'icon'     => 'Yahoo',
-		),
-		array(
-			'provider' => 'aol',
-			'name'     => 'AOL',
-			'icon'     => 'Aol',
-		),
-		array(
-			'provider' => 'linkedin',
-			'name'     => 'Linkedin',
-			'icon'     => 'LinkedIn',
-		),
-		array(
-			'provider' => 'paypal',
-			'name'     => 'Paypal',
-			'icon'     => 'PayPal',
-		),
-		array(
-			'provider' => 'github',
-			'name'     => 'GitHub',
-			'icon'     => 'GitHub',
-		),
-		array(
-			'provider' => 'amazon',
-			'name'     => 'Amazon',
-			'icon'     => 'Amazon',
-		),
-		array(
-			'provider' => 'vkontakte',
-			'name'     => 'vkontakte',
-			'icon'     => 'vk',
-		),
-		array(
-			'provider' => 'yandex',
-			'name'     => 'yandex',
-			'icon'     => 'Yandex Metrica',
-		),
-		array(
-			'provider' => 'thirtysevensignals',
-			'name'     => 'thirtysevensignals',
-			'icon'     => '37signals',
-		),
-		array(
-			'provider' => 'box',
-			'name'     => 'box',
-			'icon'     => 'Box',
-		),
-		array(
-			'provider' => 'salesforce',
-			'name'     => 'salesforce',
-			'icon'     => 'Salesforce',
-		),
-		array(
-			'provider' => 'salesforce-sandbox',
-			'name'     => 'salesforce-sandbox',
-			'icon'     => 'SalesforceSandbox',
-		),
-		array(
-			'provider' => 'salesforce-community',
-			'name'     => 'salesforce-community',
-			'icon'     => 'SalesforceCommunity',
-		),
-		array(
-			'provider' => 'fitbit',
-			'name'     => 'Fitbit',
-			'icon'     => 'Fitbit',
-		),
-		array(
-			'provider' => 'baidu',
-			'name'     => '百度 (Baidu)',
-			'icon'     => 'Baidu',
-		),
-		array(
-			'provider' => 'renren',
-			'name'     => '人人 (RenRen)',
-			'icon'     => 'RenRen',
-		),
-		array(
-			'provider' => 'weibo',
-			'name'     => '新浪微 (Weibo)',
-			'icon'     => 'Weibo',
-		),
-		array(
-			'provider' => 'shopify',
-			'name'     => 'Shopify',
-			'icon'     => 'Shopify',
-		),
-		array(
-			'provider' => 'dwolla',
-			'name'     => 'Dwolla',
-			'icon'     => 'dwolla',
-		),
-		array(
-			'provider' => 'miicard',
-			'name'     => 'miiCard',
-			'icon'     => 'miiCard',
-		),
-		array(
-			'provider' => 'wordpress',
-			'name'     => 'wordpress',
-			'icon'     => 'WordPress',
-		),
-		array(
-			'provider' => 'yammer',
-			'name'     => 'Yammer',
-			'icon'     => 'Yammer',
-		),
-		array(
-			'provider' => 'soundcloud',
-			'name'     => 'soundcloud',
-			'icon'     => 'Soundcloud',
-		),
-		array(
-			'provider' => 'instagram',
-			'name'     => 'instagram',
-			'icon'     => 'Instagram',
-		),
-		array(
-			'provider' => 'evernote',
-			'name'     => 'evernote',
-			'icon'     => 'Evernote',
-		),
-		array(
-			'provider' => 'evernote-sandbox',
-			'name'     => 'evernote-sandbox',
-			'icon'     => 'Evernote',
-		),
-		array(
-			'provider' => 'thecity',
-			'name'     => 'thecity',
-			'icon'     => 'The City',
-		),
-		array(
-			'provider' => 'thecity-sandbox',
-			'name'     => 'thecity-sandbox',
-			'icon'     => 'The City Sandbox',
-		),
-		array(
-			'provider' => 'planningcenter',
-			'name'     => 'planningcenter',
-			'icon'     => 'Planning Center',
-		),
-		array(
-			'provider' => 'exact',
-			'name'     => 'exact',
-			'icon'     => 'Exact',
-		),
-	);
-
 	protected $sections = array();
 
 	public function __construct( WP_Auth0_Options $a0_options, WP_Auth0_Routes $router ) {
@@ -256,6 +69,7 @@ class WP_Auth0_Admin {
 	}
 
 	/**
+	 *
 	 * @deprecated 3.6.0 - This method displayed an empty auth0_app_token notification, which is not necessary.
 	 */
 	public function cant_connect_to_auth0() {
@@ -283,14 +97,29 @@ class WP_Auth0_Admin {
 		);
 	}
 
-	public function input_validator( $input ) {
+	/**
+	 * Main validator for settings page inputs.
+	 * Delegates validation to settings sections in self::init_admin().
+	 *
+	 * @param array $input - Incoming array of settings fields to validate.
+	 *
+	 * @return mixed
+	 */
+	public function input_validator( array $input ) {
+		$constant_keys = $this->a0_options->get_all_constant_keys();
 
-		$old_options = $this->a0_options->get_options();
-
-		$input['connections'] = $old_options['connections'];
+		// Look for and set constant overrides so validation is still possible.
+		foreach ( $constant_keys as $key ) {
+			$input[ $key ] = $this->a0_options->get_constant_val( $key );
+		}
 
 		foreach ( $this->sections as $name => $section ) {
-			$input = $section->input_validator( $input, $old_options );
+			$input = $section->input_validator( $input );
+		}
+
+		// Remove constant overrides so they are not saved to the database.
+		foreach ( $constant_keys as $key ) {
+			unset( $input[ $key ] );
 		}
 
 		return $input;
@@ -312,39 +141,7 @@ class WP_Auth0_Admin {
 		);
 	}
 
-	protected function get_social_connection( $provider, $name, $icon ) {
-		return array(
-			'name'     => $name,
-			'provider' => $provider,
-			'icon'     => $icon,
-			'status'   => $this->a0_options->get_connection( "social_{$provider}" ),
-			'key'      => $this->a0_options->get_connection( "social_{$provider}_key" ),
-			'secret'   => $this->a0_options->get_connection( "social_{$provider}_secret" ),
-		);
-	}
-
 	public function render_settings_page() {
-		$social_connections = array();
-
-		foreach ( $this->providers as $provider ) {
-			$social_connections[] = $this->get_social_connection( $provider['provider'], $provider['name'], $provider['icon'] );
-		}
-
-		$domain = $this->a0_options->get( 'domain' );
-		$parts  = explode( '.', $domain );
-
-		$tenant = $parts[0];
-
-		if ( strpos( $domain, 'au.auth0.com' ) !== false ) {
-			$tenant .= '@au';
-		} elseif ( strpos( $domain, 'eu.auth0.com' ) !== false ) {
-			$tenant .= '@eu';
-		} elseif ( strpos( $domain, 'auth0.com' ) !== false ) {
-			$tenant .= '@us';
-		}
-
-		$options = $this->a0_options;
-
 		include WPA0_PLUGIN_DIR . 'templates/settings.php';
 	}
 }
