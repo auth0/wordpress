@@ -10,7 +10,7 @@
         "phpcompatibility/php-compatibility": "^8.1",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
         "wp-coding-standards/wpcs": "^0.14.1",
-        "phpunit/phpunit": "5.7.*"
+        "phpunit/phpunit": "^6.5.0"
     },
     "authors": [
         {
@@ -39,6 +39,7 @@
         "phpcbf-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml",
         "sniffs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -e",
         "test": "./vendor/bin/phpunit --coverage-text",
+        "test-ci": "./vendor/bin/phpunit --debug --verbose",
         "test-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpunit"
     }
 }
