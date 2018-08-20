@@ -1,0 +1,51 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.1-fpm-node-browsers
+        environment:
+          TMPDIR: /tmp
+      - image: circleci/mysql:5.6
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "composer.json" }}
+            - v1-dependencies-
+      - run:
+          name: Prepare Environment
+          command: |
+            sudo touch /usr/local/etc/php/php.ini
+            echo "memory_limit = -1" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "display_startup_errors = On" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "xdebug.force_display_errors = On" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "error_reporting = E_ALL ^ E_DEPRECATED" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "xdebug.force_error_reporting = E_ALL ^ E_DEPRECATED" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "detect_unicode = Off" | sudo tee -a /usr/local/etc/php/php.ini
+            sudo docker-php-ext-install mysqli
+            sudo apt-get update
+            sudo apt-get install -y subversion mysql-client
+            composer install -n --prefer-dist
+      - run:
+          name: Formatting and compatibility
+          command: |
+            composer phpcbf
+            composer phpcbf-tests
+            composer phpcs-tests
+            composer compat
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://127.0.0.1:3306 -timeout 120s
+      - run:
+          name: PHPUnit for default PHP version on latest WP
+          command: |
+            bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 latest
+            composer test-ci
+      - save_cache:
+          key: composer-v1-{{ checksum "composer.lock" }}
+          paths:
+            - ./vendor
+
