@@ -41,3 +41,4 @@ require dirname( __FILE__ ) . '/../vendor/autoload.php';
 
 require dirname( __FILE__ ) . '/traits/domDocumentHelpers.php';
 require dirname( __FILE__ ) . '/traits/setUpTestDb.php';
+require dirname( __FILE__ ) . '/traits/users.php';
