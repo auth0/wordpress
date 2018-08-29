@@ -24,12 +24,16 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Should the new user have an administrator role?
 	 *
+	 * TODO: Deprecate, not used
+	 *
 	 * @var bool|null
 	 */
 	protected $admin_role;
 
 	/**
 	 * Ignore verified email requirement in Settings > Advanced.
+	 *
+	 * TODO: Deprecate, not used
 	 *
 	 * @var bool
 	 */
@@ -397,14 +401,28 @@ class WP_Auth0_LoginManager {
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
 	 */
 	public function login_user( $userinfo, $id_token = null, $access_token = null, $refresh_token = null ) {
+		$auth0_sub        = $userinfo->sub;
+		list( $strategy ) = explode( '|', $auth0_sub );
+
 		// Check that the user has a verified email, if required.
-		if ( ! $this->ignore_unverified_email && $this->a0_options->get( 'requires_verified_email' ) ) {
+		if (
+			// Admin settings enforce verified email.
+			$this->a0_options->get( 'requires_verified_email' ) &&
+			// Email verification is not ignored (set at class initialization).
+			! $this->ignore_unverified_email &&
+			// Strategy for the user is not skipped.
+			! $this->a0_options->strategy_skips_verified_email( $strategy )
+		) {
+
+			// Email address is empty so cannot proceed.
 			if ( empty( $userinfo->email ) ) {
 				throw new WP_Auth0_LoginFlowValidationException(
 					__( 'This account does not have an email associated, as required by your site administrator.', 'wp-auth0' )
 				);
 			}
-			if ( ! $userinfo->email_verified ) {
+
+			// Die with an action to re-send email verification.
+			if ( empty( $userinfo->email_verified ) ) {
 				WP_Auth0_Email_Verification::render_die( $userinfo );
 			}
 		}
@@ -418,7 +436,7 @@ class WP_Auth0_LoginManager {
 				}
 			}
 		} else {
-			$user = $this->users_repo->find_auth0_user( $userinfo->sub );
+			$user = $this->users_repo->find_auth0_user( $auth0_sub );
 		}
 
 		$user = apply_filters( 'auth0_get_wp_user', $user, $userinfo );

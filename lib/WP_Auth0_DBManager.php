@@ -431,7 +431,7 @@ class WP_Auth0_DBManager {
 		$repo = new WP_Auth0_UsersRepo( $this->a0_options );
 
 		foreach ( $userRows as $row ) {
-			$auth0_id = get_user_meta( $row->wp_id, $wpdb->prefix . 'auth0_id', true );
+			$auth0_id = WP_Auth0_UsersRepo::get_meta( $row->wp_id, 'auth0_id' );
 
 			if ( ! $auth0_id ) {
 				$repo->update_auth0_object( $row->wp_id, WP_Auth0_Serializer::unserialize( $row->auth0_obj ) );
