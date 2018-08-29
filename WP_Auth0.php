@@ -530,9 +530,7 @@ $a0_plugin->init();
 if ( ! function_exists( 'get_auth0userinfo' ) ) {
 	function get_auth0userinfo( $user_id ) {
 
-		global $wpdb;
-
-		$profile = get_user_meta( $user_id, $wpdb->prefix . 'auth0_obj', true );
+		$profile = WP_Auth0_UsersRepo::get_meta( $user_id, 'auth0_obj' );
 
 		if ( $profile ) {
 			return WP_Auth0_Serializer::unserialize( $profile );
@@ -558,17 +556,15 @@ if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 if ( ! function_exists( 'get_currentauth0user' ) ) {
 	function get_currentauth0user() {
 
-		global $wpdb;
-
 		$current_user = wp_get_current_user();
 
-		$serialized_profile = get_user_meta( $current_user->ID, $wpdb->prefix . 'auth0_obj', true );
+		$serialized_profile = WP_Auth0_UsersRepo::get_meta( $current_user->ID, 'auth0_obj' );
 
 		$data = new stdClass;
 
 		$data->auth0_obj   = empty( $serialized_profile ) ? false : WP_Auth0_Serializer::unserialize( $serialized_profile );
-		$data->last_update = get_user_meta( $current_user->ID, $wpdb->prefix . 'last_update', true );
-		$data->auth0_id    = get_user_meta( $current_user->ID, $wpdb->prefix . 'auth0_id', true );
+		$data->last_update = WP_Auth0_UsersRepo::get_meta( $current_user->ID, 'last_update' );
+		$data->auth0_id    = WP_Auth0_UsersRepo::get_meta( $current_user->ID, 'auth0_id' );
 
 		return $data;
 	}

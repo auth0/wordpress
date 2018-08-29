@@ -68,90 +68,83 @@ class WP_Auth0_UsersRepo {
 
 	}
 
-	public function create( $userinfo, $token, $access_token = null, $role = null, $ignore_unverified_email = false ) {
+	/**
+	 * Create or join a WP user with an incoming Auth0 one or reject with an exception.
+	 *
+	 * @param object      $userinfo - Profile object from Auth0.
+	 * @param string      $token - ID token from Auth0.
+	 * @param null|string $access_token - TODO: Deprecate, not used
+	 * @param null|string $role - TODO: Deprecate, not used
+	 * @param bool        $skip_email_verified - TODO: Deprecate, not used
+	 *
+	 * @return int|null|WP_Error
+	 *
+	 * @throws WP_Auth0_CouldNotCreateUserException
+	 * @throws WP_Auth0_EmailNotVerifiedException
+	 * @throws WP_Auth0_RegistrationNotEnabledException
+	 */
+	public function create( $userinfo, $token, $access_token = null, $role = null, $skip_email_verified = false ) {
+		$auth0_sub      = $userinfo->sub;
+		list($strategy) = explode( '|', $auth0_sub );
+		$opts           = WP_Auth0_Options::Instance();
+		$wp_user        = null;
+		$user_id        = null;
 
-		// If the user doesn't exist we need to either create a new one, or assign them to an existing one
-		$isDatabaseUser = false;
-
-		if ( isset( $userinfo->identities ) ) {
+		// Check legacy identities profile object for a DB connection.
+		$is_db_connection = 'auth0' === $strategy;
+		if ( ! $is_db_connection && ! empty( $userinfo->identities ) ) {
 			foreach ( $userinfo->identities as $identity ) {
-				if ( $identity->provider == 'auth0' ) {
-					$isDatabaseUser = true;
+				if ( 'auth0' === $identity->provider ) {
+					$is_db_connection = true;
+					break;
 				}
 			}
-		} else {
-			$sub                 = $userinfo->sub;
-			list($provider, $id) = explode( '|', $sub );
-			if ( $provider == 'auth0' ) {
-				$isDatabaseUser = true;
-			}
 		}
 
-		$joinUser = null;
+		// Email is considered verified if flagged as such, if we ignore the requirement, or if the strategy is skipped.
+		$email_verified = ! empty( $userinfo->email_verified )
+			|| $skip_email_verified
+			|| $opts->strategy_skips_verified_email( $strategy );
 
-		// If the user has a verified email or is a database user try to see if there is
-		// a user to join with. The isDatabase is because we don't want to allow database
-		// user creation if there is an existing one with no verified email
-		$shouldJoinUser = ( isset( $userinfo->email ) // if a0 user has email
-			&& ( ( $ignore_unverified_email || ( isset( $userinfo->email_verified ) && $userinfo->email_verified ) ) // and it is verified (or we should ignore verification)
-				|| ! $isDatabaseUser // or it is not a database user (we can trust the email is valid)
-			)
-		); // if true, we can join the a0 user with the wp one
-
+		// WP user to join with incoming Auth0 user.
 		if ( ! empty( $userinfo->email ) ) {
-			$joinUser = get_user_by( 'email', $userinfo->email );
+			$wp_user = get_user_by( 'email', $userinfo->email );
 		}
 
-		$auto_provisioning = WP_Auth0_Options::Instance()->get( 'auto_provisioning' );
-		$allow_signup      = WP_Auth0_Options::Instance()->is_wp_registration_enabled() || $auto_provisioning;
+		if ( is_object( $wp_user ) && $wp_user instanceof WP_User ) {
+			// WP user exists, check if we can join.
+			$user_id = $wp_user->ID;
 
-		$user_id = null;
-
-		global $wpdb;
-
-		// If there is a user with the same email, we should check if the wp user was joined with an auth0 user. If so, we shouldn't allow it again
-		if ( ! is_null( $joinUser ) && $joinUser instanceof WP_User ) {
-			$auth0_id = get_user_meta( $joinUser->ID, $wpdb->prefix . 'auth0_id', true );
-
-			if ( $auth0_id ) { // if it has an a0 id, we cant join it
-				$msg = __( 'There is a user with the same email', 'wp-auth0' );
-
-				throw new WP_Auth0_CouldNotCreateUserException( $msg );
-			}
-		}
-
-		if ( $shouldJoinUser && ! is_null( $joinUser ) && $joinUser instanceof WP_User ) {
-			// If we are here, we have a potential join user
-			// Don't allow creation or assignation of user if the email is not verified, that would
-			// be hijacking
-			if ( $ignore_unverified_email || $userinfo->email_verified ) {
-				$user_id = $joinUser->ID;
-			} else {
+			// Cannot join a DB connection user without a verified email.
+			if ( $is_db_connection && ! $email_verified ) {
 				throw new WP_Auth0_EmailNotVerifiedException( $userinfo, $token );
 			}
-		} elseif ( $allow_signup ) {
 
-			// If we are here, we need to create the user
+			// If the user has a different Auth0 ID, we cannot join it.
+			$current_auth0_id = self::get_meta( $user_id, 'auth0_id' );
+			if ( ! empty( $current_auth0_id ) && $auth0_sub !== $current_auth0_id ) {
+				throw new WP_Auth0_CouldNotCreateUserException( __( 'There is a user with the same email.', 'wp-auth0' ) );
+			}
+		} elseif ( $opts->is_wp_registration_enabled() || $opts->get( 'auto_provisioning' ) ) {
+			// WP user does not exist and registration is allowed.
 			$user_id = WP_Auth0_Users::create_user( $userinfo, $role );
 
 			// Check if user was created
 			if ( is_wp_error( $user_id ) ) {
 				throw new WP_Auth0_CouldNotCreateUserException( $user_id->get_error_message() );
-			} elseif ( $user_id == -2 ) {
-				$msg = __( 'Could not create user. The registration process were rejected. Please verify that your account is whitelisted for this system. Please contact your site’s administrator.', 'wp-auth0' );
-
-				throw new WP_Auth0_CouldNotCreateUserException( $msg );
+			} elseif ( -2 === $user_id ) {
+				// Registration rejected by wpa0_should_create_user filter in WP_Auth0_Users::create_user().
+				throw new WP_Auth0_CouldNotCreateUserException( __( 'Registration rejected.', 'wp-auth0' ) );
 			} elseif ( $user_id < 0 ) {
+				// Registration failed for another reason.
 				throw new WP_Auth0_CouldNotCreateUserException();
 			}
-		} elseif ( ! $allow_signup ) {
+		} else {
+			// Signup is not allowed.
 			throw new WP_Auth0_RegistrationNotEnabledException();
 		}
 
-		// If we are here we should have a valid $user_id with a new user or an existing one
-		// log him in, and update the auth0_user table
 		$this->update_auth0_object( $user_id, $userinfo );
-
 		return $user_id;
 	}
 
@@ -202,4 +195,18 @@ class WP_Auth0_UsersRepo {
 		delete_user_meta( $user_id, $wpdb->prefix . 'last_update' );
 	}
 
+	/**
+	 * Get a user's Auth0 meta data.
+	 *
+	 * @param integer  $user_id - WordPress user ID.
+	 * @param string - $key - Usermeta key to get.
+	 *
+	 * @return mixed
+	 *
+	 * @since 3.8.0
+	 */
+	public static function get_meta( $user_id, $key ) {
+		global $wpdb;
+		return get_user_meta( $user_id, $wpdb->prefix . $key, true );
+	}
 }

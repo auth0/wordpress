@@ -179,6 +179,29 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	/**
+	 * Check if provided strategy is allowed to skip email verification.
+	 * Useful for Enterprise strategies that do not provide a email_verified profile value.
+	 *
+	 * @param string $strategy - Strategy to check against saved setting.
+	 *
+	 * @return bool
+	 *
+	 * @since 3.8.0
+	 */
+	public function strategy_skips_verified_email( $strategy ) {
+		$skip_strategies = trim( $this->get( 'skip_strategies' ) );
+
+		// No strategies to skip.
+		if ( empty( $skip_strategies ) ) {
+			return false;
+		}
+
+		$skip_strategies = explode( ',', $skip_strategies );
+		$skip_strategies = array_map( 'trim', $skip_strategies );
+		return in_array( $strategy, $skip_strategies );
+	}
+
+	/**
 	 * Default settings when plugin is installed or reset
 	 *
 	 * @return array
@@ -229,6 +252,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
 			// Advanced
 			'requires_verified_email'   => true,
+			'skip_strategies'           => '',
 			'remember_users_session'    => false,
 			'default_login_redirection' => home_url(),
 			'passwordless_enabled'      => false,

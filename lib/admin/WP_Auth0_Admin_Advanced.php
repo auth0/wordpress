@@ -46,6 +46,12 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_verified_email',
 			),
 			array(
+				'name'     => __( 'Skip Strategies', 'wp-auth0' ),
+				'opt'      => 'skip_strategies',
+				'id'       => 'wpa0_skip_strategies',
+				'function' => 'render_skip_strategies',
+			),
+			array(
 				'name'     => __( 'Remember User Session', 'wp-auth0' ),
 				'opt'      => 'remember_users_session',
 				'id'       => 'wpa0_remember_users_session',
@@ -207,11 +213,31 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_verified_email( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
+		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_skip_strategies' );
 		$this->render_field_description(
 			__( 'Require new users to both provide and verify their email before logging in. ', 'wp-auth0' ) .
 			__( 'An email is verified manually by an email from Auth0 or automatically by the provider. ', 'wp-auth0' ) .
 			__( 'This will disallow logins from social connections that do not provide email (like Twitter)', 'wp-auth0' )
+		);
+	}
+
+	/**
+	 * Render form field and description for the `skip_strategies` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 *
+	 * @since 3.8.0
+	 */
+	public function render_skip_strategies( $args = array() ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Enter one or more strategies, separated by commas, to skip email verification. ', 'wp-auth0' ) .
+			__( 'Leave this field blank to require email for all strategies. ', 'wp-auth0' ) .
+			__( 'This could introduce a security risk and should be used sparingly, if at all', 'wp-auth0' )
 		);
 	}
 
@@ -661,14 +687,17 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	public function basic_validation( $old_options, $input ) {
-		$input['requires_verified_email']   = ( isset( $input['requires_verified_email'] ) ? $input['requires_verified_email'] : 0 );
-		$input['auto_provisioning']         = ( isset( $input['auto_provisioning'] ) ? $input['auto_provisioning'] : 0 );
-		$input['remember_users_session']    = ( isset( $input['remember_users_session'] ) ? $input['remember_users_session'] : 0 ) == 1;
-		$input['passwordless_enabled']      = ( isset( $input['passwordless_enabled'] ) ? $input['passwordless_enabled'] : 0 ) == 1;
-		$input['jwt_auth_integration']      = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
-		$input['auth0_implicit_workflow']   = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
-		$input['force_https_callback']      = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
-		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
+		$input['requires_verified_email'] = intval( ! empty( $input['requires_verified_email'] ) );
+
+		$input['skip_strategies'] = isset( $input['skip_strategies'] ) ?
+			sanitize_text_field( trim( $input['skip_strategies'] ) ) : '';
+
+		$input['auto_provisioning']       = ( isset( $input['auto_provisioning'] ) ? $input['auto_provisioning'] : 0 );
+		$input['remember_users_session']  = ( isset( $input['remember_users_session'] ) ? $input['remember_users_session'] : 0 ) == 1;
+		$input['passwordless_enabled']    = ( isset( $input['passwordless_enabled'] ) ? $input['passwordless_enabled'] : 0 ) == 1;
+		$input['jwt_auth_integration']    = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
+		$input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
+		$input['force_https_callback']    = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
 
 		$input['social_twitter_key'] = isset( $input['social_twitter_key'] ) ?
 			sanitize_text_field( $input['social_twitter_key'] ) : '';
@@ -683,14 +712,20 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			sanitize_text_field( $input['social_facebook_secret'] ) : '';
 
 		$input['migration_ips_filter'] = ( ! empty( $input['migration_ips_filter'] ) ? 1 : 0 );
-		$input['migration_ips']        = sanitize_text_field( $input['migration_ips'] );
+
+		$input['migration_ips'] = isset( $input['migration_ips'] ) ?
+			sanitize_text_field( $input['migration_ips'] ) : '';
 
 		$input['valid_proxy_ip'] = ( isset( $input['valid_proxy_ip'] ) ? $input['valid_proxy_ip'] : null );
 
-		$input['lock_connections']     = trim( $input['lock_connections'] );
-		$input['custom_signup_fields'] = trim( $input['custom_signup_fields'] );
+		$input['lock_connections'] = isset( $input['lock_connections'] ) ?
+			trim( $input['lock_connections'] ) : '';
 
-		if ( trim( $input['extra_conf'] ) != '' ) {
+		$input['custom_signup_fields'] = isset( $input['custom_signup_fields'] ) ?
+			trim( $input['custom_signup_fields'] ) : '';
+
+		$input['extra_conf'] = isset( $input['extra_conf'] ) ? trim( $input['extra_conf'] ) : '';
+		if ( ! empty( $input['extra_conf'] ) ) {
 			if ( json_decode( $input['extra_conf'] ) === null ) {
 				$error = __( 'The Extra settings parameter should be a valid json object', 'wp-auth0' );
 				self::add_validation_error( $error );
@@ -780,7 +815,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @return array
 	 */
 	public function loginredirection_validation( $old_options, $input ) {
-		$new_redirect_url = strtolower( $input['default_login_redirection'] );
+		$new_redirect_url = esc_url_raw( strtolower( $input['default_login_redirection'] ) );
 		$old_redirect_url = strtolower( $old_options['default_login_redirection'] );
 
 		// No change so no validation needed.
