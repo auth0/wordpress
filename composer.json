@@ -39,7 +39,7 @@
         "phpcbf-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml",
         "sniffs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -e",
         "test": "./vendor/bin/phpunit --coverage-text",
-        "test-ci": "./vendor/bin/phpunit --debug --verbose",
+        "test-ci": "./vendor/bin/phpunit --debug --verbose --coverage-clover=coverage.xml",
         "test-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpunit"
     }
 }
