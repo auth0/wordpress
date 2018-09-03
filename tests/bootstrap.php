@@ -5,6 +5,8 @@
  * @package WP-Auth0
  */
 
+echo 'PHP version: ' . phpversion() . "\n";
+
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
 if ( ! $_tests_dir ) {
@@ -28,13 +30,14 @@ function _manually_load_plugin() {
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 // Start up the WP testing environment.
+if ( ! file_exists( $_tests_dir . '/includes/bootstrap.php' ) ) {
+	echo "Could not find $_tests_dir/includes/bootstrap.php" . PHP_EOL;
+	exit( 1 );
+}
+
 require $_tests_dir . '/includes/bootstrap.php';
 
-spl_autoload_register(
-	function( $class_name ) {
-			$file_name = stream_resolve_include_path( 'traits/' . $class_name . '.php' );
-		if ( false !== $file_name ) {
-			include $file_name;
-		}
-	}
-);
+require dirname( __FILE__ ) . '/../vendor/autoload.php';
+
+require dirname( __FILE__ ) . '/traits/domDocumentHelpers.php';
+require dirname( __FILE__ ) . '/traits/setUpTestDb.php';
