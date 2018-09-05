@@ -14,6 +14,7 @@
     <rule ref="WordPress-Core">
         <exclude name="WordPress.Files.FileName"/>
         <exclude name="WordPress.NamingConventions.ValidFunctionName"/>
+        <exclude name="WordPress.NamingConventions.ValidVariableName"/>
     </rule>
     <rule ref="WordPress.VIP.DirectDatabaseQuery"/>
     <rule ref="WordPress.VIP.SlowDBQuery"/>
