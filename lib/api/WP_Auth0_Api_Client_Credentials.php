@@ -32,7 +32,6 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 	 * @param WP_Auth0_Options $options - WP_Auth0_Options instance.
 	 */
 	public function __construct( WP_Auth0_Options $options ) {
-
 		parent::__construct( $options );
 		$this->set_path( 'oauth/token' )
 			->send_client_id()

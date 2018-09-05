@@ -901,6 +901,9 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
+	/**
+	 * TODO: Deprecate
+	 */
 	public static function delete_user_mfa( $domain, $app_token, $user_id, $provider ) {
 
 		$endpoint = "https://$domain/api/v2/users/$user_id/multifactor/$provider";
