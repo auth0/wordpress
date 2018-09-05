@@ -420,7 +420,7 @@ class WP_Auth0 {
 		// Do not show Auth0 form when ...
 		if (
 			// .. processing lost password
-			( isset( $_GET['action'] ) && $_GET['action'] == 'lostpassword' )
+			( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'lostpassword', 'rp' ) ) )
 			// ... handling an Auth0 callback
 			|| ! empty( $_GET['auth0'] )
 			// ... plugin is not configured
