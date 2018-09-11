@@ -5,27 +5,7 @@ Login by Auth0
 
 ## Introduction
 
-This plugin replaces standard WordPress login forms with one powered by Auth0 that enables:
-
-#### Universal authentication
-
-* Over 30 social login providers
-* Enterprise connections (ADFS, Active directory / LDAP, SAML, Office 365, Google Apps and more)
-* Connect your own database
-* Passwordless connections (using email or SMS)
-
-#### Ultra secure
-
-* Multifactor authentication
-* Password policies
-* Email validation
-* Mitigate brute force attacks
-
-#### Easy access to your users data
-
-* User stats
-* Profile data
-* Login history and locations
+This plugin replaces standard WordPress login forms with one powered by Auth0 that enables social, passwordless, and enterprise connection login as well as additional security, multifactor auth, and user statistics. Please see the [WP.org plugin page](https://wordpress.org/plugins/auth0/) for more details on functionality. 
 
 [![WordPress plugin downloads](https://img.shields.io/wordpress/plugin/dt/auth0.svg)](https://wordpress.org/plugins/auth0/)
 [![WordPress plugin rating](https://img.shields.io/wordpress/plugin/r/auth0.svg)](https://wordpress.org/plugins/auth0/)
@@ -54,7 +34,7 @@ Please see the [installation docs](https://auth0.com/docs/cms/wordpress/installa
 
 ## Contribution
 
-Thank you in advance! Please soo our [Contribution guide](CONTRIBUTION.md) for more details.  
+Thank you in advance! Please see our [Contribution guide](CONTRIBUTION.md) for more details.  
  
 ## Support + Feedback
 
