@@ -233,9 +233,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @since 3.8.0
 	 */
 	public function render_skip_strategies( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'e.g. "twitter,ldap"' );
 		$this->render_field_description(
 			__( 'Enter one or more strategies, separated by commas, to skip email verification. ', 'wp-auth0' ) .
+			__( 'You can find the strategy under the "Connection Name" field in the Auth0 dashboard. ', 'wp-auth0' ) .
 			__( 'Leave this field blank to require email for all strategies. ', 'wp-auth0' ) .
 			__( 'This could introduce a security risk and should be used sparingly, if at all', 'wp-auth0' )
 		);
