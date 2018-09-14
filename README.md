@@ -34,7 +34,11 @@ Please see the [installation docs](https://auth0.com/docs/cms/wordpress/installa
 
 ## Contribution
 
-Thank you in advance! Please see our [Contribution guide](CONTRIBUTION.md) for more details.  
+We appreciate feedback and contribution to this template! Before you get started, please see the following:
+
+- [Auth0's general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
+- [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
+- [This repo's contribution guidelines](CONTRIBUTING.md)
  
 ## Support + Feedback
 
