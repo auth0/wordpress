@@ -10,7 +10,7 @@
 /**
  * Class WP_Auth0_Api_Change_Password to perform a client credentials grant.
  */
-final class WP_Auth0_Api_Change_Password extends WP_Auth0_Api_Abstract {
+class WP_Auth0_Api_Change_Password extends WP_Auth0_Api_Abstract {
 
 	/**
 	 * Default value to return on failure.
@@ -27,14 +27,15 @@ final class WP_Auth0_Api_Change_Password extends WP_Auth0_Api_Abstract {
 	protected $token_decoded = null;
 
 	/**
-	 * WP_Auth0_Api_Change_Password constructor.
+	 * Set the User ID to change.
 	 *
-	 * @param WP_Auth0_Options $options - WP_Auth0_Options instance.
-	 * @param string           $user_id - Auth0 user ID to update.
+	 * @param string $user_id - Auth0 user ID.
+	 *
+	 * @return WP_Auth0_Api_Change_Password
 	 */
-	public function __construct( WP_Auth0_Options $options, $user_id ) {
-		parent::__construct( $options );
+	public function init_path( $user_id ) {
 		$this->set_path( 'api/v2/users/' . rawurlencode( $user_id ) );
+		return $this;
 	}
 
 	/**

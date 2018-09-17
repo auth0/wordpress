@@ -123,7 +123,15 @@ class WP_Auth0 {
 		$this->social_amplificator = new WP_Auth0_Amplificator( $this->db_manager, $this->a0_options );
 		$this->social_amplificator->init();
 
-		$edit_profile = new WP_Auth0_EditProfile( $this->db_manager, $users_repo, $this->a0_options );
+		$api_change_password = new WP_Auth0_Api_Change_Password( $this->a0_options );
+		$api_delete_mfa      = new WP_Auth0_Api_Delete_User_Mfa( $this->a0_options );
+		$edit_profile        = new WP_Auth0_EditProfile(
+			$this->db_manager,
+			$users_repo,
+			$this->a0_options,
+			$api_change_password,
+			$api_delete_mfa
+		);
 		$edit_profile->init();
 
 		WP_Auth0_Email_Verification::init();
