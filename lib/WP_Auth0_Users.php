@@ -91,4 +91,19 @@ class WP_Auth0_Users {
 		// Return the user ID
 		return $user_id;
 	}
+
+	/**
+	 * Get the strategy from an Auth0 user ID.
+	 *
+	 * @param string $auth0_id - Auth0 user ID.
+	 *
+	 * @return string
+	 */
+	public static function get_strategy( $auth0_id ) {
+		if ( false === strpos( $auth0_id, '|' ) ) {
+			return '';
+		}
+		$auth0_id_parts = explode( '|', $auth0_id );
+		return $auth0_id_parts[0];
+	}
 }
