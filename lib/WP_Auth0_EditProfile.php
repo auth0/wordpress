@@ -28,20 +28,40 @@ class WP_Auth0_EditProfile {
 	protected $a0_options;
 
 	/**
+	 * WP_Auth0_Api_Change_Password instance.
+	 *
+	 * @var WP_Auth0_Api_Change_Password
+	 */
+	protected $api_change_password;
+
+	/**
+	 * WP_Auth0_Api_Delete_User_Mfa instance.
+	 *
+	 * @var WP_Auth0_Api_Delete_User_Mfa
+	 */
+	protected $api_delete_mfa;
+
+	/**
 	 * WP_Auth0_EditProfile constructor.
 	 *
-	 * @param WP_Auth0_DBManager $db_manager - WP_Auth0_DBManager instance.
-	 * @param WP_Auth0_UsersRepo $users_repo - WP_Auth0_UsersRepo instance.
-	 * @param WP_Auth0_Options   $a0_options - WP_Auth0_Options instance.
+	 * @param WP_Auth0_DBManager           $db_manager - WP_Auth0_DBManager instance.
+	 * @param WP_Auth0_UsersRepo           $users_repo - WP_Auth0_UsersRepo instance.
+	 * @param WP_Auth0_Options             $a0_options - WP_Auth0_Options instance.
+	 * @param WP_Auth0_Api_Change_Password $api_change_password - WP_Auth0_Api_Change_Password instance.
+	 * @param WP_Auth0_Api_Delete_User_Mfa $api_delete_mfa - WP_Auth0_Api_Delete_User_Mfa instance.
 	 */
 	public function __construct(
 		WP_Auth0_DBManager $db_manager,
 		WP_Auth0_UsersRepo $users_repo,
-		WP_Auth0_Options $a0_options
+		WP_Auth0_Options $a0_options,
+		WP_Auth0_Api_Change_Password $api_change_password,
+		WP_Auth0_Api_Delete_User_Mfa $api_delete_mfa
 	) {
-		$this->a0_options = $a0_options;
-		$this->users_repo = $users_repo;
-		$this->db_manager = $db_manager;
+		$this->db_manager          = $db_manager;
+		$this->users_repo          = $users_repo;
+		$this->a0_options          = $a0_options;
+		$this->api_change_password = $api_change_password;
+		$this->api_delete_mfa      = $api_delete_mfa;
 	}
 
 	/**
@@ -71,6 +91,8 @@ class WP_Auth0_EditProfile {
 	/**
 	 * Enqueue styles and scripts for the user profile edit screen.
 	 * Hooked to: admin_enqueue_scripts
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function admin_enqueue_scripts() {
 		global $user_id;
@@ -83,7 +105,7 @@ class WP_Auth0_EditProfile {
 		);
 
 		$profile  = get_auth0userinfo( $user_id );
-		$strategy = isset( $profile->sub ) ? $this->get_auth0_strategy( $profile->sub ) : '';
+		$strategy = isset( $profile->sub ) ? WP_Auth0_Users::get_strategy( $profile->sub ) : '';
 
 		wp_localize_script(
 			'wpa0_user_profile',
@@ -111,13 +133,14 @@ class WP_Auth0_EditProfile {
 	 *
 	 * @param WP_Error        $errors - WP_Error object to use if validation fails.
 	 * @param boolean|WP_User $user - Boolean update or WP_User instance, depending on action.
+	 *
+	 * @return boolean
 	 */
 	public function validate_new_password( $errors, $user ) {
-		global $wpdb;
 
 		// Exit if we're not changing the password.
 		if ( empty( $_POST['pass1'] ) ) {
-			return;
+			return false;
 		}
 		$new_password = $_POST['pass1'];
 
@@ -126,28 +149,28 @@ class WP_Auth0_EditProfile {
 		} elseif ( is_object( $user ) && $user instanceof WP_User ) {
 			$wp_user_id = absint( $user->ID );
 		} else {
-			return;
+			return false;
 		}
 
 		// Exit if this is not an Auth0 user.
-		// TODO: Replace the call below with WP_Auth0_UsersRepo::get_meta() when rebased.
-		$auth0_id = get_user_meta( $wp_user_id, $wpdb->prefix . 'auth0_id', true );
+		$auth0_id = WP_Auth0_UsersRepo::get_meta( $wp_user_id, 'auth0_id' );
 		if ( empty( $auth0_id ) ) {
-			return;
+			return false;
 		}
-		$strategy = $this->get_auth0_strategy( $auth0_id );
+		$strategy = WP_Auth0_Users::get_strategy( $auth0_id );
 
 		// Exit if this is not a database strategy user.
 		if ( 'auth0' !== $strategy ) {
-			return;
+			return false;
 		}
 
-		$change_password = new WP_Auth0_Api_Change_Password( $this->a0_options, $auth0_id );
-		$result          = $change_password->call( array( 'password' => $new_password ) );
+		$result = $this->api_change_password
+			->init_path( $auth0_id )
+			->call( array( 'password' => $new_password ) );
 
 		// Password change was successful, nothing else to do.
 		if ( true === $result ) {
-			return;
+			return true;
 		}
 
 		// Password change was unsuccessful so don't change WP user account.
@@ -158,10 +181,13 @@ class WP_Auth0_EditProfile {
 		// Add an error message to appear at the top of the page.
 		$error_msg = is_string( $result ) ? $result : __( 'Password could not be updated.', 'wp-auth0' );
 		$errors->add( 'auth0_password', $error_msg, array( 'form-field' => 'pass1' ) );
+		return false;
 	}
 
 	/**
 	 * TODO: Deprecate, moved to WP_Auth0_EditProfile::validate_new_password()
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function update_change_password() {
 		$current_user = get_currentauth0user();
@@ -217,23 +243,20 @@ class WP_Auth0_EditProfile {
 	 * Hooked to: wp_ajax_auth0_delete_data
 	 */
 	public function delete_user_data() {
-
-		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'delete_auth0_identity' ) ) {
-			exit( '0' );
-		}
+		check_ajax_referer( 'delete_auth0_identity' );
 
 		if ( empty( $_POST['user_id'] ) ) {
-			exit( '0' );
+			wp_send_json_error( array( 'error' => __( 'Empty user_id', 'wp-auth0' ) ) );
 		}
 
 		$user_id = $_POST['user_id'];
 
-		if ( ! current_user_can( 'edit_users', $user_id ) ) {
-			exit( '0' );
+		if ( ! current_user_can( 'edit_users' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Forbidden', 'wp-auth0' ) ) );
 		}
 
 		$this->users_repo->delete_auth0_object( $user_id );
-		exit( '1' );
+		wp_send_json_success();
 	}
 
 	/**
@@ -241,25 +264,29 @@ class WP_Auth0_EditProfile {
 	 * Hooked to: wp_ajax_auth0_delete_data
 	 */
 	public function delete_mfa() {
-
-		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'delete_auth0_mfa' ) ) {
-			exit( '0' );
-		}
+		check_ajax_referer( 'delete_auth0_mfa' );
 
 		if ( empty( $_POST['user_id'] ) ) {
-			exit( '0' );
+			wp_send_json_error( array( 'error' => __( 'Empty user_id', 'wp-auth0' ) ) );
 		}
 
 		$user_id = $_POST['user_id'];
 
 		if ( ! current_user_can( 'edit_users', $user_id ) ) {
-			exit( '0' );
+			wp_send_json_error( array( 'error' => __( 'Forbidden', 'wp-auth0' ) ) );
 		}
 
-		$profile         = get_auth0userinfo( $user_id );
-		$delete_user_mfa = new WP_Auth0_Api_Delete_User_Mfa( $this->a0_options, $profile->sub );
-		echo intval( $delete_user_mfa->call() );
-		exit;
+		$profile = get_auth0userinfo( $user_id );
+
+		if ( ! $profile || empty( $profile->sub ) ) {
+			wp_send_json_error( array( 'error' => __( 'Auth0 profile data not found', 'wp-auth0' ) ) );
+		}
+
+		if ( $this->api_delete_mfa->init_path( $profile->sub )->call() ) {
+			wp_send_json_success();
+		} else {
+			wp_send_json_error( array( 'error' => __( 'API call failed', 'wp-auth0' ) ) );
+		}
 	}
 
 	/**
@@ -326,6 +353,8 @@ class WP_Auth0_EditProfile {
 
 	/**
 	 * TODO: Deprecate, moved to edit-user-profile.js
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function show_change_password() {
 		$current_user = get_currentauth0user();
@@ -373,6 +402,8 @@ class WP_Auth0_EditProfile {
 
 	/**
 	 * TODO: Deprecate, moved to edit-user-profile.js
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function disable_email_field() {
 		$current_user = get_currentauth0user();
@@ -499,20 +530,5 @@ class WP_Auth0_EditProfile {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Get the strategy from an Auth0 user ID.
-	 *
-	 * @param string $auth0_id - Auth0 user ID.
-	 *
-	 * @return string
-	 */
-	private function get_auth0_strategy( $auth0_id ) {
-		if ( false === strpos( $auth0_id, '|' ) ) {
-			return '';
-		}
-		$auth0_id_parts = explode( '|', $auth0_id );
-		return $auth0_id_parts[0];
 	}
 }
