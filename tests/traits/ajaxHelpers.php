@@ -3,7 +3,10 @@
  * Contains Trait AjaxHelpers.
  *
  * @package WP-Auth0
+<<<<<<< HEAD
  *
+=======
+>>>>>>> Fix failing tests
  * @since 3.8.0
  */
 

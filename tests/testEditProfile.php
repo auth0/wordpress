@@ -15,13 +15,15 @@ use PHPUnit\Framework\TestCase;
  */
 class TestEditProfile extends TestCase {
 
+	use ajaxHelpers;
+
 	use domDocumentHelpers;
 
 	use hookHelpers;
 
 	use setUpTestDb;
 
-	use users;
+	use usersHelper;
 
 	/**
 	 * WP_Auth0_Options instance.
@@ -213,12 +215,7 @@ class TestEditProfile extends TestCase {
 	 * Test that the delete user data action works as expected.
 	 */
 	public function testDeleteUserDataAjax() {
-		add_filter( 'wp_doing_ajax', '__return_true' );
-		add_filter(
-			'wp_die_ajax_handler', function() {
-				return [ $this, 'die_ajax' ];
-			}
-		);
+		$this->startAjax();
 
 		// No nonce set should fail.
 		$caught_exception = false;
@@ -261,38 +258,36 @@ class TestEditProfile extends TestCase {
 		$this->assertTrue( $caught_exception );
 		$this->assertEquals( '{"success":false,"data":{"error":"Forbidden"}}', $return_json );
 
-		// Set the admin user.
+		// Set the admin user, store Auth0 profile data to delete, and reset the nonce.
 		$this->setGlobalUser();
-
-		// Have to reset the nonce as well.
+		$this->storeAuth0Data( 1 );
 		$_REQUEST['_ajax_nonce'] = wp_create_nonce( 'delete_auth0_identity' );
+
+		$this->assertNotEmpty( WP_Auth0_UsersRepo::get_meta( 1, 'auth0_id' ) );
+		$this->assertNotEmpty( WP_Auth0_UsersRepo::get_meta( 1, 'auth0_obj' ) );
+		$this->assertNotEmpty( WP_Auth0_UsersRepo::get_meta( 1, 'last_update' ) );
 
 		ob_start();
 		$caught_exception = false;
-		$error_msg        = false;
 		try {
 			self::$editProfile->delete_user_data();
 		} catch ( Exception $e ) {
-			$error_msg        = $e->getMessage();
-			$caught_exception = ( 'die_ajax' === $error_msg );
-
+			$caught_exception = ( 'die_ajax' === $e->getMessage() );
 		}
 		$return_json = ob_get_clean();
 
-		$this->assertTrue( $caught_exception, $error_msg );
+		$this->assertTrue( $caught_exception );
 		$this->assertEquals( '{"success":true}', $return_json );
+		$this->assertEmpty( WP_Auth0_UsersRepo::get_meta( 1, 'auth0_id' ) );
+		$this->assertEmpty( WP_Auth0_UsersRepo::get_meta( 1, 'auth0_obj' ) );
+		$this->assertEmpty( WP_Auth0_UsersRepo::get_meta( 1, 'last_update' ) );
 	}
 
 	/**
 	 * Test that the delete MFA action works as expected.
 	 */
 	public function testDeleteMfaAjax() {
-		add_filter( 'wp_doing_ajax', '__return_true' );
-		add_filter(
-			'wp_die_ajax_handler', function() {
-				return [ $this, 'die_ajax' ];
-			}
-		);
+		$this->startAjax();
 
 		// Create a stub for the WP_Auth0_Api_Change_Password class.
 		$mock_api_delete_mfa = $this
@@ -361,16 +356,14 @@ class TestEditProfile extends TestCase {
 		// Nonce, user_id, and admin user pass but user is not authorized.
 		ob_start();
 		$caught_exception = false;
-		$error_msg        = false;
 		try {
 			$edit_profile->delete_mfa();
 		} catch ( Exception $e ) {
-			$error_msg        = $e->getMessage();
-			$caught_exception = ( 'die_ajax' === $error_msg );
+			$caught_exception = ( 'die_ajax' === $e->getMessage() );
 		}
 		$return_json = ob_get_clean();
 
-		$this->assertTrue( $caught_exception, $error_msg );
+		$this->assertTrue( $caught_exception );
 		$this->assertEquals( '{"success":false,"data":{"error":"Auth0 profile data not found"}}', $return_json );
 
 		// Set Auth0 profile.
@@ -379,37 +372,31 @@ class TestEditProfile extends TestCase {
 		// Have to reset the nonce as well.
 		$_REQUEST['_ajax_nonce'] = wp_create_nonce( 'delete_auth0_mfa' );
 
+		// Mocked to simulate a successful API call.
 		ob_start();
 		$caught_exception = false;
-		$error_msg        = false;
 		try {
-			$edit_profile->delete_user_data();
+			$edit_profile->delete_mfa();
 		} catch ( Exception $e ) {
-			$error_msg        = $e->getMessage();
-			$caught_exception = ( 'die_ajax' === $error_msg );
+			$caught_exception = ( 'die_ajax' === $e->getMessage() );
 		}
 		$return_json = ob_get_clean();
 
-		$this->assertTrue( $caught_exception, $error_msg );
+		$this->assertTrue( $caught_exception );
 		$this->assertEquals( '{"success":true}', $return_json );
-	}
 
-	/**
-	 * Stop AJAX requests from dying.
-	 *
-	 * @param string}int $message - Message for die page.
-	 * @param string     $title - Title for die page, not used.
-	 * @param array      $args - Other args.
-	 *
-	 * @throws Exception - Always, to stop AJAX process.
-	 */
-	public function die_ajax( $message, $title, $args ) {
-		if ( -1 === $message && ! empty( $args['response'] ) && 403 === $args['response'] && empty( $title ) ) {
-			$error_msg = 'bad_nonce';
-		} else {
-			$error_msg = 'die_ajax';
+		// Mocked to simulate a failed API call.
+		ob_start();
+		$caught_exception = false;
+		try {
+			$edit_profile->delete_mfa();
+		} catch ( Exception $e ) {
+			$caught_exception = ( 'die_ajax' === $e->getMessage() );
 		}
-		throw new Exception( $error_msg );
+		$return_json = ob_get_clean();
+
+		$this->assertTrue( $caught_exception );
+		$this->assertEquals( '{"success":false,"data":{"error":"API call failed"}}', $return_json );
 	}
 
 	/**
