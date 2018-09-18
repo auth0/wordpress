@@ -120,6 +120,14 @@ class WP_Auth0_Api_Client {
 
 	}
 
+	/**
+	 * Validate the scopes of the API token.
+	 * TODO: Deprecate, not used.
+	 *
+	 * @param string $app_token - API token.
+	 *
+	 * @return bool
+	 */
 	public static function validate_user_token( $app_token ) {
 
 		if ( empty( $app_token ) ) {
@@ -149,20 +157,13 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
-	 * Get required telemetry header
+	 * Get required telemetry header.
+	 * TODO: Refactor to use WP_Auth0_Api_Abstract::get_info_headers and deprecate.
 	 *
 	 * @return array
 	 */
 	public static function get_info_headers() {
-		$header_value = array(
-			'name'        => 'wp-auth0',
-			'version'     => WPA0_VERSION,
-			'environment' => array(
-				'PHP'       => phpversion(),
-				'WordPress' => get_bloginfo( 'version' ),
-			),
-		);
-		return array( 'Auth0-Client' => base64_encode( wp_json_encode( $header_value ) ) );
+		return WP_Auth0_Api_Abstract::get_info_headers();
 	}
 
 	/**
@@ -189,6 +190,7 @@ class WP_Auth0_Api_Client {
 
 		return $headers;
 	}
+
 
 	public static function get_token( $domain, $client_id, $client_secret, $grantType = 'client_credentials', $extraBody = null ) {
 		if ( ! is_array( $extraBody ) ) {
@@ -224,6 +226,7 @@ class WP_Auth0_Api_Client {
 
 	/**
 	 * Get a client_credentials token using default stored connection info
+	 * TODO: Change implementations to use WP_Auth0_Api_Abstract and deprecate.
 	 *
 	 * @since 3.4.1
 	 *
@@ -276,6 +279,9 @@ class WP_Auth0_Api_Client {
 		);
 	}
 
+	/**
+	 * TODO: Deprecate, not used.
+	 */
 	public static function search_users( $domain, $jwt, $q = '', $page = 0, $per_page = 100, $include_totals = false, $sort = 'user_id:1' ) {
 
 		$include_totals = $include_totals ? 'true' : 'false';
@@ -296,7 +302,8 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
-	 * Trigger a verification email re-send
+	 * Trigger a verification email re-send.
+	 * TODO: Deprecate, not used.
 	 *
 	 * @since 3.5.0
 	 *
@@ -349,6 +356,9 @@ class WP_Auth0_Api_Client {
 
 	}
 
+	/**
+	 * TODO: Deprecate, not used.
+	 */
 	public static function create_user( $domain, $jwt, $data ) {
 
 		$endpoint = "https://$domain/api/v2/users";
@@ -524,6 +534,9 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
+	/**
+	 * TODO: Deprecate, not used.
+	 */
 	public static function search_clients( $domain, $app_token ) {
 		$endpoint = "https://$domain/api/v2/clients";
 
@@ -810,6 +823,9 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
+	/**
+	 * TODO: Deprecate, not used.
+	 */
 	public static function get_current_user( $domain, $app_token ) {
 		list( $head, $payload, $signature ) = explode( '.', $app_token );
 		$decoded                            = json_decode( JWT::urlsafeB64Decode( $payload ) );
@@ -852,6 +868,9 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
+	/**
+	 * TODO: Deprecate, not used.
+	 */
 	public static function delete_connection( $domain, $app_token, $id ) {
 		$endpoint = "https://$domain/api/v2/connections/$id";
 
@@ -982,6 +1001,9 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
+	/**
+	 * TODO: Deprecate, not used.
+	 */
 	public static function link_users( $domain, $app_token, $main_user_id, $user_id, $provider, $connection_id = null ) {
 		$endpoint = "https://$domain/api/v2/users/$main_user_id/identities";
 

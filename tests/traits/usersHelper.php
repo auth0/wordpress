@@ -9,7 +9,7 @@
 /**
  * Trait Users.
  */
-trait Users {
+trait UsersHelper {
 
 	/**
 	 * Create a new User.
