@@ -508,6 +508,7 @@ class WP_Auth0 {
 		$paths = array(
 			$source_dir,
 			$source_dir . 'admin/',
+			$source_dir . 'api/',
 			$source_dir . 'exceptions/',
 			$source_dir . 'wizard/',
 			$source_dir . 'initial-setup/',

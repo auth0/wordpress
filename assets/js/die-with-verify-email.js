@@ -1,6 +1,7 @@
-/* globals jQuery, console, WPAuth0EmailVerification */
+/* globals jQuery, alert, WPAuth0EmailVerification */
 
 jQuery( document ).ready( function ($) {
+    'use strict';
 
     var $resendLink = $( '#js-a0-resend-verification' );
 
@@ -8,23 +9,25 @@ jQuery( document ).ready( function ($) {
 
         var postData = {
             action: 'resend_verification_email',
-            nonce: WPAuth0EmailVerification.nonce,
+            _ajax_nonce: WPAuth0EmailVerification.nonce,
             sub: WPAuth0EmailVerification.sub
         };
+        var errorMsg = WPAuth0EmailVerification.e_msg;
 
         $.post( WPAuth0EmailVerification.ajaxUrl, postData )
-            .done( function( data ) {
-
-                if ( 'success' === data ) {
+            .done( function( response ) {
+                if ( response.success ) {
                     $resendLink.after( WPAuth0EmailVerification.s_msg );
                     $resendLink.remove();
                 } else {
-                    alert( WPAuth0EmailVerification.e_msg );
+                    if ( response.data && response.data.error ) {
+                        errorMsg = response.data.error;
+                    }
+                    alert( errorMsg );
                 }
-
             } )
             .fail( function() {
-                alert( WPAuth0EmailVerification.e_msg );
+                alert( errorMsg );
             } );
     } );
 } );
