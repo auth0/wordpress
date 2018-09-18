@@ -122,6 +122,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @since 3.7.0
 	 */
 	public function render_custom_domain( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'login.yourdomain.com' );

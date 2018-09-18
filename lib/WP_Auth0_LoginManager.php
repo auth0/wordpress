@@ -24,12 +24,16 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Should the new user have an administrator role?
 	 *
+	 * TODO: Deprecate, not used
+	 *
 	 * @var bool|null
 	 */
 	protected $admin_role;
 
 	/**
 	 * Ignore verified email requirement in Settings > Advanced.
+	 *
+	 * TODO: Deprecate, not used
 	 *
 	 * @var bool
 	 */
@@ -110,15 +114,13 @@ class WP_Auth0_LoginManager {
 		$connection  = apply_filters( 'auth0_get_auto_login_connection', $this->a0_options->get( 'auto_login_method' ) );
 		$auth_params = self::get_authorize_params( $connection );
 
-		$auth_url = 'https://' . $this->a0_options->get_auth_domain() . '/authorize';
-		$auth_url = add_query_arg( array_map( 'rawurlencode', $auth_params ), $auth_url );
-
 		WP_Auth0_State_Handler::get_instance()->set_cookie( $auth_params['state'] );
 
 		if ( isset( $auth_params['nonce'] ) ) {
 			WP_Auth0_Nonce_Handler::get_instance()->set_cookie();
 		}
 
+		$auth_url = self::build_authorize_url( $auth_params );
 		wp_redirect( $auth_url );
 		exit;
 	}
@@ -397,14 +399,28 @@ class WP_Auth0_LoginManager {
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
 	 */
 	public function login_user( $userinfo, $id_token = null, $access_token = null, $refresh_token = null ) {
+		$auth0_sub        = $userinfo->sub;
+		list( $strategy ) = explode( '|', $auth0_sub );
+
 		// Check that the user has a verified email, if required.
-		if ( ! $this->ignore_unverified_email && $this->a0_options->get( 'requires_verified_email' ) ) {
+		if (
+			// Admin settings enforce verified email.
+			$this->a0_options->get( 'requires_verified_email' ) &&
+			// Email verification is not ignored (set at class initialization).
+			! $this->ignore_unverified_email &&
+			// Strategy for the user is not skipped.
+			! $this->a0_options->strategy_skips_verified_email( $strategy )
+		) {
+
+			// Email address is empty so cannot proceed.
 			if ( empty( $userinfo->email ) ) {
 				throw new WP_Auth0_LoginFlowValidationException(
 					__( 'This account does not have an email associated, as required by your site administrator.', 'wp-auth0' )
 				);
 			}
-			if ( ! $userinfo->email_verified ) {
+
+			// Die with an action to re-send email verification.
+			if ( empty( $userinfo->email_verified ) ) {
 				WP_Auth0_Email_Verification::render_die( $userinfo );
 			}
 		}
@@ -418,7 +434,7 @@ class WP_Auth0_LoginManager {
 				}
 			}
 		} else {
-			$user = $this->users_repo->find_auth0_user( $userinfo->sub );
+			$user = $this->users_repo->find_auth0_user( $auth0_sub );
 		}
 
 		$user = apply_filters( 'auth0_get_wp_user', $user, $userinfo );
@@ -559,6 +575,7 @@ class WP_Auth0_LoginManager {
 				$this->a0_options->get( 'client_id' ),
 				$telemetry_headers['Auth0-Client']
 			);
+			$redirect_url      = apply_filters( 'auth0_logout_url', $redirect_url );
 			wp_redirect( $redirect_url );
 			exit;
 		}
@@ -684,7 +701,20 @@ class WP_Auth0_LoginManager {
 			)
 		);
 
-		return $params;
+		return apply_filters( 'auth0_authorize_url_params', $params, $connection, $redirect_to );
+	}
+
+	/**
+	 * Build a link to the tenant's authorize page.
+	 *
+	 * @param array $params - URL parameters to append.
+	 *
+	 * @return string
+	 */
+	public static function build_authorize_url( array $params = array() ) {
+		$auth_url = 'https://' . WP_Auth0_Options::Instance()->get_auth_domain() . '/authorize';
+		$auth_url = add_query_arg( array_map( 'rawurlencode', $params ), $auth_url );
+		return apply_filters( 'auth0_authorize_url', $auth_url, $params );
 	}
 
 	/**

@@ -38,7 +38,23 @@ jQuery(document).ready(function($) {
         media_frame.open();
     });
 
-    // Show/hide field for specific switches
+    /*
+    Generic form confirm stop
+     */
+    $('form.js-a0-confirm-submit').submit(function (e) {
+        var message = $(this).attr('data-confirm-msg');
+        if ( !message || !message.length ) {
+            message = wpa0.form_confirm_submit_msg;
+        }
+
+        if ( ! window.confirm(message) ) {
+            e.preventDefault();
+        }
+    });
+
+    /*
+    Show/hide field for specific switches
+     */
     $('[data-expand][data-expand!=""]').each( function() {
         var $thisSwitch = $( this );
         var $showFieldRow = $( '#' + $thisSwitch.attr( 'data-expand' ).trim() ).closest( 'tr' );

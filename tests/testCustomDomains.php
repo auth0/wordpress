@@ -19,6 +19,11 @@ class TestCustomDomains extends TestCase {
 	use domDocumentHelpers;
 
 	/**
+	 * DB settings name.
+	 */
+	const OPTIONS_NAME = 'wp_auth0_settings';
+
+	/**
 	 * Test the input HTML for the custom domain setting.
 	 */
 	public function testCustomDomainsFieldOutput() {
@@ -39,7 +44,7 @@ class TestCustomDomains extends TestCase {
 		$this->assertEquals( 1, $input->length );
 		$this->assertEquals( $field_args['label_for'], $input->item( 0 )->getAttribute( 'id' ) );
 		$this->assertEquals(
-			testWPAuth0Options::OPTIONS_NAME . '[' . $field_args['opt_name'] . ']',
+			self::OPTIONS_NAME . '[' . $field_args['opt_name'] . ']',
 			$input->item( 0 )->getAttribute( 'name' )
 		);
 		$this->assertEquals( 'text', $input->item( 0 )->getAttribute( 'type' ) );
