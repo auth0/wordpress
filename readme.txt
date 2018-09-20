@@ -1,5 +1,5 @@
-=== PLUGIN_NAME ===
-Tags: PLUGIN_TAGS
+=== Login by Auth0 ===
+Tags: login, oauth, authentication, single sign on, ldap, active directory, saml, windows azure ad, google apps, two factor, two-factor, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer, passwordless, sms, magiclink, totp, social
 Tested up to: 4.9.8
 Requires at least: 3.8
 Requires PHP: 5.3
@@ -8,7 +8,7 @@ License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE
 Stable tag: trunk
 Contributors: auth0, glena, rrauch, auth0josh
 
-PLUGIN_DESCRIPTION
+Login by Auth0 provides improved username/password login, Passwordless login, Social login and Single Sign On for all your sites.
 
 == Description ==
 
