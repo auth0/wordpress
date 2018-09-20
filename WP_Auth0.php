@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: PLUGIN_NAME
- * Description: PLUGIN_DESCRIPTION
+ * Plugin Name: Login by Auth0
+ * Description: Login by Auth0 provides improved username/password login, Passwordless login, Social login and Single Sign On for all your sites.
  * Version: 3.7.0
  * Author: Auth0
  * Author URI: https://auth0.com
