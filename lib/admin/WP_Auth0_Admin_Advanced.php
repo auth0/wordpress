@@ -391,8 +391,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				$this->render_const_notice( 'migration_token' );
 			}
 			printf(
-				'<textarea class="code" rows="%d" disabled>%s</textarea>',
-				$this->_textarea_rows,
+				'<code class="code-block" disabled>%s</code>',
 				sanitize_text_field( $this->options->get( 'migration_token' ) )
 			);
 		} else {
