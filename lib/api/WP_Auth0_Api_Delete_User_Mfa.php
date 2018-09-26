@@ -27,31 +27,40 @@ class WP_Auth0_Api_Delete_User_Mfa extends WP_Auth0_Api_Abstract {
 	protected $token_decoded = null;
 
 	/**
-	 * Set the User ID to and provider to delete.
+	 * WP_Auth0_Api_Delete_User_Mfa constructor.
 	 *
-	 * @param string $user_id - Auth0 user ID.
-	 * @param string $provider - Provider name.
-	 *
-	 * @return WP_Auth0_Api_Delete_User_Mfa
+	 * @param WP_Auth0_Options                $options - WP_Auth0_Options instance.
+	 * @param WP_Auth0_Api_Client_Credentials $api_client_creds - WP_Auth0_Api_Client_Credentials instance.
 	 */
-	public function init_path( $user_id, $provider = 'google-authenticator' ) {
-		$this->set_path( sprintf( 'api/v2/users/%s/multifactor/%s', $user_id, $provider ) );
-		return $this;
+	public function __construct(
+		WP_Auth0_Options $options,
+		WP_Auth0_Api_Client_Credentials $api_client_creds
+	) {
+		parent::__construct( $options );
+		$this->api_client_creds = $api_client_creds;
+		$this->send_audience();
 	}
 
 	/**
-	 * Set body data, make the API call, and handle the response.
+	 * Set the user_id and provider, set the authorization header, call the API, and handle the response.
 	 *
-	 * @return mixed|null
+	 * @param string|null $user_id - Auth0 user ID to delete the MFA provider.
+	 * @param string      $provider - MFA provider.
+	 *
+	 * @return int|mixed
 	 */
-	public function call() {
+	public function call( $user_id = null, $provider = 'google-authenticator' ) {
+
+		if ( empty( $user_id ) || empty( $provider ) ) {
+			return self::RETURN_ON_FAILURE;
+		}
 
 		if ( ! $this->set_bearer( 'update:users' ) ) {
 			return self::RETURN_ON_FAILURE;
 		}
 
 		return $this
-			->send_audience( 'api/v2/' )
+			->set_path( sprintf( 'api/v2/users/%s/multifactor/%s', $user_id, $provider ) )
 			->delete()
 			->handle_response( __METHOD__ );
 	}

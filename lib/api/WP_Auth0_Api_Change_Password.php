@@ -27,36 +27,39 @@ class WP_Auth0_Api_Change_Password extends WP_Auth0_Api_Abstract {
 	protected $token_decoded = null;
 
 	/**
-	 * Set the User ID to change.
+	 * WP_Auth0_Api_Change_Password constructor.
 	 *
-	 * @param string $user_id - Auth0 user ID.
-	 *
-	 * @return WP_Auth0_Api_Change_Password
+	 * @param WP_Auth0_Options                $options - WP_Auth0_Options instance.
+	 * @param WP_Auth0_Api_Client_Credentials $api_client_creds - WP_Auth0_Api_Client_Credentials instance.
 	 */
-	public function init_path( $user_id ) {
-		$this->set_path( 'api/v2/users/' . rawurlencode( $user_id ) );
-		return $this;
+	public function __construct(
+		WP_Auth0_Options $options,
+		WP_Auth0_Api_Client_Credentials $api_client_creds
+	) {
+		parent::__construct( $options );
+		$this->api_client_creds = $api_client_creds;
 	}
 
 	/**
-	 * Set body data, make the API call, and handle the response.
+	 * Set the user_id and password, make the API call, and handle the response.
 	 *
-	 * @param array $body - Body array to send.
-	 *
-	 * @return int|mixed
+	 * @param null $user_id
+	 * @param null $password
+	 * @return bool|int|mixed
 	 */
-	public function call( array $body = array() ) {
+	public function call( $user_id = null, $password = null ) {
+
+		if ( empty( $user_id ) || empty( $password ) ) {
+			return self::RETURN_ON_FAILURE;
+		}
 
 		if ( ! $this->set_bearer( 'update:users' ) ) {
 			return self::RETURN_ON_FAILURE;
 		}
 
-		if ( empty( $body ) || empty( $body['password'] ) ) {
-			return self::RETURN_ON_FAILURE;
-		}
-
 		return $this
-			->add_body( 'password', $body['password'] )
+			->set_path( 'api/v2/users/' . rawurlencode( $user_id ) )
+			->add_body( 'password', $password )
 			->patch()
 			->handle_response( __METHOD__ );
 	}

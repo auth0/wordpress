@@ -63,7 +63,7 @@ class TestEmailVerification extends TestCase {
 	 * Test the the AJAX handler function is hooked properly.
 	 */
 	public function testHooks() {
-		$hooked = $this->getHooked( 'wp_ajax_nopriv_resend_verification_email' );
+		$hooked = $this->get_hook( 'wp_ajax_nopriv_resend_verification_email' );
 
 		$this->assertNotEmpty( $hooked[0] );
 		$this->assertEquals( 'wp_auth0_ajax_resend_verification_email', $hooked[0]['function'] );
@@ -121,7 +121,7 @@ class TestEmailVerification extends TestCase {
 	 * Test AJAX email verification send.
 	 */
 	public function testResendVerificationEmail() {
-		$this->start_ajax();
+		$this->startAjaxHalting();
 
 		// 1. Should fail with a bad nonce.
 		$caught_exception = false;
