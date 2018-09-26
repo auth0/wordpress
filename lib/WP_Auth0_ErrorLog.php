@@ -125,6 +125,8 @@ class WP_Auth0_ErrorLog {
 	 * Enqueue scripts and styles.
 	 *
 	 * @deprecated 3.6.0 - Not needed, handled in WP_Auth0_Admin::admin_enqueue()
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function admin_enqueue() {
 		// phpcs:ignore
