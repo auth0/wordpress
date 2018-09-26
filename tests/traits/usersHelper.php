@@ -16,7 +16,7 @@ trait UsersHelper {
 	 *
 	 * @var WP_Auth0_UsersRepo
 	 */
-	public static $usersRepo;
+	protected static $users_repo;
 
 	/**
 	 * Create a new User.
@@ -75,6 +75,6 @@ trait UsersHelper {
 	 * @param string $strategy - Auth0 user strategy to use.
 	 */
 	public function storeAuth0Data( $user_id, $strategy = 'auth0' ) {
-		self::$usersRepo->update_auth0_object( $user_id, $this->getUserinfo( $strategy ) );
+		self::$users_repo->update_auth0_object( $user_id, $this->getUserinfo( $strategy ) );
 	}
 }

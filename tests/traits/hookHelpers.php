@@ -19,7 +19,7 @@ trait HookHelpers {
 	 *
 	 * @return array
 	 */
-	public function getHooked( $hook = '' ) {
+	public function get_hook( $hook = '' ) {
 		global $wp_filter;
 
 		if ( isset( $wp_filter[ $hook ]->callbacks ) ) {
@@ -59,6 +59,16 @@ trait HookHelpers {
 	}
 
 	/**
+	 * Remove all hooked functions from a hook.
+	 *
+	 * @param string $hook - Hook to clear.
+	 */
+	public function clear_hooks( $hook = '' ) {
+		global $wp_filter;
+		unset( $wp_filter[ $hook ] );
+	}
+
+	/**
 	 * Assert that hooked functions exists with the correct priority and arg numbers.
 	 *
 	 * @param string $hook_name - Hook name in WP.
@@ -68,7 +78,7 @@ trait HookHelpers {
 	 * @return void
 	 */
 	public function assertHooked( $hook_name, $function, array $hooked ) {
-		$hooks = $this->getHooked( $hook_name );
+		$hooks = $this->get_hook( $hook_name );
 		$found = 0;
 
 		foreach ( $hooks as $hook ) {

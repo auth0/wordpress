@@ -123,16 +123,21 @@ class WP_Auth0 {
 		$this->social_amplificator = new WP_Auth0_Amplificator( $this->db_manager, $this->a0_options );
 		$this->social_amplificator->init();
 
-		$api_change_password = new WP_Auth0_Api_Change_Password( $this->a0_options );
-		$api_delete_mfa      = new WP_Auth0_Api_Delete_User_Mfa( $this->a0_options );
-		$edit_profile        = new WP_Auth0_EditProfile(
-			$this->db_manager,
-			$users_repo,
-			$this->a0_options,
-			$api_change_password,
-			$api_delete_mfa
-		);
+		$api_client_creds = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
+
+		$edit_profile = new WP_Auth0_EditProfile( $this->db_manager, $users_repo, $this->a0_options );
 		$edit_profile->init();
+
+		$api_change_password = new WP_Auth0_Api_Change_Password( $this->a0_options, $api_client_creds );
+		$profile_change_pwd  = new WP_Auth0_Profile_Change_Password( $api_change_password );
+		$profile_change_pwd->init();
+
+		$profile_delete_data = new WP_Auth0_Profile_Delete_Data( $users_repo );
+		$profile_delete_data->init();
+
+		$api_delete_mfa     = new WP_Auth0_Api_Delete_User_Mfa( $this->a0_options, $api_client_creds );
+		$profile_delete_mfa = new WP_Auth0_Profile_Delete_Mfa( $this->a0_options, $api_delete_mfa );
+		$profile_delete_mfa->init();
 
 		WP_Auth0_Email_Verification::init();
 	}
@@ -518,6 +523,7 @@ class WP_Auth0 {
 			$source_dir . 'admin/',
 			$source_dir . 'api/',
 			$source_dir . 'exceptions/',
+			$source_dir . 'profile/',
 			$source_dir . 'wizard/',
 			$source_dir . 'initial-setup/',
 		);
