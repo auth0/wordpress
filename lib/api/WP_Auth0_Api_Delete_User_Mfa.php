@@ -38,7 +38,6 @@ class WP_Auth0_Api_Delete_User_Mfa extends WP_Auth0_Api_Abstract {
 	) {
 		parent::__construct( $options );
 		$this->api_client_creds = $api_client_creds;
-		$this->send_audience();
 	}
 
 	/**
@@ -60,7 +59,7 @@ class WP_Auth0_Api_Delete_User_Mfa extends WP_Auth0_Api_Abstract {
 		}
 
 		return $this
-			->set_path( sprintf( 'api/v2/users/%s/multifactor/%s', $user_id, $provider ) )
+			->set_path( sprintf( 'api/v2/users/%s/multifactor/%s', rawurlencode( $user_id ), rawurlencode( $provider ) ) )
 			->delete()
 			->handle_response( __METHOD__ );
 	}

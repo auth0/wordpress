@@ -152,11 +152,6 @@ class TestApiClientCredentials extends TestCase {
 	 * @return array|null|WP_Error
 	 */
 	public function httpMock() {
-		$parent_mock = $this->httpMockDefault();
-		if ( ! is_null( $parent_mock ) ) {
-			return $parent_mock;
-		}
-
 		switch ( $this->getResponseType() ) {
 			case 'access_token':
 				return [
@@ -164,6 +159,7 @@ class TestApiClientCredentials extends TestCase {
 					'response' => [ 'code' => 200 ],
 				];
 		}
+		return $this->httpMockDefault();
 	}
 
 	/**
@@ -173,6 +169,8 @@ class TestApiClientCredentials extends TestCase {
 		parent::tearDown();
 		$this->stopHttpHalting();
 		$this->stopHttpMocking();
+		self::$error_log->clear();
+		$this->assertEmpty( self::$error_log->get() );
 		delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
 	}
 }

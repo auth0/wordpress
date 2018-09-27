@@ -123,10 +123,10 @@ class WP_Auth0 {
 		$this->social_amplificator = new WP_Auth0_Amplificator( $this->db_manager, $this->a0_options );
 		$this->social_amplificator->init();
 
-		$api_client_creds = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
-
 		$edit_profile = new WP_Auth0_EditProfile( $this->db_manager, $users_repo, $this->a0_options );
 		$edit_profile->init();
+
+		$api_client_creds = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
 
 		$api_change_password = new WP_Auth0_Api_Change_Password( $this->a0_options, $api_client_creds );
 		$profile_change_pwd  = new WP_Auth0_Profile_Change_Password( $api_change_password );
