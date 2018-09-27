@@ -43,9 +43,10 @@ class WP_Auth0_Api_Change_Password extends WP_Auth0_Api_Abstract {
 	/**
 	 * Set the user_id and password, make the API call, and handle the response.
 	 *
-	 * @param null $user_id
-	 * @param null $password
-	 * @return bool|int|mixed
+	 * @param string|null $user_id - Auth0 user ID to change the password for.
+	 * @param string|null $password - New password.
+	 *
+	 * @return bool|string
 	 */
 	public function call( $user_id = null, $password = null ) {
 
