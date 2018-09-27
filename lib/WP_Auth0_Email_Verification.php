@@ -103,7 +103,7 @@ class WP_Auth0_Email_Verification {
 			wp_send_json_error( array( 'error' => __( 'No Auth0 user ID provided.', 'wp-auth0' ) ) );
 		}
 
-		if ( ! $this->api_jobs_resend->call() ) {
+		if ( ! $this->api_jobs_resend->call( $_POST['sub'] ) ) {
 			wp_send_json_error( array( 'error' => __( 'API call failed.', 'wp-auth0' ) ) );
 		}
 
@@ -120,8 +120,7 @@ class WP_Auth0_Email_Verification {
 function wp_auth0_ajax_resend_verification_email() {
 	$options               = WP_Auth0_Options::Instance();
 	$api_client_creds      = new WP_Auth0_Api_Client_Credentials( $options );
-	$auth0_user_id         = isset( $_POST['sub'] ) ? $_POST['sub'] : null;
-	$api_jobs_verification = new WP_Auth0_Api_Jobs_Verification( $options, $api_client_creds, $auth0_user_id );
+	$api_jobs_verification = new WP_Auth0_Api_Jobs_Verification( $options, $api_client_creds );
 	$email_verification    = new WP_Auth0_Email_Verification( $api_jobs_verification );
 
 	$email_verification->resend_verification_email();
