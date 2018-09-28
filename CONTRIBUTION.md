@@ -1,6 +1,5 @@
 # Contribution
 
-* All PRs must use the `dev` branch as a base
 * Change the least amount of code to achieve the goal; PRs with lots of whitespace changes and abstraction combined with a feature add or bug fix are difficult to review and may be rejected
 * Use the latest version of WordPress and turn `WP_DEBUG` on
 * If other plugins are installed during testing that might affect behavior, please list those in the PR description
