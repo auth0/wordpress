@@ -7,35 +7,6 @@ class WP_Auth0_Api_Operations {
 		$this->a0_options = $a0_options;
 	}
 
-	/**
-	 * TODO: Deprecate, no longer used
-	 */
-	public function disable_signup_wordpress_connection( $app_token, $disable_signup ) {
-		$domain    = $this->a0_options->get( 'domain' );
-		$client_id = $this->a0_options->get( 'client_id' );
-
-		$connections = WP_Auth0_Api_Client::search_connection( $domain, $app_token, 'auth0' );
-
-		if ( $connections === false ) {
-			return;
-		}
-
-		foreach ( $connections as $connection ) {
-
-			if ( in_array( $client_id, $connection->enabled_clients ) ) {
-				$connection->options->disable_signup = $disable_signup;
-				$connection_id                       = $connection->id;
-
-				unset( $connection->name );
-				unset( $connection->strategy );
-				unset( $connection->id );
-
-				WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection_id, $connection );
-			}
-		}
-
-	}
-
 	public function update_wordpress_connection( $app_token, $connection_id, $password_policy, $migration_token ) {
 
 		$domain = $this->a0_options->get( 'domain' );
@@ -155,8 +126,72 @@ class WP_Auth0_Api_Operations {
 		return $migration_connection_id;
 	}
 
+	// $input['geo_rule'] = ( isset( $input['geo_rule'] ) ? $input['geo_rule'] : 0 );
+	// $enable = ($old_options['geo_rule'] == null && 1 == $input['geo_rule'])
+	public function toggle_rule( $app_token, $rule_id, $rule_name, $rule_script ) {
+
+		$domain = $this->a0_options->get( 'domain' );
+
+		if ( is_null( $rule_id ) ) {
+			$rule = WP_Auth0_Api_Client::create_rule( $domain, $app_token, $rule_name, $rule_script );
+
+			if ( $rule === false ) {
+				$error = __( 'There was an error creating the Auth0 rule. You can do it manually from your Auth0 dashboard.', 'wp-auth0' );
+				throw new Exception( $error );
+			} else {
+				return $rule->id;
+			}
+		} else {
+			if ( false === WP_Auth0_Api_Client::delete_rule( $domain, $app_token, $rule_id ) ) {
+				$error = __( 'There was an error deleting the Auth0 rule. You can do it manually from your Auth0 dashboard.', 'wp-auth0' );
+				throw new Exception( $error );
+			}
+			return null;
+		}
+	}
+
+	/*
+	 *
+	 * DEPRECATED
+	 *
+	 */
+
 	/**
-	 * TODO: Deprecate when WP_Auth0_InitialSetup_Connections::toggle_social() is deprecated
+	 * @deprecated - 3.8.0, not used and no replacement provided.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function disable_signup_wordpress_connection( $app_token, $disable_signup ) {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		$domain    = $this->a0_options->get( 'domain' );
+		$client_id = $this->a0_options->get( 'client_id' );
+
+		$connections = WP_Auth0_Api_Client::search_connection( $domain, $app_token, 'auth0' );
+
+		if ( $connections === false ) {
+			return;
+		}
+
+		foreach ( $connections as $connection ) {
+
+			if ( in_array( $client_id, $connection->enabled_clients ) ) {
+				$connection->options->disable_signup = $disable_signup;
+				$connection_id                       = $connection->id;
+
+				unset( $connection->name );
+				unset( $connection->strategy );
+				unset( $connection->id );
+
+				WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection_id, $connection );
+			}
+		}
+
+	}
+
+	/**
+	 * @deprecated - 3.8.0, not used and no replacement provided.
 	 *
 	 * This function will sync and update the connection setting with auth0
 	 * First it checks if there is any connection with this strategy enabled for the app.
@@ -167,8 +202,13 @@ class WP_Auth0_Api_Operations {
 	 *
 	 * In the case that the user disable the connection on WP, it check if there is an active connection with the client_id.
 	 * - If exists, it will remove the client_id and if there is no other client_id it will delete the connection.
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function social_validation( $app_token, $old_options, $input, $strategy, $connection_options ) {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
 		$domain    = $this->a0_options->get( 'domain' );
 		$client_id = $this->a0_options->get( 'client_id' );
 
@@ -220,8 +260,8 @@ class WP_Auth0_Api_Operations {
 			if ( $input[ $main_key ] ) {
 
 				if ( $selected_connection &&
-					( empty( $selected_connection->options->client_id ) || ( empty( $input[ "{$main_key}_key" ] ) && empty( $old_input[ "{$main_key}_key" ] ) ) || $selected_connection->options->client_id === $input[ "{$main_key}_key" ] ) &&
-					( empty( $selected_connection->options->client_secret ) || ( empty( $input[ "{$main_key}_secret" ] ) && empty( $old_input[ "{$main_key}_secret" ] ) ) || $selected_connection->options->client_secret === $input[ "{$main_key}_secret" ] ) ) {
+					 ( empty( $selected_connection->options->client_id ) || ( empty( $input[ "{$main_key}_key" ] ) && empty( $old_input[ "{$main_key}_key" ] ) ) || $selected_connection->options->client_id === $input[ "{$main_key}_key" ] ) &&
+					 ( empty( $selected_connection->options->client_secret ) || ( empty( $input[ "{$main_key}_secret" ] ) && empty( $old_input[ "{$main_key}_secret" ] ) ) || $selected_connection->options->client_secret === $input[ "{$main_key}_secret" ] ) ) {
 
 					$data = array(
 						'options'         => $connection_options,
@@ -244,14 +284,14 @@ class WP_Auth0_Api_Operations {
 						return $input;
 					}
 				} elseif ( $selected_connection && ! empty( $selected_connection->options->client_id ) && ! empty( $selected_connection->options->client_secret )
-					&& ! empty( $input[ "{$main_key}_key" ] ) && ! empty( $input[ "{$main_key}_secret" ] ) ) {
+						   && ! empty( $input[ "{$main_key}_key" ] ) && ! empty( $input[ "{$main_key}_secret" ] ) ) {
 
 					$input[ "{$main_key}_key" ]    = $selected_connection->options->client_id;
 					$input[ "{$main_key}_secret" ] = $selected_connection->options->client_secret;
 
 					$error  = __( 'The connection has already set an API key and secret and can not be overridden. ', 'wp-auth0' );
 					$error .= '<a href="https://manage.auth0.com/#/connections/social">' .
-						__( 'Please update them in the Auth0 dashboard. ', 'wp-auth0' ) . '</a>';
+							  __( 'Please update them in the Auth0 dashboard. ', 'wp-auth0' ) . '</a>';
 
 					throw new Exception( $error );
 
@@ -318,30 +358,5 @@ class WP_Auth0_Api_Operations {
 
 		return $input;
 	}
-
-	// $input['geo_rule'] = ( isset( $input['geo_rule'] ) ? $input['geo_rule'] : 0 );
-	// $enable = ($old_options['geo_rule'] == null && 1 == $input['geo_rule'])
-	public function toggle_rule( $app_token, $rule_id, $rule_name, $rule_script ) {
-
-		$domain = $this->a0_options->get( 'domain' );
-
-		if ( is_null( $rule_id ) ) {
-			$rule = WP_Auth0_Api_Client::create_rule( $domain, $app_token, $rule_name, $rule_script );
-
-			if ( $rule === false ) {
-				$error = __( 'There was an error creating the Auth0 rule. You can do it manually from your Auth0 dashboard.', 'wp-auth0' );
-				throw new Exception( $error );
-			} else {
-				return $rule->id;
-			}
-		} else {
-			if ( false === WP_Auth0_Api_Client::delete_rule( $domain, $app_token, $rule_id ) ) {
-				$error = __( 'There was an error deleting the Auth0 rule. You can do it manually from your Auth0 dashboard.', 'wp-auth0' );
-				throw new Exception( $error );
-			}
-			return null;
-		}
-	}
-
 
 }

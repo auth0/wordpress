@@ -186,44 +186,6 @@ class WP_Auth0 {
 	}
 
 	/**
-	 * TODO: Deprecate, no longer used
-	 *
-	 * Checks it it should update the database connection no enable or disable signups and create or delete
-	 * the rule that will disable social signups.
-	 */
-	function check_signup_status() {
-		$app_token = $this->a0_options->get( 'auth0_app_token' );
-
-		if ( $app_token ) {
-			$disable_signup_rule        = $this->a0_options->get( 'disable_signup_rule' );
-			$is_wp_registration_enabled = $this->a0_options->is_wp_registration_enabled();
-
-			if ( $is_wp_registration_enabled != $this->a0_options->get( 'registration_enabled' ) ) {
-					$this->a0_options->set( 'registration_enabled', $is_wp_registration_enabled );
-
-					$operations = new WP_Auth0_Api_Operations( $this->a0_options );
-
-					$operations->disable_signup_wordpress_connection( $app_token, ! $is_wp_registration_enabled );
-
-					$rule_name = WP_Auth0_RulesLib::$disable_social_signup['name'] . '-' . get_bloginfo( 'name' );
-
-					$rule_script = WP_Auth0_RulesLib::$disable_social_signup['script'];
-					$rule_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $this->a0_options->get( 'client_id' ), $rule_script );
-
-				try {
-					if ( $is_wp_registration_enabled && $disable_signup_rule === null ) {
-						return;
-					}
-					$disable_signup_rule = $operations->toggle_rule( $app_token, ( $is_wp_registration_enabled ? $disable_signup_rule : null ), $rule_name, $rule_script );
-					$this->a0_options->set( 'disable_signup_rule', $disable_signup_rule );
-				} catch ( Exception $e ) {
-
-				}
-			}
-		}
-	}
-
-	/**
 	 * Filter the avatar to use the Auth0 profile image
 	 *
 	 * @param string                                $avatar - avatar HTML
@@ -298,18 +260,6 @@ class WP_Auth0 {
 		}
 	}
 
-	/**
-	 *
-	 * @deprecated 3.6.0 - Use WPA0_PLUGIN_URL constant
-	 *
-	 * @return string
-	 */
-	public static function get_plugin_dir_url() {
-		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		return WPA0_PLUGIN_URL;
-	}
-
 	public function a0_register_query_vars( $qvars ) {
 		$qvars[] = 'error';
 		$qvars[] = 'error_description';
@@ -321,6 +271,7 @@ class WP_Auth0 {
 		return $qvars;
 	}
 
+	// TODO: Deprecate, not used
 	public function a0_render_message() {
 		$message = null;
 
@@ -452,7 +403,6 @@ class WP_Auth0 {
 		$this->router->setup_rewrites();
 	}
 
-
 	public function install() {
 		$this->db_manager->install_db();
 		$this->router->setup_rewrites();
@@ -536,6 +486,68 @@ class WP_Auth0 {
 		}
 
 		return false;
+	}
+
+	/*
+	 *
+	 * DEPRECATED
+	 *
+	 */
+
+	/**
+	 * @deprecated - 3.8.0, not used and no replacement provided.
+	 *
+	 * Checks it it should update the database connection no enable or disable signups and create or delete
+	 * the rule that will disable social signups.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function check_signup_status() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		$app_token = $this->a0_options->get( 'auth0_app_token' );
+
+		if ( $app_token ) {
+			$disable_signup_rule        = $this->a0_options->get( 'disable_signup_rule' );
+			$is_wp_registration_enabled = $this->a0_options->is_wp_registration_enabled();
+
+			if ( $is_wp_registration_enabled != $this->a0_options->get( 'registration_enabled' ) ) {
+				$this->a0_options->set( 'registration_enabled', $is_wp_registration_enabled );
+
+				$operations = new WP_Auth0_Api_Operations( $this->a0_options );
+
+				$operations->disable_signup_wordpress_connection( $app_token, ! $is_wp_registration_enabled );
+
+				$rule_name = WP_Auth0_RulesLib::$disable_social_signup['name'] . '-' . get_bloginfo( 'name' );
+
+				$rule_script = WP_Auth0_RulesLib::$disable_social_signup['script'];
+				$rule_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $this->a0_options->get( 'client_id' ), $rule_script );
+
+				try {
+					if ( $is_wp_registration_enabled && $disable_signup_rule === null ) {
+						return;
+					}
+					$disable_signup_rule = $operations->toggle_rule( $app_token, ( $is_wp_registration_enabled ? $disable_signup_rule : null ), $rule_name, $rule_script );
+					$this->a0_options->set( 'disable_signup_rule', $disable_signup_rule );
+				} catch ( Exception $e ) {
+
+				}
+			}
+		}
+	}
+
+	/**
+	 * @deprecated 3.6.0 - Use WPA0_PLUGIN_URL constant
+	 *
+	 * @return string
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public static function get_plugin_dir_url() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		return WPA0_PLUGIN_URL;
 	}
 }
 
