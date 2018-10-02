@@ -20,6 +20,11 @@ class WP_Auth0_Api_Delete_User_Mfa extends WP_Auth0_Api_Abstract {
 	const RETURN_ON_FAILURE = 0;
 
 	/**
+	 * Required scope for API token.
+	 */
+	const API_SCOPE = 'update:users';
+
+	/**
 	 * Decoded token received.
 	 *
 	 * @var null|object
@@ -54,7 +59,7 @@ class WP_Auth0_Api_Delete_User_Mfa extends WP_Auth0_Api_Abstract {
 			return self::RETURN_ON_FAILURE;
 		}
 
-		if ( ! $this->set_bearer( 'update:users' ) ) {
+		if ( ! $this->set_bearer( self::API_SCOPE ) ) {
 			return self::RETURN_ON_FAILURE;
 		}
 

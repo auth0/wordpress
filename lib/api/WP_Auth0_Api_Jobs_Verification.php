@@ -20,7 +20,7 @@ class WP_Auth0_Api_Jobs_Verification extends WP_Auth0_Api_Abstract {
 	/**
 	 * Required scope for API token.
 	 */
-	const API_SCOPE = false;
+	const API_SCOPE = 'update:users';
 
 	/**
 	 * WP_Auth0_Api_Client_Credentials instance.

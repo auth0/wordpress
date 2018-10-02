@@ -348,15 +348,6 @@ class WP_Auth0 {
 		}
 
 		wp_enqueue_style( 'auth0', WPA0_PLUGIN_CSS_URL . 'login.css', false, WPA0_VERSION );
-
-		if ( $this->a0_options->get( 'auth0_implicit_workflow' ) && ! empty( $_GET['auth0'] ) ) {
-			wp_enqueue_script( 'auth0-implicit', WPA0_PLUGIN_JS_URL . 'implicit-login.js', false, WPA0_VERSION );
-			wp_localize_script(
-				'auth0-implicit', 'wpAuth0ImplicitGlobal', array(
-					'postUrl' => add_query_arg( 'auth0', 'implicit', site_url( 'index.php' ) ),
-				)
-			);
-		}
 	}
 
 	/**

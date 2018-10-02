@@ -20,12 +20,11 @@ class WP_Auth0_Lock10_Options {
 	}
 
 	public function get_code_callback_url() {
-		$protocol = $this->_get_boolean( $this->wp_options->get( 'force_https_callback' ) ) ? 'https' : null;
-		return $this->wp_options->get_wp_auth0_url( $protocol );
+		return $this->wp_options->get_wp_auth0_url( $this->get_callback_protocol() );
 	}
 
 	public function get_implicit_callback_url() {
-		return add_query_arg( 'auth0', 1, wp_login_url() );
+		return $this->wp_options->get_wp_auth0_url( $this->get_callback_protocol(), true );
 	}
 
 	public function get_sso() {
@@ -183,6 +182,7 @@ class WP_Auth0_Lock10_Options {
 
 		if ( $this->get_auth0_implicit_workflow() ) {
 			$extraOptions['auth']['responseType']    = 'id_token';
+			$extraOptions['auth']['responseMode']    = 'form_post';
 			$extraOptions['auth']['redirectUrl']     = $this->get_implicit_callback_url();
 			$extraOptions['autoParseHash']           = false;
 			$extraOptions['auth']['params']['nonce'] = WP_Auth0_Nonce_Handler::get_instance()->get_unique();
@@ -221,6 +221,15 @@ class WP_Auth0_Lock10_Options {
 		}
 
 		return $options_obj;
+	}
+
+	/**
+	 * Get the protocol to use for callback URLs.
+	 *
+	 * @return null|string - Returns 'https' if forced, null (use site default) if not.
+	 */
+	private function get_callback_protocol() {
+		return $this->_get_boolean( $this->wp_options->get( 'force_https_callback' ) ) ? 'https' : null;
 	}
 
 	/**

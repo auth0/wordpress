@@ -329,16 +329,15 @@ class WP_Auth0_LoginManager {
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
 	 *
 	 * @link https://auth0.com/docs/api-auth/tutorials/implicit-grant
-	 *
-	 * @see /wp-content/plugins/auth0/assets/js/implicit-login.js
 	 */
 	public function implicit_login() {
-		if ( empty( $_POST['token'] ) ) {
+		if ( empty( $_POST['id_token'] ) && empty( $_POST['token'] ) ) {
 			throw new WP_Auth0_LoginFlowValidationException( __( 'No ID token found', 'wp-auth0' ) );
 		}
 
 		// Posted from the login page to the callback URL.
-		$id_token = sanitize_text_field( wp_unslash( $_POST['token'] ) );
+		$id_token_param = ! empty( $_POST['id_token'] ) ? $_POST['id_token'] : $_POST['token'];
+		$id_token       = sanitize_text_field( wp_unslash( $id_token_param ) );
 
 		try {
 			$decoded_token = JWT::decode(
@@ -667,10 +666,11 @@ class WP_Auth0_LoginManager {
 		$params['response_type'] = $is_implicit ? 'id_token' : 'code';
 		$params['redirect_uri']  = $is_implicit
 			? $lock_options->get_implicit_callback_url()
-			: $options->get_wp_auth0_url( null );
+			: $options->get_wp_auth0_url();
 
 		if ( $is_implicit ) {
-			$params['nonce'] = $nonce;
+			$params['nonce']         = $nonce;
+			$params['response_mode'] = 'form_post';
 		}
 
 		if ( ! empty( $connection ) ) {
