@@ -10,6 +10,8 @@ class WP_Auth0_InitialSetup_Rules {
 
 	/**
 	 * @deprecated - 3.8.0, not used and no replacement provided.
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function __construct( WP_Auth0_Options $a0_options ) {
 		// phpcs:ignore
