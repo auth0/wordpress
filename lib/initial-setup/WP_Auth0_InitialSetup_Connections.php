@@ -12,10 +12,28 @@ class WP_Auth0_InitialSetup_Connections {
 		include WPA0_PLUGIN_DIR . 'templates/initial-setup/connections.php';
 	}
 
+	public function callback() {
+		wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=5' ) );
+	}
+
+	public function add_validation_error( $error ) {
+		wp_redirect(
+			admin_url(
+				'admin.php?page=wpa0-setup&step=5&error=' .
+				urlencode( 'There was an error setting up your connections.' )
+			)
+		);
+		exit;
+	}
+
 	/**
-	 * TODO: Deprecate, not used
+	 * @deprecated - 3.8.0, not used and no replacement provided.
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function update_connection() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$provider_name = $_POST['connection'];
 
@@ -27,9 +45,13 @@ class WP_Auth0_InitialSetup_Connections {
 	}
 
 	/**
-	 * TODO: Deprecate when self::update_connection() is deprecated
+	 * @deprecated - 3.8.0, not used and no replacement provided.
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	protected function toggle_db() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$domain        = $this->a0_options->get( 'domain' );
 		$app_token     = $this->a0_options->get( 'auth0_app_token' );
@@ -61,9 +83,13 @@ class WP_Auth0_InitialSetup_Connections {
 	}
 
 	/**
-	 * TODO: Deprecate when self::update_connection() is deprecated
+	 * @deprecated - 3.8.0, not used and no replacement provided.
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	protected function toggle_social( $provider_name ) {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$provider_options = array(
 			'facebook'      => array(
@@ -106,20 +132,6 @@ class WP_Auth0_InitialSetup_Connections {
 			$this->a0_options->set_connection( $key, $value );
 		}
 
-		exit;
-	}
-
-	public function callback() {
-		wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=5' ) );
-	}
-
-	public function add_validation_error( $error ) {
-		wp_redirect(
-			admin_url(
-				'admin.php?page=wpa0-setup&step=5&error=' .
-				urlencode( 'There was an error setting up your connections.' )
-			)
-		);
 		exit;
 	}
 }
