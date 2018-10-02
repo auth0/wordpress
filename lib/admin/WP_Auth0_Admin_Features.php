@@ -63,6 +63,18 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 				'function' => 'render_passwordless_enabled',
 			),
 			array(
+				'name'     => __( 'Universal Login Page', 'wp-auth0' ),
+				'opt'      => 'auto_login',
+				'id'       => 'wpa0_auto_login',
+				'function' => 'render_auto_login',
+			),
+			array(
+				'name'     => __( 'Auto Login Method', 'wp-auth0' ),
+				'opt'      => 'auto_login_method',
+				'id'       => 'wpa0_auto_login_method',
+				'function' => 'render_auto_login_method',
+			),
+			array(
 				'name'     => __( 'Multifactor Authentication (MFA)', 'wp-auth0' ),
 				'opt'      => 'mfa',
 				'id'       => 'wpa0_mfa',
@@ -192,6 +204,46 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 			$this->get_dashboard_link( 'connections/passwordless' ) .
 			__( ' and at least one must be active and enabled on this Application for this to work. ', 'wp-auth0' ) .
 			__( 'Username/password login is not enabled when Passwordless is on', 'wp-auth0' )
+		);
+	}
+
+	/**
+	 * Render form field and description for the `auto_login` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_auto_login( $args = array() ) {
+		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_auto_login_method' );
+		$this->render_field_description(
+			__( 'Use the Universal Login Page (ULP) for authentication. ', 'wp-auth0' ) .
+			__( 'When turned on, <code>wp-login.php</code> will be redirected to the hosted login page. ', 'wp-auth0' ) .
+			__( 'When turned off, <code>wp-login.php</code> will show an embedded login form. ', 'wp-auth0' ) .
+			$this->get_docs_link( 'guides/login/universal-vs-embedded', __( 'More on ULP vs embedded here', 'wp-auth0' ) )
+		);
+	}
+
+	/**
+	 * Render form field and description for the `auto_login_method` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_auto_login_method( $args = array() ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Enter a name here to automatically use a single, specific connection to login . ', 'wp-auth0' ) .
+			sprintf(
+				__( 'Find the method name to use under Connections > [Connection Type] in your %s. ', 'wp-auth0' ),
+				$this->get_dashboard_link()
+			) .
+			__( 'Click the expand icon and use the value in the "Name" field (like "google-oauth2")', 'wp-auth0' )
 		);
 	}
 

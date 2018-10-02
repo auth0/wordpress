@@ -118,12 +118,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_auto_login',
 			),
 			array(
-				'name'     => __( 'Auto Login Method', 'wp-auth0' ),
-				'opt'      => 'auto_login_method',
-				'id'       => 'wpa0_auto_login_method',
-				'function' => 'render_auto_login_method',
-			),
-			array(
 				'name'     => __( 'Implicit Login Flow', 'wp-auth0' ),
 				'opt'      => 'auth0_implicit_workflow',
 				'id'       => 'wpa0_auth0_implicit_workflow',
@@ -434,38 +428,12 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Render form field and description for the `auto_login` option.
+	 * Refer to the Features tab for the `auto_login` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
 	 */
-	public function render_auto_login( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_auto_login_method' );
+	public function render_auto_login() {
 		$this->render_field_description(
-			__( 'Send logins directly to a specific Connection, skipping the login page', 'wp-auth0' )
-		);
-	}
-
-	/**
-	 * Render form field and description for the `auto_login_method` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_auto_login_method( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			sprintf(
-				__( 'Find the method name to use under Connections > [Connection Type] in your %s. ', 'wp-auth0' ),
-				$this->get_dashboard_link()
-			) .
-			__( 'Click the expand icon and use the value in the "Name" field (like "google-oauth2")', 'wp-auth0' )
+			__( 'Please see the "Universal Login Page" setting on the Features tab', 'wp-auth0' )
 		);
 	}
 
