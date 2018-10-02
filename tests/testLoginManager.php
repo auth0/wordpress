@@ -59,9 +59,10 @@ class TestLoginManager extends TestCase {
 
 		$options->set( 'auth0_implicit_workflow', 1 );
 		$auth_params = WP_Auth0_LoginManager::get_authorize_params();
-		$this->assertEquals( add_query_arg( 'auth0', 1, wp_login_url() ), $auth_params['redirect_uri'] );
+		$this->assertEquals( add_query_arg( 'auth0', 'implicit', site_url( 'index.php' ) ), $auth_params['redirect_uri'] );
 		$this->assertEquals( 'id_token', $auth_params['response_type'] );
 		$this->assertNotEmpty( $auth_params['nonce'] );
+		$this->assertEquals( 'form_post', $auth_params['response_mode'] );
 
 		add_filter(
 			'auth0_authorize_url_params', function( $params, $connection, $redirect_to ) {

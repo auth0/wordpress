@@ -14,10 +14,13 @@ class WP_Auth0_Api_Change_Password extends WP_Auth0_Api_Abstract {
 
 	/**
 	 * Default value to return on failure.
-	 *
-	 * @var boolean
 	 */
 	const RETURN_ON_FAILURE = false;
+
+	/**
+	 * Required scope for API token.
+	 */
+	const API_SCOPE = 'update:users';
 
 	/**
 	 * Decoded token received.
@@ -54,7 +57,7 @@ class WP_Auth0_Api_Change_Password extends WP_Auth0_Api_Abstract {
 			return self::RETURN_ON_FAILURE;
 		}
 
-		if ( ! $this->set_bearer( 'update:users' ) ) {
+		if ( ! $this->set_bearer( self::API_SCOPE ) ) {
 			return self::RETURN_ON_FAILURE;
 		}
 

@@ -16,7 +16,7 @@ $domain       = $lock_options->get_domain();
 			clientID:'<?php echo $client_id; ?>',
 			domain:'<?php echo $domain; ?>'
 		});
-		var postAction = '<?php echo add_query_arg( 'auth0', 'implicit', site_url( 'index.php' ) ); ?>';
+		var postAction = '<?php echo $lock_options->get_implicit_callback_url(); ?>';
 		var stateCookieName = '<?php echo WP_Auth0_State_Handler::get_storage_cookie_name(); ?>';
 		var nonceCookieName = '<?php echo WP_Auth0_Nonce_Handler::get_storage_cookie_name(); ?>';
 
@@ -32,7 +32,7 @@ $domain       = $lock_options->get_domain();
 						.css({display: 'none'})
 						.attr("method", "POST")
 						.attr("action", postAction);
-					var $input=$(document.createElement('input')).attr('name','token').val(authResult.idToken);
+					var $input=$(document.createElement('input')).attr('name','id_token').val(authResult.idToken);
 					var $input2=$(document.createElement('input')).attr('name','state').val(authResult.state);
 					$form.append($input).append($input2);
 					$("body").append($form);
