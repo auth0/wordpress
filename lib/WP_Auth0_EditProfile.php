@@ -96,275 +96,6 @@ class WP_Auth0_EditProfile {
 		);
 	}
 
-	// TODO: Deprecate
-	public function validate_new_password( $errors, $update, $user ) {
-		$auth0_password        = isset( $_POST['auth0_password'] ) ? $_POST['auth0_password'] : null;
-		$auth0_repeat_password = isset( $_POST['auth0_repeat_password'] ) ? $_POST['auth0_repeat_password'] : null;
-
-		if ( $auth0_password != $auth0_repeat_password ) {
-			$errors->add( 'auth0_password', __( '<strong>ERROR</strong>: The password does not match', 'wp-auth0' ), array( 'form-field' => 'auth0_password' ) );
-		}
-	}
-
-	// TODO: Deprecate
-	public function update_change_password() {
-		$current_user = get_currentauth0user();
-		$user_profile = $current_user->auth0_obj;
-
-		if ( empty( $user_profile ) ) {
-			return;
-		}
-
-		$auth0_password        = isset( $_POST['auth0_password'] ) ? $_POST['auth0_password'] : null;
-		$auth0_repeat_password = isset( $_POST['auth0_repeat_password'] ) ? $_POST['auth0_repeat_password'] : null;
-
-		if ( ! empty( $auth0_password ) && $auth0_password == $auth0_repeat_password ) {
-			$domain    = $this->a0_options->get( 'domain' );
-			$client_id = $this->a0_options->get( 'client_id' );
-			$api_token = $this->a0_options->get( 'auth0_app_token' );
-
-			$connection = null;
-			$email      = null;
-
-			foreach ( $user_profile->identities as $identity ) {
-				if ( $identity->provider === 'auth0' ) {
-					$connection = $identity->connection;
-					if ( isset( $identity->email ) ) {
-						$email = $identity->email;
-					} else {
-						$email = $user_profile->email;
-					}
-				}
-			}
-
-			if ( $api_token ) {
-				WP_Auth0_Api_Client::update_user(
-					$domain, $api_token, $user_profile->user_id, array(
-						'password'   => $auth0_password,
-						'connection' => $connection,
-					)
-				);
-			} else {
-				WP_Auth0_Api_Client::change_password(
-					$domain, array(
-						'client_id'  => $client_id,
-						'email'      => $user_profile->email,
-						'connection' => $connection,
-					)
-				);
-			}
-		}
-	}
-
-	// TODO: Deprecate
-	public function delete_user_data() {
-		if ( ! is_admin() ) {
-			return;
-		}
-
-		$user_id = $_POST['user_id'];
-
-		$this->users_repo->delete_auth0_object( $user_id );
-	}
-
-	// TODO: Deprecate
-	public function delete_mfa() {
-		if ( ! is_admin() ) {
-			return;
-		}
-
-		$user_id = $_POST['user_id'];
-
-		$users = $this->db_manager->get_auth0_users( array( $user_id ) );
-		if ( empty( $users ) ) {
-			return;
-		}
-
-		$user_id = $users[0]->auth0_id;
-
-		$provider  = 'google-authenticator';
-		$domain    = $this->a0_options->get( 'domain' );
-		$app_token = $this->a0_options->get( 'auth0_app_token' );
-
-		WP_Auth0_Api_Client::delete_user_mfa( $domain, $app_token, $user_id, $provider );
-	}
-
-	// TODO: Deprecate
-	public function show_delete_identity() {
-		if ( ! is_admin() ) {
-			return;
-		}
-		if ( ! get_auth0userinfo( $_GET['user_id'] ) ) {
-			return;
-		}
-		?>
-	<table class="form-table">
-	<tr>
-	  <th>
-		<label><?php _e( 'Delete Auth0 data' ); ?></label>
-	  </th>
-	  <td>
-		<input type="button" onclick="DeleteAuth0Data(event);" name="auth0_delete_data" id="auth0_delete_data"
-					 value="<?php _e( 'Delete Auth0 Data', 'wp-auth0' ); ?>" class="button button-secondary" />
-	  </td>
-	</tr>
-	</table>
-	<script>
-	function DeleteAuth0Data(event) {
-	  event.preventDefault();
-
-	  var data = {
-		'action': 'auth0_delete_data',
-		'user_id': '<?php echo $_GET['user_id']; ?>'
-	  };
-
-	  var successMsg = "<?php _e( 'Done!', 'wp-auth0' ); ?>";
-
-	  jQuery('#auth0_delete_data').attr('disabled', 'true');
-
-	  jQuery.post('<?php echo admin_url( 'admin-ajax.php' ); ?>', data, function(response) {
-
-		jQuery('#auth0_delete_data').val(successMsg).attr('disabled', 'true');
-
-	  }, 'json');
-
-	}
-	</script>
-		<?php
-	}
-
-	// TODO: Deprecate
-	public function show_delete_mfa() {
-		if ( ! is_admin() ) {
-			return;
-		}
-		if ( ! $this->a0_options->get( 'mfa' ) ) {
-			return;
-		}
-
-		?>
-	<table class="form-table">
-	<tr>
-	  <th>
-		<label><?php _e( 'Delete MFA Provider' ); ?></label>
-	  </th>
-	  <td>
-		<input type="button" onclick="DeleteMFA(event);" name="auth0_delete_mfa" id="auth0_delete_mfa"
-					 value="<?php _e( 'Delete MFA' ); ?>" class="button button-secondary" />
-	  </td>
-	</tr>
-	</table>
-	<script>
-	function DeleteMFA(event) {
-	  event.preventDefault();
-
-	  var data = {
-		'action': 'auth0_delete_mfa',
-		'user_id': '<?php echo $_GET['user_id']; ?>'
-	  };
-
-	var successMsg = "<?php _e( 'Done!', 'wp-auth0' ); ?>";
-
-	  jQuery('#auth0_delete_mfa').attr('disabled', 'true');
-
-	  jQuery.post('<?php echo admin_url( 'admin-ajax.php' ); ?>', data, function(response) {
-
-		jQuery('#auth0_delete_mfa').val(successMsg).attr('disabled', 'true');
-
-	  }, 'json');
-
-	}
-  </script>
-
-		<?php
-	}
-
-	// TODO: Deprecate
-	public function show_change_password() {
-		$current_user = get_currentauth0user();
-		$user_profile = $current_user->auth0_obj;
-
-		if ( empty( $user_profile ) ) {
-			return;
-		}
-
-		$connection = null;
-
-		if ( ! empty( $user_profile->identities ) && is_array( $user_profile->identities ) ) {
-			foreach ( $user_profile->identities as $identity ) {
-				if ( $identity->provider === 'auth0' ) {
-					$connection = $identity->connection;
-				}
-			}
-		}
-
-		if ( $connection === null ) {
-			return;
-		}
-		?>
-	<script>
-	  jQuery('.wp-pwd').parent().parent().hide();
-	</script>
-	<table class="form-table">
-	<tr>
-	  <th>
-		<label for="auth0_password"><?php _e( 'New Password' ); ?></label>
-	  </th>
-	  <td>
-		<input type="password" name="auth0_password" id="auth0_password" value="" class="regular-text" />
-	  </td>
-	</tr>
-	 <tr>
-	  <th>
-		<label for="auth0_repeat_password"><?php _e( 'Repeat Password' ); ?></label>
-	  </th>
-	  <td>
-		<input type="password" name="auth0_repeat_password" id="auth0_repeat_password" value="" class="regular-text" />
-	  </td>
-	</tr>
-
-	</table>
-		<?php
-	}
-
-	// TODO: Deprecate
-	public function disable_email_field() {
-		$current_user = get_currentauth0user();
-		$user_profile = $current_user->auth0_obj;
-
-		if ( $user_profile && ! empty( $user_profile ) ) {
-			$connection = null;
-			if ( ! empty( $user_profile->identities ) && is_array( $user_profile->identities ) ) {
-				foreach ( $user_profile->identities as $identity ) {
-					if ( $identity->provider === 'auth0' ) {
-						$connection = $identity->connection;
-					}
-				}
-			}
-
-			if ( $connection === null ) {
-				?>
-		<script>
-		  jQuery(document).ready( function($) {
-			if ( $('input[name=email]').length ) {
-			  var emailElement = $('input[name=email]');
-			  var newEmailElement = emailElement.clone();
-			  newEmailElement.attr("disabled", "disabled")
-							.attr("name", "disabled_name")
-							.attr("id", "disabled_name")
-							  .insertAfter(emailElement);
-			  emailElement.attr("type", "hidden");
-
-			  var errorMsg = "<?php _e( 'You cannot change your email here if you logged in using a social connection.', 'wp-auth0' ); ?>";
-			  $('<span class="description">' + errorMsg + '</span>').insertAfter(newEmailElement);
-			}
-		  });
-		</script>
-				<?php
-			}
-		}
-	}
-
 	/**
 	 * Process email changes and pass the update to Auth0 if it passes validation.
 	 * Hooked to: personal_options_update
@@ -455,4 +186,348 @@ class WP_Auth0_EditProfile {
 		}
 	}
 
+	/**
+	 * Validate a new password.
+	 *
+	 * @deprecated - 3.8.0, use WP_Auth0_Profile_Change_Password::validate_new_password() instead.
+	 *
+	 * @param WP_Error $errors - Error instance to collect user profile errors.
+	 * @param boolean  $update - Update or creation.
+	 * @param WP_User  $user - User to validate.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function validate_new_password( $errors, $update, $user ) {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		$auth0_password        = isset( $_POST['auth0_password'] ) ? $_POST['auth0_password'] : null;
+		$auth0_repeat_password = isset( $_POST['auth0_repeat_password'] ) ? $_POST['auth0_repeat_password'] : null;
+
+		if ( $auth0_password != $auth0_repeat_password ) {
+			$errors->add( 'auth0_password', __( '<strong>ERROR</strong>: The password does not match', 'wp-auth0' ), array( 'form-field' => 'auth0_password' ) );
+		}
+	}
+
+	/**
+	 * Delete a user's password on Auth0.
+	 *
+	 * @deprecated - 3.8.0, use WP_Auth0_Profile_Change_Password::validate_new_password() instead.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function update_change_password() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		$current_user = get_currentauth0user();
+		$user_profile = $current_user->auth0_obj;
+
+		if ( empty( $user_profile ) ) {
+			return;
+		}
+
+		$auth0_password        = isset( $_POST['auth0_password'] ) ? $_POST['auth0_password'] : null;
+		$auth0_repeat_password = isset( $_POST['auth0_repeat_password'] ) ? $_POST['auth0_repeat_password'] : null;
+
+		if ( ! empty( $auth0_password ) && $auth0_password == $auth0_repeat_password ) {
+			$domain    = $this->a0_options->get( 'domain' );
+			$client_id = $this->a0_options->get( 'client_id' );
+			$api_token = $this->a0_options->get( 'auth0_app_token' );
+
+			$connection = null;
+			$email      = null;
+
+			foreach ( $user_profile->identities as $identity ) {
+				if ( $identity->provider === 'auth0' ) {
+					$connection = $identity->connection;
+					if ( isset( $identity->email ) ) {
+						$email = $identity->email;
+					} else {
+						$email = $user_profile->email;
+					}
+				}
+			}
+
+			if ( $api_token ) {
+				WP_Auth0_Api_Client::update_user(
+					$domain, $api_token, $user_profile->user_id, array(
+						'password'   => $auth0_password,
+						'connection' => $connection,
+					)
+				);
+			} else {
+				WP_Auth0_Api_Client::change_password(
+					$domain, array(
+						'client_id'  => $client_id,
+						'email'      => $user_profile->email,
+						'connection' => $connection,
+					)
+				);
+			}
+		}
+	}
+
+	/**
+	 * Delete a user's Auth0 data in WordPress.
+	 *
+	 * @deprecated - 3.8.0, use WP_Auth0_Profile_Delete_Data::delete_user_data() instead.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function delete_user_data() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		$user_id = $_POST['user_id'];
+
+		$this->users_repo->delete_auth0_object( $user_id );
+	}
+
+	/**
+	 * Delete a user's MFA provider.
+	 *
+	 * @deprecated - 3.8.0, use WP_Auth0_Profile_Delete_Mfa::delete_mfa() instead.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function delete_mfa() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		$user_id = $_POST['user_id'];
+
+		$users = $this->db_manager->get_auth0_users( array( $user_id ) );
+		if ( empty( $users ) ) {
+			return;
+		}
+
+		$user_id = $users[0]->auth0_id;
+
+		$provider  = 'google-authenticator';
+		$domain    = $this->a0_options->get( 'domain' );
+		$app_token = $this->a0_options->get( 'auth0_app_token' );
+
+		WP_Auth0_Api_Client::delete_user_mfa( $domain, $app_token, $user_id, $provider );
+	}
+
+	/**
+	 * Show controls to delete a user's Auth0 data.
+	 *
+	 * @deprecated - 3.8.0, use WP_Auth0_Profile_Delete_Data::show_delete_identity() instead.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function show_delete_identity() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		if ( ! is_admin() ) {
+			return;
+		}
+		if ( ! get_auth0userinfo( $_GET['user_id'] ) ) {
+			return;
+		}
+		?>
+		<table class="form-table">
+			<tr>
+				<th>
+					<label><?php _e( 'Delete Auth0 data' ); ?></label>
+				</th>
+				<td>
+					<input type="button" onclick="DeleteAuth0Data(event);" name="auth0_delete_data" id="auth0_delete_data"
+						   value="<?php _e( 'Delete Auth0 Data', 'wp-auth0' ); ?>" class="button button-secondary" />
+				</td>
+			</tr>
+		</table>
+		<script>
+		function DeleteAuth0Data(event) {
+			event.preventDefault();
+
+			var data = {
+				'action': 'auth0_delete_data',
+				'user_id': '<?php echo $_GET['user_id']; ?>'
+			};
+
+			var successMsg = "<?php _e( 'Done!', 'wp-auth0' ); ?>";
+
+			jQuery('#auth0_delete_data').attr('disabled', 'true');
+
+			jQuery.post('<?php echo admin_url( 'admin-ajax.php' ); ?>', data, function(response) {
+
+				jQuery('#auth0_delete_data').val(successMsg).attr('disabled', 'true');
+
+			}, 'json');
+
+		}
+		</script>
+		<?php
+	}
+
+	/**
+	 * Show controls to delete a user's Auth0 MFA provider.
+	 *
+	 * @deprecated - 3.8.0, use WP_Auth0_Profile_Delete_Mfa::show_delete_mfa() instead.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function show_delete_mfa() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		if ( ! is_admin() ) {
+			return;
+		}
+		if ( ! $this->a0_options->get( 'mfa' ) ) {
+			return;
+		}
+
+		?>
+		<table class="form-table">
+			<tr>
+				<th>
+					<label><?php _e( 'Delete MFA Provider' ); ?></label>
+				</th>
+				<td>
+					<input type="button" onclick="DeleteMFA(event);" name="auth0_delete_mfa" id="auth0_delete_mfa"
+						   value="<?php _e( 'Delete MFA' ); ?>" class="button button-secondary" />
+				</td>
+			</tr>
+		</table>
+		<script>
+		function DeleteMFA(event) {
+			event.preventDefault();
+
+			var data = {
+				'action': 'auth0_delete_mfa',
+				'user_id': '<?php echo $_GET['user_id']; ?>'
+			};
+
+			var successMsg = "<?php _e( 'Done!', 'wp-auth0' ); ?>";
+
+			jQuery('#auth0_delete_mfa').attr('disabled', 'true');
+
+			jQuery.post('<?php echo admin_url( 'admin-ajax.php' ); ?>', data, function(response) {
+
+				jQuery('#auth0_delete_mfa').val(successMsg).attr('disabled', 'true');
+
+			}, 'json');
+
+		}
+		</script>
+
+		<?php
+	}
+
+	/**
+	 * Replace WP password field with a custom one plus confirm field.
+	 *
+	 * @deprecated - 3.8.0, handled in WP core by default.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function show_change_password() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		$current_user = get_currentauth0user();
+		$user_profile = $current_user->auth0_obj;
+
+		if ( empty( $user_profile ) ) {
+			return;
+		}
+
+		$connection = null;
+
+		if ( ! empty( $user_profile->identities ) && is_array( $user_profile->identities ) ) {
+			foreach ( $user_profile->identities as $identity ) {
+				if ( $identity->provider === 'auth0' ) {
+					$connection = $identity->connection;
+				}
+			}
+		}
+
+		if ( $connection === null ) {
+			return;
+		}
+		?>
+		<script>
+		jQuery('.wp-pwd').parent().parent().hide();
+		</script>
+		<table class="form-table">
+			<tr>
+				<th>
+					<label for="auth0_password"><?php _e( 'New Password' ); ?></label>
+				</th>
+				<td>
+					<input type="password" name="auth0_password" id="auth0_password" value="" class="regular-text" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<label for="auth0_repeat_password"><?php _e( 'Repeat Password' ); ?></label>
+				</th>
+				<td>
+					<input type="password" name="auth0_repeat_password" id="auth0_repeat_password" value="" class="regular-text" />
+				</td>
+			</tr>
+
+		</table>
+		<?php
+	}
+
+	/**
+	 * Disable the email field for certain connections.
+	 *
+	 * @deprecated - 3.8.0, handled in assets/js/edit-user-profile.js.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function disable_email_field() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		$current_user = get_currentauth0user();
+		$user_profile = $current_user->auth0_obj;
+
+		if ( $user_profile && ! empty( $user_profile ) ) {
+			$connection = null;
+			if ( ! empty( $user_profile->identities ) && is_array( $user_profile->identities ) ) {
+				foreach ( $user_profile->identities as $identity ) {
+					if ( $identity->provider === 'auth0' ) {
+						$connection = $identity->connection;
+					}
+				}
+			}
+
+			if ( $connection === null ) {
+				?>
+				<script>
+			jQuery(document).ready( function($) {
+				if ( $('input[name=email]').length ) {
+					var emailElement = $('input[name=email]');
+					var newEmailElement = emailElement.clone();
+					newEmailElement.attr("disabled", "disabled")
+						.attr("name", "disabled_name")
+						.attr("id", "disabled_name")
+						.insertAfter(emailElement);
+					emailElement.attr("type", "hidden");
+
+					var errorMsg = "<?php _e( 'You cannot change your email here if you logged in using a social connection.', 'wp-auth0' ); ?>";
+					$('<span class="description">' + errorMsg + '</span>').insertAfter(newEmailElement);
+				}
+			});
+				</script>
+				<?php
+			}
+		}
+	}
 }
