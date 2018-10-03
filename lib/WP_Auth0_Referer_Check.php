@@ -1,5 +1,9 @@
 <?php
-// TODO: Deprecate
+/**
+ * @deprecated - 3.8.0, not used and no replacement provided.
+ *
+ * @codeCoverageIgnore - Deprecated
+ */
 class WP_Auth0_Referer_Check {
 	public static function init() {
 		if ( ! WP_Auth0_Options::Instance()->get( 'redirect_referer' ) ) {
@@ -9,7 +13,13 @@ class WP_Auth0_Referer_Check {
 		new WP_Auth0_Referer_Check();
 	}
 
+	/**
+	 * @deprecated - 3.8.0, not used and no replacement provided.
+	 */
 	private function __construct() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
 		add_action( 'init', array( $this, 'do_url_check' ) );
 		add_filter( 'wp_auth0_get_option', array( $this, 'check_activate' ), 10, 2 );
 	}
