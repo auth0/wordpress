@@ -133,26 +133,14 @@ class WP_Auth0_Lock10_Options {
 	}
 
 	public function get_sso_options() {
-		$options['scope'] = WP_Auth0_LoginManager::get_userinfo_scope( 'sso' );
-
-		$options['responseType'] = 'token id_token';
-		if ( $this->get_auth0_implicit_workflow() ) {
-			$options['redirectUri'] = $this->get_implicit_callback_url();
-		} else {
-			$options['redirectUri'] = $this->get_code_callback_url();
-		}
-
-		$redirect_to = null;
-
-		if ( isset( $_GET['redirect_to'] ) ) {
-			$redirect_to = $_GET['redirect_to'];
-		} else {
-			$redirect_to = home_url( $_SERVER['REQUEST_URI'] );
-		}
-
+		$options['scope']        = WP_Auth0_LoginManager::get_userinfo_scope( 'sso' );
+		$options['responseType'] = 'id_token';
+		$options['redirectUri']  = $this->get_implicit_callback_url();
+		$options['nonce']        = WP_Auth0_Nonce_Handler::get_instance()->get_unique();
 		unset( $options['authParams'] );
+
+		$redirect_to      = ! empty( $_SERVER['REQUEST_URI'] ) ? home_url( $_SERVER['REQUEST_URI'] ) : null;
 		$options['state'] = $this->get_state_obj( $redirect_to );
-		$options['nonce'] = WP_Auth0_Nonce_Handler::get_instance()->get_unique();
 
 		return $options;
 	}

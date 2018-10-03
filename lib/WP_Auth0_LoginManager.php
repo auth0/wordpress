@@ -90,11 +90,9 @@ class WP_Auth0_LoginManager {
 		add_action( 'login_init', array( $this, 'login_auto' ) );
 		add_action( 'template_redirect', array( $this, 'init_auth0' ), 1 );
 		add_action( 'wp_logout', array( $this, 'logout' ) );
-		add_filter( 'login_message', array( $this, 'auth0_sso_footer' ) );
 		add_action( 'wp_footer', array( $this, 'auth0_singlelogout_footer' ) );
 		add_action( 'admin_footer', array( $this, 'auth0_singlelogout_footer' ) );
 		add_action( 'login_footer', array( $this, 'auth0_singlelogout_footer' ) );
-		add_action( 'wp_login', array( $this, 'end_session' ) );
 	}
 
 	/**
@@ -599,6 +597,7 @@ class WP_Auth0_LoginManager {
 	 * Outputs JS on wp-login.php to log a user in if an Auth0 session is found.
 	 * Hooked to `login_message` filter.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 * TODO: Deprecate, moved to assets/js/lock-init.js
 	 *
 	 * @param string $previous_html - HTML passed into the login_message filter.
 	 *
