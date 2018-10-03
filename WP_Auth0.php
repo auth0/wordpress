@@ -372,6 +372,18 @@ class WP_Auth0 {
 			return $html;
 		}
 
+		// If the user has a WP session, determine where they should end up and redirect.
+		if ( is_user_logged_in() ) {
+			$login_redirect = ! empty( $_REQUEST['redirect_to'] ) ?
+				filter_var( $_REQUEST['redirect_to'], FILTER_SANITIZE_URL ) :
+				$this->a0_options->get( 'default_login_redirection' );
+
+			// Add a cache buster to avoid an infinite redirect loop on pages that check for auth.
+			$login_redirect = add_query_arg( time(), '', $login_redirect );
+			wp_safe_redirect( $login_redirect );
+			exit;
+		}
+
 		ob_start();
 		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
 		renderAuth0Form();
