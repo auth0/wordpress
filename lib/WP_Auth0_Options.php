@@ -16,28 +16,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		return is_multisite() ? users_can_register_signup_filter() : get_site_option( 'users_can_register' );
 	}
 
-	/**
-	 * TODO: Deprecate
-	 */
-	public function set_connection( $key, $value ) {
-		$options                        = $this->get_options();
-		$options['connections'][ $key ] = $value;
-
-		$this->set( 'connections', $options['connections'] );
-	}
-
-	/**
-	 * TODO: Deprecate
-	 */
-	public function get_connection( $key, $default = null ) {
-		$options = $this->get_options();
-
-		if ( ! isset( $options['connections'][ $key ] ) ) {
-			return apply_filters( 'wp_auth0_get_option', $default, $key );
-		}
-		return apply_filters( 'wp_auth0_get_option', $options['connections'][ $key ], $key );
-	}
-
 	public function get_default( $key ) {
 		$defaults = $this->defaults();
 		return $defaults[ $key ];
@@ -291,8 +269,45 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		);
 	}
 
-	/**
+	/*
 	 *
+	 * DEPRECATED
+	 *
+	 */
+
+	/**
+	 * @deprecated - 3.8.0, not used and no replacement provided. Connection settings now live in top-level settings.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function set_connection( $key, $value ) {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		$options                        = $this->get_options();
+		$options['connections'][ $key ] = $value;
+
+		$this->set( 'connections', $options['connections'] );
+	}
+
+	/**
+	 * @deprecated - 3.8.0, not used and no replacement provided. Connection settings now live in top-level settings.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function get_connection( $key, $default = null ) {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		$options = $this->get_options();
+
+		if ( ! isset( $options['connections'][ $key ] ) ) {
+			return apply_filters( 'wp_auth0_get_option', $default, $key );
+		}
+		return apply_filters( 'wp_auth0_get_option', $options['connections'][ $key ], $key );
+	}
+
+	/**
 	 * @deprecated 3.6.0 - Social connections are no longer set during initial setup so this data is no longer needed.
 	 *
 	 * @return array
