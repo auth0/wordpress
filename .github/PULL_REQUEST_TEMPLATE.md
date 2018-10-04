@@ -30,5 +30,4 @@ Please describe how this can be tested by reviewers. Tests must be added for new
 * [ ] All existing and new tests complete without errors
 * [ ] All code quality tools/guidelines in the [Contribution guide](CONTRIBUTION.md) have been run/followed
 * [ ] All relevant assets have been compiled as directed in the [Contribution guide](CONTRIBUTION.md), if applicable
-* [ ] This PR is rebased against the `dev` branch
 * [ ] All active GitHub CI checks have passed
