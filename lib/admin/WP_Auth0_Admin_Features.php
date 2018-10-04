@@ -220,7 +220,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_auto_login_method' );
 		$this->render_field_description(
 			__( 'Use the Universal Login Page (ULP) for authentication. ', 'wp-auth0' ) .
-			__( 'When turned on, <code>wp-login.php</code> will be redirected to the hosted login page. ', 'wp-auth0' ) .
+			__( 'When turned on, <code>wp-login.php</code> will redirect to the hosted login page. ', 'wp-auth0' ) .
 			__( 'When turned off, <code>wp-login.php</code> will show an embedded login form. ', 'wp-auth0' ) .
 			$this->get_docs_link( 'guides/login/universal-vs-embedded', __( 'More on ULP vs embedded here', 'wp-auth0' ) )
 		);
