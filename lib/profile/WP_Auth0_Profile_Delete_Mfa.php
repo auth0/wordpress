@@ -71,7 +71,7 @@ class WP_Auth0_Profile_Delete_Mfa {
 				</th>
 				<td>
 					<input type="button" id="auth0_delete_mfa" class="button button-secondary"
-						   value="<?php _e( 'Delete MFA' ); ?>" />
+						   value="<?php _e( 'Delete MFA Provider' ); ?>" />
 				</td>
 			</tr>
 		</table>

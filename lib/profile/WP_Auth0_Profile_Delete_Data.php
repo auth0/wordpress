@@ -53,7 +53,7 @@ class WP_Auth0_Profile_Delete_Data {
 		<table class="form-table">
 			<tr>
 				<th>
-					<label><?php _e( 'Delete Auth0 data' ); ?></label>
+					<label><?php _e( 'Delete Auth0 Data' ); ?></label>
 				</th>
 				<td>
 					<input type="button" id="auth0_delete_data" class="button button-secondary"

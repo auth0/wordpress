@@ -26,7 +26,7 @@ jQuery(function($) {
     }
 
     /**
-     * Delete Auth0 data button click.
+     * Delete Auth0 Data button click.
      */
     deleteUserDataButton.click(function (e) {
         if ( ! window.confirm(wpa0UserProfile.i18n.confirmDeleteId) ) {
@@ -37,7 +37,7 @@ jQuery(function($) {
     });
 
     /**
-     * Delete MFA data button click.
+     * Delete MFA Provider button click.
      */
     deleteMfaDataButton.click(function (e) {
         if ( ! window.confirm(wpa0UserProfile.i18n.confirmDeleteMfa) ) {
