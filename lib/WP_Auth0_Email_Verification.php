@@ -77,21 +77,6 @@ class WP_Auth0_Email_Verification {
 
 	/**
 	 * AJAX handler to request that the verification email be resent.
-	 * TODO: Deprecate, use $this->resend_verification_email()
-	 *
-	 * @codeCoverageIgnore - Not adding tests for soon-to-be-deprecated methods.
-	 */
-	public static function ajax_resend_email() {
-		check_ajax_referer( self::RESEND_NONCE_ACTION );
-		if ( ! empty( $_POST['sub'] ) ) {
-			$user_id = sanitize_text_field( $_POST['sub'] );
-			$result  = WP_Auth0_Api_Client::resend_verification_email( $user_id );
-			echo $result ? 'success' : 'fail';
-		}
-	}
-
-	/**
-	 * AJAX handler to request that the verification email be resent.
 	 * Triggered in $this->render_die
 	 *
 	 * @codeCoverageIgnore - Tested in TestEmailVerification::testResendVerificationEmail()
@@ -108,6 +93,31 @@ class WP_Auth0_Email_Verification {
 		}
 
 		wp_send_json_success();
+	}
+
+	/*
+	 *
+	 * DEPRECATED
+	 *
+	 */
+
+	/**
+	 * AJAX handler to request that the verification email be re-sent.
+	 *
+	 * @deprecated - 3.8.0, use $this->resend_verification_email().
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
+	public static function ajax_resend_email() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		check_ajax_referer( self::RESEND_NONCE_ACTION );
+		if ( ! empty( $_POST['sub'] ) ) {
+			$user_id = sanitize_text_field( $_POST['sub'] );
+			$result  = WP_Auth0_Api_Client::resend_verification_email( $user_id );
+			echo $result ? 'success' : 'fail';
+		}
 	}
 }
 
