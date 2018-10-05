@@ -488,6 +488,9 @@ class WP_Auth0 {
 	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function a0_render_message() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
 		$message = null;
 
 		if ( $message ) {
