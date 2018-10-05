@@ -271,18 +271,6 @@ class WP_Auth0 {
 		return $qvars;
 	}
 
-	// TODO: Deprecate, not used
-	public function a0_render_message() {
-		$message = null;
-
-		if ( $message ) {
-			echo "<div class=\"a0-message\">$message <small onclick=\"jQuery('.a0-message').hide();\">(Close)</small></div>";
-			echo '<script type="text/javascript">
-				setTimeout(function(){jQuery(".a0-message").hide();}, 10 * 1000);
-			</script>';
-		}
-	}
-
 	/**
 	 * Add settings link on plugin page.
 	 */
@@ -493,6 +481,22 @@ class WP_Auth0 {
 	 * DEPRECATED
 	 *
 	 */
+
+	/**
+	 * @deprecated - 3.8.0, not used and no replacement provided.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function a0_render_message() {
+		$message = null;
+
+		if ( $message ) {
+			echo "<div class=\"a0-message\">$message <small onclick=\"jQuery('.a0-message').hide();\">(Close)</small></div>";
+			echo '<script type="text/javascript">
+				setTimeout(function(){jQuery(".a0-message").hide();}, 10 * 1000);
+			</script>';
+		}
+	}
 
 	/**
 	 * @deprecated - 3.8.0, not used and no replacement provided.
