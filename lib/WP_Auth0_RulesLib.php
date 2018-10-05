@@ -2,54 +2,6 @@
 
 class WP_Auth0_RulesLib {
 
-	/**
-	 * TODO: Deprecate, no longer used
-	 */
-	public static $disable_social_signup = array(
-
-		'name'   => 'Disable-Social-Signup-Do-Not-Rename',
-		'script' => "
-function (user, context, callback) {
-
-  var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
-  // run only for the specified clients
-  if (CLIENTS_ENABLED.indexOf(context.clientID) === -1) {
-    return callback(null, user, context);
-  }
-
-  // initialize app_metadata
-  user.app_metadata = user.app_metadata || {};
-
-  // if it is the first login (hence the `signup`) and it is a social login
-  if (context.stats.loginsCount === 1 && user.identities[0].isSocial) {
-
-    // turn on the flag
-    user.app_metadata.is_signup = true;
-
-    // store the app_metadata
-    auth0.users.updateAppMetadata(user.user_id, user.app_metadata)
-      .then(function(){
-        // throw error
-        return callback('Signup disabled');
-      })
-      .catch(function(err){
-        callback(err);
-      });
-
-    return;
-  }
-
-  // if flag is enabled, throw error
-  if (user.app_metadata.is_signup) {
-    return callback('Signup disabled');
-  }
-
-  // else it is a non social login or it is not a signup
-  callback(null, user, context);
-}
-		",
-	);
-
 	public static $link_accounts = array(
 
 		'name'   => 'Account-Linking-Do-Not-Rename',
@@ -130,27 +82,6 @@ function (user, context, callback) {
       context.multifactor = {
         provider: 'guardian',
         ignoreCookie: true, // optional. Force Auth0 MFA everytime this rule runs. Defaults to false. if accepted by users the cookie lasts for 30 days (this cannot be changed)
-      };
-    // }
-  }
-  callback(null, user, context);
-}",
-	);
-
-	public static $google_MFA = array(
-		'name'   => 'Multifactor-Google-Authenticator-Do-Not-Rename',
-		'script' => "
-function (user, context, callback) {
-  var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
-  // run only for the specified clients
-  if (CLIENTS_ENABLED.indexOf(context.clientID) !== -1) {
-    // uncomment the following if clause in case you want to request a second factor only from user's that have user_metadata.use_mfa === true
-    // if (user.user_metadata && user.user_metadata.use_mfa){
-      context.multifactor = {
-        provider: 'google-authenticator',
-        // issuer: 'Label on Google Authenticator App', // optional
-        // key: '{YOUR_KEY_HERE}', //  optional, the key to use for TOTP. by default one is generated for you
-        // ignoreCookie: true // optional, force Google Authenticator everytime this rule runs. Defaults to false. if accepted by users the cookie lasts for 30 days (this cannot be changed)
       };
     // }
   }
@@ -281,6 +212,88 @@ function (user, context, callback) {
           callback(null, user, context);
         }
     }
+}",
+	);
+
+	/*
+	 *
+	 * DEPRECATED
+	 *
+	 */
+
+	/**
+	 * @deprecated - 3.8.0, not used and no replacement provided.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
+	public static $disable_social_signup = array(
+
+		'name'   => 'Disable-Social-Signup-Do-Not-Rename',
+		'script' => "
+function (user, context, callback) {
+
+  var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
+  // run only for the specified clients
+  if (CLIENTS_ENABLED.indexOf(context.clientID) === -1) {
+    return callback(null, user, context);
+  }
+
+  // initialize app_metadata
+  user.app_metadata = user.app_metadata || {};
+
+  // if it is the first login (hence the `signup`) and it is a social login
+  if (context.stats.loginsCount === 1 && user.identities[0].isSocial) {
+
+    // turn on the flag
+    user.app_metadata.is_signup = true;
+
+    // store the app_metadata
+    auth0.users.updateAppMetadata(user.user_id, user.app_metadata)
+      .then(function(){
+        // throw error
+        return callback('Signup disabled');
+      })
+      .catch(function(err){
+        callback(err);
+      });
+
+    return;
+  }
+
+  // if flag is enabled, throw error
+  if (user.app_metadata.is_signup) {
+    return callback('Signup disabled');
+  }
+
+  // else it is a non social login or it is not a signup
+  callback(null, user, context);
+}
+		",
+	);
+
+	/**
+	 * @deprecated - 3.8.0, not used and no replacement provided.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
+	public static $google_MFA = array(
+		'name'   => 'Multifactor-Google-Authenticator-Do-Not-Rename',
+		'script' => "
+function (user, context, callback) {
+  var CLIENTS_ENABLED = ['REPLACE_WITH_YOUR_CLIENT_ID'];
+  // run only for the specified clients
+  if (CLIENTS_ENABLED.indexOf(context.clientID) !== -1) {
+    // uncomment the following if clause in case you want to request a second factor only from user's that have user_metadata.use_mfa === true
+    // if (user.user_metadata && user.user_metadata.use_mfa){
+      context.multifactor = {
+        provider: 'google-authenticator',
+        // issuer: 'Label on Google Authenticator App', // optional
+        // key: '{YOUR_KEY_HERE}', //  optional, the key to use for TOTP. by default one is generated for you
+        // ignoreCookie: true // optional, force Google Authenticator everytime this rule runs. Defaults to false. if accepted by users the cookie lasts for 30 days (this cannot be changed)
+      };
+    // }
+  }
+  callback(null, user, context);
 }",
 	);
 }
