@@ -73,9 +73,9 @@ class WP_Auth0_UsersRepo {
 	 *
 	 * @param object      $userinfo - Profile object from Auth0.
 	 * @param string      $token - ID token from Auth0.
-	 * @param null|string $access_token - TODO: Deprecate, not used
-	 * @param null|string $role - TODO: Deprecate, not used
-	 * @param bool        $skip_email_verified - TODO: Deprecate, not used
+	 * @param null|string $access_token - @deprecated - 3.8.0.
+	 * @param null|string $role - @deprecated - 3.8.0.
+	 * @param bool        $skip_email_verified - @deprecated - 3.8.0.
 	 *
 	 * @return int|null|WP_Error
 	 *
@@ -84,6 +84,18 @@ class WP_Auth0_UsersRepo {
 	 * @throws WP_Auth0_RegistrationNotEnabledException
 	 */
 	public function create( $userinfo, $token, $access_token = null, $role = null, $skip_email_verified = false ) {
+
+		if ( func_num_args() > 2 ) {
+			// phpcs:ignore
+			trigger_error(
+				sprintf(
+					__( '$access_token, $role, and $skip_email_verified params are deprecated.', 'wp-auth0' ),
+					__METHOD__
+				),
+				E_USER_DEPRECATED
+			);
+		}
+
 		$auth0_sub      = $userinfo->sub;
 		list($strategy) = explode( '|', $auth0_sub );
 		$opts           = WP_Auth0_Options::Instance();
