@@ -24,7 +24,7 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Should the new user have an administrator role?
 	 *
-	 * TODO: Deprecate, not used
+	 * @deprecated - 3.8.0
 	 *
 	 * @var bool|null
 	 */
@@ -33,7 +33,7 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Ignore verified email requirement in Settings > Advanced.
 	 *
-	 * TODO: Deprecate, not used
+	 * @deprecated - 3.8.0
 	 *
 	 * @var bool
 	 */
@@ -51,8 +51,8 @@ class WP_Auth0_LoginManager {
 	 *
 	 * @param WP_Auth0_UsersRepo    $users_repo - see member variable doc comment.
 	 * @param WP_Auth0_Options|null $a0_options - see member variable doc comment.
-	 * @param null|bool             $admin_role - see member variable doc comment.
-	 * @param bool                  $ignore_unverified_email - see member variable doc comment.
+	 * @param null|bool             $admin_role - @deprecated - 3.8.0.
+	 * @param bool                  $ignore_unverified_email - @deprecated - 3.8.0.
 	 */
 	public function __construct(
 		WP_Auth0_UsersRepo $users_repo,
@@ -60,14 +60,23 @@ class WP_Auth0_LoginManager {
 		$admin_role = null,
 		$ignore_unverified_email = false
 	) {
-		$this->admin_role              = $admin_role;
-		$this->ignore_unverified_email = $ignore_unverified_email;
-		$this->users_repo              = $users_repo;
+		$this->users_repo = $users_repo;
 
 		if ( $a0_options instanceof WP_Auth0_Options ) {
 			$this->a0_options = $a0_options;
 		} else {
 			$this->a0_options = WP_Auth0_Options::Instance();
+		}
+
+		$this->admin_role              = $admin_role;
+		$this->ignore_unverified_email = $ignore_unverified_email;
+
+		if ( func_num_args() > 2 ) {
+			// phpcs:ignore
+			trigger_error(
+				sprintf( __( '$admin_role and $ignore_unverified_email are deprecated.', 'wp-auth0' ), __METHOD__ ),
+				E_USER_DEPRECATED
+			);
 		}
 	}
 
@@ -626,17 +635,6 @@ class WP_Auth0_LoginManager {
 	}
 
 	/**
-	 * End the PHP session.
-	 *
-	 * TODO: Deprecate
-	 */
-	public function end_session() {
-		if ( session_id() ) {
-			session_destroy();
-		}
-	}
-
-	/**
 	 * Get and filter the scope used for access and ID tokens.
 	 *
 	 * @param string $context - how the scopes are being used.
@@ -772,6 +770,28 @@ class WP_Auth0_LoginManager {
 					: __( '← Logout', 'wp-auth0' )
 			)
 		);
+	}
+
+	/*
+	 *
+	 * DEPRECATED
+	 *
+	 */
+
+	/**
+	 * End the PHP session.
+	 *
+	 * @deprecated - 3.8.0, not used and no replacement provided.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function end_session() {
+		// phpcs:ignore
+		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		if ( session_id() ) {
+			session_destroy();
+		}
 	}
 
 	/**

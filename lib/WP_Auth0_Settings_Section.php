@@ -65,8 +65,5 @@ class WP_Auth0_Settings_Section {
 		}
 	}
 
-	// TODO: deprecate
-	public function redirect_to_help() {
-
-	}
+	public function redirect_to_help() {}
 }
