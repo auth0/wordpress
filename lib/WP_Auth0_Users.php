@@ -5,7 +5,7 @@ class WP_Auth0_Users {
 	 * Create a WordPress user with Auth0 data.
 	 *
 	 * @param object       $userinfo - User profile data from Auth0.
-	 * @param null|boolean $role - Set the sole as administrator - @deprecated - 3.8.0.
+	 * @param null|boolean $role - Set the role as administrator - @deprecated - 3.8.0.
 	 *
 	 * @return int|WP_Error
 	 */
