@@ -340,7 +340,7 @@ class WP_Auth0_EditProfile {
 		<table class="form-table">
 			<tr>
 				<th>
-					<label><?php _e( 'Delete Auth0 data' ); ?></label>
+					<label><?php _e( 'Delete Auth0 Data' ); ?></label>
 				</th>
 				<td>
 					<input type="button" onclick="DeleteAuth0Data(event);" name="auth0_delete_data" id="auth0_delete_data"
@@ -398,7 +398,7 @@ class WP_Auth0_EditProfile {
 				</th>
 				<td>
 					<input type="button" onclick="DeleteMFA(event);" name="auth0_delete_mfa" id="auth0_delete_mfa"
-						   value="<?php _e( 'Delete MFA' ); ?>" class="button button-secondary" />
+						   value="<?php _e( 'Delete MFA Provider' ); ?>" class="button button-secondary" />
 				</td>
 			</tr>
 		</table>
