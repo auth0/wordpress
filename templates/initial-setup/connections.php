@@ -15,9 +15,9 @@ $next_step = $options->get( 'migration_ws' ) ? 4 : 3;
 	<div class="container-fluid">
 		<div class="row">
 
-			<h1><?php _e( 'Configure your social connections', 'wp-auth0' ); ?></h1>
+			<h1><?php _e( 'Configure your Connections', 'wp-auth0' ); ?></h1>
 
-			<p class="a0-step-text"><?php _e( "If your site visitors already have social network accounts, they can authenticate using their existing credentials, or they can set up a username and password combination safeguarded by Auth0's password policies and brute force protection. To configure these connections, use the Auth0 Dashboard button below.", 'wp-auth0' ); ?></p>
+			<p class="a0-step-text"><?php _e( "If your site visitors already have social network accounts, they can authenticate using their existing credentials, or they can set up a username and password combination safeguarded by Auth0's password policies and brute force protection. To configure these connections, use the Configure Connections button below.", 'wp-auth0' ); ?></p>
 
 			<div class="a0-separator"></div>
 
@@ -29,7 +29,7 @@ $next_step = $options->get( 'migration_ws' ) ? 4 : 3;
 			<?php echo $options->get( 'client_id' ); ?>
 			/connections" class="a0-button primary" target="_blank">
 			<?php
-			  _e( 'Auth0 Dashboard', 'wp-auth0' );
+			  _e( 'Configure Connections', 'wp-auth0' );
 			?>
 			  </a>
 			<a class="a0-button primary" href="

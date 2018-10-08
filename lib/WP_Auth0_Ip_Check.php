@@ -27,10 +27,13 @@ class WP_Auth0_Ip_Check {
 	 */
 	protected $valid_webtask_ips = [
 		'us' => [
+			'3.211.189.167',
+			'18.233.90.226',
 			'34.195.142.251',
 			'35.160.3.103',
 			'35.166.202.113',
 			'35.167.74.121',
+			'35.171.156.124',
 			'52.14.17.114',
 			'52.14.38.78',
 			'52.14.40.253',
@@ -57,10 +60,13 @@ class WP_Auth0_Ip_Check {
 			'52.29.176.99',
 			'52.50.106.250',
 			'52.57.230.214',
+			'52.208.95.174',
+			'52.210.122.50',
 			'52.211.56.181',
 			'52.213.38.246',
 			'52.213.74.69',
 			'52.213.216.142',
+			'54.76.184.103',
 		],
 		'au' => [
 			'13.54.254.182',
@@ -99,7 +105,7 @@ class WP_Auth0_Ip_Check {
 	 * @param string $domain - Tenant domain.
 	 * @param string $glue   - String used to implode arrays.
 	 *
-	 * @return string
+	 * @return string|array
 	 */
 	public function get_ips_by_domain( $domain = null, $glue = self::IP_STRING_GLUE ) {
 		if ( empty( $domain ) ) {
@@ -115,10 +121,11 @@ class WP_Auth0_Ip_Check {
 	 * @param string $region - Tenant region.
 	 * @param string $glue   - String used to implode arrays.
 	 *
-	 * @return string
+	 * @return string|array
 	 */
 	public function get_ip_by_region( $region, $glue = self::IP_STRING_GLUE ) {
-		return implode( $glue, $this->valid_webtask_ips[ $region ] );
+		$ip_addresses = $this->valid_webtask_ips[ $region ];
+		return is_null( $glue ) ? $ip_addresses : implode( $glue, $ip_addresses );
 	}
 
 	/**

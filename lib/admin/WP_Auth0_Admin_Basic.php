@@ -103,7 +103,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_domain( $args = [] ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'your-tenant.auth0.com' );
+		$style = $this->options->get( $args['opt_name'] ) ? '' : self::ERROR_FIELD_STYLE;
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'your-tenant.auth0.com', $style );
 		$this->render_field_description(
 			__( 'Auth0 Domain, found in your Application settings in the ', 'wp-auth0' ) .
 			$this->get_dashboard_link( 'applications' )
@@ -139,7 +140,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_client_id( $args = [] ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$style = $this->options->get( $args['opt_name'] ) ? '' : self::ERROR_FIELD_STYLE;
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', '', $style );
 		$this->render_field_description(
 			__( 'Client ID, found in your Application settings in the ', 'wp-auth0' ) .
 			$this->get_dashboard_link( 'applications' )
@@ -156,7 +158,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_client_secret( $args = [] ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password' );
+		$style = $this->options->get( $args['opt_name'] ) ? '' : self::ERROR_FIELD_STYLE;
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password', '', $style );
 		$this->render_field_description(
 			__( 'Client Secret, found in your Application settings in the ', 'wp-auth0' ) .
 			$this->get_dashboard_link( 'applications' )
@@ -354,19 +357,21 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			return $input;
 		}
 
+		$input['domain']           = sanitize_text_field( $input['domain'] );
+		$input['custom_domain']    = sanitize_text_field( $input['custom_domain'] );
 		$input['client_id']        = sanitize_text_field( $input['client_id'] );
 		$input['cache_expiration'] = absint( $input['cache_expiration'] );
 
-		$input['allow_signup'] = ( isset( $input['allow_signup'] ) ? $input['allow_signup'] : 0 );
+		$input['client_secret'] = sanitize_text_field( $input['client_secret'] );
+		if ( __( '[REDACTED]', 'wp-auth0' ) === $input['client_secret'] ) {
+			$input['client_secret'] = $old_options['client_secret'];
+		}
 
-		// Only replace the secret or token if a new value was set. If not, we will keep the last one entered.
-		$input['client_secret'] = ( ! empty( $input['client_secret'] )
-			? $input['client_secret']
-			: $old_options['client_secret'] );
+		$input['client_secret_b64_encoded'] = empty( $input['client_secret_b64_encoded'] ) ? 0 : 1;
 
-		$input['client_secret_b64_encoded'] = ( isset( $input['client_secret_b64_encoded'] )
-			? $input['client_secret_b64_encoded'] == 1
-			: false );
+		if ( ! in_array( $input['client_signing_algorithm'], [ 'HS256', 'RS256' ] ) ) {
+			$input['client_signing_algorithm'] = WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG;
+		}
 
 		if ( empty( $input['domain'] ) ) {
 			$this->add_validation_error( __( 'You need to specify a domain', 'wp-auth0' ) );

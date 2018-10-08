@@ -7,7 +7,7 @@
         "php": "^5.6 || ^7.0"
     },
     "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.5",
         "wp-coding-standards/wpcs": "^1",
         "phpcompatibility/phpcompatibility-wp": "*",
         "phpunit/phpunit": "^5.0 || ^6.0"
@@ -32,7 +32,7 @@
     "scripts": {
         "compat": "\"vendor/bin/phpcs\" --standard=phpcs-compat-ruleset.xml .",
         "phpcs": "\"vendor/bin/phpcs\"",
-        "phpcs-i18n": "\"vendor/bin/phpcs\" --sniffs=WordPress.WP.I18n ./lib/",
+        "phpcs-i18n": "\"vendor/bin/phpcs\" --sniffs=WordPress.WP.I18n",
         "phpcs-tests": "\"vendor/bin/phpcs\" --standard=phpcs-test-ruleset.xml -s ./tests/",
         "phpcbf": "\"vendor/bin/phpcbf\"",
         "phpcbf-tests": "\"vendor/bin/phpcbf\" --standard=phpcs-test-ruleset.xml -s ./tests/",
@@ -40,7 +40,7 @@
         "test": "\"vendor/bin/phpunit\" --coverage-text",
         "test-group": "\"vendor/bin/phpunit\" --coverage-text --group",
         "test-ci": "\"vendor/bin/phpunit\" --coverage-clover=coverage.xml",
-        "pre-commit-no-tests": [ "@compat", "@phpcs-i18n", "@phpcbf", "@phpcbf-tests", "@phpcs-tests" ],
+        "pre-commit-no-tests": [ "@phpcbf", "@phpcbf-tests", "@phpcs-tests", "@compat", "@phpcs-i18n" ],
         "pre-commit": [ "@phpcbf", "@phpcbf-tests", "@phpcs-tests", "@compat", "@phpcs-i18n", "@test" ]
     },
     "autoload-dev": {

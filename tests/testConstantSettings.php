@@ -155,8 +155,8 @@ class TestConstantSettings extends WP_Auth0_Test_Case {
 			$this->assertContains( $constant_name, $field_html );
 
 			// Sensitive fields will not output the current value.
-			$is_sensitive = in_array( $field['opt_name'], [ 'client_secret' ] );
-			$this->assertContains( 'value="' . ( $is_sensitive ? '' : $field['value'] ) . '"', $field_html );
+			$expected_value = 'client_secret' === $field['opt_name'] ? '[REDACTED]' : $field['value'];
+			$this->assertContains( 'value="' . $expected_value . '"', $field_html );
 		}
 	}
 }

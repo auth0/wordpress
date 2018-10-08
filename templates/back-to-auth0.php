@@ -6,5 +6,10 @@ if ( empty( $title ) ) {
 ?>
 
 <div id="extra-options">
-	<a href="?"><?php printf( __( '← Back to %s login', 'wp-auth0' ), $title ); ?></a>
+	<a href="?">
+	<?php
+			// translators: The $title variable is the admin-controlled form title.
+			printf( __( '← Back to %s login', 'wp-auth0' ), $title );
+	?>
+			</a>
 </div>

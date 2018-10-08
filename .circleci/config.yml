@@ -17,7 +17,7 @@ commands:
             sudo docker-php-ext-install mysqli
             sudo apt-get update
             sudo composer self-update
-            sudo apt-get install -y subversion mysql-client
+            sudo apt-get install -y subversion default-mysql-client
       - restore_cache:
           keys:
             - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
@@ -40,7 +40,7 @@ commands:
             composer phpcbf
             composer phpcbf-tests
             composer phpcs-tests
-            composer compat
+            composer phpcs-i18n
   run-tests:
     steps:
       - run:
@@ -49,9 +49,6 @@ commands:
             dockerize -wait tcp://127.0.0.1:3306 -timeout 120s
             bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 latest
       - run: composer test-ci
-      - run:
-          command: bash <(curl -s https://codecov.io/bash)
-          when: on_success
 
 jobs:
   php_5:
@@ -63,7 +60,8 @@ jobs:
     steps:
       - prepare
       - run-tests
-      - run-formatting
+      - run:
+          command: composer compat
   php_7:
     docker:
       - image: circleci/php:7.1
@@ -74,6 +72,9 @@ jobs:
       - prepare
       - run-tests
       - run-formatting
+      - run:
+          command: bash <(curl -s https://codecov.io/bash)
+          when: on_success
   snyk:
     docker:
       - image: snyk/snyk-cli:composer

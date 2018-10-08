@@ -14,6 +14,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	protected $actions_middlewares = [
 		'basic_validation',
 		'migration_ws_validation',
+		'migration_ips_validation',
 		'loginredirection_validation',
 	];
 
@@ -578,20 +579,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
 		$input['force_https_callback']    = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
 
-		$input['custom_cdn_url'] = empty( $input['custom_cdn_url'] ) ? 0 : 1;
-
-		$input['cdn_url'] = empty( $input['cdn_url'] ) ? WPA0_LOCK_CDN_URL : sanitize_text_field( $input['cdn_url'] );
-
-		// If an invalid URL is used, default to previously saved (if there is one) or default URL.
-		if ( ! filter_var( $input['cdn_url'], FILTER_VALIDATE_URL ) ) {
-			$input['cdn_url'] = isset( $old_options['cdn_url'] ) ? $old_options['cdn_url'] : WPA0_LOCK_CDN_URL;
-			self::add_validation_error( __( 'The Lock JS CDN URL used is not a valid URL.', 'wp-auth0' ) );
-		}
-
 		$input['migration_ips_filter'] = ( ! empty( $input['migration_ips_filter'] ) ? 1 : 0 );
-
-		$input['migration_ips'] = isset( $input['migration_ips'] ) ?
-			sanitize_text_field( $input['migration_ips'] ) : '';
 
 		$input['valid_proxy_ip'] = ( isset( $input['valid_proxy_ip'] ) ? $input['valid_proxy_ip'] : null );
 
@@ -653,6 +641,29 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			// If the JWT cannot be decoded then we use the token as-is without storing the JTI.
 		}
 
+		return $input;
+	}
+
+	public function migration_ips_validation( array $old_options, array $input ) {
+
+		if ( empty( $input['migration_ips'] ) ) {
+			$input['migration_ips'] = '';
+			return $input;
+		}
+
+		$ip_addresses = explode( ',', $input['migration_ips'] );
+		$ip_addresses = array_map( 'trim', $ip_addresses );
+		$ip_addresses = array_map( 'sanitize_text_field', $ip_addresses );
+		$ip_addresses = array_filter( $ip_addresses );
+		$ip_addresses = array_unique( $ip_addresses );
+
+		if ( ! empty( $input['domain'] ) ) {
+			$ip_check      = new WP_Auth0_Ip_Check();
+			$whitelist_ips = $ip_check->get_ips_by_domain( $input['domain'], null );
+			$ip_addresses  = array_diff( $ip_addresses, $whitelist_ips );
+		}
+
+		$input['migration_ips'] = implode( ', ', $ip_addresses );
 		return $input;
 	}
 
