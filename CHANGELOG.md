@@ -1,5 +1,14 @@
 # Change Log
 
+## [3.7.1](https://github.com/auth0/wp-auth0/tree/3.7.1) (2018-10-08)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.7.0...3.7.1)
+
+**Closed issues**
+- "search_engine=v2 is not available for your tenant because it is deprecated" error [\#562](https://github.com/auth0/wp-auth0/issues/562)
+
+**Fixed**
+- 3.7.1 patch release to fix user search engine in rules [\#563](https://github.com/auth0/wp-auth0/pull/563) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [3.7.0](https://github.com/auth0/wp-auth0/tree/3.7.0) (2018-08-13)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.6.2...3.7.0)
 
