@@ -209,6 +209,9 @@ class TestUserRepoCreate extends TestCase {
 		$this->assertEquals( $expected_uid, $user->ID );
 	}
 
+	/**
+	 * Run after every test.
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		update_option( 'users_can_register', null );
