@@ -95,6 +95,8 @@ class TestProfileDeleteData extends TestCase {
 
 	/**
 	 * Test that a delete_user_data AJAX call with no user_id fails.
+	 *
+	 * @runInSeparateProcess
 	 */
 	public function testThatAjaxFailsWithNoUserId() {
 		$this->startAjaxHalting();
@@ -117,6 +119,8 @@ class TestProfileDeleteData extends TestCase {
 
 	/**
 	 * Test that a delete_user_data AJAX call with a non-admin user fails.
+	 *
+	 * @runInSeparateProcess
 	 */
 	public function testThatAjaxFailsWithNoAdmin() {
 		$this->startAjaxHalting();
@@ -142,6 +146,8 @@ class TestProfileDeleteData extends TestCase {
 
 	/**
 	 * Test that a delete_user_data AJAX call can succeed.
+	 *
+	 * @runInSeparateProcess
 	 */
 	public function testThatAjaxCallSucceeds() {
 		$this->startAjaxReturn();
