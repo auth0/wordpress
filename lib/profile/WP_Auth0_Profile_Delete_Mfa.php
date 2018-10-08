@@ -51,8 +51,8 @@ class WP_Auth0_Profile_Delete_Mfa {
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 */
 	public function show_delete_mfa() {
-		global $user_id;
-		if ( ! current_user_can( 'edit_users', $user_id ) ) {
+
+		if ( ! isset( $GLOBALS['user_id'] ) || ! current_user_can( 'edit_users', $GLOBALS['user_id'] ) ) {
 			return;
 		}
 
@@ -60,7 +60,7 @@ class WP_Auth0_Profile_Delete_Mfa {
 			return;
 		}
 
-		if ( ! get_auth0userinfo( $user_id ) ) {
+		if ( ! get_auth0userinfo( $GLOBALS['user_id'] ) ) {
 			return;
 		}
 		?>

@@ -62,10 +62,9 @@ trait UsersHelper {
 	 * @return int
 	 */
 	public function setGlobalUser( $set_uid = 1 ) {
-		global $user_id;
-		$user_id = $set_uid;
-		wp_set_current_user( $user_id );
-		return $user_id;
+		$GLOBALS['user_id'] = $set_uid;
+		wp_set_current_user( $set_uid );
+		return $set_uid;
 	}
 
 	/**

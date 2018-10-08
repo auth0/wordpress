@@ -286,6 +286,7 @@ class TestProfileDeleteMfa extends TestCase {
 		parent::tearDown();
 		$this->stopAjaxHalting();
 		$this->stopAjaxReturn();
+		self::$users_repo->delete_auth0_object(1);
 	}
 
 	/*

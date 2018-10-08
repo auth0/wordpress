@@ -214,6 +214,7 @@ class TestErrorLog extends TestCase {
 	 * Test that log clearing works.
 	 */
 	public function testLogClear() {
+		delete_option( self::$error_log_option );
 		$this->assertFalse( get_option( self::$error_log_option ) );
 
 		self::$error_log->add( self::$default_log_entry );
@@ -230,6 +231,7 @@ class TestErrorLog extends TestCase {
 	 * Test that log deleting works.
 	 */
 	public function testLogDelete() {
+		delete_option( self::$error_log_option );
 		$this->assertFalse( get_option( self::$error_log_option ) );
 
 		self::$error_log->add( self::$default_log_entry );
@@ -238,5 +240,13 @@ class TestErrorLog extends TestCase {
 		self::$error_log->delete();
 
 		$this->assertFalse( get_option( self::$error_log_option ) );
+	}
+
+	/**
+	 * Clear out the error log in between tests.
+	 */
+	public function tearDown() {
+		parent::tearDown();
+		self::$error_log->clear();
 	}
 }

@@ -59,7 +59,6 @@ class WP_Auth0_EditProfile {
 	 * @codeCoverageIgnore
 	 */
 	public function admin_enqueue_scripts() {
-		global $user_id;
 		global $pagenow;
 
 		if ( ! in_array( $pagenow, array( 'profile.php', 'user-edit.php' ) ) ) {
@@ -73,14 +72,14 @@ class WP_Auth0_EditProfile {
 			WPA0_VERSION
 		);
 
-		$profile  = get_auth0userinfo( $user_id );
+		$profile  = get_auth0userinfo( $GLOBALS['user_id'] );
 		$strategy = isset( $profile->sub ) ? WP_Auth0_Users::get_strategy( $profile->sub ) : '';
 
 		wp_localize_script(
 			'wpa0_user_profile',
 			'wpa0UserProfile',
 			array(
-				'userId'         => intval( $user_id ),
+				'userId'         => intval( $GLOBALS['user_id'] ),
 				'userStrategy'   => sanitize_text_field( $strategy ),
 				'deleteIdNonce'  => wp_create_nonce( 'delete_auth0_identity' ),
 				'deleteMfaNonce' => wp_create_nonce( 'delete_auth0_mfa' ),

@@ -315,5 +315,6 @@ class TestApiAbstract extends TestCase {
 		parent::tearDown();
 		$this->stopHttpHalting();
 		$this->stopHttpMocking();
+		self::$error_log->clear();
 	}
 }
