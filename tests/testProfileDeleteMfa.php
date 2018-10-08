@@ -112,6 +112,8 @@ class TestProfileDeleteMfa extends TestCase {
 
 	/**
 	 * Test that an AJAX call with no user_id fails.
+	 *
+	 * @runInSeparateProcess
 	 */
 	public function testThatAjaxFailsWithNoUserId() {
 		$this->startAjaxHalting();
@@ -133,6 +135,8 @@ class TestProfileDeleteMfa extends TestCase {
 
 	/**
 	 * Test that an AJAX call with no admin user fails.
+	 *
+	 * @runInSeparateProcess
 	 */
 	public function testThatAjaxFailsWithNoAdmin() {
 		$this->startAjaxHalting();
@@ -157,6 +161,8 @@ class TestProfileDeleteMfa extends TestCase {
 
 	/**
 	 * Test that an AJAX call with no Auth0 data fails.
+	 *
+	 * @runInSeparateProcess
 	 */
 	public function testThatAjaxFailsWithNoAuth0Data() {
 		$this->startAjaxHalting();
@@ -185,6 +191,8 @@ class TestProfileDeleteMfa extends TestCase {
 
 	/**
 	 * Test that the delete MFA action works as expected.
+	 *
+	 * @runInSeparateProcess
 	 */
 	public function testDeleteMfaAjax() {
 		$this->startAjaxHalting();
@@ -216,6 +224,8 @@ class TestProfileDeleteMfa extends TestCase {
 
 	/**
 	 * Test that an AJAX call will succeed.
+	 *
+	 * @runInSeparateProcess
 	 */
 	public function testThatAjaxCallSucceeds() {
 		$this->startAjaxReturn();

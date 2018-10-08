@@ -119,6 +119,8 @@ class TestEmailVerification extends TestCase {
 
 	/**
 	 * Test AJAX email verification send.
+	 *
+	 * @runInSeparateProcess
 	 */
 	public function testResendVerificationEmail() {
 		$this->startAjaxHalting();
