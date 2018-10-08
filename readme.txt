@@ -1,6 +1,6 @@
 === Login by Auth0 ===
 Tags: login, oauth, authentication, single sign on, ldap, active directory, saml, windows azure ad, google apps, two factor, two-factor, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer, passwordless, sms, magiclink, totp, social
-Tested up to: 5.2.1
+Tested up to: 5.2.2
 Requires at least: 3.8
 Requires PHP: 5.6
 License: GPLv2
@@ -56,7 +56,7 @@ If the email was not verified and there is an account with that email in WordPre
 
 = Widget =
 
-You can enable the Auth0 as a WordPress widget in order to show it in a sidebar. The widget inherits the main plugin settings but can be overridden with its own settings in the widget form.
+You can enable the Auth0 as a WordPress widget in order to show it in a sidebar. The widget inherits the main plugin settings but can be overridden with its own settings in the widget form. Note: this form will not display for logged-in users.
 
 = Shortcode =
 
@@ -80,6 +80,8 @@ Like widgets, shortcode login forms will use the main plugins settings. It can b
 Example:
 
     [auth0 show_as_modal="1" modal_trigger_name="Login button: This text is configurable!"]
+
+Note: this form will not display for logged-in users.
 
 == Frequently Asked Questions ==
 
@@ -118,11 +120,13 @@ All is not lost!
 
 == Changelog ==
 
-**v3.11.0**
+**v3.11.1**
 
-- Lock was updated from 11.15 to 11.16. The option to display social connections in small styled buttons is no longer available due to branding compliance reasons with third party identity providers. All the social connections will now be displayed as large styled buttons.
-- New installs using user migration will now have a namespaced user ID returned to Auth0 on first login. If you have or plan on having multiple custom databases, please see the [User Migration documentation](https://auth0.com/docs/cms/wordpress/user-migration) for more information. New installs will also use configuration variables instead of hard-coded values for the URL, migration token, and user namespace.
-- Added more complete ID token validation during login.
-- Fixed a bug that prevented sites using user migration from changing the WordPress user's email.
+- Check state in specific global based on callback type [\#708](https://github.com/auth0/wp-auth0/pull/708) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix sensitive field handling; add Basic settings tab validations [\#703](https://github.com/auth0/wp-auth0/pull/703) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add new Auth0 IPs; do not save duplicate or whitelisted IPs [\#700](https://github.com/auth0/wp-auth0/pull/700) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix post passwords getting redirected [\#698](https://github.com/auth0/wp-auth0/pull/698) ([joshcanhelp](https://github.com/joshcanhelp))
+
+... and more!
 
 [Complete list of changes for this and other releases](https://github.com/auth0/wp-auth0/releases)

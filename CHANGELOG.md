@@ -1,12 +1,32 @@
 # Change Log
 
-## 4.0.0-beta
-[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.11.0...master)
+## 4.0.0-beta (master branch)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.11.1...master)
 
 **Notes on this release**
 
 - The minimum PHP version has been updated from 5.3 to 5.6. All long arrays have been converted to short arrays with a PHPCS check. 
 - The site will no longer auto-redirect paths with `auth0` in them to the callback URL. Use `/index.php?auth0=1` to use the callback URL directly. Your site may require permalinks to be refreshed manually by going to **wp-admin > Settings > Permalinks** and clicking **Save Changes**.
+
+**Closed issues**
+- Using the auth0 word in the URL path triggers an authorization code exchange [\#351](https://github.com/auth0/wp-auth0/issues/351)
+
+**Breaking changes**
+- Fix auth0 in paths triggering callback [\#697](https://github.com/auth0/wp-auth0/pull/697) ([joshcanhelp](https://github.com/joshcanhelp))
+- Bump PHP version to 5.6; auto-adjust array syntax [\#696](https://github.com/auth0/wp-auth0/pull/696) ([joshcanhelp](https://github.com/joshcanhelp))
+
+## [3.11.1](https://github.com/auth0/wp-auth0/tree/3.11.1) (2019-08-05)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.11.0...3.11.1)
+
+**Fixed**
+- Check state in specific global based on callback type [\#708](https://github.com/auth0/wp-auth0/pull/708) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix widget gravatar and language settings [\#706](https://github.com/auth0/wp-auth0/pull/706) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change CDN URL field type [\#704](https://github.com/auth0/wp-auth0/pull/704) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix sensitive field handling; add Basic settings tab validations [\#703](https://github.com/auth0/wp-auth0/pull/703) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix embed widget documentation and validation [\#702](https://github.com/auth0/wp-auth0/pull/702) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add new Auth0 IPs; do not save duplicate or whitelisted IPs [\#700](https://github.com/auth0/wp-auth0/pull/700) ([joshcanhelp](https://github.com/joshcanhelp))
+- Improve setup wizard documentation [\#699](https://github.com/auth0/wp-auth0/pull/699) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix post passwords getting redirected [\#698](https://github.com/auth0/wp-auth0/pull/698) ([joshcanhelp](https://github.com/joshcanhelp))
 
 ## [3.11.0](https://github.com/auth0/wp-auth0/tree/3.11.0) (2019-05-30)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.10.0...3.11.0)
@@ -270,6 +290,8 @@
 - Fix migration token display to allow copying [\#540](https://github.com/auth0/wp-auth0/pull/540) ([joshcanhelp](https://github.com/joshcanhelp))
 - Change and improve user profile [\#532](https://github.com/auth0/wp-auth0/pull/532) ([joshcanhelp](https://github.com/joshcanhelp))
 
+=======
+>>>>>>> d5c5c0d... Add CHANGELOG entry for 3.7.1
 ## [3.7.1](https://github.com/auth0/wp-auth0/tree/3.7.1) (2018-10-08)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.7.0...3.7.1)
 

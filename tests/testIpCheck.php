@@ -43,14 +43,14 @@ class TestIpCheck extends WP_Auth0_Test_Case {
 		$ip_check = new WP_Auth0_Ip_Check( self::$opts );
 
 		$us_ips = explode( ',', $ip_check->get_ip_by_region( 'us' ) );
-		$this->assertCount( 16, $us_ips );
+		$this->assertCount( 19, $us_ips );
 		$us_ips = explode( ',', $ip_check->get_ips_by_domain( 'test.auth0.com' ) );
-		$this->assertCount( 16, $us_ips );
+		$this->assertCount( 19, $us_ips );
 
 		$eu_ips = explode( ',', $ip_check->get_ip_by_region( 'eu' ) );
-		$this->assertCount( 16, $eu_ips );
+		$this->assertCount( 19, $eu_ips );
 		$eu_ips = explode( ',', $ip_check->get_ips_by_domain( 'test.eu.auth0.com' ) );
-		$this->assertCount( 16, $eu_ips );
+		$this->assertCount( 19, $eu_ips );
 
 		$au_ips = explode( ',', $ip_check->get_ip_by_region( 'au' ) );
 		$this->assertCount( 11, $au_ips );

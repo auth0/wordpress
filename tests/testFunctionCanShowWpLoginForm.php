@@ -40,6 +40,14 @@ class TestFunctionCanShowWpLoginForm extends WP_Auth0_Test_Case {
 		$this->assertTrue( wp_auth0_can_show_wp_login_form() );
 	}
 
+	public function testThatWpLoginCanBeShownIfProcessingPostPassword() {
+		self::auth0Ready();
+		$GLOBALS['pagenow'] = 'wp-login.php';
+		$_REQUEST['action'] = 'postpass';
+		self::$opts->set( 'wordpress_login_enabled', 'link' );
+		$this->assertTrue( wp_auth0_can_show_wp_login_form() );
+	}
+
 	public function testThatWpLoginCannotBeShownIfNotWle() {
 		self::auth0Ready();
 		self::$opts->set( 'wordpress_login_enabled', 'link' );

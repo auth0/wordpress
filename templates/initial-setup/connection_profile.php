@@ -12,8 +12,8 @@
 		<?php
 		  _e( 'For more information on installation and configuration, including manual steps, please see the', 'wp-auth0' );
 		printf(
-			' <strong><a href="https://auth0.com/docs/cms/wordpress" target="_blank">%s</a></strong>',
-			__( 'documentation pages here' )
+			' <strong><a href="https://auth0.com/docs/cms/wordpress/installation" target="_blank">%s</a></strong>',
+			__( 'documentation pages here', 'wp-auth0' )
 		);
 		?>
 		  .</p>
@@ -62,10 +62,10 @@
 
 	  </div>
 		<div class="a0-step-text a0-message a0-tip">
-			<b><?php _e( 'Pro Tip' ); ?>:</b>
-			<?php _e( 'Already set up another WordPress instance with Auth0? ' ); ?>
-			<a href="<?php echo admin_url( 'admin.php?page=wpa0-import-settings' ); ?>"><?php _e( 'Click here' ); ?></a>
-			<?php _e( ' to save time and import existing Auth0 settings.' ); ?>
+			<b><?php _e( 'Pro Tip', 'wp-auth0' ); ?>:</b>
+			<?php _e( 'Already set up another WordPress instance with Auth0? ', 'wp-auth0' ); ?>
+			<a href="<?php echo admin_url( 'admin.php?page=wpa0-import-settings' ); ?>"><?php _e( 'Click here', 'wp-auth0' ); ?></a>
+			<?php _e( ' to save time and import existing Auth0 settings.', 'wp-auth0' ); ?>
 		</div>
 	</div>
 	<div class="a0-profiles row">
@@ -110,27 +110,34 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="<?php _e( 'Close', 'wp-auth0' ); ?>">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title" id="connectionSelectedModalLabel"><?php _e( 'Important', 'wp-auth0' ); ?></h4>
+				<h4 class="modal-title" id="connectionSelectedModalLabel"><?php _e( 'Select a Setup Type', 'wp-auth0' ); ?></h4>
 			  </div>
 			  <div class="modal-body no-padding-bottom">
-				  <h4><?php _e( 'Standard Setup', 'wp-auth0' ); ?></h4>
-				  <p><?php _e( 'This will create and configure an Application and a database connection for this site.', 'wp-auth0' ); ?></p>
-				  <p><a class="a0-button primary" href="#" id="manuallySetToken"><?php _e( 'Start Standard Setup', 'wp-auth0' ); ?></a></p>
-				  <br>
+					 <h4><?php _e( 'Standard Setup', 'wp-auth0' ); ?></h4>
+					 <p>
+						<?php _e( 'This will create and configure an Application and a database connection for this site.', 'wp-auth0' ); ?>
+					  <a href="https://auth0.com/docs/cms/wordpress/installation#option-1-standard-setup" target="_blank">
+							<?php _e( 'Detailed instructions for this option are here.', 'wp-auth0' ); ?>
+						</a>
+					</p>
+					<p><a class="a0-button primary" href="#" id="manuallySetToken"><?php _e( 'Start Standard Setup', 'wp-auth0' ); ?></a></p>
+					<br>
 
-				  <h4><?php _e( 'User Migration Setup', 'wp-auth0' ); ?></h4>
-				  <p>
+					<h4><?php _e( 'User Migration Setup', 'wp-auth0' ); ?></h4>
+					<p>
 						<?php _e( 'This includes everything above plus data migration from your WordPress database.', 'wp-auth0' ); ?>
 						<?php _e( 'This requires an inbound connection from Auth0 servers and cannot be changed later without losing data.', 'wp-auth0' ); ?>
 					  <a href="https://auth0.com/docs/cms/wordpress/how-does-it-work#scenario-data-migration" target="_blank">
-						<?php _e( 'More information here.', 'wp-auth0' ); ?>
-					  </a></p>
-				  <p><a class="a0-button primary submit" href="#" id="automaticSetup">
-					<?php
-						  _e( 'Start User Migration Setup', 'wp-auth0' )
-					?>
-						  </a></p>
-				  <br>
+							<?php _e( 'More information here.', 'wp-auth0' ); ?>
+					  </a>
+					</p>
+
+					<p>
+						<a class="a0-button primary submit" href="#" id="automaticSetup">
+							<?php _e( 'Start User Migration Setup', 'wp-auth0' ); ?>
+						</a>
+					</p>
+					<br>
 
 				  <h4><?php _e( 'Manual Setup', 'wp-auth0' ); ?></h4>
 				  <p><?php _e( 'If you already have an Application or want to use an existing database connection, please follow the steps below.', 'wp-auth0' ); ?></p>
@@ -149,28 +156,34 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="<?php _e( 'Close', 'wp-auth0' ); ?>">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title" id="enterTokenModalModalLabel"><?php _e( 'Important', 'wp-auth0' ); ?></h4>
+				<h4 class="modal-title" id="enterTokenModalModalLabel"><?php _e( 'Management API Token', 'wp-auth0' ); ?></h4>
 			  </div>
 			  <div class="modal-body">
 				<p>
 					<?php _e( 'Enter your tenant Domain:', 'wp-auth0' ); ?>
 				</p>
-				<input type="text" name="domain" class="js-a0-setup-input" placeholder="youraccount.auth0.com" required>
+				<input type="text" name="domain" class="js-a0-setup-input" placeholder="tenant-name.auth0.com" required>
+				  <p>
+						<a href="https://auth0.com/docs/getting-started/the-basics#domains" target="_blank">
+							<small><?php _e( 'More about tenant Domains here', 'wp-auth0' ); ?></small>
+						</a>
+				  </p>
 				<br><br>
 				<p>
-					<?php _e( 'Manually create an API token with the', 'wp-auth0' ); ?>
-				  <a href="https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually" target="_blank">
-						<?php _e( 'token generator', 'wp-auth0' ); ?></a>
+				  <a href="https://auth0.com/docs/api/management/v2/get-access-tokens-for-test#get-access-tokens-manually"
+						target="_blank">
+						<?php _e( 'Create a Management API token using these steps', 'wp-auth0' ); ?>
+				  </a>
 					<?php _e( ' and paste it below:', 'wp-auth0' ); ?>
 				</p>
+
+				<input type="text" name="apitoken" class="js-a0-setup-input" autocomplete="off" required>
 				  <p>
 					  <small>
-						  <?php _e( 'Scopes required', 'wp-auth0' ); ?>:
+				<?php _e( 'Scopes required', 'wp-auth0' ); ?>:
 						  <code><?php echo implode( '</code> <code>', WP_Auth0_Api_Client::ConsentRequiredScopes() ); ?></code>
 					  </small>
 				  </p>
-				<input type="password" name="apitoken" class="js-a0-setup-input" autocomplete="off" required>
-
 			  </div>
 			  <div class="modal-footer">
 				<input type="submit" class="a0-button primary" value="<?php _e( 'Continue', 'wp-auth0' ); ?>"/>

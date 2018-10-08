@@ -1,7 +1,8 @@
 <div class="wrap">
 
-	<?php screen_icon(); ?>
-	<h2><?php _e( "Auth0 for WordPress - Setup Wizard (step $step)", 'wp-auth0' ); ?></h2>
+	<h2><?php
+	  // translators: the $step variable is a number representing the step that the setup wizard is on.
+	  printf( __( 'Auth0 for WordPress - Setup Wizard (step %d)', 'wp-auth0' ), $step ); ?></h2>
 
 	<p>
 		<?php _e( 'This will create a new database connection, expose 2 endpoints, and populate the custom scripts to call this endpoints to migrate the users to Auth0.', 'wp-auth0' ); ?>
@@ -17,7 +18,7 @@
 				<span class="description">
 					<?php echo __( 'Mark this if you want to enable multifactor authentication with Google Authenticator. More info ', 'wp-auth0' ); ?>
 					<a target="_blank" href="https://auth0.com/docs/mfa"><?php echo __( 'HERE', 'wp-auth0' ); ?></a>.
-					<?php echo __( 'You can enable other MFA providers from the ', 'wp-auth0' ); ?>
+			<?php echo __( 'You can enable other MFA providers from the ', 'wp-auth0' ); ?>
 					<a target="_blank" href="https://manage.auth0.com/#/multifactor"><?php echo __( 'Auth0 dashboard', 'wp-auth0' ); ?></a>.
 				</span>
 			</div>
@@ -54,7 +55,7 @@
 			<div class="subelement">
 				<span class="description">
 					<?php echo __( 'Mark this if you want to augment user profiles with data provided by FullContact. A valid API key is required.', 'wp-auth0' ); ?>
-					<?php echo __( 'More info ', 'wp-auth0' ); ?>
+			<?php echo __( 'More info ', 'wp-auth0' ); ?>
 					<a href="https://auth0.com/docs/scenarios/fullcontact"><?php echo __( 'HERE', 'wp-auth0' ); ?></a>
 				</span>
 			</div>
@@ -67,9 +68,9 @@
 
 </div>
 <script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function() {
 	jQuery(".toggle_check").click(function(){
-			jQuery(this).parent().find(".subelement.toggle").toggle(this.checked).removeClass('hidden');
+	  jQuery(this).parent().find(".subelement.toggle").toggle(this.checked).removeClass('hidden');
 	});
-});
+  });
 </script>

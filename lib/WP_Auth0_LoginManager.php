@@ -155,7 +155,8 @@ class WP_Auth0_LoginManager {
 		set_query_var( 'auth0_login_successful', false );
 
 		// Not an Auth0 login process or settings are not configured to allow logins.
-		if ( ! $this->query_vars( 'auth0' ) || ! WP_Auth0::ready() ) {
+		$cb_type = $this->query_vars( 'auth0' );
+		if ( ! $cb_type || ! WP_Auth0::ready() ) {
 			return false;
 		}
 
@@ -173,15 +174,14 @@ class WP_Auth0_LoginManager {
 			exit;
 		}
 
-		// Check for valid state nonce, set in WP_Auth0_Lock10_Options::get_state_obj().
-		// See https://auth0.com/docs/protocols/oauth2/oauth-state for more info.
-		$state_returned = isset( $_REQUEST['state'] ) ? rawurldecode( $_REQUEST['state'] ) : null;
-		if ( ! $state_returned || ! WP_Auth0_State_Handler::get_instance()->validate( $state_returned ) ) {
+		// Check for valid state value returned from Auth0.
+		$cb_req = 'implicit' === $cb_type ? $_POST : $_GET;
+		if ( empty( $cb_req['state'] ) || ! WP_Auth0_State_Handler::get_instance()->validate( $cb_req['state'] ) ) {
 			$this->die_on_login( __( 'Invalid state', 'wp-auth0' ) );
 		}
 
 		try {
-			if ( $this->query_vars( 'auth0' ) === 'implicit' ) {
+			if ( $cb_type === 'implicit' ) {
 				$this->implicit_login();
 			} else {
 				$this->redirect_login();
@@ -280,6 +280,7 @@ class WP_Auth0_LoginManager {
 	 * @link https://auth0.com/docs/api-auth/tutorials/implicit-grant
 	 */
 	public function implicit_login() {
+
 		if ( empty( $_POST['id_token'] ) && empty( $_POST['token'] ) ) {
 			throw new WP_Auth0_LoginFlowValidationException( __( 'No ID token found', 'wp-auth0' ) );
 		}
@@ -625,7 +626,7 @@ class WP_Auth0_LoginManager {
 	}
 
 	/**
-	 * Get a value from query_vars or $_REQUEST global.
+	 * Get a value from query_vars or request global.
 	 *
 	 * @param string $key - query var key to return.
 	 *

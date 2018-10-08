@@ -2,6 +2,8 @@
 
 class WP_Auth0_Admin_Generic {
 
+	const ERROR_FIELD_STYLE = 'border: 1px solid red;';
+
 	protected $options;
 
 	protected $_option_name;
@@ -167,8 +169,8 @@ class WP_Auth0_Admin_Generic {
 
 		// Secure fields are not output by default; validation keeps last value if a new one is not entered
 		if ( 'password' === $type ) {
-			$placeholder = ! empty( $value ) ? 'Not visible' : '';
-			$value       = '';
+			$value = empty( $value ) ? '' : __( '[REDACTED]', 'wp-auth0' );
+			$type  = 'text';
 		}
 		if ( $field_is_const = $this->options->has_constant_val( $input_name ) ) {
 			$this->render_const_notice( $input_name );

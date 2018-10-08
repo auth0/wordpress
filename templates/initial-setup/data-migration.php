@@ -1,7 +1,8 @@
 <div class="wrap">
 
-	<?php screen_icon(); ?>
-	<h2><?php _e( "Auth0 for WordPress - Setup Wizard (step $step)", 'wp-auth0' ); ?></h2>
+	<h2><?php
+	  // translators: the $step variable is a number representing the step that the setup wizard is on.
+	  printf( __( 'Auth0 for WordPress - Setup Wizard (step %d)', 'wp-auth0' ), $step ); ?></h2>
 
 	<p>
 		<?php _e( 'This will create a new database connection, expose 2 endpoints, and populate the custom scripts to call this endpoints to migrate the users to Auth0.', 'wp-auth0' ); ?>

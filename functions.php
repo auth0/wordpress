@@ -74,7 +74,7 @@ function wp_auth0_can_show_wp_login_form() {
 		return true;
 	}
 
-	if ( wp_auth0_is_current_login_action( [ 'resetpass', 'rp', 'validate_2fa' ] ) ) {
+	if ( wp_auth0_is_current_login_action( [ 'resetpass', 'rp', 'validate_2fa', 'postpass' ] ) ) {
 		return true;
 	}
 
