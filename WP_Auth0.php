@@ -1,13 +1,13 @@
 <?php
 /**
- * Plugin Name: PLUGIN_NAME
- * Description: PLUGIN_DESCRIPTION
- * Version: 3.7.0
+ * Plugin Name: Login by Auth0
+ * Description: Login by Auth0 provides improved username/password login, Passwordless login, Social login and Single Sign On for all your sites.
+ * Version: 3.7.1
  * Author: Auth0
  * Author URI: https://auth0.com
  * Text Domain: wp-auth0
  */
-define( 'WPA0_VERSION', '3.7.0' );
+define( 'WPA0_VERSION', '3.7.1' );
 define( 'AUTH0_DB_VERSION', 19 );
 
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
