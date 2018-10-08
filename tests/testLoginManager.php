@@ -82,6 +82,7 @@ class TestLoginManager extends TestCase {
 
 		// Basic authorize URL.
 		$options->set( 'domain', 'test.auth0.com' );
+		$options->set( 'custom_domain', '' );
 		$auth_url = WP_Auth0_LoginManager::build_authorize_url();
 
 		$this->assertEquals( 'https://test.auth0.com/authorize', $auth_url );
