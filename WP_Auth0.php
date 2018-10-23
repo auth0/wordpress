@@ -33,25 +33,49 @@ define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
  */
 class WP_Auth0 {
 
+	/**
+	 * @var WP_Auth0_DBManager
+	 */
 	protected $db_manager;
+
+	/**
+	 * @var null|WP_Auth0_Options
+	 */
 	protected $a0_options;
+
+	/**
+	 * @var WP_Auth0_Amplificator
+	 */
 	protected $social_amplificator;
+
+	/**
+	 * @var WP_Auth0_Routes
+	 */
 	protected $router;
+
+	/**
+	 * @var string
+	 */
 	protected $basename;
+
+	/**
+	 * WP_Auth0 constructor.
+	 *
+	 * @param null|WP_Auth0_Options $options - WP_Auth0_Options instance.
+	 */
+	public function __construct( $options = null ) {
+		spl_autoload_register( array( $this, 'autoloader' ) );
+		$this->a0_options = $options instanceof WP_Auth0_Options ? $options : WP_Auth0_Options::Instance();
+	}
 
 	/**
 	 * Initialize the plugin and its modules setting all the hooks
 	 */
 	public function init() {
-
-		spl_autoload_register( array( $this, 'autoloader' ) );
-
 		$this->basename = plugin_basename( __FILE__ );
 
 		$ip_checker = new WP_Auth0_Ip_Check();
 		$ip_checker->init();
-
-		$this->a0_options = WP_Auth0_Options::Instance();
 
 		$this->db_manager = new WP_Auth0_DBManager( $this->a0_options );
 		$this->db_manager->init();
@@ -374,9 +398,9 @@ class WP_Auth0 {
 
 		// If the user has a WP session, determine where they should end up and redirect.
 		if ( is_user_logged_in() ) {
-			$login_redirect = ! empty( $_REQUEST['redirect_to'] ) ?
-				filter_var( $_REQUEST['redirect_to'], FILTER_SANITIZE_URL ) :
-				$this->a0_options->get( 'default_login_redirection' );
+			$login_redirect = empty( $_REQUEST['redirect_to'] ) ?
+				$this->a0_options->get( 'default_login_redirection' ) :
+				filter_var( $_REQUEST['redirect_to'], FILTER_SANITIZE_URL );
 
 			// Add a cache buster to avoid an infinite redirect loop on pages that check for auth.
 			$login_redirect = add_query_arg( time(), '', $login_redirect );

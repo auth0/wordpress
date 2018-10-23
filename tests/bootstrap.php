@@ -45,5 +45,6 @@ require dirname( __FILE__ ) . '/traits/ajaxHelpers.php';
 require dirname( __FILE__ ) . '/traits/domDocumentHelpers.php';
 require dirname( __FILE__ ) . '/traits/hookHelpers.php';
 require dirname( __FILE__ ) . '/traits/httpHelpers.php';
+require dirname( __FILE__ ) . '/traits/redirectHelpers.php';
 require dirname( __FILE__ ) . '/traits/setUpTestDb.php';
 require dirname( __FILE__ ) . '/traits/usersHelper.php';
