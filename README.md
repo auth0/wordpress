@@ -1,9 +1,6 @@
-Login by Auth0
-====
+# Login by Auth0
 
 ![Login by Auth0](https://raw.githubusercontent.com/auth0/wp-auth0/master/banner-1544x500.png)
-
-## Introduction
 
 This plugin replaces standard WordPress login forms with one powered by Auth0 that enables social, passwordless, and enterprise connection login as well as additional security, multifactor auth, and user statistics. Please see the [WP.org plugin page](https://wordpress.org/plugins/auth0/) for more details on functionality. 
 
@@ -17,6 +14,7 @@ This plugin replaces standard WordPress login forms with one powered by Auth0 th
 
 - [Documentation](#documentation)
 - [Installation](#installation)
+- [Getting Started](#getting-started)
 - [Contribution](#contribution)
 - [Support + Feedback](#support--feedback)
 - [Vulnerability Reporting](#vulnerability-reporting)
@@ -34,9 +32,20 @@ This plugin replaces standard WordPress login forms with one powered by Auth0 th
 
 Please see the [installation docs](https://auth0.com/docs/cms/wordpress/installation) for detailed instructions on how to get started with Login by Auth0.
 
+## Getting Started
+
+Please see the [configuration docs](https://auth0.com/docs/cms/wordpress/configuration) for instructions on how to configure Login by Auth0 for your site. Once configured, you'll want to test:
+
+- Existing user login
+- New user signup (if allowed)
+- SSO login (if used)
+- Additional features like MFA, user migration, etc.
+
+We recommend testing on a staging/development site first using a separate Auth0 Application before putting the plugin live on your production site. See the **[Support](#support--feedback)** section below if you have any questions or issues during setup.
+
 ## Contribution
 
-We appreciate feedback and contribution to this template! Before you get started, please see the following:
+We appreciate feedback and contribution to this plugin! Before you get started, please see the following:
 
 - [Auth0's general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
 - [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
