@@ -9,6 +9,8 @@ Tell us about the issue you're having or the feature you're proposing. Consider 
 
 ### Prerequisites
 
+* [ ] Have you read [Auth0's general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)?
+* [ ] Have you read [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
 * [ ] Did you check the [documentation](https://auth0.com/docs/cms/wordpress/)?
 * [ ] Did you check the [Auth0 Community](https://community.auth0.com/tags/wordpress)?
 * [ ] Did you check the [WP.org Support Forum](https://wordpress.org/support/plugin/auth0)?

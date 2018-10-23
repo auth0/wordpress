@@ -22,11 +22,14 @@ Please note any links that are not publicly accessible.
 
 Please describe how this can be tested by reviewers. Tests must be added for new functionality and existing tests should complete without errors. 
 
+* [ ] I included manual testing steps above, if applicable
 * [ ] This change adds unit test coverage
 * [ ] This change has been tested on the latest version of the platform/language or why not
 
 ### Checklist
 
+* [ ] I read [Auth0's general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)?
+* [ ] I read [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
 * [ ] All existing and new tests complete without errors
 * [ ] All code quality tools/guidelines in the [Contribution guide](CONTRIBUTION.md) have been run/followed
 * [ ] All relevant assets have been compiled as directed in the [Contribution guide](CONTRIBUTION.md), if applicable
