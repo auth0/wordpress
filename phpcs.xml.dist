@@ -2,6 +2,8 @@
 <ruleset name="WP-Auth0" namespace="WPAuth0\CS\Standard">
     <description>A custom coding standard for WP-Auth0</description>
 
+    <file>.</file>
+
     <!-- Internal tool, will be removed-->
     <exclude-pattern>/account_cleanup/*</exclude-pattern>
 
@@ -21,12 +23,26 @@
     <exclude-pattern>/lib/admin/WP_Auth0_Admin_Dashboard.php</exclude-pattern>
     <exclude-pattern>/lib/dashboard-widgets/*</exclude-pattern>
 
-    <config name="testVersion" value="5.3-"/>
-    <config name="showProgress" value="1"/>
-    <config name="extensions" value="php"/>
     <config name="minimum_supported_wp_version" value="3.8"/>
 
+    <!-- Only check PHP files. -->
+    <arg name="extensions" value="php"/>
+
+    <!-- Show progress, show the error codes for each message (source). -->
+    <arg value="sp"/>
+
+    <!-- Strip the filepaths down to the relevant bit. -->
+    <arg name="basepath" value="."/>
+
+    <!-- Show coloured output, if available. -->
     <arg name="colors"/>
+
+    <!--
+    PHPCompatibility sniffs to check for PHP cross-version incompatible code.
+    https://github.com/PHPCompatibility/PHPCompatibility
+    -->
+    <config name="testVersion" value="5.5-"/>
+    <rule ref="PHPCompatibilityWP"/>
 
     <rule ref="Generic.CodeAnalysis"/>
     <rule ref="Generic.Commenting.Todo"/>
@@ -36,8 +52,13 @@
         <exclude name="WordPress.Files.FileName"/>
         <exclude name="WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar"/>
     </rule>
-    <rule ref="WordPress.VIP.DirectDatabaseQuery"/>
-    <rule ref="WordPress.VIP.SlowDBQuery"/>
+    <rule ref="WordPress.DB.DirectDatabaseQuery"/>
+    <rule ref="WordPress.DB.SlowDBQuery"/>
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <properties>
+            <property name="prefixes" type="array" value="wp_auth0" />
+        </properties>
+    </rule>
     <rule ref="WordPress.WP.I18n">
         <properties>
             <property name="text_domain" type="array" value="wp-auth0" />
