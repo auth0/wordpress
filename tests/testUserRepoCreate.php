@@ -140,9 +140,11 @@ class TestUserRepoCreate extends TestCase {
 		update_option( 'users_can_register', 1 );
 
 		add_filter(
-			'wpa0_should_create_user', function() {
+			'wpa0_should_create_user',
+			function() {
 				return false;
-			}, 10
+			},
+			10
 		);
 
 		$this->expectException( WP_Auth0_CouldNotCreateUserException::class );

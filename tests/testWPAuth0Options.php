@@ -68,7 +68,9 @@ class TestWPAuth0Options extends TestCase {
 			// phpcs:ignore
 			'wp_auth0_get_option', function( $value, $key ) {
 				return $key . self::FILTER_TEST_STRING;
-			}, 10, 2
+			},
+			10,
+			2
 		);
 
 		foreach ( array_keys( $opts->get_options() ) as $opt_name ) {

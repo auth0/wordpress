@@ -24,10 +24,13 @@ class TestLoginManager extends TestCase {
 		$this->assertEquals( 'openid email profile', $scope );
 
 		add_filter(
-			'auth0_auth_scope', function( $default_scope, $context ) {
+			'auth0_auth_scope',
+			function( $default_scope, $context ) {
 				$default_scope[] = $context;
 				return $default_scope;
-			}, 10, 2
+			},
+			10,
+			2
 		);
 
 		$scope = WP_Auth0_LoginManager::get_userinfo_scope( 'auth0' );
@@ -65,10 +68,13 @@ class TestLoginManager extends TestCase {
 		$this->assertEquals( 'form_post', $auth_params['response_mode'] );
 
 		add_filter(
-			'auth0_authorize_url_params', function( $params, $connection, $redirect_to ) {
+			'auth0_authorize_url_params',
+			function( $params, $connection, $redirect_to ) {
 				$params[ $connection ] = $redirect_to;
 				return $params;
-			}, 10, 3
+			},
+			10,
+			3
 		);
 
 		$auth_params = WP_Auth0_LoginManager::get_authorize_params( 'auth0', 'https://auth0.com' );
@@ -111,9 +117,12 @@ class TestLoginManager extends TestCase {
 
 		// Authorize URL filter.
 		add_filter(
-			'auth0_authorize_url', function ( $auth_url, $params ) {
+			'auth0_authorize_url',
+			function ( $auth_url, $params ) {
 				return explode( '?', $auth_url )[0] . '?test=' . $params['test'];
-			}, 10, 2
+			},
+			10,
+			2
 		);
 
 		$auth_url = WP_Auth0_LoginManager::build_authorize_url(

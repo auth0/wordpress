@@ -73,7 +73,11 @@ class WP_Auth0_InitialSetup_Consent {
 		$client_id = get_bloginfo( 'url' );
 
 		$response = WP_Auth0_Api_Client::get_token(
-			$this->domain, $client_id, null, 'authorization_code', array(
+			$this->domain,
+			$client_id,
+			null,
+			'authorization_code',
+			array(
 				'redirect_uri' => home_url(),
 				'code'         => $code,
 			)
@@ -152,7 +156,8 @@ class WP_Auth0_InitialSetup_Consent {
 					array(
 						'scope' => 'migration_ws',
 						'jti'   => $token_id,
-					), $secret
+					),
+					$secret
 				);
 				$migration_token_id = $token_id;
 

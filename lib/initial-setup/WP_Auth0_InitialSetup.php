@@ -144,7 +144,8 @@ class WP_Auth0_InitialSetup {
 					<?php
 					echo __(
 						'Go to your Auth0 dashboard > APIs > Auth0 Management API > Non-Interactive Clients'
-								   . ' tab and authorize the client for this site. ', 'wp-auth0'
+								   . ' tab and authorize the client for this site. ',
+						'wp-auth0'
 					);
 					?>
 					<?php echo __( 'Make sure to add the following scopes: ', 'wp-auth0' ); ?>

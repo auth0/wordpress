@@ -114,7 +114,8 @@ class WP_Auth0_Api_Client {
 		$headers['content-type'] = 'application/x-www-form-urlencoded';
 
 		$response = wp_remote_post(
-			$endpoint . 'oauth/token', array(
+			$endpoint . 'oauth/token',
+			array(
 				'headers' => $headers,
 				'body'    => $body,
 			)
@@ -140,7 +141,8 @@ class WP_Auth0_Api_Client {
 	public static function get_client_token() {
 
 		$response = wp_remote_post(
-			self::get_endpoint( 'oauth/token' ), array(
+			self::get_endpoint( 'oauth/token' ),
+			array(
 				'headers' => self::get_headers(),
 				'body'    => json_encode(
 					array(
@@ -192,7 +194,8 @@ class WP_Auth0_Api_Client {
 		$headers['Authorization'] = "Bearer $jwt";
 
 		return wp_remote_get(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'headers' => $headers,
 			)
 		);
@@ -208,7 +211,8 @@ class WP_Auth0_Api_Client {
 		$headers['content-type'] = 'application/json';
 
 		$response = wp_remote_post(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'headers' => $headers,
 				'body'    => json_encode( $data ),
 			)
@@ -322,7 +326,8 @@ class WP_Auth0_Api_Client {
 		);
 
 		$response = wp_remote_post(
-			self::get_endpoint( 'api/v2/clients', $domain ), array(
+			self::get_endpoint( 'api/v2/clients', $domain ),
+			array(
 				'headers' => self::get_headers( $app_token ),
 				'body'    => json_encode( $payload ),
 			)
@@ -353,7 +358,8 @@ class WP_Auth0_Api_Client {
 		$headers['content-type']  = 'application/json';
 
 		$response = wp_remote_post(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'method'  => 'PATCH',
 				'headers' => $headers,
 				'body'    => json_encode( array_merge( array( 'sso' => (bool) $sso ), $payload ) ),
@@ -391,7 +397,8 @@ class WP_Auth0_Api_Client {
 		$headers['content-type']  = 'application/json';
 
 		$response = wp_remote_post(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'method'  => 'POST',
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
@@ -423,7 +430,8 @@ class WP_Auth0_Api_Client {
 		$headers['content-type']  = 'application/json';
 
 		$response = wp_remote_post(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'method'  => 'DELETE',
 				'headers' => $headers,
 			)
@@ -461,7 +469,8 @@ class WP_Auth0_Api_Client {
 		);
 
 		$response = wp_remote_post(
-			self::get_endpoint( 'api/v2/client-grants' ), array(
+			self::get_endpoint( 'api/v2/client-grants' ),
+			array(
 				'headers' => self::get_headers( $app_token ),
 				'body'    => json_encode( $data ),
 			)
@@ -507,7 +516,8 @@ class WP_Auth0_Api_Client {
 		$headers['content-type']  = 'application/json';
 
 		$response = wp_remote_post(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'method'  => 'POST',
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
@@ -541,7 +551,8 @@ class WP_Auth0_Api_Client {
 		$headers['Authorization'] = "Bearer $app_token";
 
 		$response = wp_remote_get(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'headers' => $headers,
 			)
 		);
@@ -573,7 +584,8 @@ class WP_Auth0_Api_Client {
 		$headers['Authorization'] = "Bearer $app_token";
 
 		$response = wp_remote_get(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'headers' => $headers,
 			)
 		);
@@ -606,7 +618,8 @@ class WP_Auth0_Api_Client {
 		$headers['content-type']  = 'application/json';
 
 		$response = wp_remote_post(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'method'  => 'PATCH',
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
@@ -641,7 +654,8 @@ class WP_Auth0_Api_Client {
 		$headers['content-type']  = 'application/json';
 
 		$response = wp_remote_post(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'method'  => 'PATCH',
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
@@ -733,7 +747,8 @@ class WP_Auth0_Api_Client {
 		);
 
 		$response = wp_remote_post(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'method'  => 'PUT',
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
@@ -875,7 +890,8 @@ class WP_Auth0_Api_Client {
 		);
 
 		$response = wp_remote_post(
-			$endpoint . 'oauth/ro', array(
+			$endpoint . 'oauth/ro',
+			array(
 				'headers' => $headers,
 				'body'    => $body,
 			)
@@ -956,7 +972,8 @@ class WP_Auth0_Api_Client {
 		$headers['Authorization'] = "Bearer $jwt";
 
 		$response = wp_remote_get(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'headers' => $headers,
 			)
 		);
@@ -1026,7 +1043,8 @@ class WP_Auth0_Api_Client {
 		$headers['content-type']  = 'application/json';
 
 		$response = wp_remote_post(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'headers' => $headers,
 				'body'    => json_encode( $data ),
 			)
@@ -1063,7 +1081,8 @@ class WP_Auth0_Api_Client {
 		$headers['Authorization'] = "Bearer $app_token";
 
 		$response = wp_remote_get(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'headers' => $headers,
 			)
 		);
@@ -1119,7 +1138,8 @@ class WP_Auth0_Api_Client {
 		$headers['content-type']  = 'application/json';
 
 		$response = wp_remote_post(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'method'  => 'DELETE',
 				'headers' => $headers,
 			)
@@ -1157,7 +1177,8 @@ class WP_Auth0_Api_Client {
 		$headers['content-type']  = 'application/json';
 
 		$response = wp_remote_post(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'method'  => 'DELETE',
 				'headers' => $headers,
 			)
@@ -1194,7 +1215,8 @@ class WP_Auth0_Api_Client {
 		$headers['content-type'] = 'application/json';
 
 		$response = wp_remote_post(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'method'  => 'POST',
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
@@ -1244,7 +1266,8 @@ class WP_Auth0_Api_Client {
 		}
 
 		$response = wp_remote_post(
-			$endpoint, array(
+			$endpoint,
+			array(
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
 			)

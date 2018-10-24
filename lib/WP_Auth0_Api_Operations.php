@@ -116,7 +116,10 @@ class WP_Auth0_Api_Operations {
 				$enabled_clients = array_diff( $db_connection->enabled_clients, array( $client_id ) );
 
 				WP_Auth0_Api_Client::update_connection(
-					$domain, $app_token, $db_connection->id, array(
+					$domain,
+					$app_token,
+					$db_connection->id,
+					array(
 						'enabled_clients' => array_values( $enabled_clients ),
 					)
 				);
@@ -297,7 +300,8 @@ class WP_Auth0_Api_Operations {
 
 					$data = array(
 						'options'         => array_merge(
-							$connection_options, array(
+							$connection_options,
+							array(
 								'client_id'     => $input[ "{$main_key}_key" ],
 								'client_secret' => $input[ "{$main_key}_secret" ],
 							)
@@ -322,7 +326,8 @@ class WP_Auth0_Api_Operations {
 						'strategy'        => $strategy,
 						'enabled_clients' => array( $client_id ),
 						'options'         => array_merge(
-							$connection_options, array(
+							$connection_options,
+							array(
 								'client_id'     => $input[ "{$main_key}_key" ],
 								'client_secret' => $input[ "{$main_key}_secret" ],
 							)
