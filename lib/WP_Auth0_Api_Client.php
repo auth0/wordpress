@@ -857,7 +857,7 @@ class WP_Auth0_Api_Client {
 	 *
 	 * @see https://auth0.com/docs/api-auth/intro#other-authentication-api-endpoints
 	 *
-	 * @deprecated 3.6.0
+	 * @deprecated - 3.6.0, not used and no replacement provided.
 	 *
 	 * @param $domain
 	 * @param $client_id
@@ -871,10 +871,8 @@ class WP_Auth0_Api_Client {
 	 * @codeCoverageIgnore - Deprecated
 	 */
 	public static function ro( $domain, $client_id, $username, $password, $connection, $scope ) {
-
-		$deprecation_msg = sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ );
-		trigger_error( $deprecation_msg, E_USER_DEPRECATED );
-		WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $deprecation_msg );
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$endpoint = "https://$domain/";
 
@@ -926,7 +924,7 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function validate_user_token( $app_token ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		if ( empty( $app_token ) ) {
 			return false;
@@ -961,7 +959,7 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function search_users( $domain, $jwt, $q = '', $page = 0, $per_page = 100, $include_totals = false, $sort = 'user_id:1' ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$include_totals = $include_totals ? 'true' : 'false';
 
@@ -996,7 +994,7 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function resend_verification_email( $user_id ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$response = wp_remote_post(
 			self::get_endpoint( 'api/v2/jobs/verification-email' ),
@@ -1033,7 +1031,7 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function create_user( $domain, $jwt, $data ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$endpoint = "https://$domain/api/v2/users";
 
@@ -1072,7 +1070,7 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function search_clients( $domain, $app_token ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$endpoint = "https://$domain/api/v2/clients";
 
@@ -1113,7 +1111,7 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function get_current_user( $domain, $app_token ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		list( $head, $payload, $signature ) = explode( '.', $app_token );
 		$decoded                            = json_decode( JWT::urlsafeB64Decode( $payload ) );
@@ -1128,7 +1126,7 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function delete_connection( $domain, $app_token, $id ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$endpoint = "https://$domain/api/v2/connections/$id";
 
@@ -1167,7 +1165,7 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function delete_user_mfa( $domain, $app_token, $user_id, $provider ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$endpoint = "https://$domain/api/v2/users/$user_id/multifactor/$provider";
 
@@ -1206,7 +1204,7 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function change_password( $domain, $payload ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$endpoint = "https://$domain/dbconnections/change_password";
 
@@ -1249,7 +1247,7 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function link_users( $domain, $app_token, $main_user_id, $user_id, $provider, $connection_id = null ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$endpoint = "https://$domain/api/v2/users/$main_user_id/identities";
 

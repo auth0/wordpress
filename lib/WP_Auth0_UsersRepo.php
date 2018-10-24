@@ -87,7 +87,7 @@ class WP_Auth0_UsersRepo {
 
 		if ( func_num_args() > 2 ) {
 			// phpcs:ignore
-			trigger_error(
+			@trigger_error(
 				sprintf(
 					__( '$access_token, $role, and $skip_email_verified params are deprecated.', 'wp-auth0' ),
 					__METHOD__

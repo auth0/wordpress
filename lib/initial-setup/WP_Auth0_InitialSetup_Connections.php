@@ -33,7 +33,7 @@ class WP_Auth0_InitialSetup_Connections {
 	 */
 	public function update_connection() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$provider_name = $_POST['connection'];
 
@@ -51,7 +51,7 @@ class WP_Auth0_InitialSetup_Connections {
 	 */
 	protected function toggle_db() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$domain        = $this->a0_options->get( 'domain' );
 		$app_token     = $this->a0_options->get( 'auth0_app_token' );
@@ -89,7 +89,7 @@ class WP_Auth0_InitialSetup_Connections {
 	 */
 	protected function toggle_social( $provider_name ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$provider_options = array(
 			'facebook'      => array(

@@ -516,7 +516,7 @@ class WP_Auth0 {
 	 */
 	public function a0_render_message() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$message = null;
 
@@ -538,7 +538,7 @@ class WP_Auth0 {
 	 */
 	public function check_signup_status() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$app_token = $this->a0_options->get( 'auth0_app_token' );
 
@@ -572,7 +572,7 @@ class WP_Auth0 {
 	}
 
 	/**
-	 * @deprecated 3.6.0 - Use WPA0_PLUGIN_URL constant
+	 * @deprecated - 3.6.0, use WPA0_PLUGIN_URL constant
 	 *
 	 * @return string
 	 *
@@ -580,7 +580,7 @@ class WP_Auth0 {
 	 */
 	public static function get_plugin_dir_url() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return WPA0_PLUGIN_URL;
 	}
 }

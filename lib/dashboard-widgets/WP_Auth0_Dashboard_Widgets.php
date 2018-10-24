@@ -2,7 +2,9 @@
 /**
  * Class WP_Auth0_Dashboard_Widgets
  *
- * @deprecated 3.6.0 - The plugin no longer supports the dashboard widgets functionality.
+ * @deprecated - 3.6.0, the plugin no longer supports the dashboard widgets functionality.
+ *
+ * @codeCoverageIgnore - Deprecated
  */
 class WP_Auth0_Dashboard_Widgets {
 
@@ -14,14 +16,14 @@ class WP_Auth0_Dashboard_Widgets {
 	/**
 	 * WP_Auth0_Dashboard_Widgets constructor.
 	 *
-	 * @deprecated 3.6.0 - The plugin no longer supports the dashboard widgets functionality.
+	 * @deprecated - 3.6.0, the plugin no longer supports the dashboard widgets functionality.
 	 *
 	 * @param WP_Auth0_Options $a0_options
 	 * @param WP_Auth0_DBManager $db_manager
 	 */
 	public function __construct( WP_Auth0_Options $a0_options, WP_Auth0_DBManager $db_manager ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Class %s is deprecated.', 'wp-auth0' ), __CLASS__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Class %s is deprecated.', 'wp-auth0' ), __CLASS__ ), E_USER_DEPRECATED );
 		$this->db_manager = $db_manager;
 		$this->a0_options = $a0_options;
 	}

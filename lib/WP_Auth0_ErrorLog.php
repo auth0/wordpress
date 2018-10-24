@@ -124,13 +124,13 @@ class WP_Auth0_ErrorLog {
 	/**
 	 * Enqueue scripts and styles.
 	 *
-	 * @deprecated 3.6.0 - Not needed, handled in WP_Auth0_Admin::admin_enqueue()
+	 * @deprecated - 3.6.0, not used, handled in WP_Auth0_Admin::admin_enqueue()
 	 *
 	 * @codeCoverageIgnore
 	 */
 	public function admin_enqueue() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 }
 

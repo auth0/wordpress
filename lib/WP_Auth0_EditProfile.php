@@ -201,7 +201,7 @@ class WP_Auth0_EditProfile {
 	 */
 	public function validate_new_password( $errors, $update, $user ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$auth0_password        = isset( $_POST['auth0_password'] ) ? $_POST['auth0_password'] : null;
 		$auth0_repeat_password = isset( $_POST['auth0_repeat_password'] ) ? $_POST['auth0_repeat_password'] : null;
@@ -220,7 +220,7 @@ class WP_Auth0_EditProfile {
 	 */
 	public function update_change_password() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$current_user = get_currentauth0user();
 		$user_profile = $current_user->auth0_obj;
@@ -283,7 +283,7 @@ class WP_Auth0_EditProfile {
 	 */
 	public function delete_user_data() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		if ( ! is_admin() ) {
 			return;
@@ -303,7 +303,7 @@ class WP_Auth0_EditProfile {
 	 */
 	public function delete_mfa() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		if ( ! is_admin() ) {
 			return;
@@ -334,7 +334,7 @@ class WP_Auth0_EditProfile {
 	 */
 	public function show_delete_identity() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		if ( ! is_admin() ) {
 			return;
@@ -387,7 +387,7 @@ class WP_Auth0_EditProfile {
 	 */
 	public function show_delete_mfa() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		if ( ! is_admin() ) {
 			return;
@@ -442,7 +442,7 @@ class WP_Auth0_EditProfile {
 	 */
 	public function show_change_password() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$current_user = get_currentauth0user();
 		$user_profile = $current_user->auth0_obj;
@@ -499,7 +499,7 @@ class WP_Auth0_EditProfile {
 	 */
 	public function disable_email_field() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$current_user = get_currentauth0user();
 		$user_profile = $current_user->auth0_obj;
