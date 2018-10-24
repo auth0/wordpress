@@ -56,7 +56,7 @@ class TestRenderForm extends TestCase {
 	 */
 	public function testThatRenderFormPassesThrough() {
 		self::auth0Ready( false );
-		
+
 		$this->assertArrayNotHasKey( 'action', $_GET );
 
 		// Should pass through initially because WP-Auth0 is not configured.
