@@ -76,9 +76,11 @@ class TestEmailVerification extends TestCase {
 	 */
 	public function testWpRenderDie() {
 		add_filter(
-			'wp_die_handler', function() {
+			'wp_die_handler',
+			function() {
 				return [ $this, 'wp_die_handler' ];
-			}, 10
+			},
+			10
 		);
 
 		$userinfo = $this->getUserinfo( 'not-auth0' );
@@ -106,9 +108,11 @@ class TestEmailVerification extends TestCase {
 		$this->assertContains( 'assets/js/die-with-verify-email.js?ver=' . WPA0_VERSION, $html );
 
 		add_filter(
-			'auth0_verify_email_page', function() {
+			'auth0_verify_email_page',
+			function() {
 				return '__test_auth0_verify_email_page__';
-			}, 10
+			},
+			10
 		);
 
 		// 3. Test that the auth0_verify_email_page returns passed-in content.

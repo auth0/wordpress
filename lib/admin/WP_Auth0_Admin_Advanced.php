@@ -720,7 +720,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 					array(
 						'scope' => 'migration_ws',
 						'jti'   => $token_id,
-					), $secret
+					),
+					$secret
 				);
 				$input['migration_token_id'] = $token_id;
 

@@ -221,7 +221,11 @@ class WP_Auth0_LoginManager {
 
 		// Exchange authorization code for an access token.
 		$exchange_resp = WP_Auth0_Api_Client::get_token(
-			$auth_domain, $client_id, $client_secret, 'authorization_code', array(
+			$auth_domain,
+			$client_id,
+			$client_secret,
+			'authorization_code',
+			array(
 				'redirect_uri' => $this->a0_options->get_wp_auth0_url(),
 				'code'         => $this->query_vars( 'code' ),
 			)
@@ -534,7 +538,9 @@ class WP_Auth0_LoginManager {
 
 		// See wp_signon() for documentation on this filter.
 		$secure_cookie = apply_filters(
-			'secure_signon_cookie', $secure_cookie, array(
+			'secure_signon_cookie',
+			$secure_cookie,
+			array(
 				'user_login'    => $user->user_login,
 				'user_password' => null,
 				'remember'      => $remember_users_session,
@@ -816,7 +822,11 @@ class WP_Auth0_LoginManager {
 		$client_id = $this->a0_options->get( 'client_id' );
 		$secret    = $this->a0_options->get_client_secret_as_key();
 		$response  = WP_Auth0_Api_Client::ro(
-			$domain, $client_id, $username, $password, $connection,
+			$domain,
+			$client_id,
+			$username,
+			$password,
+			$connection,
 			'openid name email nickname email_verified identities'
 		);
 		try {

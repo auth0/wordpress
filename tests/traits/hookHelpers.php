@@ -24,13 +24,15 @@ trait HookHelpers {
 
 		if ( isset( $wp_filter[ $hook ]->callbacks ) ) {
 			array_walk(
-				$wp_filter[ $hook ]->callbacks, function( $callbacks, $priority ) use ( &$hooks ) {
+				$wp_filter[ $hook ]->callbacks,
+				function( $callbacks, $priority ) use ( &$hooks ) {
 					foreach ( $callbacks as $id => $callback ) {
 						$hooks[] = array_merge(
 							[
 								'id'       => $id,
 								'priority' => $priority,
-							], $callback
+							],
+							$callback
 						);
 					}
 				}

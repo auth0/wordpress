@@ -27,7 +27,8 @@ class WP_Auth0_InitialSetup_Migration {
 			array(
 				'scope' => 'migration_ws',
 				'jti'   => $token_id,
-			), $secret
+			),
+			$secret
 		);
 
 		$this->a0_options->set( 'migration_token', $token );

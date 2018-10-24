@@ -30,7 +30,9 @@ class WP_Auth0_Admin {
 		wp_register_script( 'wpa0_bootstrap', WPA0_PLUGIN_BS_URL . 'js/bootstrap.min.js', array( 'jquery' ), '3.3.6' );
 		wp_register_script( 'wpa0_admin', WPA0_PLUGIN_JS_URL . 'admin.js', array( 'wpa0_bootstrap' ), WPA0_VERSION );
 		wp_localize_script(
-			'wpa0_admin', 'wpa0', array(
+			'wpa0_admin',
+			'wpa0',
+			array(
 				'media_title'             => __( 'Choose your icon', 'wp-auth0' ),
 				'media_button'            => __( 'Choose icon', 'wp-auth0' ),
 				'clear_cache_working'     => __( 'Working ...', 'wp-auth0' ),

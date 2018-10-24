@@ -158,7 +158,10 @@ class WP_Auth0_EditProfile {
 			$requires_verified_email = $this->a0_options->get( 'requires_verified_email' );
 
 			$response = WP_Auth0_Api_Client::update_user(
-				$domain, $app_token, $user_id, array(
+				$domain,
+				$app_token,
+				$user_id,
+				array(
 					'connection'   => $connection,
 					'email'        => $user_email,
 					'client_id'    => $client_id,
@@ -250,14 +253,18 @@ class WP_Auth0_EditProfile {
 
 			if ( $api_token ) {
 				WP_Auth0_Api_Client::update_user(
-					$domain, $api_token, $user_profile->user_id, array(
+					$domain,
+					$api_token,
+					$user_profile->user_id,
+					array(
 						'password'   => $auth0_password,
 						'connection' => $connection,
 					)
 				);
 			} else {
 				WP_Auth0_Api_Client::change_password(
-					$domain, array(
+					$domain,
+					array(
 						'client_id'  => $client_id,
 						'email'      => $user_profile->email,
 						'connection' => $connection,
