@@ -110,7 +110,7 @@ class WP_Auth0_Email_Verification {
 	 */
 	public static function ajax_resend_email() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		check_ajax_referer( self::RESEND_NONCE_ACTION );
 		if ( ! empty( $_POST['sub'] ) ) {

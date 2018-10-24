@@ -62,7 +62,7 @@ class WP_Auth0_InitialSetup {
 	 */
 	public function admin_enqueue() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	/**
@@ -71,7 +71,7 @@ class WP_Auth0_InitialSetup {
 	 */
 	public function notify_setup() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	public function notify_error() {

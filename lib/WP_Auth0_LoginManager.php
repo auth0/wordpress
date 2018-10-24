@@ -73,7 +73,7 @@ class WP_Auth0_LoginManager {
 
 		if ( func_num_args() > 2 ) {
 			// phpcs:ignore
-			trigger_error(
+			@trigger_error(
 				sprintf( __( '$admin_role and $ignore_unverified_email are deprecated.', 'wp-auth0' ), __METHOD__ ),
 				E_USER_DEPRECATED
 			);
@@ -792,7 +792,7 @@ class WP_Auth0_LoginManager {
 	 */
 	public function end_session() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		if ( session_id() ) {
 			session_destroy();
@@ -802,7 +802,7 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Login using oauth/ro endpoint
 	 *
-	 * @deprecated 3.6.0 - Use Password Grant instead.
+	 * @deprecated - 3.6.0, not used and no replacement provided.
 	 *
 	 * @param string $username - Username from the login form.
 	 * @param string $password - Password from the login form.
@@ -817,7 +817,7 @@ class WP_Auth0_LoginManager {
 	 */
 	public function login_with_credentials( $username, $password, $connection = 'Username-Password-Authentication' ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$domain    = $this->a0_options->get( 'domain' );
 		$client_id = $this->a0_options->get( 'client_id' );
 		$secret    = $this->a0_options->get_client_secret_as_key();
@@ -853,17 +853,17 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Deprecated to improve the functionality and move to a new class
 	 *
-	 * @deprecated 3.5.0
+	 * @deprecated - 3.5.0, use WP_Auth0_Email_Verification::render_die().
 	 *
 	 * @param object $userinfo - Auth0 profile.
 	 * @param string $id_token - ID token.
 	 *
-	 * @see WP_Auth0_Email_Verification::render_die()
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	// phpcs:ignore
 	private function dieWithVerifyEmail( $userinfo, $id_token = '' ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		WP_Auth0_Email_Verification::render_die( $userinfo );
 	}
 }

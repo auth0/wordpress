@@ -18,7 +18,7 @@ class WP_Auth0_Referer_Check {
 	 */
 	private function __construct() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		add_action( 'init', array( $this, 'do_url_check' ) );
 		add_filter( 'wp_auth0_get_option', array( $this, 'check_activate' ), 10, 2 );

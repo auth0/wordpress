@@ -3,8 +3,7 @@
 class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
 	/**
-	 *
-	 * @deprecated 3.6.0 - Use $this->_description instead
+	 * @deprecated - 3.6.0, use $this->_description instead
 	 */
 	const APPEARANCE_DESCRIPTION = '';
 
@@ -294,12 +293,13 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 * @deprecated - 3.6.0, handled by WP_Auth0_Admin_Generic::render_description()
 	 *
-	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_appearance_description() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 }

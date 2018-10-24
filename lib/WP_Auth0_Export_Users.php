@@ -15,12 +15,13 @@ class WP_Auth0_Export_Users {
 	}
 
 	/**
+	 * @deprecated - 3.6.0, not used, handled in WP_Auth0_Admin::admin_enqueue()
 	 *
-	 * @deprecated 3.6.0 - Not needed, handled in WP_Auth0_Admin::admin_enqueue()
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function admin_enqueue() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	public function a0_add_users_export() {

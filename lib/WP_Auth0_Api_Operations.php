@@ -166,7 +166,7 @@ class WP_Auth0_Api_Operations {
 	 */
 	public function disable_signup_wordpress_connection( $app_token, $disable_signup ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$domain    = $this->a0_options->get( 'domain' );
 		$client_id = $this->a0_options->get( 'client_id' );
@@ -210,7 +210,7 @@ class WP_Auth0_Api_Operations {
 	 */
 	public function social_validation( $app_token, $old_options, $input, $strategy, $connection_options ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$domain    = $this->a0_options->get( 'domain' );
 		$client_id = $this->a0_options->get( 'client_id' );

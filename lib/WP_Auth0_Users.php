@@ -86,7 +86,7 @@ class WP_Auth0_Users {
 
 		if ( $role ) {
 			// phpcs:ignore
-			trigger_error( sprintf( __( '$role parameter is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+			@trigger_error( sprintf( __( '$role parameter is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 			$user_data['role'] = 'administrator';
 		}
 

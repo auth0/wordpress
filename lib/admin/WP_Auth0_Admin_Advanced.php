@@ -3,8 +3,7 @@
 class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
 	/**
-	 *
-	 * @deprecated 3.6.0 - Use $this->_description instead
+	 * @deprecated - 3.6.0, use $this->_description instead
 	 */
 	const ADVANCED_DESCRIPTION = '';
 
@@ -827,55 +826,61 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 * @deprecated - 3.6.0, handled by WP_Auth0_Admin_Features::render_passwordless_enabled()
 	 *
-	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Features::render_passwordless_enabled()
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_passwordless_enabled() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	/**
+	 * @deprecated - 3.6.0, passwordless method is determined by activating them for this Application.
 	 *
-	 * @deprecated 3.6.0 - Passwordless method is determined by activating them for this Application.
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_passwordless_method() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	/**
+	 * @deprecated - 3.6.0, this feature was removed so this option is unused.
 	 *
-	 * @deprecated 3.6.0 - This feature was removed so this option is unused.
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_metrics() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	/**
+	 * @deprecated - 3.6.0, handled by WP_Auth0_Admin_Generic::render_description().
 	 *
-	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description().
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_advanced_description() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 
 	/**
 	 * Validate the `passwordless_method` option.
 	 *
-	 * @deprecated 3.6.0 - The `passwordless_method` option was removed in this version.
+	 * @deprecated - 3.6.0, the `passwordless_method` option was removed in this version.
 	 *
 	 * @param array $old_options - previous option values.
 	 * @param array $input - option values to be updated.
 	 *
 	 * @return mixed
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function connections_validation( $old_options, $input ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return $input;
 	}
 }

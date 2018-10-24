@@ -282,7 +282,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 */
 	public function set_connection( $key, $value ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$options                        = $this->get_options();
 		$options['connections'][ $key ] = $value;
@@ -297,7 +297,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 */
 	public function get_connection( $key, $default = null ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$options = $this->get_options();
 
@@ -308,13 +308,15 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	/**
-	 * @deprecated 3.6.0 - Social connections are no longer set during initial setup so this data is no longer needed.
+	 * @deprecated - 3.6.0, social connections are no longer set during initial setup so this data is no longer needed.
 	 *
 	 * @return array
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function get_enabled_connections() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return array( 'facebook', 'twitter', 'google-oauth2' );
 	}
 }
