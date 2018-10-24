@@ -36,7 +36,7 @@
         "phpcbf": "\"vendor/bin/phpcbf\"",
         "phpcbf-tests": "./vendor/bin/phpcbf --standard=phpcs-test-ruleset.xml -s ./tests/",
         "sniffs": "vendor/bin/phpcs --standard=phpcs-ruleset.xml -e",
-        "test": "\"vendor/bin/phpunit\"",
+        "test": "\"vendor/bin/phpunit\" --coverage-text",
         "test-ci": "vendor/bin/phpunit --debug --coverage-clover=coverage.xml"
     }
 }
