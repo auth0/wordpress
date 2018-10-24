@@ -2,22 +2,35 @@
 <ruleset name="WP-Auth0" namespace="WPAuth0\CS\Standard">
     <description>A custom coding standard for WP-Auth0 tests</description>
 
-    <config name="testVersion" value="5.6-"/>
-    <config name="showProgress" value="1"/>
+    <!-- Only check PHP files. -->
+    <arg name="extensions" value="php"/>
 
+    <!-- Show progress, show the error codes for each message (source). -->
+    <arg value="sp"/>
+
+    <!-- Strip the filepaths down to the relevant bit. -->
+    <arg name="basepath" value="."/>
+
+    <!-- Show coloured output, if available. -->
     <arg name="colors"/>
+
+    <!--
+    PHPCompatibility sniffs to check for PHP cross-version incompatible code.
+    https://github.com/PHPCompatibility/PHPCompatibility
+    -->
+    <config name="testVersion" value="7.1-"/>
+    <rule ref="PHPCompatibilityWP"/>
 
     <rule ref="Generic.CodeAnalysis"/>
     <rule ref="Generic.Commenting.Todo"/>
-    <rule ref="PHPCompatibility"/>
     <rule ref="WordPress-Docs"/>
     <rule ref="WordPress-Core">
         <exclude name="WordPress.Files.FileName"/>
         <exclude name="WordPress.NamingConventions.ValidFunctionName"/>
         <exclude name="WordPress.NamingConventions.ValidVariableName"/>
     </rule>
-    <rule ref="WordPress.VIP.DirectDatabaseQuery"/>
-    <rule ref="WordPress.VIP.SlowDBQuery"/>
+    <rule ref="WordPress.DB.DirectDatabaseQuery"/>
+    <rule ref="WordPress.DB.SlowDBQuery"/>
     <rule ref="WordPress.WP.I18n">
         <properties>
             <property name="text_domain" type="array" value="wp-auth0" />
