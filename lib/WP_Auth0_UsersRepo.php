@@ -193,13 +193,30 @@ class WP_Auth0_UsersRepo {
 		return ! empty( $users[0] ) ? $users[0] : null;
 	}
 
+	/**
+	 * Update all Auth0 meta fields for a WordPress user.
+	 *
+	 * @param int      $user_id - WordPress user ID.
+	 * @param stdClass $userinfo - User profile object from Auth0.
+	 */
 	public function update_auth0_object( $user_id, $userinfo ) {
 		global $wpdb;
-		update_user_meta( $user_id, $wpdb->prefix . 'auth0_id', ( isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub ) );
-		update_user_meta( $user_id, $wpdb->prefix . 'auth0_obj', WP_Auth0_Serializer::serialize( $userinfo ) );
+
+		$auth0_user_id = isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub;
+		update_user_meta( $user_id, $wpdb->prefix . 'auth0_id', $auth0_user_id );
+
+		$userinfo_encoded = WP_Auth0_Serializer::serialize( $userinfo );
+		$userinfo_encoded = wp_slash( $userinfo_encoded );
+		update_user_meta( $user_id, $wpdb->prefix . 'auth0_obj', $userinfo_encoded );
+
 		update_user_meta( $user_id, $wpdb->prefix . 'last_update', date( 'c' ) );
 	}
 
+	/**
+	 * Delete all Auth0 meta fields for a WordPress user.
+	 *
+	 * @param int $user_id - WordPress user ID.
+	 */
 	public function delete_auth0_object( $user_id ) {
 		global $wpdb;
 		delete_user_meta( $user_id, $wpdb->prefix . 'auth0_id' );
