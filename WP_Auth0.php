@@ -590,44 +590,26 @@ $a0_plugin->init();
 
 if ( ! function_exists( 'get_auth0userinfo' ) ) {
 	function get_auth0userinfo( $user_id ) {
-
 		$profile = WP_Auth0_UsersRepo::get_meta( $user_id, 'auth0_obj' );
-
-		if ( $profile ) {
-			return WP_Auth0_Serializer::unserialize( $profile );
-		}
-
-		return false;
+		return $profile ? WP_Auth0_Serializer::unserialize( $profile ) : false;
 	}
 }
 
 if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 	function get_currentauth0userinfo() {
-
 		global $currentauth0_user;
-
-		$current_user = wp_get_current_user();
-
-		$currentauth0_user = get_auth0userinfo( $current_user->ID );
-
+		$currentauth0_user = get_auth0userinfo( get_current_user_id() );
 		return $currentauth0_user;
 	}
 }
 
 if ( ! function_exists( 'get_currentauth0user' ) ) {
 	function get_currentauth0user() {
-
-		$current_user = wp_get_current_user();
-
-		$serialized_profile = WP_Auth0_UsersRepo::get_meta( $current_user->ID, 'auth0_obj' );
-
-		$data = new stdClass;
-
-		$data->auth0_obj   = empty( $serialized_profile ) ? false : WP_Auth0_Serializer::unserialize( $serialized_profile );
-		$data->last_update = WP_Auth0_UsersRepo::get_meta( $current_user->ID, 'last_update' );
-		$data->auth0_id    = WP_Auth0_UsersRepo::get_meta( $current_user->ID, 'auth0_id' );
-
-		return $data;
+		return (object) array(
+			'auth0_obj'   => get_auth0userinfo( get_current_user_id() ),
+			'last_update' => WP_Auth0_UsersRepo::get_meta( get_current_user_id(), 'last_update' ),
+			'auth0_id'    => WP_Auth0_UsersRepo::get_meta( get_current_user_id(), 'auth0_id' ),
+		);
 	}
 }
 

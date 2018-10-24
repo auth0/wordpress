@@ -49,14 +49,14 @@ class TestRenderForm extends TestCase {
 		parent::setUpBeforeClass();
 		self::$opts     = WP_Auth0_Options::Instance();
 		self::$wp_auth0 = new WP_Auth0( self::$opts );
-
-		self::auth0Ready( false );
 	}
 
 	/**
 	 * Test that a specific region and domain return the correct number of IP addresses.
 	 */
 	public function testThatRenderFormPassesThrough() {
+		self::auth0Ready( false );
+		
 		$this->assertArrayNotHasKey( 'action', $_GET );
 
 		// Should pass through initially because WP-Auth0 is not configured.
