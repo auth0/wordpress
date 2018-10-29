@@ -183,6 +183,10 @@ class WP_Auth0_LoginManager {
 
 			// JWT:decode error - Algorithm was not provided.
 			$this->die_on_login( __( 'Invalid ID token (no algorithm)', 'wp-auth0' ), $e->getCode(), false );
+		} catch ( InvalidArgumentException $e ) {
+
+			// JWT:decode error - Key provided to decode was empty.
+			$this->die_on_login( __( 'Invalid ID token (failed signature verification)', 'wp-auth0' ), $e->getCode(), false );
 		} catch ( SignatureInvalidException $e ) {
 
 			// JWT:decode error - Provided JWT was invalid because the signature verification failed.
@@ -283,24 +287,12 @@ class WP_Auth0_LoginManager {
 			$userinfo_resp_body = wp_remote_retrieve_body( $userinfo_resp );
 		}
 
-		// Management API call failed, fallback to userinfo.
-		if ( 200 !== $userinfo_resp_code || empty( $userinfo_resp_body ) ) {
-
-			$userinfo_resp      = WP_Auth0_Api_Client::get_user_info( $auth_domain, $access_token );
-			$userinfo_resp_code = (int) wp_remote_retrieve_response_code( $userinfo_resp );
-			$userinfo_resp_body = wp_remote_retrieve_body( $userinfo_resp );
-
-			if ( 200 !== $userinfo_resp_code || empty( $userinfo_resp_body ) ) {
-
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' L:' . __LINE__, $userinfo_resp );
-				throw new WP_Auth0_LoginFlowValidationException(
-					__( 'Error getting user information', 'wp-auth0' ),
-					$userinfo_resp_code
-				);
-			}
+		// Management API call failed, fallback to ID token.
+		if ( 200 === $userinfo_resp_code && ! empty( $userinfo_resp_body ) ) {
+			$userinfo = json_decode( $userinfo_resp_body );
+		} else {
+			$userinfo = $this->clean_id_token( $decoded_token );
 		}
-
-		$userinfo = json_decode( $userinfo_resp_body );
 
 		// Populate sub property, if not provided.
 		if ( ! isset( $userinfo->sub ) ) {
@@ -341,16 +333,11 @@ class WP_Auth0_LoginManager {
 		$id_token_param = ! empty( $_POST['id_token'] ) ? $_POST['id_token'] : $_POST['token'];
 		$id_token       = sanitize_text_field( wp_unslash( $id_token_param ) );
 
-		try {
-			$decoded_token = JWT::decode(
-				$id_token,
-				$this->a0_options->get_client_secret_as_key(),
-				array( $this->a0_options->get_client_signing_algorithm() )
-			);
-		} catch ( UnexpectedValueException $e ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
-			throw new WP_Auth0_LoginFlowValidationException();
-		}
+		$decoded_token = JWT::decode(
+			$id_token,
+			$this->a0_options->get_client_secret_as_key(),
+			array( $this->a0_options->get_client_signing_algorithm() )
+		);
 
 		// Validate that this JWT was made for us.
 		if ( $this->a0_options->get( 'client_id' ) !== $decoded_token->aud ) {
@@ -367,15 +354,7 @@ class WP_Auth0_LoginManager {
 			);
 		}
 
-		// Remove unneeded ID token attributes.
-		foreach ( array( 'iss', 'aud', 'iat', 'exp', 'nonce', 'clientID' ) as $attr ) {
-			unset( $decoded_token->$attr );
-		}
-
-		// Populate legacy user_id property, if not provided.
-		if ( ! isset( $decoded_token->user_id ) ) {
-			$decoded_token->user_id = $decoded_token->sub;
-		}
+		$decoded_token = $this->clean_id_token( $decoded_token );
 
 		if ( $this->login_user( $decoded_token, $id_token ) ) {
 
@@ -775,6 +754,27 @@ class WP_Auth0_LoginManager {
 					: __( '← Logout', 'wp-auth0' )
 			)
 		);
+	}
+
+	/**
+	 * Remove unnecessary ID token properties.
+	 *
+	 * @param stdClass $id_token_obj - ID token object to clean.
+	 *
+	 * @return stdClass
+	 *
+	 * @codeCoverageIgnore - Private method
+	 */
+	private function clean_id_token( $id_token_obj ) {
+		foreach ( array( 'iss', 'aud', 'iat', 'exp', 'nonce' ) as $attr ) {
+			unset( $id_token_obj->$attr );
+		}
+		if ( ! isset( $id_token_obj->user_id ) && isset( $id_token_obj->sub ) ) {
+			$id_token_obj->user_id = $id_token_obj->sub;
+		} elseif ( ! isset( $id_token_obj->sub ) && isset( $id_token_obj->user_id ) ) {
+			$id_token_obj->sub = $id_token_obj->user_id;
+		}
+		return $id_token_obj;
 	}
 
 	/*
