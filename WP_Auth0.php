@@ -468,13 +468,10 @@ class WP_Auth0 {
 				return true;
 
 			case 'JWT':
-				require_once $source_dir . 'php-jwt/Authentication/' . $class . '.php';
-				return true;
-
 			case 'BeforeValidException':
 			case 'ExpiredException':
 			case 'SignatureInvalidException':
-				require_once $source_dir . 'php-jwt/Exceptions/' . $class . '.php';
+				require_once $source_dir . 'php-jwt/' . $class . '.php';
 				return true;
 		}
 
