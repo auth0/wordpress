@@ -558,7 +558,7 @@ class WP_Auth0_LoginManager {
 
 		// If SSO is in use, redirect to Auth0 to logout there as well.
 		if ( $is_sso ) {
-			$telemetry_headers = WP_Auth0_Api_Client::get_info_headers();
+			$telemetry_headers = WP_Auth0_Api_Abstract::get_info_headers();
 			$redirect_url      = sprintf(
 				'https://%s/v2/logout?returnTo=%s&client_id=%s&auth0Client=%s',
 				$this->a0_options->get_auth_domain(),
@@ -662,7 +662,7 @@ class WP_Auth0_LoginManager {
 		}
 
 		// Get the telemetry header.
-		$telemetry             = WP_Auth0_Api_Client::get_info_headers();
+		$telemetry             = WP_Auth0_Api_Abstract::get_info_headers();
 		$params['auth0Client'] = $telemetry['Auth0-Client'];
 
 		// Where should the user be redirected after logging in?
