@@ -64,9 +64,11 @@ class WP_Auth0_Api_Client {
 
 	/**
 	 * Get required telemetry header.
-	 * TODO: Refactor to use WP_Auth0_Api_Abstract::get_info_headers and deprecate.
+	 * TODO: Deprecate
 	 *
 	 * @return array
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public static function get_info_headers() {
 		return WP_Auth0_Api_Abstract::get_info_headers();
@@ -84,7 +86,7 @@ class WP_Auth0_Api_Client {
 	 */
 	private static function get_headers( $token = '', $content_type = 'application/json' ) {
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		if ( ! empty( $token ) ) {
 			$headers['Authorization'] = "Bearer {$token}";
@@ -110,7 +112,7 @@ class WP_Auth0_Api_Client {
 		$body['client_secret'] = is_null( $client_secret ) ? '' : $client_secret;
 		$body['grant_type']    = $grantType;
 
-		$headers                 = self::get_info_headers();
+		$headers                 = WP_Auth0_Api_Abstract::get_info_headers();
 		$headers['content-type'] = 'application/x-www-form-urlencoded';
 
 		$response = wp_remote_post(
@@ -189,7 +191,7 @@ class WP_Auth0_Api_Client {
 	public static function get_user( $domain, $jwt, $user_id ) {
 		$endpoint = "https://$domain/api/v2/users/" . urlencode( $user_id );
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $jwt";
 
@@ -206,7 +208,7 @@ class WP_Auth0_Api_Client {
 
 		$endpoint = "https://$domain/dbconnections/signup";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['content-type'] = 'application/json';
 
@@ -352,7 +354,7 @@ class WP_Auth0_Api_Client {
 
 		$endpoint = "https://$domain/api/v2/clients/$client_id";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type']  = 'application/json';
@@ -391,7 +393,7 @@ class WP_Auth0_Api_Client {
 
 		$endpoint = "https://$domain/api/v2/rules";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type']  = 'application/json';
@@ -424,7 +426,7 @@ class WP_Auth0_Api_Client {
 
 		$endpoint = "https://$domain/api/v2/rules/$id";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type']  = 'application/json';
@@ -510,7 +512,7 @@ class WP_Auth0_Api_Client {
 	public static function create_connection( $domain, $app_token, $payload ) {
 		$endpoint = "https://$domain/api/v2/connections";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type']  = 'application/json';
@@ -546,7 +548,7 @@ class WP_Auth0_Api_Client {
 			$endpoint .= "?strategy=$strategy";
 		}
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
 
@@ -579,7 +581,7 @@ class WP_Auth0_Api_Client {
 	public static function get_connection( $domain, $app_token, $id ) {
 		$endpoint = "https://$domain/api/v2/connections/$id";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
 
@@ -612,7 +614,7 @@ class WP_Auth0_Api_Client {
 	public static function update_connection( $domain, $app_token, $id, $payload ) {
 		$endpoint = "https://$domain/api/v2/connections/$id";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type']  = 'application/json';
@@ -648,7 +650,7 @@ class WP_Auth0_Api_Client {
 	public static function update_user( $domain, $app_token, $id, $payload ) {
 		$endpoint = "https://$domain/api/v2/users/$id";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type']  = 'application/json';
@@ -737,7 +739,7 @@ class WP_Auth0_Api_Client {
 	public static function update_guardian( $domain, $app_token, $factor, $enabled ) {
 		$endpoint = "https://$domain/api/v2/guardian/factors/$factor";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type']  = 'application/json';
@@ -876,7 +878,7 @@ class WP_Auth0_Api_Client {
 
 		$endpoint = "https://$domain/";
 
-		$headers                 = self::get_info_headers();
+		$headers                 = WP_Auth0_Api_Abstract::get_info_headers();
 		$headers['content-type'] = 'application/x-www-form-urlencoded';
 		$body                    = array(
 			'client_id'  => $client_id,
@@ -965,7 +967,7 @@ class WP_Auth0_Api_Client {
 
 		$endpoint = "https://$domain/api/v2/users?include_totals=$include_totals&per_page=$per_page&page=$page&sort=$sort&q=$q&search_engine=v2";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $jwt";
 
@@ -1035,7 +1037,7 @@ class WP_Auth0_Api_Client {
 
 		$endpoint = "https://$domain/api/v2/users";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $jwt";
 		$headers['content-type']  = 'application/json';
@@ -1074,7 +1076,7 @@ class WP_Auth0_Api_Client {
 
 		$endpoint = "https://$domain/api/v2/clients";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
 
@@ -1130,7 +1132,7 @@ class WP_Auth0_Api_Client {
 
 		$endpoint = "https://$domain/api/v2/connections/$id";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type']  = 'application/json';
@@ -1169,7 +1171,7 @@ class WP_Auth0_Api_Client {
 
 		$endpoint = "https://$domain/api/v2/users/$user_id/multifactor/$provider";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type']  = 'application/json';
@@ -1208,7 +1210,7 @@ class WP_Auth0_Api_Client {
 
 		$endpoint = "https://$domain/dbconnections/change_password";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['content-type'] = 'application/json';
 
@@ -1251,7 +1253,7 @@ class WP_Auth0_Api_Client {
 
 		$endpoint = "https://$domain/api/v2/users/$main_user_id/identities";
 
-		$headers = self::get_info_headers();
+		$headers = WP_Auth0_Api_Abstract::get_info_headers();
 
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type']  = 'application/json';

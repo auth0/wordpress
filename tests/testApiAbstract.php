@@ -62,13 +62,18 @@ class TestApiAbstract extends TestCase {
 		// 2. Test that we have an analytics header being sent with the correct data.
 		$headers = $api_abstract->get_request( 'headers' );
 		$this->assertNotEmpty( $headers );
-		$this->assertNotEmpty( $headers['Auth0-Client'] );
+		$this->assertArrayHasKey( 'Auth0-Client', $headers );
 
 		$client_header = base64_decode( $headers['Auth0-Client'] );
 		$client_header = json_decode( $client_header, true );
 
 		$this->assertEquals( 'wp-auth0', $client_header['name'] );
 		$this->assertEquals( WPA0_VERSION, $client_header['version'] );
+		$this->assertArrayHasKey( 'env', $client_header );
+		$this->assertArrayHasKey( 'php', $client_header['env'] );
+		$this->assertEquals( phpversion(), $client_header['env']['php'] );
+		$this->assertArrayHasKey( 'wp', $client_header['env'] );
+		$this->assertEquals( get_bloginfo( 'version' ), $client_header['env']['wp'] );
 	}
 
 	/**

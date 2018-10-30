@@ -133,11 +133,11 @@ abstract class WP_Auth0_Api_Abstract {
 	 */
 	public static function get_info_headers() {
 		$header_value = array(
-			'name'        => 'wp-auth0',
-			'version'     => WPA0_VERSION,
-			'environment' => array(
-				'PHP'       => phpversion(),
-				'WordPress' => get_bloginfo( 'version' ),
+			'name'    => 'wp-auth0',
+			'version' => WPA0_VERSION,
+			'env'     => array(
+				'php' => phpversion(),
+				'wp'  => get_bloginfo( 'version' ),
 			),
 		);
 		return array( 'Auth0-Client' => base64_encode( wp_json_encode( $header_value ) ) );
