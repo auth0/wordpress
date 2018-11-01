@@ -7,6 +7,7 @@
  * Author URI: https://auth0.com
  * Text Domain: wp-auth0
  */
+
 define( 'WPA0_VERSION', '3.8.0-beta' );
 define( 'AUTH0_DB_VERSION', 19 );
 

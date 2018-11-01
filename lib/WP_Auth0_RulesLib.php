@@ -30,7 +30,7 @@ function (user, context, callback) {
      Authorization: 'Bearer ' + auth0.accessToken
    },
    qs: {
-     search_engine: 'v2',
+     search_engine: 'v3',
      q: 'email:\"' + user.email + '\" -user_id:\"' + user.user_id + '\"',
    }
   },
