@@ -135,4 +135,13 @@ All is not lost!
 
 == Changelog ==
 
-[Complete CHANGELOG.md maintained on Github](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md)
+**v3.8.0**
+
+- Administrators can now mark certain strategies as able to skip email verification. This is typically used for Enterprise strategies that do not provide an email verification flag. This should be used sparingly and only for connections that do not provide this flag.
+- Password changes for WordPress users now work properly and are rejected clearly if Auth0 rejects the change (typically because the password does not conform to the password policy). A current API token is not required but your Application does need to allow for a Client Credentials grant with the Management API (this configured for you by default, [more information here](https://auth0.com/docs/cms/wordpress/configuration#authorize-the-application-for-the-management-api)).
+- The `wp-login.php` page is no longer used for any callback processing. If you are using this page to process callbacks in a custom plugin or theme, please update to use the main callback URL for the implicit flow `/index.php?auth0=implicit`. In addition, users that are already logged in will be redirected to the default login page when accessing `wp-login.php`.
+- Error logging has been improved in general, along with improvements to the error log display. Consecutive, duplicate errors are now combined, the error log now shows more entries, and entries can be cleared from the admin.
+- The "Auto-Login" setting has been renamed to "Universal Login Page" and moved from the Advanced tab to the Features tab. The functionality is the same as before and will retain the existing setting.
+- And more!
+
+[Complete list of changes for this and other releases](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#380-2018-11-06)

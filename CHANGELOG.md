@@ -1,5 +1,77 @@
 # Change Log
 
+## [3.8.0](https://github.com/auth0/wp-auth0/tree/3.8.0) (2018-11-06)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.7.1...3.8.0)
+
+### Notes on this release
+
+- Administrators can now mark certain strategies as able to skip email verification. This is typically used for Enterprise strategies that do not provide an email verification flag. This should be used sparingly and only for connections that do not provide this flag. 
+- Password changes for WordPress users now work properly and are rejected clearly if Auth0 rejects the change (typically because the password does not conform to the password policy). A current API token is not required but your Application does need to allow for a Client Credentials grant with the Management API (this configured for you by default, [more information here](https://auth0.com/docs/cms/wordpress/configuration#authorize-the-application-for-the-management-api)). 
+- The `wp-login.php` page is no longer used for any callback processing. If you are using this page to process callbacks in a custom plugin or theme, please update to use the main callback URL for the implicit flow `/index.php?auth0=implicit`. In addition, users that are already logged in will be redirected to the default login page when accessing `wp-login.php`.
+- Error logging has been improved in general, along with improvements to the error log display. Consecutive, duplicate errors are now combined, the error log now shows more entries, and entries can be cleared from the admin. 
+- The "Auto-Login" setting has been renamed to "Universal Login Page" and moved from the Advanced tab to the Features tab. The functionality is the same as before and will retain the existing setting.
+
+### Issues and PRs 
+
+**Closed issues**
+- Plugin tries to create a user if they log in a different way [\#539](https://github.com/auth0/wp-auth0/issues/539)
+- Problems with implicit login in > 3.6 [\#536](https://github.com/auth0/wp-auth0/issues/536)
+- Add authorization token to header for external request [\#534](https://github.com/auth0/wp-auth0/issues/534)
+- Configuring auth0 OIDC URL parameters [\#521](https://github.com/auth0/wp-auth0/issues/521)
+- Single sign on shows the login username/password fields briefly before automatically signing in [\#508](https://github.com/auth0/wp-auth0/issues/508)
+- Better behavior when logged-in users visits wp-login.php [\#414](https://github.com/auth0/wp-auth0/issues/414)
+- Profile password update changes [\#375](https://github.com/auth0/wp-auth0/issues/375)
+- auth0 forgot password doesn't change WP password [\#310](https://github.com/auth0/wp-auth0/issues/310)
+- Woocommerce can't change user password [\#300](https://github.com/auth0/wp-auth0/issues/300)
+
+**Added**
+- Update translation file [\#561](https://github.com/auth0/wp-auth0/pull/561) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add Management API framework [WIP] [\#537](https://github.com/auth0/wp-auth0/pull/537) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update README, CONTRIBUTION, LICENSE, and Issue+PR templates [\#533](https://github.com/auth0/wp-auth0/pull/533) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add filters for authorize URL and params, logout URL + tests [\#531](https://github.com/auth0/wp-auth0/pull/531) ([joshcanhelp](https://github.com/joshcanhelp))
+- Improve error log [\#530](https://github.com/auth0/wp-auth0/pull/530) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add skip strategies setting and tests [\#528](https://github.com/auth0/wp-auth0/pull/528) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Changed**
+- Update telemetry header [\#577](https://github.com/auth0/wp-auth0/pull/577) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update JWT library [\#576](https://github.com/auth0/wp-auth0/pull/576) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change deprecation error handling [\#574](https://github.com/auth0/wp-auth0/pull/574) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix tests to run in same process [\#565](https://github.com/auth0/wp-auth0/pull/565) ([joshcanhelp](https://github.com/joshcanhelp))
+- Rename the Auto Login setting to ULP; move to features tab [\#551](https://github.com/auth0/wp-auth0/pull/551) ([joshcanhelp](https://github.com/joshcanhelp))
+- Switch implicit flow to hybrid flow and correct Management API scopes [\#546](https://github.com/auth0/wp-auth0/pull/546) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update README and version number for dev->master merge [\#543](https://github.com/auth0/wp-auth0/pull/543) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Deprecated**
+- Deprecate unused rules JS [\#560](https://github.com/auth0/wp-auth0/pull/560) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP_Auth0_Email_Verification::ajax_resend_email [\#559](https://github.com/auth0/wp-auth0/pull/559) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate a0_render_message method [\#558](https://github.com/auth0/wp-auth0/pull/558) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate unused login methods and props [\#557](https://github.com/auth0/wp-auth0/pull/557) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP_Auth0_Options connection methods [\#556](https://github.com/auth0/wp-auth0/pull/556) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP_Auth0_Referer_Check [\#555](https://github.com/auth0/wp-auth0/pull/555) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP_Auth0_Metrics [\#554](https://github.com/auth0/wp-auth0/pull/554) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP_Auth0_InitialSetup_Signup, remove usage [\#553](https://github.com/auth0/wp-auth0/pull/553) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate methods in WP_Auth0_Api_Operations and related ones in WP_Auth0 [\#552](https://github.com/auth0/wp-auth0/pull/552) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate unused methods and classes for initial setup [\#550](https://github.com/auth0/wp-auth0/pull/550) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate unused methods in WP_Auth0_Api_Client [\#549](https://github.com/auth0/wp-auth0/pull/549) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecations for WP_Auth0_EditProfile [\#548](https://github.com/auth0/wp-auth0/pull/548) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecations for WP_Auth0_EditProfile [\#547](https://github.com/auth0/wp-auth0/pull/547) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix label font-weight and migration token display [\#579](https://github.com/auth0/wp-auth0/pull/579) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix user profile saving [\#573](https://github.com/auth0/wp-auth0/pull/573) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update phpcs script and dependent libs [\#572](https://github.com/auth0/wp-auth0/pull/572) ([joshcanhelp](https://github.com/joshcanhelp))
+- Move SSO checking into Lock init [\#570](https://github.com/auth0/wp-auth0/pull/570) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix migration token display to allow copying [\#540](https://github.com/auth0/wp-auth0/pull/540) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change and improve user profile [\#532](https://github.com/auth0/wp-auth0/pull/532) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix label font-weight and migration token display [\#579](https://github.com/auth0/wp-auth0/pull/579) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix user profile saving [\#573](https://github.com/auth0/wp-auth0/pull/573) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update phpcs script and dependent libs [\#572](https://github.com/auth0/wp-auth0/pull/572) ([joshcanhelp](https://github.com/joshcanhelp))
+- Move SSO checking into Lock init [\#570](https://github.com/auth0/wp-auth0/pull/570) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix migration token display to allow copying [\#540](https://github.com/auth0/wp-auth0/pull/540) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change and improve user profile [\#532](https://github.com/auth0/wp-auth0/pull/532) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [3.7.1](https://github.com/auth0/wp-auth0/tree/3.7.1) (2018-10-08)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.7.0...3.7.1)
 
