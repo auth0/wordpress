@@ -3,8 +3,7 @@
 class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
 	/**
-	 *
-	 * @deprecated 3.6.0 - Use $this->_description instead
+	 * @deprecated - 3.6.0, use $this->_description instead
 	 */
 	const ADVANCED_DESCRIPTION = '';
 
@@ -44,6 +43,12 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'opt'      => 'requires_verified_email',
 				'id'       => 'wpa0_verified_email',
 				'function' => 'render_verified_email',
+			),
+			array(
+				'name'     => __( 'Skip Strategies', 'wp-auth0' ),
+				'opt'      => 'skip_strategies',
+				'id'       => 'wpa0_skip_strategies',
+				'function' => 'render_skip_strategies',
 			),
 			array(
 				'name'     => __( 'Remember User Session', 'wp-auth0' ),
@@ -110,12 +115,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'opt'      => 'auto_login',
 				'id'       => 'wpa0_auto_login',
 				'function' => 'render_auto_login',
-			),
-			array(
-				'name'     => __( 'Auto Login Method', 'wp-auth0' ),
-				'opt'      => 'auto_login_method',
-				'id'       => 'wpa0_auto_login_method',
-				'function' => 'render_auto_login_method',
 			),
 			array(
 				'name'     => __( 'Implicit Login Flow', 'wp-auth0' ),
@@ -207,11 +206,32 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_verified_email( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
+		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_skip_strategies' );
 		$this->render_field_description(
 			__( 'Require new users to both provide and verify their email before logging in. ', 'wp-auth0' ) .
 			__( 'An email is verified manually by an email from Auth0 or automatically by the provider. ', 'wp-auth0' ) .
 			__( 'This will disallow logins from social connections that do not provide email (like Twitter)', 'wp-auth0' )
+		);
+	}
+
+	/**
+	 * Render form field and description for the `skip_strategies` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 *
+	 * @since 3.8.0
+	 */
+	public function render_skip_strategies( $args = array() ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'e.g. "twitter,ldap"' );
+		$this->render_field_description(
+			__( 'Enter one or more strategies, separated by commas, to skip email verification. ', 'wp-auth0' ) .
+			__( 'You can find the strategy under the "Connection Name" field in the Auth0 dashboard. ', 'wp-auth0' ) .
+			__( 'Leave this field blank to require email for all strategies. ', 'wp-auth0' ) .
+			__( 'This could introduce a security risk and should be used sparingly, if at all', 'wp-auth0' )
 		);
 	}
 
@@ -364,8 +384,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				$this->render_const_notice( 'migration_token' );
 			}
 			printf(
-				'<textarea class="code" rows="%d" disabled>%s</textarea>',
-				$this->_textarea_rows,
+				'<code class="code-block" disabled>%s</code>',
 				sanitize_text_field( $this->options->get( 'migration_token' ) )
 			);
 		} else {
@@ -408,38 +427,12 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Render form field and description for the `auto_login` option.
+	 * Refer to the Features tab for the `auto_login` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
 	 */
-	public function render_auto_login( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_auto_login_method' );
+	public function render_auto_login() {
 		$this->render_field_description(
-			__( 'Send logins directly to a specific Connection, skipping the login page', 'wp-auth0' )
-		);
-	}
-
-	/**
-	 * Render form field and description for the `auto_login_method` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_auto_login_method( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			sprintf(
-				__( 'Find the method name to use under Connections > [Connection Type] in your %s. ', 'wp-auth0' ),
-				$this->get_dashboard_link()
-			) .
-			__( 'Click the expand icon and use the value in the "Name" field (like "google-oauth2")', 'wp-auth0' )
+			__( 'Please see the "Universal Login Page" setting on the Features tab', 'wp-auth0' )
 		);
 	}
 
@@ -661,14 +654,17 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	public function basic_validation( $old_options, $input ) {
-		$input['requires_verified_email']   = ( isset( $input['requires_verified_email'] ) ? $input['requires_verified_email'] : 0 );
-		$input['auto_provisioning']         = ( isset( $input['auto_provisioning'] ) ? $input['auto_provisioning'] : 0 );
-		$input['remember_users_session']    = ( isset( $input['remember_users_session'] ) ? $input['remember_users_session'] : 0 ) == 1;
-		$input['passwordless_enabled']      = ( isset( $input['passwordless_enabled'] ) ? $input['passwordless_enabled'] : 0 ) == 1;
-		$input['jwt_auth_integration']      = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
-		$input['auth0_implicit_workflow']   = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
-		$input['force_https_callback']      = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
-		$input['default_login_redirection'] = esc_url_raw( $input['default_login_redirection'] );
+		$input['requires_verified_email'] = intval( ! empty( $input['requires_verified_email'] ) );
+
+		$input['skip_strategies'] = isset( $input['skip_strategies'] ) ?
+			sanitize_text_field( trim( $input['skip_strategies'] ) ) : '';
+
+		$input['auto_provisioning']       = ( isset( $input['auto_provisioning'] ) ? $input['auto_provisioning'] : 0 );
+		$input['remember_users_session']  = ( isset( $input['remember_users_session'] ) ? $input['remember_users_session'] : 0 ) == 1;
+		$input['passwordless_enabled']    = ( isset( $input['passwordless_enabled'] ) ? $input['passwordless_enabled'] : 0 ) == 1;
+		$input['jwt_auth_integration']    = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
+		$input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
+		$input['force_https_callback']    = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
 
 		$input['social_twitter_key'] = isset( $input['social_twitter_key'] ) ?
 			sanitize_text_field( $input['social_twitter_key'] ) : '';
@@ -683,14 +679,20 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			sanitize_text_field( $input['social_facebook_secret'] ) : '';
 
 		$input['migration_ips_filter'] = ( ! empty( $input['migration_ips_filter'] ) ? 1 : 0 );
-		$input['migration_ips']        = sanitize_text_field( $input['migration_ips'] );
+
+		$input['migration_ips'] = isset( $input['migration_ips'] ) ?
+			sanitize_text_field( $input['migration_ips'] ) : '';
 
 		$input['valid_proxy_ip'] = ( isset( $input['valid_proxy_ip'] ) ? $input['valid_proxy_ip'] : null );
 
-		$input['lock_connections']     = trim( $input['lock_connections'] );
-		$input['custom_signup_fields'] = trim( $input['custom_signup_fields'] );
+		$input['lock_connections'] = isset( $input['lock_connections'] ) ?
+			trim( $input['lock_connections'] ) : '';
 
-		if ( trim( $input['extra_conf'] ) != '' ) {
+		$input['custom_signup_fields'] = isset( $input['custom_signup_fields'] ) ?
+			trim( $input['custom_signup_fields'] ) : '';
+
+		$input['extra_conf'] = isset( $input['extra_conf'] ) ? trim( $input['extra_conf'] ) : '';
+		if ( ! empty( $input['extra_conf'] ) ) {
 			if ( json_decode( $input['extra_conf'] ) === null ) {
 				$error = __( 'The Extra settings parameter should be a valid json object', 'wp-auth0' );
 				self::add_validation_error( $error );
@@ -717,7 +719,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 					array(
 						'scope' => 'migration_ws',
 						'jti'   => $token_id,
-					), $secret
+					),
+					$secret
 				);
 				$input['migration_token_id'] = $token_id;
 
@@ -780,7 +783,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @return array
 	 */
 	public function loginredirection_validation( $old_options, $input ) {
-		$new_redirect_url = strtolower( $input['default_login_redirection'] );
+		$new_redirect_url = esc_url_raw( strtolower( $input['default_login_redirection'] ) );
 		$old_redirect_url = strtolower( $old_options['default_login_redirection'] );
 
 		// No change so no validation needed.
@@ -823,55 +826,61 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 * @deprecated - 3.6.0, handled by WP_Auth0_Admin_Features::render_passwordless_enabled()
 	 *
-	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Features::render_passwordless_enabled()
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_passwordless_enabled() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	/**
+	 * @deprecated - 3.6.0, passwordless method is determined by activating them for this Application.
 	 *
-	 * @deprecated 3.6.0 - Passwordless method is determined by activating them for this Application.
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_passwordless_method() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	/**
+	 * @deprecated - 3.6.0, this feature was removed so this option is unused.
 	 *
-	 * @deprecated 3.6.0 - This feature was removed so this option is unused.
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_metrics() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	/**
+	 * @deprecated - 3.6.0, handled by WP_Auth0_Admin_Generic::render_description().
 	 *
-	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description().
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_advanced_description() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 
 	/**
 	 * Validate the `passwordless_method` option.
 	 *
-	 * @deprecated 3.6.0 - The `passwordless_method` option was removed in this version.
+	 * @deprecated - 3.6.0, the `passwordless_method` option was removed in this version.
 	 *
 	 * @param array $old_options - previous option values.
 	 * @param array $input - option values to be updated.
 	 *
 	 * @return mixed
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function connections_validation( $old_options, $input ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return $input;
 	}
 }

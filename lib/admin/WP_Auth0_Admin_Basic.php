@@ -3,8 +3,9 @@
 class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
 	/**
+	 * @deprecated - 3.6.0, use $this->_description instead
 	 *
-	 * @deprecated 3.6.0 - Use $this->_description instead
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	const BASIC_DESCRIPTION = '';
 
@@ -122,6 +123,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @since 3.7.0
 	 */
 	public function render_custom_domain( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'login.yourdomain.com' );
@@ -360,30 +363,33 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 * @deprecated - 3.6.0, should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
 	 *
-	 * @deprecated 3.6.0 - Should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_allow_signup_regular_multisite() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	/**
+	 * @deprecated - 3.6.0, should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
 	 *
-	 * @deprecated 3.6.0 - Should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_allow_signup_regular() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	/**
+	 * @deprecated - 3.6.0, handled by WP_Auth0_Admin_Generic::render_description()
 	 *
-	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description()
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_basic_description() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 }

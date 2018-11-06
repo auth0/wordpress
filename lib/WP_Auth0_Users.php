@@ -1,5 +1,14 @@
 <?php
 class WP_Auth0_Users {
+
+	/**
+	 * Create a WordPress user with Auth0 data.
+	 *
+	 * @param object       $userinfo - User profile data from Auth0.
+	 * @param null|boolean $role - Set the role as administrator - @deprecated - 3.8.0.
+	 *
+	 * @return int|WP_Error
+	 */
 	public static function create_user( $userinfo, $role = null ) {
 		$email = null;
 		if ( isset( $userinfo->email ) ) {
@@ -76,6 +85,8 @@ class WP_Auth0_Users {
 		);
 
 		if ( $role ) {
+			// phpcs:ignore
+			@trigger_error( sprintf( __( '$role parameter is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 			$user_data['role'] = 'administrator';
 		}
 
@@ -90,5 +101,20 @@ class WP_Auth0_Users {
 
 		// Return the user ID
 		return $user_id;
+	}
+
+	/**
+	 * Get the strategy from an Auth0 user ID.
+	 *
+	 * @param string $auth0_id - Auth0 user ID.
+	 *
+	 * @return string
+	 */
+	public static function get_strategy( $auth0_id ) {
+		if ( false === strpos( $auth0_id, '|' ) ) {
+			return '';
+		}
+		$auth0_id_parts = explode( '|', $auth0_id );
+		return $auth0_id_parts[0];
 	}
 }

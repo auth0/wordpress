@@ -16,28 +16,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		return is_multisite() ? users_can_register_signup_filter() : get_site_option( 'users_can_register' );
 	}
 
-	/**
-	 * TODO: Deprecate
-	 */
-	public function set_connection( $key, $value ) {
-		$options                        = $this->get_options();
-		$options['connections'][ $key ] = $value;
-
-		$this->set( 'connections', $options['connections'] );
-	}
-
-	/**
-	 * TODO: Deprecate
-	 */
-	public function get_connection( $key, $default = null ) {
-		$options = $this->get_options();
-
-		if ( ! isset( $options['connections'][ $key ] ) ) {
-			return apply_filters( 'wp_auth0_get_option', $default, $key );
-		}
-		return apply_filters( 'wp_auth0_get_option', $options['connections'][ $key ], $key );
-	}
-
 	public function get_default( $key ) {
 		$defaults = $this->defaults();
 		return $defaults[ $key ];
@@ -179,6 +157,29 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	/**
+	 * Check if provided strategy is allowed to skip email verification.
+	 * Useful for Enterprise strategies that do not provide a email_verified profile value.
+	 *
+	 * @param string $strategy - Strategy to check against saved setting.
+	 *
+	 * @return bool
+	 *
+	 * @since 3.8.0
+	 */
+	public function strategy_skips_verified_email( $strategy ) {
+		$skip_strategies = trim( $this->get( 'skip_strategies' ) );
+
+		// No strategies to skip.
+		if ( empty( $skip_strategies ) ) {
+			return false;
+		}
+
+		$skip_strategies = explode( ',', $skip_strategies );
+		$skip_strategies = array_map( 'trim', $skip_strategies );
+		return in_array( $strategy, $skip_strategies );
+	}
+
+	/**
 	 * Default settings when plugin is installed or reset
 	 *
 	 * @return array
@@ -229,6 +230,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
 			// Advanced
 			'requires_verified_email'   => true,
+			'skip_strategies'           => '',
 			'remember_users_session'    => false,
 			'default_login_redirection' => home_url(),
 			'passwordless_enabled'      => false,
@@ -267,15 +269,54 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		);
 	}
 
-	/**
+	/*
 	 *
-	 * @deprecated 3.6.0 - Social connections are no longer set during initial setup so this data is no longer needed.
+	 * DEPRECATED
+	 *
+	 */
+
+	/**
+	 * @deprecated - 3.8.0, not used and no replacement provided. Connection settings now live in top-level settings.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function set_connection( $key, $value ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		$options                        = $this->get_options();
+		$options['connections'][ $key ] = $value;
+
+		$this->set( 'connections', $options['connections'] );
+	}
+
+	/**
+	 * @deprecated - 3.8.0, not used and no replacement provided. Connection settings now live in top-level settings.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function get_connection( $key, $default = null ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		$options = $this->get_options();
+
+		if ( ! isset( $options['connections'][ $key ] ) ) {
+			return apply_filters( 'wp_auth0_get_option', $default, $key );
+		}
+		return apply_filters( 'wp_auth0_get_option', $options['connections'][ $key ], $key );
+	}
+
+	/**
+	 * @deprecated - 3.6.0, social connections are no longer set during initial setup so this data is no longer needed.
 	 *
 	 * @return array
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function get_enabled_connections() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return array( 'facebook', 'twitter', 'google-oauth2' );
 	}
 }

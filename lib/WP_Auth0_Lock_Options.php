@@ -3,7 +3,9 @@
 /**
  * Class WP_Auth0_Lock_Options.
  *
- * @deprecated 3.6.0 - Outdated, use WP_Auth0_Lock10_Options
+ * @deprecated - 3.6.0, not used, use WP_Auth0_Lock10_Options instead.
+ *
+ * @codeCoverageIgnore - Deprecated
  */
 class WP_Auth0_Lock_Options {
 
@@ -15,13 +17,13 @@ class WP_Auth0_Lock_Options {
 	/**
 	 * WP_Auth0_Lock_Options constructor.
 	 *
-	 * @deprecated 3.6.0 - Outdated, use WP_Auth0_Lock10_Options
+	 * @deprecated - 3.6.0, not used, use WP_Auth0_Lock10_Options instead.
 	 *
 	 * @param array $extended_settings
 	 */
 	public function __construct( $extended_settings = array() ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Class %s is deprecated.', 'wp-auth0' ), __CLASS__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Class %s is deprecated.', 'wp-auth0' ), __CLASS__ ), E_USER_DEPRECATED );
 		$this->wp_options        = WP_Auth0_Options::Instance();
 		$this->extended_settings = $extended_settings;
 	}

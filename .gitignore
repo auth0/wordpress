@@ -8,3 +8,5 @@ wp-phptidy.php
 /account_cleanup/vendor/
 /vendor/
 /rules/
+.phpcs.xml
+phpcs.xml

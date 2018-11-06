@@ -2,12 +2,13 @@
 /**
  * Plugin Name: Login by Auth0
  * Description: Login by Auth0 provides improved username/password login, Passwordless login, Social login and Single Sign On for all your sites.
- * Version: 3.7.1
+ * Version: 3.8.0
  * Author: Auth0
  * Author URI: https://auth0.com
  * Text Domain: wp-auth0
  */
-define( 'WPA0_VERSION', '3.7.1' );
+
+define( 'WPA0_VERSION', '3.8.0' );
 define( 'AUTH0_DB_VERSION', 19 );
 
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
@@ -33,25 +34,49 @@ define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
  */
 class WP_Auth0 {
 
+	/**
+	 * @var WP_Auth0_DBManager
+	 */
 	protected $db_manager;
+
+	/**
+	 * @var null|WP_Auth0_Options
+	 */
 	protected $a0_options;
+
+	/**
+	 * @var WP_Auth0_Amplificator
+	 */
 	protected $social_amplificator;
+
+	/**
+	 * @var WP_Auth0_Routes
+	 */
 	protected $router;
+
+	/**
+	 * @var string
+	 */
 	protected $basename;
+
+	/**
+	 * WP_Auth0 constructor.
+	 *
+	 * @param null|WP_Auth0_Options $options - WP_Auth0_Options instance.
+	 */
+	public function __construct( $options = null ) {
+		spl_autoload_register( array( $this, 'autoloader' ) );
+		$this->a0_options = $options instanceof WP_Auth0_Options ? $options : WP_Auth0_Options::Instance();
+	}
 
 	/**
 	 * Initialize the plugin and its modules setting all the hooks
 	 */
 	public function init() {
-
-		spl_autoload_register( array( $this, 'autoloader' ) );
-
 		$this->basename = plugin_basename( __FILE__ );
 
 		$ip_checker = new WP_Auth0_Ip_Check();
 		$ip_checker->init();
-
-		$this->a0_options = WP_Auth0_Options::Instance();
 
 		$this->db_manager = new WP_Auth0_DBManager( $this->a0_options );
 		$this->db_manager->init();
@@ -103,6 +128,7 @@ class WP_Auth0 {
 		$auth0_admin->init();
 
 		$error_log = new WP_Auth0_ErrorLog();
+		$error_log->init();
 
 		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH( $this->a0_options );
 		$configure_jwt_auth->init();
@@ -124,6 +150,19 @@ class WP_Auth0 {
 
 		$edit_profile = new WP_Auth0_EditProfile( $this->db_manager, $users_repo, $this->a0_options );
 		$edit_profile->init();
+
+		$api_client_creds = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
+
+		$api_change_password = new WP_Auth0_Api_Change_Password( $this->a0_options, $api_client_creds );
+		$profile_change_pwd  = new WP_Auth0_Profile_Change_Password( $api_change_password );
+		$profile_change_pwd->init();
+
+		$profile_delete_data = new WP_Auth0_Profile_Delete_Data( $users_repo );
+		$profile_delete_data->init();
+
+		$api_delete_mfa     = new WP_Auth0_Api_Delete_User_Mfa( $this->a0_options, $api_client_creds );
+		$profile_delete_mfa = new WP_Auth0_Profile_Delete_Mfa( $this->a0_options, $api_delete_mfa );
+		$profile_delete_mfa->init();
 
 		WP_Auth0_Email_Verification::init();
 	}
@@ -169,44 +208,6 @@ class WP_Auth0 {
 
 		$parts = explode( '.', $domain );
 		return $parts[0] . '@' . self::get_tenant_region( $domain );
-	}
-
-	/**
-	 * TODO: Deprecate, no longer used
-	 *
-	 * Checks it it should update the database connection no enable or disable signups and create or delete
-	 * the rule that will disable social signups.
-	 */
-	function check_signup_status() {
-		$app_token = $this->a0_options->get( 'auth0_app_token' );
-
-		if ( $app_token ) {
-			$disable_signup_rule        = $this->a0_options->get( 'disable_signup_rule' );
-			$is_wp_registration_enabled = $this->a0_options->is_wp_registration_enabled();
-
-			if ( $is_wp_registration_enabled != $this->a0_options->get( 'registration_enabled' ) ) {
-					$this->a0_options->set( 'registration_enabled', $is_wp_registration_enabled );
-
-					$operations = new WP_Auth0_Api_Operations( $this->a0_options );
-
-					$operations->disable_signup_wordpress_connection( $app_token, ! $is_wp_registration_enabled );
-
-					$rule_name = WP_Auth0_RulesLib::$disable_social_signup['name'] . '-' . get_bloginfo( 'name' );
-
-					$rule_script = WP_Auth0_RulesLib::$disable_social_signup['script'];
-					$rule_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $this->a0_options->get( 'client_id' ), $rule_script );
-
-				try {
-					if ( $is_wp_registration_enabled && $disable_signup_rule === null ) {
-						return;
-					}
-					$disable_signup_rule = $operations->toggle_rule( $app_token, ( $is_wp_registration_enabled ? $disable_signup_rule : null ), $rule_name, $rule_script );
-					$this->a0_options->set( 'disable_signup_rule', $disable_signup_rule );
-				} catch ( Exception $e ) {
-
-				}
-			}
-		}
 	}
 
 	/**
@@ -284,18 +285,6 @@ class WP_Auth0 {
 		}
 	}
 
-	/**
-	 *
-	 * @deprecated 3.6.0 - Use WPA0_PLUGIN_URL constant
-	 *
-	 * @return string
-	 */
-	public static function get_plugin_dir_url() {
-		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		return WPA0_PLUGIN_URL;
-	}
-
 	public function a0_register_query_vars( $qvars ) {
 		$qvars[] = 'error';
 		$qvars[] = 'error_description';
@@ -305,17 +294,6 @@ class WP_Auth0 {
 		$qvars[] = 'code';
 		$qvars[] = 'state';
 		return $qvars;
-	}
-
-	public function a0_render_message() {
-		$message = null;
-
-		if ( $message ) {
-			echo "<div class=\"a0-message\">$message <small onclick=\"jQuery('.a0-message').hide();\">(Close)</small></div>";
-			echo '<script type="text/javascript">
-				setTimeout(function(){jQuery(".a0-message").hide();}, 10 * 1000);
-			</script>';
-		}
 	}
 
 	/**
@@ -395,15 +373,6 @@ class WP_Auth0 {
 		}
 
 		wp_enqueue_style( 'auth0', WPA0_PLUGIN_CSS_URL . 'login.css', false, WPA0_VERSION );
-
-		if ( $this->a0_options->get( 'auth0_implicit_workflow' ) && ! empty( $_GET['auth0'] ) ) {
-			wp_enqueue_script( 'auth0-implicit', WPA0_PLUGIN_JS_URL . 'implicit-login.js', false, WPA0_VERSION );
-			wp_localize_script(
-				'auth0-implicit', 'wpAuth0ImplicitGlobal', array(
-					'postUrl' => add_query_arg( 'auth0', 'implicit', site_url( 'index.php' ) ),
-				)
-			);
-		}
 	}
 
 	/**
@@ -419,13 +388,25 @@ class WP_Auth0 {
 		// Do not show Auth0 form when ...
 		if (
 			// .. processing lost password
-			( isset( $_GET['action'] ) && $_GET['action'] == 'lostpassword' )
+			( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'lostpassword', 'rp' ) ) )
 			// ... handling an Auth0 callback
 			|| ! empty( $_GET['auth0'] )
 			// ... plugin is not configured
 			|| ! self::ready()
 		) {
 			return $html;
+		}
+
+		// If the user has a WP session, determine where they should end up and redirect.
+		if ( is_user_logged_in() ) {
+			$login_redirect = empty( $_REQUEST['redirect_to'] ) ?
+				$this->a0_options->get( 'default_login_redirection' ) :
+				filter_var( $_REQUEST['redirect_to'], FILTER_SANITIZE_URL );
+
+			// Add a cache buster to avoid an infinite redirect loop on pages that check for auth.
+			$login_redirect = add_query_arg( time(), '', $login_redirect );
+			wp_safe_redirect( $login_redirect );
+			exit;
 		}
 
 		ob_start();
@@ -438,7 +419,6 @@ class WP_Auth0 {
 		$this->router->setup_rewrites();
 	}
 
-
 	public function install() {
 		$this->db_manager->install_db();
 		$this->router->setup_rewrites();
@@ -450,12 +430,15 @@ class WP_Auth0 {
 	public function deactivate() {
 		flush_rewrite_rules();
 	}
+
 	public static function uninstall() {
 		$a0_options = WP_Auth0_Options::Instance();
 		$a0_options->delete();
 
+		$error_log = new WP_Auth0_ErrorLog();
+		$error_log->delete();
+
 		delete_option( 'auth0_db_version' );
-		delete_option( 'auth0_error_log' );
 
 		delete_option( 'widget_wp_auth0_popup_widget' );
 		delete_option( 'widget_wp_auth0_widget' );
@@ -486,13 +469,10 @@ class WP_Auth0 {
 				return true;
 
 			case 'JWT':
-				require_once $source_dir . 'php-jwt/Authentication/' . $class . '.php';
-				return true;
-
 			case 'BeforeValidException':
 			case 'ExpiredException':
 			case 'SignatureInvalidException':
-				require_once $source_dir . 'php-jwt/Exceptions/' . $class . '.php';
+				require_once $source_dir . 'php-jwt/' . $class . '.php';
 				return true;
 		}
 
@@ -504,7 +484,9 @@ class WP_Auth0 {
 		$paths = array(
 			$source_dir,
 			$source_dir . 'admin/',
+			$source_dir . 'api/',
 			$source_dir . 'exceptions/',
+			$source_dir . 'profile/',
 			$source_dir . 'wizard/',
 			$source_dir . 'initial-setup/',
 		);
@@ -518,6 +500,87 @@ class WP_Auth0 {
 
 		return false;
 	}
+
+	/*
+	 *
+	 * DEPRECATED
+	 *
+	 */
+
+	/**
+	 * @deprecated - 3.8.0, not used and no replacement provided.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function a0_render_message() {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		$message = null;
+
+		if ( $message ) {
+			echo "<div class=\"a0-message\">$message <small onclick=\"jQuery('.a0-message').hide();\">(Close)</small></div>";
+			echo '<script type="text/javascript">
+				setTimeout(function(){jQuery(".a0-message").hide();}, 10 * 1000);
+			</script>';
+		}
+	}
+
+	/**
+	 * @deprecated - 3.8.0, not used and no replacement provided.
+	 *
+	 * Checks it it should update the database connection no enable or disable signups and create or delete
+	 * the rule that will disable social signups.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function check_signup_status() {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+
+		$app_token = $this->a0_options->get( 'auth0_app_token' );
+
+		if ( $app_token ) {
+			$disable_signup_rule        = $this->a0_options->get( 'disable_signup_rule' );
+			$is_wp_registration_enabled = $this->a0_options->is_wp_registration_enabled();
+
+			if ( $is_wp_registration_enabled != $this->a0_options->get( 'registration_enabled' ) ) {
+				$this->a0_options->set( 'registration_enabled', $is_wp_registration_enabled );
+
+				$operations = new WP_Auth0_Api_Operations( $this->a0_options );
+
+				$operations->disable_signup_wordpress_connection( $app_token, ! $is_wp_registration_enabled );
+
+				$rule_name = WP_Auth0_RulesLib::$disable_social_signup['name'] . '-' . get_bloginfo( 'name' );
+
+				$rule_script = WP_Auth0_RulesLib::$disable_social_signup['script'];
+				$rule_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $this->a0_options->get( 'client_id' ), $rule_script );
+
+				try {
+					if ( $is_wp_registration_enabled && $disable_signup_rule === null ) {
+						return;
+					}
+					$disable_signup_rule = $operations->toggle_rule( $app_token, ( $is_wp_registration_enabled ? $disable_signup_rule : null ), $rule_name, $rule_script );
+					$this->a0_options->set( 'disable_signup_rule', $disable_signup_rule );
+				} catch ( Exception $e ) {
+
+				}
+			}
+		}
+	}
+
+	/**
+	 * @deprecated - 3.6.0, use WPA0_PLUGIN_URL constant
+	 *
+	 * @return string
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public static function get_plugin_dir_url() {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		return WPA0_PLUGIN_URL;
+	}
 }
 
 $a0_plugin = new WP_Auth0();
@@ -525,48 +588,26 @@ $a0_plugin->init();
 
 if ( ! function_exists( 'get_auth0userinfo' ) ) {
 	function get_auth0userinfo( $user_id ) {
-
-		global $wpdb;
-
-		$profile = get_user_meta( $user_id, $wpdb->prefix . 'auth0_obj', true );
-
-		if ( $profile ) {
-			return WP_Auth0_Serializer::unserialize( $profile );
-		}
-
-		return false;
+		$profile = WP_Auth0_UsersRepo::get_meta( $user_id, 'auth0_obj' );
+		return $profile ? WP_Auth0_Serializer::unserialize( $profile ) : false;
 	}
 }
 
 if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
 	function get_currentauth0userinfo() {
-
 		global $currentauth0_user;
-
-		$current_user = wp_get_current_user();
-
-		$currentauth0_user = get_auth0userinfo( $current_user->ID );
-
+		$currentauth0_user = get_auth0userinfo( get_current_user_id() );
 		return $currentauth0_user;
 	}
 }
 
 if ( ! function_exists( 'get_currentauth0user' ) ) {
 	function get_currentauth0user() {
-
-		global $wpdb;
-
-		$current_user = wp_get_current_user();
-
-		$serialized_profile = get_user_meta( $current_user->ID, $wpdb->prefix . 'auth0_obj', true );
-
-		$data = new stdClass;
-
-		$data->auth0_obj   = empty( $serialized_profile ) ? false : WP_Auth0_Serializer::unserialize( $serialized_profile );
-		$data->last_update = get_user_meta( $current_user->ID, $wpdb->prefix . 'last_update', true );
-		$data->auth0_id    = get_user_meta( $current_user->ID, $wpdb->prefix . 'auth0_id', true );
-
-		return $data;
+		return (object) array(
+			'auth0_obj'   => get_auth0userinfo( get_current_user_id() ),
+			'last_update' => WP_Auth0_UsersRepo::get_meta( get_current_user_id(), 'last_update' ),
+			'auth0_id'    => WP_Auth0_UsersRepo::get_meta( get_current_user_id(), 'auth0_id' ),
+		);
 	}
 }
 

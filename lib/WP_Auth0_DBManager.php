@@ -171,7 +171,8 @@ class WP_Auth0_DBManager {
 				}
 			} else {
 				WP_Auth0_ErrorManager::insert_auth0_error(
-					__METHOD__, sprintf(
+					__METHOD__,
+					sprintf(
 						__(
 							'Unable to automatically create Client Grant. Please go to your Auth0 Dashboard and authorize your Application %1$s for management API scopes %2$s.',
 							'wp-auth0'
@@ -226,7 +227,8 @@ class WP_Auth0_DBManager {
 				);
 			} else {
 				WP_Auth0_ErrorManager::insert_auth0_error(
-					__METHOD__, sprintf(
+					__METHOD__,
+					sprintf(
 						__(
 							'Unable to automatically update Client Grant Type. Please go to your Auth0 Dashboard and add Client Credentials to your Application settings > Advanced > Grant Types for ID %s ',
 							'wp-auth0'
@@ -431,7 +433,7 @@ class WP_Auth0_DBManager {
 		$repo = new WP_Auth0_UsersRepo( $this->a0_options );
 
 		foreach ( $userRows as $row ) {
-			$auth0_id = get_user_meta( $row->wp_id, $wpdb->prefix . 'auth0_id', true );
+			$auth0_id = WP_Auth0_UsersRepo::get_meta( $row->wp_id, 'auth0_id' );
 
 			if ( ! $auth0_id ) {
 				$repo->update_auth0_object( $row->wp_id, WP_Auth0_Serializer::unserialize( $row->auth0_obj ) );

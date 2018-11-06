@@ -277,12 +277,13 @@ class WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 * @deprecated - 3.6.0, use WP_Auth0_Admin_Generic::render_switch() instead
 	 *
-	 * @deprecated 3.6.0 - Use WP_Auth0_Admin_Generic::render_switch() instead
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	protected function render_a0_switch( $id, $name, $value, $checked ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_switch( $id, $name );
 	}
 }

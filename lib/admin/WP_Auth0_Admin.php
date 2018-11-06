@@ -30,13 +30,16 @@ class WP_Auth0_Admin {
 		wp_register_script( 'wpa0_bootstrap', WPA0_PLUGIN_BS_URL . 'js/bootstrap.min.js', array( 'jquery' ), '3.3.6' );
 		wp_register_script( 'wpa0_admin', WPA0_PLUGIN_JS_URL . 'admin.js', array( 'wpa0_bootstrap' ), WPA0_VERSION );
 		wp_localize_script(
-			'wpa0_admin', 'wpa0', array(
-				'media_title'         => __( 'Choose your icon', 'wp-auth0' ),
-				'media_button'        => __( 'Choose icon', 'wp-auth0' ),
-				'clear_cache_working' => __( 'Working ...', 'wp-auth0' ),
-				'clear_cache_done'    => __( 'Done!', 'wp-auth0' ),
-				'clear_cache_nonce'   => wp_create_nonce( 'auth0_delete_cache_transient' ),
-				'ajax_url'            => admin_url( 'admin-ajax.php' ),
+			'wpa0_admin',
+			'wpa0',
+			array(
+				'media_title'             => __( 'Choose your icon', 'wp-auth0' ),
+				'media_button'            => __( 'Choose icon', 'wp-auth0' ),
+				'clear_cache_working'     => __( 'Working ...', 'wp-auth0' ),
+				'clear_cache_done'        => __( 'Done!', 'wp-auth0' ),
+				'clear_cache_nonce'       => wp_create_nonce( 'auth0_delete_cache_transient' ),
+				'form_confirm_submit_msg' => __( 'Are you sure?', 'wp-auth0' ),
+				'ajax_url'                => admin_url( 'admin-ajax.php' ),
 			)
 		);
 		wp_register_script( 'wpa0_async', WPA0_PLUGIN_LIB_URL . 'async.min.js', false, WPA0_VERSION );
@@ -51,7 +54,7 @@ class WP_Auth0_Admin {
 			add_action( 'admin_notices', array( $this, 'create_account_message' ) );
 		}
 
-		if ( in_array( $wpa0_curr_page, array( 'wpa0', 'wpa0-setup', 'wpa0-import-settings' ) ) ) {
+		if ( in_array( $wpa0_curr_page, array( 'wpa0', 'wpa0-setup', 'wpa0-import-settings', 'wpa0-errors' ) ) ) {
 			wp_enqueue_script( 'wpa0_admin' );
 			wp_enqueue_script( 'wpa0_async' );
 		}
@@ -69,12 +72,13 @@ class WP_Auth0_Admin {
 	}
 
 	/**
+	 * @deprecated - 3.6.0, this method displayed an empty auth0_app_token notification, which is not necessary.
 	 *
-	 * @deprecated 3.6.0 - This method displayed an empty auth0_app_token notification, which is not necessary.
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function cant_connect_to_auth0() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	public function init_admin() {

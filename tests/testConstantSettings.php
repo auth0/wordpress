@@ -39,6 +39,8 @@ class TestConstantSettings extends TestCase {
 
 	/**
 	 * Test that setting a constant will store the constant key.
+	 *
+	 * @runInSeparateProcess
 	 */
 	public function testThatConstructorStoresConstants() {
 		// Set a few constant overrides.
@@ -65,9 +67,12 @@ class TestConstantSettings extends TestCase {
 		$this->assertEquals( self::DEFAULT_CONSTANT_PREFIX . 'DOMAIN', $opts->get_constant_name( $opt_name ) );
 
 		add_filter(
-			'auth0_settings_constant_prefix', function( $prefix ) {
+			'auth0_settings_constant_prefix',
+			function( $prefix ) {
 				return '__TEST_PREFIX_' . $prefix;
-			}, 10, 2
+			},
+			10,
+			2
 		);
 
 		$this->assertEquals(
@@ -78,6 +83,8 @@ class TestConstantSettings extends TestCase {
 
 	/**
 	 * Test that setting a constant will change it's value on output.
+	 *
+	 * @runInSeparateProcess
 	 */
 	public function testThatConstantOverridesWork() {
 		$opts          = new WP_Auth0_Options();
@@ -127,6 +134,8 @@ class TestConstantSettings extends TestCase {
 
 	/**
 	 * Test that options cannot be set when a constant is present.
+	 *
+	 * @runInSeparateProcess
 	 */
 	public function testSetWithConstant() {
 		$opt_name      = 'domain';
@@ -147,6 +156,8 @@ class TestConstantSettings extends TestCase {
 
 	/**
 	 * Test that commonly-overridden settings will show a notice.
+	 *
+	 * @runInSeparateProcess
 	 */
 	public function testConstantSettingNoticeBasic() {
 		$opts  = new WP_Auth0_Options();
