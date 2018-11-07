@@ -16,6 +16,16 @@ class WP_Auth0_InitialSetup_Consent {
 	public function render( $step ) {
 	}
 
+	/**
+	 * Used by both Setup Wizard installation flows.
+	 * Called in WP_Auth0_InitialSetup_ConnectionProfile::callback() when an API token is used during install.
+	 * Called in self::callback() when returning from consent URL install.
+	 *
+	 * @param string $domain - Auth0 domain for the Application.
+	 * @param string $access_token - Management API access token.
+	 * @param string $type - Installation type, "social" (AKA standard) or "enterprise".
+	 * @param bool   $hasInternetConnection - True if the installing site be reached by Auth0, false if not.
+	 */
 	public function callback_with_token( $domain, $access_token, $type, $hasInternetConnection = true ) {
 
 		$this->a0_options->set( 'auth0_app_token', $access_token );
@@ -92,6 +102,12 @@ class WP_Auth0_InitialSetup_Consent {
 		return $obj->access_token;
 	}
 
+	/**
+	 * Used by both Setup Wizard installation flows.
+	 * Called by self::callback_with_token() to create a Client, Connection, and Client Grant.
+	 *
+	 * @param string $name - Client name to use.
+	 */
 	public function consent_callback( $name ) {
 
 		$domain    = $this->a0_options->get( 'domain' );
@@ -128,19 +144,22 @@ class WP_Auth0_InitialSetup_Consent {
 		$connection_exists     = false;
 		$connection_pwd_policy = null;
 
-		$connections = WP_Auth0_Api_Client::search_connection( $domain, $app_token );
+		$connections = WP_Auth0_Api_Client::search_connection( $domain, $app_token, 'auth0' );
 
-		foreach ( $connections as $connection ) {
+		if ( $should_create_and_update_connection && ! empty( $connections ) && is_array( $connections ) ) {
+			foreach ( $connections as $connection ) {
 
-			if ( in_array( $client_id, $connection->enabled_clients ) ) {
-				if ( $connection->strategy === 'auth0' && $should_create_and_update_connection ) {
+				if ( in_array( $client_id, $connection->enabled_clients ) ) {
 
 					if ( $db_connection_name === $connection->name ) {
-						$connection_exists     = $connection->id;
-						$connection_pwd_policy = ( isset( $connection->options ) && isset( $connection->options->passwordPolicy ) ) ? $connection->options->passwordPolicy : null;
+						$connection_exists = $connection->id;
+						if ( isset( $connection->options ) && isset( $connection->options->passwordPolicy ) ) {
+							$connection_pwd_policy = $connection->options->passwordPolicy;
+						}
 					} else {
-						$enabled_clients = array_diff( $connection->enabled_clients, array( $client_id ) );
-						WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection->id, array( 'enabled_clients' => array_values( $enabled_clients ) ) );
+						$u_connection                  = clone $connection;
+						$u_connection->enabled_clients = array_diff( $u_connection->enabled_clients, array( $client_id ) );
+						WP_Auth0_Api_Client::update_connection( $domain, $app_token, $u_connection->id, $u_connection );
 					}
 				}
 			}
@@ -191,6 +210,6 @@ class WP_Auth0_InitialSetup_Consent {
 		}
 
 		wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=2&profile=' . $this->state ) );
-		exit();
+		exit;
 	}
 }

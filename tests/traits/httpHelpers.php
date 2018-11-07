@@ -71,16 +71,21 @@ trait HttpHelpers {
 	 * @return string|null
 	 */
 	public function getResponseType() {
+		if ( is_array( $this->http_request_type ) ) {
+			return array_shift( $this->http_request_type );
+		}
 		return $this->http_request_type;
 	}
 
 	/**
-	 * Return a mocked API call based on type.
+	 * Mock returns from the HTTP client.
 	 *
-	 * @return array|null|WP_Error
+	 * @param null|string $response_type - Response type to use.
+	 *
+	 * @return array|WP_Error
 	 */
-	public function httpMock() {
-		switch ( $this->getResponseType() ) {
+	public function httpMock( $response_type = null ) {
+		switch ( $response_type ?: $this->getResponseType() ) {
 
 			case 'wp_error':
 				return new WP_Error( 1, 'Caught WP_Error.' );
@@ -109,8 +114,26 @@ trait HttpHelpers {
 					'response' => [ 'code' => 200 ],
 				];
 
+			case 'success_create_empty_body':
+				return [
+					'body'     => '',
+					'response' => [ 'code' => 201 ],
+				];
+
+			case 'success_create_connection':
+				return [
+					'body'     => '{"id":"TEST_CREATED_CONN_ID"}',
+					'response' => [ 'code' => 201 ],
+				];
+
+			case 'success_update_connection':
+				return [
+					'body'     => '{"id":"TEST_UPDATED_CONN_ID"}',
+					'response' => [ 'code' => 200 ],
+				];
+
 			default:
-				return null;
+				return new WP_Error( 2, 'No mock type found.' );
 		}
 	}
 

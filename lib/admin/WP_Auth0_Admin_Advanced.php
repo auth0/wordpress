@@ -741,10 +741,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 					$connection->options->enabledDatabaseCustomization = false;
 					$connection->options->import_mode                  = false;
 
-					unset( $connection->name );
-					unset( $connection->strategy );
-					unset( $connection->id );
-
 					$response = WP_Auth0_Api_Client::update_connection( $input['domain'], $input['auth0_app_token'], $old_options['db_connection_id'], $connection );
 				} else {
 					$response = false;

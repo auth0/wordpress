@@ -611,6 +611,17 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
+	/**
+	 * Update a Connection via the Management API.
+	 * Note: $payload must be a complete settings object, not just the property to change.
+	 *
+	 * @param string   $domain - Auth0 Domain.
+	 * @param string   $app_token - Valid Auth0 Management API token.
+	 * @param string   $id - DB Connection ID.
+	 * @param stdClass $payload - DB Connection settings, will override existing.
+	 *
+	 * @return bool|object
+	 */
 	public static function update_connection( $domain, $app_token, $id, $payload ) {
 		$endpoint = "https://$domain/api/v2/connections/$id";
 
@@ -618,6 +629,14 @@ class WP_Auth0_Api_Client {
 
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type']  = 'application/json';
+
+		unset( $payload->name );
+		unset( $payload->strategy );
+		unset( $payload->id );
+
+		if ( ! empty( $payload->enabled_clients ) ) {
+			$payload->enabled_clients = array_values( $payload->enabled_clients );
+		}
 
 		$response = wp_remote_post(
 			$endpoint,
