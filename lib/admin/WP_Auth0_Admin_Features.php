@@ -427,8 +427,10 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
 			foreach ( $connections as $connection ) {
 				if ( in_array( $input['client_id'], $connection->enabled_clients ) ) {
-					$patch       = array( 'options' => array( 'passwordPolicy' => $input['password_policy'] ) );
-					$update_resp = WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection->id, $patch );
+					$u_connection                          = clone $connection;
+					$u_connection->options->passwordPolicy = $input['password_policy'];
+
+					$update_resp = WP_Auth0_Api_Client::update_connection( $domain, $app_token, $u_connection->id, $u_connection );
 
 					if ( false === $update_resp ) {
 						$this->add_validation_error(
