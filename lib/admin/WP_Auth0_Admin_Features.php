@@ -423,6 +423,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 					__( 'No database connections found for this application. ', 'wp-auth0' ) .
 					$this->get_dashboard_link( 'connections/database', __( 'See all database connections', 'wp-auth0' ) )
 				);
+				$input['password_policy'] = $old_options['password_policy'];
+				return $input;
 			}
 
 			foreach ( $connections as $connection ) {
@@ -438,6 +440,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 							__( 'Please manually review and update the policy. ', 'wp-auth0' ) .
 							$this->get_dashboard_link( 'connections/database', __( 'See all database connections', 'wp-auth0' ) )
 						);
+						$input['password_policy'] = $old_options['password_policy'];
 					}
 				}
 			}

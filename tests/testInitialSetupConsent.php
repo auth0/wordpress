@@ -284,12 +284,6 @@ class TestInitialSetupConsent extends TestCase {
 						'","enabled_clients":["TEST_CLIENT_ID"],"options":{"passwordPolicy":"good"}}]',
 					'response' => [ 'code' => 200 ],
 				];
-
-			case 'success_get_connections':
-				return [
-					'body'     => '[{"id":"TEST_CONN_ID","name":"TEST_CONNECTION","enabled_clients":["TEST_CLIENT_ID"]}]',
-					'response' => [ 'code' => 200 ],
-				];
 		}
 
 		return $this->httpMockDefault( $response_type );
