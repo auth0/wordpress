@@ -106,7 +106,7 @@ class TestRenderForm extends TestCase {
 		// Use the default login redirection.
 		$caught_exception = false;
 		try {
-			self::$wp_auth0->render_form( self::$html );
+			self::$wp_auth0->render_auth0_login_css();
 		} catch ( Exception $e ) {
 			$err_msg          = unserialize( $e->getMessage() );
 			$caught_exception = 0 === strpos( $err_msg['location'], 'http://example.org' ) && 302 === $err_msg['status'];
@@ -118,7 +118,7 @@ class TestRenderForm extends TestCase {
 
 		$caught_exception = false;
 		try {
-			self::$wp_auth0->render_form( self::$html );
+			self::$wp_auth0->render_auth0_login_css();
 		} catch ( Exception $e ) {
 			$err_msg          = unserialize( $e->getMessage() );
 			$caught_exception = 0 === strpos( $err_msg['location'], $_REQUEST['redirect_to'] ) && 302 === $err_msg['status'];
