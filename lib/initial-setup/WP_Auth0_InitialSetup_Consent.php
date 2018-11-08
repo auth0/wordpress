@@ -149,19 +149,24 @@ class WP_Auth0_InitialSetup_Consent {
 		if ( $should_create_and_update_connection && ! empty( $connections ) && is_array( $connections ) ) {
 			foreach ( $connections as $connection ) {
 
-				if ( in_array( $client_id, $connection->enabled_clients ) ) {
-
-					if ( $db_connection_name === $connection->name ) {
-						$connection_exists = $connection->id;
-						if ( isset( $connection->options ) && isset( $connection->options->passwordPolicy ) ) {
-							$connection_pwd_policy = $connection->options->passwordPolicy;
-						}
-					} else {
-						$u_connection                  = clone $connection;
-						$u_connection->enabled_clients = array_diff( $u_connection->enabled_clients, array( $client_id ) );
-						WP_Auth0_Api_Client::update_connection( $domain, $app_token, $u_connection->id, $u_connection );
-					}
+				// We only want to check/update connections that are active for this Application.
+				if ( ! in_array( $client_id, $connection->enabled_clients ) ) {
+					continue;
 				}
+
+				// Connection with the same name, use it below.
+				if ( $db_connection_name === $connection->name ) {
+					$connection_exists = $connection->id;
+					if ( isset( $connection->options ) && isset( $connection->options->passwordPolicy ) ) {
+						$connection_pwd_policy = $connection->options->passwordPolicy;
+					}
+					continue;
+				}
+
+				// Different Connection, update to remove the Application created above.
+				$u_connection                  = clone $connection;
+				$u_connection->enabled_clients = array_diff( $u_connection->enabled_clients, array( $client_id ) );
+				WP_Auth0_Api_Client::update_connection( $domain, $app_token, $u_connection->id, $u_connection );
 			}
 		}
 
