@@ -62,7 +62,7 @@ trait HttpHelpers {
 	 * Use this at the top of tests that should test behavior for different HTTP responses.
 	 */
 	public function startHttpMocking() {
-		add_filter( 'pre_http_request', [ $this, 'httpMock' ], 1 );
+		add_filter( 'pre_http_request', [ $this, 'httpMock' ], 1, 3 );
 	}
 
 	/**
@@ -80,12 +80,18 @@ trait HttpHelpers {
 	/**
 	 * Mock returns from the HTTP client.
 	 *
-	 * @param null|string $response_type - Response type to use.
+	 * @param string|null $response_type - HTTP response type to use.
+	 * @param array|null  $args - HTTP args.
+	 * @param string|null $url - Remote URL.
 	 *
 	 * @return array|WP_Error
 	 */
-	public function httpMock( $response_type = null ) {
+	public function httpMock( $response_type = null, array $args = null, $url = null ) {
 		switch ( $response_type ?: $this->getResponseType() ) {
+
+			case 'halt':
+				$this->httpHalt( false, $args, $url );
+				return new WP_Error( 3, 'Halted.' );
 
 			case 'wp_error':
 				return new WP_Error( 1, 'Caught WP_Error.' );
@@ -129,6 +135,17 @@ trait HttpHelpers {
 			case 'success_update_connection':
 				return [
 					'body'     => '{"id":"TEST_UPDATED_CONN_ID"}',
+					'response' => [ 'code' => 200 ],
+				];
+
+			case 'success_get_connections':
+				return [
+					'body'     => '[{
+						"id":"TEST_CONN_ID",
+						"name":"TEST_CONNECTION",
+						"enabled_clients":["TEST_CLIENT_ID"],
+						"options":{"passwordPolicy":"poor"}
+					}]',
 					'response' => [ 'code' => 200 ],
 				];
 
