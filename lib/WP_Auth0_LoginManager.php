@@ -96,9 +96,25 @@ class WP_Auth0_LoginManager {
 	}
 
 	/**
-	 * Redirect to a specific connection designated in Settings > Advanced
+	 * Redirect logged-in users from wp-login.php.
+	 * Redirect to Universal Login Page under certain conditions and if the option is turned on.
+	 *
+	 * @return bool
 	 */
 	public function login_auto() {
+
+		// If the user has a WP session, determine where they should end up and redirect.
+		if ( is_user_logged_in() ) {
+			$login_redirect = empty( $_REQUEST['redirect_to'] ) ?
+				$this->a0_options->get( 'default_login_redirection' ) :
+				filter_var( $_REQUEST['redirect_to'], FILTER_SANITIZE_URL );
+
+			// Add a cache buster to avoid an infinite redirect loop on pages that check for auth.
+			$login_redirect = add_query_arg( time(), '', $login_redirect );
+			wp_safe_redirect( $login_redirect );
+			exit;
+		}
+
 		if (
 			// Nothing to do.
 			( ! $this->a0_options->get( 'auto_login', false ) )
@@ -111,11 +127,10 @@ class WP_Auth0_LoginManager {
 			// Do not redirect log out action.
 			|| ( isset( $_GET['action'] ) && 'logout' === $_GET['action'] )
 			// Do not redirect Auth0 login processing.
+			// TODO: This should be removed as this page is no longer used for callbacks.
 			|| null !== $this->query_vars( 'auth0' )
-			// Do not redirect if already authenticated.
-			|| is_user_logged_in()
 		) {
-			return;
+			return false;
 		}
 
 		$connection  = apply_filters( 'auth0_get_auto_login_connection', $this->a0_options->get( 'auto_login_method' ) );

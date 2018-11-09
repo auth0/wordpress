@@ -39,12 +39,13 @@ require $_tests_dir . '/includes/bootstrap.php';
 
 require dirname( __FILE__ ) . '/../vendor/autoload.php';
 
+// TODO: Move these to an autoloader.
 require dirname( __FILE__ ) . '/classes/Test_WP_Auth0_Api_Abstract.php';
-
 require dirname( __FILE__ ) . '/traits/ajaxHelpers.php';
 require dirname( __FILE__ ) . '/traits/domDocumentHelpers.php';
 require dirname( __FILE__ ) . '/traits/hookHelpers.php';
 require dirname( __FILE__ ) . '/traits/httpHelpers.php';
+require dirname( __FILE__ ) . '/traits/optionsHelpers.php';
 require dirname( __FILE__ ) . '/traits/redirectHelpers.php';
 require dirname( __FILE__ ) . '/traits/setUpTestDb.php';
 require dirname( __FILE__ ) . '/traits/usersHelper.php';
