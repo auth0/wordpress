@@ -255,23 +255,17 @@ class TestLoginManager extends TestCase {
 	}
 
 	/**
-	 * Test that the ULP redirect does not happen under certain conditions.
+	 * Test that the ULP redirect does not happen for non-GET methods.
 	 */
-	public function testThatUlpRedirectDoesNotOccur() {
+	public function testThatUlpRedirectIsSkippedForNonGetMethod() {
 		$this->startRedirectHalting();
 
 		$login_manager = new WP_Auth0_LoginManager( self::$users_repo, self::$opts );
-		$this->assertFalse( $login_manager->login_auto() );
 
 		// First, check that a redirect is happening.
 		self::$opts->set( 'auto_login', 1 );
 		self::auth0Ready( true );
-		$this->assertTrue( WP_Auth0::ready() );
-
-		$caught_redirect = [
-			'location' => null,
-			'status'   => null,
-		];
+		$caught_redirect = [];
 		try {
 			// Need to hide error messages here because a cookie is set.
 			// phpcs:ignore
@@ -282,24 +276,91 @@ class TestLoginManager extends TestCase {
 		$this->assertEquals( 302, $caught_redirect['status'] );
 
 		// Test that request method will stop redirect.
-		$req_method_backup         = $_SERVER['REQUEST_METHOD'];
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$this->assertFalse( $login_manager->login_auto() );
-		$_SERVER['REQUEST_METHOD'] = $req_method_backup;
+
+		$_SERVER['REQUEST_METHOD'] = 'PATCH';
+		$this->assertFalse( $login_manager->login_auto() );
+	}
+
+	/**
+	 * Test that the ULP redirect does not happen if we're loading the WP login form.
+	 */
+	public function testThatUlpRedirectIsSkippedForWleOverride() {
+		$this->startRedirectHalting();
+
+		$login_manager = new WP_Auth0_LoginManager( self::$users_repo, self::$opts );
+		$this->assertFalse( $login_manager->login_auto() );
+
+		// First, check that a redirect is happening.
+		self::$opts->set( 'auto_login', 1 );
+		self::auth0Ready( true );
+		$caught_redirect = [];
+		try {
+			// Need to hide error messages here because a cookie is set.
+			// phpcs:ignore
+			@$login_manager->login_auto();
+		} catch ( Exception $e ) {
+			$caught_redirect = unserialize( $e->getMessage() );
+		}
+		$this->assertEquals( 302, $caught_redirect['status'] );
 
 		// Test that WP login override will skip the redirect.
 		$_GET['wle'] = 1;
 		$this->assertFalse( $login_manager->login_auto() );
-		unset( $_GET['wle'] );
+	}
+
+	/**
+	 * Test that the ULP redirect does not happen is this is a logout action.
+	 */
+	public function testThatUlpRedirectIsSkippedForLogout() {
+		$this->startRedirectHalting();
+
+		$login_manager = new WP_Auth0_LoginManager( self::$users_repo, self::$opts );
+		$this->assertFalse( $login_manager->login_auto() );
+
+		// First, check that a redirect is happening.
+		self::$opts->set( 'auto_login', 1 );
+		self::auth0Ready( true );
+		$caught_redirect = [];
+		try {
+			// Need to hide error messages here because a cookie is set.
+			// phpcs:ignore
+			@$login_manager->login_auto();
+		} catch ( Exception $e ) {
+			$caught_redirect = unserialize( $e->getMessage() );
+		}
+		$this->assertEquals( 302, $caught_redirect['status'] );
 
 		// Test that logout will skip the redirect.
 		$_GET['action'] = 'logout';
 		$this->assertFalse( $login_manager->login_auto() );
-		unset( $_GET['action'] );
+	}
+
+	/**
+	 * Test that the ULP redirect does not happen if wp-login.php is used as a callback.
+	 */
+	public function testThatUlpRedirectIsSkippedForCallback() {
+		$this->startRedirectHalting();
+
+		$login_manager = new WP_Auth0_LoginManager( self::$users_repo, self::$opts );
+		$this->assertFalse( $login_manager->login_auto() );
+
+		// First, check that a redirect is happening.
+		self::$opts->set( 'auto_login', 1 );
+		self::auth0Ready( true );
+		$caught_redirect = [];
+		try {
+			// Need to hide error messages here because a cookie is set.
+			// phpcs:ignore
+			@$login_manager->login_auto();
+		} catch ( Exception $e ) {
+			$caught_redirect = unserialize( $e->getMessage() );
+		}
+		$this->assertEquals( 302, $caught_redirect['status'] );
 
 		// Test that the auth0 URL param will skip the redirect.
 		$_REQUEST['auth0'] = 1;
 		$this->assertFalse( $login_manager->login_auto() );
-		unset( $_REQUEST['auth0'] );
 	}
 }
