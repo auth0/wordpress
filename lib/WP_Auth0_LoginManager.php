@@ -103,6 +103,27 @@ class WP_Auth0_LoginManager {
 	 */
 	public function login_auto() {
 
+		// Do not redirect anywhere if this is a logout action.
+		if ( isset( $_GET['action'] ) && 'logout' === $_GET['action'] ) {
+			return false;
+		}
+
+		// Do not redirect login page override.
+		if ( isset( $_GET['wle'] ) ) {
+			return false;
+		}
+
+		// Do not redirect non-GET requests.
+		if ( strtolower( $_SERVER['REQUEST_METHOD'] ) !== 'get' ) {
+			return false;
+		}
+
+		// Do not redirect Auth0 login processing.
+		// TODO: This should be removed as this page is no longer used for callbacks.
+		if ( null !== $this->query_vars( 'auth0' ) ) {
+			return false;
+		}
+
 		// If the user has a WP session, determine where they should end up and redirect.
 		if ( is_user_logged_in() ) {
 			$login_redirect = empty( $_REQUEST['redirect_to'] ) ?
@@ -115,21 +136,8 @@ class WP_Auth0_LoginManager {
 			exit;
 		}
 
-		if (
-			// Nothing to do.
-			( ! $this->a0_options->get( 'auto_login', false ) )
-			// Auth0 is not ready to process logins.
-			|| ! WP_Auth0::ready()
-			// Do not redirect POST requests.
-			|| strtolower( $_SERVER['REQUEST_METHOD'] ) !== 'get'
-			// Do not redirect login page override.
-			|| isset( $_GET['wle'] )
-			// Do not redirect log out action.
-			|| ( isset( $_GET['action'] ) && 'logout' === $_GET['action'] )
-			// Do not redirect Auth0 login processing.
-			// TODO: This should be removed as this page is no longer used for callbacks.
-			|| null !== $this->query_vars( 'auth0' )
-		) {
+		// Do not use the ULP if the setting is off or if the plugin is not configured.
+		if ( ! $this->a0_options->get( 'auto_login', false ) || ! WP_Auth0::ready() ) {
 			return false;
 		}
 
