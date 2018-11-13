@@ -1,4 +1,11 @@
 <?php
+/**
+ * Contains class WP_Auth0_Profile_Change_Password.
+ *
+ * @package WP-Auth0
+ *
+ * @since 3.8.0
+ */
 
 /**
  * Class WP_Auth0_Profile_Change_Password.
@@ -29,6 +36,7 @@ class WP_Auth0_Profile_Change_Password {
 	public function init() {
 		add_action( 'user_profile_update_errors', array( $this, 'validate_new_password' ), 10, 2 );
 		add_action( 'validate_password_reset', array( $this, 'validate_new_password' ), 10, 2 );
+		add_action( 'woocommerce_save_account_details_errors', array( $this, 'validate_new_password' ), 10, 2 );
 	}
 
 	/**
@@ -44,14 +52,17 @@ class WP_Auth0_Profile_Change_Password {
 	public function validate_new_password( $errors, $user ) {
 
 		// Exit if we're not changing the password.
-		if ( empty( $_POST['pass1'] ) ) {
+		// The pass1 key is for core WP, password_1 is WooCommerce.
+		if ( empty( $_POST['pass1'] ) && empty( $_POST['password_1'] ) ) {
 			return false;
 		}
-		$new_password = $_POST['pass1'];
+
+		$field_name   = ! empty( $_POST['pass1'] ) ? 'pass1' : 'password_1';
+		$new_password = $_POST[ $field_name ];
 
 		if ( isset( $_POST['user_id'] ) ) {
 			$wp_user_id = absint( $_POST['user_id'] );
-		} elseif ( is_object( $user ) && $user instanceof WP_User ) {
+		} elseif ( is_object( $user ) && ! empty( $user->ID ) ) {
 			$wp_user_id = absint( $user->ID );
 		} else {
 			return false;
@@ -83,7 +94,7 @@ class WP_Auth0_Profile_Change_Password {
 
 		// Add an error message to appear at the top of the page.
 		$error_msg = is_string( $result ) ? $result : __( 'Password could not be updated.', 'wp-auth0' );
-		$errors->add( 'auth0_password', $error_msg, array( 'form-field' => 'pass1' ) );
+		$errors->add( 'auth0_password', $error_msg, array( 'form-field' => $field_name ) );
 		return false;
 	}
 }
