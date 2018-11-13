@@ -58,7 +58,7 @@ class TestApiChangePassword extends TestCase {
 	}
 
 	/**
-	 * Test the request sent by the Client Credentials call.
+	 * Test the request sent by the change password call.
 	 */
 	public function testRequest() {
 		$this->startHttpHalting();
@@ -100,25 +100,25 @@ class TestApiChangePassword extends TestCase {
 	}
 
 	/**
-	 * Test a basic Delete MFA call against a mock API server.
+	 * Test a basic change password call against a mock API server.
 	 */
 	public function testCall() {
 		$this->startHttpMocking();
 		self::$options->set( 'domain', self::TEST_DOMAIN );
 
 		// Mock for a successful API call.
-		$delete_mfa = $this->getStub( true );
+		$change_password = $this->getStub( true );
 
 		// 1. Make sure that a transport returns the default failed response and logs an error.
 		$this->http_request_type = 'wp_error';
-		$this->assertFalse( $delete_mfa->call( uniqid(), uniqid() ) );
+		$this->assertFalse( $change_password->call( uniqid(), uniqid() ) );
 		$log = self::$error_log->get();
 		$this->assertCount( 1, $log );
 		$this->assertEquals( 'Caught WP_Error.', $log[0]['message'] );
 
 		// 2. Make sure that an Auth0 API error returns the default failed response and logs an error.
 		$this->http_request_type = 'auth0_api_error';
-		$this->assertFalse( $delete_mfa->call( uniqid(), uniqid() ) );
+		$this->assertFalse( $change_password->call( uniqid(), uniqid() ) );
 		$log = self::$error_log->get();
 		$this->assertCount( 2, $log );
 		$this->assertEquals( 'caught_api_error', $log[0]['code'] );
@@ -127,15 +127,15 @@ class TestApiChangePassword extends TestCase {
 		$this->http_request_type = 'failed_weak_password';
 		$this->assertEquals(
 			'Password is too weak, please choose a different one.',
-			$delete_mfa->call( uniqid(), uniqid() )
+			$change_password->call( uniqid(), uniqid() )
 		);
 		$log = self::$error_log->get();
 		$this->assertCount( 3, $log );
 		$this->assertEquals( '400', $log[0]['code'] );
 
-		// 4. Make sure it succeeds.
+		// 5. Make sure it succeeds.
 		$this->http_request_type = 'success_empty_body';
-		$this->assertTrue( $delete_mfa->call( uniqid(), uniqid() ) );
+		$this->assertTrue( $change_password->call( uniqid(), uniqid() ) );
 		$this->assertCount( 3, self::$error_log->get() );
 	}
 
