@@ -61,8 +61,10 @@ class WP_Auth0_Profile_Change_Password {
 		$new_password = $_POST[ $field_name ];
 
 		if ( isset( $_POST['user_id'] ) ) {
+			// Input field from user edit or profile update.
 			$wp_user_id = absint( $_POST['user_id'] );
 		} elseif ( is_object( $user ) && ! empty( $user->ID ) ) {
+			// User object passed in from an action.
 			$wp_user_id = absint( $user->ID );
 		} else {
 			return false;
