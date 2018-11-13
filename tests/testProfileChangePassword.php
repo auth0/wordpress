@@ -102,7 +102,6 @@ class TestProfileChangePassword extends TestCase {
 		$_POST['user_id'] = $user_id;
 		$this->storeAuth0Data( $user_id );
 		$this->assertTrue( $change_password->validate_new_password( $errors, false ) );
-		$this->assertEmpty( $errors->get_error_messages() );
 
 		// Test core WP password field.
 		unset( $_POST['pass1'] );
@@ -131,7 +130,6 @@ class TestProfileChangePassword extends TestCase {
 		$_POST['user_id'] = $user_id;
 		$this->storeAuth0Data( $user_id );
 		$this->assertTrue( $change_password->validate_new_password( $errors, false ) );
-		$this->assertEmpty( $errors->get_error_messages() );
 
 		// Test core WP profile update screen field.
 		unset( $_POST['user_id'] );
@@ -142,7 +140,7 @@ class TestProfileChangePassword extends TestCase {
 	}
 
 	/**
-	 * Test that a user without Auth0 data or with a non-DB strategy skips update.
+	 * Test that a user without Auth0 data skips update.
 	 */
 	public function testThatNonAuth0UserSkipsUpdate() {
 		$user_id = $this->createUser()->ID;
@@ -155,11 +153,26 @@ class TestProfileChangePassword extends TestCase {
 		$_POST['user_id'] = $user_id;
 		$this->storeAuth0Data( $user_id );
 		$this->assertTrue( $change_password->validate_new_password( $errors, false ) );
-		$this->assertEmpty( $errors->get_error_messages() );
 
 		// Test that an unlinked user will not be updated.
 		self::$users_repo->delete_auth0_object( $user_id );
 		$this->assertFalse( $change_password->validate_new_password( $errors, false ) );
+	}
+
+	/**
+	 * Test that a user with a non-DB strategy skips update.
+	 */
+	public function testThatNonDbStrategySkipsUpdate() {
+		$user_id = $this->createUser()->ID;
+		$errors  = new WP_Error();
+
+		$mock_api_test_password = $this->getStub( true );
+		$change_password        = new WP_Auth0_Profile_Change_Password( $mock_api_test_password );
+
+		$_POST['pass1']   = uniqid();
+		$_POST['user_id'] = $user_id;
+		$this->storeAuth0Data( $user_id );
+		$this->assertTrue( $change_password->validate_new_password( $errors, false ) );
 
 		// Test that a linked, non-DB user will not be updated.
 		$this->storeAuth0Data( $user_id, 'not-a-db-strategy' );
@@ -183,7 +196,6 @@ class TestProfileChangePassword extends TestCase {
 		$_POST['user_id'] = $user_id;
 		$this->storeAuth0Data( $user_id );
 		$this->assertTrue( $change_password->validate_new_password( $errors, false ) );
-		$this->assertEmpty( $errors->get_error_messages() );
 
 		// API call mocked to fail.
 		$mock_api_test_password = $this->getStub( false );

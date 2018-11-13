@@ -123,7 +123,7 @@ class TestApiChangePassword extends TestCase {
 		$this->assertCount( 2, $log );
 		$this->assertEquals( 'caught_api_error', $log[0]['code'] );
 
-		// 4. Make sure that a weak password error returns the correct message.
+		// 3. Make sure that a weak password error returns the correct message.
 		$this->http_request_type = 'failed_weak_password';
 		$this->assertEquals(
 			'Password is too weak, please choose a different one.',
@@ -133,7 +133,7 @@ class TestApiChangePassword extends TestCase {
 		$this->assertCount( 3, $log );
 		$this->assertEquals( '400', $log[0]['code'] );
 
-		// 5. Make sure it succeeds.
+		// 4. Make sure it succeeds.
 		$this->http_request_type = 'success_empty_body';
 		$this->assertTrue( $change_password->call( uniqid(), uniqid() ) );
 		$this->assertCount( 3, self::$error_log->get() );
