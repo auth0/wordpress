@@ -1,4 +1,11 @@
 <?php
+/**
+ * Contains class WP_Auth0_Profile_Delete_Data.
+ *
+ * @package WP-Auth0
+ *
+ * @since 3.8.0
+ */
 
 /**
  * Class WP_Auth0_Profile_Delete_Data.

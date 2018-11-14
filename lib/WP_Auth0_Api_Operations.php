@@ -30,10 +30,6 @@ class WP_Auth0_Api_Operations {
 		$connection->options->customScripts->login    = $login_script;
 		$connection->options->customScripts->get_user = $get_user_script;
 
-		unset( $connection->name );
-		unset( $connection->strategy );
-		unset( $connection->id );
-
 		WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection_id, $connection );
 
 	}
@@ -99,34 +95,10 @@ class WP_Auth0_Api_Operations {
 		$response = WP_Auth0_Api_Client::create_connection( $domain, $app_token, $body );
 
 		if ( $response === false ) {
-
 			return false;
-
 		}
 
-		$connections   = WP_Auth0_Api_Client::search_connection( $domain, $app_token, 'auth0' );
-		$db_connection = null;
-
-		$migration_connection_id = $response->id;
-
-		foreach ( $connections as $connection ) {
-			if ( $migration_connection_id != $connection->id && in_array( $client_id, $connection->enabled_clients ) ) {
-				$db_connection = $connection;
-
-				$enabled_clients = array_diff( $db_connection->enabled_clients, array( $client_id ) );
-
-				WP_Auth0_Api_Client::update_connection(
-					$domain,
-					$app_token,
-					$db_connection->id,
-					array(
-						'enabled_clients' => array_values( $enabled_clients ),
-					)
-				);
-			}
-		}
-
-		return $migration_connection_id;
+		return $response->id;
 	}
 
 	// $input['geo_rule'] = ( isset( $input['geo_rule'] ) ? $input['geo_rule'] : 0 );

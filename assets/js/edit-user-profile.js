@@ -19,7 +19,7 @@ jQuery(function($) {
      * Disable email changes if not an Auth0 connection.
      */
     if ( emailField.length && wpa0UserProfile.userStrategy && 'auth0' !== wpa0UserProfile.userStrategy ) {
-        emailField.prop( 'disabled', true );
+        emailField.prop( 'readonly', true );
         $('<p>' + wpa0UserProfile.i18n.cannotChangeEmail + '</p>')
             .addClass('description')
             .insertAfter(emailField);

@@ -2,13 +2,13 @@
 /**
  * Plugin Name: Login by Auth0
  * Description: Login by Auth0 provides improved username/password login, Passwordless login, Social login and Single Sign On for all your sites.
- * Version: 3.8.0
+ * Version: 3.8.1
  * Author: Auth0
  * Author URI: https://auth0.com
  * Text Domain: wp-auth0
  */
 
-define( 'WPA0_VERSION', '3.8.0' );
+define( 'WPA0_VERSION', '3.8.1' );
 define( 'AUTH0_DB_VERSION', 19 );
 
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
@@ -395,18 +395,6 @@ class WP_Auth0 {
 			|| ! self::ready()
 		) {
 			return $html;
-		}
-
-		// If the user has a WP session, determine where they should end up and redirect.
-		if ( is_user_logged_in() ) {
-			$login_redirect = empty( $_REQUEST['redirect_to'] ) ?
-				$this->a0_options->get( 'default_login_redirection' ) :
-				filter_var( $_REQUEST['redirect_to'], FILTER_SANITIZE_URL );
-
-			// Add a cache buster to avoid an infinite redirect loop on pages that check for auth.
-			$login_redirect = add_query_arg( time(), '', $login_redirect );
-			wp_safe_redirect( $login_redirect );
-			exit;
 		}
 
 		ob_start();

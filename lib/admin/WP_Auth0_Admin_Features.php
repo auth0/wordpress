@@ -423,12 +423,16 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 					__( 'No database connections found for this application. ', 'wp-auth0' ) .
 					$this->get_dashboard_link( 'connections/database', __( 'See all database connections', 'wp-auth0' ) )
 				);
+				$input['password_policy'] = $old_options['password_policy'];
+				return $input;
 			}
 
 			foreach ( $connections as $connection ) {
 				if ( in_array( $input['client_id'], $connection->enabled_clients ) ) {
-					$patch       = array( 'options' => array( 'passwordPolicy' => $input['password_policy'] ) );
-					$update_resp = WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection->id, $patch );
+					$u_connection                          = clone $connection;
+					$u_connection->options->passwordPolicy = $input['password_policy'];
+
+					$update_resp = WP_Auth0_Api_Client::update_connection( $domain, $app_token, $u_connection->id, $u_connection );
 
 					if ( false === $update_resp ) {
 						$this->add_validation_error(
@@ -436,6 +440,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 							__( 'Please manually review and update the policy. ', 'wp-auth0' ) .
 							$this->get_dashboard_link( 'connections/database', __( 'See all database connections', 'wp-auth0' ) )
 						);
+						$input['password_policy'] = $old_options['password_policy'];
 					}
 				}
 			}

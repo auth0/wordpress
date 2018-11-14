@@ -1,5 +1,20 @@
 # Change Log
 
+## [3.8.1](https://github.com/auth0/wp-auth0/tree/3.8.1) (2018-11-14)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.8.0...3.8.1)
+
+**Closed issues**
+- Javascript: Use readonly instead of disabled on email field [\#587](https://github.com/auth0/wp-auth0/issues/587)
+
+**Changed**
+- Change logged-in user redirect to login_init hook [\#584](https://github.com/auth0/wp-auth0/pull/584) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Switch email field property to readonly [\#588](https://github.com/auth0/wp-auth0/pull/588) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add WooCommerce password change action. [\#585](https://github.com/auth0/wp-auth0/pull/585) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix Connection update over-writing Connection settings. [\#582](https://github.com/auth0/wp-auth0/pull/582) ([joshcanhelp](https://github.com/joshcanhelp))
+
+
 ## [3.8.0](https://github.com/auth0/wp-auth0/tree/3.8.0) (2018-11-06)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.7.1...3.8.0)
 
