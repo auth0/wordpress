@@ -135,6 +135,10 @@ All is not lost!
 
 == Changelog ==
 
+**v3.8.1**
+
+Bug fixes, see [CHANGELOG](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#380-2018-11-14) for details.
+
 **v3.8.0**
 
 - Administrators can now mark certain strategies as able to skip email verification. This is typically used for Enterprise strategies that do not provide an email verification flag. This should be used sparingly and only for connections that do not provide this flag.
