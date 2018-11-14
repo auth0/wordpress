@@ -34,8 +34,14 @@ class WP_Auth0_Profile_Change_Password {
 	 * @codeCoverageIgnore - Tested in TestProfileChangePassword::testInitHooks()
 	 */
 	public function init() {
+
+		// Used during profile update in wp-admin.
 		add_action( 'user_profile_update_errors', array( $this, 'validate_new_password' ), 10, 2 );
+
+		// Used during password reset on wp-login.php
 		add_action( 'validate_password_reset', array( $this, 'validate_new_password' ), 10, 2 );
+
+		// Used during WooCommerce edit account save.
 		add_action( 'woocommerce_save_account_details_errors', array( $this, 'validate_new_password' ), 10, 2 );
 	}
 
@@ -44,8 +50,8 @@ class WP_Auth0_Profile_Change_Password {
 	 * Hooked to: user_profile_update_errors, validate_password_reset
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
-	 * @param WP_Error        $errors - WP_Error object to use if validation fails.
-	 * @param boolean|WP_User $user - Boolean update or WP_User instance, depending on action.
+	 * @param WP_Error         $errors - WP_Error object to use if validation fails.
+	 * @param boolean|stdClass $user - Boolean update or WP_User instance, depending on action.
 	 *
 	 * @return boolean
 	 */
