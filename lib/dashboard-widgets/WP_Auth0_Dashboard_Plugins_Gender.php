@@ -2,7 +2,9 @@
 /**
  * Class WP_Auth0_Dashboard_Plugins_Gender
  *
- * @deprecated 3.6.0 - The plugin no longer supports the dashboard widgets functionality.
+ * @deprecated - 3.6.0, the plugin no longer supports the dashboard widgets functionality.
+ *
+ * @codeCoverageIgnore - Deprecated
  */
 class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Generic {
 
@@ -17,13 +19,13 @@ class WP_Auth0_Dashboard_Plugins_Gender extends WP_Auth0_Dashboard_Plugins_Gener
 	/**
 	 * WP_Auth0_Dashboard_Plugins_Gender constructor.
 	 *
-	 * @deprecated 3.6.0 - The plugin no longer supports the dashboard widgets functionality.
+	 * @deprecated - 3.6.0, the plugin no longer supports the dashboard widgets functionality.
 	 *
 	 * @param WP_Auth0_Options $a0_options
 	 */
 	public function __construct( WP_Auth0_Options $a0_options ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Class %s is deprecated.', 'wp-auth0' ), __CLASS__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Class %s is deprecated.', 'wp-auth0' ), __CLASS__ ), E_USER_DEPRECATED );
 		$this->a0_options = $a0_options;
 		$this->type = $this->a0_options->get( 'chart_gender_type' );
 	}

@@ -3,8 +3,7 @@
 class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
 	/**
-	 *
-	 * @deprecated 3.6.0 - Use $this->_description instead
+	 * @deprecated - 3.6.0, use $this->_description instead
 	 */
 	const ADVANCED_DESCRIPTION = '';
 
@@ -116,12 +115,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'opt'      => 'auto_login',
 				'id'       => 'wpa0_auto_login',
 				'function' => 'render_auto_login',
-			),
-			array(
-				'name'     => __( 'Auto Login Method', 'wp-auth0' ),
-				'opt'      => 'auto_login_method',
-				'id'       => 'wpa0_auto_login_method',
-				'function' => 'render_auto_login_method',
 			),
 			array(
 				'name'     => __( 'Implicit Login Flow', 'wp-auth0' ),
@@ -391,8 +384,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				$this->render_const_notice( 'migration_token' );
 			}
 			printf(
-				'<textarea class="code" rows="%d" disabled>%s</textarea>',
-				$this->_textarea_rows,
+				'<code class="code-block" disabled>%s</code>',
 				sanitize_text_field( $this->options->get( 'migration_token' ) )
 			);
 		} else {
@@ -435,38 +427,12 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Render form field and description for the `auto_login` option.
+	 * Refer to the Features tab for the `auto_login` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
 	 */
-	public function render_auto_login( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_auto_login_method' );
+	public function render_auto_login() {
 		$this->render_field_description(
-			__( 'Send logins directly to a specific Connection, skipping the login page', 'wp-auth0' )
-		);
-	}
-
-	/**
-	 * Render form field and description for the `auto_login_method` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_auto_login_method( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			sprintf(
-				__( 'Find the method name to use under Connections > [Connection Type] in your %s. ', 'wp-auth0' ),
-				$this->get_dashboard_link()
-			) .
-			__( 'Click the expand icon and use the value in the "Name" field (like "google-oauth2")', 'wp-auth0' )
+			__( 'Please see the "Universal Login Page" setting on the Features tab', 'wp-auth0' )
 		);
 	}
 
@@ -753,7 +719,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 					array(
 						'scope' => 'migration_ws',
 						'jti'   => $token_id,
-					), $secret
+					),
+					$secret
 				);
 				$input['migration_token_id'] = $token_id;
 
@@ -773,10 +740,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
 					$connection->options->enabledDatabaseCustomization = false;
 					$connection->options->import_mode                  = false;
-
-					unset( $connection->name );
-					unset( $connection->strategy );
-					unset( $connection->id );
 
 					$response = WP_Auth0_Api_Client::update_connection( $input['domain'], $input['auth0_app_token'], $old_options['db_connection_id'], $connection );
 				} else {
@@ -859,55 +822,61 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 * @deprecated - 3.6.0, handled by WP_Auth0_Admin_Features::render_passwordless_enabled()
 	 *
-	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Features::render_passwordless_enabled()
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_passwordless_enabled() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	/**
+	 * @deprecated - 3.6.0, passwordless method is determined by activating them for this Application.
 	 *
-	 * @deprecated 3.6.0 - Passwordless method is determined by activating them for this Application.
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_passwordless_method() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	/**
+	 * @deprecated - 3.6.0, this feature was removed so this option is unused.
 	 *
-	 * @deprecated 3.6.0 - This feature was removed so this option is unused.
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_metrics() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	/**
+	 * @deprecated - 3.6.0, handled by WP_Auth0_Admin_Generic::render_description().
 	 *
-	 * @deprecated 3.6.0 - Handled by WP_Auth0_Admin_Generic::render_description().
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_advanced_description() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 
 	/**
 	 * Validate the `passwordless_method` option.
 	 *
-	 * @deprecated 3.6.0 - The `passwordless_method` option was removed in this version.
+	 * @deprecated - 3.6.0, the `passwordless_method` option was removed in this version.
 	 *
 	 * @param array $old_options - previous option values.
 	 * @param array $input - option values to be updated.
 	 *
 	 * @return mixed
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function connections_validation( $old_options, $input ) {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return $input;
 	}
 }

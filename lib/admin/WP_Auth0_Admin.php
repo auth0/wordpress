@@ -30,7 +30,9 @@ class WP_Auth0_Admin {
 		wp_register_script( 'wpa0_bootstrap', WPA0_PLUGIN_BS_URL . 'js/bootstrap.min.js', array( 'jquery' ), '3.3.6' );
 		wp_register_script( 'wpa0_admin', WPA0_PLUGIN_JS_URL . 'admin.js', array( 'wpa0_bootstrap' ), WPA0_VERSION );
 		wp_localize_script(
-			'wpa0_admin', 'wpa0', array(
+			'wpa0_admin',
+			'wpa0',
+			array(
 				'media_title'             => __( 'Choose your icon', 'wp-auth0' ),
 				'media_button'            => __( 'Choose icon', 'wp-auth0' ),
 				'clear_cache_working'     => __( 'Working ...', 'wp-auth0' ),
@@ -70,12 +72,13 @@ class WP_Auth0_Admin {
 	}
 
 	/**
+	 * @deprecated - 3.6.0, this method displayed an empty auth0_app_token notification, which is not necessary.
 	 *
-	 * @deprecated 3.6.0 - This method displayed an empty auth0_app_token notification, which is not necessary.
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function cant_connect_to_auth0() {
 		// phpcs:ignore
-		trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	public function init_admin() {

@@ -1,16 +1,22 @@
 <?xml version="1.0"?>
 <phpunit
 	bootstrap="tests/bootstrap.php"
-	backupGlobals="false"
+	backupGlobals="true"
 	colors="true"
 	convertErrorsToExceptions="true"
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
-	processIsolation="true"
+	verbose="true"
 	>
 	<filter>
 		<whitelist>
 			<directory suffix=".php">./lib</directory>
+			<file>./WP_Auth0.php</file>
+			<exclude>
+				<directory>./lib/dashboard-widgets</directory>
+				<directory>./lib/php-jwt</directory>
+				<directory>./lib/twitter-api-php</directory>
+			</exclude>
 		</whitelist>
 	</filter>
 	<testsuites>

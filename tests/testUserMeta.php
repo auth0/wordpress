@@ -16,7 +16,7 @@ class TestUserMeta extends TestCase {
 
 	use setUpTestDb;
 
-	use users;
+	use UsersHelper;
 
 	/**
 	 * Instance of WP_Auth0_Options.

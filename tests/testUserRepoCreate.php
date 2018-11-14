@@ -16,7 +16,7 @@ class TestUserRepoCreate extends TestCase {
 
 	use setUpTestDb;
 
-	use users;
+	use UsersHelper;
 
 	/**
 	 * Instance of WP_Auth0_Options.
@@ -119,6 +119,9 @@ class TestUserRepoCreate extends TestCase {
 		// Turn on user registration.
 		update_option( 'users_can_register', 1 );
 
+		// Do not equire a verified email.
+		self::$opts->set( 'requires_verified_email', 1 );
+
 		$this->expectException( WP_Auth0_CouldNotCreateUserException::class );
 		self::$repo->create( $userinfo, self::TOKEN );
 	}
@@ -137,9 +140,11 @@ class TestUserRepoCreate extends TestCase {
 		update_option( 'users_can_register', 1 );
 
 		add_filter(
-			'wpa0_should_create_user', function() {
+			'wpa0_should_create_user',
+			function() {
 				return false;
-			}, 10
+			},
+			10
 		);
 
 		$this->expectException( WP_Auth0_CouldNotCreateUserException::class );
@@ -204,5 +209,14 @@ class TestUserRepoCreate extends TestCase {
 
 		$expected_uid = self::$repo->create( $userinfo, self::TOKEN );
 		$this->assertEquals( $expected_uid, $user->ID );
+	}
+
+	/**
+	 * Run after every test.
+	 */
+	public function tearDown() {
+		parent::tearDown();
+		update_option( 'users_can_register', null );
+		self::$opts->set( 'requires_verified_email', null );
 	}
 }
