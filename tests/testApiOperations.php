@@ -107,22 +107,22 @@ class TestApiOperations extends TestCase {
 		);
 
 		$this->assertContains(
-			'request.post("http://example.org/index.php?a0_action=migration-ws-login"',
+			'http://example.org/index.php?a0_action=migration-ws-login',
 			$caught_http['body']['options']['customScripts']['login']
 		);
 
 		$this->assertContains(
-			'form:{username:email, password:password, access_token:"TEST_MIGRATION_TOKEN"}',
+			"access_token: 'TEST_MIGRATION_TOKEN'",
 			$caught_http['body']['options']['customScripts']['login']
 		);
 
 		$this->assertContains(
-			'request.post("http://example.org/index.php?a0_action=migration-ws-get-user"',
+			'http://example.org/index.php?a0_action=migration-ws-get-user',
 			$caught_http['body']['options']['customScripts']['get_user']
 		);
 
 		$this->assertContains(
-			'form:{username:email, access_token:"TEST_MIGRATION_TOKEN',
+			"access_token: 'TEST_MIGRATION_TOKEN'",
 			$caught_http['body']['options']['customScripts']['get_user']
 		);
 	}
