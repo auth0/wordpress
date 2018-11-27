@@ -21,14 +21,8 @@ class WP_Auth0_Api_Operations {
 			}
 		}
 
-		$login_script = str_replace( '{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$login_script );
-		$login_script = str_replace( '{THE_WS_URL}', site_url( 'index.php?a0_action=migration-ws-login' ), $login_script );
-
-		$get_user_script = str_replace( '{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$get_user_script );
-		$get_user_script = str_replace( '{THE_WS_URL}', site_url( 'index.php?a0_action=migration-ws-get-user' ), $get_user_script );
-
-		$connection->options->customScripts->login    = $login_script;
-		$connection->options->customScripts->get_user = $get_user_script;
+		$connection->options->customScripts->login    = WP_Auth0_CustomDBLib::get_script( 'login', $migration_token );
+		$connection->options->customScripts->get_user = WP_Auth0_CustomDBLib::get_script( 'get-user', $migration_token );
 
 		WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection_id, $connection );
 
@@ -64,12 +58,6 @@ class WP_Auth0_Api_Operations {
 				$this->a0_options->set( 'migration_ips_filter', false );
 			}
 
-			$login_script = str_replace( '{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$login_script );
-			$login_script = str_replace( '{THE_WS_URL}', site_url( 'index.php?a0_action=migration-ws-login' ), $login_script );
-
-			$get_user_script = str_replace( '{THE_WS_TOKEN}', $migration_token, WP_Auth0_CustomDBLib::$get_user_script );
-			$get_user_script = str_replace( '{THE_WS_URL}', site_url( 'index.php?a0_action=migration-ws-get-user' ), $get_user_script );
-
 			$body['options'] = array(
 				'enabledDatabaseCustomization' => true,
 				'requires_username'            => true,
@@ -83,8 +71,8 @@ class WP_Auth0_Api_Operations {
 					),
 				),
 				'customScripts'                => array(
-					'login'    => $login_script,
-					'get_user' => $get_user_script,
+					'login'    => WP_Auth0_CustomDBLib::get_script( 'login', $migration_token ),
+					'get_user' => WP_Auth0_CustomDBLib::get_script( 'get-user', $migration_token ),
 				),
 			);
 
