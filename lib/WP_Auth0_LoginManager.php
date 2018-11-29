@@ -760,23 +760,24 @@ class WP_Auth0_LoginManager {
 	 * @param bool       $login_link - TRUE for login link, FALSE for logout link.
 	 */
 	protected function die_on_login( $msg = '', $code = 0, $login_link = true ) {
-		wp_die(
-			sprintf(
-				'%s: %s [%s: %s]<br><br><a href="%s">%s</a>',
-				$login_link
-					? __( 'There was a problem with your log in', 'wp-auth0' )
-					: __( 'You have logged in successfully, but there is a problem accessing this site', 'wp-auth0' ),
-				! empty( $msg )
-					? sanitize_text_field( $msg )
-					: __( 'Please see the site administrator', 'wp-auth0' ),
-				__( 'error code', 'wp-auth0' ),
-				$code ? sanitize_text_field( $code ) : __( 'unknown', 'wp-auth0' ),
-				$login_link ? add_query_arg( 'skip_sso', '', wp_login_url() ) : wp_logout_url(),
-				$login_link
-					? __( '← Login', 'wp-auth0' )
-					: __( '← Logout', 'wp-auth0' )
-			)
+		$html = sprintf(
+			'%s: %s [%s: %s]<br><br><a href="%s">%s</a>',
+			$login_link
+				? __( 'There was a problem with your log in', 'wp-auth0' )
+				: __( 'You have logged in successfully, but there is a problem accessing this site', 'wp-auth0' ),
+			! empty( $msg )
+				? sanitize_text_field( $msg )
+				: __( 'Please see the site administrator', 'wp-auth0' ),
+			__( 'error code', 'wp-auth0' ),
+			$code ? sanitize_text_field( $code ) : __( 'unknown', 'wp-auth0' ),
+			$login_link ? add_query_arg( 'skip_sso', '', wp_login_url() ) : wp_logout_url(),
+			$login_link
+				? __( '← Login', 'wp-auth0' )
+				: __( '← Logout', 'wp-auth0' )
 		);
+
+		$html = apply_filters( 'auth0_die_on_login_output', $html, $msg, $code, $login_link );
+		wp_die( $html );
 	}
 
 	/**
