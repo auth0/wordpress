@@ -83,14 +83,6 @@ class TestEditProfile extends TestCase {
 	public function testInitHooks() {
 		global $pagenow;
 
-		$expect_hooked = [
-			'override_email_update' => [
-				'priority'      => 1,
-				'accepted_args' => 1,
-			],
-		];
-		$this->assertHooked( 'personal_options_update', 'WP_Auth0_EditProfile', $expect_hooked );
-
 		// Test page-specific JS enqueuing.
 		$expect_hooked = [
 			'admin_enqueue_scripts' => [

@@ -157,6 +157,10 @@ class WP_Auth0 {
 		$profile_change_pwd  = new WP_Auth0_Profile_Change_Password( $api_change_password );
 		$profile_change_pwd->init();
 
+		$api_change_email     = new WP_Auth0_Api_Change_Email( $this->a0_options, $api_client_creds );
+		$profile_change_email = new WP_Auth0_Profile_Change_Email( $api_change_email );
+		$profile_change_email->init();
+
 		$profile_delete_data = new WP_Auth0_Profile_Delete_Data( $users_repo );
 		$profile_delete_data->init();
 

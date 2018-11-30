@@ -1,8 +1,15 @@
 <?php
+/**
+ * Contains class WP_Auth0_EditProfile.
+ *
+ * @package WP-Auth0
+ *
+ * @since 2.0.0
+ */
 
 /**
  * Class WP_Auth0_EditProfile.
- * Provides functionality on the edit profile and edit user page.
+ * Loads assets for the user profile and user edit screens.
  */
 class WP_Auth0_EditProfile {
 
@@ -49,7 +56,6 @@ class WP_Auth0_EditProfile {
 	 */
 	public function init() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
-		add_action( 'personal_options_update', array( $this, 'override_email_update' ), 1 );
 	}
 
 	/**
@@ -95,9 +101,17 @@ class WP_Auth0_EditProfile {
 		);
 	}
 
+	/*
+	 * DEPRECATED
+	 * phpcs:disable
+	 */
+
 	/**
 	 * Process email changes and pass the update to Auth0 if it passes validation.
-	 * Hooked to: personal_options_update
+	 *
+	 * @deprecated - 3.9.0, use WP_Auth0_Profile_Change_Email::update_email() instead.
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function override_email_update() {
 		global $wpdb;
@@ -536,4 +550,6 @@ class WP_Auth0_EditProfile {
 			}
 		}
 	}
+
+	// phpcs:enable
 }
