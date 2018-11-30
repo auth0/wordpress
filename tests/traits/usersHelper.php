@@ -21,13 +21,14 @@ trait UsersHelper {
 	/**
 	 * Create a new User.
 	 *
-	 * @param null $email - Email to use, default is used if none provided.
+	 * @param null $email              - Email to use, default is used if none provided.
+	 * @param bool $should_return_data - True to return data only, false to return WP_User.
 	 *
-	 * @return null|object|stdClass
+	 * @return null|object|stdClass|WP_User
 	 */
-	public function createUser( $email = null ) {
+	public function createUser( $email = null, $should_return_data = true ) {
 		$username = 'test_new_user' . uniqid();
-		$user     = wp_insert_user(
+		$user_id  = wp_insert_user(
 			[
 				'user_login' => $username,
 				'user_email' => $email ? $email : $username . '@example.com',
@@ -35,7 +36,12 @@ trait UsersHelper {
 			]
 		);
 
-		return is_wp_error( $user ) ? null : get_user_by( 'id', $user )->data;
+		if ( is_wp_error( $user_id ) ) {
+			return null;
+		}
+
+		$user = get_user_by( 'id', $user_id );
+		return $should_return_data ? $user->data : $user;
 	}
 
 	/**
