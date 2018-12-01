@@ -2,10 +2,25 @@
 
 class WP_Auth0_Routes {
 
+	/**
+	 * @var WP_Auth0_Options
+	 */
 	protected $a0_options;
 
-	public function __construct( WP_Auth0_Options $a0_options ) {
+	/**
+	 * @var WP_Auth0_Ip_Check
+	 */
+	protected $ip_check;
+
+	/**
+	 * WP_Auth0_Routes constructor.
+	 *
+	 * @param WP_Auth0_Options       $a0_options - WP_Auth0_Options instance.
+	 * @param WP_Auth0_Ip_Check|null $ip_check - WP_Auth0_Ip_Check instance.
+	 */
+	public function __construct( WP_Auth0_Options $a0_options, WP_Auth0_Ip_Check $ip_check = null ) {
 		$this->a0_options = $a0_options;
+		$this->ip_check   = $ip_check instanceof WP_Auth0_Ip_Check ? $ip_check : new WP_Auth0_Ip_Check( $a0_options );
 	}
 
 	public function init() {
@@ -22,11 +37,6 @@ class WP_Auth0_Routes {
 
 		add_rewrite_rule( '^auth0', 'index.php?auth0=1', 'top' );
 		add_rewrite_rule( '^\.well-known/oauth2-client-configuration', 'index.php?a0_action=oauth2-config', 'top' );
-
-		// if ( $force_ws || $this->a0_options->get( 'migration_ws' ) ) {
-		// add_rewrite_rule( '^migration-ws-login', 'index.php?a0_action=migration-ws-login', 'top' );
-		// add_rewrite_rule( '^migration-ws-get-user', 'index.php?a0_action=migration-ws-get-user', 'top' );
-		// }
 	}
 
 	public function custom_requests( $wp ) {
@@ -44,20 +54,32 @@ class WP_Auth0_Routes {
 			$page = $wp->query_vars['pagename'];
 		}
 
+		$output = null;
 		if ( ! empty( $page ) ) {
 			switch ( $page ) {
 				case 'oauth2-config':
 					$this->oauth2_config();
 					exit;
 				case 'migration-ws-login':
-					$this->migration_ws_login();
-					exit;
+					$output = $this->migration_ws_login();
+					break;
 				case 'migration-ws-get-user':
 					$this->migration_ws_get_user();
 					exit;
 				case 'coo-fallback':
 					$this->coo_fallback();
 					exit;
+				default:
+					return false;
+			}
+
+			if ( $output ) {
+				if ( empty( $wp->query_vars['custom_requests_return'] ) ) {
+					echo wp_json_encode( $output );
+					exit;
+				} else {
+					return wp_json_encode( $output );
+				}
 			}
 		}
 	}
@@ -111,13 +133,19 @@ EOT;
 	protected function migration_ws_login() {
 
 		if ( $this->a0_options->get( 'migration_ws' ) == 0 ) {
-			return;
+			return array(
+				'status' => 403,
+				'error'  => __( 'Forbidden', 'wp-auth0' ),
+			);
 		}
 
 		if ( $this->a0_options->get( 'migration_ips_filter' ) ) {
-			$ipCheck = new WP_Auth0_Ip_Check( $this->a0_options );
-			if ( ! $ipCheck->connection_is_valid( $this->a0_options->get( 'migration_ips' ) ) ) {
-				return;
+			$allowed_ips = $this->a0_options->get( 'migration_ips' );
+			if ( ! $this->ip_check->connection_is_valid( $allowed_ips ) ) {
+				return array(
+					'status' => 401,
+					'error'  => __( 'Unauthorized', 'wp-auth0' ),
+				);
 			}
 		}
 
@@ -127,51 +155,43 @@ EOT;
 		$secret   = $this->a0_options->get_client_secret_as_key( true );
 		$token_id = $this->a0_options->get( 'migration_token_id' );
 
-		$user = null;
-
 		try {
 			if ( empty( $authorization ) ) {
-				throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ) );
+				throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ), 401 );
 			}
 
 			$token = JWT::decode( $authorization, $secret, array( 'HS256' ) );
 
 			if ( $token->jti != $token_id ) {
-				throw new Exception( __( 'Invalid token ID', 'wp-auth0' ) );
+				throw new Exception( __( 'Invalid token ID', 'wp-auth0' ), 401 );
 			}
 
-			if ( ! isset( $_POST['username'] ) ) {
+			if ( empty( $_POST['username'] ) ) {
 				throw new Exception( __( 'Username is required', 'wp-auth0' ) );
 			}
 
-			if ( ! isset( $_POST['password'] ) ) {
+			if ( empty( $_POST['password'] ) ) {
 				throw new Exception( __( 'Password is required', 'wp-auth0' ) );
 			}
 
-			$username = $_POST['username'];
-			$password = $_POST['password'];
+			$user = wp_authenticate( $_POST['username'], $_POST['password'] );
 
-			$user = wp_authenticate( $username, $password );
-
-			if ( $user instanceof WP_Error ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' => wp_authenticate()', $user );
-				$user = array( 'error' => __( 'Invalid credentials', 'wp-auth0' ) );
-			} else {
-				if ( $user instanceof WP_User ) {
-					unset( $user->data->user_pass );
-				}
-
-				$user = apply_filters( 'auth0_migration_ws_authenticated', $user );
+			if ( is_wp_error( $user ) ) {
+				throw new Exception( __( 'Invalid Credentials', 'wp-auth0' ), 401 );
 			}
+
+			unset( $user->data->user_pass );
+			return apply_filters( 'auth0_migration_ws_authenticated', $user );
+
 		} catch ( Exception $e ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
-			$user = array( 'error' => $e->getMessage() );
+			return array(
+				'status' => $e->getCode() ?: 400,
+				'error'  => $e->getMessage(),
+			);
 		}
-
-		echo json_encode( $user );
-		exit;
-
 	}
+
 	protected function migration_ws_get_user() {
 
 		if ( $this->a0_options->get( 'migration_ws' ) == 0 ) {
