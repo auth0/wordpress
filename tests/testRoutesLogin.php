@@ -106,6 +106,8 @@ class TestRoutesLogin extends TestCase {
 		unset( self::$wp->query_vars['a0_action'] );
 		self::$wp->query_vars['pagename'] = uniqid();
 		$this->assertFalse( self::$routes->custom_requests( self::$wp ) );
+
+		$this->assertEmpty( self::$error_log->get() );
 	}
 
 	/**
@@ -118,6 +120,8 @@ class TestRoutesLogin extends TestCase {
 
 		$this->assertEquals( 403, $output->status );
 		$this->assertEquals( 'Forbidden', $output->error );
+
+		$this->assertEmpty( self::$error_log->get() );
 	}
 
 	/**
@@ -132,12 +136,15 @@ class TestRoutesLogin extends TestCase {
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Unauthorized', $output->error );
+
+		$this->assertEmpty( self::$error_log->get() );
 	}
 
 	/**
 	 * If there is no token, the route should fail with an error.
 	 */
 	public function testThatLoginRouteIsUnauthorizedIfNoToken() {
+		$expected_msg                      =
 		self::$opts->set( 'migration_ws', 1 );
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 
@@ -145,6 +152,10 @@ class TestRoutesLogin extends TestCase {
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Unauthorized: missing authorization header', $output->error );
+
+		$log = self::$error_log->get();
+		$this->assertCount( 1, $log );
+		$this->assertEquals( $output->error, $log[0]['message'] );
 	}
 
 	/**
@@ -159,6 +170,10 @@ class TestRoutesLogin extends TestCase {
 
 		$this->assertEquals( 400, $output->status );
 		$this->assertEquals( 'Key may not be empty', $output->error );
+
+		$log = self::$error_log->get();
+		$this->assertCount( 1, $log );
+		$this->assertEquals( $output->error, $log[0]['message'] );
 	}
 
 	/**
@@ -177,6 +192,10 @@ class TestRoutesLogin extends TestCase {
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Invalid token ID', $output->error );
+
+		$log = self::$error_log->get();
+		$this->assertCount( 1, $log );
+		$this->assertEquals( $output->error, $log[0]['message'] );
 	}
 
 	/**
@@ -196,6 +215,10 @@ class TestRoutesLogin extends TestCase {
 
 		$this->assertEquals( 400, $output->status );
 		$this->assertEquals( 'Username is required', $output->error );
+
+		$log = self::$error_log->get();
+		$this->assertCount( 1, $log );
+		$this->assertEquals( $output->error, $log[0]['message'] );
 	}
 
 	/**
@@ -216,6 +239,10 @@ class TestRoutesLogin extends TestCase {
 
 		$this->assertEquals( 400, $output->status );
 		$this->assertEquals( 'Password is required', $output->error );
+
+		$log = self::$error_log->get();
+		$this->assertCount( 1, $log );
+		$this->assertEquals( $output->error, $log[0]['message'] );
 	}
 
 	/**
@@ -238,6 +265,10 @@ class TestRoutesLogin extends TestCase {
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Invalid Credentials', $output->error );
+
+		$log = self::$error_log->get();
+		$this->assertCount( 1, $log );
+		$this->assertEquals( $output->error, $log[0]['message'] );
 	}
 
 	/**
@@ -263,5 +294,7 @@ class TestRoutesLogin extends TestCase {
 		$this->assertEquals( $user->user_email, $output->data->user_email );
 		$this->assertEquals( $user->display_name, $output->data->display_name );
 		$this->assertObjectNotHasAttribute( 'user_pass', $output->data );
+
+		$this->assertEmpty( self::$error_log->get() );
 	}
 }
