@@ -9,7 +9,7 @@
  */
 
 define( 'WPA0_VERSION', '3.9.0-beta' );
-define( 'AUTH0_DB_VERSION', 19 );
+define( 'AUTH0_DB_VERSION', 20 );
 
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
