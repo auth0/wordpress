@@ -200,6 +200,15 @@ class WP_Auth0_Options_Generic {
 	}
 
 	/**
+	 * Reset options to defaults.
+	 */
+	public function reset() {
+		$this->_opts = null;
+		$this->delete();
+		$this->get_options();
+	}
+
+	/**
 	 * Return default options as key => value or just keys.
 	 *
 	 * @param bool $keys_only - Only return the array keys for the default options.

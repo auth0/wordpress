@@ -1,5 +1,19 @@
 <?php
+/**
+ * Contains class WP_Auth0_Ip_Check.
+ *
+ * @package WP-Auth0
+ *
+ * @since 1.2.1
+ */
+
+/**
+ * Class WP_Auth0_Ip_Check.
+ * Used for checking IP addresses against whitelists and default Auth0 IPs.
+ */
 class WP_Auth0_Ip_Check {
+
+	const IP_STRING_GLUE = ',';
 
 	/**
 	 * IP addresses for inbound connections per region.
@@ -73,7 +87,7 @@ class WP_Auth0_Ip_Check {
 	/**
 	 * WP_Auth0_Ip_Check constructor.
 	 *
-	 * @param WP_Auth0_Options|null $a0_options
+	 * @param WP_Auth0_Options|null $a0_options WP_Auth0_Options instance.
 	 */
 	public function __construct( WP_Auth0_Options $a0_options = null ) {
 		$this->a0_options = $a0_options;
@@ -83,24 +97,35 @@ class WP_Auth0_Ip_Check {
 	 * Get regional inbound IP addresses based on a domain.
 	 *
 	 * @param string $domain - Tenant domain.
+	 * @param string $glue   - String used to implode arrays.
 	 *
 	 * @return string
 	 */
-	public function get_ips_by_domain( $domain ) {
-		return $this->get_ip_by_region( WP_Auth0::get_tenant_region( $domain ) );
+	public function get_ips_by_domain( $domain = null, $glue = self::IP_STRING_GLUE ) {
+		if ( empty( $domain ) ) {
+			$domain = $this->a0_options->get( 'domain' );
+		}
+		$region = WP_Auth0::get_tenant_region( $domain );
+		return $this->get_ip_by_region( $region, $glue );
 	}
 
 	/**
 	 * Get regional inbound IP addresses based on a region.
 	 *
 	 * @param string $region - Tenant region.
+	 * @param string $glue   - String used to implode arrays.
 	 *
 	 * @return string
 	 */
-	public function get_ip_by_region( $region ) {
-		return implode( ',', $this->valid_webtask_ips[ $region ] );
+	public function get_ip_by_region( $region, $glue = self::IP_STRING_GLUE ) {
+		return implode( $glue, $this->valid_webtask_ips[ $region ] );
 	}
 
+	/**
+	 * Get the IP address of the incoming connection.
+	 *
+	 * @return string
+	 */
 	protected function get_request_ip() {
 		$valid_proxy_ip = $this->a0_options->get( 'valid_proxy_ip' );
 
@@ -108,15 +133,20 @@ class WP_Auth0_Ip_Check {
 			if ( $_SERVER['REMOTE_ADDR'] == $valid_proxy_ip ) {
 				return $_SERVER['HTTP_X_FORWARDED_FOR'];
 			}
-		} else {
-			return $_SERVER['REMOTE_ADDR'];
 		}
 
-		return null;
+		return $_SERVER['REMOTE_ADDR'];
 	}
 
+	/**
+	 * Process an array or concatenated string of IP addresses into ranges.
+	 *
+	 * @param array|string $ip_list - IP list to process.
+	 *
+	 * @return array
+	 */
 	protected function process_ip_list( $ip_list ) {
-		$raw = explode( ',', $ip_list );
+		$raw = is_array( $ip_list ) ? $ip_list : explode( self::IP_STRING_GLUE, $ip_list );
 
 		$ranges = array();
 		foreach ( $raw as $r ) {
@@ -137,13 +167,21 @@ class WP_Auth0_Ip_Check {
 		return $ranges;
 	}
 
-	public function connection_is_valid( $valid_ips ) {
-		$ip              = $this->get_request_ip();
-		$valid_ip_ranges = $this->process_ip_list( $valid_ips );
+	/**
+	 * Check incoming IP address against default Auth0 and custom ones.
+	 *
+	 * @param string $valid_ips - String of comma-separated IP addresses to allow.
+	 *
+	 * @return bool
+	 */
+	public function connection_is_valid( $valid_ips = '' ) {
+		$valid_ips   = explode( self::IP_STRING_GLUE, $valid_ips );
+		$default_ips = explode( self::IP_STRING_GLUE, $this->get_ips_by_domain() );
+		$allowed_ips = array_merge( $valid_ips, $default_ips );
+		$allowed_ips = array_unique( $allowed_ips );
 
-		foreach ( $valid_ip_ranges as $range ) {
-			$in_range = $this->in_range( $ip, $range );
-			if ( $in_range ) {
+		foreach ( $this->process_ip_list( $allowed_ips ) as $range ) {
+			if ( $this->in_range( $this->get_request_ip(), $range ) ) {
 				return true;
 			}
 		}
@@ -151,7 +189,29 @@ class WP_Auth0_Ip_Check {
 		return false;
 	}
 
+	/**
+	 * Check if an IP address is within a range.
+	 *
+	 * @param string $ip - IP address to check.
+	 * @param array  $range - IP range to use.
+	 *
+	 * @return bool
+	 */
+	private function in_range( $ip, array $range ) {
+		$from = ip2long( $range['from'] );
+		$to   = ip2long( $range['to'] );
+		$ip   = ip2long( $ip );
 
+		return $ip >= $from && $ip <= $to;
+	}
+
+	// phpcs:disable
+
+	/**
+	 * TODO: Deprecate, not used. Also remove related setting.
+	 *
+	 * @codeCoverageIgnore
+	 */
 	public function init() {
 		if ( ! WP_Auth0_Options::Instance()->get( 'ip_range_check' ) || is_admin() ) {
 			return;
@@ -160,6 +220,11 @@ class WP_Auth0_Ip_Check {
 		add_filter( 'wp_auth0_get_option', array( $this, 'check_activate' ), 10, 2 );
 	}
 
+	/**
+	 * TODO: Deprecate, not used.
+	 *
+	 * @codeCoverageIgnore
+	 */
 	public function check_activate( $val, $key ) {
 		if ( 'active' !== $key ) {
 			return $val;
@@ -168,6 +233,11 @@ class WP_Auth0_Ip_Check {
 		return $is_active;
 	}
 
+	/**
+	 * TODO: Deprecate, not used.
+	 *
+	 * @codeCoverageIgnore
+	 */
 	private function validate_ip() {
 		$ranges = $this->get_ranges();
 		$ip     = $_SERVER['REMOTE_ADDR'];
@@ -182,14 +252,11 @@ class WP_Auth0_Ip_Check {
 		return false;
 	}
 
-	private function in_range( $ip, $range ) {
-		$from = ip2long( $range['from'] );
-		$to   = ip2long( $range['to'] );
-		$ip   = ip2long( $ip );
-
-		return $ip >= $from && $ip <= $to;
-	}
-
+	/**
+	 * TODO: Deprecate, not used. Also remove related setting.
+	 *
+	 * @codeCoverageIgnore
+	 */
 	private function get_ranges() {
 		$data = WP_Auth0_Options::Instance()->get( 'ip_ranges' );
 		$data = str_replace( "\r\n", "\n", $data );
@@ -215,4 +282,6 @@ class WP_Auth0_Ip_Check {
 
 		return $ranges;
 	}
+
+	// phpcs:enable
 }

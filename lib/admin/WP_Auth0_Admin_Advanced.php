@@ -105,7 +105,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_migration_ws_ips_filter',
 			),
 			array(
-				'name'     => __( 'IP Addresses', 'wp-auth0' ),
+				'name'     => '',
 				'opt'      => 'migration_ips',
 				'id'       => 'wpa0_migration_ws_ips',
 				'function' => 'render_migration_ws_ips',
@@ -419,10 +419,13 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_migration_ws_ips( $args = array() ) {
+		$ip_check = new WP_Auth0_Ip_Check( WP_Auth0_Options::Instance() );
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Only requests from these IPs will be allowed to access the migration webservice. ', 'wp-auth0' ) .
-			__( 'Separate multiple IPs with commas', 'wp-auth0' )
+			__( 'Only requests from these IPs will be allowed to access the migration endpoints. ', 'wp-auth0' ) .
+			__( 'Separate multiple IPs with commas. ', 'wp-auth0' ) .
+			__( 'The following Auth0 IPs are automatically whitelisted: ', 'wp-auth0' ) .
+			'<br><br><code>' . $ip_check->get_ips_by_domain( null, '</code> <code>' ) . '</code>'
 		);
 	}
 

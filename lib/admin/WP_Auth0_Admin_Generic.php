@@ -231,7 +231,8 @@ class WP_Auth0_Admin_Generic {
 	 * @param string $text - description text to display
 	 */
 	protected function render_field_description( $text ) {
-		printf( '<div class="subelement"><span class="description">%s.</span></div>', $text );
+		$period = ! in_array( $text[ strlen( $text ) - 1 ], array( '.', ':', '>' ) ) ? '.' : '';
+		printf( '<div class="subelement"><span class="description">%s%s</span></div>', $text, $period );
 	}
 
 	/**
