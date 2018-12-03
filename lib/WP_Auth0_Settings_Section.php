@@ -34,8 +34,8 @@ class WP_Auth0_Settings_Section {
 		$main_menu = ! WP_Auth0::ready() ? 'wpa0-setup' : 'wpa0';
 
 		add_menu_page(
-			__( 'Auth0', 'wp-auth0' ),
-			__( 'Auth0', 'wp-auth0' ),
+			'Auth0',
+			'Auth0',
 			'manage_options',
 			$main_menu,
 			! WP_Auth0::ready() ?

@@ -209,7 +209,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_skip_strategies' );
 		$this->render_field_description(
 			__( 'Require new users to both provide and verify their email before logging in. ', 'wp-auth0' ) .
-			__( 'An email is verified manually by an email from Auth0 or automatically by the provider. ', 'wp-auth0' ) .
+			__( 'An email address is verified manually by an email from Auth0 or automatically by the provider. ', 'wp-auth0' ) .
 			__( 'This will disallow logins from social connections that do not provide email (like Twitter)', 'wp-auth0' )
 		);
 	}
