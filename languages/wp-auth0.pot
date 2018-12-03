@@ -125,7 +125,7 @@ msgid "JWT Auth installed. "
 msgstr ""
 
 #: lib/WP_Auth0_Configure_JWTAUTH.php:31
-msgid "To configure it to work the Auth0 plugin, click here."
+msgid "To configure it to work with the Auth0 plugin, click here."
 msgstr ""
 
 #: lib/WP_Auth0_DBManager.php:176
@@ -508,11 +508,6 @@ msgstr ""
 msgid "Invalid credentials"
 msgstr ""
 
-#. Author of the plugin/theme
-#: lib/WP_Auth0_Settings_Section.php:37 lib/WP_Auth0_Settings_Section.php:38
-msgid "Auth0"
-msgstr ""
-
 #: lib/WP_Auth0_Settings_Section.php:49 lib/WP_Auth0_Settings_Section.php:56
 msgid "Auth0 for WordPress - Setup Wizard"
 msgstr ""
@@ -737,7 +732,7 @@ msgstr ""
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:213
 msgid ""
-"An email is verified manually by an email from Auth0 or automatically by the "
+"An email address is verified manually by an email from Auth0 or automatically by the "
 "provider. "
 msgstr ""
 
@@ -1265,11 +1260,11 @@ msgid "You need to specify a domain"
 msgstr ""
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:354
-msgid "You need to specify a client id"
+msgid "You need to specify a Client ID"
 msgstr ""
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:358
-msgid "You need to specify a client secret"
+msgid "You need to specify a Client Secret"
 msgstr ""
 
 #: lib/admin/WP_Auth0_Admin_Dashboard.php:29
@@ -1586,7 +1581,7 @@ msgid "Auth0 Dashboard"
 msgstr ""
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:131
-msgid " and copy the client_id and secret."
+msgid " and copy the Client ID and Client Secret."
 msgstr ""
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:143
@@ -1612,12 +1607,12 @@ msgid " for more information."
 msgstr ""
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:166
-msgid "There was an error retrieving your auth0 credentials. Check the "
+msgid "There was an error retrieving your Auth0 credentials. Check the "
 msgstr ""
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:168
 msgid ""
-" for more information. Please check that your sever has internet access and "
+" for more information. Please check that your server has internet access and "
 "can reach \"https://"
 msgstr ""
 
@@ -2094,7 +2089,7 @@ msgstr ""
 #: templates/initial-setup/data-migration.php:7
 #: templates/initial-setup/rules.php:7
 msgid ""
-"This will create a new database connections, expose 2 endpoints, and "
+"This will create a new database connection, expose 2 endpoints, and "
 "populate the custom scripts to call this endpoints to migrate the users to "
 "Auth0."
 msgstr ""
@@ -2105,7 +2100,7 @@ msgid "The users will not be changed in WordPress."
 msgstr ""
 
 #: templates/initial-setup/data-migration.php:15
-msgid "Mark this to expose a WS in order to easy the users migration process."
+msgid "Mark this to expose a web service to handle the user migration process."
 msgstr ""
 
 #: templates/initial-setup/data-migration.php:16
@@ -2114,7 +2109,7 @@ msgstr ""
 
 #: templates/initial-setup/data-migration.php:18
 msgid ""
-"This action will create a new Database connection with the custom scrits "
+"This action will create a new Database connection with the custom scripts "
 "required to import your WordPress Users."
 msgstr ""
 
@@ -2201,8 +2196,8 @@ msgstr ""
 
 #: templates/initial-setup/rules.php:56
 msgid ""
-"Mark this if you want to hydrate your users profile with the data provided "
-"by FullContact. A valid api key is requiere."
+"Mark this if you want to augment user profiles with data provided "
+"by FullContact. A valid API key is required."
 msgstr ""
 
 #: templates/initial-setup/rules.php:57
@@ -2253,7 +2248,7 @@ msgstr ""
 #: templates/settings.php:64
 msgid ""
 "Thank you for installing Login by Auth0! Auth0 is a powerful identity "
-"solution that that secures billions of logins every month. In addition to "
+"solution that secures billions of logins every month. In addition to "
 "the options here, there are many more features available in the"
 msgstr ""
 
@@ -2291,7 +2286,7 @@ msgstr ""
 #: templates/settings.php:102
 msgid ""
 "If you are setting up the plugin for the first time or having issues after "
-"an upgrade, please review the  to make sure your Application is setup "
+"an upgrade, please review the settings to make sure your Application is setup "
 "correctly."
 msgstr ""
 

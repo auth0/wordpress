@@ -61,7 +61,7 @@
 
 					<p>
 						<?php
-						_e( 'Thank you for installing Login by Auth0! Auth0 is a powerful identity solution that that secures billions of logins every month. In addition to the options here, there are many more features available in the', 'wp-auth0' );
+						_e( 'Thank you for installing Login by Auth0! Auth0 is a powerful identity solution that secures billions of logins every month. In addition to the options here, there are many more features available in the', 'wp-auth0' );
 						?>
 						<a href="https://manage.auth0.com" target="_blank"><?php _e( 'Auth0 dashboard', 'wp-auth0' ); ?></a>
 						<?php _e( 'including:', 'wp-auth0' ); ?>
@@ -99,7 +99,7 @@
 								?>
 							</a> -
 							<?php
-							_e( 'If you are setting up the plugin for the first time or having issues after an upgrade, please review the  to make sure your Application is setup correctly.', 'wp-auth0' )
+							_e( 'If you are setting up the plugin for the first time or having issues after an upgrade, please review the settings to make sure your Application is setup correctly.', 'wp-auth0' )
 							?>
 						</li>
 						<li><a href="https://community.auth0.com/tags/wordpress" target="_blank">

@@ -4,7 +4,7 @@
 	<h2><?php _e( "Auth0 for WordPress - Setup Wizard (step $step)", 'wp-auth0' ); ?></h2>
 
 	<p>
-		<?php _e( 'This will create a new database connections, expose 2 endpoints, and populate the custom scripts to call this endpoints to migrate the users to Auth0.', 'wp-auth0' ); ?>
+		<?php _e( 'This will create a new database connection, expose 2 endpoints, and populate the custom scripts to call this endpoints to migrate the users to Auth0.', 'wp-auth0' ); ?>
 		<?php _e( 'The users will not be changed in WordPress.', 'wp-auth0' ); ?>
 	</p>
 
@@ -53,7 +53,7 @@
 
 			<div class="subelement">
 				<span class="description">
-					<?php echo __( 'Mark this if you want to hydrate your users profile with the data provided by FullContact. A valid api key is requiere.', 'wp-auth0' ); ?>
+					<?php echo __( 'Mark this if you want to augment user profiles with data provided by FullContact. A valid API key is required.', 'wp-auth0' ); ?>
 					<?php echo __( 'More info ', 'wp-auth0' ); ?>
 					<a href="https://auth0.com/docs/scenarios/fullcontact"><?php echo __( 'HERE', 'wp-auth0' ); ?></a>
 				</span>

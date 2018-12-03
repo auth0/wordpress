@@ -128,7 +128,7 @@ class WP_Auth0_InitialSetup {
 					  <a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', 'wp-auth0' ); ?></a>
 					<?php echo __( ' for more information. If the problem persists, please create it manually in the ', 'wp-auth0' ); ?>
 					  <a target="_blank" href="https://manage.auth0.com/#/applications"><?php echo __( 'Auth0 Dashboard', 'wp-auth0' ); ?></a>
-					<?php echo __( ' and copy the client_id and secret.', 'wp-auth0' ); ?>
+					<?php echo __( ' and copy the Client ID and Client Secret.', 'wp-auth0' ); ?>
 				  </strong>
 			  </p>
 		  </div>
@@ -164,9 +164,9 @@ class WP_Auth0_InitialSetup {
 		  <div id="message" class="error">
 			  <p>
 				  <strong>
-					<?php echo __( 'There was an error retrieving your auth0 credentials. Check the ', 'wp-auth0' ); ?>
+					<?php echo __( 'There was an error retrieving your Auth0 credentials. Check the ', 'wp-auth0' ); ?>
 					  <a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', 'wp-auth0' ); ?></a>
-					<?php echo __( ' for more information. Please check that your sever has internet access and can reach "https://' . $domain . '/" ', 'wp-auth0' ); ?>
+					<?php echo __( ' for more information. Please check that your server has internet access and can reach "https://' . $domain . '/" ', 'wp-auth0' ); ?>
 				  </strong>
 			  </p>
 		  </div>

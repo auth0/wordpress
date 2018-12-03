@@ -136,7 +136,7 @@ msgid "JWT Auth installed. "
 msgstr "JWT Auth instalado. "
 
 #: lib/WP_Auth0_Configure_JWTAUTH.php:31
-msgid "To configure it to work the Auth0 plugin, click here."
+msgid "To configure it to work with the Auth0 plugin, click here."
 msgstr "Para configurarlo para que funcione el plugin Auth0, haz clic aquí."
 
 #: lib/WP_Auth0_DBManager.php:177
@@ -554,11 +554,6 @@ msgstr "La contraseña es obligatoria"
 msgid "Invalid credentials"
 msgstr "Credenciales no válidas"
 
-#. Author of the plugin/theme
-#: lib/WP_Auth0_Settings_Section.php:37 lib/WP_Auth0_Settings_Section.php:38
-msgid "Auth0"
-msgstr "Auth0"
-
 #: lib/WP_Auth0_Settings_Section.php:49 lib/WP_Auth0_Settings_Section.php:56
 msgid "Auth0 for WordPress - Setup Wizard"
 msgstr "Auth0 para WordPress - Asistente de configuración"
@@ -789,7 +784,7 @@ msgstr ""
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:212
 msgid ""
-"An email is verified manually by an email from Auth0 or automatically by the "
+"An email address is verified manually by an email from Auth0 or automatically by the "
 "provider. "
 msgstr ""
 "La dirección de un correo electrónico es verificada manualmente por un correo electrónico de "
@@ -1421,11 +1416,11 @@ msgid "You need to specify a domain"
 msgstr "Necesitas especificar un domain"
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:355
-msgid "You need to specify a client id"
+msgid "You need to specify a Client ID"
 msgstr "Necesitas especificar un Client ID"
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:359
-msgid "You need to specify a client secret"
+msgid "You need to specify a Client Secret"
 msgstr "Necesitas especificar un Client Secret"
 
 #: lib/admin/WP_Auth0_Admin_Dashboard.php:31
@@ -1793,7 +1788,7 @@ msgid "Auth0 Dashboard"
 msgstr "Auth0 dashboard"
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:131
-msgid " and copy the client_id and secret."
+msgid " and copy the Client ID and Client Secret."
 msgstr " y copiar el Client ID y Client Secret."
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:143
@@ -1822,13 +1817,13 @@ msgid " for more information."
 msgstr " para más información."
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:167
-msgid "There was an error retrieving your auth0 credentials. Check the "
+msgid "There was an error retrieving your Auth0 credentials. Check the "
 msgstr ""
 "Ha ocurrido un error al recuperar tus credenciales de Auth0. Comprueba el "
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:169
 msgid ""
-" for more information. Please check that your sever has internet access and "
+" for more information. Please check that your server has internet access and "
 "can reach \"https://"
 msgstr ""
 " para más información. Por favor, comprueba que tu servidor tiene acceso a "
@@ -2361,7 +2356,7 @@ msgstr "Siguiente"
 #: templates/initial-setup/data-migration.php:7
 #: templates/initial-setup/rules.php:7
 msgid ""
-"This will create a new database connections, expose 2 endpoints, and "
+"This will create a new database connection, expose 2 endpoints, and "
 "populate the custom scripts to call this endpoints to migrate the users to "
 "Auth0."
 msgstr ""
@@ -2375,7 +2370,7 @@ msgid "The users will not be changed in WordPress."
 msgstr "Los usuarios no serán modificados en WordPress."
 
 #: templates/initial-setup/data-migration.php:15
-msgid "Mark this to expose a WS in order to easy the users migration process."
+msgid "Mark this to expose a web service to handle the user migration process."
 msgstr ""
 "Marca esto para exponer un servicio web con el fin de facilitar el proceso de "
 "migración de los usuarios."
@@ -2386,7 +2381,7 @@ msgstr "Token de seguridad:"
 
 #: templates/initial-setup/data-migration.php:18
 msgid ""
-"This action will create a new Database connection with the custom scrits "
+"This action will create a new Database connection with the custom scripts "
 "required to import your WordPress Users."
 msgstr ""
 "Esta acción creará una nueva conexión de base de datos con el script "
@@ -2494,8 +2489,8 @@ msgstr ""
 
 #: templates/initial-setup/rules.php:56
 msgid ""
-"Mark this if you want to hydrate your users profile with the data provided "
-"by FullContact. A valid api key is requiere."
+"Mark this if you want to augment user profiles with data provided "
+"by FullContact. A valid API key is required."
 msgstr ""
 "Marca esto si deseas completar los perfiles de tus usuarios con los datos  "
 "proporcionados por FullContact. Se necesita una API key válida."
@@ -2550,7 +2545,7 @@ msgstr "Avanzado"
 #: templates/settings.php:64
 msgid ""
 "Thank you for installing Login by Auth0! Auth0 is a powerful identity "
-"solution that that secures billions of logins every month. In addition to "
+"solution that secures billions of logins every month. In addition to "
 "the options here, there are many more features available in the"
 msgstr ""
 "¡Gracias por instalar Login by Auth0! Auth0 es una potente solución de "
@@ -2595,7 +2590,7 @@ msgstr "Documentación de la configuración"
 #: templates/settings.php:102
 msgid ""
 "If you are setting up the plugin for the first time or having issues after "
-"an upgrade, please review the  to make sure your Application is setup "
+"an upgrade, please review the settings to make sure your Application is setup "
 "correctly."
 msgstr ""
 "Si estás configurando el plugin por primera vez o tienes problemas después "
