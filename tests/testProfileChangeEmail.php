@@ -69,7 +69,7 @@ class TestProfileChangeEmail extends TestCase {
 	 * Test that an email update works.
 	 */
 	public function testSuccessfulEmailUpdate() {
-		$user                       = $this->createUser( null, null, false );
+		$user                       = $this->createUser( [], false );
 		$new_email                  = $user->data->user_email;
 		$old_user                   = clone $user;
 		$old_user->data->user_email = 'OLD-' . $new_email;
@@ -88,7 +88,7 @@ class TestProfileChangeEmail extends TestCase {
 	 * Test that a non-Auth0 user will skip the email update.
 	 */
 	public function testThatNonAuth0UserSkipsUpdate() {
-		$user                       = $this->createUser( null, null, false );
+		$user                       = $this->createUser( [], false );
 		$old_user                   = clone $user;
 		$old_user->data->user_email = 'OLD-' . $old_user->data->user_email;
 
@@ -102,7 +102,7 @@ class TestProfileChangeEmail extends TestCase {
 	 * Test that a non-DB strategy user will skip the email update.
 	 */
 	public function testThatNonDbUserSkipsUpdate() {
-		$user                       = $this->createUser( null, null, false );
+		$user                       = $this->createUser( [], false );
 		$old_user                   = clone $user;
 		$old_user->data->user_email = 'OLD-' . $old_user->data->user_email;
 
@@ -119,7 +119,7 @@ class TestProfileChangeEmail extends TestCase {
 	 * Test that a user change without an email update will skip the email update.
 	 */
 	public function testThatSameEmailSkipsUpdate() {
-		$user     = $this->createUser( null, null, false );
+		$user     = $this->createUser( [], false );
 		$old_user = clone $user;
 
 		// API call mocked to succeed.
@@ -135,7 +135,7 @@ class TestProfileChangeEmail extends TestCase {
 	 * Test that a failed API call changes the email address back.
 	 */
 	public function testThatFailedApiCallStopsEmailUpdate() {
-		$user                       = $this->createUser( null, null, false );
+		$user                       = $this->createUser( [], false );
 		$old_user                   = clone $user;
 		$old_user->data->user_email = 'OLD-' . $old_user->data->user_email;
 
@@ -163,7 +163,7 @@ class TestProfileChangeEmail extends TestCase {
 	public function testThatFailedApiRedirectsOnUserEditPage() {
 		$this->startRedirectHalting();
 
-		$user                       = $this->createUser( null, null, false );
+		$user                       = $this->createUser( [], false );
 		$old_user                   = clone $user;
 		$old_user->data->user_email = 'OLD-' . $old_user->data->user_email;
 
