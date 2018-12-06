@@ -279,7 +279,12 @@ class TestRoutesLogin extends TestCase {
 		$token_id          = '__test_token_id__';
 		$_POST['username'] = uniqid() . '@' . uniqid() . '.com';
 		$_POST['password'] = uniqid();
-		$user              = $this->createUser( $_POST['username'], $_POST['password'] );
+		$user              = $this->createUser(
+			[
+				'user_email' => $_POST['username'],
+				'user_pass'  => $_POST['password'],
+			]
+		);
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token_id', $token_id );

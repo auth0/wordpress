@@ -21,21 +21,19 @@ trait UsersHelper {
 	/**
 	 * Create a new User.
 	 *
-	 * @param null        $email              - Email to use, default is used if none provided.
-	 * @param null|string $password           - Password to use, default is used if empty.
-	 * @param bool        $should_return_data - True to return data only, false to return WP_User.
+	 * @param array $user_data         - User data to use.
+	 * @param bool  $should_return_data - True to return data only, false to return WP_User.
 	 *
 	 * @return null|object|stdClass|WP_User
 	 */
-	public function createUser( $email = null, $password = null, $should_return_data = true ) {
-		$username = 'test_new_user' . uniqid();
-		$user_id  = wp_insert_user(
-			[
-				'user_login' => $username,
-				'user_email' => $email ? $email : $username . '@example.com',
-				'user_pass'  => $password ? $password : uniqid(),
-			]
-		);
+	public function createUser( array $user_data = [], $should_return_data = true ) {
+		$username     = 'test_new_user' . uniqid();
+		$default_data = [
+			'user_login' => 'test_new_user' . uniqid(),
+			'user_email' => $username . '@example.com',
+			'user_pass'  => uniqid() . uniqid() . uniqid(),
+		];
+		$user_id      = wp_insert_user( array_merge( $default_data, $user_data ) );
 
 		if ( is_wp_error( $user_id ) ) {
 			return null;
