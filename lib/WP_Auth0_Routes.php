@@ -1,5 +1,16 @@
 <?php
+/**
+ * Contains class WP_Auth0_Routes.
+ *
+ * @package WP-Auth0
+ *
+ * @since 2.0.0
+ */
 
+/**
+ * Class WP_Auth0_Routes.
+ * Handles all custom routes used by Auth0 except login callback.
+ */
 class WP_Auth0_Routes {
 
 	/**
@@ -39,6 +50,13 @@ class WP_Auth0_Routes {
 		add_rewrite_rule( '^\.well-known/oauth2-client-configuration', 'index.php?a0_action=oauth2-config', 'top' );
 	}
 
+	/**
+	 * Route incoming Auth0 actions.
+	 *
+	 * @param WP_Query $wp - WP_Query object for current request.
+	 *
+	 * @return bool|false|string
+	 */
 	public function custom_requests( $wp ) {
 		$page = null;
 
@@ -50,7 +68,7 @@ class WP_Auth0_Routes {
 			$page = $wp->query_vars['a0_action'];
 		}
 
-		if ( $page === null && isset( $wp->query_vars['pagename'] ) ) {
+		if ( null === $page && isset( $wp->query_vars['pagename'] ) ) {
 			$page = $wp->query_vars['pagename'];
 		}
 
@@ -64,8 +82,8 @@ class WP_Auth0_Routes {
 					$output = $this->migration_ws_login();
 					break;
 				case 'migration-ws-get-user':
-					$this->migration_ws_get_user();
-					exit;
+					$output = $this->migration_ws_get_user();
+					break;
 				case 'coo-fallback':
 					$this->coo_fallback();
 					exit;
@@ -130,22 +148,25 @@ EOT;
 		return $authorization;
 	}
 
+	/**
+	 * User migration login route used by custom database Login script.
+	 *
+	 * @return array
+	 *
+	 * @see lib/scripts-js/db-login.js
+	 */
 	protected function migration_ws_login() {
 
+		// Migration web service is not turned on.
 		if ( $this->a0_options->get( 'migration_ws' ) == 0 ) {
-			return array(
-				'status' => 403,
-				'error'  => __( 'Forbidden', 'wp-auth0' ),
-			);
+			return $this->error_return_array( 403 );
 		}
 
+		// IP filtering is on and incoming IP address does not match filter.
 		if ( $this->a0_options->get( 'migration_ips_filter' ) ) {
 			$allowed_ips = $this->a0_options->get( 'migration_ips' );
 			if ( ! $this->ip_check->connection_is_valid( $allowed_ips ) ) {
-				return array(
-					'status' => 401,
-					'error'  => __( 'Unauthorized', 'wp-auth0' ),
-				);
+				return $this->error_return_array( 401 );
 			}
 		}
 
@@ -192,16 +213,25 @@ EOT;
 		}
 	}
 
+	/**
+	 * User migration get user route used by custom database Login script.
+	 *
+	 * @return array
+	 *
+	 * @see lib/scripts-js/db-get-user.js
+	 */
 	protected function migration_ws_get_user() {
 
+		// Migration web service is not turned on.
 		if ( $this->a0_options->get( 'migration_ws' ) == 0 ) {
-			return;
+			return $this->error_return_array( 403 );
 		}
 
+		// IP filtering is on and incoming IP address does not match filter.
 		if ( $this->a0_options->get( 'migration_ips_filter' ) ) {
-			$ipCheck = new WP_Auth0_Ip_Check( $this->a0_options );
-			if ( ! $ipCheck->connection_is_valid( $this->a0_options->get( 'migration_ips' ) ) ) {
-				return;
+			$allowed_ips = $this->a0_options->get( 'migration_ips' );
+			if ( ! $this->ip_check->connection_is_valid( $allowed_ips ) ) {
+				return $this->error_return_array( 401 );
 			}
 		}
 
@@ -215,13 +245,13 @@ EOT;
 
 		try {
 			if ( empty( $authorization ) ) {
-				throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ) );
+				throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ), 401 );
 			}
 
 			$token = JWT::decode( $authorization, $secret, array( 'HS256' ) );
 
 			if ( $token->jti != $token_id ) {
-				throw new Exception( __( 'Invalid token ID', 'wp-auth0' ) );
+				throw new Exception( __( 'Invalid token ID', 'wp-auth0' ), 401 );
 			}
 
 			if ( ! isset( $_POST['username'] ) ) {
@@ -231,32 +261,26 @@ EOT;
 			$username = $_POST['username'];
 
 			$user = get_user_by( 'email', $username );
-
 			if ( ! $user ) {
 				$user = get_user_by( 'slug', $username );
 			}
 
-			if ( $user instanceof WP_Error ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $user->get_error_message() );
-				$user = array( 'error' => __( 'Invalid credentials', 'wp-auth0' ) );
-			} else {
-
-				if ( ! $user instanceof WP_User ) {
-					$user = array( 'error' => __( 'Invalid credentials', 'wp-auth0' ) );
-				} else {
-					unset( $user->data->user_pass );
-					$user = apply_filters( 'auth0_migration_ws_authenticated', $user );
-				}
+			if ( ! $user ) {
+				throw new Exception( __( 'Invalid Credentials', 'wp-auth0' ), 401 );
 			}
+
+			unset( $user->data->user_pass );
+			return apply_filters( 'auth0_migration_ws_authenticated', $user );
+
 		} catch ( Exception $e ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
-			$user = array( 'error' => $e->getMessage() );
+			return array(
+				'status' => $e->getCode() ?: 400,
+				'error'  => $e->getMessage(),
+			);
 		}
-
-		echo json_encode( $user );
-		exit;
-
 	}
+
 	protected function oauth2_config() {
 
 		$callback_url = admin_url( 'admin.php?page=wpa0-setup&callback=1' );
@@ -270,5 +294,29 @@ EOT;
 			)
 		);
 		exit;
+	}
+
+	/**
+	 * Default error arrays.
+	 *
+	 * @param integer $code - Error code.
+	 *
+	 * @return array
+	 */
+	private function error_return_array( $code ) {
+
+		switch ( $code ) {
+			case 401:
+				return array(
+					'status' => 401,
+					'error'  => __( 'Unauthorized', 'wp-auth0' ),
+				);
+
+			case 403:
+				return array(
+					'status' => 403,
+					'error'  => __( 'Forbidden', 'wp-auth0' ),
+				);
+		}
 	}
 }
