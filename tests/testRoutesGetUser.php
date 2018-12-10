@@ -1,6 +1,6 @@
 <?php
 /**
- * Contains Class TestRoutesLogin.
+ * Contains Class TestRoutesGetUser.
  *
  * @package WP-Auth0
  *
@@ -10,9 +10,9 @@
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class TestRoutesLogin.
+ * Class TestRoutesGetUser.
  */
-class TestRoutesLogin extends TestCase {
+class TestRoutesGetUser extends TestCase {
 
 	use HookHelpers;
 
@@ -92,8 +92,8 @@ class TestRoutesLogin extends TestCase {
 	/**
 	 * If migration services are off, the route should fail with an error.
 	 */
-	public function testThatLoginRouteIsForbiddenByDefault() {
-		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
+	public function testThatGetUserRouteIsForbiddenByDefault() {
+		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
 
@@ -106,10 +106,10 @@ class TestRoutesLogin extends TestCase {
 	/**
 	 * If the incoming IP address is invalid, the route should fail with an error.
 	 */
-	public function testThatLoginRouteIsUnauthorizedIfWrongIp() {
+	public function testThatGetUserRouteIsUnauthorizedIfWrongIp() {
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'migration_ips_filter', 1 );
-		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
+		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
 
@@ -122,9 +122,9 @@ class TestRoutesLogin extends TestCase {
 	/**
 	 * If there is no token, the route should fail with an error.
 	 */
-	public function testThatLoginRouteIsUnauthorizedIfNoToken() {
+	public function testThatGetUserRouteIsUnauthorizedIfNoToken() {
 		self::$opts->set( 'migration_ws', 1 );
-		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
+		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
 
@@ -139,9 +139,9 @@ class TestRoutesLogin extends TestCase {
 	/**
 	 * If the token is invalid, the route should fail with an error.
 	 */
-	public function testThatLoginRouteIsUnauthorizedIfBadToken() {
+	public function testThatGetUserRouteIsUnauthorizedIfBadToken() {
 		self::$opts->set( 'migration_ws', 1 );
-		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
+		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 		$_POST['access_token']             = uniqid();
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
@@ -157,13 +157,13 @@ class TestRoutesLogin extends TestCase {
 	/**
 	 * If the token has the wrong JTI, the route should fail with an error.
 	 */
-	public function testThatLoginRouteIsUnauthorizedIfWrongJti() {
+	public function testThatGetUserRouteIsUnauthorizedIfWrongJti() {
 		$client_secret = '__test_client_secret__';
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token_id', '__test_token_id__' );
 
-		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
+		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 		$_POST['access_token']             = JWT::encode( [ 'jti' => uniqid() ], $client_secret );
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
@@ -179,14 +179,14 @@ class TestRoutesLogin extends TestCase {
 	/**
 	 * If there is no username POSTed, the route should fail with an error.
 	 */
-	public function testThatLoginRouteIsBadRequestIfNoUsername() {
+	public function testThatGetUserRouteIsBadRequestIfNoUsername() {
 		$client_secret = '__test_client_secret__';
 		$token_id      = '__test_token_id__';
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token_id', $token_id );
 
-		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
+		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 		$_POST['access_token']             = JWT::encode( [ 'jti' => $token_id ], $client_secret );
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
@@ -200,44 +200,19 @@ class TestRoutesLogin extends TestCase {
 	}
 
 	/**
-	 * If there is no password POSTed, the route should fail with an error.
+	 * If there the username cannot be found, the route should fail with an error.
 	 */
-	public function testThatLoginRouteIsBadRequestIfNoPassword() {
+	public function testThatGetUserRouteIsUnauthorizedIfUserNotFound() {
 		$client_secret = '__test_client_secret__';
 		$token_id      = '__test_token_id__';
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token_id', $token_id );
 
-		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
-		$_POST['access_token']             = JWT::encode( [ 'jti' => $token_id ], $client_secret );
-		$_POST['username']                 = uniqid();
-
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
-
-		$this->assertEquals( 400, $output->status );
-		$this->assertEquals( 'Password is required', $output->error );
-
-		$log = self::$error_log->get();
-		$this->assertCount( 1, $log );
-		$this->assertEquals( $output->error, $log[0]['message'] );
-	}
-
-	/**
-	 * If there the username or password are incorrect, the route should fail with an error.
-	 */
-	public function testThatLoginRouteIsUnauthorizedIfNotAuthenticated() {
-		$client_secret = '__test_client_secret__';
-		$token_id      = '__test_token_id__';
-		self::$opts->set( 'migration_ws', 1 );
-		self::$opts->set( 'client_secret', $client_secret );
-		self::$opts->set( 'migration_token_id', $token_id );
-
-		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
+		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 
 		$_POST['access_token'] = JWT::encode( [ 'jti' => $token_id ], $client_secret );
 		$_POST['username']     = uniqid();
-		$_POST['password']     = uniqid();
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
 
@@ -250,34 +225,34 @@ class TestRoutesLogin extends TestCase {
 	}
 
 	/**
-	 * Route should return a user with no password set if provided a valid username and password.
+	 * Route should return a user with no password set if provided a valid username or email.
 	 */
-	public function testThatLoginRouteReturnsUserIfSuccessful() {
+	public function testThatGetUserRouteReturnsUserIfSuccessful() {
 		$client_secret     = '__test_client_secret__';
 		$token_id          = '__test_token_id__';
 		$_POST['username'] = uniqid() . '@' . uniqid() . '.com';
-		$_POST['password'] = uniqid();
-		$user              = $this->createUser(
-			[
-				'user_email' => $_POST['username'],
-				'user_pass'  => $_POST['password'],
-			]
-		);
+		$user              = $this->createUser( [ 'user_email' => $_POST['username'] ] );
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token_id', $token_id );
 
-		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
+		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 		$_POST['access_token']             = JWT::encode( [ 'jti' => $token_id ], $client_secret );
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output_em = json_decode( self::$routes->custom_requests( self::$wp ) );
 
-		$this->assertEquals( $user->ID, $output->data->ID );
-		$this->assertEquals( $user->user_login, $output->data->user_login );
-		$this->assertEquals( $user->user_email, $output->data->user_email );
-		$this->assertEquals( $user->display_name, $output->data->display_name );
-		$this->assertObjectNotHasAttribute( 'user_pass', $output->data );
+		$this->assertEquals( $user->ID, $output_em->data->ID );
+		$this->assertEquals( $user->user_login, $output_em->data->user_login );
+		$this->assertEquals( $user->user_email, $output_em->data->user_email );
+		$this->assertEquals( $user->display_name, $output_em->data->display_name );
+		$this->assertObjectNotHasAttribute( 'user_pass', $output_em->data );
+		$this->assertEmpty( self::$error_log->get() );
 
+		// Test username lookup.
+		$_POST['username'] = $user->user_login;
+		$output_un         = json_decode( self::$routes->custom_requests( self::$wp ) );
+
+		$this->assertEquals( $output_em, $output_un );
 		$this->assertEmpty( self::$error_log->get() );
 	}
 }
