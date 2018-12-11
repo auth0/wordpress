@@ -38,8 +38,9 @@ class WP_Auth0_Options_Generic {
 	public function __construct() {
 		$option_keys = $this->get_defaults( true );
 		foreach ( $option_keys as $key ) {
-			if ( $this->has_constant_val( $key ) ) {
-				$this->constant_opts[ $key ] = $this->get_constant_val( $key );
+			$setting_const = $this->get_constant_name( $key );
+			if ( defined( $setting_const ) ) {
+				$this->constant_opts[ $key ] = constant( $setting_const );
 			}
 		}
 	}
@@ -65,8 +66,7 @@ class WP_Auth0_Options_Generic {
 	 * @return boolean
 	 */
 	public function has_constant_val( $key ) {
-		$setting_const = $this->get_constant_name( $key );
-		return defined( $setting_const );
+		return isset( $this->constant_opts[ $key ] );
 	}
 
 	/**
