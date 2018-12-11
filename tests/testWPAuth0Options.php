@@ -153,4 +153,28 @@ class TestWPAuth0Options extends TestCase {
 		$this->assertTrue( $opts->delete() );
 		$this->assertFalse( get_option( $opts->get_options_name() ) );
 	}
+
+	/**
+	 * Test that options can be set in memory and in the DB.
+	 */
+	public function testSet() {
+		$opt_name       = 'domain';
+		$expected_val_1 = rand();
+		$expected_val_2 = rand();
+		$opts           = new WP_Auth0_Options();
+
+		// Test that a basic set without DB update works.
+		$result = $opts->set( $opt_name, $expected_val_1, false );
+		$this->assertTrue( $result );
+		$this->assertEquals( $expected_val_1, $opts->get( $opt_name ) );
+		$db_options = get_option( $opts->get_options_name() );
+		$this->assertNotEquals( $expected_val_1, $db_options[ $opt_name ] );
+
+		// Test that a basic set with DB update works.
+		$result = $opts->set( $opt_name, $expected_val_2, true );
+		$this->assertTrue( $result );
+		$this->assertEquals( $expected_val_2, $opts->get( $opt_name ) );
+		$db_options = get_option( $opts->get_options_name() );
+		$this->assertEquals( $expected_val_2, $db_options[ $opt_name ] );
+	}
 }

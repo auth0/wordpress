@@ -23,8 +23,6 @@
     <exclude-pattern>/lib/admin/WP_Auth0_Admin_Dashboard.php</exclude-pattern>
     <exclude-pattern>/lib/dashboard-widgets/*</exclude-pattern>
 
-    <config name="minimum_supported_wp_version" value="3.8"/>
-
     <!-- Only check PHP files. -->
     <arg name="extensions" value="php"/>
 
@@ -41,7 +39,8 @@
     PHPCompatibility sniffs to check for PHP cross-version incompatible code.
     https://github.com/PHPCompatibility/PHPCompatibility
     -->
-    <config name="testVersion" value="5.5-"/>
+    <config name="testVersion" value="5.3-"/>
+    <config name="minimum_supported_wp_version" value="3.8"/>
     <rule ref="PHPCompatibilityWP"/>
 
     <rule ref="Generic.CodeAnalysis"/>
