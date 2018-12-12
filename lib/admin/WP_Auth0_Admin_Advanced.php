@@ -798,17 +798,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			return $input;
 		}
 
-		$home_url_host     = wp_parse_url( $home_url, PHP_URL_HOST );
-		$redirect_url_host = wp_parse_url( $new_redirect_url, PHP_URL_HOST );
-
-		// Same host name so it's safe to redirect.
-		if ( $redirect_url_host === $home_url_host ) {
-			return $input;
-		}
-
-		// The redirect can be a subdomain of the home_url or vice versa.
-		$min_host = min( strlen( $redirect_url_host ), strlen( $home_url_host ) );
-		if ( substr( $redirect_url_host, -$min_host ) === substr( $home_url_host, -$min_host ) ) {
+		// Allow subdomains within the same domain.
+		$home_domain     = $this->get_domain( $home_url );
+		$redirect_domain = $this->get_domain( $new_redirect_url );
+		if ( $home_domain === $redirect_domain ) {
 			return $input;
 		}
 
@@ -822,6 +815,15 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			$home_url;
 
 		return $input;
+	}
+
+	private function get_domain( $url ) {
+		$host_pieces = explode( '.', wp_parse_url( $url, PHP_URL_HOST ) );
+		$domain      = array_pop( $host_pieces );
+		if ( count( $host_pieces ) ) {
+			$domain = array_pop( $host_pieces ) . '.' . $domain;
+		}
+		return $domain;
 	}
 
 	/**
