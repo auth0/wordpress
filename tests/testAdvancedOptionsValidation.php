@@ -3,6 +3,7 @@
  * Contains Class TestAdvancedOptionsValidation.
  *
  * @package WP-Auth0
+ *
  * @since 3.7.0
  */
 
@@ -14,62 +15,164 @@ use PHPUnit\Framework\TestCase;
  */
 class TestAdvancedOptionsValidation extends TestCase {
 
-	use setUpTestDb;
+	use setUpTestDb {
+		setUp as setUpDb;
+	}
 
 	/**
-	 * Test validation for the login redirection URL.
+	 * WP_Auth0_Options instance.
+	 *
+	 * @var WP_Auth0_Options
 	 */
-	public function testLoginRedirectValidation() {
-		$opts            = new WP_Auth0_Options();
-		$router          = new WP_Auth0_Routes( $opts );
-		$admin           = new WP_Auth0_Admin_Advanced( $opts, $router );
-		$home_url        = home_url();
-		$home_url_host   = wp_parse_url( $home_url )['host'];
-		$home_url_scheme = wp_parse_url( $home_url )['scheme'];
-		$invalid_url     = 'https://auth0.com';
+	public static $opts;
 
-		// Test that no validation happens if the new value is the same as the old value.
+	/**
+	 * WP_Auth0_Admin_Advanced instance.
+	 *
+	 * @var WP_Auth0_Admin_Advanced
+	 */
+	public static $admin;
+
+	/**
+	 * Existing home_url value before tests.
+	 *
+	 * @var string
+	 */
+	public static $home_url;
+
+	/**
+	 * Empty input value.
+	 *
+	 * @var array
+	 */
+	public static $empty_input = [ 'default_login_redirection' => '' ];
+
+	/**
+	 * Run before the test suite starts.
+	 */
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		self::$opts  = new WP_Auth0_Options();
+		$router      = new WP_Auth0_Routes( self::$opts );
+		self::$admin = new WP_Auth0_Admin_Advanced( self::$opts, $router );
+	}
+
+	/**
+	 * Run before each test starts.
+	 */
+	public function setUp() {
+		parent::setUp();
+		self::setUpDb();
+		self::$home_url = home_url();
+	}
+
+	/**
+	 * Run after each test finishes.
+	 */
+	public function tearDown() {
+		parent::tearDown();
+		update_option( 'home_url', self::$home_url );
+	}
+
+	/**
+	 * Test that no validation happens if the new value is the same as the old value.
+	 */
+	public function testThatNoValidationRunsIfNoChange() {
+		$invalid_url = 'https://auth0.com';
 		$input       = [ 'default_login_redirection' => $invalid_url ];
 		$old_input   = [ 'default_login_redirection' => $invalid_url ];
-		$valid_input = $admin->loginredirection_validation( $old_input, $input );
+
+		$valid_input = self::$admin->loginredirection_validation( $old_input, $input );
 		$this->assertEquals( $invalid_url, $valid_input['default_login_redirection'] );
+	}
 
-		// Test that the default is set when the input is empty.
-		$input       = [ 'default_login_redirection' => '' ];
-		$old_input   = [ 'default_login_redirection' => $home_url . '/path' ];
-		$valid_input = $admin->loginredirection_validation( $old_input, $input );
-		$this->assertEquals( $home_url, $valid_input['default_login_redirection'] );
+	/**
+	 * Test that the default is set when the input is empty.
+	 */
+	public function testThatDefaultIsUsedIfNewValueIsEmpty() {
+		$old_input = [ 'default_login_redirection' => self::$home_url . '/path' ];
 
-		// Test that the defaults is set if URL is another site.
+		$valid_input = self::$admin->loginredirection_validation( $old_input, self::$empty_input );
+		$this->assertEquals( self::$home_url, $valid_input['default_login_redirection'] );
+	}
+
+	/**
+	 * Test that the default is set if new URL is another site.
+	 */
+	public function testThatDefaultIsUsedIfNewUrlIsInvalid() {
+		$invalid_url = 'https://auth0.com';
 		$input       = [ 'default_login_redirection' => $invalid_url ];
-		$old_input   = [ 'default_login_redirection' => $home_url . '/path' ];
-		$valid_input = $admin->loginredirection_validation( $old_input, $input );
+		$old_input   = [ 'default_login_redirection' => self::$home_url . '/path' ];
+
+		$valid_input = self::$admin->loginredirection_validation( $old_input, $input );
 		$this->assertEquals( $old_input['default_login_redirection'], $valid_input['default_login_redirection'] );
-		$old_input   = [ 'default_login_redirection' => '' ];
-		$valid_input = $admin->loginredirection_validation( $old_input, $input );
-		$this->assertEquals( $home_url, $valid_input['default_login_redirection'] );
 
-		// Test that a URL with the same host as home_url will be saved.
-		$input       = [ 'default_login_redirection' => $home_url . '/path' ];
-		$valid_input = $admin->loginredirection_validation( $old_input, $input );
-		$this->assertEquals( $input['default_login_redirection'], $valid_input['default_login_redirection'] );
+		$valid_input = self::$admin->loginredirection_validation( self::$empty_input, $input );
+		$this->assertEquals( self::$home_url, $valid_input['default_login_redirection'] );
+	}
 
-		// Test that a URL with a different scheme will be saved.
-		$test_scheme = 'http' === $home_url_scheme ? 'https' : 'http';
-		$input       = [ 'default_login_redirection' => $test_scheme . '://' . $home_url_host . '/path' ];
-		$valid_input = $admin->loginredirection_validation( $old_input, $input );
-		$this->assertEquals( $input['default_login_redirection'], $valid_input['default_login_redirection'] );
+	/**
+	 * Test that a URL with the same host as home_url will be saved.
+	 */
+	public function testThatNewUrlWithSameHostIsValid() {
+		$input = [ 'default_login_redirection' => self::$home_url . '/path' ];
 
-		// Test that a subdomain of a main site can be used.
-		$input       = [ 'default_login_redirection' => $home_url_scheme . '://www.auth0.' . $home_url_host ];
-		$valid_input = $admin->loginredirection_validation( $old_input, $input );
+		$valid_input = self::$admin->loginredirection_validation( self::$empty_input, $input );
 		$this->assertEquals( $input['default_login_redirection'], $valid_input['default_login_redirection'] );
+	}
 
-		// Test that a main site of a subdomain can be used.
-		$input = [ 'default_login_redirection' => $home_url ];
-		update_option( 'home_url', $home_url_scheme . '://www.auth0.' . $home_url_host );
-		$valid_input = $admin->loginredirection_validation( $old_input, $input );
+	/**
+	 * Test that a URL with a different scheme is valid.
+	 */
+	public function testThatNewUrlWithDifferentSchemeIsValid() {
+		$input = [ 'default_login_redirection' => 'http://www.example.org' ];
+		update_option( 'home_url', 'https://www.example.org' );
+
+		$valid_input = self::$admin->loginredirection_validation( self::$empty_input, $input );
 		$this->assertEquals( $input['default_login_redirection'], $valid_input['default_login_redirection'] );
-		update_option( 'home_url', $home_url );
+	}
+
+	/**
+	 * Test that a subdomain of a main site is valid.
+	 */
+	public function testThatSubdomainIsValid() {
+		$input = [ 'default_login_redirection' => 'https://sub.sub.example.org' ];
+		update_option( 'home_url', 'https://www.example.org' );
+
+		$valid_input = self::$admin->loginredirection_validation( self::$empty_input, $input );
+		$this->assertEquals( $input['default_login_redirection'], $valid_input['default_login_redirection'] );
+	}
+
+	/**
+	 * Test that a main site of a subdomain is valid.
+	 */
+	public function testThatParentDomainIsValid() {
+		$input = [ 'default_login_redirection' => 'https://example.org' ];
+		update_option( 'home_url', 'https://www.example.org' );
+
+		$valid_input = self::$admin->loginredirection_validation( self::$empty_input, $input );
+		$this->assertEquals( $input['default_login_redirection'], $valid_input['default_login_redirection'] );
+	}
+
+	/**
+	 * Test that sibling subdomains are valid.
+	 */
+	public function testThatSiblingSubdomainIsValid() {
+		$input = [ 'default_login_redirection' => 'https://sub.example.org' ];
+		update_option( 'home_url', 'https://www.example.org' );
+
+		$valid_input = self::$admin->loginredirection_validation( self::$empty_input, $input );
+		$this->assertEquals( $input['default_login_redirection'], $valid_input['default_login_redirection'] );
+	}
+
+	/**
+	 * Test that other ports of the main site domain are valid.
+	 */
+	public function testThatDifferentPortIsValid() {
+		$input = [ 'default_login_redirection' => 'http://www.example.org:8080' ];
+		update_option( 'home_url', 'https://www.example.org' );
+
+		$valid_input = self::$admin->loginredirection_validation( self::$empty_input, $input );
+		$this->assertEquals( $input['default_login_redirection'], $valid_input['default_login_redirection'] );
 	}
 }
