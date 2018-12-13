@@ -137,24 +137,6 @@ class TestRoutesGetUser extends TestCase {
 	}
 
 	/**
-	 * If the token is invalid, the route should fail with an error.
-	 */
-	public function testThatGetUserRouteIsUnauthorizedIfBadToken() {
-		self::$opts->set( 'migration_ws', 1 );
-		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
-		$_POST['access_token']             = uniqid();
-
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
-
-		$this->assertEquals( 400, $output->status );
-		$this->assertEquals( 'Key may not be empty', $output->error );
-
-		$log = self::$error_log->get();
-		$this->assertCount( 1, $log );
-		$this->assertEquals( $output->error, $log[0]['message'] );
-	}
-
-	/**
 	 * If the token has the wrong JTI, the route should fail with an error.
 	 */
 	public function testThatGetUserRouteIsUnauthorizedIfWrongJti() {
@@ -169,7 +151,7 @@ class TestRoutesGetUser extends TestCase {
 		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
 
 		$this->assertEquals( 401, $output->status );
-		$this->assertEquals( 'Invalid token ID', $output->error );
+		$this->assertEquals( 'Invalid token', $output->error );
 
 		$log = self::$error_log->get();
 		$this->assertCount( 1, $log );
@@ -180,14 +162,15 @@ class TestRoutesGetUser extends TestCase {
 	 * If there is no username POSTed, the route should fail with an error.
 	 */
 	public function testThatGetUserRouteIsBadRequestIfNoUsername() {
-		$client_secret = '__test_client_secret__';
-		$token_id      = '__test_token_id__';
+		$client_secret   = '__test_client_secret__';
+		$token_id        = '__test_token_id__';
+		$migration_token = JWT::encode( [ 'jti' => $token_id ], $client_secret );
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'client_secret', $client_secret );
-		self::$opts->set( 'migration_token_id', $token_id );
+		self::$opts->set( 'migration_token', $migration_token );
 
 		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
-		$_POST['access_token']             = JWT::encode( [ 'jti' => $token_id ], $client_secret );
+		$_POST['access_token']             = $migration_token;
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
 
@@ -203,15 +186,16 @@ class TestRoutesGetUser extends TestCase {
 	 * If there the username cannot be found, the route should fail with an error.
 	 */
 	public function testThatGetUserRouteIsUnauthorizedIfUserNotFound() {
-		$client_secret = '__test_client_secret__';
-		$token_id      = '__test_token_id__';
+		$client_secret   = '__test_client_secret__';
+		$token_id        = '__test_token_id__';
+		$migration_token = JWT::encode( [ 'jti' => $token_id ], $client_secret );
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'client_secret', $client_secret );
-		self::$opts->set( 'migration_token_id', $token_id );
+		self::$opts->set( 'migration_token', $migration_token );
 
 		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 
-		$_POST['access_token'] = JWT::encode( [ 'jti' => $token_id ], $client_secret );
+		$_POST['access_token'] = $migration_token;
 		$_POST['username']     = uniqid();
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
@@ -232,12 +216,13 @@ class TestRoutesGetUser extends TestCase {
 		$token_id          = '__test_token_id__';
 		$_POST['username'] = uniqid() . '@' . uniqid() . '.com';
 		$user              = $this->createUser( [ 'user_email' => $_POST['username'] ] );
+		$migration_token   = JWT::encode( [ 'jti' => $token_id ], $client_secret );
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'client_secret', $client_secret );
-		self::$opts->set( 'migration_token_id', $token_id );
+		self::$opts->set( 'migration_token', $migration_token );
 
 		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
-		$_POST['access_token']             = JWT::encode( [ 'jti' => $token_id ], $client_secret );
+		$_POST['access_token']             = $migration_token;
 
 		$output_em = json_decode( self::$routes->custom_requests( self::$wp ) );
 

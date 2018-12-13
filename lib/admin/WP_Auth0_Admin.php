@@ -145,7 +145,22 @@ class WP_Auth0_Admin {
 		);
 	}
 
+	/**
+	 * Output the settings page with a generic settings saved message if none is present.
+	 */
 	public function render_settings_page() {
+		$notifications      = get_settings_errors();
+		$message            = __( 'Settings saved.', 'wp-auth0' );
+		$add_settings_saved = true;
+		foreach ( $notifications as $notification ) {
+			if ( $message === $notification['message'] ) {
+				$add_settings_saved = false;
+				break;
+			}
+		}
+		if ( $add_settings_saved ) {
+			add_settings_error( 'wp_auth0_settings', 'wp_auth0_settings', $message, 'updated' );
+		}
 		include WPA0_PLUGIN_DIR . 'templates/settings.php';
 	}
 }

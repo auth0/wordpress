@@ -158,7 +158,7 @@ EOT;
 	protected function migration_ws_login() {
 
 		// Migration web service is not turned on.
-		if ( $this->a0_options->get( 'migration_ws' ) == 0 ) {
+		if ( ! $this->a0_options->get( 'migration_ws' ) ) {
 			return $this->error_return_array( 403 );
 		}
 
@@ -170,21 +170,16 @@ EOT;
 			}
 		}
 
-		$authorization = $this->getAuthorizationHeader();
-		$authorization = trim( str_replace( 'Bearer ', '', $authorization ) );
-
-		$secret   = $this->a0_options->get_client_secret_as_key( true );
-		$token_id = $this->a0_options->get( 'migration_token_id' );
+		$authorization   = trim( str_replace( 'Bearer ', '', $this->getAuthorizationHeader() ) );
+		$migration_token = $this->a0_options->get( 'migration_token' );
 
 		try {
 			if ( empty( $authorization ) ) {
 				throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ), 401 );
 			}
 
-			$token = JWT::decode( $authorization, $secret, array( 'HS256' ) );
-
-			if ( $token->jti != $token_id ) {
-				throw new Exception( __( 'Invalid token ID', 'wp-auth0' ), 401 );
+			if ( $authorization !== $migration_token ) {
+				throw new Exception( __( 'Invalid token', 'wp-auth0' ), 401 );
 			}
 
 			if ( empty( $_POST['username'] ) ) {
@@ -223,7 +218,7 @@ EOT;
 	protected function migration_ws_get_user() {
 
 		// Migration web service is not turned on.
-		if ( $this->a0_options->get( 'migration_ws' ) == 0 ) {
+		if ( ! $this->a0_options->get( 'migration_ws' ) ) {
 			return $this->error_return_array( 403 );
 		}
 
@@ -235,11 +230,8 @@ EOT;
 			}
 		}
 
-		$authorization = $this->getAuthorizationHeader();
-		$authorization = trim( str_replace( 'Bearer ', '', $authorization ) );
-
-		$secret   = $this->a0_options->get_client_secret_as_key( true );
-		$token_id = $this->a0_options->get( 'migration_token_id' );
+		$authorization   = trim( str_replace( 'Bearer ', '', $this->getAuthorizationHeader() ) );
+		$migration_token = $this->a0_options->get( 'migration_token' );
 
 		$user = null;
 
@@ -248,10 +240,8 @@ EOT;
 				throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ), 401 );
 			}
 
-			$token = JWT::decode( $authorization, $secret, array( 'HS256' ) );
-
-			if ( $token->jti != $token_id ) {
-				throw new Exception( __( 'Invalid token ID', 'wp-auth0' ), 401 );
+			if ( $authorization !== $migration_token ) {
+				throw new Exception( __( 'Invalid token', 'wp-auth0' ), 401 );
 			}
 
 			if ( ! isset( $_POST['username'] ) ) {
