@@ -83,17 +83,13 @@ class WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Wrapper for add_settings_error
+	 * Wrapper for add_settings_error to output error message on settings change failure.
 	 *
-	 * @param string $error - translated error message
+	 * @param string $error - Translated error message.
+	 * @param string $type - Notice type, "error" by default or "updated".
 	 */
-	protected function add_validation_error( $error ) {
-		add_settings_error(
-			$this->_option_name,
-			$this->_option_name,
-			$error,
-			'error'
-		);
+	protected function add_validation_error( $error, $type = 'error' ) {
+		add_settings_error( $this->_option_name, $this->_option_name, $error, $type );
 	}
 
 	protected function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {

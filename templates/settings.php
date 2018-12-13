@@ -12,11 +12,6 @@
 				<a target="_blank" href="https://manage.auth0.com/#/clients/<?php echo WP_Auth0_Options::Instance()->get( 'client_id' ); ?>/connections"><?php _e( 'here', 'wp-auth0' ); ?></a>.
 			</div>
 
-			<?php if ( count( get_settings_errors() ) == 0 && isset( $_GET['settings-updated'] ) ) { ?>
-				<div id="message" class="updated">
-					<p><strong><?php _e( 'Settings saved.' ); ?></strong></p>
-				</div>
-			<?php } ?>
 			<?php settings_errors(); ?>
 
 			<ul class="nav nav-tabs" role="tablist">

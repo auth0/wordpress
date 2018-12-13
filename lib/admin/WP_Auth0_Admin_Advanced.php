@@ -705,63 +705,52 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		return $input;
 	}
 
-	public function migration_ws_validation( $old_options, $input ) {
-		$input['migration_ws'] = ( isset( $input['migration_ws'] ) ? $input['migration_ws'] : 0 );
+	/**
+	 * Validation for the migration_ws setting.
+	 * Generates new migration tokens if none is present.
+	 *
+	 * @param array $old_options - Option values before savings.
+	 * @param array $input - New option values to validate.
+	 *
+	 * @return array
+	 */
+	public function migration_ws_validation( array $old_options, array $input ) {
+		$input['migration_ws'] = isset( $input['migration_ws'] ) ? $input['migration_ws'] : 0;
 
-		if ( $old_options['migration_ws'] != $input['migration_ws'] ) {
+		// No longer using the token ID for validation.
+		$input['migration_token_id'] = null;
 
-			if ( 1 == $input['migration_ws'] ) {
-
-				$token_id = uniqid();
-				$secret   = $input['client_secret'];
-				if ( $input['client_secret_b64_encoded'] ) {
-					$secret = JWT::urlsafeB64Decode( $secret );
-				}
-
-				$input['migration_token']    = JWT::encode(
-					array(
-						'scope' => 'migration_ws',
-						'jti'   => $token_id,
-					),
-					$secret
-				);
-				$input['migration_token_id'] = $token_id;
-
-				$this->add_validation_error(
-					__( 'User Migration needs to be configured manually. ', 'wp-auth0' )
-					. __( 'Please see Advanced > Users Migration below for your token, instructions are ', 'wp-auth0' )
-					. '<a href="https://auth0.com/docs/users/migrations/automatic">HERE</a>.'
-				);
-
-			} else {
-				$input['migration_token']    = null;
-				$input['migration_token_id'] = null;
-
-				if ( isset( $old_options['db_connection_id'] ) ) {
-
-					$connection = WP_Auth0_Api_Client::get_connection( $input['domain'], $input['auth0_app_token'], $old_options['db_connection_id'] );
-
-					$connection->options->enabledDatabaseCustomization = false;
-					$connection->options->import_mode                  = false;
-
-					$response = WP_Auth0_Api_Client::update_connection( $input['domain'], $input['auth0_app_token'], $old_options['db_connection_id'], $connection );
-				} else {
-					$response = false;
-				}
-
-				if ( $response === false ) {
-					$error  = __( 'There was an error disabling your custom database. Check how to do it manually ', 'wp-auth0' );
-					$error .= '<a href="https://manage.auth0.com/#/connections/database">HERE</a>.';
-					$this->add_validation_error( $error );
-				}
-			}
-
-			$this->router->setup_rewrites( $input['migration_ws'] == 1 );
-			flush_rewrite_rules();
-		} else {
-			$input['migration_token']    = $old_options['migration_token'];
-			$input['migration_token_id'] = $old_options['migration_token_id'];
+		// No change to migration endpoints, keep old token data.
+		if ( $old_options['migration_ws'] === $input['migration_ws'] ) {
+			$input['migration_token'] = $old_options['migration_token'];
+			return $input;
 		}
+
+		// Migration endpoints turned off; warn admin of implications.
+		if ( empty( $input['migration_ws'] ) ) {
+			$input['migration_token'] = null;
+
+			$error  = __( 'User migration endpoints deactivated. ', 'wp-auth0' );
+			$error .= __( 'Custom database connections can be deactivated in the ', 'wp-auth0' );
+			$error .= $this->get_dashboard_link( 'connections/database' );
+			$this->add_validation_error( $error, 'updated' );
+			return $input;
+		}
+
+		// If we don't have a token yet, generate one.
+		if ( empty( $input['migration_token'] ) ) {
+			$input['migration_token'] = base64_encode( openssl_random_pseudo_bytes( 64 ) );
+		}
+
+		$error  = __( 'User migration endpoints activated. ', 'wp-auth0' );
+		$error .= __( 'The custom database scripts needs to be configured manually as described ', 'wp-auth0' );
+		$error .= $this->get_docs_link( 'users/migrations/automatic' ) . '. ';
+		$error .= __( 'Please see Advanced > Users Migration below for the token to use.', 'wp-auth0' );
+		$this->add_validation_error( $error, 'updated' );
+
+		$this->router->setup_rewrites();
+		flush_rewrite_rules();
+
 		return $input;
 	}
 
