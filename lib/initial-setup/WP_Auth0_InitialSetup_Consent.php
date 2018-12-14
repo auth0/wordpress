@@ -173,24 +173,13 @@ class WP_Auth0_InitialSetup_Consent {
 		if ( $should_create_and_update_connection ) {
 
 			if ( $connection_exists === false ) {
-
-				$secret             = $this->a0_options->get_client_secret_as_key( true );
-				$token_id           = uniqid();
-				$migration_token    = JWT::encode(
-					array(
-						'scope' => 'migration_ws',
-						'jti'   => $token_id,
-					),
-					$secret
-				);
-				$migration_token_id = $token_id;
-
-				$operations = new WP_Auth0_Api_Operations( $this->a0_options );
-				$response   = $operations->create_wordpress_connection( $this->a0_options->get( 'auth0_app_token' ), $this->hasInternetConnection, $this->a0_options->get( 'password_policy' ), $migration_token );
+				$migration_token = JWT::urlsafeB64Encode( openssl_random_pseudo_bytes( 64 ) );
+				$operations      = new WP_Auth0_Api_Operations( $this->a0_options );
+				$response        = $operations->create_wordpress_connection( $this->a0_options->get( 'auth0_app_token' ), $this->hasInternetConnection, $this->a0_options->get( 'password_policy' ), $migration_token );
 
 				$this->a0_options->set( 'migration_ws', $this->hasInternetConnection );
 				$this->a0_options->set( 'migration_token', $migration_token );
-				$this->a0_options->set( 'migration_token_id', $migration_token_id );
+				$this->a0_options->set( 'migration_token_id', null );
 				$this->a0_options->set( 'db_connection_enabled', $response ? 1 : 0 );
 				$this->a0_options->set( 'db_connection_id', $response );
 
