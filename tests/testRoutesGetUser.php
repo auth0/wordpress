@@ -216,7 +216,13 @@ class TestRoutesGetUser extends TestCase {
 		$token_id          = '__test_token_id__';
 		$_POST['username'] = uniqid() . '@' . uniqid() . '.com';
 		$user              = $this->createUser( [ 'user_email' => $_POST['username'] ] );
-		$migration_token   = JWT::encode( [ 'jti' => $token_id ], $client_secret );
+		$migration_token   = JWT::encode(
+			[
+				'jti'   => $token_id,
+				'scope' => 'migration_ws',
+			],
+			$client_secret
+		);
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );

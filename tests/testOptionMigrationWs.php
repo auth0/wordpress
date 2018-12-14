@@ -71,56 +71,27 @@ class TestOptionMigrationWs extends TestCase {
 	}
 
 	/**
-	 * Test that no change in migration setting does not change the token.
+	 * Test that turning migration endpoints off does not affect new input.
 	 */
-	public function testThatMigrationNotChangingKeepsOldTokenData() {
+	public function testThatChangingMigrationToOffKeepsTokenData() {
 		$input     = [
-			'migration_ws'    => 1,
-			'migration_token' => '',
-		];
-		$old_input = [
-			'migration_ws'       => 1,
-			'migration_token'    => 'old_token',
-			'migration_token_id' => 'old_id',
-		];
-		$validated = self::$admin->migration_ws_validation( $old_input, $input );
-		$this->assertEquals( $old_input['migration_ws'], $validated['migration_ws'] );
-		$this->assertEquals( $old_input['migration_token'], $validated['migration_token'] );
-		$this->assertNull( $validated['migration_token_id'] );
-	}
-
-	/**
-	 * Test that turning migration endpoints off will clear out the token and set an admin notice.
-	 */
-	public function testThatChangingMigrationToOffClearsTokensSetsError() {
-		$input     = [
-			'migration_ws'    => 0,
-			'migration_token' => 'new_token',
+			'migration_ws'       => 0,
+			'migration_token'    => 'new_token',
+			'migration_token_id' => 'new_token_id',
 		];
 		$old_input = [ 'migration_ws' => 1 ];
-
 		$validated = self::$admin->migration_ws_validation( $old_input, $input );
-
-		$this->assertNull( $validated['migration_token'] );
-		$this->assertNull( $validated['migration_token_id'] );
-		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
-
-		$errors = get_settings_errors();
-		$this->assertEquals( 'wp_auth0_settings', $errors[0]['setting'] );
-		$this->assertEquals( 'wp_auth0_settings', $errors[0]['code'] );
-		$this->assertEquals( 'updated', $errors[0]['type'] );
-		$this->assertContains( 'User migration endpoints deactivated', $errors[0]['message'] );
-		$this->assertContains( 'Custom database connections can be deactivated in the', $errors[0]['message'] );
-		$this->assertContains( 'https://manage.auth0.com/#/connections/database', $errors[0]['message'] );
+		$this->assertEquals( $input, $validated );
 	}
 
 	/**
 	 * Test that turning on migration keeps the existing token and sets an admin notification.
 	 */
-	public function testThatChangingMigrationToOnKeepsTokenSetsError() {
+	public function testThatChangingMigrationToOnKeepsToken() {
 		$input     = [
 			'migration_ws'    => 1,
 			'migration_token' => 'new_token',
+			'client_secret'   => '__test_client_secret__',
 		];
 		$old_input = [ 'migration_ws' => 0 ];
 
@@ -129,15 +100,43 @@ class TestOptionMigrationWs extends TestCase {
 		$this->assertEquals( $input['migration_token'], $validated['migration_token'] );
 		$this->assertNull( $validated['migration_token_id'] );
 		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
+	}
 
-		$errors = get_settings_errors();
-		$this->assertEquals( 'wp_auth0_settings', $errors[0]['setting'] );
-		$this->assertEquals( 'wp_auth0_settings', $errors[0]['code'] );
-		$this->assertEquals( 'updated', $errors[0]['type'] );
-		$this->assertContains( 'User migration endpoints activated', $errors[0]['message'] );
-		$this->assertContains( 'The custom database scripts needs to be configured manually', $errors[0]['message'] );
-		$this->assertContains( 'https://auth0.com/docs/users/migrations/automatic', $errors[0]['message'] );
-		$this->assertContains( 'Please see Advanced > Users Migration below for the token to use', $errors[0]['message'] );
+	/**
+	 * Test that turning on migration keeps the existing token and sets an admin notification.
+	 */
+	public function testThatChangingMigrationToOnKeepsWithJwtSetsId() {
+		$client_secret = '__test_client_secret__';
+		$input         = [
+			'migration_ws'    => 1,
+			'migration_token' => JWT::encode( [ 'jti' => '__test_token_id__' ], $client_secret ),
+			'client_secret'   => $client_secret,
+		];
+		$old_input     = [ 'migration_ws' => 0 ];
+
+		$validated = self::$admin->migration_ws_validation( $old_input, $input );
+
+		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
+		$this->assertEquals( $input['migration_token'], $validated['migration_token'] );
+		$this->assertEquals( '__test_token_id__', $validated['migration_token_id'] );
+	}
+
+	/**
+	 * Test that turning on migration keeps the existing token and sets an admin notification.
+	 */
+	public function testThatChangingMigrationToOnKeepsWithBase64JwtSetsId() {
+		$client_secret = '__test_client_secret__';
+		$input         = [
+			'migration_ws'              => 1,
+			'migration_token'           => JWT::encode( [ 'jti' => '__test_token_id__' ], $client_secret ),
+			'client_secret'             => JWT::urlsafeB64Encode( $client_secret ),
+			'client_secret_b64_encoded' => 1,
+		];
+		$old_input     = [ 'migration_ws' => 0 ];
+
+		$validated = self::$admin->migration_ws_validation( $old_input, $input );
+
+		$this->assertEquals( '__test_token_id__', $validated['migration_token_id'] );
 	}
 
 	/**
@@ -164,6 +163,7 @@ class TestOptionMigrationWs extends TestCase {
 		$input     = [
 			'migration_ws'    => 1,
 			'migration_token' => AUTH0_ENV_MIGRATION_TOKEN,
+			'client_secret'   => '__test_client_secret__',
 		];
 		$old_input = [ 'migration_ws' => 0 ];
 

@@ -89,7 +89,12 @@ class WP_Auth0_Admin_Generic {
 	 * @param string $type - Notice type, "error" by default or "updated".
 	 */
 	protected function add_validation_error( $error, $type = 'error' ) {
-		add_settings_error( $this->_option_name, $this->_option_name, $error, $type );
+		add_settings_error(
+			$this->_option_name,
+			$this->_option_name,
+			$error,
+			$type
+		);
 	}
 
 	protected function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {
@@ -227,7 +232,7 @@ class WP_Auth0_Admin_Generic {
 	 * @param string $text - description text to display
 	 */
 	protected function render_field_description( $text ) {
-		$period = ! in_array( $text[ strlen( $text ) - 1 ], array( '.', ':', '>' ) ) ? '.' : '';
+		$period = ! in_array( $text[ strlen( $text ) - 1 ], array( '.', ':' ) ) ? '.' : '';
 		printf( '<div class="subelement"><span class="description">%s%s</span></div>', $text, $period );
 	}
 

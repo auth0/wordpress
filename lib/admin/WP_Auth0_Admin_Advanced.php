@@ -93,7 +93,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_auto_provisioning',
 			),
 			array(
-				'name'     => __( 'User Migration', 'wp-auth0' ),
+				'name'     => __( 'User Migration Endpoints', 'wp-auth0' ),
 				'opt'      => 'migration_ws',
 				'id'       => 'wpa0_migration_ws',
 				'function' => 'render_migration_ws',
@@ -375,9 +375,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
 		if ( $value ) {
 			$this->render_field_description(
-				__( 'Users migration is enabled. ', 'wp-auth0' ) .
-				__( 'If you disable this setting, it must be re-enabled manually in the ', 'wp-auth0' ) .
-				$this->get_dashboard_link()
+				__( 'User migration endpoints activated. ', 'wp-auth0' ) .
+				__( 'See below for the token to use. ', 'wp-auth0' ) .
+				__( 'The custom database scripts need to be configured manually as described ', 'wp-auth0' ) .
+				$this->get_docs_link( 'users/migrations/automatic' )
 			);
 			$this->render_field_description( 'Security token:' );
 			if ( $this->options->has_constant_val( 'migration_token' ) ) {
@@ -389,9 +390,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			);
 		} else {
 			$this->render_field_description(
-				__( 'Users migration is disabled. ', 'wp-auth0' ) .
-				__( 'Enabling this exposes migration webservices but the Connection must be updated manually. ', 'wp-auth0' ) .
-				$this->get_docs_link( 'users/migrations/automatic', __( 'More information here', 'wp-auth0' ) )
+				__( 'User migration endpoints deactivated. ', 'wp-auth0' ) .
+				__( 'Custom database connections can be deactivated in the ', 'wp-auth0' ) .
+				$this->get_dashboard_link( 'connections/database' )
 			);
 		}
 	}
@@ -715,41 +716,34 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @return array
 	 */
 	public function migration_ws_validation( array $old_options, array $input ) {
-		$input['migration_ws'] = isset( $input['migration_ws'] ) ? $input['migration_ws'] : 0;
+		$input['migration_ws'] = (int) ! empty( $input['migration_ws'] );
 
-		// No longer using the token ID for validation.
-		$input['migration_token_id'] = null;
-
-		// No change to migration endpoints, keep old token data.
-		if ( $old_options['migration_ws'] === $input['migration_ws'] ) {
-			$input['migration_token'] = $old_options['migration_token'];
-			return $input;
-		}
-
-		// Migration endpoints turned off; warn admin of implications.
+		// Migration endpoints or turned off, nothing to do.
 		if ( empty( $input['migration_ws'] ) ) {
-			$input['migration_token'] = null;
-
-			$error  = __( 'User migration endpoints deactivated. ', 'wp-auth0' );
-			$error .= __( 'Custom database connections can be deactivated in the ', 'wp-auth0' );
-			$error .= $this->get_dashboard_link( 'connections/database' );
-			$this->add_validation_error( $error, 'updated' );
 			return $input;
 		}
+
+		$input['migration_token_id'] = null;
+		$this->router->setup_rewrites();
+		flush_rewrite_rules();
 
 		// If we don't have a token yet, generate one.
 		if ( empty( $input['migration_token'] ) ) {
-			$input['migration_token'] = base64_encode( openssl_random_pseudo_bytes( 64 ) );
+			$input['migration_token'] = JWT::urlsafeB64Encode( openssl_random_pseudo_bytes( 64 ) );
+			return $input;
 		}
 
-		$error  = __( 'User migration endpoints activated. ', 'wp-auth0' );
-		$error .= __( 'The custom database scripts needs to be configured manually as described ', 'wp-auth0' );
-		$error .= $this->get_docs_link( 'users/migrations/automatic' ) . '. ';
-		$error .= __( 'Please see Advanced > Users Migration below for the token to use.', 'wp-auth0' );
-		$this->add_validation_error( $error, 'updated' );
-
-		$this->router->setup_rewrites();
-		flush_rewrite_rules();
+		// If we do have a token, try to decode and store the JTI.
+		$secret = $input['client_secret'];
+		if ( ! empty( $input['client_secret_b64_encoded'] ) ) {
+			$secret = base64_decode( $input['client_secret'] );
+		}
+		try {
+			$token_decoded               = JWT::decode( $input['migration_token'], $secret, array( 'HS256' ) );
+			$input['migration_token_id'] = isset( $token_decoded->jti ) ? $token_decoded->jti : null;
+		} catch ( Exception $e ) {
+			// If the JWT cannot be decoded then we use the token as-is without storing the JTI.
+		}
 
 		return $input;
 	}

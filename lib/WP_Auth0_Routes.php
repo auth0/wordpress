@@ -170,15 +170,15 @@ EOT;
 			}
 		}
 
-		$authorization   = trim( str_replace( 'Bearer ', '', $this->getAuthorizationHeader() ) );
-		$migration_token = $this->a0_options->get( 'migration_token' );
+		$authorization = $this->getAuthorizationHeader();
+		$authorization = trim( str_replace( 'Bearer ', '', $authorization ) );
 
 		try {
 			if ( empty( $authorization ) ) {
 				throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ), 401 );
 			}
 
-			if ( $authorization !== $migration_token ) {
+			if ( ! $this->valid_token( $authorization ) ) {
 				throw new Exception( __( 'Invalid token', 'wp-auth0' ), 401 );
 			}
 
@@ -230,17 +230,16 @@ EOT;
 			}
 		}
 
-		$authorization   = trim( str_replace( 'Bearer ', '', $this->getAuthorizationHeader() ) );
-		$migration_token = $this->a0_options->get( 'migration_token' );
-
-		$user = null;
+		$authorization = $this->getAuthorizationHeader();
+		$authorization = trim( str_replace( 'Bearer ', '', $authorization ) );
+		$user          = null;
 
 		try {
 			if ( empty( $authorization ) ) {
 				throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ), 401 );
 			}
 
-			if ( $authorization !== $migration_token ) {
+			if ( ! $this->valid_token( $authorization ) ) {
 				throw new Exception( __( 'Invalid token', 'wp-auth0' ), 401 );
 			}
 
@@ -307,6 +306,32 @@ EOT;
 					'status' => 403,
 					'error'  => __( 'Forbidden', 'wp-auth0' ),
 				);
+				break;
+		}
+	}
+
+	/**
+	 * Check if a token or token JTI is the same as what is stored.
+	 *
+	 * @param string $authorization - Incoming migration token;
+	 *
+	 * @return bool
+	 */
+	private function valid_token( $authorization ) {
+		$token = $this->a0_options->get( 'migration_token' );
+		if ( $token === $authorization ) {
+			return true;
+		}
+		$client_secret = $this->a0_options->get( 'client_secret' );
+		if ( $this->a0_options->get( 'client_secret_base64_encoded' ) ) {
+			$client_secret = JWT::urlsafeB64Decode( $client_secret );
+		}
+
+		try {
+			$decoded = JWT::decode( $token, $client_secret, array( 'HS256' ) );
+			return isset( $decoded->jti ) && $decoded->jti === $this->a0_options->get( 'migration_token_id' );
+		} catch ( Exception $e ) {
+			return false;
 		}
 	}
 }
