@@ -159,6 +159,28 @@ class TestRoutesLogin extends TestCase {
 	}
 
 	/**
+	 * If the token has the wrong JTI, the route should fail with an error.
+	 */
+	public function testThatLoginRouteIsUnauthorizedIfMissingJti() {
+		$client_secret = '__test_client_secret__';
+		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'client_secret', $client_secret );
+		self::$opts->set( 'migration_token_id', '__test_token_id__' );
+
+		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
+		$_POST['access_token']             = JWT::encode( [ 'iss' => uniqid() ], $client_secret );
+
+		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+
+		$this->assertEquals( 401, $output->status );
+		$this->assertEquals( 'Invalid token', $output->error );
+
+		$log = self::$error_log->get();
+		$this->assertCount( 1, $log );
+		$this->assertEquals( $output->error, $log[0]['message'] );
+	}
+
+	/**
 	 * If there is no username POSTed, the route should fail with an error.
 	 */
 	public function testThatLoginRouteIsBadRequestIfNoUsername() {
