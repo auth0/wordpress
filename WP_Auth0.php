@@ -29,6 +29,15 @@ define( 'WPA0_JWKS_CACHE_TRANSIENT_NAME', 'WP_Auth0_JWKS_cache' );
 
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 
+/*
+ * Localization
+ */
+
+function wp_auth0_load_plugin_textdomain() {
+	load_plugin_textdomain( 'wp-auth0', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'plugins_loaded', 'wp_auth0_load_plugin_textdomain' );
+
 /**
  * Main plugin class
  */
@@ -624,15 +633,6 @@ if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
 		return $name;
 	}
 }
-
-/*
- * Localization
- */
-
-function wp_auth0_load_plugin_textdomain() {
-	load_plugin_textdomain( 'wp-auth0', false, basename( dirname( __FILE__ ) ) . '/languages/' );
-}
-add_action( 'plugins_loaded', 'wp_auth0_load_plugin_textdomain' );
 
 /*
  * Beta plugin deactivation
