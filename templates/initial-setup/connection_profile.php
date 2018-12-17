@@ -10,7 +10,7 @@
 		<p><?php _e( 'Once configured, this plugin replaces the standard WordPress login screen (see the "WordPress Login Enabled" setting under the Basic tab to keep the WordPress login form enabled). Auth0 adds many features to make login easier and better for your users but the old system will still be there too.', 'wp-auth0' ); ?></p><br>
 		<p>
 		<?php
-		  _e( 'For more information on installation and configuration, including manual steps, please see the' );
+		  _e( 'For more information on installation and configuration, including manual steps, please see the', 'wp-auth0' );
 		printf(
 			' <strong><a href="https://auth0.com/docs/cms/wordpress" target="_blank">%s</a></strong>',
 			__( 'documentation pages here' )
@@ -19,6 +19,37 @@
 		  .</p>
 		</div>
 	</div>
+		<?php if ( WP_Auth0::ready() ) : ?>
+	  <div class="row">
+		  <div class="a0-step-text a0-message a0-warning">
+			  <p>
+				  <?php _e( 'Login by Auth0 is set up and ready for use.', 'wp-auth0' ); ?>
+				  <?php _e( 'To start over and re-run the Setup Wizard:', 'wp-auth0' ); ?>
+			  </p>
+			  <ol>
+				<li>
+					<a href="<?php echo admin_url( 'admin.php?page=wpa0#basic' ); ?>">
+						<?php _e( 'Go to Auth0 > Settings > Basic.', 'wp-auth0' ); ?>
+					</a>
+				</li>
+				<li><?php _e( 'Delete the Domain and Client ID and save changes.', 'wp-auth0' ); ?></li>
+				<li><?php _e( 'Delete the created Application ', 'wp-auth0' ); ?>
+					<a target="_blank"
+					   href="https://manage.auth0.com/#/applications/<?php echo WP_Auth0_Options::Instance()->get( 'client_id' ); ?>/settings" >
+						<?php _e( 'here', 'wp-auth0' ); ?>
+					</a>
+				</li>
+				<li>
+					<?php _e( 'Delete the created Database Connection ', 'wp-auth0' ); ?>
+					<a href="https://manage.auth0.com/#/connections/database" target="_blank">
+						<?php _e( 'here', 'wp-auth0' ); ?>
+					</a>.
+					<?php _e( 'Please note that this will delete all Auth0 users for this connection.', 'wp-auth0' ); ?>
+				</li>
+			  </ol>
+		  </div>
+	  </div>
+		<?php else : ?>
 	<div class="row">
 	  <div class="a0-step-text a0-message a0-warning">
 
@@ -137,7 +168,8 @@
 				  <small>
 					Scopes required:
 					<?php
-					$a = 0;
+					$a      = 0;
+					$scopes = WP_Auth0_Api_Client::GetConsentScopestoShow();
 					foreach ( $scopes as $resource => $actions ) {
 						$a++;
 						?>
@@ -162,6 +194,6 @@
 
 	  </form>
 	</div>
-
+		<?php endif; ?>
   </div>
 </div>

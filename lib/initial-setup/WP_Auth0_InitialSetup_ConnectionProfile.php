@@ -11,7 +11,6 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
 	}
 
 	public function render( $step ) {
-		$scopes = WP_Auth0_Api_Client::GetConsentScopestoShow();
 		include WPA0_PLUGIN_DIR . 'templates/initial-setup/connection_profile.php';
 	}
 
