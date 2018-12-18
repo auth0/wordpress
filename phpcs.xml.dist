@@ -50,6 +50,7 @@
     <rule ref="WordPress-Core">
         <exclude name="WordPress.Files.FileName"/>
         <exclude name="WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar"/>
+        <exclude name="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid"/>
     </rule>
     <rule ref="WordPress.DB.DirectDatabaseQuery"/>
     <rule ref="WordPress.DB.SlowDBQuery"/>
