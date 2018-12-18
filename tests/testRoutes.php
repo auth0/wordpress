@@ -88,7 +88,7 @@ class TestRoutes extends TestCase {
 	 * If we have no query vars, the route should do nothing.
 	 */
 	public function testThatEmptyQueryVarsDoesNothing() {
-		$this->assertNull( self::$routes->custom_requests( self::$wp ) );
+		$this->assertFalse( self::$routes->custom_requests( self::$wp ) );
 	}
 
 	/**
