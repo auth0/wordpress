@@ -99,21 +99,6 @@ class TestRoutesChangePassword extends TestCase {
 	}
 
 	/**
-	 * If the incoming IP address is invalid, the route should fail with an error.
-	 */
-	public function testThatPasswordRouteIsUnauthorizedIfWrongIp() {
-		self::$opts->set( 'migration_ws', 1 );
-		self::$opts->set( 'migration_ips_filter', 1 );
-		self::$wp->set( 'a0_action', 'migration-ws-change-password' );
-
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
-
-		$this->assertEquals( 401, $output->status );
-		$this->assertEquals( 'Unauthorized', $output->error );
-		$this->assertEmpty( self::$error_log->get() );
-	}
-
-	/**
 	 * If there is no token, the route should fail with an error.
 	 */
 	public function testThatPasswordRouteIsUnauthorizedIfNoToken() {

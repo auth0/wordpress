@@ -125,6 +125,16 @@ class TestApiOperations extends TestCase {
 			"access_token: 'TEST_MIGRATION_TOKEN'",
 			$caught_http['body']['options']['customScripts']['get_user']
 		);
+
+		$this->assertContains(
+			'http://example.org/index.php?a0_action=migration-ws-change-password',
+			$caught_http['body']['options']['customScripts']['change_password']
+		);
+
+		$this->assertContains(
+			"access_token: 'TEST_MIGRATION_TOKEN'",
+			$caught_http['body']['options']['customScripts']['change_password']
+		);
 	}
 
 	/**
