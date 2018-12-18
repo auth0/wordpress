@@ -11,6 +11,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestRoutesGetUser.
+ *
+ * @group routes
  */
 class TestRoutesGetUser extends TestCase {
 
@@ -21,11 +23,6 @@ class TestRoutesGetUser extends TestCase {
 	}
 
 	use UsersHelper;
-
-	/**
-	 * Default query_vars state.
-	 */
-	const WP_OBJECT_DEFAULT = [ 'query_vars' => [ 'custom_requests_return' => true ] ];
 
 	/**
 	 * Instance of WP_Auth0_Options.
@@ -64,7 +61,6 @@ class TestRoutesGetUser extends TestCase {
 		self::$routes = new WP_Auth0_Routes( self::$opts );
 
 		self::$error_log = new WP_Auth0_ErrorLog();
-		self::$wp        = (object) self::WP_OBJECT_DEFAULT;
 	}
 
 	/**
@@ -78,7 +74,8 @@ class TestRoutesGetUser extends TestCase {
 		parent::setUp();
 		$this->setUpDb();
 		self::$opts->reset();
-		self::$wp = (object) self::WP_OBJECT_DEFAULT;
+		self::$wp = new WP_Query();
+		self::$wp->set( 'custom_requests_return', true );
 	}
 
 	/**

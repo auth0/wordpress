@@ -21,8 +21,9 @@ class WP_Auth0_Api_Operations {
 			}
 		}
 
-		$connection->options->customScripts->login    = WP_Auth0_CustomDBLib::get_script( 'login', $migration_token );
-		$connection->options->customScripts->get_user = WP_Auth0_CustomDBLib::get_script( 'get-user', $migration_token );
+		$connection->options->customScripts->login           = WP_Auth0_CustomDBLib::get_script( 'login', $migration_token );
+		$connection->options->customScripts->get_user        = WP_Auth0_CustomDBLib::get_script( 'get-user', $migration_token );
+		$connection->options->customScripts->change_password = WP_Auth0_CustomDBLib::get_script( 'change-password', $migration_token );
 
 		WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection_id, $connection );
 
@@ -71,8 +72,9 @@ class WP_Auth0_Api_Operations {
 					),
 				),
 				'customScripts'                => array(
-					'login'    => WP_Auth0_CustomDBLib::get_script( 'login', $migration_token ),
-					'get_user' => WP_Auth0_CustomDBLib::get_script( 'get-user', $migration_token ),
+					'login'           => WP_Auth0_CustomDBLib::get_script( 'login', $migration_token ),
+					'get_user'        => WP_Auth0_CustomDBLib::get_script( 'get-user', $migration_token ),
+					'change_password' => WP_Auth0_CustomDBLib::get_script( 'change-password', $migration_token ),
 				),
 			);
 
