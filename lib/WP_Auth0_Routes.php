@@ -55,7 +55,7 @@ class WP_Auth0_Routes {
 	 *
 	 * @param WP $wp - WP object for current request.
 	 *
-	 * @return bool|false|string
+	 * @return bool|string
 	 */
 	public function custom_requests( $wp ) {
 		$page = null;
@@ -72,31 +72,33 @@ class WP_Auth0_Routes {
 			$page = $wp->query_vars['pagename'];
 		}
 
-		if ( ! empty( $page ) ) {
-			switch ( $page ) {
-				case 'oauth2-config':
-					$output = wp_json_encode( $this->oauth2_config() );
-					break;
-				case 'migration-ws-login':
-					$output = wp_json_encode( $this->migration_ws_login() );
-					break;
-				case 'migration-ws-get-user':
-					$output = wp_json_encode( $this->migration_ws_get_user() );
-					break;
-				case 'coo-fallback':
-					$output = $this->coo_fallback();
-					break;
-				default:
-					return false;
-			}
-
-			if ( $wp->query_vars['custom_requests_return'] ) {
-				return $output;
-			}
-
-			echo $output;
-			exit;
+		if ( empty( $page ) ) {
+			return false;
 		}
+
+		switch ( $page ) {
+			case 'oauth2-config':
+				$output = wp_json_encode( $this->oauth2_config() );
+				break;
+			case 'migration-ws-login':
+				$output = wp_json_encode( $this->migration_ws_login() );
+				break;
+			case 'migration-ws-get-user':
+				$output = wp_json_encode( $this->migration_ws_get_user() );
+				break;
+			case 'coo-fallback':
+				$output = $this->coo_fallback();
+				break;
+			default:
+				return false;
+		}
+
+		if ( $wp->query_vars['custom_requests_return'] ) {
+			return $output;
+		}
+
+		echo $output;
+		exit;
 	}
 
 	protected function coo_fallback() {
