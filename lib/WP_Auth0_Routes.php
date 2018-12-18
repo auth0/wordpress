@@ -53,7 +53,7 @@ class WP_Auth0_Routes {
 	/**
 	 * Route incoming Auth0 actions.
 	 *
-	 * @param WP_Query $wp - WP_Query object for current request.
+	 * @param WP $wp - WP object for current request.
 	 *
 	 * @return bool|false|string
 	 */
@@ -93,7 +93,7 @@ class WP_Auth0_Routes {
 					return false;
 			}
 
-			if ( $wp->get( 'custom_requests_return' ) ) {
+			if ( get_query_var( 'custom_requests_return' ) ) {
 				return $output;
 			}
 
@@ -112,7 +112,7 @@ class WP_Auth0_Routes {
 			esc_url( $this->a0_options->get( 'auth0js-cdn' ) ),
 			sanitize_text_field( $this->a0_options->get( 'client_id' ) ),
 			sanitize_text_field( $this->a0_options->get_auth_domain() ),
-			$this->a0_options->get_wp_auth0_url( $protocol )
+			esc_url( $this->a0_options->get_wp_auth0_url( $protocol ) )
 		);
 	}
 
@@ -322,7 +322,7 @@ class WP_Auth0_Routes {
 					'error'  => __( 'Unauthorized', 'wp-auth0' ),
 				);
 
-			case 403:
+			default:
 				return array(
 					'status' => 403,
 					'error'  => __( 'Forbidden', 'wp-auth0' ),

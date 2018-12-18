@@ -48,7 +48,7 @@ class TestRoutesGetUser extends TestCase {
 	/**
 	 * Mock WP instance.
 	 *
-	 * @var stdClass|WP_Query
+	 * @var WP
 	 */
 	protected static $wp;
 
@@ -74,8 +74,8 @@ class TestRoutesGetUser extends TestCase {
 		parent::setUp();
 		$this->setUpDb();
 		self::$opts->reset();
-		self::$wp = new WP_Query();
-		self::$wp->set( 'custom_requests_return', true );
+		self::$wp = new WP();
+		self::$wp->set_query_var( 'custom_requests_return', true );
 	}
 
 	/**

@@ -48,7 +48,7 @@ class TestRoutesChangePassword extends TestCase {
 	/**
 	 * Mock WP instance.
 	 *
-	 * @var stdClass|WP_Query
+	 * @var WP
 	 */
 	protected static $wp;
 
@@ -73,8 +73,8 @@ class TestRoutesChangePassword extends TestCase {
 		parent::setUp();
 		$this->setUpDb();
 		self::$opts->reset();
-		self::$wp = new WP_Query();
-		self::$wp->set( 'custom_requests_return', true );
+		self::$wp = new WP();
+		self::$wp->set_query_var( 'custom_requests_return', true );
 	}
 
 	/**
@@ -89,7 +89,7 @@ class TestRoutesChangePassword extends TestCase {
 	 * If migration services are off, the route should fail with an error.
 	 */
 	public function testThatPasswordRouteIsForbiddenByDefault() {
-		self::$wp->set( 'a0_action', 'migration-ws-change-password' );
+		self::$wp->set_query_var( 'a0_action', 'migration-ws-change-password' );
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
 
@@ -103,7 +103,7 @@ class TestRoutesChangePassword extends TestCase {
 	 */
 	public function testThatPasswordRouteIsUnauthorizedIfNoToken() {
 		self::$opts->set( 'migration_ws', 1 );
-		self::$wp->set( 'a0_action', 'migration-ws-change-password' );
+		self::$wp->set_query_var( 'a0_action', 'migration-ws-change-password' );
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
 
@@ -123,7 +123,7 @@ class TestRoutesChangePassword extends TestCase {
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'migration_token', $migration_token );
 
-		self::$wp->set( 'a0_action', 'migration-ws-change-password' );
+		self::$wp->set_query_var( 'a0_action', 'migration-ws-change-password' );
 		$_POST['access_token'] = $migration_token;
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
@@ -144,7 +144,7 @@ class TestRoutesChangePassword extends TestCase {
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'migration_token', $migration_token );
 
-		self::$wp->set( 'a0_action', 'migration-ws-change-password' );
+		self::$wp->set_query_var( 'a0_action', 'migration-ws-change-password' );
 		$_POST['access_token'] = $migration_token;
 		$_POST['username']     = uniqid();
 
@@ -166,7 +166,7 @@ class TestRoutesChangePassword extends TestCase {
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'migration_token', $migration_token );
 
-		self::$wp->set( 'a0_action', 'migration-ws-change-password' );
+		self::$wp->set_query_var( 'a0_action', 'migration-ws-change-password' );
 
 		$_POST['access_token'] = $migration_token;
 		$_POST['username']     = uniqid();
@@ -200,7 +200,7 @@ class TestRoutesChangePassword extends TestCase {
 			]
 		);
 
-		self::$wp->set( 'a0_action', 'migration-ws-change-password' );
+		self::$wp->set_query_var( 'a0_action', 'migration-ws-change-password' );
 
 		$this->assertEquals( '{}', self::$routes->custom_requests( self::$wp ) );
 		$this->assertEmpty( self::$error_log->get() );
