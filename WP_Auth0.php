@@ -54,6 +54,8 @@ class WP_Auth0 {
 	protected $a0_options;
 
 	/**
+	 * TODO: Deprecate
+	 *
 	 * @var WP_Auth0_Amplificator
 	 */
 	protected $social_amplificator;
@@ -153,9 +155,6 @@ class WP_Auth0 {
 
 		$settings_section = new WP_Auth0_Settings_Section( $this->a0_options, $initial_setup, $users_exporter, $configure_jwt_auth, $error_log, $auth0_admin, $import_settings );
 		$settings_section->init();
-
-		$this->social_amplificator = new WP_Auth0_Amplificator( $this->db_manager, $this->a0_options );
-		$this->social_amplificator->init();
 
 		$edit_profile = new WP_Auth0_EditProfile( $this->db_manager, $users_repo, $this->a0_options );
 		$edit_profile->init();
@@ -335,9 +334,6 @@ class WP_Auth0 {
 	public function wp_register_widget() {
 		register_widget( 'WP_Auth0_Embed_Widget' );
 		register_widget( 'WP_Auth0_Popup_Widget' );
-
-		WP_Auth0_SocialAmplification_Widget::set_context( $this->db_manager, $this->social_amplificator );
-		register_widget( 'WP_Auth0_SocialAmplification_Widget' );
 	}
 
 	public function wp_enqueue() {

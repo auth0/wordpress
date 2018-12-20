@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Class WP_Auth0_SocialAmplification_Widget
+ *
+ * TODO: Deprecate, functionality removed
+ *
+ * @codeCoverageIgnore
+ */
 class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
 	protected static $db_manager;
@@ -11,6 +18,11 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 		self::$social_amplificator = $social_amplificator;
 	}
 
+	/**
+	 * WP_Auth0_SocialAmplification_Widget constructor.
+	 *
+	 * TODO: Deprecate, functionality removed
+	 */
 	function __construct() {
 		parent::__construct(
 			$this->getWidgetId(),
@@ -175,6 +187,9 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
 	}
 
+	/**
+	 * TODO: Deprecate, functionality removed
+	 */
 	protected static function current_page_url() {
 
 		return home_url( $_SERVER['REQUEST_URI'] );
