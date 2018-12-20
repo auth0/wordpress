@@ -153,30 +153,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_custom_signup_fields',
 			),
 			array(
-				'name'     => __( 'Twitter Consumer Key', 'wp-auth0' ),
-				'opt'      => 'social_twitter_key',
-				'id'       => 'wpa0_social_twitter_key',
-				'function' => 'render_social_twitter_key',
-			),
-			array(
-				'name'     => __( 'Twitter Consumer Secret', 'wp-auth0' ),
-				'opt'      => 'social_twitter_secret',
-				'id'       => 'wpa0_social_twitter_secret',
-				'function' => 'render_social_twitter_secret',
-			),
-			array(
-				'name'     => __( 'Facebook App Key', 'wp-auth0' ),
-				'opt'      => 'social_facebook_key',
-				'id'       => 'wpa0_social_facebook_key',
-				'function' => 'render_social_facebook_key',
-			),
-			array(
-				'name'     => __( 'Facebook App Secret', 'wp-auth0' ),
-				'opt'      => 'social_facebook_secret',
-				'id'       => 'wpa0_social_facebook_secret',
-				'function' => 'render_social_facebook_secret',
-			),
-			array(
 				'name'     => __( 'Auth0 Server Domain', 'wp-auth0' ),
 				'opt'      => 'auth0_server_domain',
 				'id'       => 'wpa0_auth0_server_domain',
@@ -548,6 +524,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `social_twitter_key` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * TODO: Deprecate, functionality removed
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
@@ -569,6 +547,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `social_twitter_secret` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * TODO: Deprecate, functionality removed
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
@@ -588,6 +568,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	/**
 	 * Render form field and description for the `social_facebook_key` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * TODO: Deprecate, functionality removed
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
@@ -610,6 +592,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	/**
 	 * Render form field and description for the `social_facebook_secret` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * TODO: Deprecate, functionality removed
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
