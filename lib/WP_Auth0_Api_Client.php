@@ -305,7 +305,6 @@ class WP_Auth0_Api_Client {
 
 			'callbacks'           => array(
 				$options->get_wp_auth0_url(),
-				$options->get_wp_auth0_url(),
 			),
 
 			// Web origins do not take into account the path
