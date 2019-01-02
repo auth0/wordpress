@@ -64,7 +64,7 @@ class WP_Auth0_Profile_Change_Password {
 		}
 
 		$field_name   = ! empty( $_POST['pass1'] ) ? 'pass1' : 'password_1';
-		$new_password = $_POST[ $field_name ];
+		$new_password = wp_unslash( $_POST[ $field_name ] );
 
 		if ( isset( $_POST['user_id'] ) ) {
 			// Input field from user edit or profile update.
