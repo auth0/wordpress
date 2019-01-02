@@ -73,6 +73,15 @@ class TestProfileChangePassword extends TestCase {
 	}
 
 	/**
+	 * Run after each test is completed.
+	 */
+	public function tearDown() {
+		parent::tearDown();
+		self::$options->reset();
+		$this->stopHttpHalting();
+	}
+
+	/**
 	 * Test that correct hooks are loaded.
 	 */
 	public function testInitHooks() {
