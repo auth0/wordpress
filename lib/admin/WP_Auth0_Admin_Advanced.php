@@ -521,97 +521,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Render form field and description for the `social_twitter_key` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * TODO: Deprecate, functionality removed
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_social_twitter_key( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Twitter app key for the Social Amplification Widget. ', 'wp-auth0' ) .
-			__( 'The app used here needs to have "read" and "write" permissions. ', 'wp-auth0' ) .
-			$this->get_docs_link(
-				'connections/social/twitter#2-get-your-consumer-key-and-consumer-secret',
-				__( 'Instructions here', 'wp-auth0' )
-			)
-		);
-	}
-
-	/**
-	 * Render form field and description for the `social_twitter_secret` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * TODO: Deprecate, functionality removed
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_social_twitter_secret( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Secret for the app above. ', 'wp-auth0' ) .
-			$this->get_docs_link(
-				'connections/social/twitter#2-get-your-consumer-key-and-consumer-secret',
-				__( 'Instructions here', 'wp-auth0' )
-			)
-		);
-	}
-
-	/**
-	 * Render form field and description for the `social_facebook_key` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * TODO: Deprecate, functionality removed
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_social_facebook_key( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Facebook app key for the Social Amplification Widget. ', 'wp-auth0' ) .
-			__( 'The app used here needs to have "publish_actions" permission. ', 'wp-auth0' ) .
-			__( 'Used for the Social Amplification Widget. ', 'wp-auth0' ) .
-			$this->get_docs_link(
-				'connections/social/facebook#5-get-your-app-id-and-app-secret',
-				__( 'Instructions here', 'wp-auth0' )
-			)
-		);
-	}
-
-	/**
-	 * Render form field and description for the `social_facebook_secret` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * TODO: Deprecate, functionality removed
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_social_facebook_secret( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Secret for the app above. ', 'wp-auth0' ) .
-			$this->get_docs_link(
-				'connections/social/facebook#5-get-your-app-id-and-app-secret',
-				__( 'Instructions here', 'wp-auth0' )
-			)
-		);
-	}
-
-	/**
 	 * Render form field and description for the `auth0_server_domain` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
@@ -791,6 +700,97 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			$domain = array_pop( $host_pieces ) . '.' . $domain;
 		}
 		return $domain;
+	}
+
+	/*
+	 * DEPRECATED
+	 */
+
+	/**
+	 * Render form field and description for the `social_twitter_key` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.9.0, functionality removed
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function render_social_twitter_key( $args = array() ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Twitter app key for the Social Amplification Widget. ', 'wp-auth0' ) .
+			__( 'The app used here needs to have "read" and "write" permissions. ', 'wp-auth0' ) .
+			$this->get_docs_link(
+				'connections/social/twitter#2-get-your-consumer-key-and-consumer-secret',
+				__( 'Instructions here', 'wp-auth0' )
+			)
+		);
+	}
+
+	/**
+	 * Render form field and description for the `social_twitter_secret` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.9.0, functionality removed
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function render_social_twitter_secret( $args = array() ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Secret for the app above. ', 'wp-auth0' ) .
+			$this->get_docs_link(
+				'connections/social/twitter#2-get-your-consumer-key-and-consumer-secret',
+				__( 'Instructions here', 'wp-auth0' )
+			)
+		);
+	}
+
+	/**
+	 * Render form field and description for the `social_facebook_key` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.9.0, functionality removed
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function render_social_facebook_key( $args = array() ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Facebook app key for the Social Amplification Widget. ', 'wp-auth0' ) .
+			__( 'The app used here needs to have "publish_actions" permission. ', 'wp-auth0' ) .
+			__( 'Used for the Social Amplification Widget. ', 'wp-auth0' ) .
+			$this->get_docs_link(
+				'connections/social/facebook#5-get-your-app-id-and-app-secret',
+				__( 'Instructions here', 'wp-auth0' )
+			)
+		);
+	}
+
+	/**
+	 * Render form field and description for the `social_facebook_secret` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.9.0, functionality removed
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function render_social_facebook_secret( $args = array() ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Secret for the app above. ', 'wp-auth0' ) .
+			$this->get_docs_link(
+				'connections/social/facebook#5-get-your-app-id-and-app-secret',
+				__( 'Instructions here', 'wp-auth0' )
+			)
+		);
 	}
 
 	/**

@@ -3,7 +3,7 @@
 /**
  * Class WP_Auth0_Amplificator
  *
- * TODO: Deprecate, functionality removed
+ * @deprecated - 3.9.0, functionality removed
  *
  * @codeCoverageIgnore
  */
@@ -18,9 +18,7 @@ class WP_Auth0_Amplificator {
 	 * @param WP_Auth0_DBManager $db_manager
 	 * @param WP_Auth0_Options   $a0_options
 	 *
-	 * TODO: Deprecate, functionality removed
-	 *
-	 * @codeCoverageIgnore
+	 * @deprecated - 3.9.0, functionality removed
 	 */
 	public function __construct( WP_Auth0_DBManager $db_manager, WP_Auth0_Options $a0_options ) {
 		$this->db_manager = $db_manager;
