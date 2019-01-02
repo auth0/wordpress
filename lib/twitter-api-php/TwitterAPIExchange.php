@@ -5,14 +5,14 @@
  *
  * PHP version 5.3.10
  *
+ * @deprecated - 3.9.0, functionality removed
+ *
  * @category Awesomeness
  * @package  Twitter-API-PHP
  * @author   James Mallison <me@j7mbo.co.uk>
  * @license  MIT License
  * @version  1.0.4
  * @link     http://github.com/j7mbo/twitter-api-php
- *
- * TODO: Deprecate with Amplificator, not used
  */
 class TwitterAPIExchange {
 

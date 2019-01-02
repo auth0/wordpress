@@ -54,7 +54,7 @@ class WP_Auth0 {
 	protected $a0_options;
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.9.0, functionality removed
 	 *
 	 * @var WP_Auth0_Amplificator
 	 */
