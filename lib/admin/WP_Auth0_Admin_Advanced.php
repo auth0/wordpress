@@ -717,6 +717,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_social_twitter_key( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Twitter app key for the Social Amplification Widget. ', 'wp-auth0' ) .
@@ -739,6 +741,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_social_twitter_secret( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Secret for the app above. ', 'wp-auth0' ) .
@@ -760,6 +764,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_social_facebook_key( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Facebook app key for the Social Amplification Widget. ', 'wp-auth0' ) .
@@ -783,6 +789,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_social_facebook_secret( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Secret for the app above. ', 'wp-auth0' ) .
