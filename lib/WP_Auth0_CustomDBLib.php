@@ -9,32 +9,17 @@
 
 /**
  * Class WP_Auth0_CustomDBLib
+ *
+ * @codeCoverageIgnore - Deprecated.
  */
 class WP_Auth0_CustomDBLib {
-
-	/**
-	 * Get JS to use in the custom database script.
-	 *
-	 * @param string $name  - Database script name.
-	 * @param string $token - Migration token.
-	 *
-	 * @return bool|string
-	 */
-	public static function get_script( $name, $token ) {
-		$script = (string) file_get_contents( WPA0_PLUGIN_DIR . 'lib/scripts-js/db-' . $name . '.js' );
-		$script = str_replace( '{THE_WS_TOKEN}', $token, $script );
-		$script = str_replace( '{THE_WS_URL}', site_url( 'index.php?a0_action=migration-ws-' . $name ), $script );
-		return $script;
-	}
 
 	/**
 	 * Custom database login script.
 	 *
 	 * @var string
 	 *
-	 * @deprecated - 3.9.0, use self::get_script( 'login', $token ) instead.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
+	 * @deprecated - 3.9.0, moved to separate files in lib/scripts-js.
 	 */
 	public static $login_script = '
 function login (email, password, callback) {
@@ -74,9 +59,7 @@ function login (email, password, callback) {
 	 *
 	 * @var string
 	 *
-	 * @deprecated - 3.9.0, use self::get_script( 'get-user', $token ) instead.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
+	 * @deprecated - 3.9.0, moved to separate files in lib/scripts-js.
 	 */
 	public static $get_user_script = '
 function getByEmail (email, callback) {
