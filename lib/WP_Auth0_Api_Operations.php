@@ -21,8 +21,8 @@ class WP_Auth0_Api_Operations {
 			}
 		}
 
-		$connection->options->customScripts->login    = WP_Auth0_CustomDBLib::get_script( 'login', $migration_token );
-		$connection->options->customScripts->get_user = WP_Auth0_CustomDBLib::get_script( 'get-user', $migration_token );
+		$connection->options->customScripts->login    = $this->get_script( 'login', $migration_token );
+		$connection->options->customScripts->get_user = $this->get_script( 'get-user', $migration_token );
 
 		WP_Auth0_Api_Client::update_connection( $domain, $app_token, $connection_id, $connection );
 
@@ -71,8 +71,8 @@ class WP_Auth0_Api_Operations {
 					),
 				),
 				'customScripts'                => array(
-					'login'    => WP_Auth0_CustomDBLib::get_script( 'login', $migration_token ),
-					'get_user' => WP_Auth0_CustomDBLib::get_script( 'get-user', $migration_token ),
+					'login'    => $this->get_script( 'login', $migration_token ),
+					'get_user' => $this->get_script( 'get-user', $migration_token ),
 				),
 			);
 
@@ -111,6 +111,21 @@ class WP_Auth0_Api_Operations {
 			}
 			return null;
 		}
+	}
+
+	/**
+	 * Get JS to use in the custom database script.
+	 *
+	 * @param string $name  - Database script name.
+	 * @param string $token - Migration token.
+	 *
+	 * @return bool|string
+	 */
+	protected function get_script( $name, $token ) {
+		$script = (string) file_get_contents( WPA0_PLUGIN_DIR . 'lib/scripts-js/db-' . $name . '.js' );
+		$script = str_replace( '{THE_WS_TOKEN}', $token, $script );
+		$script = str_replace( '{THE_WS_URL}', site_url( 'index.php?a0_action=migration-ws-' . $name ), $script );
+		return $script;
 	}
 
 	/*
