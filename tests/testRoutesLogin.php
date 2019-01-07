@@ -75,7 +75,6 @@ class TestRoutesLogin extends TestCase {
 		$this->setUpDb();
 		self::$opts->reset();
 		self::$wp = new WP();
-		self::$wp->set_query_var( 'custom_requests_return', true );
 	}
 
 	/**
@@ -92,7 +91,7 @@ class TestRoutesLogin extends TestCase {
 	public function testThatLoginRouteIsForbiddenByDefault() {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 403, $output->status );
 		$this->assertEquals( 'Forbidden', $output->error );
@@ -108,7 +107,7 @@ class TestRoutesLogin extends TestCase {
 		self::$opts->set( 'migration_ips_filter', 1 );
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Unauthorized', $output->error );
@@ -123,7 +122,7 @@ class TestRoutesLogin extends TestCase {
 		self::$opts->set( 'migration_ws', 1 );
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Unauthorized: missing authorization header', $output->error );
@@ -145,7 +144,7 @@ class TestRoutesLogin extends TestCase {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 		$_POST['access_token']             = JWT::encode( [ 'jti' => uniqid() ], $client_secret );
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Invalid token', $output->error );
@@ -167,7 +166,7 @@ class TestRoutesLogin extends TestCase {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 		$_POST['access_token']             = JWT::encode( [ 'iss' => uniqid() ], $client_secret );
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Invalid token', $output->error );
@@ -191,7 +190,7 @@ class TestRoutesLogin extends TestCase {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 		$_POST['access_token']             = $migration_token;
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 400, $output->status );
 		$this->assertEquals( 'Username is required', $output->error );
@@ -216,7 +215,7 @@ class TestRoutesLogin extends TestCase {
 		$_POST['access_token']             = $migration_token;
 		$_POST['username']                 = uniqid();
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 400, $output->status );
 		$this->assertEquals( 'Password is required', $output->error );
@@ -243,7 +242,7 @@ class TestRoutesLogin extends TestCase {
 		$_POST['username']     = uniqid();
 		$_POST['password']     = uniqid();
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Invalid Credentials', $output->error );
@@ -275,7 +274,7 @@ class TestRoutesLogin extends TestCase {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 		$_POST['access_token']             = $migration_token;
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( $user->ID, $output->data->ID );
 		$this->assertEquals( $user->user_login, $output->data->user_login );

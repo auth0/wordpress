@@ -53,11 +53,12 @@ class WP_Auth0_Routes {
 	/**
 	 * Route incoming Auth0 actions.
 	 *
-	 * @param WP $wp - WP object for current request.
+	 * @param WP   $wp - WP object for current request.
+	 * @param bool $return - True to return the data, false to echo and exit.
 	 *
 	 * @return bool|string
 	 */
-	public function custom_requests( $wp ) {
+	public function custom_requests( $wp, $return = false ) {
 		$page = null;
 
 		if ( isset( $wp->query_vars['auth0fallback'] ) ) {
@@ -93,7 +94,7 @@ class WP_Auth0_Routes {
 				return false;
 		}
 
-		if ( $wp->query_vars['custom_requests_return'] ) {
+		if ( $return ) {
 			return $output;
 		}
 
