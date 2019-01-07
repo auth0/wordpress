@@ -75,7 +75,6 @@ class TestRoutesGetUser extends TestCase {
 		$this->setUpDb();
 		self::$opts->reset();
 		self::$wp = new WP();
-		self::$wp->set_query_var( 'custom_requests_return', true );
 	}
 
 	/**
@@ -92,7 +91,7 @@ class TestRoutesGetUser extends TestCase {
 	public function testThatGetUserRouteIsForbiddenByDefault() {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 403, $output->status );
 		$this->assertEquals( 'Forbidden', $output->error );
@@ -108,7 +107,7 @@ class TestRoutesGetUser extends TestCase {
 		self::$opts->set( 'migration_ips_filter', 1 );
 		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Unauthorized', $output->error );
@@ -123,7 +122,7 @@ class TestRoutesGetUser extends TestCase {
 		self::$opts->set( 'migration_ws', 1 );
 		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Unauthorized: missing authorization header', $output->error );
@@ -145,7 +144,7 @@ class TestRoutesGetUser extends TestCase {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 		$_POST['access_token']             = JWT::encode( [ 'jti' => uniqid() ], $client_secret );
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Invalid token', $output->error );
@@ -169,7 +168,7 @@ class TestRoutesGetUser extends TestCase {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 		$_POST['access_token']             = $migration_token;
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 400, $output->status );
 		$this->assertEquals( 'Username is required', $output->error );
@@ -195,7 +194,7 @@ class TestRoutesGetUser extends TestCase {
 		$_POST['access_token'] = $migration_token;
 		$_POST['username']     = uniqid();
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Invalid Credentials', $output->error );
@@ -227,7 +226,7 @@ class TestRoutesGetUser extends TestCase {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 		$_POST['access_token']             = $migration_token;
 
-		$output_em = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output_em = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( $user->ID, $output_em->data->ID );
 		$this->assertEquals( $user->user_login, $output_em->data->user_login );
@@ -238,7 +237,7 @@ class TestRoutesGetUser extends TestCase {
 
 		// Test username lookup.
 		$_POST['username'] = $user->user_login;
-		$output_un         = json_decode( self::$routes->custom_requests( self::$wp ) );
+		$output_un         = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( $output_em, $output_un );
 		$this->assertEmpty( self::$error_log->get() );
