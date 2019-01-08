@@ -58,6 +58,7 @@ class TestOptionMigrationWs extends TestCase {
 	public function setUp() {
 		parent::setUp();
 		self::setUpDb();
+		self::$opts->reset();
 		$router      = new WP_Auth0_Routes( self::$opts );
 		self::$admin = new WP_Auth0_Admin_Advanced( self::$opts, $router );
 	}
@@ -74,9 +75,9 @@ class TestOptionMigrationWs extends TestCase {
 	 * Test that turning migration endpoints off does not affect new input.
 	 */
 	public function testThatChangingMigrationToOffKeepsTokenData() {
+		self::$opts->set( 'migration_token', 'new_token' );
 		$input     = [
 			'migration_ws'       => 0,
-			'migration_token'    => 'new_token',
 			'migration_token_id' => 'new_token_id',
 		];
 		$old_input = [ 'migration_ws' => 1 ];
@@ -88,16 +89,16 @@ class TestOptionMigrationWs extends TestCase {
 	 * Test that turning on migration keeps the existing token and sets an admin notification.
 	 */
 	public function testThatChangingMigrationToOnKeepsToken() {
+		self::$opts->set( 'migration_token', 'new_token' );
 		$input     = [
-			'migration_ws'    => 1,
-			'migration_token' => 'new_token',
-			'client_secret'   => '__test_client_secret__',
+			'migration_ws'  => 1,
+			'client_secret' => '__test_client_secret__',
 		];
 		$old_input = [ 'migration_ws' => 0 ];
 
 		$validated = self::$admin->migration_ws_validation( $old_input, $input );
 
-		$this->assertEquals( $input['migration_token'], $validated['migration_token'] );
+		$this->assertEquals( 'new_token', $validated['migration_token'] );
 		$this->assertNull( $validated['migration_token_id'] );
 		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
 	}
@@ -106,18 +107,19 @@ class TestOptionMigrationWs extends TestCase {
 	 * Test that turning on migration keeps the existing token and sets an admin notification.
 	 */
 	public function testThatChangingMigrationToOnKeepsWithJwtSetsId() {
-		$client_secret = '__test_client_secret__';
-		$input         = [
-			'migration_ws'    => 1,
-			'migration_token' => JWT::encode( [ 'jti' => '__test_token_id__' ], $client_secret ),
-			'client_secret'   => $client_secret,
+		$client_secret   = '__test_client_secret__';
+		$migration_token = JWT::encode( [ 'jti' => '__test_token_id__' ], $client_secret );
+		self::$opts->set( 'migration_token', $migration_token );
+		$input     = [
+			'migration_ws'  => 1,
+			'client_secret' => $client_secret,
 		];
-		$old_input     = [ 'migration_ws' => 0 ];
+		$old_input = [ 'migration_ws' => 0 ];
 
 		$validated = self::$admin->migration_ws_validation( $old_input, $input );
 
 		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
-		$this->assertEquals( $input['migration_token'], $validated['migration_token'] );
+		$this->assertEquals( $migration_token, $validated['migration_token'] );
 		$this->assertEquals( '__test_token_id__', $validated['migration_token_id'] );
 	}
 
@@ -126,13 +128,13 @@ class TestOptionMigrationWs extends TestCase {
 	 */
 	public function testThatChangingMigrationToOnKeepsWithBase64JwtSetsId() {
 		$client_secret = '__test_client_secret__';
-		$input         = [
+		self::$opts->set( 'migration_token', JWT::encode( [ 'jti' => '__test_token_id__' ], $client_secret ) );
+		$input     = [
 			'migration_ws'              => 1,
-			'migration_token'           => JWT::encode( [ 'jti' => '__test_token_id__' ], $client_secret ),
 			'client_secret'             => JWT::urlsafeB64Encode( $client_secret ),
 			'client_secret_b64_encoded' => 1,
 		];
-		$old_input     = [ 'migration_ws' => 0 ];
+		$old_input = [ 'migration_ws' => 0 ];
 
 		$validated = self::$admin->migration_ws_validation( $old_input, $input );
 
@@ -160,10 +162,10 @@ class TestOptionMigrationWs extends TestCase {
 	 */
 	public function testThatMigrationTokenInConstantSettingIsValidated() {
 		define( 'AUTH0_ENV_MIGRATION_TOKEN', '__test_constant_setting__' );
+		self::$opts->set( 'migration_token', '__test_saved_setting__' );
 		$input     = [
-			'migration_ws'    => 1,
-			'migration_token' => AUTH0_ENV_MIGRATION_TOKEN,
-			'client_secret'   => '__test_client_secret__',
+			'migration_ws'  => 1,
+			'client_secret' => '__test_client_secret__',
 		];
 		$old_input = [ 'migration_ws' => 0 ];
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Contains Class TestAdvancedOptionsValidation.
+ * Contains Class TestOptionLoginRedirect.
  *
  * @package WP-Auth0
  *
@@ -10,10 +10,10 @@
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class TestAdvancedOptionsValidation.
+ * Class TestOptionLoginRedirect.
  * Tests that Advanced settings are validated properly.
  */
-class TestAdvancedOptionsValidation extends TestCase {
+class TestOptionLoginRedirect extends TestCase {
 
 	use setUpTestDb {
 		setUp as setUpDb;

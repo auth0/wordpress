@@ -574,6 +574,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			return $input;
 		}
 
+		$input['migration_token']    = $this->options->get( 'migration_token' );
 		$input['migration_token_id'] = null;
 		$this->router->setup_rewrites();
 		flush_rewrite_rules();
@@ -589,6 +590,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		if ( ! empty( $input['client_secret_b64_encoded'] ) ) {
 			$secret = base64_decode( $input['client_secret'] );
 		}
+
 		try {
 			$token_decoded               = JWT::decode( $input['migration_token'], $secret, array( 'HS256' ) );
 			$input['migration_token_id'] = isset( $token_decoded->jti ) ? $token_decoded->jti : null;
