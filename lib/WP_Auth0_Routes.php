@@ -77,6 +77,7 @@ class WP_Auth0_Routes {
 			return false;
 		}
 
+		$json_header = true;
 		switch ( $page ) {
 			case 'oauth2-config':
 				$output = wp_json_encode( $this->oauth2_config() );
@@ -88,7 +89,8 @@ class WP_Auth0_Routes {
 				$output = wp_json_encode( $this->migration_ws_get_user() );
 				break;
 			case 'coo-fallback':
-				$output = $this->coo_fallback();
+				$json_header = false;
+				$output      = $this->coo_fallback();
 				break;
 			default:
 				return false;
@@ -98,8 +100,25 @@ class WP_Auth0_Routes {
 			return $output;
 		}
 
+		if ( $json_header ) {
+			add_filter( 'wp_headers', array( $this, 'add_json_header' ) );
+			$wp->send_headers();
+		}
+
 		echo $output;
 		exit;
+	}
+
+	/**
+	 * Use with the wp_headers filter to add a Content-Type header for JSON output.
+	 *
+	 * @param array $headers - Existing headers to modify.
+	 *
+	 * @return mixed
+	 */
+	public function add_json_header( array $headers ) {
+		$headers['Content-Type'] = 'application/json; charset=' . get_bloginfo( 'charset' );
+		return $headers;
 	}
 
 	protected function coo_fallback() {
