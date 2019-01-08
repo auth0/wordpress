@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Login by Auth0\n"
-"POT-Creation-Date: 2019-01-07 13:52-0800\n"
-"PO-Revision-Date: 2019-01-07 14:06-0800\n"
+"POT-Creation-Date: 2019-01-08 08:25-0800\n"
+"PO-Revision-Date: 2019-01-08 08:27-0800\n"
 "Last-Translator: Josh Cunningham <josh.cunningham@auth0.com>\n"
 "Language-Team: Carlos Longarela https://tabernawp.com/\n"
 "Language: es_ES\n"
@@ -731,7 +731,7 @@ msgstr "Aprovisionamiento automático"
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:96
 msgid "User Migration Endpoints"
-msgstr ""
+msgstr "Rutas de Migración de Usuarios"
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:102
 msgid "Migration IPs Whitelist"
@@ -930,7 +930,7 @@ msgstr ""
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:354
 msgid "User migration endpoints activated. "
-msgstr ""
+msgstr "Rutas de migración de usuarios activadas. "
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:355
 msgid "See below for the token to use. "
@@ -940,14 +940,18 @@ msgstr "Ver debajo el token a utilizar. "
 msgid ""
 "The custom database scripts need to be configured manually as described "
 msgstr ""
+"Los scripts de la base de datos personalizada deben ser configurados "
+"manualmente como explica "
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:369
 msgid "User migration endpoints deactivated. "
-msgstr ""
+msgstr "Rutas de migración de usuarios desactivadas. "
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:370
 msgid "Custom database connections can be deactivated in the "
 msgstr ""
+"Las conexiones de base de datos personalizadas pueden desactivarse en el "
+"siguiente "
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:402
 msgid ""
@@ -2158,7 +2162,7 @@ msgstr "páginas de documentación aquí"
 
 #: templates/initial-setup/connection_profile.php:26
 msgid "Login by Auth0 is set up and ready for use."
-msgstr ""
+msgstr "Login by Auth0 está configurado y listo para usar."
 
 #: templates/initial-setup/connection_profile.php:27
 msgid "To start over and re-run the Setup Wizard:"
