@@ -205,12 +205,14 @@ class WP_Auth0_Ip_Check {
 		return $ip >= $from && $ip <= $to;
 	}
 
-	// phpcs:disable
+	/*
+	 * DEPRECATED
+	 */
 
 	/**
-	 * TODO: Deprecate, not used. Also remove related setting.
+	 * @deprecated - 3.9.0, unused
 	 *
-	 * @codeCoverageIgnore
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function init() {
 		if ( ! WP_Auth0_Options::Instance()->get( 'ip_range_check' ) || is_admin() ) {
@@ -221,9 +223,9 @@ class WP_Auth0_Ip_Check {
 	}
 
 	/**
-	 * TODO: Deprecate, not used.
+	 * @deprecated - 3.9.0, unused
 	 *
-	 * @codeCoverageIgnore
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function check_activate( $val, $key ) {
 		if ( 'active' !== $key ) {
@@ -234,9 +236,9 @@ class WP_Auth0_Ip_Check {
 	}
 
 	/**
-	 * TODO: Deprecate, not used.
+	 * @deprecated - 3.9.0, unused
 	 *
-	 * @codeCoverageIgnore
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	private function validate_ip() {
 		$ranges = $this->get_ranges();
@@ -253,9 +255,9 @@ class WP_Auth0_Ip_Check {
 	}
 
 	/**
-	 * TODO: Deprecate, not used. Also remove related setting.
+	 * @deprecated - 3.9.0, unused
 	 *
-	 * @codeCoverageIgnore
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	private function get_ranges() {
 		$data = WP_Auth0_Options::Instance()->get( 'ip_ranges' );
@@ -282,6 +284,4 @@ class WP_Auth0_Ip_Check {
 
 		return $ranges;
 	}
-
-	// phpcs:enable
 }
