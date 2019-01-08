@@ -426,44 +426,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Render form field and description for the `ip_range_check` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * TODO: Deprecate, not used
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	public function render_ip_range_check( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_ip_ranges' );
-	}
-
-	/**
-	 * Render form field and description for the `ip_ranges` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * TODO: Deprecate, not used
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	public function render_ip_ranges( $args = array() ) {
-		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Only one range per line! Range format should be as follows (spaces ignored): ', 'wp-auth0' ) .
-			__( '<br><code>xx.xx.xx.xx - yy.yy.yy.yy</code>', 'wp-auth0' )
-		);
-	}
-
-	/**
 	 * Render form field and description for the `valid_proxy_ip` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
@@ -701,6 +663,44 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	/*
 	 * DEPRECATED
 	 */
+
+	/**
+	 * Render form field and description for the `ip_range_check` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.9.0, unused
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function render_ip_range_check( $args = array() ) {
+		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_ip_ranges' );
+	}
+
+	/**
+	 * Render form field and description for the `ip_ranges` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.9.0, unused
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function render_ip_ranges( $args = array() ) {
+		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Only one range per line! Range format should be as follows (spaces ignored): ', 'wp-auth0' ) .
+			__( '<br><code>xx.xx.xx.xx - yy.yy.yy.yy</code>', 'wp-auth0' )
+		);
+	}
 
 	/**
 	 * Render form field and description for the `social_twitter_key` option.
