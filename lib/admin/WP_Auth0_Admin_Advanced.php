@@ -123,18 +123,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_auth0_implicit_workflow',
 			),
 			array(
-				'name'     => __( 'Enable IP Ranges', 'wp-auth0' ),
-				'opt'      => 'ip_range_check',
-				'id'       => 'wpa0_ip_range_check',
-				'function' => 'render_ip_range_check',
-			),
-			array(
-				'name'     => __( 'IP Ranges', 'wp-auth0' ),
-				'opt'      => 'ip_ranges',
-				'id'       => 'wpa0_ip_ranges',
-				'function' => 'render_ip_ranges',
-			),
-			array(
 				'name'     => __( 'Valid Proxy IP', 'wp-auth0' ),
 				'opt'      => 'valid_proxy_ip',
 				'id'       => 'wpa0_valid_proxy_ip',
@@ -441,10 +429,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `ip_range_check` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * TODO: Deprecate, not used
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_ip_range_check( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_ip_ranges' );
@@ -454,10 +446,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `ip_ranges` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * TODO: Deprecate, not used
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_ip_ranges( $args = array() ) {
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );

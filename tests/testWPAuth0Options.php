@@ -28,7 +28,7 @@ class TestWPAuth0Options extends TestCase {
 	/**
 	 * Total number of options.
 	 */
-	const DEFAULT_OPTIONS_COUNT = 68;
+	const DEFAULT_OPTIONS_COUNT = 66;
 
 	/**
 	 * Test the basic options functionality.
