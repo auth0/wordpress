@@ -75,14 +75,16 @@ class TestOptionMigrationWs extends TestCase {
 	 * Test that turning migration endpoints off does not affect new input.
 	 */
 	public function testThatChangingMigrationToOffKeepsTokenData() {
-		self::$opts->set( 'migration_token', 'new_token' );
+		self::$opts->set( 'migration_token', 'existing_token' );
 		$input     = [
 			'migration_ws'       => 0,
-			'migration_token_id' => 'new_token_id',
+			'migration_token_id' => 'existing_token_id',
 		];
-		$old_input = [ 'migration_ws' => 1 ];
-		$validated = self::$admin->migration_ws_validation( $old_input, $input );
-		$this->assertEquals( $input, $validated );
+		$validated = self::$admin->migration_ws_validation( [], $input );
+
+		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
+		$this->assertEquals( $input['migration_token_id'], $validated['migration_token_id'] );
+		$this->assertEquals( 'existing_token', $validated['migration_token'] );
 	}
 
 	/**
@@ -94,9 +96,8 @@ class TestOptionMigrationWs extends TestCase {
 			'migration_ws'  => 1,
 			'client_secret' => '__test_client_secret__',
 		];
-		$old_input = [ 'migration_ws' => 0 ];
 
-		$validated = self::$admin->migration_ws_validation( $old_input, $input );
+		$validated = self::$admin->migration_ws_validation( [], $input );
 
 		$this->assertEquals( 'new_token', $validated['migration_token'] );
 		$this->assertNull( $validated['migration_token_id'] );
@@ -114,9 +115,8 @@ class TestOptionMigrationWs extends TestCase {
 			'migration_ws'  => 1,
 			'client_secret' => $client_secret,
 		];
-		$old_input = [ 'migration_ws' => 0 ];
 
-		$validated = self::$admin->migration_ws_validation( $old_input, $input );
+		$validated = self::$admin->migration_ws_validation( [], $input );
 
 		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
 		$this->assertEquals( $migration_token, $validated['migration_token'] );
@@ -134,9 +134,8 @@ class TestOptionMigrationWs extends TestCase {
 			'client_secret'             => JWT::urlsafeB64Encode( $client_secret ),
 			'client_secret_b64_encoded' => 1,
 		];
-		$old_input = [ 'migration_ws' => 0 ];
 
-		$validated = self::$admin->migration_ws_validation( $old_input, $input );
+		$validated = self::$admin->migration_ws_validation( [], $input );
 
 		$this->assertEquals( '__test_token_id__', $validated['migration_token_id'] );
 	}
@@ -146,9 +145,8 @@ class TestOptionMigrationWs extends TestCase {
 	 */
 	public function testThatChangingMigrationToOnGeneratesNewToken() {
 		$input     = [ 'migration_ws' => 1 ];
-		$old_input = [ 'migration_ws' => 0 ];
 
-		$validated = self::$admin->migration_ws_validation( $old_input, $input );
+		$validated = self::$admin->migration_ws_validation( [], $input );
 
 		$this->assertGreaterThan( 64, strlen( $validated['migration_token'] ) );
 		$this->assertNull( $validated['migration_token_id'] );
@@ -167,13 +165,12 @@ class TestOptionMigrationWs extends TestCase {
 			'migration_ws'  => 1,
 			'client_secret' => '__test_client_secret__',
 		];
-		$old_input = [ 'migration_ws' => 0 ];
 
 		$opts   = new WP_Auth0_Options();
 		$router = new WP_Auth0_Routes( $opts );
 		$admin  = new WP_Auth0_Admin_Advanced( $opts, $router );
 
-		$validated = $admin->migration_ws_validation( $old_input, $input );
+		$validated = $admin->migration_ws_validation( [], $input );
 
 		$this->assertNull( $validated['migration_token_id'] );
 		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
