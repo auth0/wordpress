@@ -92,7 +92,7 @@ class TestOptionMigrationWs extends TestCase {
 	 */
 	public function testThatChangingMigrationToOnKeepsToken() {
 		self::$opts->set( 'migration_token', 'new_token' );
-		$input     = [
+		$input = [
 			'migration_ws'  => 1,
 			'client_secret' => '__test_client_secret__',
 		];
@@ -111,7 +111,7 @@ class TestOptionMigrationWs extends TestCase {
 		$client_secret   = '__test_client_secret__';
 		$migration_token = JWT::encode( [ 'jti' => '__test_token_id__' ], $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
-		$input     = [
+		$input = [
 			'migration_ws'  => 1,
 			'client_secret' => $client_secret,
 		];
@@ -129,7 +129,7 @@ class TestOptionMigrationWs extends TestCase {
 	public function testThatChangingMigrationToOnKeepsWithBase64JwtSetsId() {
 		$client_secret = '__test_client_secret__';
 		self::$opts->set( 'migration_token', JWT::encode( [ 'jti' => '__test_token_id__' ], $client_secret ) );
-		$input     = [
+		$input = [
 			'migration_ws'              => 1,
 			'client_secret'             => JWT::urlsafeB64Encode( $client_secret ),
 			'client_secret_b64_encoded' => 1,
@@ -144,7 +144,7 @@ class TestOptionMigrationWs extends TestCase {
 	 * Test that turning on migration endpoints without a stored token will generate one.
 	 */
 	public function testThatChangingMigrationToOnGeneratesNewToken() {
-		$input     = [ 'migration_ws' => 1 ];
+		$input = [ 'migration_ws' => 1 ];
 
 		$validated = self::$admin->migration_ws_validation( [], $input );
 
@@ -161,7 +161,7 @@ class TestOptionMigrationWs extends TestCase {
 	public function testThatMigrationTokenInConstantSettingIsValidated() {
 		define( 'AUTH0_ENV_MIGRATION_TOKEN', '__test_constant_setting__' );
 		self::$opts->set( 'migration_token', '__test_saved_setting__' );
-		$input     = [
+		$input = [
 			'migration_ws'  => 1,
 			'client_secret' => '__test_client_secret__',
 		];

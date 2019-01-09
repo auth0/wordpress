@@ -567,14 +567,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @return array
 	 */
 	public function migration_ws_validation( array $old_options, array $input ) {
-		$input['migration_ws'] = (int) ! empty( $input['migration_ws'] );
+		$input['migration_ws']    = (int) ! empty( $input['migration_ws'] );
+		$input['migration_token'] = $this->options->get( 'migration_token' );
 
 		// Migration endpoints or turned off, nothing to do.
 		if ( empty( $input['migration_ws'] ) ) {
 			return $input;
 		}
 
-		$input['migration_token']    = $this->options->get( 'migration_token' );
 		$input['migration_token_id'] = null;
 		$this->router->setup_rewrites();
 		flush_rewrite_rules();
