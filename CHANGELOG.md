@@ -1,5 +1,55 @@
 # Change Log
 
+## [3.9.0](https://github.com/auth0/wp-auth0/tree/3.9.0) (2019-01-11)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.8.1...3.9.0)
+
+### Notes on this release
+
+- Added a complete Spanish translation!
+- Email changes for WordPress users now work properly and are rejected clearly if Auth0 rejects the change. This does not affect the email verification process in WordPress; the email is changed only after the verification happens. A current API token is not required but your Application does need to allow for a Client Credentials grant with the Management API (this configured for you by default, [more information here](https://auth0.com/docs/cms/wordpress/configuration#authorize-the-application-for-the-management-api)). 
+- Sibling sub-domains are now allowed for the Login Redirect URL. Anything within the same domain name as the site URL can now be saved. 
+- Default Auth0 IP addresses are now allowed by default on the user migration endpoints. Adding or changing the IP addresses for the "Migration IPs Whitelist" field will not affect default IPs. 
+- User migration endpoints were improved to provide better errors when requests are rejected and more clear custom database scripts that can be used as an example when setting up the migration manually. Switching this setting on or off does not make any changes in the Auth0 dashboard or to the existing token, it only makes the endpoints available or not.  
+- The Social Amplificator functionality has been removed. 
+
+**Added**
+- Update Translations [\#615](https://github.com/auth0/wp-auth0/pull/615) ([joshcanhelp](https://github.com/joshcanhelp))
+- Allow subdomains in redirect and refactor validation tests [\#601](https://github.com/auth0/wp-auth0/pull/601) ([joshcanhelp](https://github.com/joshcanhelp))
+- Whitelist Auth0 IPs by default and show in wp-admin [\#596](https://github.com/auth0/wp-auth0/pull/596) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix migration login route output and add tests [\#595](https://github.com/auth0/wp-auth0/pull/595) ([joshcanhelp](https://github.com/joshcanhelp))
+- Added filter to allow for changing the output of die_on_login [\#593](https://github.com/auth0/wp-auth0/pull/593) ([coperator](https://github.com/coperator))
+- Spanish translation by Carlos Longarela [\#526](https://github.com/auth0/wp-auth0/pull/526) ([CarlosLongarela](https://github.com/CarlosLongarela))
+
+**Changed**
+- Refactor migration route handling and add tests [\#606](https://github.com/auth0/wp-auth0/pull/606) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove unnecessary callback; add notice if plugin is already setup [\#604](https://github.com/auth0/wp-auth0/pull/604) ([joshcanhelp](https://github.com/joshcanhelp))
+- Refactor migration token validation and match entire token on endpoints [\#602](https://github.com/auth0/wp-auth0/pull/602) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update translations [\#599](https://github.com/auth0/wp-auth0/pull/599) ([joshcanhelp](https://github.com/joshcanhelp))
+- Refactor and tests for user migration get user route [\#598](https://github.com/auth0/wp-auth0/pull/598) ([joshcanhelp](https://github.com/joshcanhelp))
+- Move custom DB scripts to separate files [\#592](https://github.com/auth0/wp-auth0/pull/592) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Deprecated**
+- Deprecations for ip_range setting [\#618](https://github.com/auth0/wp-auth0/pull/618) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate Social Amplificator classes + methods [\#612](https://github.com/auth0/wp-auth0/pull/612) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Removed**
+- Remove unused IP range setting [\#616](https://github.com/auth0/wp-auth0/pull/616) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove Social Amplificator functionality [\#607](https://github.com/auth0/wp-auth0/pull/607) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix Migration Token Generation; Add JSON Content-Type header [\#617](https://github.com/auth0/wp-auth0/pull/617) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix escaped passwords sent to Auth0 [\#611](https://github.com/auth0/wp-auth0/pull/611) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix notice when settings constant is defined too late [\#600](https://github.com/auth0/wp-auth0/pull/600) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix email update on Auth0 [\#594](https://github.com/auth0/wp-auth0/pull/594) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Closed issues**
+- Invalid State error 100% of the time [\#597](https://github.com/auth0/wp-auth0/issues/597)
+- Update docs [\#591](https://github.com/auth0/wp-auth0/issues/591)
+- Correct dimensions for custom login icon [\#586](https://github.com/auth0/wp-auth0/issues/586)
+- Basic settings edit box doesn't show values from AUTH0_ENV_* constants [\#569](https://github.com/auth0/wp-auth0/issues/569)
+- Better documentation of User Migration endpoints with manual setup [\#542](https://github.com/auth0/wp-auth0/issues/542)
+- Keep getting logged out once SSO is turned on [\#541](https://github.com/auth0/wp-auth0/issues/541)
+
 ## [3.8.1](https://github.com/auth0/wp-auth0/tree/3.8.1) (2018-11-14)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.8.0...3.8.1)
 
