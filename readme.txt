@@ -1,6 +1,6 @@
 === Login by Auth0 ===
 Tags: login, oauth, authentication, single sign on, ldap, active directory, saml, windows azure ad, google apps, two factor, two-factor, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer, passwordless, sms, magiclink, totp, social
-Tested up to: 4.9.8
+Tested up to: 5.0.2
 Requires at least: 3.8
 Requires PHP: 5.3
 License: GPLv2
@@ -135,17 +135,14 @@ All is not lost!
 
 == Changelog ==
 
-**v3.8.1**
+**v3.9.0**
 
-Bug fixes, see [CHANGELOG](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#380-2018-11-14) for details.
-
-**v3.8.0**
-
-- Administrators can now mark certain strategies as able to skip email verification. This is typically used for Enterprise strategies that do not provide an email verification flag. This should be used sparingly and only for connections that do not provide this flag.
-- Password changes for WordPress users now work properly and are rejected clearly if Auth0 rejects the change (typically because the password does not conform to the password policy). A current API token is not required but your Application does need to allow for a Client Credentials grant with the Management API (this configured for you by default, [more information here](https://auth0.com/docs/cms/wordpress/configuration#authorize-the-application-for-the-management-api)).
-- The `wp-login.php` page is no longer used for any callback processing. If you are using this page to process callbacks in a custom plugin or theme, please update to use the main callback URL for the implicit flow `/index.php?auth0=implicit`. In addition, users that are already logged in will be redirected to the default login page when accessing `wp-login.php`.
-- Error logging has been improved in general, along with improvements to the error log display. Consecutive, duplicate errors are now combined, the error log now shows more entries, and entries can be cleared from the admin.
-- The "Auto-Login" setting has been renamed to "Universal Login Page" and moved from the Advanced tab to the Features tab. The functionality is the same as before and will retain the existing setting.
+- Added a complete Spanish translation!
+- Email changes for WordPress users now work properly and are rejected clearly if Auth0 rejects the change. This does not affect the email verification process in WordPress; the email is changed only after the verification happens. A current API token is not required but your Application does need to allow for a Client Credentials grant with the Management API (this configured for you by default, [more information here](https://auth0.com/docs/cms/wordpress/configuration#authorize-the-application-for-the-management-api)).
+- Sibling sub-domains are now allowed for the Login Redirect URL. Anything within the same domain name as the site URL can now be saved.
+- Default Auth0 IP addresses are now allowed by default on the user migration endpoints. Adding or changing the IP addresses for the "Migration IPs Whitelist" field will not affect default IPs.
+- User migration endpoints were improved to provide better errors when requests are rejected and more clear custom database scripts that can be used as an example when setting up the migration manually. Switching this setting on or off does not make any changes in the Auth0 dashboard or to the existing token, it only makes the endpoints available or not.
+- The Social Amplificator functionality has been removed.
 - And more!
 
-[Complete list of changes for this and other releases](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#380-2018-11-06)
+[Complete list of changes for this and other releases](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#390-2019-01-11)
