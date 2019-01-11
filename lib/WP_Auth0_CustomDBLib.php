@@ -1,7 +1,26 @@
 <?php
+/**
+ * Contains class WP_Auth0_CustomDBLib
+ *
+ * @package WP-Auth0
+ *
+ * @since 2.0.0
+ */
 
+/**
+ * Class WP_Auth0_CustomDBLib
+ *
+ * @codeCoverageIgnore - Deprecated.
+ */
 class WP_Auth0_CustomDBLib {
 
+	/**
+	 * Custom database login script.
+	 *
+	 * @var string
+	 *
+	 * @deprecated - 3.9.0, moved to separate files in lib/scripts-js.
+	 */
 	public static $login_script = '
 function login (email, password, callback) {
 
@@ -35,6 +54,13 @@ function login (email, password, callback) {
 }
 ';
 
+	/**
+	 * Custom database get user script.
+	 *
+	 * @var string
+	 *
+	 * @deprecated - 3.9.0, moved to separate files in lib/scripts-js.
+	 */
 	public static $get_user_script = '
 function getByEmail (email, callback) {
 

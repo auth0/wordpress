@@ -5,6 +5,8 @@
  *
  * PHP version 5.3.10
  *
+ * @deprecated - 3.9.0, functionality removed
+ *
  * @category Awesomeness
  * @package  Twitter-API-PHP
  * @author   James Mallison <me@j7mbo.co.uk>

@@ -28,7 +28,7 @@ class WP_Auth0_Configure_JWTAUTH {
 		<div class="update-nag">
 			<?php _e( 'JWT Auth installed. ', 'wp-auth0' ); ?>
 			<a href="<?php echo admin_url( 'admin.php?page=wpa0-jwt-auth' ); ?>">
-				<?php _e( 'To configure it to work the Auth0 plugin, click here.', 'wp-auth0' ); ?>
+				<?php _e( 'To configure it to work with the Auth0 plugin, click here.', 'wp-auth0' ); ?>
 			</a>
 		</div>
 		<?php

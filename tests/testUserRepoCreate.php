@@ -57,7 +57,7 @@ class TestUserRepoCreate extends TestCase {
 	 */
 	public function testRequiredEmailRejected() {
 		$userinfo = $this->getUserinfo( 'auth0' );
-		$this->createUser( $userinfo->email );
+		$this->createUser( [ 'user_email' => $userinfo->email ] );
 
 		// Require a verified email.
 		self::$opts->set( 'requires_verified_email', 1 );
@@ -75,7 +75,7 @@ class TestUserRepoCreate extends TestCase {
 	 */
 	public function testUserAlreadyExistsRejected() {
 		$userinfo = $this->getUserinfo();
-		$user     = $this->createUser( $userinfo->email );
+		$user     = $this->createUser( [ 'user_email' => $userinfo->email ] );
 		self::$repo->update_auth0_object( $user->ID, $userinfo );
 
 		// Require a verified email.
@@ -160,7 +160,7 @@ class TestUserRepoCreate extends TestCase {
 	 */
 	public function testJoinUserEmailVerificationOff() {
 		$userinfo = $this->getUserinfo();
-		$user     = $this->createUser( $userinfo->email );
+		$user     = $this->createUser( [ 'user_email' => $userinfo->email ] );
 
 		// Require a verified email.
 		self::$opts->set( 'requires_verified_email', 0 );
@@ -178,7 +178,7 @@ class TestUserRepoCreate extends TestCase {
 	 */
 	public function testJoinUserEmailVerified() {
 		$userinfo = $this->getUserinfo();
-		$user     = $this->createUser( $userinfo->email );
+		$user     = $this->createUser( [ 'user_email' => $userinfo->email ] );
 
 		// Require a verified email.
 		self::$opts->set( 'requires_verified_email', 1 );
@@ -199,7 +199,7 @@ class TestUserRepoCreate extends TestCase {
 	 */
 	public function testJoinUserSkipStrategy() {
 		$userinfo = $this->getUserinfo( 'auth0' );
-		$user     = $this->createUser( $userinfo->email );
+		$user     = $this->createUser( [ 'user_email' => $userinfo->email ] );
 
 		// Require a verified email.
 		self::$opts->set( 'requires_verified_email', 1 );

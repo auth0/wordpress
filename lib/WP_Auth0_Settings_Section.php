@@ -34,8 +34,8 @@ class WP_Auth0_Settings_Section {
 		$main_menu = ! WP_Auth0::ready() ? 'wpa0-setup' : 'wpa0';
 
 		add_menu_page(
-			__( 'Auth0', 'wp-auth0' ),
-			__( 'Auth0', 'wp-auth0' ),
+			'Auth0',
+			'Auth0',
 			'manage_options',
 			$main_menu,
 			! WP_Auth0::ready() ?
@@ -53,7 +53,7 @@ class WP_Auth0_Settings_Section {
 
 			add_submenu_page( $main_menu, __( 'Help', 'wp-auth0' ), __( 'Help', 'wp-auth0' ), 'manage_options', 'wpa0-help', array( $this, 'redirect_to_help' ) );
 
-			add_submenu_page( $main_menu, __( 'Auth0 for WordPress - Setup Wizard', 'wp-auth0' ), __( 'Setup Wizard', 'wp-auth0' ), 'manage_options', 'wpa0-setup', array( $this->initial_setup, 'render_setup_page' ) );
+			add_submenu_page( null, __( 'Auth0 for WordPress - Setup Wizard', 'wp-auth0' ), __( 'Setup Wizard', 'wp-auth0' ), 'manage_options', 'wpa0-setup', array( $this->initial_setup, 'render_setup_page' ) );
 		}
 
 		add_submenu_page( $main_menu, __( 'Export Users Data', 'wp-auth0' ), __( 'Export Users Data', 'wp-auth0' ), 'manage_options', 'wpa0-users-export', array( $this->users_exporter, 'render_export_users' ) );

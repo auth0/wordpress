@@ -1,18 +1,44 @@
 <?php
+/**
+ * Contains class WP_Auth0_Routes.
+ *
+ * @package WP-Auth0
+ *
+ * @since 2.0.0
+ */
 
+/**
+ * Class WP_Auth0_Routes.
+ * Handles all custom routes used by Auth0 except login callback.
+ */
 class WP_Auth0_Routes {
 
+	/**
+	 * @var WP_Auth0_Options
+	 */
 	protected $a0_options;
 
-	public function __construct( WP_Auth0_Options $a0_options ) {
+	/**
+	 * @var WP_Auth0_Ip_Check
+	 */
+	protected $ip_check;
+
+	/**
+	 * WP_Auth0_Routes constructor.
+	 *
+	 * @param WP_Auth0_Options       $a0_options - WP_Auth0_Options instance.
+	 * @param WP_Auth0_Ip_Check|null $ip_check - WP_Auth0_Ip_Check instance.
+	 */
+	public function __construct( WP_Auth0_Options $a0_options, WP_Auth0_Ip_Check $ip_check = null ) {
 		$this->a0_options = $a0_options;
+		$this->ip_check   = $ip_check instanceof WP_Auth0_Ip_Check ? $ip_check : new WP_Auth0_Ip_Check( $a0_options );
 	}
 
 	public function init() {
 		add_action( 'parse_request', array( $this, 'custom_requests' ) );
 	}
 
-	public function setup_rewrites( $force_ws = false ) {
+	public function setup_rewrites() {
 		add_rewrite_tag( '%auth0%', '([^&]+)' );
 		add_rewrite_tag( '%auth0fallback%', '([^&]+)' );
 		add_rewrite_tag( '%code%', '([^&]+)' );
@@ -22,14 +48,17 @@ class WP_Auth0_Routes {
 
 		add_rewrite_rule( '^auth0', 'index.php?auth0=1', 'top' );
 		add_rewrite_rule( '^\.well-known/oauth2-client-configuration', 'index.php?a0_action=oauth2-config', 'top' );
-
-		// if ( $force_ws || $this->a0_options->get( 'migration_ws' ) ) {
-		// add_rewrite_rule( '^migration-ws-login', 'index.php?a0_action=migration-ws-login', 'top' );
-		// add_rewrite_rule( '^migration-ws-get-user', 'index.php?a0_action=migration-ws-get-user', 'top' );
-		// }
 	}
 
-	public function custom_requests( $wp ) {
+	/**
+	 * Route incoming Auth0 actions.
+	 *
+	 * @param WP   $wp - WP object for current request.
+	 * @param bool $return - True to return the data, false to echo and exit.
+	 *
+	 * @return bool|string
+	 */
+	public function custom_requests( $wp, $return = false ) {
 		$page = null;
 
 		if ( isset( $wp->query_vars['auth0fallback'] ) ) {
@@ -40,51 +69,70 @@ class WP_Auth0_Routes {
 			$page = $wp->query_vars['a0_action'];
 		}
 
-		if ( $page === null && isset( $wp->query_vars['pagename'] ) ) {
+		if ( null === $page && isset( $wp->query_vars['pagename'] ) ) {
 			$page = $wp->query_vars['pagename'];
 		}
 
-		if ( ! empty( $page ) ) {
-			switch ( $page ) {
-				case 'oauth2-config':
-					$this->oauth2_config();
-					exit;
-				case 'migration-ws-login':
-					$this->migration_ws_login();
-					exit;
-				case 'migration-ws-get-user':
-					$this->migration_ws_get_user();
-					exit;
-				case 'coo-fallback':
-					$this->coo_fallback();
-					exit;
-			}
+		if ( empty( $page ) ) {
+			return false;
 		}
+
+		$json_header = true;
+		switch ( $page ) {
+			case 'oauth2-config':
+				$output = wp_json_encode( $this->oauth2_config() );
+				break;
+			case 'migration-ws-login':
+				$output = wp_json_encode( $this->migration_ws_login() );
+				break;
+			case 'migration-ws-get-user':
+				$output = wp_json_encode( $this->migration_ws_get_user() );
+				break;
+			case 'coo-fallback':
+				$json_header = false;
+				$output      = $this->coo_fallback();
+				break;
+			default:
+				return false;
+		}
+
+		if ( $return ) {
+			return $output;
+		}
+
+		if ( $json_header ) {
+			add_filter( 'wp_headers', array( $this, 'add_json_header' ) );
+			$wp->send_headers();
+		}
+
+		echo $output;
+		exit;
+	}
+
+	/**
+	 * Use with the wp_headers filter to add a Content-Type header for JSON output.
+	 *
+	 * @param array $headers - Existing headers to modify.
+	 *
+	 * @return mixed
+	 */
+	public function add_json_header( array $headers ) {
+		$headers['Content-Type'] = 'application/json; charset=' . get_bloginfo( 'charset' );
+		return $headers;
 	}
 
 	protected function coo_fallback() {
-		$cdn          = $this->a0_options->get( 'auth0js-cdn' );
-		$client_id    = $this->a0_options->get( 'client_id' );
-		$domain       = $this->a0_options->get_auth_domain();
-		$protocol     = $this->a0_options->get( 'force_https_callback', false ) ? 'https' : null;
-		$redirect_uri = $this->a0_options->get_wp_auth0_url( $protocol );
-		echo <<<EOT
-		<!DOCTYPE html>
-		<html>
-		<head>
-		<script src="$cdn"></script>
-		<script type="text/javascript">
-		  var auth0 = new auth0.WebAuth({
-			clientID: '$client_id',
-			domain: '$domain',
-			redirectUri: '$redirect_uri'
-		  });
-		  auth0.crossOriginAuthenticationCallback();
-		</script>
-		</head>
-		<body></body>
-		</html>	  
-EOT;
+		$protocol = $this->a0_options->get( 'force_https_callback', false ) ? 'https' : null;
+		return sprintf(
+			'<!DOCTYPE html><html><head><script src="%s"></script><script type="text/javascript">
+			var auth0 = new auth0.WebAuth({clientID:"%s",domain:"%s",redirectUri:"%s"});
+			auth0.crossOriginAuthenticationCallback();
+			</script></head><body></body></html>',
+			esc_url( $this->a0_options->get( 'auth0js-cdn' ) ),
+			sanitize_text_field( $this->a0_options->get( 'client_id' ) ),
+			sanitize_text_field( $this->a0_options->get_auth_domain() ),
+			esc_url( $this->a0_options->get_wp_auth0_url( $protocol ) )
+		);
 	}
 
 	protected function getAuthorizationHeader() {
@@ -108,147 +156,188 @@ EOT;
 		return $authorization;
 	}
 
+	/**
+	 * User migration login route used by custom database Login script.
+	 *
+	 * @return array
+	 *
+	 * @see lib/scripts-js/db-login.js
+	 */
 	protected function migration_ws_login() {
 
-		if ( $this->a0_options->get( 'migration_ws' ) == 0 ) {
-			return;
+		$code = $this->check_endpoint_access_error();
+		if ( $code ) {
+			return $this->error_return_array( $code );
 		}
-
-		if ( $this->a0_options->get( 'migration_ips_filter' ) ) {
-			$ipCheck = new WP_Auth0_Ip_Check( $this->a0_options );
-			if ( ! $ipCheck->connection_is_valid( $this->a0_options->get( 'migration_ips' ) ) ) {
-				return;
-			}
-		}
-
-		$authorization = $this->getAuthorizationHeader();
-		$authorization = trim( str_replace( 'Bearer ', '', $authorization ) );
-
-		$secret   = $this->a0_options->get_client_secret_as_key( true );
-		$token_id = $this->a0_options->get( 'migration_token_id' );
-
-		$user = null;
 
 		try {
-			if ( empty( $authorization ) ) {
-				throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ) );
+			$this->check_endpoint_request( true );
+
+			$user = wp_authenticate( $_POST['username'], $_POST['password'] );
+
+			if ( is_wp_error( $user ) ) {
+				throw new Exception( __( 'Invalid Credentials', 'wp-auth0' ), 401 );
 			}
 
-			$token = JWT::decode( $authorization, $secret, array( 'HS256' ) );
+			unset( $user->data->user_pass );
+			return apply_filters( 'auth0_migration_ws_authenticated', $user );
 
-			if ( $token->jti != $token_id ) {
-				throw new Exception( __( 'Invalid token ID', 'wp-auth0' ) );
-			}
-
-			if ( ! isset( $_POST['username'] ) ) {
-				throw new Exception( __( 'Username is required', 'wp-auth0' ) );
-			}
-
-			if ( ! isset( $_POST['password'] ) ) {
-				throw new Exception( __( 'Password is required', 'wp-auth0' ) );
-			}
-
-			$username = $_POST['username'];
-			$password = $_POST['password'];
-
-			$user = wp_authenticate( $username, $password );
-
-			if ( $user instanceof WP_Error ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' => wp_authenticate()', $user );
-				$user = array( 'error' => __( 'Invalid credentials', 'wp-auth0' ) );
-			} else {
-				if ( $user instanceof WP_User ) {
-					unset( $user->data->user_pass );
-				}
-
-				$user = apply_filters( 'auth0_migration_ws_authenticated', $user );
-			}
 		} catch ( Exception $e ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
-			$user = array( 'error' => $e->getMessage() );
+			return array(
+				'status' => $e->getCode() ?: 400,
+				'error'  => $e->getMessage(),
+			);
 		}
-
-		echo json_encode( $user );
-		exit;
-
 	}
+
+	/**
+	 * User migration get user route used by custom database Login script.
+	 *
+	 * @return array
+	 *
+	 * @see lib/scripts-js/db-get-user.js
+	 */
 	protected function migration_ws_get_user() {
 
-		if ( $this->a0_options->get( 'migration_ws' ) == 0 ) {
-			return;
+		$code = $this->check_endpoint_access_error();
+		if ( $code ) {
+			return $this->error_return_array( $code );
 		}
-
-		if ( $this->a0_options->get( 'migration_ips_filter' ) ) {
-			$ipCheck = new WP_Auth0_Ip_Check( $this->a0_options );
-			if ( ! $ipCheck->connection_is_valid( $this->a0_options->get( 'migration_ips' ) ) ) {
-				return;
-			}
-		}
-
-		$authorization = $this->getAuthorizationHeader();
-		$authorization = trim( str_replace( 'Bearer ', '', $authorization ) );
-
-		$secret   = $this->a0_options->get_client_secret_as_key( true );
-		$token_id = $this->a0_options->get( 'migration_token_id' );
-
-		$user = null;
 
 		try {
-			if ( empty( $authorization ) ) {
-				throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ) );
-			}
-
-			$token = JWT::decode( $authorization, $secret, array( 'HS256' ) );
-
-			if ( $token->jti != $token_id ) {
-				throw new Exception( __( 'Invalid token ID', 'wp-auth0' ) );
-			}
-
-			if ( ! isset( $_POST['username'] ) ) {
-				throw new Exception( __( 'Username is required', 'wp-auth0' ) );
-			}
+			$this->check_endpoint_request();
 
 			$username = $_POST['username'];
 
 			$user = get_user_by( 'email', $username );
-
 			if ( ! $user ) {
 				$user = get_user_by( 'slug', $username );
 			}
 
-			if ( $user instanceof WP_Error ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $user->get_error_message() );
-				$user = array( 'error' => __( 'Invalid credentials', 'wp-auth0' ) );
-			} else {
-
-				if ( ! $user instanceof WP_User ) {
-					$user = array( 'error' => __( 'Invalid credentials', 'wp-auth0' ) );
-				} else {
-					unset( $user->data->user_pass );
-					$user = apply_filters( 'auth0_migration_ws_authenticated', $user );
-				}
+			if ( ! $user ) {
+				throw new Exception( __( 'Invalid Credentials', 'wp-auth0' ), 401 );
 			}
+
+			unset( $user->data->user_pass );
+			return apply_filters( 'auth0_migration_ws_authenticated', $user );
+
 		} catch ( Exception $e ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
-			$user = array( 'error' => $e->getMessage() );
+			return array(
+				'status' => $e->getCode() ?: 400,
+				'error'  => $e->getMessage(),
+			);
 		}
-
-		echo json_encode( $user );
-		exit;
-
 	}
+
 	protected function oauth2_config() {
 
-		$callback_url = admin_url( 'admin.php?page=wpa0-setup&callback=1' );
-
-		echo json_encode(
-			array(
-				'client_name'   => get_bloginfo( 'name' ),
-				'redirect_uris' => array(
-					$callback_url,
-				),
-			)
+		return array(
+			'client_name'   => get_bloginfo( 'name' ),
+			'redirect_uris' => array( admin_url( 'admin.php?page=wpa0-setup&callback=1' ) ),
 		);
-		exit;
+
+	}
+
+	/**
+	 * Check the migration endpoint status and IP filter for incoming requests.
+	 *
+	 * @return int
+	 */
+	private function check_endpoint_access_error() {
+
+		// Migration web service is not turned on.
+		if ( ! $this->a0_options->get( 'migration_ws' ) ) {
+			return 403;
+		}
+
+		// IP filtering is on and incoming IP address does not match filter.
+		if ( $this->a0_options->get( 'migration_ips_filter' ) ) {
+			$allowed_ips = $this->a0_options->get( 'migration_ips' );
+			if ( ! $this->ip_check->connection_is_valid( $allowed_ips ) ) {
+				return 401;
+			}
+		}
+
+		return 0;
+	}
+
+	/**
+	 * Check the incoming request for token and required data.
+	 *
+	 * @param bool $require_password - True to check for a POSTed password, false to ignore.
+	 *
+	 * @throws Exception
+	 */
+	private function check_endpoint_request( $require_password = false ) {
+		$authorization = $this->getAuthorizationHeader();
+		$authorization = trim( str_replace( 'Bearer ', '', $authorization ) );
+
+		if ( empty( $authorization ) ) {
+			throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ), 401 );
+		}
+
+		if ( ! $this->valid_token( $authorization ) ) {
+			throw new Exception( __( 'Invalid token', 'wp-auth0' ), 401 );
+		}
+
+		if ( empty( $_POST['username'] ) ) {
+			throw new Exception( __( 'Username is required', 'wp-auth0' ) );
+		}
+
+		if ( $require_password && empty( $_POST['password'] ) ) {
+			throw new Exception( __( 'Password is required', 'wp-auth0' ) );
+		}
+	}
+
+	/**
+	 * Default error arrays.
+	 *
+	 * @param integer $code - Error code.
+	 *
+	 * @return array
+	 */
+	private function error_return_array( $code ) {
+
+		switch ( $code ) {
+			case 401:
+				return array(
+					'status' => 401,
+					'error'  => __( 'Unauthorized', 'wp-auth0' ),
+				);
+
+			default:
+				return array(
+					'status' => 403,
+					'error'  => __( 'Forbidden', 'wp-auth0' ),
+				);
+				break;
+		}
+	}
+
+	/**
+	 * Check if a token or token JTI is the same as what is stored.
+	 *
+	 * @param string $authorization - Incoming migration token.
+	 *
+	 * @return bool
+	 */
+	private function valid_token( $authorization ) {
+		$token = $this->a0_options->get( 'migration_token' );
+		if ( $token === $authorization ) {
+			return true;
+		}
+		$client_secret = $this->a0_options->get( 'client_secret' );
+		if ( $this->a0_options->get( 'client_secret_base64_encoded' ) ) {
+			$client_secret = JWT::urlsafeB64Decode( $client_secret );
+		}
+
+		try {
+			$decoded = JWT::decode( $token, $client_secret, array( 'HS256' ) );
+			return isset( $decoded->jti ) && $decoded->jti === $this->a0_options->get( 'migration_token_id' );
+		} catch ( Exception $e ) {
+			return false;
+		}
 	}
 }

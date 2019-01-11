@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Class WP_Auth0_SocialAmplification_Widget
+ *
+ * @deprecated - 3.9.0, functionality removed
+ *
+ * @codeCoverageIgnore
+ */
 class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
 	protected static $db_manager;
@@ -11,7 +18,14 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 		self::$social_amplificator = $social_amplificator;
 	}
 
+	/**
+	 * WP_Auth0_SocialAmplification_Widget constructor.
+	 *
+	 * @deprecated - 3.9.0, functionality removed
+	 */
 	function __construct() {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		parent::__construct(
 			$this->getWidgetId(),
 			__( $this->getWidgetName(), 'wp_auth0_widget_domain' ),
@@ -175,8 +189,12 @@ class WP_Auth0_SocialAmplification_Widget extends WP_Widget {
 
 	}
 
+	/**
+	 * @deprecated - 3.9.0, functionality removed
+	 */
 	protected static function current_page_url() {
-
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return home_url( $_SERVER['REQUEST_URI'] );
 	}
 

@@ -1,11 +1,28 @@
 <?php
 
+/**
+ * Class WP_Auth0_Amplificator
+ *
+ * @deprecated - 3.9.0, functionality removed
+ *
+ * @codeCoverageIgnore
+ */
 class WP_Auth0_Amplificator {
 
 	protected $a0_options;
 	protected $db_manager;
 
+	/**
+	 * WP_Auth0_Amplificator constructor.
+	 *
+	 * @param WP_Auth0_DBManager $db_manager
+	 * @param WP_Auth0_Options   $a0_options
+	 *
+	 * @deprecated - 3.9.0, functionality removed
+	 */
 	public function __construct( WP_Auth0_DBManager $db_manager, WP_Auth0_Options $a0_options ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->db_manager = $db_manager;
 		$this->a0_options = $a0_options;
 	}

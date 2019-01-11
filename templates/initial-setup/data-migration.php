@@ -4,7 +4,7 @@
 	<h2><?php _e( "Auth0 for WordPress - Setup Wizard (step $step)", 'wp-auth0' ); ?></h2>
 
 	<p>
-		<?php _e( 'This will create a new database connections, expose 2 endpoints, and populate the custom scripts to call this endpoints to migrate the users to Auth0.', 'wp-auth0' ); ?>
+		<?php _e( 'This will create a new database connection, expose 2 endpoints, and populate the custom scripts to call this endpoints to migrate the users to Auth0.', 'wp-auth0' ); ?>
 		<?php _e( 'The users will not be changed in WordPress.', 'wp-auth0' ); ?>
 	</p>
 
@@ -12,10 +12,10 @@
 
 		<input type="checkbox" name="migration_ws" id="wpa0_auth0_migration_ws" value="1" <?php echo checked( $migration_ws, 1, false ); ?>/>
 		<div class="subelement">
-			<span class="description"><?php echo __( 'Mark this to expose a WS in order to easy the users migration process.', 'wp-auth0' ); ?></span>
+			<span class="description"><?php echo __( 'Mark this to expose a web service to handle the user migration process.', 'wp-auth0' ); ?></span>
 			<span class="description"><?php echo __( 'Security token:', 'wp-auth0' ); ?><code><?php echo $token; ?></code></span>
 			<p>
-				<?php _e( 'This action will create a new Database connection with the custom scrits required to import your WordPress Users.', 'wp-auth0' ); ?>
+				<?php _e( 'This action will create a new Database connection with the custom scripts required to import your WordPress Users.', 'wp-auth0' ); ?>
 			</p>
 		</div>
 

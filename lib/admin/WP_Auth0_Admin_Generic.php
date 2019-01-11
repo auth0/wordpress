@@ -83,16 +83,17 @@ class WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Wrapper for add_settings_error
+	 * Wrapper for add_settings_error to output error message on settings change failure.
 	 *
-	 * @param string $error - translated error message
+	 * @param string $error - Translated error message.
+	 * @param string $type - Notice type, "error" by default or "updated".
 	 */
-	protected function add_validation_error( $error ) {
+	protected function add_validation_error( $error, $type = 'error' ) {
 		add_settings_error(
 			$this->_option_name,
 			$this->_option_name,
 			$error,
-			'error'
+			$type
 		);
 	}
 
@@ -231,7 +232,8 @@ class WP_Auth0_Admin_Generic {
 	 * @param string $text - description text to display
 	 */
 	protected function render_field_description( $text ) {
-		printf( '<div class="subelement"><span class="description">%s.</span></div>', $text );
+		$period = ! in_array( $text[ strlen( $text ) - 1 ], array( '.', ':' ) ) ? '.' : '';
+		printf( '<div class="subelement"><span class="description">%s%s</span></div>', $text, $period );
 	}
 
 	/**

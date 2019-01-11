@@ -93,7 +93,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_auto_provisioning',
 			),
 			array(
-				'name'     => __( 'User Migration', 'wp-auth0' ),
+				'name'     => __( 'User Migration Endpoints', 'wp-auth0' ),
 				'opt'      => 'migration_ws',
 				'id'       => 'wpa0_migration_ws',
 				'function' => 'render_migration_ws',
@@ -105,7 +105,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_migration_ws_ips_filter',
 			),
 			array(
-				'name'     => __( 'IP Addresses', 'wp-auth0' ),
+				'name'     => '',
 				'opt'      => 'migration_ips',
 				'id'       => 'wpa0_migration_ws_ips',
 				'function' => 'render_migration_ws_ips',
@@ -121,18 +121,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'opt'      => 'auth0_implicit_workflow',
 				'id'       => 'wpa0_auth0_implicit_workflow',
 				'function' => 'render_auth0_implicit_workflow',
-			),
-			array(
-				'name'     => __( 'Enable IP Ranges', 'wp-auth0' ),
-				'opt'      => 'ip_range_check',
-				'id'       => 'wpa0_ip_range_check',
-				'function' => 'render_ip_range_check',
-			),
-			array(
-				'name'     => __( 'IP Ranges', 'wp-auth0' ),
-				'opt'      => 'ip_ranges',
-				'id'       => 'wpa0_ip_ranges',
-				'function' => 'render_ip_ranges',
 			),
 			array(
 				'name'     => __( 'Valid Proxy IP', 'wp-auth0' ),
@@ -151,30 +139,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'opt'      => 'custom_signup_fields',
 				'id'       => 'wpa0_custom_signup_fields',
 				'function' => 'render_custom_signup_fields',
-			),
-			array(
-				'name'     => __( 'Twitter Consumer Key', 'wp-auth0' ),
-				'opt'      => 'social_twitter_key',
-				'id'       => 'wpa0_social_twitter_key',
-				'function' => 'render_social_twitter_key',
-			),
-			array(
-				'name'     => __( 'Twitter Consumer Secret', 'wp-auth0' ),
-				'opt'      => 'social_twitter_secret',
-				'id'       => 'wpa0_social_twitter_secret',
-				'function' => 'render_social_twitter_secret',
-			),
-			array(
-				'name'     => __( 'Facebook App Key', 'wp-auth0' ),
-				'opt'      => 'social_facebook_key',
-				'id'       => 'wpa0_social_facebook_key',
-				'function' => 'render_social_facebook_key',
-			),
-			array(
-				'name'     => __( 'Facebook App Secret', 'wp-auth0' ),
-				'opt'      => 'social_facebook_secret',
-				'id'       => 'wpa0_social_facebook_secret',
-				'function' => 'render_social_facebook_secret',
 			),
 			array(
 				'name'     => __( 'Auth0 Server Domain', 'wp-auth0' ),
@@ -209,7 +173,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_skip_strategies' );
 		$this->render_field_description(
 			__( 'Require new users to both provide and verify their email before logging in. ', 'wp-auth0' ) .
-			__( 'An email is verified manually by an email from Auth0 or automatically by the provider. ', 'wp-auth0' ) .
+			__( 'An email address is verified manually by an email from Auth0 or automatically by the provider. ', 'wp-auth0' ) .
 			__( 'This will disallow logins from social connections that do not provide email (like Twitter)', 'wp-auth0' )
 		);
 	}
@@ -375,9 +339,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
 		if ( $value ) {
 			$this->render_field_description(
-				__( 'Users migration is enabled. ', 'wp-auth0' ) .
-				__( 'If you disable this setting, it must be re-enabled manually in the ', 'wp-auth0' ) .
-				$this->get_dashboard_link()
+				__( 'User migration endpoints activated. ', 'wp-auth0' ) .
+				__( 'See below for the token to use. ', 'wp-auth0' ) .
+				__( 'The custom database scripts need to be configured manually as described ', 'wp-auth0' ) .
+				$this->get_docs_link( 'users/migrations/automatic' )
 			);
 			$this->render_field_description( 'Security token:' );
 			if ( $this->options->has_constant_val( 'migration_token' ) ) {
@@ -389,9 +354,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			);
 		} else {
 			$this->render_field_description(
-				__( 'Users migration is disabled. ', 'wp-auth0' ) .
-				__( 'Enabling this exposes migration webservices but the Connection must be updated manually. ', 'wp-auth0' ) .
-				$this->get_docs_link( 'users/migrations/automatic', __( 'More information here', 'wp-auth0' ) )
+				__( 'User migration endpoints deactivated. ', 'wp-auth0' ) .
+				__( 'Custom database connections can be deactivated in the ', 'wp-auth0' ) .
+				$this->get_dashboard_link( 'connections/database' )
 			);
 		}
 	}
@@ -419,10 +384,13 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_migration_ws_ips( $args = array() ) {
+		$ip_check = new WP_Auth0_Ip_Check( WP_Auth0_Options::Instance() );
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Only requests from these IPs will be allowed to access the migration webservice. ', 'wp-auth0' ) .
-			__( 'Separate multiple IPs with commas', 'wp-auth0' )
+			__( 'Only requests from these IPs will be allowed to access the migration endpoints. ', 'wp-auth0' ) .
+			__( 'Separate multiple IPs with commas. ', 'wp-auth0' ) .
+			__( 'The following Auth0 IPs are automatically whitelisted: ', 'wp-auth0' ) .
+			'<br><br><code>' . $ip_check->get_ips_by_domain( null, '</code> <code>' ) . '</code>'
 		);
 	}
 
@@ -454,36 +422,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			$this->get_dashboard_link( 'clients' ) .
 			__( ' for this setting to work properly. ', 'wp-auth0' ) .
 			__( 'This will limit profile changes and other functionality in the plugin', 'wp-auth0' )
-		);
-	}
-
-	/**
-	 * Render form field and description for the `ip_range_check` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_ip_range_check( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_ip_ranges' );
-	}
-
-	/**
-	 * Render form field and description for the `ip_ranges` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_ip_ranges( $args = array() ) {
-		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Only one range per line! Range format should be as follows (spaces ignored): ', 'wp-auth0' ) .
-			__( '<br><code>xx.xx.xx.xx - yy.yy.yy.yy</code>', 'wp-auth0' )
 		);
 	}
 
@@ -536,89 +474,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			$this->get_docs_link(
 				'libraries/lock/v11/configuration#additionalsignupfields-array-',
 				__( 'More information and examples', 'wp-auth0' )
-			)
-		);
-	}
-
-	/**
-	 * Render form field and description for the `social_twitter_key` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_social_twitter_key( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Twitter app key for the Social Amplification Widget. ', 'wp-auth0' ) .
-			__( 'The app used here needs to have "read" and "write" permissions. ', 'wp-auth0' ) .
-			$this->get_docs_link(
-				'connections/social/twitter#2-get-your-consumer-key-and-consumer-secret',
-				__( 'Instructions here', 'wp-auth0' )
-			)
-		);
-	}
-
-	/**
-	 * Render form field and description for the `social_twitter_secret` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_social_twitter_secret( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Secret for the app above. ', 'wp-auth0' ) .
-			$this->get_docs_link(
-				'connections/social/twitter#2-get-your-consumer-key-and-consumer-secret',
-				__( 'Instructions here', 'wp-auth0' )
-			)
-		);
-	}
-
-	/**
-	 * Render form field and description for the `social_facebook_key` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_social_facebook_key( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Facebook app key for the Social Amplification Widget. ', 'wp-auth0' ) .
-			__( 'The app used here needs to have "publish_actions" permission. ', 'wp-auth0' ) .
-			__( 'Used for the Social Amplification Widget. ', 'wp-auth0' ) .
-			$this->get_docs_link(
-				'connections/social/facebook#5-get-your-app-id-and-app-secret',
-				__( 'Instructions here', 'wp-auth0' )
-			)
-		);
-	}
-
-	/**
-	 * Render form field and description for the `social_facebook_secret` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_social_facebook_secret( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Secret for the app above. ', 'wp-auth0' ) .
-			$this->get_docs_link(
-				'connections/social/facebook#5-get-your-app-id-and-app-secret',
-				__( 'Instructions here', 'wp-auth0' )
 			)
 		);
 	}
@@ -702,63 +557,47 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		return $input;
 	}
 
-	public function migration_ws_validation( $old_options, $input ) {
-		$input['migration_ws'] = ( isset( $input['migration_ws'] ) ? $input['migration_ws'] : 0 );
+	/**
+	 * Validation for the migration_ws setting.
+	 * Generates new migration tokens if none is present.
+	 *
+	 * @param array $old_options - Option values before savings.
+	 * @param array $input - New option values to validate.
+	 *
+	 * @return array
+	 */
+	public function migration_ws_validation( array $old_options, array $input ) {
+		$input['migration_ws']    = (int) ! empty( $input['migration_ws'] );
+		$input['migration_token'] = $this->options->get( 'migration_token' );
 
-		if ( $old_options['migration_ws'] != $input['migration_ws'] ) {
-
-			if ( 1 == $input['migration_ws'] ) {
-
-				$token_id = uniqid();
-				$secret   = $input['client_secret'];
-				if ( $input['client_secret_b64_encoded'] ) {
-					$secret = JWT::urlsafeB64Decode( $secret );
-				}
-
-				$input['migration_token']    = JWT::encode(
-					array(
-						'scope' => 'migration_ws',
-						'jti'   => $token_id,
-					),
-					$secret
-				);
-				$input['migration_token_id'] = $token_id;
-
-				$this->add_validation_error(
-					__( 'User Migration needs to be configured manually. ', 'wp-auth0' )
-					. __( 'Please see Advanced > Users Migration below for your token, instructions are ', 'wp-auth0' )
-					. '<a href="https://auth0.com/docs/users/migrations/automatic">HERE</a>.'
-				);
-
-			} else {
-				$input['migration_token']    = null;
-				$input['migration_token_id'] = null;
-
-				if ( isset( $old_options['db_connection_id'] ) ) {
-
-					$connection = WP_Auth0_Api_Client::get_connection( $input['domain'], $input['auth0_app_token'], $old_options['db_connection_id'] );
-
-					$connection->options->enabledDatabaseCustomization = false;
-					$connection->options->import_mode                  = false;
-
-					$response = WP_Auth0_Api_Client::update_connection( $input['domain'], $input['auth0_app_token'], $old_options['db_connection_id'], $connection );
-				} else {
-					$response = false;
-				}
-
-				if ( $response === false ) {
-					$error  = __( 'There was an error disabling your custom database. Check how to do it manually ', 'wp-auth0' );
-					$error .= '<a href="https://manage.auth0.com/#/connections/database">HERE</a>.';
-					$this->add_validation_error( $error );
-				}
-			}
-
-			$this->router->setup_rewrites( $input['migration_ws'] == 1 );
-			flush_rewrite_rules();
-		} else {
-			$input['migration_token']    = $old_options['migration_token'];
-			$input['migration_token_id'] = $old_options['migration_token_id'];
+		// Migration endpoints or turned off, nothing to do.
+		if ( empty( $input['migration_ws'] ) ) {
+			return $input;
 		}
+
+		$input['migration_token_id'] = null;
+		$this->router->setup_rewrites();
+		flush_rewrite_rules();
+
+		// If we don't have a token yet, generate one.
+		if ( empty( $input['migration_token'] ) ) {
+			$input['migration_token'] = JWT::urlsafeB64Encode( openssl_random_pseudo_bytes( 64 ) );
+			return $input;
+		}
+
+		// If we do have a token, try to decode and store the JTI.
+		$secret = $input['client_secret'];
+		if ( ! empty( $input['client_secret_b64_encoded'] ) ) {
+			$secret = base64_decode( $input['client_secret'] );
+		}
+
+		try {
+			$token_decoded               = JWT::decode( $input['migration_token'], $secret, array( 'HS256' ) );
+			$input['migration_token_id'] = isset( $token_decoded->jti ) ? $token_decoded->jti : null;
+		} catch ( Exception $e ) {
+			// If the JWT cannot be decoded then we use the token as-is without storing the JTI.
+		}
+
 		return $input;
 	}
 
@@ -795,17 +634,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			return $input;
 		}
 
-		$home_url_host     = wp_parse_url( $home_url, PHP_URL_HOST );
-		$redirect_url_host = wp_parse_url( $new_redirect_url, PHP_URL_HOST );
-
-		// Same host name so it's safe to redirect.
-		if ( $redirect_url_host === $home_url_host ) {
-			return $input;
-		}
-
-		// The redirect can be a subdomain of the home_url or vice versa.
-		$min_host = min( strlen( $redirect_url_host ), strlen( $home_url_host ) );
-		if ( substr( $redirect_url_host, -$min_host ) === substr( $home_url_host, -$min_host ) ) {
+		// Allow subdomains within the same domain.
+		$home_domain     = $this->get_domain( $home_url );
+		$redirect_domain = $this->get_domain( $new_redirect_url );
+		if ( $home_domain === $redirect_domain ) {
 			return $input;
 		}
 
@@ -819,6 +651,152 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			$home_url;
 
 		return $input;
+	}
+
+	private function get_domain( $url ) {
+		$host_pieces = explode( '.', wp_parse_url( $url, PHP_URL_HOST ) );
+		$domain      = array_pop( $host_pieces );
+		if ( count( $host_pieces ) ) {
+			$domain = array_pop( $host_pieces ) . '.' . $domain;
+		}
+		return $domain;
+	}
+
+	/*
+	 * DEPRECATED
+	 */
+
+	/**
+	 * Render form field and description for the `ip_range_check` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.9.0, unused
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function render_ip_range_check( $args = array() ) {
+		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_ip_ranges' );
+	}
+
+	/**
+	 * Render form field and description for the `ip_ranges` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.9.0, unused
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function render_ip_ranges( $args = array() ) {
+		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Only one range per line! Range format should be as follows (spaces ignored): ', 'wp-auth0' ) .
+			__( '<br><code>xx.xx.xx.xx - yy.yy.yy.yy</code>', 'wp-auth0' )
+		);
+	}
+
+	/**
+	 * Render form field and description for the `social_twitter_key` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.9.0, functionality removed
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function render_social_twitter_key( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Twitter app key for the Social Amplification Widget. ', 'wp-auth0' ) .
+			__( 'The app used here needs to have "read" and "write" permissions. ', 'wp-auth0' ) .
+			$this->get_docs_link(
+				'connections/social/twitter#2-get-your-consumer-key-and-consumer-secret',
+				__( 'Instructions here', 'wp-auth0' )
+			)
+		);
+	}
+
+	/**
+	 * Render form field and description for the `social_twitter_secret` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.9.0, functionality removed
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function render_social_twitter_secret( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Secret for the app above. ', 'wp-auth0' ) .
+			$this->get_docs_link(
+				'connections/social/twitter#2-get-your-consumer-key-and-consumer-secret',
+				__( 'Instructions here', 'wp-auth0' )
+			)
+		);
+	}
+
+	/**
+	 * Render form field and description for the `social_facebook_key` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.9.0, functionality removed
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function render_social_facebook_key( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Facebook app key for the Social Amplification Widget. ', 'wp-auth0' ) .
+			__( 'The app used here needs to have "publish_actions" permission. ', 'wp-auth0' ) .
+			__( 'Used for the Social Amplification Widget. ', 'wp-auth0' ) .
+			$this->get_docs_link(
+				'connections/social/facebook#5-get-your-app-id-and-app-secret',
+				__( 'Instructions here', 'wp-auth0' )
+			)
+		);
+	}
+
+	/**
+	 * Render form field and description for the `social_facebook_secret` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.9.0, functionality removed
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function render_social_facebook_secret( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Secret for the app above. ', 'wp-auth0' ) .
+			$this->get_docs_link(
+				'connections/social/facebook#5-get-your-app-id-and-app-secret',
+				__( 'Instructions here', 'wp-auth0' )
+			)
+		);
 	}
 
 	/**

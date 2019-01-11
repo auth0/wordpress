@@ -24,6 +24,8 @@ class TestProfileChangePassword extends TestCase {
 
 	use UsersHelper;
 
+	use httpHelpers;
+
 	/**
 	 * WP_Auth0_Options instance.
 	 *
@@ -68,6 +70,15 @@ class TestProfileChangePassword extends TestCase {
 		self::$api_change_password = new WP_Auth0_Api_Change_Password( self::$options, self::$api_client_creds );
 		self::$change_password     = new WP_Auth0_Profile_Change_Password( self::$api_change_password );
 		self::$users_repo          = new WP_Auth0_UsersRepo( self::$options );
+	}
+
+	/**
+	 * Run after each test is completed.
+	 */
+	public function tearDown() {
+		parent::tearDown();
+		self::$options->reset();
+		$this->stopHttpHalting();
 	}
 
 	/**
@@ -154,6 +165,43 @@ class TestProfileChangePassword extends TestCase {
 		$this->storeAuth0Data( $user->ID, 'auth0' );
 
 		$this->assertTrue( $change_password->validate_new_password( $errors, $user ) );
+		$this->assertEmpty( $errors->get_error_messages() );
+	}
+
+	/**
+	 * Test that the change password process handles escaped data.
+	 */
+	public function testThatPasswordIsUnescapedBeforeSending() {
+		$this->startHttpHalting();
+		self::$options->set( 'domain', 'example.auth0.com' );
+
+		$user   = $this->createUser();
+		$errors = new WP_Error();
+
+		// Store userinfo for a DB strategy user.
+		$this->storeAuth0Data( $user->ID, 'auth0' );
+
+		// Set a password with special characters.
+		$new_password        = uniqid() . '"' . uniqid() . "'" . uniqid() . '\\' . uniqid();
+		$_POST['password_1'] = wp_slash( $new_password );
+
+		// API call mocked to pass bearer check.
+		$mock_api = $this
+			->getMockBuilder( WP_Auth0_Api_Change_Password::class )
+			->setMethods( [ 'set_bearer' ] )
+			->setConstructorArgs( [ self::$options, self::$api_client_creds ] )
+			->getMock();
+		$mock_api->method( 'set_bearer' )->willReturn( true );
+		$change_password = new WP_Auth0_Profile_Change_Password( $mock_api );
+
+		$decoded_res = [];
+		try {
+			$change_password->validate_new_password( $errors, $user );
+		} catch ( Exception $e ) {
+			$decoded_res = unserialize( $e->getMessage() );
+		}
+
+		$this->assertEquals( $new_password, $decoded_res['body']['password'] );
 		$this->assertEmpty( $errors->get_error_messages() );
 	}
 

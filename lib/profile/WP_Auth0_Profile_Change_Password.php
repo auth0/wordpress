@@ -38,7 +38,7 @@ class WP_Auth0_Profile_Change_Password {
 		// Used during profile update in wp-admin.
 		add_action( 'user_profile_update_errors', array( $this, 'validate_new_password' ), 10, 2 );
 
-		// Used during password reset on wp-login.php
+		// Used during password reset on wp-login.php.
 		add_action( 'validate_password_reset', array( $this, 'validate_new_password' ), 10, 2 );
 
 		// Used during WooCommerce edit account save.
@@ -47,7 +47,7 @@ class WP_Auth0_Profile_Change_Password {
 
 	/**
 	 * Update the user's password at Auth0
-	 * Hooked to: user_profile_update_errors, validate_password_reset
+	 * Hooked to: user_profile_update_errors, validate_password_reset, woocommerce_save_account_details_errors
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
 	 * @param WP_Error         $errors - WP_Error object to use if validation fails.
@@ -64,7 +64,7 @@ class WP_Auth0_Profile_Change_Password {
 		}
 
 		$field_name   = ! empty( $_POST['pass1'] ) ? 'pass1' : 'password_1';
-		$new_password = $_POST[ $field_name ];
+		$new_password = wp_unslash( $_POST[ $field_name ] );
 
 		if ( isset( $_POST['user_id'] ) ) {
 			// Input field from user edit or profile update.

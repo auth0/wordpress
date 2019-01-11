@@ -1,16 +1,16 @@
 <?php
 /**
- * Contains WP_Auth0_Api_Change_Password.
+ * Contains WP_Auth0_Api_Change_Email.
  *
  * @package WP-Auth0
  *
- * @since 3.8.0
+ * @since 3.9.0
  */
 
 /**
- * Class WP_Auth0_Api_Change_Password to update a user's password at Auth0.
+ * Class WP_Auth0_Api_Change_Email to update a user's email at Auth0.
  */
-class WP_Auth0_Api_Change_Password extends WP_Auth0_Api_Abstract {
+class WP_Auth0_Api_Change_Email extends WP_Auth0_Api_Abstract {
 
 	/**
 	 * Default value to return on failure.
@@ -30,7 +30,7 @@ class WP_Auth0_Api_Change_Password extends WP_Auth0_Api_Abstract {
 	protected $token_decoded = null;
 
 	/**
-	 * WP_Auth0_Api_Change_Password constructor.
+	 * WP_Auth0_Api_Change_Email constructor.
 	 *
 	 * @param WP_Auth0_Options                $options - WP_Auth0_Options instance.
 	 * @param WP_Auth0_Api_Client_Credentials $api_client_creds - WP_Auth0_Api_Client_Credentials instance.
@@ -44,16 +44,16 @@ class WP_Auth0_Api_Change_Password extends WP_Auth0_Api_Abstract {
 	}
 
 	/**
-	 * Set the user_id and password, make the API call, and handle the response.
+	 * Set the user_id and email, make the API call, and handle the response.
 	 *
-	 * @param string|null $user_id - Auth0 user ID to change the password for.
-	 * @param string|null $password - New password.
+	 * @param string|null $user_id - Auth0 user ID to change the email for.
+	 * @param string|null $email - New email.
 	 *
 	 * @return bool|string
 	 */
-	public function call( $user_id = null, $password = null ) {
+	public function call( $user_id = null, $email = null ) {
 
-		if ( empty( $user_id ) || empty( $password ) ) {
+		if ( empty( $user_id ) || empty( $email ) ) {
 			return self::RETURN_ON_FAILURE;
 		}
 
@@ -63,7 +63,9 @@ class WP_Auth0_Api_Change_Password extends WP_Auth0_Api_Abstract {
 
 		return $this
 			->set_path( 'api/v2/users/' . rawurlencode( $user_id ) )
-			->add_body( 'password', $password )
+			->add_body( 'email', $email )
+			// Email is either changed by an admin or verified by WP.
+			->add_body( 'email_verified', true )
 			->patch()
 			->handle_response( __METHOD__ );
 	}
@@ -82,10 +84,6 @@ class WP_Auth0_Api_Change_Password extends WP_Auth0_Api_Abstract {
 		}
 
 		if ( $this->handle_failed_response( $method ) ) {
-			$response_body = json_decode( $this->response_body );
-			if ( isset( $response_body->message ) && false !== strpos( $response_body->message, 'PasswordStrengthError' ) ) {
-				return __( 'Password is too weak, please choose a different one.', 'wp-auth0' );
-			}
 			return self::RETURN_ON_FAILURE;
 		}
 

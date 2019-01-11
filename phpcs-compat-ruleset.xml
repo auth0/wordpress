@@ -2,31 +2,30 @@
 <ruleset name="WP-Auth0" namespace="WPAuth0\CS\Standard">
     <description>A custom compatibility standard for WP-Auth0</description>
 
-    <!-- Internal tool, will be removed-->
-    <exclude-pattern>/account_cleanup/*</exclude-pattern>
-
-    <!-- Not currently checking JS or CSS -->
-    <exclude-pattern>/assets/*</exclude-pattern>
-
     <!-- Tests have their own ruleset (different PHP version) -->
     <exclude-pattern>/tests/*</exclude-pattern>
 
     <!-- Dev tools only, currently -->
     <exclude-pattern>/vendor/*</exclude-pattern>
 
-    <!-- Not currently checking JS -->
-    <exclude-pattern>/webtask/*</exclude-pattern>
-
     <!-- Deprecated so no changes needed -->
     <exclude-pattern>/lib/admin/WP_Auth0_Admin_Dashboard.php</exclude-pattern>
     <exclude-pattern>/lib/dashboard-widgets/*</exclude-pattern>
 
-    <config name="testVersion" value="5.3-"/>
-    <config name="showProgress" value="1"/>
-    <config name="extensions" value="php"/>
-    <config name="minimum_supported_wp_version" value="3.8"/>
+    <!-- Only check PHP files. -->
+    <arg name="extensions" value="php"/>
 
+    <!-- Show progress, show the error codes for each message (source). -->
+    <arg value="sp"/>
+
+    <!-- Strip the filepaths down to the relevant bit. -->
+    <arg name="basepath" value="."/>
+
+    <!-- Show coloured output, if available. -->
     <arg name="colors"/>
+
+    <config name="testVersion" value="5.3-"/>
+    <config name="minimum_supported_wp_version" value="3.8"/>
 
     <rule ref="PHPCompatibility"/>
 </ruleset>

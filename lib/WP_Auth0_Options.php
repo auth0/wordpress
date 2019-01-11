@@ -248,8 +248,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'auto_login'                => 0,
 			'auto_login_method'         => '',
 			'auth0_implicit_workflow'   => false,
-			'ip_range_check'            => 0,
-			'ip_ranges'                 => '',
 			'valid_proxy_ip'            => null,
 			'custom_signup_fields'      => '',
 			'extra_conf'                => '',

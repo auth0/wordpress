@@ -45,6 +45,7 @@ class WP_Auth0_DBManager {
 		$sso             = $options->get( 'sso' );
 		$cdn_url         = $options->get( 'cdn_url' );
 
+		// Plugin version < 2.2.3
 		if ( $this->current_db_version <= 7 ) {
 			if ( $options->get( 'db_connection_enabled' ) ) {
 
@@ -64,10 +65,12 @@ class WP_Auth0_DBManager {
 			}
 		}
 
-		if ( $this->current_db_version < 9 ) {
+		// Plugin version < 3.1.6
+		if ( ( $this->current_db_version < 9 && 0 !== $this->current_db_version ) || 9 === $version_to_install ) {
 			$this->migrate_users_data();
 		}
 
+		// Plugin version < 3.2.3
 		if ( $this->current_db_version < 10 ) {
 			$dict = $options->get( 'dict' );
 
@@ -81,17 +84,6 @@ class WP_Auth0_DBManager {
 			}
 		}
 
-		if ( $this->current_db_version < 13 ) {
-			$ips    = $options->get( 'migration_ips' );
-			$oldips = '138.91.154.99,54.221.228.15,54.183.64.135,54.67.77.38,54.67.15.170,54.183.204.205,54.173.21.107,54.85.173.28';
-
-			$ipCheck = new WP_Auth0_Ip_Check( $options );
-
-			if ( $ips === $oldips ) {
-				$options->set( 'migration_ips', $ipCheck->get_ip_by_region( 'us' ) );
-			}
-		}
-
 		if ( $this->current_db_version < 14 && is_null( $options->get( 'client_secret_b64_encoded' ) ) ) {
 			if ( $options->get( 'client_id' ) ) {
 				$options->set( 'client_secret_b64_encoded', true );
@@ -100,7 +92,7 @@ class WP_Auth0_DBManager {
 			}
 		}
 
-		// 3.4.0
+		// Plugin version < 3.4.0
 		if ( $this->current_db_version < 15 || 15 === $version_to_install ) {
 			$options->set( 'cdn_url', WPA0_LOCK_CDN_URL );
 			$options->set( 'auth0js-cdn', WPA0_AUTH0_JS_CDN_URL );
@@ -130,7 +122,7 @@ class WP_Auth0_DBManager {
 			}
 		}
 
-		// 3.5.0
+		// Plugin version < 3.5.0
 		if ( ( $this->current_db_version < 16 && 0 !== $this->current_db_version ) || 16 === $version_to_install ) {
 
 			// Update Lock and Auth versions
@@ -185,7 +177,7 @@ class WP_Auth0_DBManager {
 			}
 		}
 
-		// 3.5.1
+		// Plugin version < 3.5.1
 		if ( ( $this->current_db_version < 17 && 0 !== $this->current_db_version ) || 17 === $version_to_install ) {
 
 			$grant_types_updated = false;
@@ -240,7 +232,7 @@ class WP_Auth0_DBManager {
 			}
 		}
 
-		// 3.6.0
+		// Plugin version < 3.6.0
 		if ( ( $this->current_db_version < 18 && 0 !== $this->current_db_version ) || 18 === $version_to_install ) {
 
 			// Migrate passwordless_method
@@ -287,7 +279,7 @@ class WP_Auth0_DBManager {
 			update_option( $options->get_options_name(), $update_options );
 		}
 
-		// 3.7.0
+		// Plugin version < 3.7.0
 		if ( ( $this->current_db_version < 19 && 0 !== $this->current_db_version ) || 19 === $version_to_install ) {
 			// Need to move settings values from child array to main array.
 			$connection_settings = $options->get( 'connections' );
@@ -299,6 +291,20 @@ class WP_Auth0_DBManager {
 					}
 					$options->set( $setting, $value );
 				}
+			}
+		}
+
+		// 3.9.0
+		if ( ( $this->current_db_version < 20 && 0 !== $this->current_db_version ) || 20 === $version_to_install ) {
+
+			// Remove default IP addresses from saved field.
+			$migration_ips = trim( $options->get( 'migration_ips' ) );
+			if ( $migration_ips ) {
+				$migration_ips = array_map( 'trim', explode( ',', $migration_ips ) );
+				$ip_check      = new WP_Auth0_Ip_Check( $options );
+				$default_ips   = explode( ',', $ip_check->get_ips_by_domain() );
+				$custom_ips    = array_diff( $migration_ips, $default_ips );
+				$options->set( 'migration_ips', implode( ',', $custom_ips ) );
 			}
 		}
 

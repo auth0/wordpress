@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Login by Auth0
  * Description: Login by Auth0 provides improved username/password login, Passwordless login, Social login and Single Sign On for all your sites.
- * Version: 3.8.1
+ * Version: 3.9.0
  * Author: Auth0
  * Author URI: https://auth0.com
  * Text Domain: wp-auth0
  */
 
-define( 'WPA0_VERSION', '3.8.1' );
-define( 'AUTH0_DB_VERSION', 19 );
+define( 'WPA0_VERSION', '3.9.0' );
+define( 'AUTH0_DB_VERSION', 20 );
 
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
@@ -29,6 +29,15 @@ define( 'WPA0_JWKS_CACHE_TRANSIENT_NAME', 'WP_Auth0_JWKS_cache' );
 
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 
+/*
+ * Localization
+ */
+
+function wp_auth0_load_plugin_textdomain() {
+	load_plugin_textdomain( 'wp-auth0', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'plugins_loaded', 'wp_auth0_load_plugin_textdomain' );
+
 /**
  * Main plugin class
  */
@@ -45,6 +54,8 @@ class WP_Auth0 {
 	protected $a0_options;
 
 	/**
+	 * @deprecated - 3.9.0, functionality removed
+	 *
 	 * @var WP_Auth0_Amplificator
 	 */
 	protected $social_amplificator;
@@ -145,9 +156,6 @@ class WP_Auth0 {
 		$settings_section = new WP_Auth0_Settings_Section( $this->a0_options, $initial_setup, $users_exporter, $configure_jwt_auth, $error_log, $auth0_admin, $import_settings );
 		$settings_section->init();
 
-		$this->social_amplificator = new WP_Auth0_Amplificator( $this->db_manager, $this->a0_options );
-		$this->social_amplificator->init();
-
 		$edit_profile = new WP_Auth0_EditProfile( $this->db_manager, $users_repo, $this->a0_options );
 		$edit_profile->init();
 
@@ -156,6 +164,10 @@ class WP_Auth0 {
 		$api_change_password = new WP_Auth0_Api_Change_Password( $this->a0_options, $api_client_creds );
 		$profile_change_pwd  = new WP_Auth0_Profile_Change_Password( $api_change_password );
 		$profile_change_pwd->init();
+
+		$api_change_email     = new WP_Auth0_Api_Change_Email( $this->a0_options, $api_client_creds );
+		$profile_change_email = new WP_Auth0_Profile_Change_Email( $api_change_email );
+		$profile_change_email->init();
 
 		$profile_delete_data = new WP_Auth0_Profile_Delete_Data( $users_repo );
 		$profile_delete_data->init();
@@ -322,9 +334,6 @@ class WP_Auth0 {
 	public function wp_register_widget() {
 		register_widget( 'WP_Auth0_Embed_Widget' );
 		register_widget( 'WP_Auth0_Popup_Widget' );
-
-		WP_Auth0_SocialAmplification_Widget::set_context( $this->db_manager, $this->social_amplificator );
-		register_widget( 'WP_Auth0_SocialAmplification_Widget' );
 	}
 
 	public function wp_enqueue() {
@@ -620,15 +629,6 @@ if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
 		return $name;
 	}
 }
-
-/*
- * Localization
- */
-
-function wp_auth0_load_plugin_textdomain() {
-	load_plugin_textdomain( 'wp-auth0', false, basename( dirname( __FILE__ ) ) . '/languages/' );
-}
-add_action( 'plugins_loaded', 'wp_auth0_load_plugin_textdomain' );
 
 /*
  * Beta plugin deactivation
