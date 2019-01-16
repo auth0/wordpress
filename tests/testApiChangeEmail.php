@@ -7,38 +7,15 @@
  * @since 3.9.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestApiChangeEmail.
  * Test the WP_Auth0_Api_Change_Email class.
  */
-class TestApiChangeEmail extends TestCase {
+class TestApiChangeEmail extends WP_Auth0_Test_Case {
 
 	use httpHelpers {
 		httpMock as protected httpMockDefault;
 	}
-
-	use SetUpTestDb;
-
-	/**
-	 * Test API domain to use.
-	 */
-	const TEST_DOMAIN = 'test.domain.com';
-
-	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	protected static $options;
-
-	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	protected static $error_log;
 
 	/**
 	 * WP_Auth0_Api_Client_Credentials instance.
@@ -52,20 +29,7 @@ class TestApiChangeEmail extends TestCase {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$options          = WP_Auth0_Options::Instance();
-		self::$error_log        = new WP_Auth0_ErrorLog();
-		self::$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$options );
-	}
-
-	/**
-	 * Run after each test.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		self::$options->set( 'domain', null );
-		$this->stopHttpHalting();
-		$this->stopHttpMocking();
-		self::$error_log->clear();
+		self::$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
 	}
 
 	/**
@@ -94,7 +58,7 @@ class TestApiChangeEmail extends TestCase {
 	 */
 	public function testThatApiCallIsFormedCorrectly() {
 		$this->startHttpHalting();
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		// Should succeed with a user_id + provider and set_bearer returning true.
 		$change_email = $this->getStub( true );
@@ -121,7 +85,7 @@ class TestApiChangeEmail extends TestCase {
 	 */
 	public function testThatWpErrorIsHandledProperly() {
 		$this->startHttpMocking();
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		// Mock for a successful API call.
 		$change_email = $this->getStub( true );
@@ -138,7 +102,7 @@ class TestApiChangeEmail extends TestCase {
 	 */
 	public function testThatApiErrorIsHandledProperly() {
 		$this->startHttpMocking();
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		// Mock for a successful API call.
 		$change_email = $this->getStub( true );
@@ -155,7 +119,7 @@ class TestApiChangeEmail extends TestCase {
 	 */
 	public function testThatSuccessfulApiCallReturnsTrue() {
 		$this->startHttpMocking();
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		// Mock for a successful API call.
 		$change_email = $this->getStub( true );
@@ -180,7 +144,7 @@ class TestApiChangeEmail extends TestCase {
 		$mock = $this
 			->getMockBuilder( WP_Auth0_Api_Change_Email::class )
 			->setMethods( [ 'set_bearer' ] )
-			->setConstructorArgs( [ self::$options, self::$api_client_creds ] )
+			->setConstructorArgs( [ self::$opts, self::$api_client_creds ] )
 			->getMock();
 		$mock->method( 'set_bearer' )->willReturn( $set_bearer_returns );
 		return $mock;

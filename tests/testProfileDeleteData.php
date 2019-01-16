@@ -7,13 +7,11 @@
  * @since 3.8.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestProfileDeleteData.
  * Tests functionality of the WP_Auth0_Profile_Delete_Data class.
  */
-class TestProfileDeleteData extends TestCase {
+class TestProfileDeleteData extends WP_Auth0_Test_Case {
 
 	use AjaxHelpers;
 
@@ -21,16 +19,7 @@ class TestProfileDeleteData extends TestCase {
 
 	use HookHelpers;
 
-	use SetUpTestDb;
-
 	use UsersHelper;
-
-	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	protected static $options;
 
 	/**
 	 * WP_Auth0_UsersRepo instance.
@@ -50,8 +39,8 @@ class TestProfileDeleteData extends TestCase {
 	 * Setup before the class starts.
 	 */
 	public static function setUpBeforeClass() {
-		self::$options     = WP_Auth0_Options::Instance();
-		self::$users_repo  = new WP_Auth0_UsersRepo( self::$options );
+		parent::setUpBeforeClass();
+		self::$users_repo  = new WP_Auth0_UsersRepo( self::$opts );
 		self::$delete_data = new WP_Auth0_Profile_Delete_Data( self::$users_repo );
 	}
 
@@ -204,18 +193,5 @@ class TestProfileDeleteData extends TestCase {
 		$table = $this->getDomListFromTagName( $delete_id_html, 'table' );
 		$this->assertEquals( 1, $table->length );
 		$this->assertEquals( 'form-table', $table->item( 0 )->getAttribute( 'class' ) );
-	}
-
-	/*
-	 * PHPUnit overrides to run after tests.
-	 */
-
-	/**
-	 * Runs after each test completes.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		$this->stopAjaxHalting();
-		$this->stopAjaxReturn();
 	}
 }

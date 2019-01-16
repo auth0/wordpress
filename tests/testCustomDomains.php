@@ -6,22 +6,13 @@
  * @since 3.7.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestCustomDomains.
  * Test custom domain functionality.
  */
-class TestCustomDomains extends TestCase {
-
-	use setUpTestDb;
+class TestCustomDomains extends WP_Auth0_Test_Case {
 
 	use domDocumentHelpers;
-
-	/**
-	 * DB settings name.
-	 */
-	const OPTIONS_NAME = 'wp_auth0_settings';
 
 	/**
 	 * Test the input HTML for the custom domain setting.

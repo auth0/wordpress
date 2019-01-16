@@ -3,33 +3,15 @@
  * Contains Class TestWPAuth0DbMigrations.
  *
  * @package WP-Auth0
+ *
  * @since 3.7.0
  */
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestWPAuth0DbMigrations.
  * Tests for database upgrade processes.
  */
-class TestWPAuth0DbMigrations extends TestCase {
-
-	use setUpTestDb;
-
-	/**
-	 * Instance of WP_Auth0_Options.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $opts;
-
-	/**
-	 * Setup for entire test class.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$opts = WP_Auth0_Options::Instance();
-	}
+class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 
 	/**
 	 * Test a DB upgrade from v18 to v19.

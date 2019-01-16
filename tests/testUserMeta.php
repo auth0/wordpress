@@ -3,35 +3,17 @@
  * Contains Class TestUserMeta.
  *
  * @package WP-Auth0
+ *
  * @since 3.8.0
  */
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestUserMeta.
  * Tests that user meta is saved, retrieved, and deleted properly.
  */
-class TestUserMeta extends TestCase {
-
-	use setUpTestDb;
+class TestUserMeta extends WP_Auth0_Test_Case {
 
 	use UsersHelper;
-
-	/**
-	 * Instance of WP_Auth0_Options.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $opts;
-
-	/**
-	 * Setup for entire test class.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$opts = WP_Auth0_Options::Instance();
-	}
 
 	/**
 	 * Test that Auth0 meta data is created and updated properly.

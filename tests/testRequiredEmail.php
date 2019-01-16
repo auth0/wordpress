@@ -3,27 +3,17 @@
  * Contains Class TestRequiredEmail.
  *
  * @package WP-Auth0
+ *
  * @since 3.8.0
  */
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestRequiredEmail.
  * Tests that required email settings function properly.
  */
-class TestRequiredEmail extends TestCase {
-
-	use setUpTestDb;
+class TestRequiredEmail extends WP_Auth0_Test_Case {
 
 	use domDocumentHelpers;
-
-	/**
-	 * Instance of WP_Auth0_Options.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $opts;
 
 	/**
 	 * Instance of WP_Auth0_Admin_Advanced.
@@ -33,16 +23,10 @@ class TestRequiredEmail extends TestCase {
 	public static $admin;
 
 	/**
-	 * DB settings name.
-	 */
-	const OPTIONS_NAME = 'wp_auth0_settings';
-
-	/**
 	 * Setup for entire test class.
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$opts  = new WP_Auth0_Options();
 		$router      = new WP_Auth0_Routes( self::$opts );
 		self::$admin = new WP_Auth0_Admin_Advanced( self::$opts, $router );
 	}

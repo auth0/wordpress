@@ -3,18 +3,15 @@
  * Contains Class TestErrorLog.
  *
  * @package WP-Auth0
+ *
  * @since 3.8.0
  */
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestErrorLog.
  * Tests that the error log stores and displays properly.
  */
-class TestErrorLog extends TestCase {
-
-	use setUpTestDb;
+class TestErrorLog extends WP_Auth0_Test_Case {
 
 	/**
 	 * Test log entry section.
@@ -25,20 +22,6 @@ class TestErrorLog extends TestCase {
 	 * Test log entry message.
 	 */
 	const BASIC_LOG_ENTRY_MESSAGE = '__test_error_message__';
-
-	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	public static $error_log;
-
-	/**
-	 * Error log option name.
-	 *
-	 * @var string
-	 */
-	public static $error_log_option;
 
 	/**
 	 * WP_Auth0_ErrorManager instance.
@@ -58,22 +41,20 @@ class TestErrorLog extends TestCase {
 	 * Run once before this test case.
 	 */
 	public static function setUpBeforeClass() {
-		self::$error_log         = new WP_Auth0_ErrorLog();
-		self::$error_log_option  = WP_Auth0_ErrorLog::OPTION_NAME;
+		parent::setUpBeforeClass();
 		self::$error_manager     = new WP_Auth0_ErrorManager();
 		self::$default_log_entry = [
 			'section' => self::BASIC_LOG_ENTRY_SECTION,
 			'code'    => 'unknown_code',
 			'message' => self::BASIC_LOG_ENTRY_MESSAGE,
 		];
-		parent::setUpBeforeClass();
 	}
 
 	/**
 	 * Test that the error log option name did not change.
 	 */
 	public function testErrorLogOptionName() {
-		$this->assertEquals( 'auth0_error_log', self::$error_log_option );
+		$this->assertEquals( 'auth0_error_log', WP_Auth0_ErrorLog::OPTION_NAME );
 	}
 
 	/**
@@ -214,14 +195,11 @@ class TestErrorLog extends TestCase {
 	 * Test that log clearing works.
 	 */
 	public function testLogClear() {
-		delete_option( self::$error_log_option );
-		$this->assertFalse( get_option( self::$error_log_option ) );
-
 		self::$error_log->add( self::$default_log_entry );
 		$this->assertCount( 1, self::$error_log->get() );
 
 		self::$error_log->clear();
-		$log = get_option( self::$error_log_option );
+		$log = get_option( WP_Auth0_ErrorLog::OPTION_NAME );
 
 		$this->assertTrue( is_array( $log ) );
 		$this->assertEmpty( $log );
@@ -231,22 +209,12 @@ class TestErrorLog extends TestCase {
 	 * Test that log deleting works.
 	 */
 	public function testLogDelete() {
-		delete_option( self::$error_log_option );
-		$this->assertFalse( get_option( self::$error_log_option ) );
-
 		self::$error_log->add( self::$default_log_entry );
 		$this->assertCount( 1, self::$error_log->get() );
 
 		self::$error_log->delete();
+		wp_cache_delete( WP_Auth0_ErrorLog::OPTION_NAME, 'options' );
 
-		$this->assertFalse( get_option( self::$error_log_option ) );
-	}
-
-	/**
-	 * Clear out the error log in between tests.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		self::$error_log->clear();
+		$this->assertFalse( get_option( WP_Auth0_ErrorLog::OPTION_NAME ) );
 	}
 }

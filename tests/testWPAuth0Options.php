@@ -3,27 +3,19 @@
  * Contains Class TestWPAuth0Options.
  *
  * @package WP-Auth0
+ *
  * @since 3.7.0
  */
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestWPAuth0Options
  */
-class TestWPAuth0Options extends TestCase {
-
-	use SetUpTestDb;
+class TestWPAuth0Options extends WP_Auth0_Test_Case {
 
 	/**
 	 * Test string to use.
 	 */
 	const FILTER_TEST_STRING = '__filter_test__';
-
-	/**
-	 * DB settings name.
-	 */
-	const OPTIONS_NAME = 'wp_auth0_settings';
 
 	/**
 	 * Total number of options.

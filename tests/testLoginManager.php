@@ -3,31 +3,19 @@
  * Contains Class TestLoginManager.
  *
  * @package WP-Auth0
+ *
  * @since 3.7.1
  */
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestLoginManager.
  * Tests that WP_Auth0_LoginManager methods function as expected.
  */
-class TestLoginManager extends TestCase {
-
-	use OptionsHelpers;
+class TestLoginManager extends WP_Auth0_Test_Case {
 
 	use RedirectHelpers;
 
-	use SetUpTestDb;
-
 	use UsersHelper;
-
-	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	protected static $error_log;
 
 	/**
 	 * WP_Auth0_UsersRepo instance.
@@ -41,22 +29,7 @@ class TestLoginManager extends TestCase {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$opts       = WP_Auth0_Options::Instance();
 		self::$users_repo = new WP_Auth0_UsersRepo( self::$opts );
-		self::$error_log  = new WP_Auth0_ErrorLog();
-	}
-
-	/**
-	 * Run after each test.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		self::auth0Ready( false );
-		$this->stopRedirectHalting();
-		self::$error_log->clear();
-		self::$opts->set( 'custom_domain', '' );
-		self::$opts->set( 'auth0_implicit_workflow', false );
-		self::$opts->set( 'auto_login', 0 );
 	}
 
 	/**

@@ -7,13 +7,11 @@
  * @since 3.8.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestEditProfile.
  * Test the edit profile class.
  */
-class TestEditProfile extends TestCase {
+class TestEditProfile extends WP_Auth0_Test_Case {
 
 	use AjaxHelpers;
 
@@ -21,16 +19,7 @@ class TestEditProfile extends TestCase {
 
 	use HookHelpers;
 
-	use SetUpTestDb;
-
 	use UsersHelper;
-
-	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $options;
 
 	/**
 	 * WP_Auth0_DBManager instance.
@@ -71,10 +60,10 @@ class TestEditProfile extends TestCase {
 	 * Setup before the class starts.
 	 */
 	public static function setUpBeforeClass() {
-		self::$options     = WP_Auth0_Options::Instance();
-		self::$dbManager   = new WP_Auth0_DBManager( self::$options );
-		self::$usersRepo   = new WP_Auth0_UsersRepo( self::$options );
-		self::$editProfile = new WP_Auth0_EditProfile( self::$dbManager, self::$usersRepo, self::$options );
+		parent::setUpBeforeClass();
+		self::$dbManager   = new WP_Auth0_DBManager( self::$opts );
+		self::$usersRepo   = new WP_Auth0_UsersRepo( self::$opts );
+		self::$editProfile = new WP_Auth0_EditProfile( self::$dbManager, self::$usersRepo, self::$opts );
 	}
 
 	/**

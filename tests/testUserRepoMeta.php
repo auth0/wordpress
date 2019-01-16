@@ -7,31 +7,19 @@
  * @since 3.8.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestUserRepoMeta.
  * Tests that user meta is added, retrieved, and deleted properly.
  */
-class TestUserRepoMeta extends TestCase {
-
-	use setUpTestDb;
+class TestUserRepoMeta extends WP_Auth0_Test_Case {
 
 	use UsersHelper;
-
-	/**
-	 * Instance of WP_Auth0_Options.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $opts;
 
 	/**
 	 * Setup for entire test class.
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$opts       = WP_Auth0_Options::Instance();
 		self::$users_repo = new WP_Auth0_UsersRepo( self::$opts );
 	}
 
@@ -118,13 +106,5 @@ class TestUserRepoMeta extends TestCase {
 		$this->assertEmpty( self::$users_repo::get_meta( 1, 'auth0_id' ) );
 		$this->assertEmpty( self::$users_repo::get_meta( 1, 'auth0_obj' ) );
 		$this->assertEmpty( self::$users_repo::get_meta( 1, 'last_update' ) );
-	}
-
-	/**
-	 * Run after every test.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		self::$users_repo->delete_auth0_object( 1 );
 	}
 }

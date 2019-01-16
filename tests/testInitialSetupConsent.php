@@ -7,43 +7,16 @@
  * @since 3.8.1
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestInitialSetupConsent.
  */
-class TestInitialSetupConsent extends TestCase {
+class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 
 	use httpHelpers {
 		httpMock as protected httpMockDefault;
 	}
 
 	use RedirectHelpers;
-
-	use SetUpTestDb;
-
-	/**
-	 * Instance of WP_Auth0_Options.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $opts;
-
-	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	protected static $error_log;
-
-	/**
-	 * Setup for entire test class.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$opts      = WP_Auth0_Options::Instance();
-		self::$error_log = new WP_Auth0_ErrorLog();
-	}
 
 	/**
 	 * Test that an invalid state is redirected to the right place.
@@ -230,34 +203,6 @@ class TestInitialSetupConsent extends TestCase {
 		$this->assertEquals( 'DB-' . get_auth0_curatedBlogName(), self::$opts->get( 'db_connection_name' ) );
 
 		$this->assertCount( 1, self::$error_log->get() );
-	}
-
-	/*
-	 * PhpUnit suite methods.
-	 */
-
-	/**
-	 * Runs after each test method.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-
-		self::$opts->set( 'auth0_app_token', self::$opts->get_default( 'auth0_app_token' ) );
-		self::$opts->set( 'domain', self::$opts->get_default( 'domain' ) );
-		self::$opts->set( 'client_id', self::$opts->get_default( 'client_id' ) );
-		self::$opts->set( 'client_secret', self::$opts->get_default( 'client_secret' ) );
-		self::$opts->set( 'password_policy', self::$opts->get_default( 'password_policy' ) );
-		self::$opts->set( 'account_profile', null );
-		self::$opts->set( 'db_connection_enabled', null );
-		self::$opts->set( 'db_connection_id', null );
-		self::$opts->set( 'db_connection_name', null );
-
-		$this->stopHttpHalting();
-		$this->stopHttpMocking();
-
-		$this->stopRedirectHalting();
-
-		self::$error_log->clear();
 	}
 
 	/*
