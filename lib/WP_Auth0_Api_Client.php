@@ -50,7 +50,7 @@ class WP_Auth0_Api_Client {
 				'client_secret'         => $a0_options->get( 'client_secret' ),
 				'client_secret_encoded' => $a0_options->get( 'client_secret_b64_encoded' ),
 				'connection'            => $a0_options->get( 'db_connection_name' ),
-				'app_token'             => $a0_options->get( 'auth0_app_token' ),
+				'app_token'             => $a0_options->get( 'auth0_app_token' ), // NOT USED
 				'audience'              => self::get_endpoint( 'api/v2/' ),
 			);
 		}

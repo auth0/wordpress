@@ -415,7 +415,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
 		if ( $old_options['password_policy'] !== $input['password_policy'] ) {
 			$domain      = $input['domain'];
-			$app_token   = $input['auth0_app_token'];
+			$app_token   = $input['auth0_app_token']; // TO BE DEPRECATED
 			$connections = WP_Auth0_Api_Client::search_connection( $domain, $app_token, 'auth0' );
 
 			if ( empty( $connections ) ) {
@@ -465,7 +465,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		}
 
 		if ( $old_options['mfa'] != $input['mfa'] && $input['mfa'] !== null ) {
-			WP_Auth0_Api_Client::update_guardian( $input['domain'], $input['auth0_app_token'], 'push-notification', true );
+			WP_Auth0_Api_Client::update_guardian( $input['domain'], $input['auth0_app_token'], 'push-notification', true ); // TO BE DEPRECATED
 		}
 
 		$mfa_script = WP_Auth0_RulesLib::$guardian_MFA['script'];

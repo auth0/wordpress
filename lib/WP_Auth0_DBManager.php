@@ -34,7 +34,7 @@ class WP_Auth0_DBManager {
 		$options = $this->a0_options;
 
 		if ( empty( $app_token ) ) {
-			$app_token = $options->get( 'auth0_app_token' );
+			$app_token = $options->get( 'auth0_app_token' ); // NEED TO ADDRESS
 		}
 
 		$connection_id   = $options->get( 'db_connection_id' );
