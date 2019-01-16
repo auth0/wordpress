@@ -28,7 +28,7 @@ class WP_Auth0_InitialSetup_Consent {
 	 */
 	public function callback_with_token( $domain, $access_token, $type, $hasInternetConnection = true ) {
 
-		$this->a0_options->set( 'auth0_app_token', $access_token );
+		$this->a0_options->set( 'auth0_app_token', $access_token ); // NEED TO ADDRESS
 		$this->a0_options->set( 'domain', $domain );
 
 		$this->hasInternetConnection = $hasInternetConnection;
@@ -111,7 +111,7 @@ class WP_Auth0_InitialSetup_Consent {
 	public function consent_callback( $name ) {
 
 		$domain    = $this->a0_options->get( 'domain' );
-		$app_token = $this->a0_options->get( 'auth0_app_token' );
+		$app_token = $this->a0_options->get( 'auth0_app_token' ); // NEED TO ADDRESS
 		$client_id = trim( $this->a0_options->get( 'client_id' ) );
 
 		/*
@@ -175,7 +175,12 @@ class WP_Auth0_InitialSetup_Consent {
 			if ( $connection_exists === false ) {
 				$migration_token = JWT::urlsafeB64Encode( openssl_random_pseudo_bytes( 64 ) );
 				$operations      = new WP_Auth0_Api_Operations( $this->a0_options );
-				$response        = $operations->create_wordpress_connection( $this->a0_options->get( 'auth0_app_token' ), $this->hasInternetConnection, $this->a0_options->get( 'password_policy' ), $migration_token );
+				$response        = $operations->create_wordpress_connection(
+					$this->a0_options->get( 'auth0_app_token' ), // NEED TO ADDRESS
+					$this->hasInternetConnection,
+					$this->a0_options->get( 'password_policy' ),
+					$migration_token
+				);
 
 				$this->a0_options->set( 'migration_ws', $this->hasInternetConnection );
 				$this->a0_options->set( 'migration_token', $migration_token );

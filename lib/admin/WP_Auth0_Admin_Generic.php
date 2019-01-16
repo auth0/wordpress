@@ -105,7 +105,12 @@ class WP_Auth0_Admin_Generic {
 			try {
 
 				$operations    = new WP_Auth0_Api_Operations( $this->options );
-				$input[ $key ] = $operations->toggle_rule( $this->options->get( 'auth0_app_token' ), ( is_null( $input[ $key ] ) ? $old_options[ $key ] : null ), $rule_name, $rule_script );
+				$input[ $key ] = $operations->toggle_rule(
+					$this->options->get( 'auth0_app_token' ), // TO BE DEPRECATED
+					( is_null( $input[ $key ] ) ? $old_options[ $key ] : null ),
+					$rule_name,
+					$rule_script
+				);
 
 			} catch ( Exception $e ) {
 				$this->add_validation_error( $e->getMessage() );

@@ -79,9 +79,9 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			),
 			array(
 				'name'     => __( 'API Token', 'wp-auth0' ),
-				'opt'      => 'auth0_app_token',
-				'id'       => 'wpa0_auth0_app_token',
-				'function' => 'render_auth0_app_token',
+				'opt'      => 'auth0_app_token', // TO BE DEPRECATED
+				'id'       => 'wpa0_auth0_app_token', // TO BE DEPRECATED
+				'function' => 'render_auth0_app_token', // TO BE DEPRECATED
 			),
 			array(
 				'name'     => __( 'WordPress Login Enabled', 'wp-auth0' ),
@@ -247,6 +247,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_auth0_app_token( $args = array() ) {
+		// TO BE DEPRECATED
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password' );
 		$this->render_field_description(
 			__( 'This token should include the following scopes: ', 'wp-auth0' ) .
@@ -330,20 +331,20 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			? $input['client_secret_b64_encoded'] == 1
 			: false );
 
-		$input['auth0_app_token'] = ( ! empty( $input['auth0_app_token'] )
-			? $input['auth0_app_token']
-			: $old_options['auth0_app_token'] );
+		$input['auth0_app_token'] = ( ! empty( $input['auth0_app_token'] ) // TO BE DEPRECATED
+			? $input['auth0_app_token'] // TO BE DEPRECATED
+			: $old_options['auth0_app_token'] ); // TO BE DEPRECATED
 
 		// If we have an app token, get and store the audience
-		if ( ! empty( $input['auth0_app_token'] ) ) {
+		if ( ! empty( $input['auth0_app_token'] ) ) { // NEED TO ADDRESS
 			$db_manager = new WP_Auth0_DBManager( WP_Auth0_Options::Instance() );
 
 			if ( get_option( 'wp_auth0_client_grant_failed' ) ) {
-				$db_manager->install_db( 16, $input['auth0_app_token'] );
+				$db_manager->install_db( 16, $input['auth0_app_token'] ); // NEED TO ADDRESS
 			}
 
 			if ( get_option( 'wp_auth0_grant_types_failed' ) ) {
-				$db_manager->install_db( 17, $input['auth0_app_token'] );
+				$db_manager->install_db( 17, $input['auth0_app_token'] ); // NEED TO ADDRESS
 			}
 		}
 

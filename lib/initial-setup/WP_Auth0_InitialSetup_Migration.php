@@ -42,7 +42,7 @@ class WP_Auth0_InitialSetup_Migration {
 		$migration_token    = ( isset( $_REQUEST['migration_token'] ) ? $_REQUEST['migration_token'] : null );
 		$migration_token_id = ( isset( $_REQUEST['migration_token_id'] ) ? $_REQUEST['migration_token_id'] : null );
 
-		$app_token          = $this->a0_options->get( 'auth0_app_token' );
+		$app_token          = $this->a0_options->get( 'auth0_app_token' ); // DEPRECATED
 		$migration_token    = $this->a0_options->get( 'migration_token' );
 		$migration_token_id = $this->a0_options->get( 'migration_token_id' );
 

@@ -75,7 +75,12 @@ class WP_Auth0_InitialSetup_Rules {
 			try {
 
 				$operations    = new WP_Auth0_Api_Operations( $this->a0_options );
-				$input[ $key ] = $operations->toggle_rule( $this->a0_options->get( 'auth0_app_token' ), ( is_null( $input[ $key ] ) ? $old_options[ $key ] : null ), $rule_name, $rule_script );
+				$input[ $key ] = $operations->toggle_rule(
+					$this->a0_options->get( 'auth0_app_token' ), // DEPRECATED
+					( is_null( $input[ $key ] ) ? $old_options[ $key ] : null ),
+					$rule_name,
+					$rule_script
+				);
 
 				$this->a0_options->set( $key, $input[ $key ] );
 

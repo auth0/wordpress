@@ -182,7 +182,7 @@ abstract class WP_Auth0_Api_Abstract {
 
 		$this->api_token = wp_cache_get( self::CACHE_KEY, WPA0_CACHE_GROUP );
 		if ( ! $this->api_token ) {
-			$this->api_token = $this->options->get( 'auth0_app_token' );
+			$this->api_token = $this->options->get( 'auth0_app_token' ); // REMOVE
 		}
 
 		if ( $this->api_token ) {
