@@ -7,27 +7,16 @@
  * @since 3.9.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestProfileChangeEmail.
  */
-class TestProfileChangeEmail extends TestCase {
+class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 
 	use HookHelpers;
 
 	use RedirectHelpers;
 
-	use SetUpTestDb;
-
 	use UsersHelper;
-
-	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $options;
 
 	/**
 	 * WP_Auth0_Api_Client_Credentials instance.
@@ -47,9 +36,9 @@ class TestProfileChangeEmail extends TestCase {
 	 * Run before the test suite.
 	 */
 	public static function setUpBeforeClass() {
-		self::$options          = WP_Auth0_Options::Instance();
-		self::$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$options );
-		self::$users_repo       = new WP_Auth0_UsersRepo( self::$options );
+		parent::setUpBeforeClass();
+		self::$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
+		self::$users_repo       = new WP_Auth0_UsersRepo( self::$opts );
 	}
 
 	/**
@@ -206,7 +195,7 @@ class TestProfileChangeEmail extends TestCase {
 		$mock_api_test_email = $this
 			->getMockBuilder( WP_Auth0_Api_Change_Email::class )
 			->setMethods( [ 'call' ] )
-			->setConstructorArgs( [ self::$options, self::$api_client_creds ] )
+			->setConstructorArgs( [ self::$opts, self::$api_client_creds ] )
 			->getMock();
 		$mock_api_test_email->method( 'call' )->willReturn( $success );
 		return new WP_Auth0_Profile_Change_Email( $mock_api_test_email );

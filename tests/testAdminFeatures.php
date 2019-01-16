@@ -7,41 +7,14 @@
  * @since 3.8.1
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestAdminFeatures.
  */
-class TestAdminFeatures extends TestCase {
+class TestAdminFeatures extends WP_Auth0_Test_Case {
 
 	use HttpHelpers;
 
 	use RedirectHelpers;
-
-	use SetUpTestDb;
-
-	/**
-	 * Instance of WP_Auth0_Options.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $opts;
-
-	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	protected static $error_log;
-
-	/**
-	 * Runs once before all tests.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$opts      = WP_Auth0_Options::Instance();
-		self::$error_log = new WP_Auth0_ErrorLog();
-	}
 
 	/**
 	 * Test that the validation does not run if the current value matches the old value.
@@ -73,7 +46,7 @@ class TestAdminFeatures extends TestCase {
 		$new_input = [
 			'password_policy' => 'good',
 			'domain'          => $test_domain,
-			'auth0_app_token' => $test_token,
+			'auth0_app_token' => $test_token, // TO BE DEPRECATED.
 		];
 
 		$caught_request = [];
@@ -100,7 +73,7 @@ class TestAdminFeatures extends TestCase {
 		$new_input = [
 			'password_policy' => 'good',
 			'domain'          => 'test-wp.auth0.com',
-			'auth0_app_token' => implode( '.', [ uniqid(), uniqid(), uniqid() ] ),
+			'auth0_app_token' => implode( '.', [ uniqid(), uniqid(), uniqid() ] ), // TO BE DEPRECATED.
 		];
 
 		$this->http_request_type = 'success_empty_body';
@@ -128,7 +101,7 @@ class TestAdminFeatures extends TestCase {
 		$new_input = [
 			'password_policy' => 'good',
 			'domain'          => 'test-wp.auth0.com',
-			'auth0_app_token' => implode( '.', [ uniqid(), uniqid(), uniqid() ] ),
+			'auth0_app_token' => implode( '.', [ uniqid(), uniqid(), uniqid() ] ), // TO BE DEPRECATED.
 			'client_id'       => 'TEST_CLIENT_ID',
 		];
 
@@ -142,7 +115,7 @@ class TestAdminFeatures extends TestCase {
 		}
 
 		$this->assertEquals( 'https://test-wp.auth0.com/api/v2/connections/TEST_CONN_ID', $caught_request['url'] );
-		$this->assertEquals( 'Bearer ' . $new_input['auth0_app_token'], $caught_request['headers']['Authorization'] );
+		$this->assertEquals( 'Bearer ' . $new_input['auth0_app_token'], $caught_request['headers']['Authorization'] ); // TO BE DEPRECATED.
 		$this->assertContains( $new_input['client_id'], $caught_request['body']['enabled_clients'] );
 		$this->assertEquals( $new_input['password_policy'], $caught_request['body']['options']['passwordPolicy'] );
 	}
@@ -159,7 +132,7 @@ class TestAdminFeatures extends TestCase {
 		$new_input = [
 			'password_policy' => 'good',
 			'domain'          => 'test-wp.auth0.com',
-			'auth0_app_token' => implode( '.', [ uniqid(), uniqid(), uniqid() ] ),
+			'auth0_app_token' => implode( '.', [ uniqid(), uniqid(), uniqid() ] ), // TO BE DEPRECATED.
 			'client_id'       => 'TEST_CLIENT_ID',
 		];
 
@@ -188,7 +161,7 @@ class TestAdminFeatures extends TestCase {
 		$new_input = [
 			'password_policy' => 'good',
 			'domain'          => 'test-wp.auth0.com',
-			'auth0_app_token' => implode( '.', [ uniqid(), uniqid(), uniqid() ] ),
+			'auth0_app_token' => implode( '.', [ uniqid(), uniqid(), uniqid() ] ), // TO BE DEPRECATED.
 			'client_id'       => 'TEST_CLIENT_ID',
 		];
 
@@ -199,17 +172,5 @@ class TestAdminFeatures extends TestCase {
 
 		global $wp_settings_errors;
 		$this->assertEmpty( $wp_settings_errors );
-	}
-
-	/**
-	 * Runs after each test method.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-
-		$this->stopHttpHalting();
-		$this->stopHttpMocking();
-
-		self::$error_log->clear();
 	}
 }

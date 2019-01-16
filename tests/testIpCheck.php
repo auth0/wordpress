@@ -3,27 +3,15 @@
  * Contains Class TestIpCheck.
  *
  * @package WP-Auth0
+ *
  * @since 3.7.0
  */
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestIpCheck.
  * Tests that IP addresses are returned correctly for a specific region.
  */
-class TestIpCheck extends TestCase {
-
-	use setUpTestDb {
-		setUp as setUpDb;
-	}
-
-	/**
-	 * Instance of WP_Auth0_Options.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $opts;
+class TestIpCheck extends WP_Auth0_Test_Case {
 
 	/**
 	 * Original request IP address.
@@ -37,7 +25,6 @@ class TestIpCheck extends TestCase {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$opts      = WP_Auth0_Options::Instance();
 		self::$backup_ip = $_SERVER['REMOTE_ADDR'];
 	}
 
@@ -45,10 +32,8 @@ class TestIpCheck extends TestCase {
 	 * Runs before each test method.
 	 */
 	public function setUp() {
-		$_SERVER['REMOTE_ADDR'] = self::$backup_ip;
 		parent::setUp();
-		$this->setUpDb();
-		self::$opts->reset();
+		$_SERVER['REMOTE_ADDR'] = self::$backup_ip;
 	}
 
 	/**

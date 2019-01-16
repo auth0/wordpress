@@ -7,27 +7,14 @@
  * @since 3.9.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestOptionMigrationWs.
  */
-class TestOptionMigrationWs extends TestCase {
+class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 
 	use DomDocumentHelpers;
 
-	use SetUpTestDb {
-		setUp as setUpDb;
-	}
-
 	use UsersHelper;
-
-	/**
-	 * Instance of WP_Auth0_Options.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $opts;
 
 	/**
 	 * Instance of WP_Auth0_Admin_Advanced.
@@ -37,38 +24,12 @@ class TestOptionMigrationWs extends TestCase {
 	public static $admin;
 
 	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	protected static $error_log;
-
-	/**
-	 * Setup for entire test class.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$opts      = WP_Auth0_Options::Instance();
-		self::$error_log = new WP_Auth0_ErrorLog();
-	}
-
-	/**
 	 * Runs before each test starts.
 	 */
 	public function setUp() {
 		parent::setUp();
-		self::setUpDb();
-		self::$opts->reset();
 		$router      = new WP_Auth0_Routes( self::$opts );
 		self::$admin = new WP_Auth0_Admin_Advanced( self::$opts, $router );
-	}
-
-	/**
-	 * Runs after each test completes.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		self::$error_log->clear();
 	}
 
 	/**

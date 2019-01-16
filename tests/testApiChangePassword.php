@@ -7,38 +7,15 @@
  * @since 3.8.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestApiChangePassword.
  * Test the WP_Auth0_Api_Change_Password class.
  */
-class TestApiChangePassword extends TestCase {
+class TestApiChangePassword extends WP_Auth0_Test_Case {
 
 	use httpHelpers {
 		httpMock as protected httpMockDefault;
 	}
-
-	use SetUpTestDb;
-
-	/**
-	 * Test API domain to use.
-	 */
-	const TEST_DOMAIN = 'test.domain.com';
-
-	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	protected static $options;
-
-	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	protected static $error_log;
 
 	/**
 	 * WP_Auth0_Api_Client_Credentials instance.
@@ -52,9 +29,7 @@ class TestApiChangePassword extends TestCase {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$options          = WP_Auth0_Options::Instance();
-		self::$error_log        = new WP_Auth0_ErrorLog();
-		self::$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$options );
+		self::$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
 	}
 
 	/**
@@ -62,7 +37,7 @@ class TestApiChangePassword extends TestCase {
 	 */
 	public function testRequest() {
 		$this->startHttpHalting();
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		// Mock for a successful API call.
 		$change_password = $this->getStub( true );
@@ -104,7 +79,7 @@ class TestApiChangePassword extends TestCase {
 	 */
 	public function testCall() {
 		$this->startHttpMocking();
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		// Mock for a successful API call.
 		$change_password = $this->getStub( true );
@@ -137,22 +112,6 @@ class TestApiChangePassword extends TestCase {
 		$this->http_request_type = 'success_empty_body';
 		$this->assertTrue( $change_password->call( uniqid(), uniqid() ) );
 		$this->assertCount( 3, self::$error_log->get() );
-	}
-
-	/*
-	 * PHPUnit overrides to run after tests.
-	 */
-
-	/**
-	 * Stop HTTP halting and mocking, reset JWKS transient.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		self::$options->set( 'domain', null );
-		$this->stopHttpHalting();
-		$this->stopHttpMocking();
-		self::$error_log->clear();
-		$this->assertEmpty( self::$error_log->get() );
 	}
 
 	/*
@@ -192,7 +151,7 @@ class TestApiChangePassword extends TestCase {
 		$mock = $this
 			->getMockBuilder( WP_Auth0_Api_Change_Password::class )
 			->setMethods( [ 'set_bearer' ] )
-			->setConstructorArgs( [ self::$options, self::$api_client_creds ] )
+			->setConstructorArgs( [ self::$opts, self::$api_client_creds ] )
 			->getMock();
 		$mock->method( 'set_bearer' )->willReturn( $set_bearer_returns );
 		return $mock;

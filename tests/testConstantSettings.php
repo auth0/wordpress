@@ -3,18 +3,15 @@
  * Contains Class TestConstantSettings.
  *
  * @package WP-Auth0
+ *
  * @since 3.7.0
  */
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestConstantSettings.
  * Tests that constant-defined settings work as expected.
  */
-class TestConstantSettings extends TestCase {
-
-	use setUpTestDb;
+class TestConstantSettings extends WP_Auth0_Test_Case {
 
 	use domDocumentHelpers;
 

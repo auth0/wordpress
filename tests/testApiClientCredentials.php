@@ -7,46 +7,14 @@
  * @since 3.8.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestApiClientCredentials.
  * Test the WP_Auth0_Api_Client_Credentials class.
  */
-class TestApiClientCredentials extends TestCase {
+class TestApiClientCredentials extends WP_Auth0_Test_Case {
 
 	use httpHelpers {
 		httpMock as protected httpMockDefault;
-	}
-
-	use SetUpTestDb;
-
-	/**
-	 * Test API domain to use.
-	 */
-	const TEST_DOMAIN = 'test.domain.com';
-
-	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	protected static $options;
-
-	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	protected static $error_log;
-
-	/**
-	 * Set up before test class.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$options   = WP_Auth0_Options::Instance();
-		self::$error_log = new WP_Auth0_ErrorLog();
 	}
 
 	/**
@@ -58,10 +26,10 @@ class TestApiClientCredentials extends TestCase {
 		$client_id     = uniqid();
 		$client_secret = uniqid();
 
-		self::$options->set( 'domain', self::TEST_DOMAIN );
-		self::$options->set( 'client_id', $client_id );
-		self::$options->set( 'client_secret', $client_secret );
-		$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$options );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'client_id', $client_id );
+		self::$opts->set( 'client_secret', $client_secret );
+		$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
 
 		$decoded_res = [];
 		try {
@@ -92,7 +60,7 @@ class TestApiClientCredentials extends TestCase {
 		$this->startHttpMocking();
 		set_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME, uniqid() );
 
-		$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$options );
+		$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
 
 		// 1. Set the response to be a WP_Error, make sure we get null back, and check for a log entry.
 		$this->http_request_type = 'wp_error';
@@ -128,7 +96,7 @@ class TestApiClientCredentials extends TestCase {
 		// Mock the parent decode_jwt method to return the dummy decoded token.
 		$api_client_creds_mock = $this->getMockBuilder( WP_Auth0_Api_Client_Credentials::class )
 			->setMethods( [ 'decode_jwt' ] )
-			->setConstructorArgs( [ self::$options ] )
+			->setConstructorArgs( [ self::$opts ] )
 			->getMock();
 		$api_client_creds_mock->method( 'decode_jwt' )
 			->willReturn( $dummy_decoded_token );
@@ -160,17 +128,5 @@ class TestApiClientCredentials extends TestCase {
 				];
 		}
 		return $this->httpMockDefault();
-	}
-
-	/**
-	 * Stop HTTP halting and mocking, reset JWKS transient.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		$this->stopHttpHalting();
-		$this->stopHttpMocking();
-		self::$error_log->clear();
-		$this->assertEmpty( self::$error_log->get() );
-		delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
 	}
 }

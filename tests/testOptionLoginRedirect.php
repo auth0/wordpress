@@ -7,24 +7,11 @@
  * @since 3.7.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestOptionLoginRedirect.
  * Tests that Advanced settings are validated properly.
  */
-class TestOptionLoginRedirect extends TestCase {
-
-	use setUpTestDb {
-		setUp as setUpDb;
-	}
-
-	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $opts;
+class TestOptionLoginRedirect extends WP_Auth0_Test_Case {
 
 	/**
 	 * WP_Auth0_Admin_Advanced instance.
@@ -32,13 +19,6 @@ class TestOptionLoginRedirect extends TestCase {
 	 * @var WP_Auth0_Admin_Advanced
 	 */
 	public static $admin;
-
-	/**
-	 * Existing home_url value before tests.
-	 *
-	 * @var string
-	 */
-	public static $home_url;
 
 	/**
 	 * Empty input value.
@@ -52,26 +32,8 @@ class TestOptionLoginRedirect extends TestCase {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$opts  = new WP_Auth0_Options();
 		$router      = new WP_Auth0_Routes( self::$opts );
 		self::$admin = new WP_Auth0_Admin_Advanced( self::$opts, $router );
-	}
-
-	/**
-	 * Run before each test starts.
-	 */
-	public function setUp() {
-		parent::setUp();
-		self::setUpDb();
-		self::$home_url = home_url();
-	}
-
-	/**
-	 * Run after each test finishes.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		update_option( 'home_url', self::$home_url );
 	}
 
 	/**
@@ -90,10 +52,10 @@ class TestOptionLoginRedirect extends TestCase {
 	 * Test that the default is set when the input is empty.
 	 */
 	public function testThatDefaultIsUsedIfNewValueIsEmpty() {
-		$old_input = [ 'default_login_redirection' => self::$home_url . '/path' ];
+		$old_input = [ 'default_login_redirection' => home_url() . '/path' ];
 
 		$valid_input = self::$admin->loginredirection_validation( $old_input, self::$empty_input );
-		$this->assertEquals( self::$home_url, $valid_input['default_login_redirection'] );
+		$this->assertEquals( home_url(), $valid_input['default_login_redirection'] );
 	}
 
 	/**
@@ -102,20 +64,20 @@ class TestOptionLoginRedirect extends TestCase {
 	public function testThatDefaultIsUsedIfNewUrlIsInvalid() {
 		$invalid_url = 'https://auth0.com';
 		$input       = [ 'default_login_redirection' => $invalid_url ];
-		$old_input   = [ 'default_login_redirection' => self::$home_url . '/path' ];
+		$old_input   = [ 'default_login_redirection' => home_url() . '/path' ];
 
 		$valid_input = self::$admin->loginredirection_validation( $old_input, $input );
 		$this->assertEquals( $old_input['default_login_redirection'], $valid_input['default_login_redirection'] );
 
 		$valid_input = self::$admin->loginredirection_validation( self::$empty_input, $input );
-		$this->assertEquals( self::$home_url, $valid_input['default_login_redirection'] );
+		$this->assertEquals( home_url(), $valid_input['default_login_redirection'] );
 	}
 
 	/**
 	 * Test that a URL with the same host as home_url will be saved.
 	 */
 	public function testThatNewUrlWithSameHostIsValid() {
-		$input = [ 'default_login_redirection' => self::$home_url . '/path' ];
+		$input = [ 'default_login_redirection' => home_url() . '/path' ];
 
 		$valid_input = self::$admin->loginredirection_validation( self::$empty_input, $input );
 		$this->assertEquals( $input['default_login_redirection'], $valid_input['default_login_redirection'] );

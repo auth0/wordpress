@@ -7,19 +7,13 @@
  * @since 3.8.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestRenderForm.
  * Tests that the login form is rendered with the right conditions.
  */
-class TestRenderForm extends TestCase {
-
-	use OptionsHelpers;
+class TestRenderForm extends WP_Auth0_Test_Case {
 
 	use RedirectHelpers;
-
-	use SetUpTestDb;
 
 	use UsersHelper;
 
@@ -42,16 +36,7 @@ class TestRenderForm extends TestCase {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$opts     = WP_Auth0_Options::Instance();
 		self::$wp_auth0 = new WP_Auth0( self::$opts );
-	}
-
-	/**
-	 * Run after each test.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		self::auth0Ready( false );
 	}
 
 	/**

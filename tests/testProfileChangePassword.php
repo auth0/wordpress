@@ -7,20 +7,16 @@
  * @since 3.8.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestProfileChangePassword.
  */
-class TestProfileChangePassword extends TestCase {
+class TestProfileChangePassword extends WP_Auth0_Test_Case {
 
 	use AjaxHelpers;
 
 	use DomDocumentHelpers;
 
 	use HookHelpers;
-
-	use SetUpTestDb;
 
 	use UsersHelper;
 
@@ -65,20 +61,11 @@ class TestProfileChangePassword extends TestCase {
 	 * Setup before the class starts.
 	 */
 	public static function setUpBeforeClass() {
-		self::$options             = WP_Auth0_Options::Instance();
-		self::$api_client_creds    = new WP_Auth0_Api_Client_Credentials( self::$options );
-		self::$api_change_password = new WP_Auth0_Api_Change_Password( self::$options, self::$api_client_creds );
+		parent::setUpBeforeClass();
+		self::$api_client_creds    = new WP_Auth0_Api_Client_Credentials( self::$opts );
+		self::$api_change_password = new WP_Auth0_Api_Change_Password( self::$opts, self::$api_client_creds );
 		self::$change_password     = new WP_Auth0_Profile_Change_Password( self::$api_change_password );
-		self::$users_repo          = new WP_Auth0_UsersRepo( self::$options );
-	}
-
-	/**
-	 * Run after each test is completed.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		self::$options->reset();
-		$this->stopHttpHalting();
+		self::$users_repo          = new WP_Auth0_UsersRepo( self::$opts );
 	}
 
 	/**
@@ -173,7 +160,7 @@ class TestProfileChangePassword extends TestCase {
 	 */
 	public function testThatPasswordIsUnescapedBeforeSending() {
 		$this->startHttpHalting();
-		self::$options->set( 'domain', 'example.auth0.com' );
+		self::$opts->set( 'domain', 'example.auth0.com' );
 
 		$user   = $this->createUser();
 		$errors = new WP_Error();
@@ -189,7 +176,7 @@ class TestProfileChangePassword extends TestCase {
 		$mock_api = $this
 			->getMockBuilder( WP_Auth0_Api_Change_Password::class )
 			->setMethods( [ 'set_bearer' ] )
-			->setConstructorArgs( [ self::$options, self::$api_client_creds ] )
+			->setConstructorArgs( [ self::$opts, self::$api_client_creds ] )
 			->getMock();
 		$mock_api->method( 'set_bearer' )->willReturn( true );
 		$change_password = new WP_Auth0_Profile_Change_Password( $mock_api );
@@ -301,7 +288,7 @@ class TestProfileChangePassword extends TestCase {
 		$mock_api_test_password = $this
 			->getMockBuilder( WP_Auth0_Api_Change_Password::class )
 			->setMethods( [ 'call' ] )
-			->setConstructorArgs( [ self::$options, self::$api_client_creds ] )
+			->setConstructorArgs( [ self::$opts, self::$api_client_creds ] )
 			->getMock();
 		$mock_api_test_password->method( 'call' )->willReturn( $success );
 		return new WP_Auth0_Profile_Change_Password( $mock_api_test_password );

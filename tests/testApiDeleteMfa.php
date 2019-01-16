@@ -7,38 +7,15 @@
  * @since 3.8.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestApiDeleteMfa.
  * Test the WP_Auth0_Api_Delete_User_Mfa class.
  */
-class TestApiDeleteMfa extends TestCase {
+class TestApiDeleteMfa extends WP_Auth0_Test_Case {
 
 	use httpHelpers {
 		httpMock as protected httpMockDefault;
 	}
-
-	use SetUpTestDb;
-
-	/**
-	 * Test API domain to use.
-	 */
-	const TEST_DOMAIN = 'test.domain.com';
-
-	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	protected static $options;
-
-	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	protected static $error_log;
 
 	/**
 	 * WP_Auth0_Api_Client_Credentials instance.
@@ -52,9 +29,7 @@ class TestApiDeleteMfa extends TestCase {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$options          = WP_Auth0_Options::Instance();
-		self::$error_log        = new WP_Auth0_ErrorLog();
-		self::$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$options );
+		self::$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
 	}
 
 	/**
@@ -62,7 +37,7 @@ class TestApiDeleteMfa extends TestCase {
 	 */
 	public function testRequest() {
 		$this->startHttpHalting();
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		// Should fail with a missing user_id.
 		$delete_mfa = $this->getStub( true );
@@ -97,7 +72,7 @@ class TestApiDeleteMfa extends TestCase {
 	 */
 	public function testCall() {
 		$this->startHttpMocking();
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		$delete_mfa = $this->getStub( true );
 
@@ -119,22 +94,6 @@ class TestApiDeleteMfa extends TestCase {
 		$this->http_request_type = 'success_delete_empty_body';
 		$this->assertEquals( 1, $delete_mfa->call( uniqid() ) );
 		$this->assertCount( 2, self::$error_log->get() );
-	}
-
-	/*
-	 * PHPUnit overrides to run after tests.
-	 */
-
-	/**
-	 * Stop HTTP halting and mocking, reset JWKS transient.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		self::$options->set( 'domain', null );
-		$this->stopHttpHalting();
-		$this->stopHttpMocking();
-		self::$error_log->clear();
-		$this->assertEmpty( self::$error_log->get() );
 	}
 
 	/*
@@ -168,7 +127,7 @@ class TestApiDeleteMfa extends TestCase {
 		$mock = $this
 			->getMockBuilder( WP_Auth0_Api_Delete_User_Mfa::class )
 			->setMethods( [ 'set_bearer' ] )
-			->setConstructorArgs( [ self::$options, self::$api_client_creds ] )
+			->setConstructorArgs( [ self::$opts, self::$api_client_creds ] )
 			->getMock();
 		$mock->method( 'set_bearer' )->willReturn( $set_bearer_returns );
 		return $mock;

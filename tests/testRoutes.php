@@ -7,31 +7,16 @@
  * @since 3.9.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestRoutes.
  *
  * @group routes
  */
-class TestRoutes extends TestCase {
+class TestRoutes extends WP_Auth0_Test_Case {
 
 	use HookHelpers;
 
-	use OptionsHelpers;
-
-	use SetUpTestDb {
-		setUp as setUpDb;
-	}
-
 	use UsersHelper;
-
-	/**
-	 * Instance of WP_Auth0_Options.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $opts;
 
 	/**
 	 * Instance of WP_Auth0_Routes.
@@ -39,13 +24,6 @@ class TestRoutes extends TestCase {
 	 * @var WP_Auth0_Routes
 	 */
 	public static $routes;
-
-	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	protected static $error_log;
 
 	/**
 	 * Mock WP instance.
@@ -59,10 +37,7 @@ class TestRoutes extends TestCase {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$opts   = WP_Auth0_Options::Instance();
 		self::$routes = new WP_Auth0_Routes( self::$opts );
-
-		self::$error_log = new WP_Auth0_ErrorLog();
 	}
 
 	/**
@@ -70,17 +45,7 @@ class TestRoutes extends TestCase {
 	 */
 	public function setUp() {
 		parent::setUp();
-		$this->setUpDb();
 		self::$wp = new WP();
-		self::$opts->reset();
-	}
-
-	/**
-	 * Runs after each test method.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		self::$error_log->clear();
 	}
 
 	/**

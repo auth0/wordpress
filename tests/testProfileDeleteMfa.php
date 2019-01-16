@@ -7,12 +7,10 @@
  * @since 3.8.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestProfileDeleteMfa.
  */
-class TestProfileDeleteMfa extends TestCase {
+class TestProfileDeleteMfa extends WP_Auth0_Test_Case {
 
 	use AjaxHelpers;
 
@@ -20,16 +18,7 @@ class TestProfileDeleteMfa extends TestCase {
 
 	use HookHelpers;
 
-	use SetUpTestDb;
-
 	use UsersHelper;
-
-	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $options;
 
 	/**
 	 * WP_Auth0_Api_Client_Credentials instance.
@@ -63,11 +52,11 @@ class TestProfileDeleteMfa extends TestCase {
 	 * Setup before the class starts.
 	 */
 	public static function setUpBeforeClass() {
-		self::$options          = WP_Auth0_Options::Instance();
-		self::$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$options );
-		self::$api_delete_mfa   = new WP_Auth0_Api_Delete_User_Mfa( self::$options, self::$api_client_creds );
-		self::$delete_mfa       = new WP_Auth0_Profile_Delete_Mfa( self::$options, self::$api_delete_mfa );
-		self::$users_repo       = new WP_Auth0_UsersRepo( self::$options );
+		parent::setUpBeforeClass();
+		self::$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
+		self::$api_delete_mfa   = new WP_Auth0_Api_Delete_User_Mfa( self::$opts, self::$api_client_creds );
+		self::$delete_mfa       = new WP_Auth0_Profile_Delete_Mfa( self::$opts, self::$api_delete_mfa );
+		self::$users_repo       = new WP_Auth0_UsersRepo( self::$opts );
 	}
 
 	/**
@@ -259,7 +248,7 @@ class TestProfileDeleteMfa extends TestCase {
 		self::$delete_mfa->show_delete_mfa();
 		$this->assertEmpty( ob_get_clean() );
 
-		self::$options->set( 'mfa', 1 );
+		self::$opts->set( 'mfa', 1 );
 
 		// Should not show this control if user is not an Auth0-connected user.
 		ob_start();
@@ -286,20 +275,6 @@ class TestProfileDeleteMfa extends TestCase {
 	}
 
 	/*
-	 * PHPUnit overrides to run after tests.
-	 */
-
-	/**
-	 * Runs after each test completes.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		$this->stopAjaxHalting();
-		$this->stopAjaxReturn();
-		self::$users_repo->delete_auth0_object( 1 );
-	}
-
-	/*
 	 * Test helper functions.
 	 */
 
@@ -315,11 +290,11 @@ class TestProfileDeleteMfa extends TestCase {
 		$mock_api_delete_mfa = $this
 			->getMockBuilder( WP_Auth0_Api_Delete_User_Mfa::class )
 			->setMethods( [ 'call', 'set_bearer' ] )
-			->setConstructorArgs( [ self::$options, self::$api_client_creds ] )
+			->setConstructorArgs( [ self::$opts, self::$api_client_creds ] )
 			->getMock();
 		$mock_api_delete_mfa->method( 'set_bearer' )->willReturn( true );
 		$mock_api_delete_mfa->method( 'call' )->willReturn( $return );
 
-		return new WP_Auth0_Profile_Delete_Mfa( self::$options, $mock_api_delete_mfa );
+		return new WP_Auth0_Profile_Delete_Mfa( self::$opts, $mock_api_delete_mfa );
 	}
 }

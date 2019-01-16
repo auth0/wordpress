@@ -3,15 +3,14 @@
  * Contains Class TestWPAuth0Helpers.
  *
  * @package WP-Auth0
+ *
  * @since 3.7.0
  */
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestWPAuth0Helpers
  */
-class TestWPAuth0Helpers extends TestCase {
+class TestWPAuth0Helpers extends WP_Auth0_Test_Case {
 
 	/**
 	 * Test the basic options functionality.
