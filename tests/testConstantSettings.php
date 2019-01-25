@@ -13,7 +13,7 @@
  */
 class TestConstantSettings extends WP_Auth0_Test_Case {
 
-	use domDocumentHelpers;
+	use DomDocumentHelpers;
 
 	/**
 	 * Default constant setting prefix.

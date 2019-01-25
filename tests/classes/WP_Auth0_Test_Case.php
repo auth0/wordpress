@@ -10,7 +10,7 @@
 /**
  * Class WP_Auth0_Test_Case
  */
-class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
+abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 
 	const TEST_DOMAIN = 'test.domain.com';
 
