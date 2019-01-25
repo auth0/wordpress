@@ -12,7 +12,7 @@
  */
 class TestCustomDomains extends WP_Auth0_Test_Case {
 
-	use domDocumentHelpers;
+	use DomDocumentHelpers;
 
 	/**
 	 * Test the input HTML for the custom domain setting.
