@@ -80,13 +80,20 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'id'       => 'wpa0_cdn_url',
 				'function' => 'render_cdn_url',
 			),
-			array(
+		);
+
+		// TODO: Remove this once feature has been removed
+		if ( $this->options->get( 'link_auth0_users' ) ) {
+			$options[] = array(
 				'name'     => __( 'Link Users with Same Email', 'wp-auth0' ),
 				'opt'      => 'link_auth0_users',
 				'id'       => 'wpa0_link_auth0_users',
 				'function' => 'render_link_auth0_users',
-			),
-			array(
+			);
+		}
+
+		$options = $options + array(
+			( count( $options ) ) => array(
 				'name'     => __( 'Auto Provisioning', 'wp-auth0' ),
 				'opt'      => 'auto_provisioning',
 				'id'       => 'wpa0_auto_provisioning',
@@ -294,16 +301,20 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `link_auth0_users` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * TODO: Deprecate
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - To be deprecated
 	 */
 	public function render_link_auth0_users( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Link accounts with the same verified e-mail address. ', 'wp-auth0' ) .
-			__( 'See the "Require Verified Email" setting above for more information on email verification', 'wp-auth0' )
+			__( 'This feature may currently be active. ', 'wp-auth0' ) .
+			__( 'Manage it with the "Account-Linking-Do-Not-Rename" Rule in the ', 'wp-auth0' ) .
+			$this->get_dashboard_link( 'rules' )
 		);
 	}
 
@@ -601,6 +612,11 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		return $input;
 	}
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - To be deprecated
+	 */
 	public function link_accounts_validation( $old_options, $input ) {
 		$link_script = WP_Auth0_RulesLib::$link_accounts['script'];
 		$link_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $link_script );

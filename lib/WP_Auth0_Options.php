@@ -209,11 +209,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'password_policy'           => 'fair',
 			'sso'                       => false,
 			'singlelogout'              => false,
-			'mfa'                       => null,
-			'fullcontact'               => null,
-			'fullcontact_apikey'        => null,
-			'geo_rule'                  => null,
-			'income_rule'               => null,
 			'override_wp_avatars'       => true,
 
 			// Appearance
@@ -239,7 +234,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'cdn_url_legacy'            => 'https://cdn.auth0.com/js/lock-9.2.min.js',
 			'passwordless_cdn_url'      => WPA0_LOCK_CDN_URL,
 			'lock_connections'          => '',
-			'link_auth0_users'          => null,
 			'auto_provisioning'         => false,
 			'migration_ws'              => false,
 			'migration_token'           => null,

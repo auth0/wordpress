@@ -79,37 +79,45 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 				'id'       => 'wpa0_mfa',
 				'function' => 'render_mfa',
 			),
-			array(
+		);
+
+		// TODO: Remove this once feature has been removed
+		if ( $this->options->get( 'fullcontact' ) ) {
+			$options[] = array(
 				'name'     => __( 'FullContact Integration', 'wp-auth0' ),
 				'opt'      => 'fullcontact',
 				'id'       => 'wpa0_fullcontact',
 				'function' => 'render_fullcontact',
-			),
-			array(
-				'name'     => __( 'FullContact API Key', 'wp-auth0' ),
-				'opt'      => 'fullcontact_apikey',
-				'id'       => 'wpa0_fullcontact_key',
-				'function' => 'render_fullcontact_apikey',
-			),
-			array(
+			);
+		}
+
+		// TODO: Remove this once feature has been removed
+		if ( $this->options->get( 'geo_rule' ) ) {
+			$options[] = array(
 				'name'     => __( 'Store Geolocation', 'wp-auth0' ),
 				'opt'      => 'geo_rule',
 				'id'       => 'wpa0_geo',
 				'function' => 'render_geo',
-			),
-			array(
+			);
+		}
+
+		// TODO: Remove this once feature has been removed
+		if ( $this->options->get( 'income_rule' ) ) {
+			$options[] = array(
 				'name'     => __( 'Store Zipcode Income', 'wp-auth0' ),
 				'opt'      => 'income_rule',
 				'id'       => 'wpa0_income',
 				'function' => 'render_income',
-			),
-			array(
-				'name'     => __( 'Override WordPress Avatars', 'wp-auth0' ),
-				'opt'      => 'override_wp_avatars',
-				'id'       => 'wpa0_override_wp_avatars',
-				'function' => 'render_override_wp_avatars',
-			),
+			);
+		}
+
+		$options[] = array(
+			'name'     => __( 'Override WordPress Avatars', 'wp-auth0' ),
+			'opt'      => 'override_wp_avatars',
+			'id'       => 'wpa0_override_wp_avatars',
+			'function' => 'render_override_wp_avatars',
 		);
+
 		$this->init_option_section( '', 'features', $options );
 	}
 
@@ -256,36 +264,41 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_mfa( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Mark this if you want to enable multifactor authentication with Auth0 Guardian. ', 'wp-auth0' ) .
-			sprintf(
-				__( 'You can enable other MFA providers in the %s. ', 'wp-auth0' ),
-				$this->get_dashboard_link( 'multifactor' )
-			) . __( 'For more information, see our ', 'wp-auth0' ) .
+			__( 'MFA is a method of verifying identity by requiring more than 1 piece of identifying information. ', 'wp-auth0' ) .
+			__( 'This provides an additional layer of security, decreasing the likelihood of unauthorized access. ', 'wp-auth0' ) .
+			__( 'To configure MFA for this site, please see this ', 'wp-auth0' ) .
 			$this->get_docs_link( 'multifactor-authentication', __( 'help page on MFA', 'wp-auth0' ) )
 		);
+
+		// TODO: Remove this check once feature has been removed
+		if ( $this->options->get( 'mfa' ) ) {
+			$this->render_field_description(
+				__( 'This feature may currently be active. ', 'wp-auth0' ) .
+				__( 'Manage it with the "Multifactor-Guardian-Do-Not-Rename" Rule in the ', 'wp-auth0' ) .
+				$this->get_dashboard_link( 'rules' )
+			);
+		}
 	}
 
 	/**
 	 * Render form field and description for the `fullcontact` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * TODO: Deprecate
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - To be deprecated
 	 */
 	public function render_fullcontact( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_fullcontact_key' );
 		$this->render_field_description(
-			__( 'Enriches your user profiles with the data provided by FullContact. ', 'wp-auth0' ) .
-			__( 'A valid FullContact API key is required for this to work. ', 'wp-auth0' ) .
-			__( 'For more details, see our ', 'wp-auth0' ) .
-			$this->get_docs_link(
-				'monitoring/track-signups-enrich-user-profile-generate-leads',
-				__( 'help page on tracking signups', 'wp-auth0' )
-			)
+			__( 'This feature may currently be active. ', 'wp-auth0' ) .
+			__( 'Manage it with the "Enrich-profile-with-FullContact-Do-Not-Rename" Rule in the ', 'wp-auth0' ) .
+			$this->get_dashboard_link( 'rules' )
 		);
 	}
 
@@ -293,10 +306,14 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `fullcontact_apikey` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * TODO: Deprecate
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - To be deprecated
 	 */
 	public function render_fullcontact_apikey( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
@@ -306,15 +323,20 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `geo_rule` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * TODO: Deprecate
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - To be deprecated
 	 */
 	public function render_geo( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Mark this if you want to store geolocation data based on the IP of the user logging in', 'wp-auth0' )
+			__( 'This feature may currently be active. ', 'wp-auth0' ) .
+			__( 'Manage it with the "Store-Geo-Location-Do-Not-Rename" Rule in the ', 'wp-auth0' ) .
+			$this->get_dashboard_link( 'rules' )
 		);
 	}
 
@@ -322,15 +344,20 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `income_rule` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * TODO: Deprecate
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - To be deprecated
 	 */
 	public function render_income( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Mark this if you want to store projected income data based on the zipcode of the user\'s IP', 'wp-auth0' )
+			__( 'This feature may currently be active. ', 'wp-auth0' ) .
+			__( 'Manage it with the "Enrich-profile-with-Zipcode-Income-Do-Not-Rename" Rule in the ', 'wp-auth0' ) .
+			$this->get_dashboard_link( 'rules' )
 		);
 	}
 
@@ -448,6 +475,11 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		return $input;
 	}
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - To be deprecated
+	 */
 	public function fullcontact_validation( $old_options, $input ) {
 		$fullcontact_script = WP_Auth0_RulesLib::$fullcontact['script'];
 		$fullcontact_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $fullcontact_script );
@@ -455,6 +487,11 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		return $this->rule_validation( $old_options, $input, 'fullcontact', WP_Auth0_RulesLib::$fullcontact['name'] . '-' . get_auth0_curatedBlogName(), $fullcontact_script );
 	}
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - To be deprecated
+	 */
 	public function mfa_validation( $old_options, $input ) {
 
 		if ( ! isset( $input['mfa'] ) ) {
@@ -473,12 +510,22 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		return $this->rule_validation( $old_options, $input, 'mfa', WP_Auth0_RulesLib::$guardian_MFA['name'] . '-' . get_auth0_curatedBlogName(), $mfa_script );
 	}
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - To be deprecated
+	 */
 	public function georule_validation( $old_options, $input ) {
 		$geo_script = WP_Auth0_RulesLib::$geo['script'];
 		$geo_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $geo_script );
 		return $this->rule_validation( $old_options, $input, 'geo_rule', WP_Auth0_RulesLib::$geo['name'] . '-' . get_auth0_curatedBlogName(), $geo_script );
 	}
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - To be deprecated
+	 */
 	public function incomerule_validation( $old_options, $input ) {
 		$income_script = WP_Auth0_RulesLib::$income['script'];
 		$income_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $income_script );

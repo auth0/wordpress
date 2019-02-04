@@ -89,8 +89,11 @@ class WP_Auth0_Api_Operations {
 		return $response->id;
 	}
 
-	// $input['geo_rule'] = ( isset( $input['geo_rule'] ) ? $input['geo_rule'] : 0 );
-	// $enable = ($old_options['geo_rule'] == null && 1 == $input['geo_rule'])
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - To be deprecated
+	 */
 	public function toggle_rule( $app_token, $rule_id, $rule_name, $rule_script ) {
 
 		$domain = $this->a0_options->get( 'domain' );
