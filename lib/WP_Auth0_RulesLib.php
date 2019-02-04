@@ -1,7 +1,16 @@
 <?php
-
+/**
+ * TODO: Deprecate
+ *
+ * @codeCoverageIgnore - Deprecated.
+ */
 class WP_Auth0_RulesLib {
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
 	public static $link_accounts = array(
 
 		'name'   => 'Account-Linking-Do-Not-Rename',
@@ -70,6 +79,11 @@ function (user, context, callback) {
 }",
 	);
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
 	public static $guardian_MFA = array(
 		'name'   => 'Multifactor-Guardian-Do-Not-Rename',
 		'script' => "
@@ -89,6 +103,11 @@ function (user, context, callback) {
 }",
 	);
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
 	public static $geo = array(
 		'name'   => 'Store-Geo-Location-Do-Not-Rename',
 		'script' => "
@@ -112,6 +131,11 @@ function (user, context, callback) {
 }",
 	);
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
 	public static $fullcontact = array(
 		'name'   => 'Enrich-profile-with-FullContact-Do-Not-Rename',
 		'script' => "
@@ -159,6 +183,11 @@ function (user, context, callback) {
 }",
 	);
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
 	public static $income = array(
 		'name'   => 'Enrich-profile-with-Zipcode-Income-Do-Not-Rename',
 		'script' => "

@@ -97,6 +97,11 @@ class WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - To be deprecated
+	 */
 	protected function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {
 		$input[ $key ] = ( isset( $input[ $key ] ) ? $input[ $key ] : null );
 

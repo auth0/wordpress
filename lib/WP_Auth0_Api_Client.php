@@ -754,6 +754,11 @@ class WP_Auth0_Api_Client {
 		return $processed;
 	}
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - To be deprecated
+	 */
 	public static function update_guardian( $domain, $app_token, $factor, $enabled ) {
 		$endpoint = "https://$domain/api/v2/guardian/factors/$factor";
 
