@@ -265,7 +265,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 */
 	public function render_mfa( $args = array() ) {
 		$this->render_field_description(
-			__( 'MFA is a method of verifying identity by requiring more than 1 piece of identifying information. ', 'wp-auth0' ) .
+			__( 'MFA is a method to verify identity by checking a second factor in addition to the password. ', 'wp-auth0' ) .
 			__( 'This provides an additional layer of security, decreasing the likelihood of unauthorized access. ', 'wp-auth0' ) .
 			__( 'To configure MFA for this site, please see this ', 'wp-auth0' ) .
 			$this->get_docs_link( 'multifactor-authentication', __( 'help page on MFA', 'wp-auth0' ) )
