@@ -11,12 +11,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
 	protected $actions_middlewares = array(
 		'basic_validation',
-		'georule_validation',
-		'sso_validation',
 		'security_validation',
-		'incomerule_validation',
-		'fullcontact_validation',
-		'mfa_validation',
 	);
 
 	/**
@@ -378,9 +373,11 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	}
 
 	public function basic_validation( $old_options, $input ) {
-		// SLO will be turned off in WP_Auth0_Admin_Features::sso_validation() if SSO is not on.
-		$input['singlelogout']        = ( isset( $input['singlelogout'] ) ? $input['singlelogout'] : 0 );
-		$input['override_wp_avatars'] = ( isset( $input['override_wp_avatars'] ) ? $input['override_wp_avatars'] : 0 );
+		$input['sso'] = ! empty( $input['sso'] ) ? 1 : 0;
+
+		// Turn SLO off if SSO is off.
+		$input['singlelogout']        = ( ! empty( $input['singlelogout'] ) && $input['sso'] ) ? 1 : 0;
+		$input['override_wp_avatars'] = ! empty( $input['override_wp_avatars'] ) ? 1 : 0;
 
 		return $input;
 	}
@@ -388,11 +385,16 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	/**
 	 * Update the Auth0 Application if SSO is turned on and disable SLO if it is turned off.
 	 *
+	 * TODO: Deprecate
+	 *
 	 * @param array $old_options - option values before saving.
 	 * @param array $input - new option values being saved.
 	 *
 	 * @return array
+	 *
+	 * @codeCoverageIgnore - To be deprecated
 	 */
+
 	public function sso_validation( $old_options, $input ) {
 		$input['sso'] = ( isset( $input['sso'] ) ? $input['sso'] : 0 );
 		$is_sso       = ! empty( $input['sso'] );
