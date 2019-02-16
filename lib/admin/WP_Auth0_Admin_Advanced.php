@@ -12,7 +12,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	protected $actions_middlewares = array(
 		'basic_validation',
 		'migration_ws_validation',
-		'link_accounts_validation',
 		'loginredirection_validation',
 	);
 

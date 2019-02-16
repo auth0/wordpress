@@ -303,6 +303,7 @@ class WP_Auth0_Api_Client {
 			'name'                => $name,
 			'app_type'            => 'regular_web',
 
+			// Callback URLs for Auth Code and Hybrid/Implicit
 			'callbacks'           => array(
 				$options->get_wp_auth0_url(),
 			),
@@ -320,10 +321,14 @@ class WP_Auth0_Api_Client {
 				wp_login_url(),
 			),
 
+			// Advanced > Grant Types
 			'grant_types'         => self::get_client_grant_types(),
 			'jwt_configuration'   => array(
 				'alg' => self::DEFAULT_CLIENT_ALG,
 			),
+
+			// "Use Auth0 to do Single Sign On"
+			'sso'                 => true,
 		);
 
 		$response = wp_remote_post(

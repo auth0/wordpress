@@ -1,6 +1,6 @@
 <?php
 /**
- * Contains Class TestAdminFeatures.
+ * Contains Class TestOptionPasswordPolicy.
  *
  * @package WP-Auth0
  *
@@ -8,9 +8,9 @@
  */
 
 /**
- * Class TestAdminFeatures.
+ * Class TestOptionPasswordPolicy.
  */
-class TestAdminFeatures extends WP_Auth0_Test_Case {
+class TestOptionPasswordPolicy extends WP_Auth0_Test_Case {
 
 	use HttpHelpers;
 
