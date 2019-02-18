@@ -376,7 +376,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		$input['sso'] = ! empty( $input['sso'] ) ? 1 : 0;
 
 		// Turn SLO off if SSO is off.
-		$input['singlelogout']        = ( ! empty( $input['singlelogout'] ) && $input['sso'] ) ? 1 : 0;
+		$input['singlelogout']        = ! empty( $input['singlelogout'] ) && $input['sso'] ? 1 : 0;
 		$input['override_wp_avatars'] = ! empty( $input['override_wp_avatars'] ) ? 1 : 0;
 
 		return $input;

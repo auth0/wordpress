@@ -123,7 +123,13 @@ class TestOptionSsoSlo extends WP_Auth0_Test_Case {
 		$this->assertEquals( 1, $input->item( 0 )->getAttribute( 'value' ) );
 	}
 
+	/**
+	 * Test that SSO is validated properly on save
+	 */
 	public function testThatSsoIsValidatedOnSave() {
+		$validated = self::$admin->basic_validation( [], [] );
+		$this->assertEquals( 0, $validated['sso'] );
+
 		$validated = self::$admin->basic_validation( [], [ 'sso' => false ] );
 		$this->assertEquals( 0, $validated['sso'] );
 
@@ -137,7 +143,15 @@ class TestOptionSsoSlo extends WP_Auth0_Test_Case {
 		$this->assertEquals( 1, $validated['sso'] );
 	}
 
+	/**
+	 * Test that SSO is validated properly on save.
+	 * SSO must be on for SLO to validate to anything except false.
+	 * See testThatSloIsTurnedOffIfSsoIsOff for tests regarding that behavior.
+	 */
 	public function testThatSloIsValidatedOnSave() {
+		$validated = self::$admin->basic_validation( [], [ 'sso' => 1 ] );
+		$this->assertEquals( 0, $validated['singlelogout'] );
+
 		$validated = self::$admin->basic_validation(
 			[],
 			[
@@ -175,6 +189,9 @@ class TestOptionSsoSlo extends WP_Auth0_Test_Case {
 		$this->assertEquals( 1, $validated['singlelogout'] );
 	}
 
+	/**
+	 * Test that SLO is turned off if SSO is off.
+	 */
 	public function testThatSloIsTurnedOffIfSsoIsOff() {
 		$validated = self::$admin->basic_validation(
 			[],

@@ -323,6 +323,8 @@ class WP_Auth0_Api_Client {
 
 			// Advanced > Grant Types
 			'grant_types'         => self::get_client_grant_types(),
+
+			// Advanced > OAuth > JsonWebToken Signature Algorithm
 			'jwt_configuration'   => array(
 				'alg' => self::DEFAULT_CLIENT_ALG,
 			),
