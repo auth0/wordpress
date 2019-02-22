@@ -481,7 +481,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	public function render_custom_signup_fields( $args = array() ) {
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Valid JSON for additional signup fields in the Auth0 signup form. ', 'wp-auth0' ) .
+			__( 'Valid array of JSON objects for additional signup fields in the Auth0 signup form. ', 'wp-auth0' ) .
 			$this->get_docs_link(
 				'libraries/lock/v11/configuration#additionalsignupfields-array-',
 				__( 'More information and examples', 'wp-auth0' )
