@@ -373,11 +373,12 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	}
 
 	public function basic_validation( $old_options, $input ) {
-		$input['sso'] = ! empty( $input['sso'] ) ? 1 : 0;
+		$input['sso'] = empty( $input['sso'] ) ? 0 : 1;
 
 		// Turn SLO off if SSO is off.
-		$input['singlelogout']        = ! empty( $input['singlelogout'] ) && $input['sso'] ? 1 : 0;
-		$input['override_wp_avatars'] = ! empty( $input['override_wp_avatars'] ) ? 1 : 0;
+		$input['singlelogout'] = empty( $input['singlelogout'] ) || empty( $input['sso'] ) ? 0 : 1;
+
+		$input['override_wp_avatars'] = empty( $input['override_wp_avatars'] ) ? 0 : 1;
 
 		return $input;
 	}
