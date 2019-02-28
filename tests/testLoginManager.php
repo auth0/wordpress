@@ -64,7 +64,7 @@ class TestLoginManager extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'openid email profile', $auth_params['scope'] );
 		$this->assertEquals( 'code', $auth_params['response_type'] );
 		$this->assertEquals( site_url( 'index.php?auth0=1' ), $auth_params['redirect_uri'] );
-		$this->assertNotEmpty( $auth_params['auth0Client'] );
+		$this->assertArrayNotHasKey( 'auth0Client', $auth_params );
 		$this->assertNotEmpty( $auth_params['state'] );
 
 		$auth_params = WP_Auth0_LoginManager::get_authorize_params( $test_connection );
