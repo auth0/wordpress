@@ -178,7 +178,7 @@ class WP_Auth0_InitialSetup_Consent {
 				$response        = $operations->create_wordpress_connection(
 					$this->a0_options->get( 'auth0_app_token' ), // NEED TO ADDRESS
 					$this->hasInternetConnection,
-					$this->a0_options->get( 'password_policy' ),
+					'fair',
 					$migration_token
 				);
 
@@ -192,7 +192,6 @@ class WP_Auth0_InitialSetup_Consent {
 
 				$this->a0_options->set( 'db_connection_enabled', 1 );
 				$this->a0_options->set( 'db_connection_id', $connection_exists );
-				$this->a0_options->set( 'password_policy', $connection_pwd_policy );
 
 			}
 		}

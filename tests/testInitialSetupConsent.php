@@ -149,7 +149,6 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'TEST_CLIENT_SECRET', self::$opts->get( 'client_secret' ) );
 		$this->assertEquals( 1, self::$opts->get( 'db_connection_enabled' ) );
 		$this->assertEquals( 'TEST_CONN_ID', self::$opts->get( 'db_connection_id' ) );
-		$this->assertEquals( 'good', self::$opts->get( 'password_policy' ) );
 
 		$this->assertEmpty( self::$error_log->get() );
 	}

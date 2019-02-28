@@ -11,7 +11,6 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
 	protected $actions_middlewares = array(
 		'basic_validation',
-		'security_validation',
 	);
 
 	/**
@@ -32,12 +31,6 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 */
 	public function init() {
 		$options = array(
-			array(
-				'name'     => __( 'Password Policy', 'wp-auth0' ),
-				'opt'      => 'password_policy',
-				'id'       => 'wpa0_password_policy',
-				'function' => 'render_password_policy',
-			),
 			array(
 				'name'     => __( 'Single Sign On (SSO)', 'wp-auth0' ),
 				'opt'      => 'sso',
@@ -119,6 +112,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	/**
 	 * Render form field and description for the `password_policy` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * TODO: Deprecate
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
@@ -434,6 +429,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
 	/**
 	 * Update the password policy for the database connection used with this application
+	 *
+	 * TODO: Deprecate
 	 *
 	 * @param array $old_options - previous option values
 	 * @param array $input - new option values

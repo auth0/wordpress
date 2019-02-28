@@ -206,7 +206,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'wordpress_login_enabled'   => true,
 
 			// Features
-			'password_policy'           => 'fair',
 			'sso'                       => 0,
 			'singlelogout'              => 0,
 			'override_wp_avatars'       => 1,

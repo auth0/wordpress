@@ -58,7 +58,7 @@ class WP_Auth0_DBManager {
 					$operations->update_wordpress_connection(
 						$app_token,
 						$connection_id,
-						$options->get( 'password_policy' ),
+						'fair',
 						$migration_token
 					);
 				}

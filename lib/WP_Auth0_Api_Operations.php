@@ -7,6 +7,9 @@ class WP_Auth0_Api_Operations {
 		$this->a0_options = $a0_options;
 	}
 
+	/**
+	 * TODO: Deprecate
+	 */
 	public function update_wordpress_connection( $app_token, $connection_id, $password_policy, $migration_token ) {
 
 		$domain = $this->a0_options->get( 'domain' );
