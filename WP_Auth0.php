@@ -144,7 +144,7 @@ class WP_Auth0 {
 		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH( $this->a0_options );
 		$configure_jwt_auth->init();
 
-		$woocommerce_override = new WP_Auth0_WooCommerceOverrides( $this );
+		$woocommerce_override = new WP_Auth0_WooCommerceOverrides( $this, $this->a0_options );
 		$woocommerce_override->init();
 
 		$users_exporter = new WP_Auth0_Export_Users( $this->db_manager );
