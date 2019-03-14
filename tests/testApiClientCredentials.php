@@ -13,8 +13,17 @@
  */
 class TestApiClientCredentials extends WP_Auth0_Test_Case {
 
-	use httpHelpers {
+	use HttpHelpers {
 		httpMock as protected httpMockDefault;
+	}
+
+	/**
+	 * Run after each test.
+	 */
+	public function tearDown() {
+		parent::tearDown();
+		delete_transient( 'auth0_api_token' );
+		delete_transient( 'auth0_api_token_scope' );
 	}
 
 	/**
@@ -54,64 +63,66 @@ class TestApiClientCredentials extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test a basic Client Credentials call against a mock API server.
+	 * Test that a WP error (HTTP not successful) is logged and stored token data is cleared.
 	 */
-	public function testCall() {
+	public function testThatWpErrorReturnsNull() {
 		$this->startHttpMocking();
-		set_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME, uniqid() );
-
 		$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
 
-		// 1. Set the response to be a WP_Error, make sure we get null back, and check for a log entry.
 		$this->http_request_type = 'wp_error';
 		$this->assertNull( $api_client_creds->call() );
+
 		$log = self::$error_log->get();
 		$this->assertCount( 1, $log );
 		$this->assertEquals( 'Caught WP_Error.', $log[0]['message'] );
+	}
 
-		// 2. Set the response to be an Auth0 server error, check for null, and check for another log entry.
+	/**
+	 * Test that an API error is logged and stored token data is cleared.
+	 */
+	public function testThatApiErrorReturnsNull() {
+		$this->startHttpMocking();
+		$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
+
 		$this->http_request_type = 'auth0_api_error';
 		$this->assertNull( $api_client_creds->call() );
-		$log = self::$error_log->get();
-		$this->assertCount( 2, $log );
-		$this->assertEquals( 'caught_api_error', $log[0]['code'] );
 
-		// 3. Set the response to be successful but empty, check for null, and check for another log entry.
+		$log = self::$error_log->get();
+		$this->assertCount( 1, $log );
+		$this->assertEquals( 'caught_api_error', $log[0]['code'] );
+	}
+
+	/**
+	 * Test that an empty access token is logged and stored token data is cleared.
+	 */
+	public function testThatEmptyAccessTokenReturnsNull() {
+		$this->startHttpMocking();
+		$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
+
 		$this->http_request_type = 'success_empty_body';
 		$this->assertNull( $api_client_creds->call() );
+
 		$log = self::$error_log->get();
-		$this->assertCount( 3, $log );
+		$this->assertCount( 1, $log );
 		$this->assertEquals( 'No access_token returned.', $log[0]['message'] );
+	}
 
-		// 4. Set the response to be successful but an invalid JWT, check for null, and check for another error entry.
+	/**
+	 * Test that a returned access token is returned and stored.
+	 */
+	public function testThatSuccessfulCallStoresTokenAndScope() {
+		$this->startHttpMocking();
+		$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
+
 		$this->http_request_type = 'access_token';
-		$this->assertNull( $api_client_creds->call() );
+		$timeout                 = time() + 1000;
+		$this->assertEquals( '__test_access_token__', $api_client_creds->call() );
+		$this->assertEquals( '__test_access_token__', get_transient( 'auth0_api_token' ) );
+		$this->assertEquals( 'test:scope', get_transient( 'auth0_api_token_scope' ) );
+		$this->assertLessThan( $timeout, (int) get_transient( '_transient_timeout_auth0_api_token_scope' ) );
+		$this->assertLessThan( $timeout, (int) get_transient( '_transient_timeout_auth0_api_token' ) );
 		$log = self::$error_log->get();
-		$this->assertCount( 4, $log );
-		$this->assertEquals( 'Wrong number of segments', $log[0]['message'] );
-
-		// Create a dummy decoded token.
-		$dummy_decoded_token = (object) array( 'scope' => 'dummy:scope' );
-
-		// Mock the parent decode_jwt method to return the dummy decoded token.
-		$api_client_creds_mock = $this->getMockBuilder( WP_Auth0_Api_Client_Credentials::class )
-			->setMethods( [ 'decode_jwt' ] )
-			->setConstructorArgs( [ self::$opts ] )
-			->getMock();
-		$api_client_creds_mock->method( 'decode_jwt' )
-			->willReturn( $dummy_decoded_token );
-
-		// Reflect the mocked class to make the get_token_decoded method public.
-		$reflect_mock = new ReflectionClass( WP_Auth0_Api_Client_Credentials::class );
-		$method       = $reflect_mock->getMethod( 'get_token_decoded' );
-		$method->setAccessible( true );
-
-		// 5. Make sure we get an access token back from the API call.
-		$this->http_request_type = 'access_token';
-		$this->assertEquals( '__test_access_token__', $api_client_creds_mock->call() );
-
-		// 6. Make sure the dummy decoded token stored during handle_response is correct.
-		$this->assertEquals( $dummy_decoded_token, $method->invoke( $api_client_creds_mock ) );
+		$this->assertCount( 0, $log );
 	}
 
 	/**
@@ -123,7 +134,7 @@ class TestApiClientCredentials extends WP_Auth0_Test_Case {
 		switch ( $this->getResponseType() ) {
 			case 'access_token':
 				return [
-					'body'     => '{"access_token":"__test_access_token__"}',
+					'body'     => '{"access_token":"__test_access_token__","scope":"test:scope","expires_in":1000}',
 					'response' => [ 'code' => 200 ],
 				];
 		}
