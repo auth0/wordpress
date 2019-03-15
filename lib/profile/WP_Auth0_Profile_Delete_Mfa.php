@@ -74,11 +74,11 @@ class WP_Auth0_Profile_Delete_Mfa {
 		<table class="form-table">
 			<tr>
 				<th>
-					<label><?php _e( 'Delete MFA Provider' ); ?></label>
+					<label><?php _e( 'Delete MFA Provider', 'wp-auth0' ); ?></label>
 				</th>
 				<td>
 					<input type="button" id="auth0_delete_mfa" class="button button-secondary"
-						   value="<?php _e( 'Delete MFA Provider' ); ?>" />
+						value="<?php _e( 'Delete MFA Provider', 'wp-auth0' ); ?>" />
 				</td>
 			</tr>
 		</table>

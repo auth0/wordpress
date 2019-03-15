@@ -13,7 +13,7 @@
  */
 class TestApiJobsVerification extends WP_Auth0_Test_Case {
 
-	use httpHelpers {
+	use HttpHelpers {
 		httpMock as protected httpMockDefault;
 	}
 

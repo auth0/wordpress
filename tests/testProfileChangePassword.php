@@ -20,7 +20,7 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 
 	use UsersHelper;
 
-	use httpHelpers;
+	use HttpHelpers;
 
 	/**
 	 * WP_Auth0_Options instance.
