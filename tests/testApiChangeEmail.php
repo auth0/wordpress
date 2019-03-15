@@ -139,9 +139,9 @@ class TestApiChangeEmail extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that the bearer setting succeeds if there is a token stored with the correct scope.
+	 * Test that the API call succeeds if there is a token stored with the correct scope.
 	 */
-	public function testThatSetBearerSucceedsWithStoredToken() {
+	public function testThatApiCallSucceedsWithStoredToken() {
 		$this->startHttpMocking();
 
 		set_transient( 'auth0_api_token', uniqid() );
@@ -153,9 +153,9 @@ class TestApiChangeEmail extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that the bearer setting succeeds if there is a token stored with the correct scope.
+	 * Test that the API call fails if there is a token stored with insufficient scope.
 	 */
-	public function testThatSetBearerFailsWithInsufficientScope() {
+	public function testThatApiCallFailsWithInsufficientScope() {
 		$this->startHttpMocking();
 
 		set_transient( 'auth0_api_token', uniqid() );
