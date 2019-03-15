@@ -20,6 +20,16 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 	const RETURN_ON_FAILURE = null;
 
 	/**
+	 * Transient key for API token.
+	 */
+	const TOKEN_TRANSIENT_KEY = 'auth0_api_token';
+
+	/**
+	 * Transient key for API token scope.
+	 */
+	const SCOPE_TRANSIENT_KEY = 'auth0_api_token_scope';
+
+	/**
 	 * Decoded token received.
 	 *
 	 * @var null|object
@@ -52,7 +62,11 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 	/**
 	 * Return the decoded API token received.
 	 *
+	 * TODO: Deprecate
+	 *
 	 * @return null|object
+	 *
+	 * @codeCoverageIgnore - To be deprecated.
 	 */
 	public function get_token_decoded() {
 		return $this->token_decoded;
@@ -77,17 +91,50 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 
 		$response_body = json_decode( $this->response_body );
 
+		// If we have no access token, something went wrong upstream.
 		if ( empty( $response_body->access_token ) ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( $method, __( 'No access_token returned.', 'wp-auth0' ) );
 			return self::RETURN_ON_FAILURE;
 		}
 
-		try {
-			$this->token_decoded = $this->decode_jwt( $response_body->access_token );
-			return $response_body->access_token;
-		} catch ( Exception $e ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( $method, $e );
-			return self::RETURN_ON_FAILURE;
-		}
+		// Set the transient to expire 1 minute before the token does.
+		$expires_in  = isset( $response_body->expires_in ) ? absint( $response_body->expires_in ) : HOUR_IN_SECONDS;
+		$expires_in -= MINUTE_IN_SECONDS;
+
+		// Store the token and scope to check when used.
+		set_transient( self::TOKEN_TRANSIENT_KEY, $response_body->access_token, $expires_in );
+		set_transient( self::SCOPE_TRANSIENT_KEY, $response_body->scope, $expires_in );
+
+		return $response_body->access_token;
+	}
+
+	/**
+	 * Get the stored API token from a transient.
+	 *
+	 * @return string
+	 */
+	public static function get_stored_token() {
+		return get_transient( self::TOKEN_TRANSIENT_KEY );
+	}
+
+	/**
+	 * Delete the stored API token and scope from transients.
+	 */
+	public static function delete_store() {
+		delete_transient( self::TOKEN_TRANSIENT_KEY );
+		delete_transient( self::SCOPE_TRANSIENT_KEY );
+	}
+
+	/**
+	 * Check the stored API token scope for a specific scope.
+	 *
+	 * @param string $scope - Scope to check for.
+	 *
+	 * @return bool
+	 */
+	public static function check_stored_scope( $scope ) {
+		$stored_scope = get_transient( self::SCOPE_TRANSIENT_KEY );
+		$scopes       = explode( ' ', $stored_scope );
+		return ! empty( $scopes ) && in_array( $scope, $scopes );
 	}
 }
