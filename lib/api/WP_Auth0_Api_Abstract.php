@@ -54,20 +54,6 @@ abstract class WP_Auth0_Api_Abstract {
 	protected $api_client_creds;
 
 	/**
-	 * API token from plugin settings or Client Credentials call.
-	 *
-	 * @var string
-	 */
-	protected $api_token;
-
-	/**
-	 * Decoded API token from plugin settings.
-	 *
-	 * @var object
-	 */
-	protected $api_token_decoded;
-
-	/**
 	 * API path.
 	 *
 	 * @var string
@@ -180,47 +166,35 @@ abstract class WP_Auth0_Api_Abstract {
 	 */
 	protected function set_bearer( $scope ) {
 
-		$this->api_token = wp_cache_get( self::CACHE_KEY, WPA0_CACHE_GROUP );
-		if ( ! $this->api_token ) {
-			$this->api_token = $this->options->get( 'auth0_app_token' ); // REMOVE
-		}
+		$api_token = WP_Auth0_Api_Client_Credentials::get_stored_token();
 
-		if ( $this->api_token ) {
-			try {
-				$this->api_token_decoded = $this->decode_jwt( $this->api_token );
-			} catch ( Exception $e ) {
-				// If we can't decode the token, try a client credentials grant below.
-				$this->api_token = null;
-			}
-		}
-
-		// Could not decode the stored API token or none was found so try to get one via API.
-		if ( ! $this->api_token_decoded && $this->api_client_creds instanceof WP_Auth0_Api_Client_Credentials ) {
-			$this->api_token         = $this->api_client_creds->call();
-			$this->api_token_decoded = $this->api_client_creds->get_token_decoded();
+		// No stored API token so need to get a new one.
+		if ( ! $api_token && $this->api_client_creds instanceof WP_Auth0_Api_Client_Credentials ) {
+			$api_token = $this->api_client_creds->call();
 		}
 
 		// No token to use, error recorded in previous steps.
-		if ( ! $this->api_token_decoded ) {
-			wp_cache_delete( self::CACHE_KEY, WPA0_CACHE_GROUP );
+		if ( ! $api_token ) {
 			return false;
+		}
+
+		if ( WP_Auth0_Api_Client_Credentials::check_stored_scope( $scope ) ) {
+			// Scope exists, add to the header and cache.
+			$this->add_header( 'Authorization', 'Bearer ' . $api_token );
+			return true;
 		}
 
 		// API token is missing the required scope.
-		if ( ! $this->api_token_has_scope( $scope ) ) {
-			WP_Auth0_ErrorManager::insert_auth0_error(
-				__METHOD__,
-				// translators: The $scope var here is a machine term and should not be translated.
-				sprintf( __( 'API token does not include the scope %s.', 'wp-auth0' ), $scope )
-			);
-			wp_cache_delete( self::CACHE_KEY, WPA0_CACHE_GROUP );
-			return false;
-		}
+		WP_Auth0_ErrorManager::insert_auth0_error(
+			__METHOD__,
+			// translators: The $scope var here is a machine term and should not be translated.
+			sprintf( __( 'API token does not include the scope %s.', 'wp-auth0' ), $scope )
+		);
 
-		// Scope exists, add to the header and cache.
-		$this->add_header( 'Authorization', 'Bearer ' . $this->api_token );
-		wp_cache_set( self::CACHE_KEY, $this->api_token, WPA0_CACHE_GROUP );
-		return true;
+		// Delete the stored token so we can try again.
+		WP_Auth0_Api_Client_Credentials::delete_store();
+		return false;
+
 	}
 
 	/**
@@ -383,7 +357,9 @@ abstract class WP_Auth0_Api_Abstract {
 	}
 
 	/**
-	 * Decode an Auth0 Management API token.
+	 * Decode an RS256 Auth0 Management API token.
+	 *
+	 * TODO: Deprecate
 	 *
 	 * @param string $token - API JWT to decode.
 	 *
@@ -395,12 +371,13 @@ abstract class WP_Auth0_Api_Abstract {
 	 * @throws BeforeValidException         Provided JWT used before it's eligible as defined by 'nbf'.
 	 * @throws BeforeValidException         Provided JWT used before it's been created as defined by 'iat'.
 	 * @throws ExpiredException             Provided JWT has since expired, as defined by the 'exp' claim.
+	 *
+	 * @codeCoverageIgnore - To be deprecated.
 	 */
 	protected function decode_jwt( $token ) {
 		return JWT::decode(
 			$token,
-			$this->options->get_client_secret_as_key(),
-			// Management API tokens are always RS256.
+			WP_Auth0_Api_Client::JWKfetch( $this->domain ),
 			array( 'RS256' )
 		);
 	}
@@ -427,18 +404,6 @@ abstract class WP_Auth0_Api_Abstract {
 		$this->response_body = wp_remote_retrieve_body( $this->response );
 
 		return $this;
-	}
-
-	/**
-	 * Check the stored API token for a specific scope.
-	 *
-	 * @param string $scope - API token scope to check for.
-	 *
-	 * @return bool
-	 */
-	private function api_token_has_scope( $scope ) {
-		$scopes = explode( ' ', $this->api_token_decoded->scope );
-		return ! empty( $scopes ) && in_array( $scope, $scopes );
 	}
 
 	/**
