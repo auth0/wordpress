@@ -153,6 +153,23 @@ class TestApiChangeEmail extends WP_Auth0_Test_Case {
 	}
 
 	/**
+	 * Test that the bearer setting succeeds if there is a token stored with the correct scope.
+	 */
+	public function testThatSetBearerFailsWithInsufficientScope() {
+		$this->startHttpMocking();
+
+		set_transient( 'auth0_api_token', uniqid() );
+		set_transient( 'auth0_api_token_scope', 'read:users' );
+
+		$api = new WP_Auth0_Api_Change_Email( self::$opts, self::$api_client_creds );
+		$this->assertFalse( $api->call( uniqid(), uniqid() ) );
+
+		$log = self::$error_log->get();
+		$this->assertCount( 1, $log );
+		$this->assertEquals( 'insufficient_scope', $log[0]['code'] );
+	}
+
+	/**
 	 * Test that set bearer fails if there is no stored token and a CC grant fails.
 	 */
 	public function testThatSetBearerFailsWhenCannotGetToken() {

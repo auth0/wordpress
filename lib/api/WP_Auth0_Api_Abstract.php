@@ -187,8 +187,11 @@ abstract class WP_Auth0_Api_Abstract {
 		// API token is missing the required scope.
 		WP_Auth0_ErrorManager::insert_auth0_error(
 			__METHOD__,
-			// translators: The $scope var here is a machine term and should not be translated.
-			sprintf( __( 'API token does not include the scope %s.', 'wp-auth0' ), $scope )
+			new WP_Error(
+				'insufficient_scope',
+				// translators: The $scope var here is a machine term and should not be translated.
+				sprintf( __( 'API token does not include the scope %s.', 'wp-auth0' ), $scope )
+			)
 		);
 
 		// Delete the stored token so we can try again.
