@@ -13,7 +13,7 @@
  */
 class TestApiChangeEmail extends WP_Auth0_Test_Case {
 
-	use httpHelpers {
+	use HttpHelpers {
 		httpMock as protected httpMockDefault;
 	}
 
@@ -30,6 +30,15 @@ class TestApiChangeEmail extends WP_Auth0_Test_Case {
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
 		self::$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
+	}
+
+	/**
+	 * Runs after each test completes.
+	 */
+	public function tearDown() {
+		parent::tearDown();
+		delete_transient( 'auth0_api_token' );
+		delete_transient( 'auth0_api_token_scope' );
 	}
 
 	/**
@@ -127,6 +136,48 @@ class TestApiChangeEmail extends WP_Auth0_Test_Case {
 		$this->http_request_type = 'success_empty_body';
 		$this->assertTrue( $change_email->call( uniqid(), uniqid() ) );
 		$this->assertEmpty( self::$error_log->get() );
+	}
+
+	/**
+	 * Test that the bearer setting succeeds if there is a token stored with the correct scope.
+	 */
+	public function testThatSetBearerSucceedsWithStoredToken() {
+		$this->startHttpMocking();
+
+		set_transient( 'auth0_api_token', uniqid() );
+		set_transient( 'auth0_api_token_scope', 'update:users' );
+
+		$this->http_request_type = 'success_empty_body';
+		$api                     = new WP_Auth0_Api_Change_Email( self::$opts, self::$api_client_creds );
+		$this->assertTrue( $api->call( uniqid(), uniqid() ) );
+	}
+
+	/**
+	 * Test that set bearer fails if there is no stored token and a CC grant fails.
+	 */
+	public function testThatSetBearerFailsWhenCannotGetToken() {
+		$this->startHttpMocking();
+
+		$this->http_request_type = [ 'wp_error', 'success_empty_body' ];
+		$api                     = new WP_Auth0_Api_Change_Email( self::$opts, self::$api_client_creds );
+		$this->assertFalse( $api->call( uniqid(), uniqid() ) );
+
+		$this->assertFalse( get_transient( 'auth0_api_token' ) );
+		$this->assertFalse( get_transient( 'auth0_api_token_scope' ) );
+	}
+
+	/**
+	 * Test that set bearer succeeds if a token with the correct scope can be retrieved.
+	 */
+	public function testThatSetBearerSucceedsWhenCanGetToken() {
+		$this->startHttpMocking();
+
+		$this->http_request_type = [ 'success_access_token', 'success_empty_body' ];
+		$api                     = new WP_Auth0_Api_Change_Email( self::$opts, self::$api_client_creds );
+		$this->assertTrue( $api->call( uniqid(), uniqid() ) );
+
+		$this->assertEquals( '__test_access_token__', get_transient( 'auth0_api_token' ) );
+		$this->assertEquals( 'update:users', get_transient( 'auth0_api_token_scope' ) );
 	}
 
 	/*

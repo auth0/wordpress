@@ -13,9 +13,7 @@
  */
 class TestApiClientCredentials extends WP_Auth0_Test_Case {
 
-	use HttpHelpers {
-		httpMock as protected httpMockDefault;
-	}
+	use HttpHelpers;
 
 	/**
 	 * Run after each test.
@@ -114,30 +112,14 @@ class TestApiClientCredentials extends WP_Auth0_Test_Case {
 		$this->startHttpMocking();
 		$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
 
-		$this->http_request_type = 'access_token';
+		$this->http_request_type = 'success_access_token';
 		$timeout                 = time() + 1000;
 		$this->assertEquals( '__test_access_token__', $api_client_creds->call() );
 		$this->assertEquals( '__test_access_token__', get_transient( 'auth0_api_token' ) );
-		$this->assertEquals( 'test:scope', get_transient( 'auth0_api_token_scope' ) );
+		$this->assertEquals( 'update:users', get_transient( 'auth0_api_token_scope' ) );
 		$this->assertLessThan( $timeout, (int) get_transient( '_transient_timeout_auth0_api_token_scope' ) );
 		$this->assertLessThan( $timeout, (int) get_transient( '_transient_timeout_auth0_api_token' ) );
 		$log = self::$error_log->get();
 		$this->assertCount( 0, $log );
-	}
-
-	/**
-	 * Specific mock API responses for this suite.
-	 *
-	 * @return array|null|WP_Error
-	 */
-	public function httpMock() {
-		switch ( $this->getResponseType() ) {
-			case 'access_token':
-				return [
-					'body'     => '{"access_token":"__test_access_token__","scope":"test:scope","expires_in":1000}',
-					'response' => [ 'code' => 200 ],
-				];
-		}
-		return $this->httpMockDefault();
 	}
 }
