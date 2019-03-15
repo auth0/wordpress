@@ -107,7 +107,7 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 	}
 
 	/**
-	 * Get the stored API token from a transient.
+	 * Get the stored access token from a transient.
 	 *
 	 * @return string
 	 */
@@ -116,7 +116,7 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 	}
 
 	/**
-	 * Delete the stored API token and scope from transients.
+	 * Delete the stored access token and scope from transients.
 	 */
 	public static function delete_store() {
 		delete_transient( self::TOKEN_TRANSIENT_KEY );
@@ -124,15 +124,15 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 	}
 
 	/**
-	 * Check the stored API token scope for a specific scope.
+	 * Check a single scope against the scope of the stored access token.
 	 *
-	 * @param string $scope - Scope to check for.
+	 * @param string $scope - Single scope to check for.
 	 *
 	 * @return bool
 	 */
 	public static function check_stored_scope( $scope ) {
 		$stored_scope = get_transient( self::SCOPE_TRANSIENT_KEY );
 		$scopes       = explode( ' ', $stored_scope );
-		return ! empty( $scopes ) && in_array( $scope, $scopes );
+		return in_array( $scope, $scopes );
 	}
 }
