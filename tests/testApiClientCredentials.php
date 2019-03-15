@@ -122,4 +122,49 @@ class TestApiClientCredentials extends WP_Auth0_Test_Case {
 		$log = self::$error_log->get();
 		$this->assertCount( 0, $log );
 	}
+
+	/**
+	 * Test that the stored token is returned, if present.
+	 */
+	public function testThatGetStoredTokenReturnsCorrectly() {
+		$this->assertFalse( WP_Auth0_Api_Client_Credentials::get_stored_token() );
+
+		$token = uniqid();
+		set_transient( 'auth0_api_token', $token );
+		$this->assertEquals( $token, WP_Auth0_Api_Client_Credentials::get_stored_token() );
+	}
+
+	/**
+	 * Test that the stored token data is deleted.
+	 */
+	public function testThatDeleteStoreRemovesTokenData() {
+		$token = uniqid();
+		set_transient( 'auth0_api_token', $token );
+		$this->assertEquals( $token, get_transient( 'auth0_api_token' ) );
+
+		$scope = uniqid();
+		set_transient( 'auth0_api_token_scope', $scope );
+		$this->assertEquals( $scope, get_transient( 'auth0_api_token_scope' ) );
+
+		WP_Auth0_Api_Client_Credentials::delete_store();
+
+		$this->assertFalse( get_transient( 'auth0_api_token' ) );
+		$this->assertFalse( get_transient( 'auth0_api_token_scope' ) );
+	}
+
+	/**
+	 * Test that the stored scope data is checked against a passed-in value.
+	 */
+	public function testThatCheckStoredScopeChecksScopeCorrectly() {
+		$this->assertFalse( WP_Auth0_Api_Client_Credentials::check_stored_scope( 'scope:none' ) );
+
+		set_transient( 'auth0_api_token_scope', 'scope:one' );
+		$this->assertTrue( WP_Auth0_Api_Client_Credentials::check_stored_scope( 'scope:one' ) );
+		$this->assertFalse( WP_Auth0_Api_Client_Credentials::check_stored_scope( 'scope:two' ) );
+
+		set_transient( 'auth0_api_token_scope', 'scope:one scope:two' );
+		$this->assertTrue( WP_Auth0_Api_Client_Credentials::check_stored_scope( 'scope:one' ) );
+		$this->assertTrue( WP_Auth0_Api_Client_Credentials::check_stored_scope( 'scope:two' ) );
+		$this->assertFalse( WP_Auth0_Api_Client_Credentials::check_stored_scope( 'scope:three' ) );
+	}
 }
