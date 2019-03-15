@@ -54,6 +54,22 @@ abstract class WP_Auth0_Api_Abstract {
 	protected $api_client_creds;
 
 	/**
+	 * API token from plugin settings or Client Credentials call.
+	 * TODO: Deprecate
+	 *
+	 * @var string
+	 */
+	protected $api_token;
+
+	/**
+	 * Decoded API token from plugin settings.
+	 * TODO: Deprecate
+	 *
+	 * @var object
+	 */
+	protected $api_token_decoded;
+
+	/**
 	 * API path.
 	 *
 	 * @var string
@@ -197,7 +213,6 @@ abstract class WP_Auth0_Api_Abstract {
 		// Delete the stored token so we can try again.
 		WP_Auth0_Api_Client_Credentials::delete_store();
 		return false;
-
 	}
 
 	/**
@@ -361,7 +376,6 @@ abstract class WP_Auth0_Api_Abstract {
 
 	/**
 	 * Decode an RS256 Auth0 Management API token.
-	 *
 	 * TODO: Deprecate
 	 *
 	 * @param string $token - API JWT to decode.

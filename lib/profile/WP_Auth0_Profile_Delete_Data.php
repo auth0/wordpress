@@ -59,11 +59,11 @@ class WP_Auth0_Profile_Delete_Data {
 		<table class="form-table">
 			<tr>
 				<th>
-					<label><?php _e( 'Delete Auth0 Data' ); ?></label>
+					<label><?php _e( 'Delete Auth0 Data', 'wp-auth0' ); ?></label>
 				</th>
 				<td>
 					<input type="button" id="auth0_delete_data" class="button button-secondary"
-								 value="<?php _e( 'Delete Auth0 Data', 'wp-auth0' ); ?>" />
+						value="<?php _e( 'Delete Auth0 Data', 'wp-auth0' ); ?>" />
 				</td>
 			</tr>
 		</table>

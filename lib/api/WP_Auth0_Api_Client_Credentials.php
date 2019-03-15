@@ -14,8 +14,6 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 
 	/**
 	 * Default value to return on failure.
-	 *
-	 * @var null
 	 */
 	const RETURN_ON_FAILURE = null;
 
@@ -31,6 +29,7 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 
 	/**
 	 * Decoded token received.
+	 * TODO: Deprecate
 	 *
 	 * @var null|object
 	 */
@@ -61,7 +60,6 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 
 	/**
 	 * Return the decoded API token received.
-	 *
 	 * TODO: Deprecate
 	 *
 	 * @return null|object
@@ -98,7 +96,7 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 		}
 
 		// Set the transient to expire 1 minute before the token does.
-		$expires_in  = isset( $response_body->expires_in ) ? absint( $response_body->expires_in ) : HOUR_IN_SECONDS;
+		$expires_in  = ! empty( $response_body->expires_in ) ? absint( $response_body->expires_in ) : HOUR_IN_SECONDS;
 		$expires_in -= MINUTE_IN_SECONDS;
 
 		// Store the token and scope to check when used.
