@@ -177,7 +177,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		} else {
 			$this->render_field_description(
 				__( 'Custom styles should be loaded in an external file using the instructions ', 'wp-auth0' ) .
-				$this->get_docs_link( 'cms/wordpress/troubleshoot#how-can-i-modify-the-embedded-auth0-login-form' )
+				$this->get_docs_link( 'cms/wordpress/troubleshoot#how-can-i-modify-the-embedded-auth0-login-form-' )
 			);
 		}
 
@@ -203,7 +203,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		} else {
 			$this->render_field_description(
 				__( 'Custom JavaScript should be loaded in an external file using the instructions ', 'wp-auth0' ) .
-				$this->get_docs_link( 'cms/wordpress/troubleshoot#how-can-i-modify-the-embedded-auth0-login-form' )
+				$this->get_docs_link( 'cms/wordpress/troubleshoot#how-can-i-modify-the-embedded-auth0-login-form-' )
 			);
 		}
 	}
