@@ -215,8 +215,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'form_title'                => '',
 			'social_big_buttons'        => false,
 			'gravatar'                  => true,
-			'custom_css'                => '',
-			'custom_js'                 => '',
 			'username_style'            => '',
 			'primary_color'             => '',
 			'language'                  => '',

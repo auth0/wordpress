@@ -20,7 +20,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 */
 	public function __construct( WP_Auth0_Options_Generic $options ) {
 		parent::__construct( $options );
-		$this->_description = __( 'Settings related to the way the login widget is shown.', 'wp-auth0' );
+		$this->_description = __( 'Change the how the embedded Auth0 login form is displayed.', 'wp-auth0' );
 	}
 
 	/**
@@ -160,6 +160,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	/**
 	 * Render form field and description for the `custom_css` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 * TODO: Deprecate
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
@@ -167,13 +168,25 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_custom_css( $args = array() ) {
-		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description( __( 'Valid CSS to customize the Auth0 login form', 'wp-auth0' ) );
+		if ( $this->options->get( 'custom_css' ) ) {
+			$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
+			$this->render_field_description(
+				__( 'NOTE: This field is deprecated and will be removed in the next major release. ', 'wp-auth0' ) .
+				__( 'Valid CSS to customize the Auth0 login form', 'wp-auth0' )
+			);
+		} else {
+			$this->render_field_description(
+				__( 'Custom styles should be loaded in an external file using the instructions ', 'wp-auth0' ) .
+				$this->get_docs_link( 'cms/wordpress/troubleshoot#how-can-i-modify-the-embedded-auth0-login-form' )
+			);
+		}
+
 	}
 
 	/**
 	 * Render form field and description for the `custom_js` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 * TODO: Deprecate
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
@@ -181,8 +194,18 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_custom_js( $args = array() ) {
-		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description( __( 'Valid JS to customize the Auth0 login form', 'wp-auth0' ) );
+		if ( $this->options->get( 'custom_js' ) ) {
+			$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
+			$this->render_field_description(
+				__( 'NOTE: This field is deprecated and will be removed in the next major release. ', 'wp-auth0' ) .
+				__( 'Valid JS to customize the Auth0 login form', 'wp-auth0' )
+			);
+		} else {
+			$this->render_field_description(
+				__( 'Custom JavaScript should be loaded in an external file using the instructions ', 'wp-auth0' ) .
+				$this->get_docs_link( 'cms/wordpress/troubleshoot#how-can-i-modify-the-embedded-auth0-login-form' )
+			);
+		}
 	}
 
 	/**
