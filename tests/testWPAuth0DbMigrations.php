@@ -78,4 +78,48 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		$this->assertNotContains( '34.195.142.251', $remaining_ips );
 		$this->assertNotContains( '35.160.3.103', $remaining_ips );
 	}
+
+	/**
+	 * Test a DB upgrade from v20 to v21.
+	 */
+	public function testV21Update() {
+		$test_version = 21;
+
+		update_option( 'auth0_db_version', $test_version - 1 );
+		$db_manager = new WP_Auth0_DBManager( self::$opts );
+		$db_manager->init();
+
+		// Set CDN URL to previous default.
+		self::$opts->set( 'cdn_url', 'https://cdn.auth0.com/js/lock/11.5/lock.min.js' );
+		self::$opts->set( 'auth0js-cdn', uniqid() );
+		self::$opts->set( 'passwordless_cdn_url', uniqid() );
+		self::$opts->set( 'cdn_url_legacy', uniqid() );
+
+		// Run the update.
+		$db_manager->install_db( $test_version, null );
+
+		// Check that Lock URL was updated.
+		$this->assertEquals( 'https://cdn.auth0.com/js/lock/11.14/lock.min.js', self::$opts->get( 'cdn_url' ) );
+		$this->assertNull( self::$opts->get( 'custom_cdn_url' ) );
+
+		// Check that unused settings were removed.
+		$this->assertNull( self::$opts->get( 'auth0js-cdn' ) );
+		$this->assertNull( self::$opts->get( 'passwordless_cdn_url' ) );
+		$this->assertNull( self::$opts->get( 'cdn_url_legacy' ) );
+
+		self::$opts->reset();
+		update_option( 'auth0_db_version', $test_version - 1 );
+		$db_manager = new WP_Auth0_DBManager( self::$opts );
+		$db_manager->init();
+
+		// Set CDN URL to something other than previous version.
+		self::$opts->set( 'cdn_url', 'https://cdn.auth0.com/js/lock/12.0/lock.min.js' );
+
+		// Run the update.
+		$db_manager->install_db( $test_version, null );
+
+		// Check that Lock URL was not updated.
+		$this->assertEquals( 'https://cdn.auth0.com/js/lock/12.0/lock.min.js', self::$opts->get( 'cdn_url' ) );
+		$this->assertEquals( 1, self::$opts->get( 'custom_cdn_url' ) );
+	}
 }
