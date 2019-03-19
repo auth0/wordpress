@@ -74,6 +74,12 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_force_https_callback',
 			),
 			array(
+				'name'     => __( 'Use Custom Lock Version', 'wp-auth0' ),
+				'opt'      => 'custom_cdn_url',
+				'id'       => 'wpa0_custom_cdn_url',
+				'function' => 'render_custom_cdn_url',
+			),
+			array(
 				'name'     => __( 'Lock JS CDN URL', 'wp-auth0' ),
 				'opt'      => 'cdn_url',
 				'id'       => 'wpa0_cdn_url',
@@ -281,6 +287,27 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
+	 * Render form field and description for the `custom_cdn_url` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_custom_cdn_url( $args = array() ) {
+		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_cdn_url' );
+		$this->render_field_description( __( 'Use a custom Lock CDN URL instead of the default. ', 'wp-auth0' ) );
+
+		if ( ! $this->options->get( $args['opt_name'] ) ) {
+			$this->render_field_description(
+				__( 'Currently using:', 'wp-auth0' ) .
+				' <code>' . WPA0_LOCK_CDN_URL . '</code>'
+			);
+		}
+	}
+
+	/**
 	 * Render form field and description for the `cdn_url` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
@@ -290,7 +317,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_cdn_url( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'url' );
 		$this->render_field_description(
 			__( 'This should point to the latest Lock JS available in the CDN and rarely needs to change', 'wp-auth0' )
 		);
@@ -530,6 +557,15 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$input['jwt_auth_integration']    = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
 		$input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
 		$input['force_https_callback']    = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
+
+		$input['custom_cdn_url'] = empty( $input['custom_cdn_url'] ) ? 0 : 1;
+
+		$input['cdn_url'] = ! empty( $input['cdn_url'] ) ? sanitize_text_field( $input['cdn_url'] ) : WPA0_LOCK_CDN_URL;
+		if ( ! filter_var( $input['cdn_url'], FILTER_VALIDATE_URL ) ) {
+			$input['cdn_url'] = isset( $old_options['cdn_url'] ) ? $old_options['cdn_url'] : WPA0_LOCK_CDN_URL;
+			$error            = __( 'The Lock JS CDN URL used is not a valid URL.', 'wp-auth0' );
+			self::add_validation_error( $error );
+		}
 
 		$input['social_twitter_key'] = isset( $input['social_twitter_key'] ) ?
 			sanitize_text_field( $input['social_twitter_key'] ) : '';

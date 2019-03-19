@@ -95,7 +95,6 @@ class WP_Auth0_DBManager {
 		// Plugin version < 3.4.0
 		if ( $this->current_db_version < 15 || 15 === $version_to_install ) {
 			$options->set( 'cdn_url', WPA0_LOCK_CDN_URL );
-			$options->set( 'auth0js-cdn', WPA0_AUTH0_JS_CDN_URL );
 			$options->set( 'cache_expiration', 1440 );
 
 			// Update Client
@@ -128,10 +127,6 @@ class WP_Auth0_DBManager {
 			// Update Lock and Auth versions
 			if ( '//cdn.auth0.com/js/lock/11.0.0/lock.min.js' === $options->get( 'cdn_url' ) ) {
 				$options->set( 'cdn_url', WPA0_LOCK_CDN_URL );
-			}
-
-			if ( '//cdn.auth0.com/js/auth0/9.0.0/auth0.min.js' === $options->get( 'auth0js-cdn' ) ) {
-				$options->set( 'auth0js-cdn', WPA0_AUTH0_JS_CDN_URL );
 			}
 
 			// Update app type and client grant
@@ -270,9 +265,6 @@ class WP_Auth0_DBManager {
 				$options->set( 'extra_conf', json_encode( $lock_json_decoded ) );
 			}
 
-			// Set passwordless_cdn_url to latest Lock
-			$options->set( 'passwordless_cdn_url', WPA0_LOCK_CDN_URL );
-
 			// Force passwordless_method to delete
 			$update_options = $options->get_options();
 			unset( $update_options['passwordless_method'] );
@@ -306,6 +298,23 @@ class WP_Auth0_DBManager {
 				$custom_ips    = array_diff( $migration_ips, $default_ips );
 				$options->set( 'migration_ips', implode( ',', $custom_ips ) );
 			}
+		}
+
+		// 3.10.0
+		if ( ( $this->current_db_version < 21 && 0 !== $this->current_db_version ) || 21 === $version_to_install ) {
+
+			if ( 'https://cdn.auth0.com/js/lock/11.5/lock.min.js' === $options->get( 'cdn_url' ) ) {
+				$options->set( 'cdn_url', WPA0_LOCK_CDN_URL );
+				$options->set( 'custom_cdn_url', null );
+			} else {
+				$options->set( 'custom_cdn_url', 1 );
+			}
+
+			$options->set( 'auth0js-cdn', null );
+			$options->set( 'passwordless_cdn_url', null );
+			$options->set( 'cdn_url_legacy', null );
+
+			$options->save();
 		}
 
 		$this->current_db_version = AUTH0_DB_VERSION;

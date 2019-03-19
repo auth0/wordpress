@@ -619,7 +619,7 @@ class WP_Auth0_LoginManager {
 			return $previous_html;
 		}
 
-		wp_enqueue_script( 'wpa0_auth0js', $this->a0_options->get( 'auth0js-cdn' ) );
+		wp_enqueue_script( 'wpa0_auth0js', apply_filters( 'auth0_sso_auth0js_url', WPA0_AUTH0_JS_CDN_URL ) );
 		ob_start();
 		include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler-lock10.php';
 		return $previous_html . ob_get_clean();
