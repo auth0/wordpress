@@ -560,11 +560,12 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
 		$input['custom_cdn_url'] = empty( $input['custom_cdn_url'] ) ? 0 : 1;
 
-		$input['cdn_url'] = ! empty( $input['cdn_url'] ) ? sanitize_text_field( $input['cdn_url'] ) : WPA0_LOCK_CDN_URL;
+		$input['cdn_url'] = empty( $input['cdn_url'] ) ? WPA0_LOCK_CDN_URL : sanitize_text_field( $input['cdn_url'] );
+
+		// If an invalid URL is used, default to previously saved (if there is one) or default URL.
 		if ( ! filter_var( $input['cdn_url'], FILTER_VALIDATE_URL ) ) {
 			$input['cdn_url'] = isset( $old_options['cdn_url'] ) ? $old_options['cdn_url'] : WPA0_LOCK_CDN_URL;
-			$error            = __( 'The Lock JS CDN URL used is not a valid URL.', 'wp-auth0' );
-			self::add_validation_error( $error );
+			self::add_validation_error( __( 'The Lock JS CDN URL used is not a valid URL.', 'wp-auth0' ) );
 		}
 
 		$input['social_twitter_key'] = isset( $input['social_twitter_key'] ) ?

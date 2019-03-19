@@ -117,7 +117,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	/**
-	 * Get the Lock JS URL.
+	 * Get a custom Lock URL or the default, depending on settings.
 	 *
 	 * @return string
 	 */

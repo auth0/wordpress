@@ -102,10 +102,16 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'https://cdn.auth0.com/js/lock/11.14/lock.min.js', self::$opts->get( 'cdn_url' ) );
 		$this->assertNull( self::$opts->get( 'custom_cdn_url' ) );
 
-		// Check that unused settings were removed.
+		// Check that unused settings were nullified.
 		$this->assertNull( self::$opts->get( 'auth0js-cdn' ) );
 		$this->assertNull( self::$opts->get( 'passwordless_cdn_url' ) );
 		$this->assertNull( self::$opts->get( 'cdn_url_legacy' ) );
+
+		// Check that unused settings were removed.
+		$updated_options = get_option( self::$opts->get_options_name() );
+		$this->assertArrayNotHasKey( 'auth0js-cdn', $updated_options );
+		$this->assertArrayNotHasKey( 'passwordless_cdn_url', $updated_options );
+		$this->assertArrayNotHasKey( 'cdn_url_legacy', $updated_options );
 
 		self::$opts->reset();
 		update_option( 'auth0_db_version', $test_version - 1 );
