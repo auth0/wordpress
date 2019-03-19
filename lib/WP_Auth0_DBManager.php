@@ -309,11 +309,16 @@ class WP_Auth0_DBManager {
 				$options->set( 'custom_cdn_url', 1 );
 			}
 
+			// Nullify and delete all removed options.
 			$options->set( 'auth0js-cdn', null );
 			$options->set( 'passwordless_cdn_url', null );
 			$options->set( 'cdn_url_legacy', null );
 
-			$options->save();
+			$update_options = $options->get_options();
+			unset( $update_options['auth0js-cdn'] );
+			unset( $update_options['passwordless_cdn_url'] );
+			unset( $update_options['cdn_url_legacy'] );
+			update_option( $options->get_options_name(), $update_options );
 		}
 
 		$this->current_db_version = AUTH0_DB_VERSION;

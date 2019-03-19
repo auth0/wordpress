@@ -205,7 +205,7 @@ class WP_Auth0_Options_Generic {
 	public function reset() {
 		$this->_opts = null;
 		$this->delete();
-		$this->get_options();
+		$this->save();
 	}
 
 	/**
