@@ -205,4 +205,18 @@ class TestOptionLockCdn extends WP_Auth0_Test_Case {
 		);
 		$this->assertEquals( WPA0_LOCK_CDN_URL, $validated['cdn_url'] );
 	}
+
+	/**
+	 * Test that the correct Lock URL is returned based on whether a custom URL is used or not.
+	 */
+	public function testThatLockUrlIsReturnedCorrectly() {
+		self::$opts->set( 'cdn_url', 'https://auth0.com' );
+		$this->assertEquals( WPA0_LOCK_CDN_URL, self::$opts->get_lock_url() );
+
+		self::$opts->set( 'custom_cdn_url', 1 );
+		$this->assertEquals( 'https://auth0.com', self::$opts->get_lock_url() );
+
+		self::$opts->set( 'cdn_url', '' );
+		$this->assertEquals( WPA0_LOCK_CDN_URL, self::$opts->get_lock_url() );
+	}
 }

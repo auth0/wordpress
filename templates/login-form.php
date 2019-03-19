@@ -15,7 +15,7 @@ function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = array()
 			wp_enqueue_script( 'wpa0_auth0js', $options->get( 'auth0js-cdn' ), false, null, true );
 		}
 
-		wp_enqueue_script( 'wpa0_lock', $options->get( 'cdn_url' ), array( 'jquery' ), false, true );
+		wp_enqueue_script( 'wpa0_lock', $options->get_lock_url(), array( 'jquery' ), false, true );
 		wp_enqueue_script( 'js-cookie', WPA0_PLUGIN_LIB_URL . 'js.cookie.min.js', false, '2.2.0', true );
 		wp_enqueue_script( 'wpa0_lock_init', WPA0_PLUGIN_JS_URL . 'lock-init.js', array( 'jquery' ), WPA0_VERSION, true );
 		wp_localize_script(

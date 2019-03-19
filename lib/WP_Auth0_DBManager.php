@@ -43,7 +43,6 @@ class WP_Auth0_DBManager {
 		$client_secret   = $options->get( 'client_secret' );
 		$domain          = $options->get( 'domain' );
 		$sso             = $options->get( 'sso' );
-		$cdn_url         = $options->get( 'cdn_url' );
 
 		// Plugin version < 2.2.3
 		if ( $this->current_db_version <= 7 ) {

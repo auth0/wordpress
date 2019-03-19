@@ -303,7 +303,7 @@ class WP_Auth0_Lock10_Options {
 	}
 
 	/**
-	 * @deprecated - 3.6.0, not used, use WP_Auth0_Options::Instance->get( 'cdn_url' ) instead.
+	 * @deprecated - 3.6.0, not used, use WP_Auth0_Options::Instance->get_lock_url() instead.
 	 *
 	 * @return string
 	 *
