@@ -74,13 +74,13 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_force_https_callback',
 			),
 			array(
-				'name'     => __( 'Use Custom Lock Version', 'wp-auth0' ),
+				'name'     => __( 'Use Custom Lock JS URL', 'wp-auth0' ),
 				'opt'      => 'custom_cdn_url',
 				'id'       => 'wpa0_custom_cdn_url',
 				'function' => 'render_custom_cdn_url',
 			),
 			array(
-				'name'     => __( 'Lock JS CDN URL', 'wp-auth0' ),
+				'name'     => __( 'Custom Lock JS URL', 'wp-auth0' ),
 				'opt'      => 'cdn_url',
 				'id'       => 'wpa0_cdn_url',
 				'function' => 'render_cdn_url',

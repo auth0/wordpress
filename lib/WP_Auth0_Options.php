@@ -117,6 +117,16 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	/**
+	 * Get the Lock JS URL.
+	 *
+	 * @return string
+	 */
+	public function get_lock_url() {
+		$cdn_url = $this->get( 'cdn_url' );
+		return $cdn_url && $this->get( 'custom_cdn_url' ) ? $cdn_url : WPA0_LOCK_CDN_URL;
+	}
+
+	/**
 	 * Get the authentication domain.
 	 *
 	 * @return string

@@ -64,8 +64,7 @@ class WP_Auth0_Admin {
 		wp_enqueue_style( 'wpa0_admin_initial_settup' );
 
 		if ( 'wpa0-setup' === $wpa0_curr_page && isset( $_REQUEST['signup'] ) ) {
-			$cdn_url = $this->a0_options->get( 'cdn_url' );
-			wp_enqueue_script( 'wpa0_lock', $cdn_url, array( 'jquery' ) );
+			wp_enqueue_script( 'wpa0_lock', $this->a0_options->get_lock_url(), array( 'jquery' ) );
 		}
 
 		wp_enqueue_style( 'media' );
