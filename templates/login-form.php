@@ -5,11 +5,9 @@ function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = array()
 	}
 
 	if ( ! $canShowLegacyLogin || ! isset( $_GET['wle'] ) ) {
-		$options          = WP_Auth0_Options::Instance();
-		$lock_options     = new WP_Auth0_Lock10_Options( $specialSettings );
-		$use_sso          = ! isset( $_GET['skip_sso'] ) && $options->get( 'sso', false );
-		$use_passwordless = $options->get( 'passwordless_enabled', false );
-		$lock_cdn_url     = $options->get( $use_passwordless ? 'passwordless_cdn_url' : 'cdn_url' );
+		$options      = WP_Auth0_Options::Instance();
+		$lock_options = new WP_Auth0_Lock10_Options( $specialSettings );
+		$use_sso      = ! isset( $_GET['skip_sso'] ) && $options->get( 'sso', false );
 
 		// If we're on wp-login.php and SSO is enabled, load Auth0.js.
 		$check_sso = $GLOBALS['pagenow'] === 'wp-login.php' && $use_sso;
@@ -17,7 +15,7 @@ function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = array()
 			wp_enqueue_script( 'wpa0_auth0js', $options->get( 'auth0js-cdn' ), false, null, true );
 		}
 
-		wp_enqueue_script( 'wpa0_lock', $lock_cdn_url, array( 'jquery' ), false, true );
+		wp_enqueue_script( 'wpa0_lock', $options->get( 'cdn_url' ), array( 'jquery' ), false, true );
 		wp_enqueue_script( 'js-cookie', WPA0_PLUGIN_LIB_URL . 'js.cookie.min.js', false, '2.2.0', true );
 		wp_enqueue_script( 'wpa0_lock_init', WPA0_PLUGIN_JS_URL . 'lock-init.js', array( 'jquery' ), WPA0_VERSION, true );
 		wp_localize_script(
@@ -30,7 +28,7 @@ function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = array()
 				'clientId'        => $options->get( 'client_id' ),
 				'stateCookieName' => WP_Auth0_State_Handler::get_storage_cookie_name(),
 				'nonceCookieName' => WP_Auth0_Nonce_Handler::get_storage_cookie_name(),
-				'usePasswordless' => $use_passwordless,
+				'usePasswordless' => $options->get( 'passwordless_enabled', false ),
 				'loginFormId'     => WPA0_AUTH0_LOGIN_FORM_ID,
 				'showAsModal'     => ! empty( $specialSettings['show_as_modal'] ),
 				'ssoOpts'         => $check_sso ? $lock_options->get_sso_options() : null,

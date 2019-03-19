@@ -192,7 +192,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'last_step'                 => 1,
 			'migration_token_id'        => null,
 			'jwt_auth_integration'      => false,
-			'auth0js-cdn'               => WPA0_AUTH0_JS_CDN_URL,
 
 			// Basic
 			'domain'                    => '',
@@ -228,8 +227,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'passwordless_enabled'      => false,
 			'force_https_callback'      => false,
 			'cdn_url'                   => WPA0_LOCK_CDN_URL,
-			'cdn_url_legacy'            => 'https://cdn.auth0.com/js/lock-9.2.min.js',
-			'passwordless_cdn_url'      => WPA0_LOCK_CDN_URL,
+			'custom_cdn_url'            => null,
 			'lock_connections'          => '',
 			'auto_provisioning'         => false,
 			'migration_ws'              => false,
