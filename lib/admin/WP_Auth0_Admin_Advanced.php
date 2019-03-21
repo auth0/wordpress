@@ -535,6 +535,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `jwt_auth_integration` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated 3.10.0, plugin is deprecated and removed from the WP plugin repo.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
@@ -542,7 +544,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 */
 	public function render_jwt_auth_integration( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description( __( 'This will enable the JWT Auth Users Repository override', 'wp-auth0' ) );
+		$this->render_field_description(
+			__( 'This setting is deprecated and will be removed in the next major version. ', 'wp-auth0' ) .
+			__( 'This will enable the JWT Auth Users Repository override', 'wp-auth0' )
+		);
 	}
 
 	public function basic_validation( $old_options, $input ) {
