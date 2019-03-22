@@ -16,9 +16,6 @@ class WP_Auth0_DBManager {
 		}
 
 		add_action( 'plugins_loaded', array( $this, 'check_update' ) );
-		add_action( 'admin_notices', array( $this, 'notice_failed_client_grant' ) );
-		add_action( 'admin_notices', array( $this, 'notice_successful_client_grant' ) );
-		add_action( 'admin_notices', array( $this, 'notice_successful_grant_types' ) );
 	}
 
 	public function check_update() {
@@ -39,10 +36,8 @@ class WP_Auth0_DBManager {
 
 		$connection_id   = $options->get( 'db_connection_id' );
 		$migration_token = $options->get( 'migration_token' );
-		$client_id       = $options->get( 'client_id' );
 		$client_secret   = $options->get( 'client_secret' );
 		$domain          = $options->get( 'domain' );
-		$sso             = $options->get( 'sso' );
 
 		// Plugin version < 2.2.3
 		if ( $this->current_db_version <= 7 ) {
@@ -83,6 +78,7 @@ class WP_Auth0_DBManager {
 			}
 		}
 
+		// Plugin version < 3.2.22
 		if ( $this->current_db_version < 14 && is_null( $options->get( 'client_secret_b64_encoded' ) ) ) {
 			if ( $options->get( 'client_id' ) ) {
 				$options->set( 'client_secret_b64_encoded', true );
@@ -102,127 +98,12 @@ class WP_Auth0_DBManager {
 			}
 		}
 
-		// App token needed for following updates
-		$decoded_token = null;
-		if ( ! empty( $app_token ) ) {
-
-			$token_parts = explode( '.', $app_token );
-
-			try {
-				$header        = json_decode( JWT::urlsafeB64Decode( $token_parts[0] ) );
-				$decoded_token = JWT::decode(
-					$app_token,
-					$options->convert_client_secret_to_key( $client_secret, false, 'RS256' === $header->alg, $domain ),
-					array( $header->alg )
-				);
-			} catch ( Exception $e ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e->getMessage() );
-			}
-		}
-
 		// Plugin version < 3.5.0
 		if ( ( $this->current_db_version < 16 && 0 !== $this->current_db_version ) || 16 === $version_to_install ) {
 
 			// Update Lock and Auth versions
 			if ( '//cdn.auth0.com/js/lock/11.0.0/lock.min.js' === $options->get( 'cdn_url' ) ) {
 				$options->set( 'cdn_url', WPA0_LOCK_CDN_URL );
-			}
-
-			// Update app type and client grant
-			$client_grant_created = false;
-			if ( $decoded_token ) {
-
-				$payload = array(
-					'app_type' => 'regular_web',
-				);
-
-				// Update the WP-created client
-				$client_updated = WP_Auth0_Api_Client::update_client( $domain, $app_token, $client_id, $sso, $payload );
-
-				// Create the client grant to the management API for the WP app client
-				if ( $client_updated ) {
-					$client_grant_created = WP_Auth0_Api_Client::create_client_grant( $app_token, $client_id );
-				}
-			}
-
-			if ( $client_grant_created ) {
-				delete_option( 'wp_auth0_client_grant_failed' );
-				update_option( 'wp_auth0_client_grant_success', 1 );
-
-				if ( 409 !== $client_grant_created->statusCode ) {
-					WP_Auth0_ErrorManager::insert_auth0_error(
-						__METHOD__,
-						'Client Grant has been successfully created!'
-					);
-				}
-			} else {
-				WP_Auth0_ErrorManager::insert_auth0_error(
-					__METHOD__,
-					sprintf(
-						__(
-							'Unable to automatically create Client Grant. Please go to your Auth0 Dashboard and authorize your Application %1$s for management API scopes %2$s.',
-							'wp-auth0'
-						),
-						$options->get( 'client_id' ),
-						implode( ', ', WP_Auth0_Api_Client::get_required_scopes() )
-					)
-				);
-				update_option( 'wp_auth0_client_grant_failed', 1 );
-			}
-		}
-
-		// Plugin version < 3.5.1
-		if ( ( $this->current_db_version < 17 && 0 !== $this->current_db_version ) || 17 === $version_to_install ) {
-
-			$grant_types_updated = false;
-			$payload             = array();
-
-			// Need a valid app token to update audience and client grant
-			if ( $decoded_token ) {
-
-				$get_client_resp = WP_Auth0_Api_Client::get_client( $app_token, $client_id );
-
-				if ( $get_client_resp ) {
-
-					if ( is_array( $get_client_resp->grant_types ) ) {
-
-						if ( false === array_search( 'client_credentials', $get_client_resp->grant_types ) ) {
-							$payload['grant_types']   = $get_client_resp->grant_types;
-							$payload['grant_types'][] = 'client_credentials';
-						} else {
-							$grant_types_updated = true;
-						}
-					} else {
-
-						$payload['grant_types'] = WP_Auth0_Api_Client::get_client_grant_types();
-					}
-
-					if ( ! empty( $payload ) ) {
-						$client_updated      = WP_Auth0_Api_Client::update_client( $domain, $app_token, $client_id, $sso, $payload );
-						$grant_types_updated = ! empty( $client_updated );
-					}
-				}
-			}
-
-			if ( $grant_types_updated ) {
-				delete_option( 'wp_auth0_grant_types_failed' );
-				update_option( 'wp_auth0_grant_types_success', 1 );
-				WP_Auth0_ErrorManager::insert_auth0_error(
-					__METHOD__,
-					__( 'Client Grant Types have been successfully updated!', 'wp-auth0' )
-				);
-			} else {
-				WP_Auth0_ErrorManager::insert_auth0_error(
-					__METHOD__,
-					sprintf(
-						__(
-							'Unable to automatically update Client Grant Type. Please go to your Auth0 Dashboard and add Client Credentials to your Application settings > Advanced > Grant Types for ID %s ',
-							'wp-auth0'
-						),
-						$options->get( 'client_id' )
-					)
-				);
-				update_option( 'wp_auth0_grant_types_failed', 1 );
 			}
 		}
 
@@ -319,6 +200,12 @@ class WP_Auth0_DBManager {
 			unset( $update_options['passwordless_cdn_url'] );
 			unset( $update_options['cdn_url_legacy'] );
 			update_option( $options->get_options_name(), $update_options );
+
+			// Remove Client Grant update notifications.
+			delete_option( 'wp_auth0_client_grant_failed' );
+			delete_option( 'wp_auth0_grant_types_failed' );
+			delete_option( 'wp_auth0_client_grant_success' );
+			delete_option( 'wp_auth0_grant_types_success' );
 		}
 
 		$this->current_db_version = AUTH0_DB_VERSION;
@@ -328,8 +215,9 @@ class WP_Auth0_DBManager {
 	}
 
 	/**
-	 * Display a banner if we are not able to get a Management API token
-	 * Hooked to admin_notices in $this->init()
+	 * Display a banner if we are not able to get a Management API token.
+	 *
+	 * @deprecated - 3.10.0, not used.
 	 */
 	public function notice_failed_client_grant() {
 
@@ -385,8 +273,9 @@ class WP_Auth0_DBManager {
 	}
 
 	/**
-	 * Display a banner once after 3.5.0 upgrade
-	 * Hooked to admin_notices in $this->init()
+	 * Display a banner once after 3.5.0 upgrade.
+	 *
+	 * @deprecated - 3.10.0, not used.
 	 */
 	public function notice_successful_client_grant() {
 
@@ -411,8 +300,9 @@ class WP_Auth0_DBManager {
 	}
 
 	/**
-	 * Display a banner once after 3.5.1 upgrade
-	 * Hooked to admin_notices in $this->init()
+	 * Display a banner once after 3.5.1 upgrade.
+	 *
+	 * @deprecated - 3.10.0, not used.
 	 */
 	public function notice_successful_grant_types() {
 

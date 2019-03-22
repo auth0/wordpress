@@ -335,19 +335,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			? $input['auth0_app_token'] // TO BE DEPRECATED
 			: $old_options['auth0_app_token'] ); // TO BE DEPRECATED
 
-		// If we have an app token, get and store the audience
-		if ( ! empty( $input['auth0_app_token'] ) ) { // NEED TO ADDRESS
-			$db_manager = new WP_Auth0_DBManager( WP_Auth0_Options::Instance() );
-
-			if ( get_option( 'wp_auth0_client_grant_failed' ) ) {
-				$db_manager->install_db( 16, $input['auth0_app_token'] ); // NEED TO ADDRESS
-			}
-
-			if ( get_option( 'wp_auth0_grant_types_failed' ) ) {
-				$db_manager->install_db( 17, $input['auth0_app_token'] ); // NEED TO ADDRESS
-			}
-		}
-
 		if ( empty( $input['domain'] ) ) {
 			$this->add_validation_error( __( 'You need to specify a domain', 'wp-auth0' ) );
 		}

@@ -441,11 +441,6 @@ class WP_Auth0 {
 		delete_option( 'widget_wp_auth0_widget' );
 		delete_option( 'widget_wp_auth0_social_amplification_widget' );
 
-		delete_option( 'wp_auth0_client_grant_failed' );
-		delete_option( 'wp_auth0_client_grant_success' );
-		delete_option( 'wp_auth0_grant_types_failed' );
-		delete_option( 'wp_auth0_grant_types_success' );
-
 		delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
 	}
 
