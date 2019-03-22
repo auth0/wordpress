@@ -244,7 +244,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'migration_token'           => null,
 			'migration_ips_filter'      => false,
 			'migration_ips'             => null,
-			'auto_login'                => 0,
+			'auto_login'                => 1,
 			'auto_login_method'         => '',
 			'auth0_implicit_workflow'   => false,
 			'valid_proxy_ip'            => null,
