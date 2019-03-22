@@ -95,6 +95,12 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		self::$opts->set( 'passwordless_cdn_url', uniqid() );
 		self::$opts->set( 'cdn_url_legacy', uniqid() );
 
+		// Set options to be deleted.
+		update_option( 'wp_auth0_client_grant_failed', 1 );
+		update_option( 'wp_auth0_grant_types_failed', 1 );
+		update_option( 'wp_auth0_client_grant_success', 1 );
+		update_option( 'wp_auth0_grant_types_success', 1 );
+
 		// Run the update.
 		$db_manager->install_db( $test_version, null );
 
@@ -106,6 +112,12 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		$this->assertNull( self::$opts->get( 'auth0js-cdn' ) );
 		$this->assertNull( self::$opts->get( 'passwordless_cdn_url' ) );
 		$this->assertNull( self::$opts->get( 'cdn_url_legacy' ) );
+
+		// Check that unused options were removed.
+		$this->assertFalse( get_option( 'wp_auth0_client_grant_failed' ) );
+		$this->assertFalse( get_option( 'wp_auth0_grant_types_failed' ) );
+		$this->assertFalse( get_option( 'wp_auth0_client_grant_success' ) );
+		$this->assertFalse( get_option( 'wp_auth0_grant_types_success' ) );
 
 		// Check that unused settings were removed.
 		$updated_options = get_option( self::$opts->get_options_name() );
