@@ -140,25 +140,17 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 	 * Test that the AJAX rotate token endpoint saves a new token when the endpoint succeeds.
 	 */
 	public function testThatAjaxTokenRotationSavesNewToken() {
-		$this->startAjaxHalting();
+		$this->startAjaxReturn();
 
 		$old_token = uniqid();
 		self::$opts->set( 'migration_token', $old_token );
 
 		ob_start();
-		$caught_exception = false;
-		$error_msg        = 'No exception';
-		try {
-			$_REQUEST['_ajax_nonce'] = wp_create_nonce( 'auth0_rotate_migration_token' );
-			self::$admin->auth0_rotate_migration_token();
-		} catch ( Exception $e ) {
-			$error_msg        = $e->getMessage();
-			$caught_exception = ( 'die_ajax' === $error_msg );
-		}
-		$return_json = ob_get_clean();
+		$_REQUEST['_ajax_nonce'] = wp_create_nonce( 'auth0_rotate_migration_token' );
+		self::$admin->auth0_rotate_migration_token();
+		$return_json = explode( PHP_EOL, ob_get_clean() );
 
-		$this->assertTrue( $caught_exception, $error_msg );
-		$this->assertEquals( '{"success":true}', $return_json );
+		$this->assertEquals( '{"success":true}', end( $return_json ) );
 		$this->assertNotEquals( $old_token, self::$opts->get( 'migration_token' ) );
 		$this->assertGreaterThanOrEqual( 64, strlen( self::$opts->get( 'migration_token' ) ) );
 	}
