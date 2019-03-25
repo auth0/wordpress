@@ -45,7 +45,7 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$this->assertContains( 'error=invalid_state', $redirect_url['query'] );
 
 		$this->assertEquals( $test_domain, self::$opts->get( 'domain' ) );
-		$this->assertEquals( $test_token, self::$opts->get( 'auth0_app_token' ) );
+		$this->assertNull( self::$opts->get( 'auth0_app_token' ) );
 
 		$this->assertEmpty( self::$error_log->get() );
 	}

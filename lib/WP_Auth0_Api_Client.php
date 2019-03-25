@@ -175,6 +175,7 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
+	 * TODO: Deprecate
 	 *
 	 * @param string $domain - tenant domain
 	 * @param string $access_token - access token with at least `openid` scope
@@ -251,6 +252,7 @@ class WP_Auth0_Api_Client {
 
 	/**
 	 * Get a single client via the Management API
+	 * TODO: Deprecate
 	 *
 	 * @see https://auth0.com/docs/api/management/v2#!/Clients/get_clients_by_id
 	 *
@@ -356,6 +358,9 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
+	/**
+	 * TODO: Deprecate
+	 */
 	public static function update_client( $domain, $app_token, $client_id, $sso, $payload = array() ) {
 
 		$endpoint = "https://$domain/api/v2/clients/$client_id";
@@ -389,6 +394,9 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
+	/**
+	 * TODO: Deprecate
+	 */
 	public static function create_rule( $domain, $app_token, $name, $script, $enabled = true ) {
 		$payload = array(
 			'name'    => $name,
@@ -428,6 +436,9 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
+	/**
+	 * TODO: Deprecate
+	 */
 	public static function delete_rule( $domain, $app_token, $id ) {
 
 		$endpoint = "https://$domain/api/v2/rules/$id";
@@ -584,6 +595,9 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
+	/**
+	 * TODO: Deprecate
+	 */
 	public static function get_connection( $domain, $app_token, $id ) {
 		$endpoint = "https://$domain/api/v2/connections/$id";
 
@@ -672,6 +686,9 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
+	/**
+	 * TODO: Deprecate
+	 */
 	public static function update_user( $domain, $app_token, $id, $payload ) {
 		$endpoint = "https://$domain/api/v2/users/$id";
 
