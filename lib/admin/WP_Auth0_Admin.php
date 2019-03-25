@@ -35,9 +35,11 @@ class WP_Auth0_Admin {
 			array(
 				'media_title'             => __( 'Choose your icon', 'wp-auth0' ),
 				'media_button'            => __( 'Choose icon', 'wp-auth0' ),
-				'clear_cache_working'     => __( 'Working ...', 'wp-auth0' ),
-				'clear_cache_done'        => __( 'Done!', 'wp-auth0' ),
+				'ajax_working'            => __( 'Working ...', 'wp-auth0' ),
+				'ajax_done'               => __( 'Done!', 'wp-auth0' ),
+				'refresh_prompt'          => __( 'Save or refresh this page to see changes.', 'wp-auth0' ),
 				'clear_cache_nonce'       => wp_create_nonce( 'auth0_delete_cache_transient' ),
+				'rotate_token_nonce'      => wp_create_nonce( WP_Auth0_Admin_Advanced::ROTATE_TOKEN_NONCE_ACTION ),
 				'form_confirm_submit_msg' => __( 'Are you sure?', 'wp-auth0' ),
 				'ajax_url'                => admin_url( 'admin-ajax.php' ),
 			)

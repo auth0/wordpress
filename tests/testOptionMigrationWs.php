@@ -103,7 +103,7 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'code-block', $code_block->item( 0 )->getAttribute( 'class' ) );
 		$this->assertEquals( 'auth0_migration_token', $code_block->item( 0 )->getAttribute( 'id' ) );
 		$this->assertEquals( 'disabled', $code_block->item( 0 )->getAttribute( 'disabled' ) );
-		$this->assertEquals( self::$opts->get( 'migration_token' ), $code_block->item( 0 )->nodeValue );
+		$this->assertEquals( 'No migration token', $code_block->item( 0 )->nodeValue );
 
 		$token_button = $this->getDomListFromTagName( $field_html, 'button' );
 		$this->assertEquals( 'auth0_rotate_migration_token', $token_button->item( 0 )->getAttribute( 'id' ) );

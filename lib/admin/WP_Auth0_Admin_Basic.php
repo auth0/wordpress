@@ -216,7 +216,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	public function render_cache_expiration( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'number' );
 		printf(
-			' <input type="button" id="auth0_delete_cache_transient" value="%s" class="button button-secondary">',
+			' <button id="auth0_delete_cache_transient" class="button button-secondary">%s</button>',
 			__( 'Delete Cache', 'wp-auth0' )
 		);
 		$this->render_field_description( __( 'JWKS cache expiration in minutes (use 0 for no caching)', 'wp-auth0' ) );
