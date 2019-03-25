@@ -6,7 +6,6 @@
  */
 
 ini_set( 'error_log', '/dev/null' );
-echo 'PHP version: ' . phpversion() . "\n";
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
