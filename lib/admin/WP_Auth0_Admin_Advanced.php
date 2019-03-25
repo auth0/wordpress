@@ -7,6 +7,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 */
 	const ADVANCED_DESCRIPTION = '';
 
+	const ROTATE_TOKEN_NONCE_ACTION = 'auth0_rotate_migration_token';
+
 	protected $_description;
 
 	protected $actions_middlewares = array(
@@ -36,6 +38,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @see \WP_Auth0_Admin_Generic::init_option_section
 	 */
 	public function init() {
+		add_action( 'wp_ajax_' . self::ROTATE_TOKEN_NONCE_ACTION, array( $this, self::ROTATE_TOKEN_NONCE_ACTION ) );
+
 		$options = array(
 			array(
 				'name'     => __( 'Require Verified Email', 'wp-auth0' ),
@@ -379,16 +383,31 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				__( 'User migration endpoints activated. ', 'wp-auth0' ) .
 				__( 'See below for the token to use. ', 'wp-auth0' ) .
 				__( 'The custom database scripts need to be configured manually as described ', 'wp-auth0' ) .
-				$this->get_docs_link( 'users/migrations/automatic' )
+				$this->get_docs_link( 'cms/wordpress/user-migration' )
 			);
-			$this->render_field_description( 'Security token:' );
+			$this->render_field_description( 'Migration token:' );
 			if ( $this->options->has_constant_val( 'migration_token' ) ) {
 				$this->render_const_notice( 'migration_token' );
 			}
+
+			$migration_token = $this->options->get( 'migration_token' );
 			printf(
-				'<code class="code-block" disabled>%s</code>',
-				sanitize_text_field( $this->options->get( 'migration_token' ) )
+				'<code class="code-block" id="auth0_migration_token" disabled>%s</code><br>',
+				$migration_token ? sanitize_text_field( $migration_token ) : __( 'No migration token', 'wp-auth0' )
 			);
+
+			if ( ! $this->options->has_constant_val( 'migration_token' ) ) {
+				printf(
+					'<button id="%s" class="button button-secondary" data-confirm-msg="%s">%s</button>',
+					esc_attr( self::ROTATE_TOKEN_NONCE_ACTION ),
+					esc_attr(
+						__( 'This will change your migration token immediately. ', 'wp-auth0' ) .
+						__( 'The new token must be changed in the custom scripts for your database Connection. ', 'wp-auth0' ) .
+						__( 'Continue?', 'wp-auth0' )
+					),
+					__( 'Generate New Migration Token', 'wp-auth0' )
+				);
+			}
 		} else {
 			$this->render_field_description(
 				__( 'User migration endpoints deactivated. ', 'wp-auth0' ) .
@@ -550,6 +569,12 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	public function auth0_rotate_migration_token() {
+		check_ajax_referer( self::ROTATE_TOKEN_NONCE_ACTION );
+		$this->options->set( 'migration_token', $this->generate_token() );
+		wp_send_json_success();
+	}
+
 	public function basic_validation( $old_options, $input ) {
 		$input['requires_verified_email'] = intval( ! empty( $input['requires_verified_email'] ) );
 
@@ -633,7 +658,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
 		// If we don't have a token yet, generate one.
 		if ( empty( $input['migration_token'] ) ) {
-			$input['migration_token'] = JWT::urlsafeB64Encode( openssl_random_pseudo_bytes( 64 ) );
+			$input['migration_token'] = $this->generate_token();
 			return $input;
 		}
 
@@ -717,6 +742,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			$domain = array_pop( $host_pieces ) . '.' . $domain;
 		}
 		return $domain;
+	}
+
+	private function generate_token() {
+		return JWT::urlsafeB64Encode( openssl_random_pseudo_bytes( 64 ) );
 	}
 
 	/*
