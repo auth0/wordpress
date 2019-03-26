@@ -90,7 +90,6 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		$db_manager->init();
 
 		// Set CDN URL to previous default.
-		self::$opts->set( 'cdn_url', 'https://cdn.auth0.com/js/lock/11.5/lock.min.js' );
 		self::$opts->set( 'auth0js-cdn', uniqid() );
 		self::$opts->set( 'passwordless_cdn_url', uniqid() );
 		self::$opts->set( 'cdn_url_legacy', uniqid() );
@@ -103,10 +102,6 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 
 		// Run the update.
 		$db_manager->install_db( $test_version, null );
-
-		// Check that Lock URL was updated.
-		$this->assertEquals( 'https://cdn.auth0.com/js/lock/11.14/lock.min.js', self::$opts->get( 'cdn_url' ) );
-		$this->assertNull( self::$opts->get( 'custom_cdn_url' ) );
 
 		// Check that unused settings were nullified.
 		$this->assertNull( self::$opts->get( 'auth0js-cdn' ) );
@@ -124,6 +119,26 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		$this->assertArrayNotHasKey( 'auth0js-cdn', $updated_options );
 		$this->assertArrayNotHasKey( 'passwordless_cdn_url', $updated_options );
 		$this->assertArrayNotHasKey( 'cdn_url_legacy', $updated_options );
+	}
+
+	/**
+	 * Test that 20 -> 21 DB migration updates cdn_url when appropriate.
+	 */
+	public function testThatV21UpdatesCdnUrl() {
+		$test_version = 21;
+
+		update_option( 'auth0_db_version', $test_version - 1 );
+		$db_manager = new WP_Auth0_DBManager( self::$opts );
+		$db_manager->init();
+
+		// Set the previous default CDN URL.
+		self::$opts->set( 'cdn_url', 'https://cdn.auth0.com/js/lock/11.5/lock.min.js' );
+
+		$db_manager->install_db( $test_version, null );
+
+		// Check that Lock URL was updated.
+		$this->assertEquals( 'https://cdn.auth0.com/js/lock/11.14/lock.min.js', self::$opts->get( 'cdn_url' ) );
+		$this->assertNull( self::$opts->get( 'custom_cdn_url' ) );
 
 		self::$opts->reset();
 		update_option( 'auth0_db_version', $test_version - 1 );
@@ -133,11 +148,34 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		// Set CDN URL to something other than previous version.
 		self::$opts->set( 'cdn_url', 'https://cdn.auth0.com/js/lock/12.0/lock.min.js' );
 
-		// Run the update.
 		$db_manager->install_db( $test_version, null );
 
 		// Check that Lock URL was not updated.
 		$this->assertEquals( 'https://cdn.auth0.com/js/lock/12.0/lock.min.js', self::$opts->get( 'cdn_url' ) );
 		$this->assertEquals( 1, self::$opts->get( 'custom_cdn_url' ) );
+	}
+
+	/**
+	 * Test that 20 -> 21 DB migration updates wordpress_login_enabled and generates wle_code.
+	 */
+	public function testThatV21UpdatesWle() {
+		$test_version = 21;
+
+		update_option( 'auth0_db_version', $test_version - 1 );
+		$db_manager = new WP_Auth0_DBManager( self::$opts );
+		$db_manager->init();
+
+		self::$opts->set( 'wordpress_login_enabled', 1 );
+		$db_manager->install_db( $test_version, null );
+		$wle_code_1 = self::$opts->get( 'wle_code' );
+		$this->assertEquals( 'link', self::$opts->get( 'wordpress_login_enabled' ) );
+		$this->assertGreaterThan( 24, strlen( $wle_code_1 ) );
+
+		self::$opts->set( 'wordpress_login_enabled', 0 );
+		self::$opts->set( 'wle_code', '' );
+		$db_manager->install_db( $test_version, null );
+		$this->assertEquals( 'isset', self::$opts->get( 'wordpress_login_enabled' ) );
+		$this->assertGreaterThan( 24, strlen( self::$opts->get( 'wle_code' ) ) );
+		$this->assertNotEquals( $wle_code_1, self::$opts->get( 'wle_code' ) );
 	}
 }
