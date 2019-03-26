@@ -190,6 +190,32 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function can_show_wp_login_form() {
+
+		if ( ! isset( $_GET['wle'] ) ) {
+			return false;
+		}
+
+		$wle_setting = $this->get( 'wordpress_login_enabled' );
+		if ( 'no' === $wle_setting ) {
+			return false;
+		}
+
+		if ( in_array( $wle_setting, array( 'link', 'isset' ) ) ) {
+			return true;
+		}
+
+		$wle_code = $this->get( 'wle_code' );
+		if ( 'code' === $wle_setting && $wle_code === $_GET['wle'] ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Default settings when plugin is installed or reset
 	 *
 	 * @return array
@@ -211,7 +237,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'client_secret_b64_encoded' => null,
 			'client_signing_algorithm'  => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
 			'cache_expiration'          => 1440,
-			'auth0_app_token'           => null, // TO BE DEPRECATED
 			'wordpress_login_enabled'   => 'link',
 			'wle_code'                  => '',
 
