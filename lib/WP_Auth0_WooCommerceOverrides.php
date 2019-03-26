@@ -2,6 +2,7 @@
 
 class WP_Auth0_WooCommerceOverrides {
 	protected $plugin;
+	protected $options;
 
 	public function __construct( WP_Auth0 $plugin, $options = null ) {
 		$this->plugin = $plugin;
@@ -24,7 +25,7 @@ class WP_Auth0_WooCommerceOverrides {
 			$redirectUrl = get_permalink( wc_get_page_id( $redirectPage ) );
 			$loginUrl    = wp_login_url( $redirectUrl );
 
-			printf( "<a class='button' href='%s'>%s</a>", $loginUrl, translate( 'Login', 'wp-auth0' ) );
+			printf( "<a class='button' href='%s'>%s</a>", $loginUrl, __( 'Login', 'wp-auth0' ) );
 		} else {
 			echo $this->plugin->shortcode( array() );
 		}
@@ -33,7 +34,7 @@ class WP_Auth0_WooCommerceOverrides {
 	public function override_woocommerce_checkout_login_form( $html ) {
 		$this->render_login_form( 'checkout' );
 
-		if ( isset( $_GET['wle'] ) ) {
+		if ( $this->options->can_show_wp_login_form() ) {
 			echo '<style>.woocommerce-checkout .woocommerce-info{display:block;}</style>';
 		}
 	}

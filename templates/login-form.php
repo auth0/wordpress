@@ -4,8 +4,8 @@ function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = array()
 		return;
 	}
 
-	if ( ! $canShowLegacyLogin || ! isset( $_GET['wle'] ) ) {
-		$options      = WP_Auth0_Options::Instance();
+	$options = WP_Auth0_Options::Instance();
+	if ( ! $canShowLegacyLogin || ! $options->can_show_wp_login_form() ) {
 		$lock_options = new WP_Auth0_Lock10_Options( $specialSettings );
 		$use_sso      = ! isset( $_GET['skip_sso'] ) && $options->get( 'sso', false );
 

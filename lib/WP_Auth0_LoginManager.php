@@ -109,18 +109,12 @@ class WP_Auth0_LoginManager {
 		}
 
 		// Do not redirect login page override.
-		if ( isset( $_GET['wle'] ) ) {
+		if ( $this->a0_options->can_show_wp_login_form() ) {
 			return false;
 		}
 
 		// Do not redirect non-GET requests.
 		if ( strtolower( $_SERVER['REQUEST_METHOD'] ) !== 'get' ) {
-			return false;
-		}
-
-		// Do not redirect Auth0 login processing.
-		// TODO: This should be removed as this page is no longer used for callbacks.
-		if ( null !== $this->query_vars( 'auth0' ) ) {
 			return false;
 		}
 
@@ -682,9 +676,6 @@ class WP_Auth0_LoginManager {
 		if ( ! empty( $connection ) ) {
 			$params['connection'] = $connection;
 		}
-
-		// Get the telemetry header.
-		$telemetry = WP_Auth0_Api_Abstract::get_info_headers();
 
 		// Where should the user be redirected after logging in?
 		if ( empty( $redirect_to ) && ! empty( $_GET['redirect_to'] ) ) {
