@@ -6,7 +6,6 @@ jQuery(function($) {
     var passwordFieldRow = $('#password');
     var emailField = $('input[name=email]');
     var deleteUserDataButton = $('#auth0_delete_data');
-    var deleteMfaDataButton = $('#auth0_delete_mfa');
 
     /**
      * Hide the password field if not an Auth0 strategy.
@@ -34,17 +33,6 @@ jQuery(function($) {
         }
         e.preventDefault();
         userProfileAjaxAction($(this), 'auth0_delete_data', wpa0UserProfile.deleteIdNonce );
-    });
-
-    /**
-     * Delete MFA Provider button click.
-     */
-    deleteMfaDataButton.click(function (e) {
-        if ( ! window.confirm(wpa0UserProfile.i18n.confirmDeleteMfa) ) {
-            return;
-        }
-        e.preventDefault();
-        userProfileAjaxAction($(this), 'auth0_delete_mfa', wpa0UserProfile.deleteMfaNonce);
     });
 
     /**

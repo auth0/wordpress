@@ -172,10 +172,6 @@ class WP_Auth0 {
 		$profile_delete_data = new WP_Auth0_Profile_Delete_Data( $users_repo );
 		$profile_delete_data->init();
 
-		$api_delete_mfa     = new WP_Auth0_Api_Delete_User_Mfa( $this->a0_options, $api_client_creds );
-		$profile_delete_mfa = new WP_Auth0_Profile_Delete_Mfa( $this->a0_options, $api_delete_mfa );
-		$profile_delete_mfa->init();
-
 		WP_Auth0_Email_Verification::init();
 	}
 

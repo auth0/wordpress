@@ -60,30 +60,6 @@ class TestProfileDeleteMfa extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that correct hooks are loaded
-	 */
-	public function testInitHooks() {
-
-		$expect_hooked = [
-			'show_delete_mfa' => [
-				'priority'      => 10,
-				'accepted_args' => 1,
-			],
-		];
-		// Same method hooked to both actions.
-		$this->assertHooked( 'edit_user_profile', 'WP_Auth0_Profile_Delete_Mfa', $expect_hooked );
-		$this->assertHooked( 'show_user_profile', 'WP_Auth0_Profile_Delete_Mfa', $expect_hooked );
-
-		$expect_hooked = [
-			'delete_mfa' => [
-				'priority'      => 10,
-				'accepted_args' => 1,
-			],
-		];
-		$this->assertHooked( 'wp_ajax_auth0_delete_mfa', 'WP_Auth0_Profile_Delete_Mfa', $expect_hooked );
-	}
-
-	/**
 	 * Test that an AJAX call with no nonce fails.
 	 */
 	public function testThatAjaxFailsWithNoNonce() {
