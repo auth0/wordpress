@@ -309,31 +309,4 @@ class TestLoginManager extends WP_Auth0_Test_Case {
 		$_GET['action'] = 'logout';
 		$this->assertFalse( $login_manager->login_auto() );
 	}
-
-	/**
-	 * Test that the ULP redirect does not happen if wp-login.php is used as a callback.
-	 */
-	public function testThatUlpRedirectIsSkippedForCallback() {
-		$this->startRedirectHalting();
-
-		$login_manager = new WP_Auth0_LoginManager( self::$users_repo, self::$opts );
-		$this->assertFalse( $login_manager->login_auto() );
-
-		// First, check that a redirect is happening.
-		self::$opts->set( 'auto_login', 1 );
-		self::auth0Ready( true );
-		$caught_redirect = [];
-		try {
-			// Need to hide error messages here because a cookie is set.
-			// phpcs:ignore
-			@$login_manager->login_auto();
-		} catch ( Exception $e ) {
-			$caught_redirect = unserialize( $e->getMessage() );
-		}
-		$this->assertEquals( 302, $caught_redirect['status'] );
-
-		// Test that the auth0 URL param will skip the redirect.
-		$_REQUEST['auth0'] = 1;
-		$this->assertFalse( $login_manager->login_auto() );
-	}
 }
