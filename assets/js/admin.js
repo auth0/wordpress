@@ -42,7 +42,7 @@ jQuery(document).ready(function($) {
     Generic form confirm stop
      */
     $('form.js-a0-confirm-submit').submit(function (e) {
-        if ( ! confirmToContinue($(this)) ) {
+        if ( cancelAction($(this)) ) {
             e.preventDefault();
         }
     });
@@ -131,26 +131,25 @@ jQuery(document).ready(function($) {
     } );
 
     /*
-    Clear cache button on Basic settings page
+    Generate new migration token button on Advanced settings page
      */
-    var rotateMigrationTokenId = 'auth0_rotate_migration_token';
-    var $rotateMigrationTokenButton = $( '#' + rotateMigrationTokenId );
-    $rotateMigrationTokenButton.click( function(e) {
+    var rotateTokenId = 'auth0_rotate_migration_token';
+    var $rotateTokenButton = $( '#' + rotateTokenId );
+    $rotateTokenButton.click( function(e) {
         e.preventDefault();
 
-        if (!confirmToContinue($rotateMigrationTokenButton) ) {
+        if (cancelAction($rotateTokenButton) ) {
             return;
         }
 
-        $rotateMigrationTokenButton.prop( 'disabled', true ).text( wpa0.ajax_working );
+        $rotateTokenButton.prop( 'disabled', true ).text( wpa0.ajax_working );
         var postData = {
-            'action': rotateMigrationTokenId,
+            'action': rotateTokenId,
             '_ajax_nonce': wpa0.rotate_token_nonce
         };
-
         $.post(wpa0.ajax_url, postData, function() {
             $( '#auth0_migration_token' ).text(wpa0.refresh_prompt);
-            $rotateMigrationTokenButton.remove();
+            $rotateTokenButton.remove();
         }, 'json');
     } );
 
@@ -183,17 +182,19 @@ jQuery(document).ready(function($) {
     });
 
   /**
+   * Show a JS confirm box to give a chance to cancel an on-page action.
    *
-   * @param $el
+   * @param {object} $el - jQuery selector for confirmation message.
+   *
    * @returns {boolean}
    */
-  function confirmToContinue( $el ) {
+  function cancelAction( $el ) {
       var message = $el.attr('data-confirm-msg');
       if ( !message || !message.length ) {
         message = wpa0.form_confirm_submit_msg;
       }
 
-      return window.confirm(message);
+      return !window.confirm(message);
     }
 
     /**
