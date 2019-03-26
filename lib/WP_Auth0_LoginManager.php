@@ -302,7 +302,8 @@ class WP_Auth0_LoginManager {
 		);
 
 		// Attempt to authenticate with the Management API.
-		$client_credentials_token = WP_Auth0_Api_Client::get_client_token();
+		$client_credentials_api   = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
+		$client_credentials_token = $client_credentials_api->call();
 
 		if ( $client_credentials_token ) {
 			$userinfo_resp      = WP_Auth0_Api_Client::get_user( $domain, $client_credentials_token, $decoded_token->sub );
