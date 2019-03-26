@@ -10,6 +10,7 @@
 /**
  * Class WP_Auth0_Profile_Delete_Mfa.
  * Provides UI and AJAX handlers to delete a user's MFA.
+ * TODO: Deprecate
  */
 class WP_Auth0_Profile_Delete_Mfa {
 
@@ -29,6 +30,7 @@ class WP_Auth0_Profile_Delete_Mfa {
 
 	/**
 	 * WP_Auth0_Profile_Delete_Mfa constructor.
+	 * TODO: Deprecate
 	 *
 	 * @param WP_Auth0_Options             $a0_options - WP_Auth0_Options instance.
 	 * @param WP_Auth0_Api_Delete_User_Mfa $api_delete_mfa - WP_Auth0_Api_Delete_User_Mfa instance.
