@@ -13,6 +13,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
 	protected $actions_middlewares = array(
 		'basic_validation',
+		'wle_validation',
 	);
 
 	/**
@@ -263,11 +264,69 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_allow_wordpress_login( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Turn on to enable a link on wp-login.php pointing to the core login form. ', 'wp-auth0' ) .
-			__( 'Logins and signups using the WordPress form will NOT be pushed to Auth0. ', 'wp-auth0' ) .
-			__( 'This is typically only used while testing the plugin initially', 'wp-auth0' )
+		$wle_code       = $this->options->get( 'wle_code' );
+		$wp_form_notice = __( 'Logins and signups using the WordPress form will NOT be pushed to Auth0', 'wp-auth0' );
+		$buttons        = array(
+			array(
+				'label' => 'Show link',
+				'value' => 'link',
+			),
+			array(
+				'label' => '"wle" present',
+				'value' => 'isset',
+			),
+			array(
+				'label' => '"wle" with code',
+				'value' => 'code',
+			),
+			array(
+				'label' => 'No',
+				'value' => 'no',
+			),
+		);
+
+		$this->render_radio_buttons(
+			$buttons,
+			$args['label_for'],
+			$args['opt_name'],
+			$this->options->get( $args['opt_name'] )
+		);
+
+		printf(
+			'<div id="js-a0-wle-link" style="display:none" class="subelement">
+				<span class="description">%s. %s.</span>
+			</div>',
+			__( 'Display a link to the WordPress login form on wp-login.php', 'wp-auth0' ),
+			$wp_form_notice
+		);
+
+		printf(
+			'<div id="js-a0-wle-isset" style="display:none" class="subelement">
+				<span class="description">%s (<a href="%s" target="_blank">%s</a>). %s.</span>
+			</div>',
+			__( 'Display the WordPress login form on wp-login.php when a "wle" parameter is present', 'wp-auth0' ),
+			add_query_arg( 'wle', '', wp_login_url() ),
+			__( 'link', 'wp-auth0' ),
+			$wp_form_notice
+		);
+
+		printf(
+			'<div id="js-a0-wle-code" style="display:none" class="subelement">
+				<span class="description">%s (<a href="%s" target="_blank">%s</a>). %s.</span><br><br>
+				<code class="code-block" disabled>%s</code>
+			</div>',
+			__( 'Display the WordPress login form on wp-login.php when a "wle=code" parameter is present', 'wp-auth0' ),
+			add_query_arg( 'wle', $wle_code, wp_login_url() ),
+			__( 'link', 'wp-auth0' ),
+			$wp_form_notice,
+			$wle_code ? sanitize_text_field( $wle_code ) : 'Save settings to generate code.'
+		);
+
+		printf(
+			'<div id="js-a0-wle-no" style="display:none" class="subelement">
+				<span class="description">%s.</span>
+			</div>',
+			__( 'Do not allow the WordPress login form', 'wp-auth0' )
 		);
 	}
 
@@ -310,10 +369,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$input['client_id']        = sanitize_text_field( $input['client_id'] );
 		$input['cache_expiration'] = absint( $input['cache_expiration'] );
 
-		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] )
-			? $input['wordpress_login_enabled']
-			: 0 );
-
 		$input['allow_signup'] = ( isset( $input['allow_signup'] ) ? $input['allow_signup'] : 0 );
 
 		// Only replace the secret or token if a new value was set. If not, we will keep the last one entered.
@@ -337,6 +392,22 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			$this->add_validation_error( __( 'You need to specify a Client Secret', 'wp-auth0' ) );
 		}
 
+		return $input;
+	}
+
+	/**
+	 * Validation for the WordPress Login Enabled setting.
+	 *
+	 * @param array $old_options - Previous option values.
+	 * @param array $input - Option values being saved.
+	 *
+	 * @return mixed
+	 */
+	public function wle_validation( $old_options, $input ) {
+		if ( ! in_array( $input['wordpress_login_enabled'], array( 'link', 'isset', 'code', 'no' ) ) ) {
+			$input['wordpress_login_enabled'] = $this->options->get_default( 'wordpress_login_enabled' );
+		}
+		$input['wle_code'] = $this->options->get( 'wle_code' ) ?: str_shuffle( uniqid() . uniqid() );
 		return $input;
 	}
 
