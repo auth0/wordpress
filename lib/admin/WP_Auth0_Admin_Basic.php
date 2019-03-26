@@ -78,12 +78,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				'function' => 'render_cache_expiration',
 			),
 			array(
-				'name'     => __( 'API Token', 'wp-auth0' ),
-				'opt'      => 'auth0_app_token', // TO BE DEPRECATED
-				'id'       => 'wpa0_auth0_app_token', // TO BE DEPRECATED
-				'function' => 'render_auth0_app_token', // TO BE DEPRECATED
-			),
-			array(
 				'name'     => __( 'WordPress Login Enabled', 'wp-auth0' ),
 				'opt'      => 'wordpress_login_enabled',
 				'id'       => 'wpa0_login_enabled',
@@ -240,6 +234,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	/**
 	 * Render form field and description for the `auth0_app_token` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 * TODO: Deprecate
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
@@ -247,7 +242,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_auth0_app_token( $args = array() ) {
-		// TO BE DEPRECATED
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password' );
 		$this->render_field_description(
 			__( 'This token should include the following scopes: ', 'wp-auth0' ) .
@@ -330,10 +324,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$input['client_secret_b64_encoded'] = ( isset( $input['client_secret_b64_encoded'] )
 			? $input['client_secret_b64_encoded'] == 1
 			: false );
-
-		$input['auth0_app_token'] = ( ! empty( $input['auth0_app_token'] ) // TO BE DEPRECATED
-			? $input['auth0_app_token'] // TO BE DEPRECATED
-			: $old_options['auth0_app_token'] ); // TO BE DEPRECATED
 
 		if ( empty( $input['domain'] ) ) {
 			$this->add_validation_error( __( 'You need to specify a domain', 'wp-auth0' ) );

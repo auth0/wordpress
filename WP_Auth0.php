@@ -530,7 +530,7 @@ class WP_Auth0 {
 		// phpcs:ignore
 		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
-		$app_token = $this->a0_options->get( 'auth0_app_token' ); // DEPRECATED
+		$app_token = $this->a0_options->get( 'auth0_app_token' );
 
 		if ( $app_token ) {
 			$disable_signup_rule        = $this->a0_options->get( 'disable_signup_rule' );
