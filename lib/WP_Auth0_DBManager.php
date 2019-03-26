@@ -166,6 +166,11 @@ class WP_Auth0_DBManager {
 			$options->set( 'passwordless_cdn_url', null );
 			$options->set( 'cdn_url_legacy', null );
 
+			// Migrate WLE setting
+			$new_wle_value = $options->get( 'wordpress_login_enabled' ) ? 'link' : 'isset';
+			$options->set( 'wordpress_login_enabled', $new_wle_value );
+			$options->set( 'wle_code', str_shuffle( uniqid() . uniqid() ) );
+
 			$update_options = $options->get_options();
 			unset( $update_options['auth0js-cdn'] );
 			unset( $update_options['passwordless_cdn_url'] );
