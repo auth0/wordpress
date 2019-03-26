@@ -54,7 +54,7 @@ class WP_Auth0_InitialSetup_Connections {
 		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$domain        = $this->a0_options->get( 'domain' );
-		$app_token     = $this->a0_options->get( 'auth0_app_token' ); // DEPRECATED
+		$app_token     = $this->a0_options->get( 'auth0_app_token' );
 		$connection_id = $this->a0_options->get( 'db_connection_id' );
 		$client_id     = $this->a0_options->get( 'client_id' );
 
@@ -123,7 +123,7 @@ class WP_Auth0_InitialSetup_Connections {
 
 		try {
 			$options = isset( $provider_options[ $provider_name ] ) ? $provider_options[ $provider_name ] : null;
-			$input   = $operations->social_validation( $this->a0_options->get( 'auth0_app_token' ), $old_input, $input, $provider_name, $options ); // DEPRECATED
+			$input   = $operations->social_validation( $this->a0_options->get( 'auth0_app_token' ), $old_input, $input, $provider_name, $options );
 		} catch ( Exception $e ) {
 			exit( $e->getMessage() );
 		}

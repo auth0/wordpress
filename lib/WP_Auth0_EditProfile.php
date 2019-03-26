@@ -124,7 +124,7 @@ class WP_Auth0_EditProfile {
 		$current_user = wp_get_current_user();
 		$user_profile = get_currentauth0userinfo();
 
-		$app_token = $this->a0_options->get( 'auth0_app_token' ); // DEPRECATED
+		$app_token = $this->a0_options->get( 'auth0_app_token' );
 
 		if ( ! $app_token ) {
 			return;
@@ -249,7 +249,7 @@ class WP_Auth0_EditProfile {
 		if ( ! empty( $auth0_password ) && $auth0_password == $auth0_repeat_password ) {
 			$domain    = $this->a0_options->get( 'domain' );
 			$client_id = $this->a0_options->get( 'client_id' );
-			$api_token = $this->a0_options->get( 'auth0_app_token' ); // DEPRECATED
+			$api_token = $this->a0_options->get( 'auth0_app_token' );
 
 			$connection = null;
 			$email      = null;
@@ -334,7 +334,7 @@ class WP_Auth0_EditProfile {
 
 		$provider  = 'google-authenticator';
 		$domain    = $this->a0_options->get( 'domain' );
-		$app_token = $this->a0_options->get( 'auth0_app_token' ); // DEPRECATED
+		$app_token = $this->a0_options->get( 'auth0_app_token' );
 
 		WP_Auth0_Api_Client::delete_user_mfa( $domain, $app_token, $user_id, $provider );
 	}

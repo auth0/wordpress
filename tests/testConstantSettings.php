@@ -129,12 +129,6 @@ class TestConstantSettings extends WP_Auth0_Test_Case {
 				'render_function' => 'render_client_secret',
 				'value'           => rand(),
 			],
-			[
-				'opt_name'        => 'auth0_app_token',
-				'label_for'       => 'wpa0_auth0_app_token',
-				'render_function' => 'render_auth0_app_token',
-				'value'           => rand(),
-			],
 		];
 
 		// Set all constant values before initializing the options class.
@@ -158,7 +152,7 @@ class TestConstantSettings extends WP_Auth0_Test_Case {
 			$this->assertContains( $constant_name, $field_html );
 
 			// Sensitive fields will not output the current value.
-			$is_sensitive = in_array( $field['opt_name'], [ 'client_secret', 'auth0_app_token' ] );
+			$is_sensitive = in_array( $field['opt_name'], [ 'client_secret' ] );
 			$this->assertContains( 'value="' . ( $is_sensitive ? '' : $field['value'] ) . '"', $field_html );
 		}
 	}

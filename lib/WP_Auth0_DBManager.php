@@ -24,40 +24,11 @@ class WP_Auth0_DBManager {
 		}
 	}
 
-	public function install_db( $version_to_install = null, $app_token = '' ) {
+	public function install_db( $version_to_install = null ) {
 
 		wp_cache_set( 'doing_db_update', true, WPA0_CACHE_GROUP );
 
 		$options = $this->a0_options;
-
-		if ( empty( $app_token ) ) {
-			$app_token = $options->get( 'auth0_app_token' ); // NEED TO ADDRESS
-		}
-
-		$connection_id   = $options->get( 'db_connection_id' );
-		$migration_token = $options->get( 'migration_token' );
-		$client_secret   = $options->get( 'client_secret' );
-		$domain          = $options->get( 'domain' );
-
-		// Plugin version < 2.2.3
-		if ( $this->current_db_version <= 7 ) {
-			if ( $options->get( 'db_connection_enabled' ) ) {
-
-				$operations = new WP_Auth0_Api_Operations( $options );
-
-				if ( ! empty( $app_token ) &&
-					! empty( $connection_id ) &&
-					! empty( $migration_token ) ) {
-
-					$operations->update_wordpress_connection(
-						$app_token,
-						$connection_id,
-						'fair',
-						$migration_token
-					);
-				}
-			}
-		}
 
 		// Plugin version < 3.1.6
 		if ( ( $this->current_db_version < 9 && 0 !== $this->current_db_version ) || 9 === $version_to_install ) {

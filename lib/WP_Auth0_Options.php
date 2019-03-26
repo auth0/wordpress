@@ -211,7 +211,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'client_secret_b64_encoded' => null,
 			'client_signing_algorithm'  => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
 			'cache_expiration'          => 1440,
-			'auth0_app_token'           => null, // TO BE DEPRECATED
 			'wordpress_login_enabled'   => true,
 
 			// Features
