@@ -182,10 +182,15 @@ abstract class WP_Auth0_Api_Abstract {
 	 */
 	protected function set_bearer( $scope ) {
 
-		$api_token = WP_Auth0_Api_Client_Credentials::get_stored_token();
+		if ( ! $this->api_client_creds instanceof WP_Auth0_Api_Client_Credentials ) {
+			return false;
+		}
+
+		$cc_api    = $this->api_client_creds;
+		$api_token = $cc_api::get_stored_token();
 
 		// No stored API token so need to get a new one.
-		if ( ! $api_token && $this->api_client_creds instanceof WP_Auth0_Api_Client_Credentials ) {
+		if ( ! $api_token ) {
 			$api_token = $this->api_client_creds->call();
 		}
 
@@ -194,7 +199,7 @@ abstract class WP_Auth0_Api_Abstract {
 			return false;
 		}
 
-		if ( WP_Auth0_Api_Client_Credentials::check_stored_scope( $scope ) ) {
+		if ( $cc_api::check_stored_scope( $scope ) ) {
 			// Scope exists, add to the header and cache.
 			$this->add_header( 'Authorization', 'Bearer ' . $api_token );
 			return true;
@@ -211,7 +216,7 @@ abstract class WP_Auth0_Api_Abstract {
 		);
 
 		// Delete the stored token so we can try again.
-		WP_Auth0_Api_Client_Credentials::delete_store();
+		$cc_api::delete_store();
 		return false;
 	}
 

@@ -134,11 +134,13 @@ class WP_Auth0_Api_Client {
 
 	/**
 	 * Get a client_credentials token using default stored connection info
-	 * TODO: Change implementations to use WP_Auth0_Api_Abstract and deprecate.
+	 * TODO: Deprecate
 	 *
 	 * @since 3.4.1
 	 *
 	 * @return bool|string
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public static function get_client_token() {
 
