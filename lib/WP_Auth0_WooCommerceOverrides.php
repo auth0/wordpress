@@ -3,9 +3,13 @@
 class WP_Auth0_WooCommerceOverrides {
 	protected $plugin;
 
-	public function __construct( WP_Auth0 $plugin, $options ) {
+	public function __construct( WP_Auth0 $plugin, $options=null ) {
 		$this->plugin = $plugin;
-		$this->options = $options;
+		if ($options == null) {
+			$this->options = \WP_Auth0_Options::Instance();
+		} else {
+			$this->options = $options;
+		}
 	}
 
 	public function init() {
@@ -13,21 +17,21 @@ class WP_Auth0_WooCommerceOverrides {
 		add_filter( 'woocommerce_before_customer_login_form', array( $this, 'override_woocommerce_login_form' ) );
 	}
 
-	private function render_login_form( $redirect ) {
+	private function render_login_form( $redirectPage ) {
 		$this->plugin->render_auth0_login_css();
 		if ($this->options->get('auto_login',false)) {
-			$redirection_after = site_url( $redirect );
 			// Redirecting to Wordpress login area
-			$loginUrl = wp_login_url( $redirection_after );
+			$redirectUrl = get_permalink( wc_get_page_id( $redirectPage ) );
+			$loginUrl = wp_login_url( $redirectUrl );
 	
-			echo '<a class="button button-primary" href="'.$loginUrl.'">Login</a>';
+			printf("<a class='button' href='%s'>%s</a>", $loginUrl, translate( 'Login', 'wp-auth0' ));
 		} else {
 			echo $this->plugin->shortcode( array() );
 		}
 	}
 
 	public function override_woocommerce_checkout_login_form( $html ) {
-		$this->render_login_form('/checkout/');
+		$this->render_login_form('checkout');
 
 		if ( isset( $_GET['wle'] ) ) {
 			echo '<style>.woocommerce-checkout .woocommerce-info{display:block;}</style>';
@@ -35,6 +39,6 @@ class WP_Auth0_WooCommerceOverrides {
 	}
 
 	public function override_woocommerce_login_form( $html ) {
-		$this->render_login_form('/my-account/');
+		$this->render_login_form('myaccount');
 	} 
 }
