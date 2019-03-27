@@ -170,6 +170,19 @@ class WP_Auth0_DBManager {
 			unset( $update_options['auth0js-cdn'] );
 			unset( $update_options['passwordless_cdn_url'] );
 			unset( $update_options['cdn_url_legacy'] );
+
+			unset( $update_options['social_twitter_key'] );
+			unset( $update_options['social_twitter_secret'] );
+			unset( $update_options['social_facebook_key'] );
+			unset( $update_options['social_facebook_secret'] );
+			unset( $update_options['connections'] );
+
+			unset( $update_options['chart_idp_type'] );
+			unset( $update_options['chart_gender_type'] );
+			unset( $update_options['chart_age_type'] );
+			unset( $update_options['chart_age_from'] );
+			unset( $update_options['chart_age_to'] );
+			unset( $update_options['chart_age_step'] );
 			update_option( $options->get_options_name(), $update_options );
 
 			// Remove Client Grant update notifications.
