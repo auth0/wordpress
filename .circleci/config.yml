@@ -1,18 +1,11 @@
-version: 2
-jobs:
-  build:
-    docker:
-      - image: circleci/php:7.1-fpm-node-browsers
-        environment:
-          TMPDIR: /tmp
-      - image: circleci/mysql:5.6
-        environment:
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
-          
+version: 2.1
+
+commands:
+  prepare:
     steps:
       - checkout
       - run:
-          name: Prepare Environment
+          name: Setup php.ini file
           command: |
             sudo touch /usr/local/etc/php/php.ini
             echo "memory_limit = -1" | sudo tee -a /usr/local/etc/php/php.ini
@@ -23,35 +16,92 @@ jobs:
             echo "detect_unicode = Off" | sudo tee -a /usr/local/etc/php/php.ini
             sudo docker-php-ext-install mysqli
             sudo apt-get update
+            sudo composer self-update
             sudo apt-get install -y subversion mysql-client
       - restore_cache:
           keys:
-            - composer-v1-{{ checksum "composer.lock" }}
+            - composer-v1-{{ checksum "composer.json" }}
             - composer-v1-
-      - run:
-          name: Install Dependencies
-          command: composer install -n --prefer-dist
-      - save_cache:
-          key: composer-v1-{{ checksum "composer.lock" }}
+      - run: composer install -n --prefer-dist
+      - run: composer update --prefer-dist --no-interaction
+      - persist_to_workspace:
+          root: .
           paths:
-            - ./vendor
+            - composer.*
+      - save_cache:
+          key: composer-v1-{{ checksum "composer.json" }}
+          paths:
+            - vendor
+  run-formatting:
+    steps:
       - run:
-          name: Formatting and Compatibility
+          name: Running Linter and Formatting
           command: |
             composer phpcbf
             composer phpcbf-tests
             composer phpcs-tests
             composer compat
+  run-tests:
+    steps:
       - run:
           name: Wait for DB
           command: |
             dockerize -wait tcp://127.0.0.1:3306 -timeout 120s
             bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 latest
-      - run:
-          name: PHPUnit for default PHP version on latest WP
-          command: composer test-ci
-      - run:
-          name: Upload Coverage
-          when: on_success
+      - run: composer test-ci
+      - run: 
           command: bash <(curl -s https://codecov.io/bash)
+          when: on_success
 
+jobs: 
+  php_5: 
+    docker: 
+      - image: circleci/php:5.6
+      - image: circleci/mysql:5.6
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+    steps:
+      - prepare
+      - run-formatting
+      - run-tests
+  php_7: 
+    docker: 
+      - image: circleci/php:7.1
+      - image: circleci/mysql:5.6
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+    steps:
+      - prepare
+      - run-formatting
+      - run-tests
+  snyk:
+    docker:
+      - image: snyk/snyk-cli:composer
+    steps:
+      - attach_workspace:
+          at: .
+      - run: snyk test
+      - run:
+          command: |
+            if [[ "${CIRCLE_BRANCH}" == "master" ]]
+            then
+            snyk monitor --org=auth0-sdks
+            fi
+          when: always
+
+#Each workflow represents a Github check
+workflows:
+  build_php_5:
+    jobs:
+      - php_5
+  build_php_7:
+    jobs:
+      - php_7
+  snyk:
+    jobs:
+      - php_7
+      - snyk:
+          # Must define SNYK_TOKEN env
+          context: snyk-env 
+          requires: 
+            - php_7 
