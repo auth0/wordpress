@@ -249,19 +249,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'valid_proxy_ip'            => null,
 			'custom_signup_fields'      => '',
 			'extra_conf'                => '',
-			'social_twitter_key'        => '',
-			'social_twitter_secret'     => '',
-			'social_facebook_key'       => '',
-			'social_facebook_secret'    => '',
 			'auth0_server_domain'       => 'auth0.auth0.com',
-
-			// Dashboard
-			'chart_idp_type'            => 'donut',
-			'chart_gender_type'         => 'donut',
-			'chart_age_type'            => 'donut',
-			'chart_age_from'            => '10',
-			'chart_age_to'              => '70',
-			'chart_age_step'            => '5',
 		);
 	}
 
