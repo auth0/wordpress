@@ -732,29 +732,28 @@ class WP_Auth0_Api_Client {
 		return json_decode( $response['body'] );
 	}
 
+	/**
+	 * Return the Management API scopes needed for install.
+	 *
+	 * @return array
+	 */
 	public static function ConsentRequiredScopes() {
 		return array(
 			'create:clients',
-			'update:clients',
-
 			'create:client_grants',
-			'update:client_grants',
-
 			'update:connections',
 			'create:connections',
 			'read:connections',
-
-			'create:rules',
-			'delete:rules',
-
 			'read:users',
 			'update:users',
-			'create:users',
-
-			'update:guardian_factors',
 		);
 	}
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - To be deprecated
+	 */
 	public static function GetConsentScopestoShow() {
 		$scopes    = self::ConsentRequiredScopes();
 		$grouped   = array();
