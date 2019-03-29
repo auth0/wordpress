@@ -213,8 +213,9 @@ class WP_Auth0_Admin_Generic {
 	 * @param string           $id - Input ID attribute.
 	 * @param string           $input_name - Option name saved to the options array.
 	 * @param int|float|string $curr_value - Current option value.
+	 * @param bool             $vert - True to use vertical orientation for buttons.
 	 */
-	protected function render_radio_buttons( array $buttons, $id, $input_name, $curr_value ) {
+	protected function render_radio_buttons( array $buttons, $id, $input_name, $curr_value, $vert = false ) {
 		if ( $field_is_const = $this->options->has_constant_val( $input_name ) ) {
 			$this->render_const_notice( $input_name );
 		}
@@ -222,8 +223,10 @@ class WP_Auth0_Admin_Generic {
 			$id_attr = $id . '_' . $index;
 			$label   = is_array( $button ) ? $button['label'] : ucfirst( $button );
 			$value   = is_array( $button ) ? $button['value'] : $button;
+			$desc    = isset( $button['desc'] ) ? '<p class="description">' . $button['desc'] . '</p>' : '';
 			printf(
-				'<label for="%s"><input type="radio" name="%s[%s]" id="%s" value="%s" %s %s>&nbsp;%s</label>',
+				'%s<label for="%s"><input type="radio" name="%s[%s]" id="%s" value="%s" %s %s>%s</label> %s',
+				$vert ? '<div class="a0-vert-radio">' : '',
 				esc_attr( $id_attr ),
 				esc_attr( $this->_option_name ),
 				esc_attr( $input_name ),
@@ -231,7 +234,8 @@ class WP_Auth0_Admin_Generic {
 				esc_attr( $value ),
 				checked( $value === $curr_value, true, false ),
 				$field_is_const ? 'disabled' : '',
-				sanitize_text_field( $label )
+				sanitize_text_field( $label ),
+				$vert ? $desc . '</div>' : ''
 			);
 		}
 	}

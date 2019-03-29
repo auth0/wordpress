@@ -69,24 +69,6 @@ jQuery(document).ready(function($) {
     });
 
     /*
-    Show/hide docs for the WordPress login enabled setting
-     */
-    var wleDocsIdPrefix = 'js-a0-wle-';
-    var $wleDocs =$('[id^=' + wleDocsIdPrefix + ']');
-    $('[id^=wpa0_login_enabled_]').each( function() {
-        var $thisRadio = $( this );
-
-        if ( $thisRadio.prop( 'checked' ) ) {
-            $( '#' + wleDocsIdPrefix + $thisRadio.val() ).show();
-        }
-
-        $thisRadio.change(function() {
-            $wleDocs.hide();
-            $( '#' + wleDocsIdPrefix + $( this ).val() ).show();
-        } );
-    });
-
-    /*
     Import and Export settings tabs
      */
     $('.js-a0-upload-toggle').click(function(){

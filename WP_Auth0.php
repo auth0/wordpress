@@ -622,6 +622,23 @@ if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
 }
 
 /*
+ * Core WP hooks
+ */
+
+/**
+ * @param array $classes
+ * @return array
+ */
+function wp_auth0_hook_add_body_class( array $classes ) {
+	if ( WP_Auth0_Options::Instance()->can_show_wp_login_form() ) {
+		$classes[] = 'a0-show-core-login';
+	}
+	return $classes;
+}
+add_filter( 'body_class', 'wp_auth0_hook_add_body_class' );
+add_filter( 'login_body_class', 'wp_auth0_hook_add_body_class' );
+
+/*
  * Beta plugin deactivation
  */
 

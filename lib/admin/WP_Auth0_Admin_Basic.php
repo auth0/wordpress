@@ -79,7 +79,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				'function' => 'render_cache_expiration',
 			),
 			array(
-				'name'     => __( 'WordPress Login Enabled', 'wp-auth0' ),
+				'name'     => __( 'Original Login Form on wp-login.php', 'wp-auth0' ),
 				'opt'      => 'wordpress_login_enabled',
 				'id'       => 'wpa0_login_enabled',
 				'function' => 'render_allow_wordpress_login',
@@ -264,69 +264,52 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_allow_wordpress_login( $args = array() ) {
-		$wle_code       = $this->options->get( 'wle_code' );
-		$wp_form_notice = __( 'Logins and signups using the WordPress form will NOT be pushed to Auth0', 'wp-auth0' );
-		$buttons        = array(
+
+		$isset_desc = sprintf(
+			'<code class="code-block"><a href="%s?wle" target="_blank">%s?wle</a></code>',
+			wp_login_url(),
+			wp_login_url()
+		);
+
+		$code_desc = '<code class="code-block">' . __( 'Save settings to generate URL.', 'wp-auth0' ) . '</code>';
+		$wle_code  = $this->options->get( 'wle_code' );
+		if ( $wle_code ) {
+			$code_desc = str_replace( '?wle', '?wle=' . $wle_code, $isset_desc );
+		}
+
+		$buttons = array(
 			array(
-				'label' => 'Show link',
-				'value' => 'link',
-			),
-			array(
-				'label' => '"wle" present',
-				'value' => 'isset',
-			),
-			array(
-				'label' => '"wle" with code',
-				'value' => 'code',
-			),
-			array(
-				'label' => 'No',
+				'label' => __( 'Never', 'wp-auth0' ),
 				'value' => 'no',
 			),
+			array(
+				'label' => __( 'Via a link under the Auth0 form', 'wp-auth0' ),
+				'value' => 'link',
+				'desc'  => __( 'URL is the same as below', 'wp-auth0' ),
+			),
+			array(
+				'label' => __( 'When "wle" query parameter is present', 'wp-auth0' ),
+				'value' => 'isset',
+				'desc'  => $isset_desc,
+			),
+			array(
+				'label' => __( 'When "wle" query parameter contains specific code', 'wp-auth0' ),
+				'value' => 'code',
+				'desc'  => $code_desc,
+			),
+		);
+
+		printf(
+			'<div class="subelement"><span class="description">%s.</span></div><br>',
+			__( 'Logins and signups using the original form will NOT be pushed to Auth0', 'wp-auth0' )
 		);
 
 		$this->render_radio_buttons(
 			$buttons,
 			$args['label_for'],
 			$args['opt_name'],
-			$this->options->get( $args['opt_name'] )
-		);
-
-		printf(
-			'<div id="js-a0-wle-link" style="display:none" class="subelement">
-				<span class="description">%s. %s.</span>
-			</div>',
-			__( 'Display a link to the WordPress login form on wp-login.php', 'wp-auth0' ),
-			$wp_form_notice
-		);
-
-		printf(
-			'<div id="js-a0-wle-isset" style="display:none" class="subelement">
-				<span class="description">%s (<a href="%s" target="_blank">%s</a>). %s.</span>
-			</div>',
-			__( 'Display the WordPress login form on wp-login.php when a "wle" parameter is present', 'wp-auth0' ),
-			add_query_arg( 'wle', '', wp_login_url() ),
-			__( 'link', 'wp-auth0' ),
-			$wp_form_notice
-		);
-
-		printf(
-			'<div id="js-a0-wle-code" style="display:none" class="subelement">
-				<span class="description">%s (<a href="%s" target="_blank">%s</a>). %s.</span><br><br>
-				<code class="code-block" disabled>%s</code>
-			</div>',
-			__( 'Display the WordPress login form on wp-login.php when a "wle=code" parameter is present', 'wp-auth0' ),
-			add_query_arg( 'wle', $wle_code, wp_login_url() ),
-			__( 'link', 'wp-auth0' ),
-			$wp_form_notice,
-			$wle_code ? sanitize_text_field( $wle_code ) : 'Save settings to generate code.'
-		);
-
-		printf(
-			'<div id="js-a0-wle-no" style="display:none" class="subelement">
-				<span class="description">%s.</span>
-			</div>',
-			__( 'Do not allow the WordPress login form', 'wp-auth0' )
+			$this->options->get( $args['opt_name'] ),
+			true
 		);
 	}
 
