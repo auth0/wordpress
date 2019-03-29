@@ -161,29 +161,16 @@
 					<?php _e( 'Manually create an API token with the', 'wp-auth0' ); ?>
 				  <a href="https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually" target="_blank">
 						<?php _e( 'token generator', 'wp-auth0' ); ?></a>
-					<?php _e( ' and paste it here:', 'wp-auth0' ); ?>
+					<?php _e( ' and paste it below:', 'wp-auth0' ); ?>
 				</p>
+				  <p>
+					  <small>
+						  <?php _e( 'Scopes required', 'wp-auth0' ); ?>:
+						  <code><?php echo implode( '</code> <code>', WP_Auth0_Api_Client::ConsentRequiredScopes() ); ?></code>
+					  </small>
+				  </p>
 				<input type="password" name="apitoken" class="js-a0-setup-input" autocomplete="off" required>
-				<p>
-				  <small>
-					Scopes required:
-					<?php
-					$a      = 0;
-					$scopes = WP_Auth0_Api_Client::GetConsentScopestoShow();
-					foreach ( $scopes as $resource => $actions ) {
-						$a++;
-						?>
-					  <code><?php echo $actions; ?> <?php echo $resource; ?></code>
-						<?php
-						if ( $a < count( $scopes ) - 1 ) {
-							echo ', ';
-						} elseif ( $a === count( $scopes ) - 1 ) {
-							echo ' and ';
-						}
-						?>
-					<?php } ?>.
-				  </small>
-				</p>
+
 			  </div>
 			  <div class="modal-footer">
 				<input type="submit" class="a0-button primary" value="<?php _e( 'Continue', 'wp-auth0' ); ?>"/>
