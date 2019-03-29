@@ -335,6 +335,10 @@ class WP_Auth0_Api_Client {
 
 			// "Use Auth0 to do Single Sign On"
 			'sso'                 => true,
+
+			// Advanced > OAuth > OIDC Conformant
+			// https://auth0.com/docs/api-auth/intro#legacy-vs-new
+			'oidc_conformant'     => true,
 		);
 
 		$response = wp_remote_post(
