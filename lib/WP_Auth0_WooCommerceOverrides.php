@@ -4,6 +4,12 @@ class WP_Auth0_WooCommerceOverrides {
 	protected $plugin;
 	protected $options;
 
+	/**
+	 * WP_Auth0_WooCommerceOverrides constructor.
+	 *
+	 * @param WP_Auth0              $plugin
+	 * @param null|WP_Auth0_Options $options
+	 */
 	public function __construct( WP_Auth0 $plugin, $options = null ) {
 		$this->plugin = $plugin;
 		if ( $options == null ) {
@@ -27,7 +33,7 @@ class WP_Auth0_WooCommerceOverrides {
 
 			printf( "<a class='button' href='%s'>%s</a>", $loginUrl, __( 'Login', 'wp-auth0' ) );
 		} else {
-			echo $this->plugin->shortcode( array() );
+			echo $this->plugin->render_form( '' );
 		}
 	}
 

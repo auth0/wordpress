@@ -59,17 +59,11 @@ class TestOptionWle extends WP_Auth0_Test_Case {
 		}
 
 		// Test that the correct values and defaults appear.
-		$this->assertEquals( 'link', $input->item( 0 )->getAttribute( 'value' ) );
-		$this->assertEquals( 'checked', $input->item( 0 )->getAttribute( 'checked' ) );
-		$this->assertEquals( 'isset', $input->item( 1 )->getAttribute( 'value' ) );
-		$this->assertEquals( 'code', $input->item( 2 )->getAttribute( 'value' ) );
-		$this->assertEquals( 'no', $input->item( 3 )->getAttribute( 'value' ) );
-
-		// Test that we have the correct JS hooks in place.
-		$this->assertContains( 'id="js-a0-wle-link" style="display:none"', $field_html );
-		$this->assertContains( 'id="js-a0-wle-isset" style="display:none"', $field_html );
-		$this->assertContains( 'id="js-a0-wle-code" style="display:none"', $field_html );
-		$this->assertContains( 'id="js-a0-wle-no" style="display:none"', $field_html );
+		$this->assertEquals( 'no', $input->item( 0 )->getAttribute( 'value' ) );
+		$this->assertEquals( 'link', $input->item( 1 )->getAttribute( 'value' ) );
+		$this->assertEquals( 'checked', $input->item( 1 )->getAttribute( 'checked' ) );
+		$this->assertEquals( 'isset', $input->item( 2 )->getAttribute( 'value' ) );
+		$this->assertEquals( 'code', $input->item( 3 )->getAttribute( 'value' ) );
 	}
 
 	/**
@@ -88,10 +82,8 @@ class TestOptionWle extends WP_Auth0_Test_Case {
 		self::$admin->render_allow_wordpress_login( $field_args );
 		$code_block = $this->getDomListFromTagName( ob_get_clean(), 'code' );
 
-		$this->assertEquals( 1, $code_block->length );
-		$this->assertEquals( 'code-block', $code_block->item( 0 )->getAttribute( 'class' ) );
-		$this->assertEquals( 'disabled', $code_block->item( 0 )->getAttribute( 'disabled' ) );
-		$this->assertEquals( 'Save settings to generate code.', $code_block->item( 0 )->nodeValue );
+		$this->assertEquals( 'code-block', $code_block->item( 1 )->getAttribute( 'class' ) );
+		$this->assertEquals( 'Save settings to generate URL.', $code_block->item( 1 )->nodeValue );
 
 		// Test that a non-empty WLE code appears.
 		self::$opts->set( 'wle_code', uniqid() );
@@ -99,7 +91,7 @@ class TestOptionWle extends WP_Auth0_Test_Case {
 		ob_start();
 		self::$admin->render_allow_wordpress_login( $field_args );
 		$code_block = $this->getDomListFromTagName( ob_get_clean(), 'code' );
-		$this->assertEquals( self::$opts->get( 'wle_code' ), $code_block->item( 0 )->nodeValue );
+		$this->assertContains( '?wle=' . self::$opts->get( 'wle_code' ), $code_block->item( 1 )->nodeValue );
 	}
 
 	/**
@@ -111,25 +103,25 @@ class TestOptionWle extends WP_Auth0_Test_Case {
 			'opt_name'  => 'wordpress_login_enabled',
 		];
 
-		self::$opts->set( $field_args['opt_name'], 'link' );
+		self::$opts->set( $field_args['opt_name'], 'no' );
 		ob_start();
 		self::$admin->render_allow_wordpress_login( $field_args );
 		$input = $this->getDomListFromTagName( ob_get_clean(), 'input' );
 		$this->assertEquals( 'checked', $input->item( 0 )->getAttribute( 'checked' ) );
 
-		self::$opts->set( $field_args['opt_name'], 'isset' );
+		self::$opts->set( $field_args['opt_name'], 'link' );
 		ob_start();
 		self::$admin->render_allow_wordpress_login( $field_args );
 		$input = $this->getDomListFromTagName( ob_get_clean(), 'input' );
 		$this->assertEquals( 'checked', $input->item( 1 )->getAttribute( 'checked' ) );
 
-		self::$opts->set( $field_args['opt_name'], 'code' );
+		self::$opts->set( $field_args['opt_name'], 'isset' );
 		ob_start();
 		self::$admin->render_allow_wordpress_login( $field_args );
 		$input = $this->getDomListFromTagName( ob_get_clean(), 'input' );
 		$this->assertEquals( 'checked', $input->item( 2 )->getAttribute( 'checked' ) );
 
-		self::$opts->set( $field_args['opt_name'], 'no' );
+		self::$opts->set( $field_args['opt_name'], 'code' );
 		ob_start();
 		self::$admin->render_allow_wordpress_login( $field_args );
 		$input = $this->getDomListFromTagName( ob_get_clean(), 'input' );

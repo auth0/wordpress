@@ -133,7 +133,6 @@
         word-wrap: break-word;
         word-break: break-all;
         padding: 0.75em 1em;
-        margin: 1em 0 0;
       }
     }
 
@@ -923,6 +922,12 @@
       color: softText;
     }
 
+    p.description,
+    span.description {
+      font-size: 14px;
+      line-height: 1.5em;
+    }
+
     label {
       margin-right: 10px;
     }
@@ -1009,6 +1014,27 @@
       &.calification-5 {
         background-image: url('../img/rates/05.svg');
       }
+    }
+  }
+
+  .a0-vert-radio {
+    margin: 0 0 1.25em;
+
+    label {
+      margin: 0;
+    }
+
+    p {
+      padding-left: 24px;
+    }
+
+    input {
+      margin-right: 8px;
+    }
+
+    .code-block {
+      padding: 0.5em 1em;
+      font-size: 11px;
     }
   }
 }

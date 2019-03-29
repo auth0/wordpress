@@ -5,13 +5,6 @@ if ( empty( $title ) ) {
 }
 ?>
 
-<style>
-	#loginform,
-	.woocommerce-account .woocommerce h2,
-	.woocommerce-account .woocommerce form.login {
-		display: block !important;
-	}
-</style>
 <div id="extra-options">
 	<a href="?"><?php printf( __( '← Back to %s login', 'wp-auth0' ), $title ); ?></a>
 </div>

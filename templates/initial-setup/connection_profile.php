@@ -54,7 +54,7 @@
 	  <div class="a0-step-text a0-message a0-warning">
 
 		<b>Important:</b>
-		<?php _e( 'To continue you need an Auth0 account.', 'wp-auth0' ); ?>
+			<?php _e( 'To continue you need an Auth0 account.', 'wp-auth0' ); ?>
 
 		<a class="a0-button default pull-right" target="_blank" href="https://auth0.com/signup" >
 			<?php _e( 'Sign up for free', 'wp-auth0' ); ?>
