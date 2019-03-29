@@ -151,6 +151,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `sso` option.
 	 * If SSO is off, the SLO setting will be hidden and turned off as well.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 * TODO: Deprecate
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
@@ -158,10 +159,13 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_sso( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_singlelogout' );
+		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'SSO allows users to sign in once to multiple Applications in the same tenant. ', 'wp-auth0' ) .
-			__( 'Turning this on will attempt to automatically log a user in when they visit wp-login.php. ', 'wp-auth0' ) .
+			__( 'This setting is deprecated and will be removed in the next major release. ', 'wp-auth0' ) .
+			__( 'To enable SSO, please use the Universal Login Page setting below. ', 'wp-auth0' )
+		);
+		$this->render_field_description(
+			__( 'Turning this on will attempt SSO on wp-login.php. ', 'wp-auth0' ) .
 			__( 'This setting will not affect how shortcodes and widgets work. ', 'wp-auth0' ) .
 			__( 'For more information, see our ', 'wp-auth0' ) .
 			$this->get_docs_link( 'sso/current/introduction', __( 'help page on SSO', 'wp-auth0' ) )
@@ -180,7 +184,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	public function render_singlelogout( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Log users out of this site and all others connected to the tenant', 'wp-auth0' )
+			__( 'Turning this on will log users out of Auth0 when they log out of WordPress.', 'wp-auth0' )
 		);
 	}
 
@@ -216,7 +220,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	public function render_auto_login( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_auto_login_method' );
 		$this->render_field_description(
-			__( 'Use the Universal Login Page (ULP) for authentication. ', 'wp-auth0' ) .
+			__( 'Use the Universal Login Page (ULP) for authentication and SSO. ', 'wp-auth0' ) .
 			__( 'When turned on, <code>wp-login.php</code> will redirect to the hosted login page. ', 'wp-auth0' ) .
 			__( 'When turned off, <code>wp-login.php</code> will show an embedded login form. ', 'wp-auth0' ) .
 			$this->get_docs_link( 'guides/login/universal-vs-embedded', __( 'More on ULP vs embedded here', 'wp-auth0' ) )
@@ -369,10 +373,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	}
 
 	public function basic_validation( $old_options, $input ) {
-		$input['sso'] = empty( $input['sso'] ) ? 0 : 1;
-
-		// Turn SLO off if SSO is off.
-		$input['singlelogout'] = empty( $input['singlelogout'] ) || empty( $input['sso'] ) ? 0 : 1;
+		$input['sso']          = empty( $input['sso'] ) ? 0 : 1;
+		$input['singlelogout'] = empty( $input['singlelogout'] ) ? 0 : 1;
 
 		$input['auto_login']          = empty( $input['auto_login'] ) ? 0 : 1;
 		$input['override_wp_avatars'] = empty( $input['override_wp_avatars'] ) ? 0 : 1;

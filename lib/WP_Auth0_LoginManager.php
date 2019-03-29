@@ -90,9 +90,6 @@ class WP_Auth0_LoginManager {
 		add_action( 'login_init', array( $this, 'login_auto' ) );
 		add_action( 'template_redirect', array( $this, 'init_auth0' ), 1 );
 		add_action( 'wp_logout', array( $this, 'logout' ) );
-		add_action( 'wp_footer', array( $this, 'auth0_singlelogout_footer' ) );
-		add_action( 'admin_footer', array( $this, 'auth0_singlelogout_footer' ) );
-		add_action( 'login_footer', array( $this, 'auth0_singlelogout_footer' ) );
 	}
 
 	/**
@@ -563,23 +560,13 @@ class WP_Auth0_LoginManager {
 		$is_slo        = (bool) $this->a0_options->get( 'singlelogout' );
 		$is_auto_login = (bool) $this->a0_options->get( 'auto_login' );
 
-		// Redirected here after checkSession in the footer (templates/auth0-singlelogout-handler.php).
-		if ( $is_slo && isset( $_REQUEST['SLO'] ) ) {
-			if ( ! empty( $_REQUEST['redirect_to'] ) && filter_var( $_REQUEST['redirect_to'], FILTER_VALIDATE_URL ) ) {
-				$redirect_url = $_REQUEST['redirect_to'];
-			} else {
-				$redirect_url = home_url();
-			}
-			wp_redirect( $redirect_url );
-			exit;
-		}
-
-		// If SSO is in use, redirect to Auth0 to logout there as well.
-		if ( $is_sso ) {
+		// If SSO/SLO is in use, redirect to Auth0 to logout there as well.
+		if ( $is_sso || $is_slo ) {
+			$return_to    = apply_filters( 'auth0_slo_return_to', home_url() );
 			$redirect_url = sprintf(
 				'https://%s/v2/logout?returnTo=%s&client_id=%s',
 				$this->a0_options->get_auth_domain(),
-				rawurlencode( home_url() ),
+				rawurlencode( $return_to ),
 				$this->a0_options->get( 'client_id' )
 			);
 			$redirect_url = apply_filters( 'auth0_logout_url', $redirect_url );
@@ -605,6 +592,8 @@ class WP_Auth0_LoginManager {
 	 * @see WP_Auth0_LoginManager::init()
 	 *
 	 * @return mixed
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function auth0_sso_footer( $previous_html ) {
 
@@ -624,12 +613,16 @@ class WP_Auth0_LoginManager {
 	 * Outputs JS on all pages to log a user out if no Auth0 session is found.
 	 * Hooked to `wp_footer` action.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 * TODO: Deprecate, not used
 	 *
 	 * @see WP_Auth0_LoginManager::init()
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function auth0_singlelogout_footer() {
-		if ( is_user_logged_in() && $this->a0_options->get( 'singlelogout' ) ) {
-			include WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
+		$tpl_path = WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
+		if ( is_user_logged_in() && $this->a0_options->get( 'singlelogout' ) && file_exists( $tpl_path ) ) {
+			include $tpl_path;
 		}
 	}
 
