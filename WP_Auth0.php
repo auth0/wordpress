@@ -626,17 +626,20 @@ if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
  */
 
 /**
- * @param array $classes
+ * Add new classes to the body element on all front-end and login pages.
+ *
+ * @param array $classes - Array of existing classes.
+ *
  * @return array
  */
-function wp_auth0_hook_add_body_class( array $classes ) {
+function wp_auth0_filter_body_class( array $classes ) {
 	if ( WP_Auth0_Options::Instance()->can_show_wp_login_form() ) {
 		$classes[] = 'a0-show-core-login';
 	}
 	return $classes;
 }
-add_filter( 'body_class', 'wp_auth0_hook_add_body_class' );
-add_filter( 'login_body_class', 'wp_auth0_hook_add_body_class' );
+add_filter( 'body_class', 'wp_auth0_filter_body_class' );
+add_filter( 'login_body_class', 'wp_auth0_filter_body_class' );
 
 /*
  * Beta plugin deactivation

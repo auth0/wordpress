@@ -27,6 +27,9 @@ class WP_Auth0_Lock10_Options {
 		return $this->wp_options->get_wp_auth0_url( $this->get_callback_protocol(), true );
 	}
 
+	/**
+	 * TODO: Deprecate
+	 */
 	public function get_sso() {
 		return $this->_get_boolean( $this->wp_options->get( 'sso' ) );
 	}

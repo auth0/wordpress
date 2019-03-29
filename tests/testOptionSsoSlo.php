@@ -62,9 +62,6 @@ class TestOptionSsoSlo extends WP_Auth0_Test_Case {
 		// Input should be a checkbox.
 		$this->assertEquals( 'checkbox', $input->item( 0 )->getAttribute( 'type' ) );
 
-		// Input should reference SLO field.
-		$this->assertEquals( 'wpa0_singlelogout', $input->item( 0 )->getAttribute( 'data-expand' ) );
-
 		// Check that saving a custom domain appears in the field value.
 		self::$opts->set( $field_args['opt_name'], 1 );
 		$this->assertEquals( 1, self::$opts->get( $field_args['opt_name'] ) );
@@ -149,57 +146,16 @@ class TestOptionSsoSlo extends WP_Auth0_Test_Case {
 	 * See testThatSloIsTurnedOffIfSsoIsOff for tests regarding that behavior.
 	 */
 	public function testThatSloIsValidatedOnSave() {
-		$validated = self::$admin->basic_validation( [], [ 'sso' => 1 ] );
+		$validated = self::$admin->basic_validation( [], [ 'singlelogout' => false ] );
 		$this->assertEquals( 0, $validated['singlelogout'] );
 
-		$validated = self::$admin->basic_validation(
-			[],
-			[
-				'sso'          => 1,
-				'singlelogout' => false,
-			]
-		);
+		$validated = self::$admin->basic_validation( [], [ 'singlelogout' => 0 ] );
 		$this->assertEquals( 0, $validated['singlelogout'] );
 
-		$validated = self::$admin->basic_validation(
-			[],
-			[
-				'sso'          => 1,
-				'singlelogout' => 0,
-			]
-		);
-		$this->assertEquals( 0, $validated['singlelogout'] );
-
-		$validated = self::$admin->basic_validation(
-			[],
-			[
-				'sso'          => 1,
-				'singlelogout' => 1,
-			]
-		);
+		$validated = self::$admin->basic_validation( [], [ 'singlelogout' => 1 ] );
 		$this->assertEquals( 1, $validated['singlelogout'] );
 
-		$validated = self::$admin->basic_validation(
-			[],
-			[
-				'sso'          => 1,
-				'singlelogout' => uniqid(),
-			]
-		);
+		$validated = self::$admin->basic_validation( [], [ 'singlelogout' => uniqid() ] );
 		$this->assertEquals( 1, $validated['singlelogout'] );
-	}
-
-	/**
-	 * Test that SLO is turned off if SSO is off.
-	 */
-	public function testThatSloIsTurnedOffIfSsoIsOff() {
-		$validated = self::$admin->basic_validation(
-			[],
-			[
-				'sso'          => 0,
-				'singlelogout' => 1,
-			]
-		);
-		$this->assertEquals( 0, $validated['singlelogout'] );
 	}
 }
