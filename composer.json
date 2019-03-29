@@ -32,6 +32,7 @@
     "scripts": {
         "compat": "\"vendor/bin/phpcs\" --standard=phpcs-compat-ruleset.xml .",
         "phpcs": "\"vendor/bin/phpcs\"",
+        "phpcs-i18n": "\"vendor/bin/phpcs\" --sniffs=WordPress.WP.I18n ./lib/",
         "phpcs-tests": "\"vendor/bin/phpcs\" --standard=phpcs-test-ruleset.xml -s ./tests/",
         "phpcbf": "\"vendor/bin/phpcbf\"",
         "phpcbf-tests": "\"vendor/bin/phpcbf\" --standard=phpcs-test-ruleset.xml -s ./tests/",

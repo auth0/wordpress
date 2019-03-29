@@ -265,6 +265,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			__( 'If this is empty, all enabled connections for this Application will be shown. ', 'wp-auth0' ) .
 			__( 'Separate multiple connection names with a comma. ', 'wp-auth0' ) .
 			sprintf(
+				// translators: HTML link to the Auth0 dashboard.
 				__( 'Connections listed here must already be active in your %s', 'wp-auth0' ),
 				$this->get_dashboard_link( 'connections/social' )
 			) .

@@ -237,6 +237,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		$this->render_field_description(
 			__( 'Enter a name here to automatically use a single, specific connection to login . ', 'wp-auth0' ) .
 			sprintf(
+				// translators: Placeholder is an HTML link to the Auth0 dashboard.
 				__( 'Find the method name to use under Connections > [Connection Type] in your %s. ', 'wp-auth0' ),
 				$this->get_dashboard_link()
 			) .
