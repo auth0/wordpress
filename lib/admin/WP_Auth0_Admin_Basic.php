@@ -199,7 +199,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			$curr_value
 		);
 		$this->render_field_description(
-			__( 'This value can be found the Application settings in the ' ) .
+			__( 'This value can be found the Application settings in the ', 'wp-auth0' ) .
 			$this->get_dashboard_link( 'applications' ) .
 			__( ' under Show Advanced Settings > OAuth > "JsonWebToken Signature Algorithm"', 'wp-auth0' )
 		);
@@ -333,7 +333,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$this->render_field_description(
 			__( 'Signups are currently ', 'wp-auth0' ) . '<b>' .
 			( $allow_signup ? __( 'enabled', 'wp-auth0' ) : __( 'disabled', 'wp-auth0' ) ) .
-			'</b>' . __( ' by this setting ' ) . $settings_text
+			'</b>' . __( ' by this setting ', 'wp-auth0' ) . $settings_text
 		);
 	}
 

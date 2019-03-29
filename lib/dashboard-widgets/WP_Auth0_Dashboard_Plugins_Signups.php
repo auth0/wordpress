@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * Class WP_Auth0_Dashboard_Plugins_Signups
  *

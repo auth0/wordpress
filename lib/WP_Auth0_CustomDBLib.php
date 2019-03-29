@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * Contains class WP_Auth0_CustomDBLib
  *
@@ -9,6 +10,8 @@
 
 /**
  * Class WP_Auth0_CustomDBLib
+ *
+ * @deprecated - 3.9.0, moved to separate files in lib/scripts-js.
  *
  * @codeCoverageIgnore - Deprecated.
  */

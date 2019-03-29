@@ -225,6 +225,7 @@ class WP_Auth0_DBManager {
 					<p>
 					<?php
 						printf(
+							// translators: Placeholder is the plugin version.
 							__( 'WP-Auth0 has upgraded to %s but could not complete the upgrade in your Auth0 dashboard.', 'wp-auth0' ),
 							WPA0_VERSION
 						);

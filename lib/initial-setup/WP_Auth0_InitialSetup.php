@@ -143,15 +143,15 @@ class WP_Auth0_InitialSetup {
 					<?php echo __( 'There was an error creating the necessary client grants. ', 'wp-auth0' ); ?>
 					<?php
 					echo __(
-						'Go to your Auth0 dashboard > APIs > Auth0 Management API > Non-Interactive Clients'
-								   . ' tab and authorize the client for this site. ',
+						'Go to your Auth0 dashboard > APIs > Auth0 Management API > Machine to Machine Applications tab and authorize this Application. ',
 						'wp-auth0'
 					);
 					?>
 					<?php echo __( 'Make sure to add the following scopes: ', 'wp-auth0' ); ?>
 					<code><?php echo implode( '</code>, <code>', WP_Auth0_Api_Client::get_required_scopes() ); ?></code>
 					<?php echo __( 'You can also check the ', 'wp-auth0' ); ?>
-					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', 'wp-auth0' ); ?></a> <?php echo __( ' for more information.' ); ?>
+					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', 'wp-auth0' ); ?></a>
+					<?php echo __( ' for more information.', 'wp-auth0' ); ?>
 				</strong>
 			</p>
 		</div>
@@ -159,14 +159,15 @@ class WP_Auth0_InitialSetup {
 	}
 
 	public function cant_exchange_token_message() {
-		$domain = $this->a0_options->get( 'domain' );
 		?>
 		  <div id="message" class="error">
 			  <p>
 				  <strong>
 					<?php echo __( 'There was an error retrieving your Auth0 credentials. Check the ', 'wp-auth0' ); ?>
-					  <a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', 'wp-auth0' ); ?></a>
-					<?php echo __( ' for more information. Please check that your server has internet access and can reach "https://' . $domain . '/" ', 'wp-auth0' ); ?>
+					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php echo __( 'Error log', 'wp-auth0' ); ?></a>
+					<?php echo __( ' for more information.', 'wp-auth0' ); ?>
+					<?php echo __( 'Please check that your server has internet access and can reach ', 'wp-auth0' ); ?>
+					<code>https://<?php echo $this->a0_options->get( 'domain' ); ?></code>
 				  </strong>
 			  </p>
 		  </div>

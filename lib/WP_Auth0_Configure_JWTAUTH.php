@@ -1,5 +1,5 @@
 <?php
-
+// phpcs:ignoreFile
 /**
  * Class WP_Auth0_Configure_JWTAUTH
  *

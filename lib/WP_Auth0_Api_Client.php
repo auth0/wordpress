@@ -513,6 +513,7 @@ class WP_Auth0_Api_Client {
 			WP_Auth0_ErrorManager::insert_auth0_error(
 				__METHOD__,
 				sprintf(
+					// translators: placeholders are machine names stored for this WP instance and must be included.
 					__( 'A client grant for %1$s to %2$s already exists. Make sure this grant at least includes %3$s.', 'wp-auth0' ),
 					self::get_connect_info( 'client_id' ),
 					self::get_connect_info( 'audience' ),
