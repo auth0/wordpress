@@ -592,8 +592,6 @@ class WP_Auth0_LoginManager {
 	 * @see WP_Auth0_LoginManager::init()
 	 *
 	 * @return mixed
-	 *
-	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function auth0_sso_footer( $previous_html ) {
 
@@ -613,11 +611,8 @@ class WP_Auth0_LoginManager {
 	 * Outputs JS on all pages to log a user out if no Auth0 session is found.
 	 * Hooked to `wp_footer` action.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 * TODO: Deprecate, not used
 	 *
 	 * @see WP_Auth0_LoginManager::init()
-	 *
-	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function auth0_singlelogout_footer() {
 		$tpl_path = WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
