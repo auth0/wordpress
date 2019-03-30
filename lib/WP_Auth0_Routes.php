@@ -34,6 +34,9 @@ class WP_Auth0_Routes {
 		$this->ip_check   = $ip_check instanceof WP_Auth0_Ip_Check ? $ip_check : new WP_Auth0_Ip_Check( $a0_options );
 	}
 
+	/**
+	 * TODO: Deprecate init()
+	 */
 	public function init() {
 		add_action( 'parse_request', array( $this, 'custom_requests' ) );
 	}
