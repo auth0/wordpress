@@ -4,6 +4,8 @@
  * Class WP_Auth0_Configure_JWTAUTH
  *
  * @deprecated - 3.10.0, plugin is deprecated and removed from the WP plugin repo.
+ *
+ * @codeCoverageIgnore - Deprecated.
  */
 class WP_Auth0_Configure_JWTAUTH {
 

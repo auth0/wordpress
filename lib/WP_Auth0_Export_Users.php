@@ -8,6 +8,9 @@ class WP_Auth0_Export_Users {
 		$this->db_manager = $db_manager;
 	}
 
+	/**
+	 * TODO: Deprecate init()
+	 */
 	public function init() {
 		add_action( 'admin_footer', array( $this, 'a0_add_users_export' ) );
 		add_action( 'load-users.php', array( $this, 'a0_export_selected_users' ) );

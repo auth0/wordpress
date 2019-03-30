@@ -9,6 +9,9 @@ class WP_Auth0_DBManager {
 		$this->a0_options = $a0_options;
 	}
 
+	/**
+	 * TODO: Deprecate init()
+	 */
 	public function init() {
 		$this->current_db_version = (int) get_option( 'auth0_db_version', 0 );
 		if ( $this->current_db_version === 0 ) {
@@ -207,6 +210,8 @@ class WP_Auth0_DBManager {
 	 * Display a banner if we are not able to get a Management API token.
 	 *
 	 * @deprecated - 3.10.0, not used.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function notice_failed_client_grant() {
 
@@ -266,6 +271,8 @@ class WP_Auth0_DBManager {
 	 * Display a banner once after 3.5.0 upgrade.
 	 *
 	 * @deprecated - 3.10.0, not used.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function notice_successful_client_grant() {
 
@@ -293,6 +300,8 @@ class WP_Auth0_DBManager {
 	 * Display a banner once after 3.5.1 upgrade.
 	 *
 	 * @deprecated - 3.10.0, not used.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function notice_successful_grant_types() {
 
