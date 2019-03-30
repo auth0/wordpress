@@ -27,11 +27,27 @@ class WP_Auth0_Lock10_Options {
 		return $this->wp_options->get_wp_auth0_url( $this->get_callback_protocol(), true );
 	}
 
+	/**
+	 * @deprecated - 3.10.0, not used.
+	 *
+	 * @return bool
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
 	public function get_sso() {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return $this->_get_boolean( $this->wp_options->get( 'sso' ) );
 	}
 
+	/**
+	 * @deprecated - 3.10.0, not used.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
 	public function get_client_id() {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return $this->wp_options->get( 'client_id' );
 	}
 
