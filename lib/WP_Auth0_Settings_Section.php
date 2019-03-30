@@ -20,6 +20,9 @@ class WP_Auth0_Settings_Section {
 		$this->import_settings    = $import_settings;
 	}
 
+	/**
+	 * TODO: Deprecate init()
+	 */
 	public function init() {
 		add_action( 'admin_menu', array( $this, 'init_menu' ), 95.55, 0 );
 	}

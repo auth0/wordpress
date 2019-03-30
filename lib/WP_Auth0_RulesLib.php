@@ -1,13 +1,13 @@
 <?php
 /**
- * TODO: Deprecate
+ * @deprecated - 3.10.0, not used and no replacement provided.
  *
  * @codeCoverageIgnore - Deprecated.
  */
 class WP_Auth0_RulesLib {
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, not used and no replacement provided.
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
@@ -80,7 +80,7 @@ function (user, context, callback) {
 	);
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, not used and no replacement provided.
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
@@ -104,7 +104,7 @@ function (user, context, callback) {
 	);
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, not used and no replacement provided.
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
@@ -132,7 +132,7 @@ function (user, context, callback) {
 	);
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, not used and no replacement provided.
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
@@ -184,7 +184,7 @@ function (user, context, callback) {
 	);
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, not used and no replacement provided.
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
@@ -243,12 +243,6 @@ function (user, context, callback) {
     }
 }",
 	);
-
-	/*
-	 *
-	 * DEPRECATED
-	 *
-	 */
 
 	/**
 	 * @deprecated - 3.8.0, not used and no replacement provided.
