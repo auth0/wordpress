@@ -64,13 +64,16 @@ class WP_Auth0_Api_Client {
 
 	/**
 	 * Get required telemetry header.
-	 * TODO: Deprecate
+	 *
+	 * @deprecated - 3.10.0, not used.
 	 *
 	 * @return array
 	 *
 	 * @codeCoverageIgnore - Deprecated
 	 */
 	public static function get_info_headers() {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return WP_Auth0_Api_Abstract::get_info_headers();
 	}
 
@@ -134,7 +137,8 @@ class WP_Auth0_Api_Client {
 
 	/**
 	 * Get a client_credentials token using default stored connection info
-	 * TODO: Deprecate
+	 *
+	 * @deprecated - 3.10.0, not used.
 	 *
 	 * @since 3.4.1
 	 *
@@ -143,6 +147,8 @@ class WP_Auth0_Api_Client {
 	 * @codeCoverageIgnore - Deprecated
 	 */
 	public static function get_client_token() {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$response = wp_remote_post(
 			self::get_endpoint( 'oauth/token' ),
@@ -177,14 +183,18 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, not used.
 	 *
 	 * @param string $domain - tenant domain
 	 * @param string $access_token - access token with at least `openid` scope
 	 *
 	 * @return array|WP_Error
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public static function get_user_info( $domain, $access_token ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return wp_remote_get(
 			self::get_endpoint( 'userinfo', $domain ),
 			array( 'headers' => self::get_headers( $access_token ) )
@@ -254,7 +264,8 @@ class WP_Auth0_Api_Client {
 
 	/**
 	 * Get a single client via the Management API
-	 * TODO: Deprecate
+	 *
+	 * @deprecated - 3.10.0, not used.
 	 *
 	 * @see https://auth0.com/docs/api/management/v2#!/Clients/get_clients_by_id
 	 *
@@ -262,9 +273,12 @@ class WP_Auth0_Api_Client {
 	 * @param string $client_id - a valid client ID in the same tenant as the app token
 	 *
 	 * @return array|bool|mixed|object
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public static function get_client( $app_token, $client_id ) {
-
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$response = wp_remote_get(
 			self::get_endpoint( '/api/v2/clients/' . urlencode( $client_id ) ),
 			array(
@@ -365,9 +379,13 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, not used.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public static function update_client( $domain, $app_token, $client_id, $sso, $payload = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$endpoint = "https://$domain/api/v2/clients/$client_id";
 
@@ -401,9 +419,13 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, not used.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public static function create_rule( $domain, $app_token, $name, $script, $enabled = true ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$payload = array(
 			'name'    => $name,
 			'script'  => $script,
@@ -443,9 +465,13 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, not used.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public static function delete_rule( $domain, $app_token, $id ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$endpoint = "https://$domain/api/v2/rules/$id";
 
@@ -603,9 +629,13 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, not used.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public static function get_connection( $domain, $app_token, $id ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$endpoint = "https://$domain/api/v2/connections/$id";
 
 		$headers = WP_Auth0_Api_Abstract::get_info_headers();
@@ -694,9 +724,13 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, not used.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public static function update_user( $domain, $app_token, $id, $payload ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$endpoint = "https://$domain/api/v2/users/$id";
 
 		$headers = WP_Auth0_Api_Abstract::get_info_headers();
@@ -750,11 +784,13 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, not used.
 	 *
 	 * @codeCoverageIgnore - To be deprecated
 	 */
 	public static function GetConsentScopestoShow() {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$scopes    = self::ConsentRequiredScopes();
 		$grouped   = array();
 		$processed = array();
@@ -785,11 +821,13 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, not used.
 	 *
 	 * @codeCoverageIgnore - To be deprecated
 	 */
 	public static function update_guardian( $domain, $app_token, $factor, $enabled ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$endpoint = "https://$domain/api/v2/guardian/factors/$factor";
 
 		$headers = WP_Auth0_Api_Abstract::get_info_headers();
