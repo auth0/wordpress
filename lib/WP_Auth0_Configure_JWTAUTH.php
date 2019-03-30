@@ -3,14 +3,14 @@
 /**
  * Class WP_Auth0_Configure_JWTAUTH
  *
- * @deprecated 3.10.0, plugin is deprecated and removed from the WP plugin repo.
+ * @deprecated - 3.10.0, plugin is deprecated and removed from the WP plugin repo.
  */
 class WP_Auth0_Configure_JWTAUTH {
 
 	protected $a0_options;
 
 	/**
-	 * @deprecated 3.10.0, plugin is deprecated and removed from the WP plugin repo.
+	 * @deprecated - 3.10.0, plugin is deprecated and removed from the WP plugin repo.
 	 */
 	public function __construct( WP_Auth0_Options $a0_options ) {
 		$this->a0_options = $a0_options;
@@ -75,7 +75,7 @@ class WP_Auth0_Configure_JWTAUTH {
 	}
 
 	/**
-	 * @deprecated 3.10.0, plugin is deprecated and removed from the WP plugin repo.
+	 * @deprecated - 3.10.0, plugin is deprecated and removed from the WP plugin repo.
 	 *
 	 * @return bool
 	 */
@@ -88,7 +88,7 @@ class WP_Auth0_Configure_JWTAUTH {
 	}
 
 	/**
-	 * @deprecated 3.10.0, plugin is deprecated and removed from the WP plugin repo.
+	 * @deprecated - 3.10.0, plugin is deprecated and removed from the WP plugin repo.
 	 *
 	 * @return bool
 	 */
