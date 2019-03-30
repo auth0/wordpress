@@ -8,13 +8,25 @@ class WP_Auth0_UsersRepo {
 		$this->a0_options = $a0_options;
 	}
 
+	/**
+	 * @deprecated - 3.10.0, JWT Auth plugin is deprecated and removed from the WP plugin repo.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
 	public function init() {
 		if ( $this->a0_options->get( 'jwt_auth_integration' ) == 1 ) {
 			add_filter( 'wp_jwt_auth_get_user', array( $this, 'getUser' ), 0, 2 );
 		}
 	}
 
+	/**
+	 * @deprecated - 3.10.0, JWT Auth plugin is deprecated and removed from the WP plugin repo.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
 	public function getUser( $jwt, $encodedJWT ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$userRow = $this->find_auth0_user( $jwt->sub );
 
@@ -59,7 +71,14 @@ class WP_Auth0_UsersRepo {
 
 	}
 
+	/**
+	 * @deprecated - 3.10.0, JWT Auth plugin is deprecated and removed from the WP plugin repo.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
 	public function tokenHasRequiredScopes( $jwt ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		return (
 			( isset( $jwt->email ) || isset( $jwt->nickname ) )
