@@ -84,7 +84,11 @@ class WP_Auth0_LoginManager {
 	 * Attach methods to hooks.
 	 * See method comments for functionality.
 	 *
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
 	 * @see WP_Auth0::init()
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
 		add_action( 'login_init', array( $this, 'login_auto' ) );
@@ -585,15 +589,18 @@ class WP_Auth0_LoginManager {
 	 * Outputs JS on wp-login.php to log a user in if an Auth0 session is found.
 	 * Hooked to `login_message` filter.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 * TODO: Deprecate, moved to assets/js/lock-init.js
+	 *
+	 * @deprecated - 3.10.0, moved to assets/js/lock-init.js
 	 *
 	 * @param string $previous_html - HTML passed into the login_message filter.
 	 *
-	 * @see WP_Auth0_LoginManager::init()
-	 *
 	 * @return mixed
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function auth0_sso_footer( $previous_html ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		// No need to checkSession if already logged in.
 		// URL parameter `skip_sso` is set to skip checkSession.
@@ -612,9 +619,13 @@ class WP_Auth0_LoginManager {
 	 * Hooked to `wp_footer` action.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
-	 * @see WP_Auth0_LoginManager::init()
+	 * @deprecated - 3.10.0, removed.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function auth0_singlelogout_footer() {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$tpl_path = WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
 		if ( is_user_logged_in() && $this->a0_options->get( 'singlelogout' ) && file_exists( $tpl_path ) ) {
 			include $tpl_path;
@@ -815,6 +826,8 @@ class WP_Auth0_LoginManager {
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
 	 *
 	 * @link https://auth0.com/docs/api-auth/intro#other-authentication-api-endpoints
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function login_with_credentials( $username, $password, $connection = 'Username-Password-Authentication' ) {
 		// phpcs:ignore
