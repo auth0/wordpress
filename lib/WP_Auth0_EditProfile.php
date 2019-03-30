@@ -53,6 +53,7 @@ class WP_Auth0_EditProfile {
 
 	/**
 	 * Add actions and filters for the profile page.
+	 * TODO: Deprecate init()
 	 */
 	public function init() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );

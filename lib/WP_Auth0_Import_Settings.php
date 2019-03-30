@@ -8,6 +8,9 @@ class WP_Auth0_Import_Settings {
 		$this->a0_options = $a0_options;
 	}
 
+	/**
+	 * TODO: Deprecate init()
+	 */
 	public function init() {
 		add_action( 'admin_action_wpauth0_export_settings', array( $this, 'export_settings' ) );
 		add_action( 'admin_action_wpauth0_import_settings', array( $this, 'import_settings' ) );

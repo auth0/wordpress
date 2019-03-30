@@ -32,6 +32,7 @@ class WP_Auth0_Email_Verification {
 
 	/**
 	 * Set up hooks tied to functions that can be dequeued.
+	 * TODO: Deprecate init()
 	 *
 	 * @codeCoverageIgnore - Called at startup, tested in TestEmailVerification::testHooks()
 	 */
