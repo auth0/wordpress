@@ -235,12 +235,15 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	/**
 	 * Render form field and description for the `auth0_app_token` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 * TODO: Deprecate
+	 *
+	 * @deprecated - 3.10.0, no longer used.
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_auth0_app_token( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password' );

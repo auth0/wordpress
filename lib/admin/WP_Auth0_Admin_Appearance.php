@@ -160,7 +160,8 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	/**
 	 * Render form field and description for the `custom_css` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 * TODO: Deprecate
+	 *
+	 * @deprecated - 3.10.0, CSS must be added as an external file starting in the next major release.
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
@@ -186,7 +187,8 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	/**
 	 * Render form field and description for the `custom_js` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 * TODO: Deprecate
+	 *
+	 * @deprecated - 3.10.0, JS must be added as an external file starting in the next major release.
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *

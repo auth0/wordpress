@@ -113,12 +113,14 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `password_policy` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, no longer used.
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_password_policy( $args = array() ) {
 		$this->render_radio_buttons(
@@ -280,14 +282,14 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `fullcontact` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, Rules must be managed in the Auth0 dashboard.
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 *
-	 * @codeCoverageIgnore - To be deprecated
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_fullcontact( $args = array() ) {
 		$this->render_field_description(
@@ -301,14 +303,14 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `fullcontact_apikey` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, Rules must be managed in the Auth0 dashboard.
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 *
-	 * @codeCoverageIgnore - To be deprecated
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_fullcontact_apikey( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
@@ -318,14 +320,14 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `geo_rule` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, Rules must be managed in the Auth0 dashboard.
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 *
-	 * @codeCoverageIgnore - To be deprecated
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_geo( $args = array() ) {
 		$this->render_field_description(
@@ -339,14 +341,14 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `income_rule` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, Rules must be managed in the Auth0 dashboard.
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 *
-	 * @codeCoverageIgnore - To be deprecated
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_income( $args = array() ) {
 		$this->render_field_description(
@@ -385,14 +387,14 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	/**
 	 * Update the Auth0 Application if SSO is turned on and disable SLO if it is turned off.
 	 *
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, no longer used.
 	 *
 	 * @param array $old_options - option values before saving.
 	 * @param array $input - new option values being saved.
 	 *
 	 * @return array
 	 *
-	 * @codeCoverageIgnore - To be deprecated
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 
 	public function sso_validation( $old_options, $input ) {
@@ -434,12 +436,14 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	/**
 	 * Update the password policy for the database connection used with this application
 	 *
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, setting removed.
 	 *
 	 * @param array $old_options - previous option values
 	 * @param array $input - new option values
 	 *
 	 * @return array
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function security_validation( $old_options, $input ) {
 		$input['password_policy'] = ! empty( $input['password_policy'] ) ? $input['password_policy'] : null;
@@ -480,9 +484,9 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 *  @deprecated - 3.10.0, setting removed.
 	 *
-	 * @codeCoverageIgnore - To be deprecated
+	 * @@codeCoverageIgnore - Deprecated.
 	 */
 	public function fullcontact_validation( $old_options, $input ) {
 		$fullcontact_script = WP_Auth0_RulesLib::$fullcontact['script'];
@@ -492,9 +496,9 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 *  @deprecated - 3.10.0, setting removed.
 	 *
-	 * @codeCoverageIgnore - To be deprecated
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function mfa_validation( $old_options, $input ) {
 
@@ -515,9 +519,9 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 *  @deprecated - 3.10.0, setting removed.
 	 *
-	 * @codeCoverageIgnore - To be deprecated
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function georule_validation( $old_options, $input ) {
 		$geo_script = WP_Auth0_RulesLib::$geo['script'];
@@ -526,9 +530,9 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 *  @deprecated - 3.10.0, setting removed.
 	 *
-	 * @codeCoverageIgnore - To be deprecated
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function incomerule_validation( $old_options, $input ) {
 		$income_script = WP_Auth0_RulesLib::$income['script'];
@@ -539,7 +543,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	/**
 	 * @deprecated - 3.6.0, handled by WP_Auth0_Admin_Generic::render_description()
 	 *
-	 * @codeCoverageIgnore - Deprecated
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_features_description() {
 		// phpcs:ignore
