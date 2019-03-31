@@ -103,6 +103,8 @@ class WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	protected function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$input[ $key ] = ( isset( $input[ $key ] ) ? $input[ $key ] : null );
 
 		if ( ( $input[ $key ] !== null && $old_options[ $key ] === null ) || ( $input[ $key ] === null && $old_options[ $key ] !== null ) ) {

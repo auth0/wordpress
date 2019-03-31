@@ -123,6 +123,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_password_policy( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_radio_buttons(
 			array(
 				array(
@@ -313,6 +315,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_fullcontact_apikey( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 	}
 
@@ -398,6 +402,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 */
 
 	public function sso_validation( $old_options, $input ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$input['sso'] = ( isset( $input['sso'] ) ? $input['sso'] : 0 );
 		$is_sso       = ! empty( $input['sso'] );
 
@@ -446,6 +452,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function security_validation( $old_options, $input ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$input['password_policy'] = ! empty( $input['password_policy'] ) ? $input['password_policy'] : null;
 
 		if ( $old_options['password_policy'] !== $input['password_policy'] ) {
@@ -489,6 +497,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @@codeCoverageIgnore - Deprecated.
 	 */
 	public function fullcontact_validation( $old_options, $input ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$fullcontact_script = WP_Auth0_RulesLib::$fullcontact['script'];
 		$fullcontact_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $fullcontact_script );
 		$fullcontact_script = str_replace( 'REPLACE_WITH_YOUR_FULLCONTACT_API_KEY', $input['fullcontact_apikey'], $fullcontact_script );
@@ -501,6 +511,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function mfa_validation( $old_options, $input ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		if ( ! isset( $input['mfa'] ) ) {
 			$input['mfa'] = null;
@@ -524,6 +536,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function georule_validation( $old_options, $input ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$geo_script = WP_Auth0_RulesLib::$geo['script'];
 		$geo_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $geo_script );
 		return $this->rule_validation( $old_options, $input, 'geo_rule', WP_Auth0_RulesLib::$geo['name'] . '-' . get_auth0_curatedBlogName(), $geo_script );
@@ -535,6 +549,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function incomerule_validation( $old_options, $input ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$income_script = WP_Auth0_RulesLib::$income['script'];
 		$income_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $income_script );
 		return $this->rule_validation( $old_options, $input, 'income_rule', WP_Auth0_RulesLib::$income['name'] . '-' . get_auth0_curatedBlogName(), $income_script );
