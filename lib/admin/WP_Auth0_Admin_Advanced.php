@@ -687,6 +687,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function link_accounts_validation( $old_options, $input ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$link_script = WP_Auth0_RulesLib::$link_accounts['script'];
 		$link_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $link_script );
 		$link_script = str_replace( 'REPLACE_WITH_YOUR_DOMAIN', $input['domain'], $link_script );
@@ -769,6 +771,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_ip_range_check( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_ip_ranges' );
 	}
 
@@ -786,6 +790,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_ip_ranges( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Only one range per line! Range format should be as follows (spaces ignored): ', 'wp-auth0' ) .

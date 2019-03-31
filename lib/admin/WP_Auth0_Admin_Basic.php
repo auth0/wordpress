@@ -246,6 +246,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_auth0_app_token( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password' );
 		$this->render_field_description(
 			__( 'This token should include the following scopes: ', 'wp-auth0' ) .
