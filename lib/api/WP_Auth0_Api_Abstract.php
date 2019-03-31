@@ -55,7 +55,8 @@ abstract class WP_Auth0_Api_Abstract {
 
 	/**
 	 * API token from plugin settings or Client Credentials call.
-	 * TODO: Deprecate
+	 *
+	 * @deprecated - 3.10.0, not used.
 	 *
 	 * @var string
 	 */
@@ -63,7 +64,8 @@ abstract class WP_Auth0_Api_Abstract {
 
 	/**
 	 * Decoded API token from plugin settings.
-	 * TODO: Deprecate
+	 *
+	 * @deprecated - 3.10.0, not used.
 	 *
 	 * @var object
 	 */
@@ -381,7 +383,8 @@ abstract class WP_Auth0_Api_Abstract {
 
 	/**
 	 * Decode an RS256 Auth0 Management API token.
-	 * TODO: Deprecate
+	 *
+	 * @deprecated - 3.10.0, not used.
 	 *
 	 * @param string $token - API JWT to decode.
 	 *
@@ -394,7 +397,7 @@ abstract class WP_Auth0_Api_Abstract {
 	 * @throws BeforeValidException         Provided JWT used before it's been created as defined by 'iat'.
 	 * @throws ExpiredException             Provided JWT has since expired, as defined by the 'exp' claim.
 	 *
-	 * @codeCoverageIgnore - To be deprecated.
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	protected function decode_jwt( $token ) {
 		return JWT::decode(
