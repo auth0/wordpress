@@ -29,7 +29,8 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 
 	/**
 	 * Decoded token received.
-	 * TODO: Deprecate
+	 *
+	 * @deprecated - 3.10.0, not used.
 	 *
 	 * @var null|object
 	 */
@@ -60,11 +61,12 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 
 	/**
 	 * Return the decoded API token received.
-	 * TODO: Deprecate
+	 *
+	 * @deprecated - 3.10.0, not used.
 	 *
 	 * @return null|object
 	 *
-	 * @codeCoverageIgnore - To be deprecated.
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function get_token_decoded() {
 		return $this->token_decoded;
