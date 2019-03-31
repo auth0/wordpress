@@ -332,14 +332,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `link_auth0_users` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, account linking should be administered in the Auth0 dashboard.
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 *
-	 * @codeCoverageIgnore - To be deprecated
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_link_auth0_users( $args = array() ) {
 		$this->render_field_description(
@@ -561,6 +561,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_jwt_auth_integration( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
@@ -680,9 +682,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.10.0, no longer used.
 	 *
-	 * @codeCoverageIgnore - To be deprecated
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function link_accounts_validation( $old_options, $input ) {
 		$link_script = WP_Auth0_RulesLib::$link_accounts['script'];
