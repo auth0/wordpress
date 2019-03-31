@@ -448,8 +448,6 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @param array $input - new option values
 	 *
 	 * @return array
-	 *
-	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function security_validation( $old_options, $input ) {
 		// phpcs:ignore
