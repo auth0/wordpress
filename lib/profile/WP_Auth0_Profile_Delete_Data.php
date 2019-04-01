@@ -32,7 +32,9 @@ class WP_Auth0_Profile_Delete_Data {
 	/**
 	 * Add actions and filters for the profile page.
 	 *
-	 * @codeCoverageIgnore - Tested in TestProfileDeleteData::testInitHooks()
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
 		add_action( 'edit_user_profile', array( $this, 'show_delete_identity' ) );

@@ -32,9 +32,10 @@ class WP_Auth0_Email_Verification {
 
 	/**
 	 * Set up hooks tied to functions that can be dequeued.
-	 * TODO: Deprecate init()
 	 *
-	 * @codeCoverageIgnore - Called at startup, tested in TestEmailVerification::testHooks()
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public static function init() {
 		add_action( 'wp_ajax_nopriv_resend_verification_email', 'wp_auth0_ajax_resend_verification_email' );
