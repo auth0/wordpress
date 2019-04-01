@@ -1,5 +1,33 @@
 # Change Log
 
+## [3.9.0](https://github.com/auth0/wp-auth0/tree/3.10.0) (2019-04-XX)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.9.0...3.10.0)
+
+### Notes on this release
+
+- The "Single Sign-On" setting has been deprecated and will be removed in the next major release. This setting is used to attempt SSO on the `wp-login.php`. To use SSO going forward, please activate the "Universal Login Page" setting in the **Features** tab of the plugin settings. If you are already using the Universal Login Page on your site then expect no changes in functionality.
+- The "Single Logout" functionality has been changed. This setting now logs users out of Auth0 automatically when they log out of WordPress. It no longer logs users out of WordPress automatically if they have already been logged out of Auth0.
+- The default Lock version has been updated from 11.5 to 11.14. If you have never changed the Lock URL, this update will be automatic for this and future releases. If you have updated the Lock URL in the past, your custom URL has been retained. We recommend using the latest tested version of Lock, which can be done by turning the "Use Custom Lock JS URL" option off on the **Advanced** tab of the plugin settings. Please see the [Lock changelog](https://github.com/auth0/lock/blob/master/CHANGELOG.md#v1160-2018-04-24) (v11.6.0 to v11.14.1) for information on changes to the embedded login form.
+- Core WordPress login form display handling has been changed to improve security and maintainability. Please review the "Original Login Form on wp-login.php" option on the **Basic** tab of the plugin settings to make sure this is set properly for your site.
+- Site administrators can now rotate the migration token in the **Advanced** tab of the plugin settings. This change will occur right after confirmation and must be updated in the database Connection immediately. Please see our [documentation page on User Migration](https://auth0.com/docs/cms/wordpress/user-migration) for more information about configuring and troubleshooting this feature.
+- The "API Token" field in the **Basic** tab of the plugin settings has been removed. All Management API functionality now uses a Client Credentials grant, which is set up automatically when you run the Setup Wizard. The only scopes required for the plugin are now `read:users` and `update:users`. Configuration steps for this can be found [here](https://auth0.com/docs/cms/wordpress/configuration#authorize-the-application-for-the-management-api) but if your site is already working as expected currently then no action is required for this update.
+- The "Password Policy" setting on the **Features** tab has been removed. This setting must be managed in the settings for the [database Connection](https://manage.auth0.com/#/connections/database) being used going forward. No changes were made to the connection, just the ability to manage it in WordPress.
+- The "Multifactor Authentication (MFA)" switch on the **Features** tab has been removed. This setting must be managed in the [Auth0 dashboard](https://manage.auth0.com/#/mfa) going forward. No changes were made to how this works, just the ability to manage it in WordPress.
+- The "FullContact," "Store Geolocation", and "Store Zipcode Income" settings on the **Features** tab have been removed. These settings must be managed in [Rules](https://manage.auth0.com/#/rules) going forward. No changes were made to how these features work, just the ability to manage them in WordPress.
+- The "Custom CSS" and "Custom JS" fields on the **Appearance** tab have been deprecated. If you already have CSS and/or JS stored, the setting will continue to work until the next major release. If not, these fields have been removed. Custom styles and scripts should be loaded in an external file using [the instructions here](https://auth0.com/docs/cms/wordpress/troubleshoot#how-can-i-modify-the-embedded-auth0-login-form-).
+- The "Link Users with Same Email" setting on the **Advanced** tab has been removed. This functionality must be managed in the Auth0 dashboard going forward. More information on this feature can be found [here](https://auth0.com/docs/link-accounts). No changes were made to how this works, just the ability to manage it in WordPress.
+- The **Delete MFA Data** control on the User Profile has been removed. Please use the Auth0 Dashboard to manage MFA for users. 
+- An Auth0 login form (or link to login) will now appear on the WooCommerce Checkout page for sites that allow or require an account to check out.  
+- The connection with the WP JWT Auth plugin has been deprecated and will be removed in the next major.
+
+### Notes for developers
+
+- As mentioned above, a Management API token can no longer be provided manually (except in the Setup Wizard). The token is now obtained automatically using a Client Credentials grant and stored in a transient along with the allowed scopes. You can get the existing token with `WP_Auth0_Api_Client_Credentials::get_stored_token()` and check for necessary scopes with `WP_Auth0_Api_Client_Credentials::check_stored_scope()`. If you need to get a new token, use `\WP_Auth0_Api_Client_Credentials::call()`.
+- If you are using any of the `WP_Auth_*` classes in a custom plugin or theme, please note that there have been many deprecations in the last several releases. All deprecated classes, methods, and functions will be removed in the next major release so please review your custom code and make the appropriate changes. 
+- The `auth0_sso_auth0js_url` filter has been added that lets you override the default CDN URL for Auth0.js when doing an SSO check on the `wp-login.php` page.
+- The `auth0_coo_auth0js_url` filter has been added that lets you override the default CDN URL for Auth0.js when loading the COO fallback page.
+- The `auth0_slo_return_to` filter has been added that lets you override the default `returnTo` URL when logging out of Auth0.
+
 ## [3.9.0](https://github.com/auth0/wp-auth0/tree/3.9.0) (2019-01-11)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.8.1...3.9.0)
 
