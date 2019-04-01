@@ -78,16 +78,17 @@ class WP_Auth0 {
 	public function __construct( $options = null ) {
 		spl_autoload_register( array( $this, 'autoloader' ) );
 		$this->a0_options = $options instanceof WP_Auth0_Options ? $options : WP_Auth0_Options::Instance();
+		$this->basename   = plugin_basename( __FILE__ );
 	}
 
 	/**
-	 * Initialize the plugin and its modules setting all the hooks
+	 * Initialize the plugin and its modules setting all the hooks.
+	 *
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
-		$this->basename = plugin_basename( __FILE__ );
-
-		$ip_checker = new WP_Auth0_Ip_Check();
-		$ip_checker->init();
 
 		$this->db_manager = new WP_Auth0_DBManager( $this->a0_options );
 		$this->db_manager->init();
@@ -118,10 +119,6 @@ class WP_Auth0 {
 		add_filter( 'query_vars', array( $this, 'a0_register_query_vars' ) );
 
 		add_filter( 'plugin_action_links_' . $this->basename, array( $this, 'wp_add_plugin_settings_link' ) );
-
-		if ( isset( $_GET['message'] ) ) {
-			add_action( 'wp_footer', array( $this, 'a0_render_message' ) );
-		}
 
 		$initial_setup = new WP_Auth0_InitialSetup( $this->a0_options );
 		$initial_setup->init();

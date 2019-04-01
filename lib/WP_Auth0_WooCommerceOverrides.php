@@ -19,6 +19,11 @@ class WP_Auth0_WooCommerceOverrides {
 		}
 	}
 
+	/**
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
 	public function init() {
 		add_filter( 'woocommerce_checkout_login_message', array( $this, 'override_woocommerce_checkout_login_form' ) );
 		add_filter( 'woocommerce_before_customer_login_form', array( $this, 'override_woocommerce_login_form' ) );

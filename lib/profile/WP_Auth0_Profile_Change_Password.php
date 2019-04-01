@@ -31,7 +31,9 @@ class WP_Auth0_Profile_Change_Password {
 	/**
 	 * Add actions and filters for the profile page.
 	 *
-	 * @codeCoverageIgnore - Tested in TestProfileChangePassword::testInitHooks()
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
 

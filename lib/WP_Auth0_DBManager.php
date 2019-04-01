@@ -10,7 +10,9 @@ class WP_Auth0_DBManager {
 	}
 
 	/**
-	 * TODO: Deprecate init()
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
 		$this->current_db_version = (int) get_option( 'auth0_db_version', 0 );

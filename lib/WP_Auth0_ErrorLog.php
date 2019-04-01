@@ -24,9 +24,10 @@ class WP_Auth0_ErrorLog {
 
 	/**
 	 * Add actions and filters for the error log settings section.
-	 * TODO: Deprecate init()
 	 *
-	 * @link https://developer.wordpress.org/reference/hooks/admin_action__requestaction/
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
 		add_action( 'admin_action_wpauth0_clear_error_log', 'wp_auth0_errorlog_clear_error_log' );

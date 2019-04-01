@@ -9,7 +9,9 @@ class WP_Auth0_Import_Settings {
 	}
 
 	/**
-	 * TODO: Deprecate init()
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
 		add_action( 'admin_action_wpauth0_export_settings', array( $this, 'export_settings' ) );
