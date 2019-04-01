@@ -155,7 +155,8 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `sso` option.
 	 * If SSO is off, the SLO setting will be hidden and turned off as well.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 * TODO: Deprecate
+	 *
+	 * @deprecated - 3.10.0, use ULP for SSO, setting removed in next major.
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
