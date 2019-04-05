@@ -42,13 +42,6 @@ class TestProfileDeleteMfa extends WP_Auth0_Test_Case {
 	public static $delete_mfa;
 
 	/**
-	 * WP_Auth0_UsersRepo instance.
-	 *
-	 * @var WP_Auth0_UsersRepo
-	 */
-	protected static $users_repo;
-
-	/**
 	 * Setup before the class starts.
 	 */
 	public static function setUpBeforeClass() {

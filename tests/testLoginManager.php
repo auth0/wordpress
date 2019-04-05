@@ -18,13 +18,6 @@ class TestLoginManager extends WP_Auth0_Test_Case {
 	use UsersHelper;
 
 	/**
-	 * WP_Auth0_UsersRepo instance.
-	 *
-	 * @var WP_Auth0_UsersRepo
-	 */
-	protected static $users_repo;
-
-	/**
 	 * Setup for entire test class.
 	 */
 	public static function setUpBeforeClass() {
