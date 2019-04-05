@@ -22,13 +22,6 @@ class TestProfileDeleteData extends WP_Auth0_Test_Case {
 	use UsersHelper;
 
 	/**
-	 * WP_Auth0_UsersRepo instance.
-	 *
-	 * @var WP_Auth0_UsersRepo
-	 */
-	protected static $users_repo;
-
-	/**
 	 * WP_Auth0_Profile_Delete_Data instance.
 	 *
 	 * @var WP_Auth0_Profile_Delete_Data

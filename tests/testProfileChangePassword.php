@@ -51,13 +51,6 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 	public static $change_password;
 
 	/**
-	 * WP_Auth0_UsersRepo instance.
-	 *
-	 * @var WP_Auth0_UsersRepo
-	 */
-	protected static $users_repo;
-
-	/**
 	 * Setup before the class starts.
 	 */
 	public static function setUpBeforeClass() {

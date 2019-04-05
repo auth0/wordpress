@@ -26,13 +26,6 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 	public static $api_client_creds;
 
 	/**
-	 * WP_Auth0_UsersRepo instance used by the UsersHelper trait.
-	 *
-	 * @var WP_Auth0_UsersRepo
-	 */
-	protected static $users_repo;
-
-	/**
 	 * Run before the test suite.
 	 */
 	public static function setUpBeforeClass() {
