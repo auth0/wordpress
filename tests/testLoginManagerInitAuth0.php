@@ -95,7 +95,6 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 		$_REQUEST['auth0']             = 1;
 		$_REQUEST['error']             = '__test_error_code__';
 		$_REQUEST['error_description'] = '__test_error_description__';
-		$this->setGlobalUser();
 
 		$output = '';
 		try {
@@ -109,7 +108,44 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 		$this->assertContains( 'error code', $output );
 		$this->assertContains( '__test_error_code__', $output );
 		$this->assertContains( '<a href="https://test.auth0.com/v2/logout?client_id=__test_client_id__', $output );
+	}
+
+	/**
+	 * Test that an error in the URL parameter logs the current user out.
+	 */
+	public function testThatErrorInUrlLogsUserOut() {
+		self::auth0Ready();
+		$_REQUEST['auth0']             = 1;
+		$_REQUEST['error']             = uniqid();
+		$_REQUEST['error_description'] = uniqid();
+		$this->setGlobalUser();
+
+		try {
+			$this->login->init_auth0();
+		} catch ( Exception $e ) {
+			// Just need to call the above ...
+		}
+
 		$this->assertFalse( is_user_logged_in() );
+	}
+
+	/**
+	 * Test that an error in the URL parameter does not allow XSS.
+	 */
+	public function testThatErrorInUrlAvoidsXss() {
+		self::auth0Ready();
+		$_REQUEST['auth0']             = 1;
+		$_REQUEST['error']             = '<script>window.location="xss.com?cookie="+document.cookie</script>';
+		$_REQUEST['error_description'] = '<script>window.location="xss.com?cookie="+document.cookie</script>';
+
+		$output = '';
+		try {
+			$this->login->init_auth0();
+		} catch ( Exception $e ) {
+			$output = $e->getMessage();
+		}
+
+		$this->assertNotContains( '<script>', $output );
 	}
 
 	/**

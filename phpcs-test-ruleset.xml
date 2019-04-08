@@ -21,7 +21,9 @@
     <config name="testVersion" value="7.1-"/>
     <rule ref="PHPCompatibilityWP"/>
 
-    <rule ref="Generic.CodeAnalysis"/>
+    <rule ref="Generic.CodeAnalysis">
+        <exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedCatch"/>
+    </rule>
     <rule ref="Generic.Commenting.Todo"/>
     <rule ref="WordPress-Docs"/>
     <rule ref="WordPress-Core">
