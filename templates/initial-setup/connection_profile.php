@@ -35,7 +35,7 @@
 				<li><?php _e( 'Delete the Domain and Client ID and save changes.', 'wp-auth0' ); ?></li>
 				<li><?php _e( 'Delete the created Application ', 'wp-auth0' ); ?>
 					<a target="_blank"
-					   href="https://manage.auth0.com/#/applications/<?php echo WP_Auth0_Options::Instance()->get( 'client_id' ); ?>/settings" >
+					   href="https://manage.auth0.com/#/applications/<?php echo wp_auth0_get_option( 'client_id' ); ?>/settings" >
 						<?php _e( 'here', 'wp-auth0' ); ?>
 					</a>
 				</li>

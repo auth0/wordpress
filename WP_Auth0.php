@@ -29,6 +29,8 @@ define( 'WPA0_JWKS_CACHE_TRANSIENT_NAME', 'WP_Auth0_JWKS_cache' );
 
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 
+require_once 'functions.php';
+
 /*
  * Localization
  */
@@ -570,53 +572,6 @@ class WP_Auth0 {
 
 $a0_plugin = new WP_Auth0();
 $a0_plugin->init();
-
-if ( ! function_exists( 'get_auth0userinfo' ) ) {
-	function get_auth0userinfo( $user_id ) {
-		$profile = WP_Auth0_UsersRepo::get_meta( $user_id, 'auth0_obj' );
-		return $profile ? WP_Auth0_Serializer::unserialize( $profile ) : false;
-	}
-}
-
-if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
-	function get_currentauth0userinfo() {
-		global $currentauth0_user;
-		$currentauth0_user = get_auth0userinfo( get_current_user_id() );
-		return $currentauth0_user;
-	}
-}
-
-if ( ! function_exists( 'get_currentauth0user' ) ) {
-	function get_currentauth0user() {
-		return (object) array(
-			'auth0_obj'   => get_auth0userinfo( get_current_user_id() ),
-			'last_update' => WP_Auth0_UsersRepo::get_meta( get_current_user_id(), 'last_update' ),
-			'auth0_id'    => WP_Auth0_UsersRepo::get_meta( get_current_user_id(), 'auth0_id' ),
-		);
-	}
-}
-
-if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
-	function get_auth0_curatedBlogName() {
-
-		$name = get_bloginfo( 'name' );
-
-		// WordPress can have a blank site title, which will cause initial client creation to fail
-		if ( empty( $name ) ) {
-			$name = wp_parse_url( home_url(), PHP_URL_HOST );
-
-			if ( $port = wp_parse_url( home_url(), PHP_URL_PORT ) ) {
-				$name .= ':' . $port;
-			}
-		}
-
-		$name = preg_replace( '/[^A-Za-z0-9 ]/', '', $name );
-		$name = preg_replace( '/\s+/', ' ', $name );
-		$name = str_replace( ' ', '-', $name );
-
-		return $name;
-	}
-}
 
 /*
  * Core WP hooks

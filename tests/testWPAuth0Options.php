@@ -47,6 +47,7 @@ class TestWPAuth0Options extends WP_Auth0_Test_Case {
 		foreach ( array_keys( $opts->get_options() ) as $opt_name ) {
 			$test_msg = 'Testing option: "' . $opt_name . '"';
 			$this->assertEquals( $opts->get_default( $opt_name ), $opts->get( $opt_name ), $test_msg );
+			$this->assertEquals( $opts->get_default( $opt_name ), wp_auth0_get_option( $opt_name ), $test_msg );
 		}
 	}
 
@@ -67,6 +68,7 @@ class TestWPAuth0Options extends WP_Auth0_Test_Case {
 
 		foreach ( array_keys( $opts->get_options() ) as $opt_name ) {
 			$this->assertEquals( $opt_name . self::FILTER_TEST_STRING, $opts->get( $opt_name ) );
+			$this->assertEquals( $opt_name . self::FILTER_TEST_STRING, wp_auth0_get_option( $opt_name ) );
 		}
 	}
 

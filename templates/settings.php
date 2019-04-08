@@ -9,7 +9,7 @@
 
 			<div class="row a0-message a0-warning manage">
 				<?php _e( 'For your Auth0 dashboard with more settings and connection options click', 'wp-auth0' ); ?>
-				<a target="_blank" href="https://manage.auth0.com/#/clients/<?php echo WP_Auth0_Options::Instance()->get( 'client_id' ); ?>/connections"><?php _e( 'here', 'wp-auth0' ); ?></a>.
+				<a target="_blank" href="https://manage.auth0.com/#/clients/<?php echo wp_auth0_get_option( 'client_id' ); ?>/connections"><?php _e( 'here', 'wp-auth0' ); ?></a>.
 			</div>
 
 			<?php settings_errors(); ?>
