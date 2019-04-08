@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Login by Auth0\n"
 "POT-Creation-Date: 2019-04-01 09:53-0700\n"
-"PO-Revision-Date: 2019-04-01 10:19-0700\n"
+"PO-Revision-Date: 2019-04-08 09:41-0700\n"
 "Last-Translator: Josh Cunningham <josh.cunningham@auth0.com>\n"
 "Language-Team: Carlos Longarela https://tabernawp.com/\n"
 "Language: es_ES\n"
@@ -958,6 +958,8 @@ msgid ""
 "The new token must be changed in the custom scripts for your database "
 "Connection. "
 msgstr ""
+"El nuevo token debe cambiarse en los scripts personalizados para tu conexión "
+"de base de datos. "
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:407
 msgid "Continue?"
@@ -965,7 +967,7 @@ msgstr "Continuar?"
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:409
 msgid "Generate New Migration Token"
-msgstr ""
+msgstr "Generar nuevo token de migración"
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:414
 msgid "User migration endpoints deactivated. "
@@ -1067,6 +1069,8 @@ msgstr ""
 msgid ""
 "This setting is deprecated and will be removed in the next major version. "
 msgstr ""
+"Esta configuración está deprecada y va a ser removida en la próxima versión "
+"mayor. "
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:571
 msgid "This will enable the JWT Auth Users Repository override"
@@ -1074,7 +1078,7 @@ msgstr "Esto habilitará la anulación del Repositorio de Usuarios de JWT Auth"
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:601
 msgid "The Lock JS CDN URL used is not a valid URL."
-msgstr ""
+msgstr "La URL de la CDN de Lock JS no es una URL válida."
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:632
 msgid "The Extra settings parameter should be a valid json object"
@@ -1134,7 +1138,7 @@ msgstr "Utilizado para el Widget de Amplificación Social. "
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:23
 msgid "Change the how the embedded Auth0 login form is displayed."
-msgstr ""
+msgstr "Cambia cómo el formulario de login de Auth0 embebido es mostrado."
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:35
 msgid "Icon URL"
@@ -1215,6 +1219,8 @@ msgid ""
 "NOTE: This field is deprecated and will be removed in the next major "
 "release. "
 msgstr ""
+"Nota: Este campo está deprecado y va a ser removido en la próxima versión "
+"mayor. "
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:176
 msgid "Valid CSS to customize the Auth0 login form"
@@ -1225,6 +1231,8 @@ msgstr ""
 msgid ""
 "Custom styles should be loaded in an external file using the instructions "
 msgstr ""
+"Los estilos personalizados deben cargarse en un archivo externo usando las "
+"instrucciones "
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:203
 msgid "Valid JS to customize the Auth0 login form"
@@ -1235,6 +1243,8 @@ msgid ""
 "Custom JavaScript should be loaded in an external file using the "
 "instructions "
 msgstr ""
+"El Javascript tiene que cargarse en un archivo externo usando las "
+"instrucciones "
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:237
 msgid ""
@@ -1319,7 +1329,7 @@ msgstr "Tiempo de caché (en minutos)"
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:82
 msgid "Original Login Form on wp-login.php"
-msgstr ""
+msgstr "Formulario de login original en wp-login.php"
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:88
 msgid "Allow Signups"
@@ -1386,27 +1396,27 @@ msgstr "Más información sobre la generación manual de tokens"
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:279
 msgid "Save settings to generate URL."
-msgstr ""
+msgstr "Guardar la configuración para generar la URL."
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:287
 msgid "Never"
-msgstr ""
+msgstr "Nunca"
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:291
 msgid "Via a link under the Auth0 form"
-msgstr ""
+msgstr "Via un vinculo debajo del formulario Auth0"
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:293
 msgid "URL is the same as below"
-msgstr ""
+msgstr "La URL es la siguiente"
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:296
 msgid "When \"wle\" query parameter is present"
-msgstr ""
+msgstr "Cuando el parámetro “wle” de la query está presente"
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:301
 msgid "When \"wle\" query parameter contains specific code"
-msgstr ""
+msgstr "Cuando el parámetro “wle” de la query contiene código específico"
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:309
 msgid "Logins and signups using the original form will NOT be pushed to Auth0"
@@ -1552,10 +1562,14 @@ msgstr "página de ayuda sobre la seguridad de la contraseña"
 msgid ""
 "This setting is deprecated and will be removed in the next major release. "
 msgstr ""
+"Esta configuración está deprecada y va a ser removida en el próximo release "
+"mayor. "
 
 #: lib/admin/WP_Auth0_Admin_Features.php:169
 msgid "To enable SSO, please use the Universal Login Page setting below. "
 msgstr ""
+"Para habilitar SSO, por favor utilizar la opción de Universal Login Page que "
+"está debajo. "
 
 #: lib/admin/WP_Auth0_Admin_Features.php:172
 msgid "Turning this on will attempt SSO on wp-login.php. "
@@ -1581,6 +1595,8 @@ msgstr "página de ayuda sobre SSO"
 msgid ""
 "Turning this on will log users out of Auth0 when they log out of WordPress."
 msgstr ""
+"Habilitar esto hará que los usuarios cierren su sesión de Auth0 cuando "
+"cierren su sesión de WordPress."
 
 #: lib/admin/WP_Auth0_Admin_Features.php:207
 msgid "Turn on Passwordless login (email or SMS) in the Auth0 form. "
@@ -1660,16 +1676,20 @@ msgid ""
 "MFA is a method to verify identity by checking a second factor in addition "
 "to the password. "
 msgstr ""
+"MFA es un método para verificar la identidad comprobando un segundo factor "
+"además de la contraseña. "
 
 #: lib/admin/WP_Auth0_Admin_Features.php:268
 msgid ""
 "This provides an additional layer of security, decreasing the likelihood of "
 "unauthorized access. "
 msgstr ""
+"Esto provee una capa adicional de seguridad, disminuyendo la posibilidad de "
+"acceso no autorizado. "
 
 #: lib/admin/WP_Auth0_Admin_Features.php:269
 msgid "To configure MFA for this site, please see this "
-msgstr ""
+msgstr "Para configurar MFA para este sitio, por favor leer esto "
 
 #: lib/admin/WP_Auth0_Admin_Features.php:270
 msgid "help page on MFA"
@@ -1677,23 +1697,27 @@ msgstr "página de ayuda sobre MFA"
 
 #: lib/admin/WP_Auth0_Admin_Features.php:277
 msgid "Manage it with the \"Multifactor-Guardian-Do-Not-Rename\" Rule in the "
-msgstr ""
+msgstr "Configurala con la regla “Multifactor-Guardian-Do-Not-Rename” en el "
 
 #: lib/admin/WP_Auth0_Admin_Features.php:299
 msgid ""
 "Manage it with the \"Enrich-profile-with-FullContact-Do-Not-Rename\" Rule in "
 "the "
 msgstr ""
+"Configurala con la regla “Enrich-profile-with-FullContact-Do-Not-Rename” en "
+"el "
 
 #: lib/admin/WP_Auth0_Admin_Features.php:339
 msgid "Manage it with the \"Store-Geo-Location-Do-Not-Rename\" Rule in the "
-msgstr ""
+msgstr "Configurala con la regla “Store-Geo-Location-Do-Not-Rename” en el "
 
 #: lib/admin/WP_Auth0_Admin_Features.php:360
 msgid ""
 "Manage it with the \"Enrich-profile-with-Zipcode-Income-Do-Not-Rename\" Rule "
 "in the "
 msgstr ""
+"Configurala con la regla “Enrich-profile-with-Zipcode-Income-Do-Not-Rename” "
+"en el "
 
 #: lib/admin/WP_Auth0_Admin_Features.php:377
 msgid "Overrides the WordPress avatar with the Auth0 profile avatar"
@@ -1855,7 +1879,7 @@ msgstr "La contraseña no se ha podido actualizar."
 
 #: lib/profile/WP_Auth0_Profile_Delete_Data.php:70
 msgid "View in Auth0"
-msgstr ""
+msgstr "Ver en Auth0"
 
 #: lib/profile/WP_Auth0_Profile_Delete_Data.php:87
 #: lib/profile/WP_Auth0_Profile_Delete_Mfa.php:101
@@ -2015,11 +2039,11 @@ msgstr "Autenticación JWT Auth"
 
 #: templates/configure-jwt-auth.php:10
 msgid "NOTE: The WP JWT Auth plugin is deprecated."
-msgstr ""
+msgstr "Nota: El plugin WP JWT Auth está deprecado."
 
 #: templates/configure-jwt-auth.php:11
 msgid "This page will be removed in the next major version."
-msgstr ""
+msgstr "Esta página será removida en la siguiente versión mayor."
 
 #: templates/configure-jwt-auth.php:18
 msgid ""
