@@ -32,24 +32,6 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	public function init() {
 		$options = array(
 			array(
-				'name'     => __( 'Single Sign On (SSO)', 'wp-auth0' ),
-				'opt'      => 'sso',
-				'id'       => 'wpa0_sso',
-				'function' => 'render_sso',
-			),
-			array(
-				'name'     => __( 'Single Logout', 'wp-auth0' ),
-				'opt'      => 'singlelogout',
-				'id'       => 'wpa0_singlelogout',
-				'function' => 'render_singlelogout',
-			),
-			array(
-				'name'     => __( 'Passwordless Login', 'wp-auth0' ),
-				'opt'      => 'passwordless_enabled',
-				'id'       => 'wpa0_passwordless_enabled',
-				'function' => 'render_passwordless_enabled',
-			),
-			array(
 				'name'     => __( 'Universal Login Page', 'wp-auth0' ),
 				'opt'      => 'auto_login',
 				'id'       => 'wpa0_auto_login',
@@ -60,6 +42,24 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 				'opt'      => 'auto_login_method',
 				'id'       => 'wpa0_auto_login_method',
 				'function' => 'render_auto_login_method',
+			),
+			array(
+				'name'     => __( 'Single Logout', 'wp-auth0' ),
+				'opt'      => 'singlelogout',
+				'id'       => 'wpa0_singlelogout',
+				'function' => 'render_singlelogout',
+			),
+			array(
+				'name'     => __( 'Single Sign On (SSO)', 'wp-auth0' ),
+				'opt'      => 'sso',
+				'id'       => 'wpa0_sso',
+				'function' => 'render_sso',
+			),
+			array(
+				'name'     => __( 'Passwordless Login', 'wp-auth0' ),
+				'opt'      => 'passwordless_enabled',
+				'id'       => 'wpa0_passwordless_enabled',
+				'function' => 'render_passwordless_enabled',
 			),
 			array(
 				'name'     => __( 'Multifactor Authentication (MFA)', 'wp-auth0' ),
@@ -167,7 +167,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'This setting is deprecated and will be removed in the next major release. ', 'wp-auth0' ) .
-			__( 'To enable SSO, please use the Universal Login Page setting below. ', 'wp-auth0' )
+			__( 'To enable SSO, please use the Universal Login Page setting above', 'wp-auth0' )
 		);
 		$this->render_field_description(
 			__( 'Turning this on will attempt SSO on wp-login.php. ', 'wp-auth0' ) .

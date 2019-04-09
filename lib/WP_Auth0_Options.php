@@ -242,7 +242,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 
 			// Features
 			'sso'                       => 0,
-			'singlelogout'              => 0,
+			'singlelogout'              => 1,
 			'override_wp_avatars'       => 1,
 
 			// Appearance
