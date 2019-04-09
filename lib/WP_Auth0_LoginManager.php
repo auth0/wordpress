@@ -159,7 +159,7 @@ class WP_Auth0_LoginManager {
 
 		// Not an Auth0 login process or settings are not configured to allow logins.
 		if ( ! $this->query_vars( 'auth0' ) || ! WP_Auth0::ready() ) {
-			return;
+			return false;
 		}
 
 		// Catch any incoming errors and stop the login process.
@@ -196,32 +196,32 @@ class WP_Auth0_LoginManager {
 		} catch ( WP_Auth0_BeforeLoginException $e ) {
 
 			// Errors encountered during the WordPress login flow.
-			$this->die_on_login( $e->getMessage(), $e->getCode(), false );
+			$this->die_on_login( $e->getMessage(), $e->getCode() );
 		} catch ( DomainException $e ) {
 
 			// JWT:decode error - Algorithm was not provided.
-			$this->die_on_login( __( 'Invalid ID token (no algorithm)', 'wp-auth0' ), $e->getCode(), false );
+			$this->die_on_login( __( 'Invalid ID token (no algorithm)', 'wp-auth0' ), $e->getCode() );
 		} catch ( InvalidArgumentException $e ) {
 
 			// JWT:decode error - Key provided to decode was empty.
-			$this->die_on_login( __( 'Invalid ID token (failed signature verification)', 'wp-auth0' ), $e->getCode(), false );
+			$this->die_on_login( __( 'Invalid ID token (failed signature verification)', 'wp-auth0' ), $e->getCode() );
 		} catch ( SignatureInvalidException $e ) {
 
 			// JWT:decode error - Provided JWT was invalid because the signature verification failed.
-			$this->die_on_login( __( 'Invalid ID token (failed signature verification)', 'wp-auth0' ), $e->getCode(), false );
+			$this->die_on_login( __( 'Invalid ID token (failed signature verification)', 'wp-auth0' ), $e->getCode() );
 		} catch ( BeforeValidException $e ) {
 
 			// JWT:decode error - Provided JWT is trying to be used before it's eligible as defined by 'nbf'.
 			// JWT:decode error - Provided JWT is trying to be used before it's been created as defined by 'iat'.
-			$this->die_on_login( __( 'Invalid ID token (used too early)', 'wp-auth0' ), $e->getCode(), false );
+			$this->die_on_login( __( 'Invalid ID token (used too early)', 'wp-auth0' ), $e->getCode() );
 		} catch ( ExpiredException $e ) {
 
 			// JWT:decode error - Provided JWT has since expired, as defined by the 'exp' claim.
-			$this->die_on_login( __( 'Expired ID token', 'wp-auth0' ), $e->getCode(), false );
+			$this->die_on_login( __( 'Expired ID token', 'wp-auth0' ), $e->getCode() );
 		} catch ( UnexpectedValueException $e ) {
 
 			// JWT:decode error - Provided JWT was invalid.
-			$this->die_on_login( __( 'Invalid ID token', 'wp-auth0' ), $e->getCode(), false );
+			$this->die_on_login( __( 'Invalid ID token', 'wp-auth0' ), $e->getCode() );
 		}
 	}
 
@@ -567,12 +567,7 @@ class WP_Auth0_LoginManager {
 		// If SSO/SLO is in use, redirect to Auth0 to logout there as well.
 		if ( $is_sso || $is_slo ) {
 			$return_to    = apply_filters( 'auth0_slo_return_to', home_url() );
-			$redirect_url = sprintf(
-				'https://%s/v2/logout?returnTo=%s&client_id=%s',
-				$this->a0_options->get_auth_domain(),
-				rawurlencode( $return_to ),
-				$this->a0_options->get( 'client_id' )
-			);
+			$redirect_url = $this->auth0_logout_url( $return_to );
 			$redirect_url = apply_filters( 'auth0_logout_url', $redirect_url );
 			wp_redirect( $redirect_url );
 			exit;
@@ -745,26 +740,27 @@ class WP_Auth0_LoginManager {
 	 *
 	 * @param string     $msg - translated error message to display.
 	 * @param string|int $code - error code, if given.
-	 * @param bool       $login_link - TRUE for login link, FALSE for logout link.
 	 */
-	protected function die_on_login( $msg = '', $code = 0, $login_link = true ) {
+	protected function die_on_login( $msg = '', $code = 0 ) {
+
+		// Log the user out completely.
+		wp_destroy_current_session();
+		wp_clear_auth_cookie();
+		wp_set_current_user( 0 );
+
 		$html = sprintf(
 			'%s: %s [%s: %s]<br><br><a href="%s">%s</a>',
-			$login_link
-				? __( 'There was a problem with your log in', 'wp-auth0' )
-				: __( 'You have logged in successfully, but there is a problem accessing this site', 'wp-auth0' ),
+			__( 'There was a problem with your log in', 'wp-auth0' ),
 			! empty( $msg )
 				? sanitize_text_field( $msg )
 				: __( 'Please see the site administrator', 'wp-auth0' ),
 			__( 'error code', 'wp-auth0' ),
 			$code ? sanitize_text_field( $code ) : __( 'unknown', 'wp-auth0' ),
-			$login_link ? add_query_arg( 'skip_sso', '', wp_login_url() ) : wp_logout_url(),
-			$login_link
-				? __( '← Login', 'wp-auth0' )
-				: __( '← Logout', 'wp-auth0' )
+			$this->auth0_logout_url( add_query_arg( 'skip_sso', '', wp_login_url() ) ),
+			__( '← Login', 'wp-auth0' )
 		);
 
-		$html = apply_filters( 'auth0_die_on_login_output', $html, $msg, $code, $login_link );
+		$html = apply_filters( 'auth0_die_on_login_output', $html, $msg, $code, false );
 		wp_die( $html );
 	}
 
@@ -787,6 +783,27 @@ class WP_Auth0_LoginManager {
 			$id_token_obj->sub = $id_token_obj->user_id;
 		}
 		return $id_token_obj;
+	}
+
+	/**
+	 * Generate the Auth0 logout URL.
+	 *
+	 * @param null $return_to - Site URL to return to after logging out.
+	 *
+	 * @return string
+	 *
+	 * @codeCoverageIgnore - Private method
+	 */
+	private function auth0_logout_url( $return_to = null ) {
+		if ( ! $return_to ) {
+			$return_to = home_url();
+		}
+		return sprintf(
+			'https://%s/v2/logout?client_id=%s&returnTo=%s',
+			$this->a0_options->get_auth_domain(),
+			$this->a0_options->get( 'client_id' ),
+			rawurlencode( $return_to )
+		);
 	}
 
 	/*
