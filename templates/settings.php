@@ -27,7 +27,7 @@
 				</li>
 				<li role="presentation">
 					<a id="tab-appearance" href="#appearance" aria-controls="appearance" role="tab" data-toggle="tab" class="js-a0-settings-tabs">
-						<?php _e( 'Appearance', 'wp-auth0' ); ?>
+						<?php _e( 'Embedded', 'wp-auth0' ); ?>
 					</a>
 				</li>
 				<li role="presentation">

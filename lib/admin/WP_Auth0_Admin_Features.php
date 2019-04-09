@@ -56,12 +56,6 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 				'function' => 'render_sso',
 			),
 			array(
-				'name'     => __( 'Passwordless Login', 'wp-auth0' ),
-				'opt'      => 'passwordless_enabled',
-				'id'       => 'wpa0_passwordless_enabled',
-				'function' => 'render_passwordless_enabled',
-			),
-			array(
 				'name'     => __( 'Multifactor Authentication (MFA)', 'wp-auth0' ),
 				'opt'      => 'mfa',
 				'id'       => 'wpa0_mfa',
@@ -197,10 +191,14 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `passwordless_enabled` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated - 3.10.0, moved to Appearance section.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_passwordless_enabled( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );

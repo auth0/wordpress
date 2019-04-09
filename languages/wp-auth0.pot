@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Login by Auth0\n"
-"POT-Creation-Date: 2019-04-01 09:53-0700\n"
+"POT-Creation-Date: 2019-04-09 13:41-0700\n"
 "PO-Revision-Date: 2018-07-25 08:37-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -21,7 +21,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: WP_Auth0.php:505 WP_Auth0.php:527 WP_Auth0.php:569 lib/WP_Auth0_Amplificator.php:25
+#: WP_Auth0.php:504 WP_Auth0.php:526 WP_Auth0.php:568 lib/WP_Auth0_Amplificator.php:25
 #: lib/WP_Auth0_Api_Client.php:76 lib/WP_Auth0_Api_Client.php:151
 #: lib/WP_Auth0_Api_Client.php:197 lib/WP_Auth0_Api_Client.php:281
 #: lib/WP_Auth0_Api_Client.php:388 lib/WP_Auth0_Api_Client.php:428
@@ -35,12 +35,12 @@ msgstr ""
 #: lib/WP_Auth0_Api_Client.php:1300 lib/WP_Auth0_Api_Client.php:1343
 #: lib/WP_Auth0_Api_Operations.php:17 lib/WP_Auth0_Api_Operations.php:106
 #: lib/WP_Auth0_Api_Operations.php:156 lib/WP_Auth0_Api_Operations.php:200
-#: lib/WP_Auth0_Configure_JWTAUTH.php:54 lib/WP_Auth0_EditProfile.php:218
-#: lib/WP_Auth0_EditProfile.php:237 lib/WP_Auth0_EditProfile.php:300
-#: lib/WP_Auth0_EditProfile.php:320 lib/WP_Auth0_EditProfile.php:351
-#: lib/WP_Auth0_EditProfile.php:404 lib/WP_Auth0_EditProfile.php:459
-#: lib/WP_Auth0_EditProfile.php:516 lib/WP_Auth0_Email_Verification.php:114
-#: lib/WP_Auth0_ErrorLog.php:134 lib/WP_Auth0_Export_Users.php:27
+#: lib/WP_Auth0_Configure_JWTAUTH.php:54 lib/WP_Auth0_EditProfile.php:221
+#: lib/WP_Auth0_EditProfile.php:240 lib/WP_Auth0_EditProfile.php:303
+#: lib/WP_Auth0_EditProfile.php:323 lib/WP_Auth0_EditProfile.php:354
+#: lib/WP_Auth0_EditProfile.php:407 lib/WP_Auth0_EditProfile.php:462
+#: lib/WP_Auth0_EditProfile.php:519 lib/WP_Auth0_Email_Verification.php:115
+#: lib/WP_Auth0_ErrorLog.php:135 lib/WP_Auth0_Export_Users.php:29
 #: lib/WP_Auth0_Lock10_Options.php:39 lib/WP_Auth0_Lock10_Options.php:50
 #: lib/WP_Auth0_Lock10_Options.php:248 lib/WP_Auth0_Lock10_Options.php:265
 #: lib/WP_Auth0_Lock10_Options.php:278 lib/WP_Auth0_Lock10_Options.php:291
@@ -48,30 +48,30 @@ msgstr ""
 #: lib/WP_Auth0_Lock10_Options.php:330 lib/WP_Auth0_Lock10_Options.php:343
 #: lib/WP_Auth0_Lock10_Options.php:356 lib/WP_Auth0_Lock10_Options.php:369
 #: lib/WP_Auth0_Lock10_Options.php:386 lib/WP_Auth0_Lock10_Options.php:405
-#: lib/WP_Auth0_LoginManager.php:603 lib/WP_Auth0_LoginManager.php:628
-#: lib/WP_Auth0_LoginManager.php:807 lib/WP_Auth0_LoginManager.php:834
-#: lib/WP_Auth0_LoginManager.php:880 lib/WP_Auth0_Metrics.php:17
+#: lib/WP_Auth0_LoginManager.php:598 lib/WP_Auth0_LoginManager.php:623
+#: lib/WP_Auth0_LoginManager.php:824 lib/WP_Auth0_LoginManager.php:851
+#: lib/WP_Auth0_LoginManager.php:897 lib/WP_Auth0_Metrics.php:17
 #: lib/WP_Auth0_Options.php:296 lib/WP_Auth0_Options.php:311
 #: lib/WP_Auth0_Options.php:330 lib/WP_Auth0_Referer_Check.php:22
 #: lib/WP_Auth0_SocialAmplification_Widget.php:28
 #: lib/WP_Auth0_SocialAmplification_Widget.php:197 lib/WP_Auth0_UsersRepo.php:29
-#: lib/WP_Auth0_UsersRepo.php:81 lib/admin/WP_Auth0_Admin.php:82
-#: lib/admin/WP_Auth0_Admin_Advanced.php:691 lib/admin/WP_Auth0_Admin_Advanced.php:775
-#: lib/admin/WP_Auth0_Admin_Advanced.php:794 lib/admin/WP_Auth0_Admin_Advanced.php:814
-#: lib/admin/WP_Auth0_Admin_Advanced.php:838 lib/admin/WP_Auth0_Admin_Advanced.php:861
-#: lib/admin/WP_Auth0_Admin_Advanced.php:886 lib/admin/WP_Auth0_Admin_Advanced.php:904
-#: lib/admin/WP_Auth0_Admin_Advanced.php:914 lib/admin/WP_Auth0_Admin_Advanced.php:924
-#: lib/admin/WP_Auth0_Admin_Advanced.php:934 lib/admin/WP_Auth0_Admin_Advanced.php:952
-#: lib/admin/WP_Auth0_Admin_Appearance.php:327 lib/admin/WP_Auth0_Admin_Basic.php:250
+#: lib/WP_Auth0_UsersRepo.php:81 lib/admin/WP_Auth0_Admin.php:87
+#: lib/admin/WP_Auth0_Admin_Advanced.php:681 lib/admin/WP_Auth0_Admin_Advanced.php:765
+#: lib/admin/WP_Auth0_Admin_Advanced.php:784 lib/admin/WP_Auth0_Admin_Advanced.php:804
+#: lib/admin/WP_Auth0_Admin_Advanced.php:828 lib/admin/WP_Auth0_Admin_Advanced.php:851
+#: lib/admin/WP_Auth0_Admin_Advanced.php:876 lib/admin/WP_Auth0_Admin_Advanced.php:894
+#: lib/admin/WP_Auth0_Admin_Advanced.php:904 lib/admin/WP_Auth0_Admin_Advanced.php:914
+#: lib/admin/WP_Auth0_Admin_Advanced.php:924 lib/admin/WP_Auth0_Admin_Advanced.php:942
+#: lib/admin/WP_Auth0_Admin_Appearance.php:499 lib/admin/WP_Auth0_Admin_Basic.php:250
 #: lib/admin/WP_Auth0_Admin_Basic.php:409 lib/admin/WP_Auth0_Admin_Basic.php:419
-#: lib/admin/WP_Auth0_Admin_Basic.php:429 lib/admin/WP_Auth0_Admin_Features.php:127
-#: lib/admin/WP_Auth0_Admin_Features.php:319 lib/admin/WP_Auth0_Admin_Features.php:406
-#: lib/admin/WP_Auth0_Admin_Features.php:454 lib/admin/WP_Auth0_Admin_Features.php:499
-#: lib/admin/WP_Auth0_Admin_Features.php:513 lib/admin/WP_Auth0_Admin_Features.php:538
-#: lib/admin/WP_Auth0_Admin_Features.php:551 lib/admin/WP_Auth0_Admin_Features.php:564
+#: lib/admin/WP_Auth0_Admin_Basic.php:429 lib/admin/WP_Auth0_Admin_Features.php:121
+#: lib/admin/WP_Auth0_Admin_Features.php:318 lib/admin/WP_Auth0_Admin_Features.php:405
+#: lib/admin/WP_Auth0_Admin_Features.php:453 lib/admin/WP_Auth0_Admin_Features.php:498
+#: lib/admin/WP_Auth0_Admin_Features.php:512 lib/admin/WP_Auth0_Admin_Features.php:537
+#: lib/admin/WP_Auth0_Admin_Features.php:550 lib/admin/WP_Auth0_Admin_Features.php:563
 #: lib/admin/WP_Auth0_Admin_Generic.php:107 lib/admin/WP_Auth0_Admin_Generic.php:304
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:65
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:74
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:70
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:79
 #: lib/initial-setup/WP_Auth0_InitialSetup_Connections.php:36
 #: lib/initial-setup/WP_Auth0_InitialSetup_Connections.php:54
 #: lib/initial-setup/WP_Auth0_InitialSetup_Connections.php:92
@@ -143,163 +143,163 @@ msgstr ""
 msgid "To configure it to work with the Auth0 plugin, click here."
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:229
+#: lib/WP_Auth0_DBManager.php:231
 msgid "IMPORTANT!"
 msgstr ""
 
 #. translators: Placeholder is the plugin version.
-#: lib/WP_Auth0_DBManager.php:234
+#: lib/WP_Auth0_DBManager.php:236
 #, php-format
 msgid ""
 "WP-Auth0 has upgraded to %s but could not complete the upgrade in your Auth0 "
 "dashboard."
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:238
+#: lib/WP_Auth0_DBManager.php:240
 msgid "This can be fixed one of 2 ways:"
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:242
+#: lib/WP_Auth0_DBManager.php:244
 msgid "Create a new Management API token"
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:245
+#: lib/WP_Auth0_DBManager.php:247
 msgid "and save it in the Auth0 > Settings > Basic tab > API Token field."
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:246
+#: lib/WP_Auth0_DBManager.php:248
 msgid "This will run the update process again."
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:251
+#: lib/WP_Auth0_DBManager.php:253
 msgid "Review your Application advanced settings"
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:254
+#: lib/WP_Auth0_DBManager.php:256
 msgid "specifically the Grant Types, and "
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:258
+#: lib/WP_Auth0_DBManager.php:260
 msgid "authorize your client for the Management API"
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:261
+#: lib/WP_Auth0_DBManager.php:263
 msgid "to manually complete the setup."
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:263
+#: lib/WP_Auth0_DBManager.php:265
 msgid "This banner will disappear once the process is complete."
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:286
+#: lib/WP_Auth0_DBManager.php:288
 msgid ""
 "As a part of this upgrade, a Client Grant was created for the Auth0 Management API."
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:290
+#: lib/WP_Auth0_DBManager.php:292
 msgid ""
 "Please check the plugin error log for any additional instructions to complete the "
 "upgrade."
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:293 lib/WP_Auth0_Settings_Section.php:63
+#: lib/WP_Auth0_DBManager.php:295 lib/WP_Auth0_Settings_Section.php:65
 #: templates/initial-setup/admin-creation.php:22
 msgid "Error Log"
 msgstr ""
 
-#: lib/WP_Auth0_DBManager.php:315
+#: lib/WP_Auth0_DBManager.php:317
 msgid ""
 "As a part of this upgrade, your Client Grant Types have been updated, if needed."
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:95
+#: lib/WP_Auth0_EditProfile.php:98
 msgid "Are you sure you want to delete the Auth0 user data for this user?"
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:96
+#: lib/WP_Auth0_EditProfile.php:99
 msgid "Deleted"
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:97
+#: lib/WP_Auth0_EditProfile.php:100
 msgid "Action failed, please see the Auth0 error log for details."
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:98
+#: lib/WP_Auth0_EditProfile.php:101
 msgid "Email cannot be changed for non-database connections."
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:152
+#: lib/WP_Auth0_EditProfile.php:155
 msgid ""
 "<strong>ERROR</strong>: You can't change your email if you are using a social "
 "connection."
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:157
+#: lib/WP_Auth0_EditProfile.php:160
 msgid "<strong>ERROR</strong>: The email address is not correct."
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:162
+#: lib/WP_Auth0_EditProfile.php:165
 msgid "<strong>ERROR</strong>: The email address is already used."
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:224
+#: lib/WP_Auth0_EditProfile.php:227
 msgid "<strong>ERROR</strong>: The password does not match"
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:363 lib/WP_Auth0_EditProfile.php:367
-#: lib/profile/WP_Auth0_Profile_Delete_Data.php:63
-#: lib/profile/WP_Auth0_Profile_Delete_Data.php:67
+#: lib/WP_Auth0_EditProfile.php:366 lib/WP_Auth0_EditProfile.php:370
+#: lib/profile/WP_Auth0_Profile_Delete_Data.php:65
+#: lib/profile/WP_Auth0_Profile_Delete_Data.php:69
 msgid "Delete Auth0 Data"
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:380 lib/WP_Auth0_EditProfile.php:434
-#: lib/admin/WP_Auth0_Admin.php:39
+#: lib/WP_Auth0_EditProfile.php:383 lib/WP_Auth0_EditProfile.php:437
+#: lib/admin/WP_Auth0_Admin.php:44
 msgid "Done!"
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:417 lib/WP_Auth0_EditProfile.php:421
+#: lib/WP_Auth0_EditProfile.php:420 lib/WP_Auth0_EditProfile.php:424
 #: lib/profile/WP_Auth0_Profile_Delete_Mfa.php:81
 #: lib/profile/WP_Auth0_Profile_Delete_Mfa.php:85
 msgid "Delete MFA Provider"
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:488
+#: lib/WP_Auth0_EditProfile.php:491
 msgid "New Password"
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:496
+#: lib/WP_Auth0_EditProfile.php:499
 msgid "Repeat Password"
 msgstr ""
 
-#: lib/WP_Auth0_EditProfile.php:544
+#: lib/WP_Auth0_EditProfile.php:547
 msgid "You cannot change your email here if you logged in using a social connection."
 msgstr ""
 
-#: lib/WP_Auth0_Email_Verification.php:51
+#: lib/WP_Auth0_Email_Verification.php:52
 msgid "This site requires a verified email address."
 msgstr ""
 
-#: lib/WP_Auth0_Email_Verification.php:61
+#: lib/WP_Auth0_Email_Verification.php:62
 msgid "Resend verification email."
 msgstr ""
 
-#: lib/WP_Auth0_Email_Verification.php:64 lib/WP_Auth0_LoginManager.php:763
+#: lib/WP_Auth0_Email_Verification.php:65 lib/WP_Auth0_LoginManager.php:760
 msgid "← Login"
 msgstr ""
 
-#: lib/WP_Auth0_Email_Verification.php:68
+#: lib/WP_Auth0_Email_Verification.php:69
 msgid "Something went wrong; please login and try again."
 msgstr ""
 
-#: lib/WP_Auth0_Email_Verification.php:69
+#: lib/WP_Auth0_Email_Verification.php:70
 msgid "Email successfully re-sent to "
 msgstr ""
 
-#: lib/WP_Auth0_Email_Verification.php:89
+#: lib/WP_Auth0_Email_Verification.php:90
 msgid "No Auth0 user ID provided."
 msgstr ""
 
-#: lib/WP_Auth0_Email_Verification.php:93
+#: lib/WP_Auth0_Email_Verification.php:94
 msgid "API call failed."
 msgstr ""
 
@@ -311,8 +311,8 @@ msgstr ""
 msgid "Shows Auth0 login form in your sidebar"
 msgstr ""
 
-#: lib/WP_Auth0_Embed_Widget.php:43 lib/WP_Auth0_WooCommerceOverrides.php:34
-#: templates/login-form.php:40
+#: lib/WP_Auth0_Embed_Widget.php:43 lib/WP_Auth0_WooCommerceOverrides.php:39
+#: templates/login-form.php:41
 msgid "Login"
 msgstr ""
 
@@ -320,11 +320,11 @@ msgstr ""
 msgid "Please check your Auth0 configuration"
 msgstr ""
 
-#: lib/WP_Auth0_ErrorLog.php:146
+#: lib/WP_Auth0_ErrorLog.php:147
 msgid "Not allowed."
 msgstr ""
 
-#: lib/WP_Auth0_ErrorLog.php:150
+#: lib/WP_Auth0_ErrorLog.php:151
 msgid "Not authorized."
 msgstr ""
 
@@ -332,31 +332,31 @@ msgstr ""
 msgid "Unknown error message"
 msgstr ""
 
-#: lib/WP_Auth0_Import_Settings.php:63
+#: lib/WP_Auth0_Import_Settings.php:65
 msgid "The settings file is empty."
 msgstr ""
 
-#: lib/WP_Auth0_Import_Settings.php:76
+#: lib/WP_Auth0_Import_Settings.php:78
 msgid "The settings file is not valid."
 msgstr ""
 
-#: lib/WP_Auth0_Import_Settings.php:99
+#: lib/WP_Auth0_Import_Settings.php:101
 msgid "The file you are uploading is too big."
 msgstr ""
 
-#: lib/WP_Auth0_Import_Settings.php:109
+#: lib/WP_Auth0_Import_Settings.php:111
 msgid "There was an error uploading the file."
 msgstr ""
 
-#: lib/WP_Auth0_Import_Settings.php:121
+#: lib/WP_Auth0_Import_Settings.php:123
 msgid "There was an error importing your settings, please try again."
 msgstr ""
 
-#: lib/WP_Auth0_Import_Settings.php:136
+#: lib/WP_Auth0_Import_Settings.php:138
 msgid "Please upload the Auth0 for WordPress setting file or copy the content."
 msgstr ""
 
-#: lib/WP_Auth0_Import_Settings.php:149
+#: lib/WP_Auth0_Import_Settings.php:151
 msgid "The settings json is not valid."
 msgstr ""
 
@@ -441,28 +441,20 @@ msgid ""
 "your site’s administrator."
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:754
+#: lib/WP_Auth0_LoginManager.php:753
 msgid "There was a problem with your log in"
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:755
-msgid "You have logged in successfully, but there is a problem accessing this site"
-msgstr ""
-
-#: lib/WP_Auth0_LoginManager.php:758
+#: lib/WP_Auth0_LoginManager.php:756
 msgid "Please see the site administrator"
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:759
+#: lib/WP_Auth0_LoginManager.php:757
 msgid "error code"
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:760
+#: lib/WP_Auth0_LoginManager.php:758
 msgid "unknown"
-msgstr ""
-
-#: lib/WP_Auth0_LoginManager.php:764
-msgid "← Logout"
 msgstr ""
 
 #: lib/WP_Auth0_Popup_Widget.php:10
@@ -473,61 +465,61 @@ msgstr ""
 msgid "Shows a button to pop up an Auth0 login form in your sidebar"
 msgstr ""
 
-#: lib/WP_Auth0_Routes.php:182 lib/WP_Auth0_Routes.php:222
+#: lib/WP_Auth0_Routes.php:184 lib/WP_Auth0_Routes.php:224
 msgid "Invalid Credentials"
 msgstr ""
 
-#: lib/WP_Auth0_Routes.php:281
+#: lib/WP_Auth0_Routes.php:283
 msgid "Unauthorized: missing authorization header"
 msgstr ""
 
-#: lib/WP_Auth0_Routes.php:285
+#: lib/WP_Auth0_Routes.php:287
 msgid "Invalid token"
 msgstr ""
 
-#: lib/WP_Auth0_Routes.php:289
+#: lib/WP_Auth0_Routes.php:291
 msgid "Username is required"
 msgstr ""
 
-#: lib/WP_Auth0_Routes.php:293
+#: lib/WP_Auth0_Routes.php:295
 msgid "Password is required"
 msgstr ""
 
-#: lib/WP_Auth0_Routes.php:310
+#: lib/WP_Auth0_Routes.php:312
 msgid "Unauthorized"
 msgstr ""
 
-#: lib/WP_Auth0_Routes.php:316 lib/profile/WP_Auth0_Profile_Delete_Data.php:93
+#: lib/WP_Auth0_Routes.php:318 lib/profile/WP_Auth0_Profile_Delete_Data.php:95
 #: lib/profile/WP_Auth0_Profile_Delete_Mfa.php:107
 msgid "Forbidden"
 msgstr ""
 
-#: lib/WP_Auth0_Settings_Section.php:52 lib/WP_Auth0_Settings_Section.php:59
+#: lib/WP_Auth0_Settings_Section.php:54 lib/WP_Auth0_Settings_Section.php:61
 msgid "Auth0 for WordPress - Setup Wizard"
 msgstr ""
 
-#: lib/WP_Auth0_Settings_Section.php:52 lib/WP_Auth0_Settings_Section.php:59
-#: lib/admin/WP_Auth0_Admin.php:143
+#: lib/WP_Auth0_Settings_Section.php:54 lib/WP_Auth0_Settings_Section.php:61
+#: lib/admin/WP_Auth0_Admin.php:148
 msgid "Setup Wizard"
 msgstr ""
 
-#: lib/WP_Auth0_Settings_Section.php:53 lib/WP_Auth0_Settings_Section.php:55
+#: lib/WP_Auth0_Settings_Section.php:55 lib/WP_Auth0_Settings_Section.php:57
 msgid "Settings"
 msgstr ""
 
-#: lib/WP_Auth0_Settings_Section.php:57 templates/settings.php:40
+#: lib/WP_Auth0_Settings_Section.php:59 templates/settings.php:40
 msgid "Help"
 msgstr ""
 
-#: lib/WP_Auth0_Settings_Section.php:62
+#: lib/WP_Auth0_Settings_Section.php:64
 msgid "Export Users Data"
 msgstr ""
 
-#: lib/WP_Auth0_Settings_Section.php:64
+#: lib/WP_Auth0_Settings_Section.php:66
 msgid "Import-Export settings"
 msgstr ""
 
-#: lib/WP_Auth0_Settings_Section.php:67
+#: lib/WP_Auth0_Settings_Section.php:69
 msgid "JWT Auth integration"
 msgstr ""
 
@@ -591,35 +583,35 @@ msgstr ""
 msgid "Empty user id"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:36
+#: lib/admin/WP_Auth0_Admin.php:41
 msgid "Choose your icon"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:37
+#: lib/admin/WP_Auth0_Admin.php:42
 msgid "Choose icon"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:38
+#: lib/admin/WP_Auth0_Admin.php:43
 msgid "Working ..."
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:40
+#: lib/admin/WP_Auth0_Admin.php:45
 msgid "Save or refresh this page to see changes."
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:43
+#: lib/admin/WP_Auth0_Admin.php:48
 msgid "Are you sure?"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:141
+#: lib/admin/WP_Auth0_Admin.php:146
 msgid "Login by Auth0 is not yet configured. Please use the "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:144
+#: lib/admin/WP_Auth0_Admin.php:149
 msgid " or follow the "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:145
+#: lib/admin/WP_Auth0_Admin.php:150
 msgid "Manual setup instructions"
 msgstr ""
 
@@ -644,466 +636,513 @@ msgid "Login Redirection URL"
 msgstr ""
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:69
-msgid "Connections to Show"
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Advanced.php:75
 msgid "Force HTTPS Callback"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:81
-msgid "Use Custom Lock JS URL"
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Advanced.php:87
-msgid "Custom Lock JS URL"
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Advanced.php:97
+#: lib/admin/WP_Auth0_Admin_Advanced.php:79
 msgid "Link Users with Same Email"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:106
+#: lib/admin/WP_Auth0_Admin_Advanced.php:88
 msgid "Auto Provisioning"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:112
+#: lib/admin/WP_Auth0_Admin_Advanced.php:94
 msgid "User Migration Endpoints"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:118
+#: lib/admin/WP_Auth0_Admin_Advanced.php:100
 msgid "Migration IPs Whitelist"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:130
+#: lib/admin/WP_Auth0_Admin_Advanced.php:112
 msgid "Auto Login"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:136
+#: lib/admin/WP_Auth0_Admin_Advanced.php:118
 msgid "Implicit Login Flow"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:142
+#: lib/admin/WP_Auth0_Admin_Advanced.php:124
 msgid "Valid Proxy IP"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:148
-msgid "Extra Settings"
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Advanced.php:154
-msgid "Custom Signup Fields"
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Advanced.php:160
+#: lib/admin/WP_Auth0_Admin_Advanced.php:130
 msgid "Auth0 Server Domain"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:191
+#: lib/admin/WP_Auth0_Admin_Advanced.php:161
 msgid "Require new users to both provide and verify their email before logging in. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:192
+#: lib/admin/WP_Auth0_Admin_Advanced.php:162
 msgid ""
 "An email address is verified manually by an email from Auth0 or automatically by the "
 "provider. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:193
+#: lib/admin/WP_Auth0_Admin_Advanced.php:163
 msgid ""
 "This will disallow logins from social connections that do not provide email (like "
 "Twitter)"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:211
+#: lib/admin/WP_Auth0_Admin_Advanced.php:181
 msgid "Enter one or more strategies, separated by commas, to skip email verification. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:212
+#: lib/admin/WP_Auth0_Admin_Advanced.php:182
 msgid ""
 "You can find the strategy under the \"Connection Name\" field in the Auth0 "
 "dashboard. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:213
+#: lib/admin/WP_Auth0_Admin_Advanced.php:183
 msgid "Leave this field blank to require email for all strategies. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:214
+#: lib/admin/WP_Auth0_Admin_Advanced.php:184
 msgid "This could introduce a security risk and should be used sparingly, if at all"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:230
+#: lib/admin/WP_Auth0_Admin_Advanced.php:200
 msgid "A user session by default is kept for two days. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:231
+#: lib/admin/WP_Auth0_Admin_Advanced.php:201
 msgid "Enabling this setting will extend that and make the session be kept for 14 days"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:247
+#: lib/admin/WP_Auth0_Admin_Advanced.php:217
 msgid ""
 "URL where successfully logged-in users are redirected when using the wp-login.php "
 "page. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:248
+#: lib/admin/WP_Auth0_Admin_Advanced.php:218
 msgid "This can be overridden with the <code>redirect_to</code> URL parameter"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:264
+#: lib/admin/WP_Auth0_Admin_Advanced.php:238
+#: lib/admin/WP_Auth0_Admin_Appearance.php:212
 msgid ""
 "Specify which Social, Database, or Passwordless connections to display in the Auth0 "
 "form. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:265
+#: lib/admin/WP_Auth0_Admin_Advanced.php:239
+#: lib/admin/WP_Auth0_Admin_Appearance.php:213
 msgid "If this is empty, all enabled connections for this Application will be shown. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:266
+#: lib/admin/WP_Auth0_Admin_Advanced.php:240
+#: lib/admin/WP_Auth0_Admin_Appearance.php:214
 msgid "Separate multiple connection names with a comma. "
 msgstr ""
 
 #. translators: HTML link to the Auth0 dashboard.
-#: lib/admin/WP_Auth0_Admin_Advanced.php:269
+#: lib/admin/WP_Auth0_Admin_Advanced.php:243
+#: lib/admin/WP_Auth0_Admin_Appearance.php:217
 #, php-format
 msgid "Connections listed here must already be active in your %s"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:272
+#: lib/admin/WP_Auth0_Admin_Advanced.php:246
+#: lib/admin/WP_Auth0_Admin_Appearance.php:220
 msgid " and enabled for this Application. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:273
+#: lib/admin/WP_Auth0_Admin_Advanced.php:247
+#: lib/admin/WP_Auth0_Admin_Appearance.php:221
 msgid "Click on a Connection and use the \"Name\" value in this field"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:289
+#: lib/admin/WP_Auth0_Admin_Advanced.php:263
 msgid "Forces the plugin to use HTTPS for the callback URL when a site supports both; "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:290
+#: lib/admin/WP_Auth0_Admin_Advanced.php:264
 msgid "if disabled, the protocol from the WordPress home URL will be used"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:305
+#: lib/admin/WP_Auth0_Admin_Advanced.php:283
+#: lib/admin/WP_Auth0_Admin_Appearance.php:154
 msgid "Use a custom Lock CDN URL instead of the default. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:309
+#: lib/admin/WP_Auth0_Admin_Advanced.php:287
+#: lib/admin/WP_Auth0_Admin_Appearance.php:158
 msgid "Currently using:"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:327
+#: lib/admin/WP_Auth0_Admin_Advanced.php:309
+#: lib/admin/WP_Auth0_Admin_Appearance.php:176
 msgid ""
 "This should point to the latest Lock JS available in the CDN and rarely needs to "
 "change"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:346 lib/admin/WP_Auth0_Admin_Features.php:276
-#: lib/admin/WP_Auth0_Admin_Features.php:298 lib/admin/WP_Auth0_Admin_Features.php:338
-#: lib/admin/WP_Auth0_Admin_Features.php:359
+#: lib/admin/WP_Auth0_Admin_Advanced.php:328 lib/admin/WP_Auth0_Admin_Features.php:275
+#: lib/admin/WP_Auth0_Admin_Features.php:297 lib/admin/WP_Auth0_Admin_Features.php:337
+#: lib/admin/WP_Auth0_Admin_Features.php:358
 msgid "This feature may currently be active. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:347
+#: lib/admin/WP_Auth0_Admin_Advanced.php:329
 msgid "Manage it with the \"Account-Linking-Do-Not-Rename\" Rule in the "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:364
+#: lib/admin/WP_Auth0_Admin_Advanced.php:346
 msgid "Create new users in the WordPress database when signups are off. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:365
+#: lib/admin/WP_Auth0_Admin_Advanced.php:347
 msgid ""
 "Signups will not be allowed but successful Auth0 logins will add the user in "
 "WordPress"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:384
+#: lib/admin/WP_Auth0_Admin_Advanced.php:366
 msgid "User migration endpoints activated. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:385
+#: lib/admin/WP_Auth0_Admin_Advanced.php:367
 msgid "See below for the token to use. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:386
+#: lib/admin/WP_Auth0_Admin_Advanced.php:368
 msgid "The custom database scripts need to be configured manually as described "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:397
+#: lib/admin/WP_Auth0_Admin_Advanced.php:379
 msgid "No migration token"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:405
+#: lib/admin/WP_Auth0_Admin_Advanced.php:387
 msgid "This will change your migration token immediately. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:406
+#: lib/admin/WP_Auth0_Admin_Advanced.php:388
 msgid ""
 "The new token must be changed in the custom scripts for your database Connection. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:407
+#: lib/admin/WP_Auth0_Admin_Advanced.php:389
 msgid "Continue?"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:409
+#: lib/admin/WP_Auth0_Admin_Advanced.php:391
 msgid "Generate New Migration Token"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:414
+#: lib/admin/WP_Auth0_Admin_Advanced.php:396
 msgid "User migration endpoints deactivated. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:415
+#: lib/admin/WP_Auth0_Admin_Advanced.php:397
 msgid "Custom database connections can be deactivated in the "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:447
+#: lib/admin/WP_Auth0_Admin_Advanced.php:429
 msgid ""
 "Only requests from these IPs will be allowed to access the migration endpoints. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:448
+#: lib/admin/WP_Auth0_Admin_Advanced.php:430
 msgid "Separate multiple IPs with commas. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:449
+#: lib/admin/WP_Auth0_Admin_Advanced.php:431
 msgid "The following Auth0 IPs are automatically whitelisted: "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:460
+#: lib/admin/WP_Auth0_Admin_Advanced.php:442
 msgid "Please see the \"Universal Login Page\" setting on the Features tab"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:476
+#: lib/admin/WP_Auth0_Admin_Advanced.php:458
 msgid "Turns on implicit login flow, which most sites will not need. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:477
+#: lib/admin/WP_Auth0_Admin_Advanced.php:459
 msgid ""
 "Only enable this if outbound connections to auth0.com are disabled on your server. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:478
+#: lib/admin/WP_Auth0_Admin_Advanced.php:460
 msgid "Your Application should be set to \"Single Page App\" in your "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:480
+#: lib/admin/WP_Auth0_Admin_Advanced.php:462
 msgid " for this setting to work properly. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:481
+#: lib/admin/WP_Auth0_Admin_Advanced.php:463
 msgid "This will limit profile changes and other functionality in the plugin"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:497
+#: lib/admin/WP_Auth0_Admin_Advanced.php:479
 msgid ""
 "Whitelist for proxy and load balancer IPs to enable logins and migration webservices"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:513
+#: lib/admin/WP_Auth0_Admin_Advanced.php:499
+#: lib/admin/WP_Auth0_Admin_Appearance.php:449
 msgid ""
 "Valid JSON for Lock options configuration; will override all options set elsewhere. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:530
+#: lib/admin/WP_Auth0_Admin_Advanced.php:520
+#: lib/admin/WP_Auth0_Admin_Appearance.php:466
 msgid ""
 "Valid array of JSON objects for additional signup fields in the Auth0 signup form. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:533
+#: lib/admin/WP_Auth0_Admin_Advanced.php:523
+#: lib/admin/WP_Auth0_Admin_Appearance.php:469
 msgid "More information and examples"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:550
+#: lib/admin/WP_Auth0_Admin_Advanced.php:540
 msgid "The Auth0 domain used by the setup wizard to fetch your account information"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:570
+#: lib/admin/WP_Auth0_Admin_Advanced.php:560
 msgid "This setting is deprecated and will be removed in the next major version. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:571
+#: lib/admin/WP_Auth0_Admin_Advanced.php:561
 msgid "This will enable the JWT Auth Users Repository override"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:601
+#: lib/admin/WP_Auth0_Admin_Advanced.php:591
 msgid "The Lock JS CDN URL used is not a valid URL."
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:632
+#: lib/admin/WP_Auth0_Admin_Advanced.php:622
 msgid "The Extra settings parameter should be a valid json object"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:732
+#: lib/admin/WP_Auth0_Admin_Advanced.php:722
 msgid "Advanced > \"Login Redirection URL\" cannot point to another site."
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:797
+#: lib/admin/WP_Auth0_Admin_Advanced.php:787
 msgid "Only one range per line! Range format should be as follows (spaces ignored): "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:798
+#: lib/admin/WP_Auth0_Admin_Advanced.php:788
 msgid "<br><code>xx.xx.xx.xx - yy.yy.yy.yy</code>"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:817
+#: lib/admin/WP_Auth0_Admin_Advanced.php:807
 msgid "Twitter app key for the Social Amplification Widget. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:818
+#: lib/admin/WP_Auth0_Admin_Advanced.php:808
 msgid "The app used here needs to have \"read\" and \"write\" permissions. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:821 lib/admin/WP_Auth0_Admin_Advanced.php:844
-#: lib/admin/WP_Auth0_Admin_Advanced.php:869 lib/admin/WP_Auth0_Admin_Advanced.php:892
+#: lib/admin/WP_Auth0_Admin_Advanced.php:811 lib/admin/WP_Auth0_Admin_Advanced.php:834
+#: lib/admin/WP_Auth0_Admin_Advanced.php:859 lib/admin/WP_Auth0_Admin_Advanced.php:882
 msgid "Instructions here"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:841 lib/admin/WP_Auth0_Admin_Advanced.php:889
+#: lib/admin/WP_Auth0_Admin_Advanced.php:831 lib/admin/WP_Auth0_Admin_Advanced.php:879
 msgid "Secret for the app above. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:864
+#: lib/admin/WP_Auth0_Admin_Advanced.php:854
 msgid "Facebook app key for the Social Amplification Widget. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:865
+#: lib/admin/WP_Auth0_Admin_Advanced.php:855
 msgid "The app used here needs to have \"publish_actions\" permission. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:866
+#: lib/admin/WP_Auth0_Admin_Advanced.php:856
 msgid "Used for the Social Amplification Widget. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:23
-msgid "Change the how the embedded Auth0 login form is displayed."
+#: lib/admin/WP_Auth0_Admin_Appearance.php:24
+msgid "Change the how the embedded Auth0 login form is displayed. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:35
+#: lib/admin/WP_Auth0_Admin_Appearance.php:25
+msgid "The settings below will not be applied to the Universal Login Page."
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Appearance.php:37
+msgid "Use Custom Lock JS URL"
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Appearance.php:43
+msgid "Custom Lock JS URL"
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Appearance.php:49
+msgid "Passwordless Login"
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Appearance.php:55
+msgid "Connections to Show"
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Appearance.php:61
 msgid "Icon URL"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:41
+#: lib/admin/WP_Auth0_Admin_Appearance.php:67
 msgid "Form Title"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:47
+#: lib/admin/WP_Auth0_Admin_Appearance.php:73
 msgid "Large Social Buttons"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:53
+#: lib/admin/WP_Auth0_Admin_Appearance.php:79
 msgid "Enable Gravatar Integration"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:59
+#: lib/admin/WP_Auth0_Admin_Appearance.php:85
 msgid "Login Form CSS"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:65
+#: lib/admin/WP_Auth0_Admin_Appearance.php:91
 msgid "Login Form JS"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:71
+#: lib/admin/WP_Auth0_Admin_Appearance.php:97
 msgid "Login Name Style"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:77
+#: lib/admin/WP_Auth0_Admin_Appearance.php:103
 msgid "Primary Color"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:83
+#: lib/admin/WP_Auth0_Admin_Appearance.php:109
 msgid "Language"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:89
+#: lib/admin/WP_Auth0_Admin_Appearance.php:119
 msgid "Language Dictionary"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:109 templates/a0-widget-setup-form.php:82
+#: lib/admin/WP_Auth0_Admin_Appearance.php:128
+msgid "Custom Signup Fields"
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Appearance.php:134
+msgid "Extra Settings"
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Appearance.php:192
+#: lib/admin/WP_Auth0_Admin_Features.php:206
+msgid "Turn on Passwordless login (email or SMS) in the Auth0 form. "
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Appearance.php:193
+#: lib/admin/WP_Auth0_Admin_Features.php:207
+msgid "Passwordless connections are managed in the "
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Appearance.php:195
+#: lib/admin/WP_Auth0_Admin_Features.php:209
+msgid ""
+" and at least one must be active and enabled on this Application for this to work. "
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Appearance.php:196
+#: lib/admin/WP_Auth0_Admin_Features.php:210
+msgid "Username/password login is not enabled when Passwordless is on"
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Appearance.php:236 templates/a0-widget-setup-form.php:82
 msgid "Choose Icon"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:111
+#: lib/admin/WP_Auth0_Admin_Appearance.php:238
 msgid "Icon above the title on the Auth0 login form. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:112
+#: lib/admin/WP_Auth0_Admin_Appearance.php:239
 msgid ""
 "This image works best as a PNG with a transparent background less than 120px tall"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:127
+#: lib/admin/WP_Auth0_Admin_Appearance.php:254
 msgid "Title used on the Auth0 login form"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:141
+#: lib/admin/WP_Auth0_Admin_Appearance.php:268
 msgid "Use large social login buttons on the Auth0 login form"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:156
+#: lib/admin/WP_Auth0_Admin_Appearance.php:283
 msgid "Automatically display an avatar (from Gravatar) on the Auth0 login form"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:175
-#: lib/admin/WP_Auth0_Admin_Appearance.php:202
+#: lib/admin/WP_Auth0_Admin_Appearance.php:302
+#: lib/admin/WP_Auth0_Admin_Appearance.php:329
+#: lib/admin/WP_Auth0_Admin_Appearance.php:432
 msgid "NOTE: This field is deprecated and will be removed in the next major release. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:176
+#: lib/admin/WP_Auth0_Admin_Appearance.php:303
 msgid "Valid CSS to customize the Auth0 login form"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:180
+#: lib/admin/WP_Auth0_Admin_Appearance.php:307
 msgid "Custom styles should be loaded in an external file using the instructions "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:203
+#: lib/admin/WP_Auth0_Admin_Appearance.php:330
 msgid "Valid JS to customize the Auth0 login form"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:207
+#: lib/admin/WP_Auth0_Admin_Appearance.php:334
 msgid "Custom JavaScript should be loaded in an external file using the instructions "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:237
+#: lib/admin/WP_Auth0_Admin_Appearance.php:364
 msgid ""
 "To allow the user to use either email or username to login, leave this as \"Auto.\" "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:238
+#: lib/admin/WP_Auth0_Admin_Appearance.php:365
 msgid "Only database connections that require a username will allow username logins"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:254
+#: lib/admin/WP_Auth0_Admin_Appearance.php:381
 msgid "Primary color for the Auth0 login form in hex format. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:257
+#: lib/admin/WP_Auth0_Admin_Appearance.php:384
 msgid "More information on this settings"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:274
+#: lib/admin/WP_Auth0_Admin_Appearance.php:401
 msgid "The language parameter for the Auth0 login form. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:277
+#: lib/admin/WP_Auth0_Admin_Appearance.php:404
 msgid "Available languages list"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:294
+#: lib/admin/WP_Auth0_Admin_Appearance.php:425
 msgid "The languageDictionary parameter for the Auth0 login form. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:297
+#: lib/admin/WP_Auth0_Admin_Appearance.php:428
 msgid "List of all modifiable options"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Appearance.php:312
+#: lib/admin/WP_Auth0_Admin_Appearance.php:433
+msgid ""
+"Use a languageDictionary property the Extra Settings field below to change text."
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Appearance.php:484
 msgid "The language dictionary parameter should be a valid json object."
 msgstr ""
 
@@ -1294,206 +1333,185 @@ msgid "Settings related to specific features provided by the plugin."
 msgstr ""
 
 #: lib/admin/WP_Auth0_Admin_Features.php:35
-msgid "Single Sign On (SSO)"
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Features.php:41
-msgid "Single Logout"
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Features.php:47
-msgid "Passwordless Login"
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Features.php:53
 msgid "Universal Login Page"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:59
+#: lib/admin/WP_Auth0_Admin_Features.php:41
 msgid "Auto Login Method"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:65
+#: lib/admin/WP_Auth0_Admin_Features.php:47
+msgid "Single Logout"
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Features.php:53
+msgid "Single Sign On (SSO)"
+msgstr ""
+
+#: lib/admin/WP_Auth0_Admin_Features.php:59
 msgid "Multifactor Authentication (MFA)"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:75
+#: lib/admin/WP_Auth0_Admin_Features.php:69
 msgid "FullContact Integration"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:85
+#: lib/admin/WP_Auth0_Admin_Features.php:79
 msgid "Store Geolocation"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:95
+#: lib/admin/WP_Auth0_Admin_Features.php:89
 msgid "Store Zipcode Income"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:103
+#: lib/admin/WP_Auth0_Admin_Features.php:97
 msgid "Override WordPress Avatars"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:144
+#: lib/admin/WP_Auth0_Admin_Features.php:138
 msgid "Password security policy for the database connection used by this application. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:145
+#: lib/admin/WP_Auth0_Admin_Features.php:139
 msgid ""
 "Changing the policy here will change it for all other applications using this "
 "database. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:146
+#: lib/admin/WP_Auth0_Admin_Features.php:140
 msgid "For information on policy levels, see our "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:149
+#: lib/admin/WP_Auth0_Admin_Features.php:143
 msgid "help page on password strength"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:168
+#: lib/admin/WP_Auth0_Admin_Features.php:163
 msgid "This setting is deprecated and will be removed in the next major release. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:169
-msgid "To enable SSO, please use the Universal Login Page setting below. "
+#: lib/admin/WP_Auth0_Admin_Features.php:164
+msgid "To enable SSO, please use the Universal Login Page setting above"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:172
+#: lib/admin/WP_Auth0_Admin_Features.php:167
 msgid "Turning this on will attempt SSO on wp-login.php. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:173
+#: lib/admin/WP_Auth0_Admin_Features.php:168
 msgid "This setting will not affect how shortcodes and widgets work. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:174
+#: lib/admin/WP_Auth0_Admin_Features.php:169
 msgid "For more information, see our "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:175
+#: lib/admin/WP_Auth0_Admin_Features.php:170
 msgid "help page on SSO"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:191
+#: lib/admin/WP_Auth0_Admin_Features.php:186
 msgid "Turning this on will log users out of Auth0 when they log out of WordPress."
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:207
-msgid "Turn on Passwordless login (email or SMS) in the Auth0 form. "
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Features.php:208
-msgid "Passwordless connections are managed in the "
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Features.php:210
-msgid ""
-" and at least one must be active and enabled on this Application for this to work. "
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Features.php:211
-msgid "Username/password login is not enabled when Passwordless is on"
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Features.php:227
+#: lib/admin/WP_Auth0_Admin_Features.php:226
 msgid "Use the Universal Login Page (ULP) for authentication and SSO. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:228
+#: lib/admin/WP_Auth0_Admin_Features.php:227
 msgid ""
 "When turned on, <code>wp-login.php</code> will redirect to the hosted login page. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:229
+#: lib/admin/WP_Auth0_Admin_Features.php:228
 msgid "When turned off, <code>wp-login.php</code> will show an embedded login form. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:230
+#: lib/admin/WP_Auth0_Admin_Features.php:229
 msgid "More on ULP vs embedded here"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:246
+#: lib/admin/WP_Auth0_Admin_Features.php:245
 msgid ""
 "Enter a name here to automatically use a single, specific connection to login . "
 msgstr ""
 
 #. translators: Placeholder is an HTML link to the Auth0 dashboard.
-#: lib/admin/WP_Auth0_Admin_Features.php:249
+#: lib/admin/WP_Auth0_Admin_Features.php:248
 #, php-format
 msgid "Find the method name to use under Connections > [Connection Type] in your %s. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:252
+#: lib/admin/WP_Auth0_Admin_Features.php:251
 msgid ""
 "Click the expand icon and use the value in the \"Name\" field (like \"google-"
 "oauth2\")"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:267
+#: lib/admin/WP_Auth0_Admin_Features.php:266
 msgid ""
 "MFA is a method to verify identity by checking a second factor in addition to the "
 "password. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:268
+#: lib/admin/WP_Auth0_Admin_Features.php:267
 msgid ""
 "This provides an additional layer of security, decreasing the likelihood of "
 "unauthorized access. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:269
+#: lib/admin/WP_Auth0_Admin_Features.php:268
 msgid "To configure MFA for this site, please see this "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:270
+#: lib/admin/WP_Auth0_Admin_Features.php:269
 msgid "help page on MFA"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:277
+#: lib/admin/WP_Auth0_Admin_Features.php:276
 msgid "Manage it with the \"Multifactor-Guardian-Do-Not-Rename\" Rule in the "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:299
+#: lib/admin/WP_Auth0_Admin_Features.php:298
 msgid ""
 "Manage it with the \"Enrich-profile-with-FullContact-Do-Not-Rename\" Rule in the "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:339
+#: lib/admin/WP_Auth0_Admin_Features.php:338
 msgid "Manage it with the \"Store-Geo-Location-Do-Not-Rename\" Rule in the "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:360
+#: lib/admin/WP_Auth0_Admin_Features.php:359
 msgid ""
 "Manage it with the \"Enrich-profile-with-Zipcode-Income-Do-Not-Rename\" Rule in the "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:377
+#: lib/admin/WP_Auth0_Admin_Features.php:376
 msgid "Overrides the WordPress avatar with the Auth0 profile avatar"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:433
+#: lib/admin/WP_Auth0_Admin_Features.php:432
 msgid "The SSO setting for your Application could not be updated automatically. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:434
+#: lib/admin/WP_Auth0_Admin_Features.php:433
 msgid ""
 "Check that \"Use Auth0 instead of the IdP to do Single Sign On\" is turned on in the "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:464
+#: lib/admin/WP_Auth0_Admin_Features.php:463
 msgid "No database connections found for this application. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:465 lib/admin/WP_Auth0_Admin_Features.php:482
+#: lib/admin/WP_Auth0_Admin_Features.php:464 lib/admin/WP_Auth0_Admin_Features.php:481
 msgid "See all database connections"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:480
+#: lib/admin/WP_Auth0_Admin_Features.php:479
 msgid "There was a problem updating the password policy. "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Features.php:481
+#: lib/admin/WP_Auth0_Admin_Features.php:480
 msgid "Please manually review and update the policy. "
 msgstr ""
 
@@ -1537,82 +1555,82 @@ msgid ""
 "the selection.  | <a href=\"%1$s\">Hide</a>"
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:127
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:132
 msgid "There was an error creating the Auth0 App. Check the "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:128
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:153
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:167
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:133
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:158
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:172
 msgid "Error log"
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:129
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:134
 msgid ""
 " for more information. If the problem persists, please create it manually in the "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:130
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:135
 #: templates/initial-setup/connections.php:32
 msgid "Auth0 Dashboard"
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:131
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:136
 msgid " and copy the Client ID and Client Secret."
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:143
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:148
 msgid "There was an error creating the necessary client grants. "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:146
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:151
 msgid ""
 "Go to your Auth0 dashboard > APIs > Auth0 Management API > Machine to Machine "
 "Applications tab and authorize this Application. "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:150
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:155
 msgid "Make sure to add the following scopes: "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:152
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:157
 msgid "You can also check the "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:154
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:168
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:159
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:173
 msgid " for more information."
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:166
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:171
 msgid "There was an error retrieving your Auth0 credentials. Check the "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:169
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:174
 msgid "Please check that your server has internet access and can reach "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:182
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:187
 msgid "The required scoped were rejected."
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:194
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:199
 msgid "Please create your Auth0 account first at "
 msgstr ""
 
-#: lib/profile/WP_Auth0_Profile_Change_Email.php:121
+#: lib/profile/WP_Auth0_Profile_Change_Email.php:123
 msgid "Email suppressed - Auth0 email change failed."
 msgstr ""
 
-#: lib/profile/WP_Auth0_Profile_Change_Password.php:104
+#: lib/profile/WP_Auth0_Profile_Change_Password.php:106
 msgid "Password could not be updated."
 msgstr ""
 
-#: lib/profile/WP_Auth0_Profile_Delete_Data.php:70
+#: lib/profile/WP_Auth0_Profile_Delete_Data.php:72
 msgid "View in Auth0"
 msgstr ""
 
-#: lib/profile/WP_Auth0_Profile_Delete_Data.php:87
+#: lib/profile/WP_Auth0_Profile_Delete_Data.php:89
 #: lib/profile/WP_Auth0_Profile_Delete_Mfa.php:101
 msgid "Empty user_id"
 msgstr ""
@@ -2214,11 +2232,11 @@ msgstr ""
 msgid "More info "
 msgstr ""
 
-#: templates/login-form.php:36
+#: templates/login-form.php:37
 msgid "Auth0 is not configured"
 msgstr ""
 
-#: templates/login-form.php:37
+#: templates/login-form.php:38
 msgid "Auth0 cannot find node with id "
 msgstr ""
 
@@ -2243,7 +2261,7 @@ msgid "Features"
 msgstr ""
 
 #: templates/settings.php:30
-msgid "Appearance"
+msgid "Embedded"
 msgstr ""
 
 #: templates/settings.php:35

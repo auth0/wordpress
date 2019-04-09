@@ -20,7 +20,9 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 */
 	public function __construct( WP_Auth0_Options_Generic $options ) {
 		parent::__construct( $options );
-		$this->_description = __( 'Change the how the embedded Auth0 login form is displayed.', 'wp-auth0' );
+		$this->_description =
+			__( 'Change the how the embedded Auth0 login form is displayed. ', 'wp-auth0' ) .
+			__( 'The settings below will not be applied to the Universal Login Page.', 'wp-auth0' );
 	}
 
 	/**
@@ -31,6 +33,30 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 */
 	public function init() {
 		$options = array(
+			array(
+				'name'     => __( 'Use Custom Lock JS URL', 'wp-auth0' ),
+				'opt'      => 'custom_cdn_url',
+				'id'       => 'wpa0_custom_cdn_url',
+				'function' => 'render_custom_cdn_url',
+			),
+			array(
+				'name'     => __( 'Custom Lock JS URL', 'wp-auth0' ),
+				'opt'      => 'cdn_url',
+				'id'       => 'wpa0_cdn_url',
+				'function' => 'render_cdn_url',
+			),
+			array(
+				'name'     => __( 'Passwordless Login', 'wp-auth0' ),
+				'opt'      => 'passwordless_enabled',
+				'id'       => 'wpa0_passwordless_enabled',
+				'function' => 'render_passwordless_enabled',
+			),
+			array(
+				'name'     => __( 'Connections to Show', 'wp-auth0' ),
+				'opt'      => 'lock_connections',
+				'id'       => 'wpa0_connections',
+				'function' => 'render_connections',
+			),
 			array(
 				'name'     => __( 'Icon URL', 'wp-auth0' ),
 				'opt'      => 'icon_url',
@@ -85,14 +111,115 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 				'id'       => 'wpa0_language',
 				'function' => 'render_language',
 			),
-			array(
+		);
+
+		// TODO: Remove this once feature has been removed
+		if ( $this->options->get( 'language_dictionary' ) ) {
+			$options[] = array(
 				'name'     => __( 'Language Dictionary', 'wp-auth0' ),
 				'opt'      => 'language_dictionary',
 				'id'       => 'wpa0_language_dictionary',
 				'function' => 'render_language_dictionary',
+			);
+		}
+
+		$options = $options + array(
+			( count( $options ) ) => array(
+				'name'     => __( 'Custom Signup Fields', 'wp-auth0' ),
+				'opt'      => 'custom_signup_fields',
+				'id'       => 'wpa0_custom_signup_fields',
+				'function' => 'render_custom_signup_fields',
+			),
+			array(
+				'name'     => __( 'Extra Settings', 'wp-auth0' ),
+				'opt'      => 'extra_conf',
+				'id'       => 'wpa0_extra_conf',
+				'function' => 'render_extra_conf',
 			),
 		);
 		$this->init_option_section( '', 'appearance', $options );
+	}
+
+	/**
+	 * Render form field and description for the `custom_cdn_url` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_custom_cdn_url( $args = array() ) {
+		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_cdn_url' );
+		$this->render_field_description( __( 'Use a custom Lock CDN URL instead of the default. ', 'wp-auth0' ) );
+
+		if ( ! $this->options->get( $args['opt_name'] ) ) {
+			$this->render_field_description(
+				__( 'Currently using:', 'wp-auth0' ) .
+				' <code>' . WPA0_LOCK_CDN_URL . '</code>'
+			);
+		}
+	}
+
+	/**
+	 * Render form field and description for the `cdn_url` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_cdn_url( $args = array() ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'url' );
+		$this->render_field_description(
+			__( 'This should point to the latest Lock JS available in the CDN and rarely needs to change', 'wp-auth0' )
+		);
+	}
+
+	/**
+	 * Render form field and description for the `passwordless_enabled` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_passwordless_enabled( $args = array() ) {
+		$this->render_switch( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Turn on Passwordless login (email or SMS) in the Auth0 form. ', 'wp-auth0' ) .
+			__( 'Passwordless connections are managed in the ', 'wp-auth0' ) .
+			$this->get_dashboard_link( 'connections/passwordless' ) .
+			__( ' and at least one must be active and enabled on this Application for this to work. ', 'wp-auth0' ) .
+			__( 'Username/password login is not enabled when Passwordless is on', 'wp-auth0' )
+		);
+	}
+
+	/**
+	 * Render form field and description for the `lock_connections` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_connections( $args = array() ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'eg: "sms, google-oauth2, github"' );
+		$this->render_field_description(
+			__( 'Specify which Social, Database, or Passwordless connections to display in the Auth0 form. ', 'wp-auth0' ) .
+			__( 'If this is empty, all enabled connections for this Application will be shown. ', 'wp-auth0' ) .
+			__( 'Separate multiple connection names with a comma. ', 'wp-auth0' ) .
+			sprintf(
+				// translators: HTML link to the Auth0 dashboard.
+				__( 'Connections listed here must already be active in your %s', 'wp-auth0' ),
+				$this->get_dashboard_link( 'connections/social' )
+			) .
+			__( ' and enabled for this Application. ', 'wp-auth0' ) .
+			__( 'Click on a Connection and use the "Name" value in this field', 'wp-auth0' )
+		);
 	}
 
 	/**
@@ -283,10 +410,14 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `language_dictionary` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated - 3.10.0, will be combined with the Extra Settings field below in the next major.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnores - Deprecated.
 	 */
 	public function render_language_dictionary( $args = array() ) {
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
@@ -295,6 +426,47 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 			sprintf(
 				'<a href="https://github.com/auth0/lock/blob/master/src/i18n/en.js" target="_blank">%s</a>',
 				__( 'List of all modifiable options', 'wp-auth0' )
+			)
+		);
+		$this->render_field_description(
+			__( 'NOTE: This field is deprecated and will be removed in the next major release. ', 'wp-auth0' ) .
+			__( 'Use a languageDictionary property the Extra Settings field below to change text.', 'wp-auth0' )
+		);
+	}
+
+	/**
+	 * Render form field and description for the `extra_conf` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_extra_conf( $args = array() ) {
+		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Valid JSON for Lock options configuration; will override all options set elsewhere. ', 'wp-auth0' ) .
+			$this->get_docs_link( 'libraries/lock/customization', 'See options and examples' )
+		);
+	}
+
+	/**
+	 * Render form field and description for the `custom_signup_fields` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_custom_signup_fields( $args = array() ) {
+		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Valid array of JSON objects for additional signup fields in the Auth0 signup form. ', 'wp-auth0' ) .
+			$this->get_docs_link(
+				'libraries/lock/v11/configuration#additionalsignupfields-array-',
+				__( 'More information and examples', 'wp-auth0' )
 			)
 		);
 	}

@@ -66,28 +66,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_default_login_redirection',
 			),
 			array(
-				'name'     => __( 'Connections to Show', 'wp-auth0' ),
-				'opt'      => 'lock_connections',
-				'id'       => 'wpa0_connections',
-				'function' => 'render_connections',
-			),
-			array(
 				'name'     => __( 'Force HTTPS Callback', 'wp-auth0' ),
 				'opt'      => 'force_https_callback',
 				'id'       => 'wpa0_force_https_callback',
 				'function' => 'render_force_https_callback',
-			),
-			array(
-				'name'     => __( 'Use Custom Lock JS URL', 'wp-auth0' ),
-				'opt'      => 'custom_cdn_url',
-				'id'       => 'wpa0_custom_cdn_url',
-				'function' => 'render_custom_cdn_url',
-			),
-			array(
-				'name'     => __( 'Custom Lock JS URL', 'wp-auth0' ),
-				'opt'      => 'cdn_url',
-				'id'       => 'wpa0_cdn_url',
-				'function' => 'render_cdn_url',
 			),
 		);
 
@@ -143,18 +125,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'opt'      => 'valid_proxy_ip',
 				'id'       => 'wpa0_valid_proxy_ip',
 				'function' => 'render_valid_proxy_ip',
-			),
-			array(
-				'name'     => __( 'Extra Settings', 'wp-auth0' ),
-				'opt'      => 'extra_conf',
-				'id'       => 'wpa0_extra_conf',
-				'function' => 'render_extra_conf',
-			),
-			array(
-				'name'     => __( 'Custom Signup Fields', 'wp-auth0' ),
-				'opt'      => 'custom_signup_fields',
-				'id'       => 'wpa0_custom_signup_fields',
-				'function' => 'render_custom_signup_fields',
 			),
 			array(
 				'name'     => __( 'Auth0 Server Domain', 'wp-auth0' ),
@@ -253,10 +223,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `lock_connections` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated - 3.10.0, moved to Features section.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_connections( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'eg: "sms, google-oauth2, github"' );
@@ -295,10 +269,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `custom_cdn_url` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated - 3.10.0, moved to Features section.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_custom_cdn_url( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_cdn_url' );
@@ -316,10 +294,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `cdn_url` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated - 3.10.0, moved to Features section.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_cdn_url( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'url' );
@@ -502,10 +484,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `extra_conf` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated - 3.10.0, moved to Features section.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_extra_conf( $args = array() ) {
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
@@ -519,10 +505,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `custom_signup_fields` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated - 3.10.0, moved to Features section.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_custom_signup_fields( $args = array() ) {
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
