@@ -40,7 +40,7 @@
         "test": "\"vendor/bin/phpunit\" --coverage-text",
         "test-group": "\"vendor/bin/phpunit\" --coverage-text --group",
         "test-ci": "\"vendor/bin/phpunit\" --debug --coverage-clover=coverage.xml",
-        "pre-commit": [ "@compat", "@phpcbf", "@phpcbf-tests", "@phpcs-tests", "@test" ]
+        "pre-commit": [ "@compat", "@phpcs-i18n", "@phpcbf", "@phpcbf-tests", "@phpcs-tests", "@test" ]
     },
     "autoload": {
         "classmap": ["tests/classes/", "tests/traits/"]
