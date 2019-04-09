@@ -12,7 +12,8 @@ function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = array()
 		// If we're on wp-login.php and SSO is enabled, load Auth0.js.
 		$check_sso = $GLOBALS['pagenow'] === 'wp-login.php' && $use_sso;
 		if ( $check_sso ) {
-			wp_enqueue_script( 'wpa0_auth0js', $options->get( 'auth0js-cdn' ), false, null, true );
+			$auth0_js_url = apply_filters( 'auth0_sso_auth0js_url', WPA0_AUTH0_JS_CDN_URL );
+			wp_enqueue_script( 'wpa0_auth0js', $auth0_js_url, false, null, true );
 		}
 
 		wp_enqueue_script( 'wpa0_lock', $options->get_lock_url(), array( 'jquery' ), false, true );
