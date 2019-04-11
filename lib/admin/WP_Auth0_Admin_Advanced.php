@@ -457,9 +457,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$this->render_field_description(
 			__( 'Turns on implicit login flow, which most sites will not need. ', 'wp-auth0' ) .
 			__( 'Only enable this if outbound connections to auth0.com are disabled on your server. ', 'wp-auth0' ) .
-			__( 'Your Application should be set to "Single Page App" in your ', 'wp-auth0' ) .
-			$this->get_dashboard_link( 'clients' ) .
-			__( ' for this setting to work properly. ', 'wp-auth0' ) .
 			__( 'This will limit profile changes and other functionality in the plugin', 'wp-auth0' )
 		);
 	}
