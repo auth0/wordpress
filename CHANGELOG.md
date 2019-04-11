@@ -1,9 +1,9 @@
 # Change Log
 
-## [3.9.0](https://github.com/auth0/wp-auth0/tree/3.10.0) (2019-04-XX)
+## [3.10.0](https://github.com/auth0/wp-auth0/tree/3.10.0) (2019-04-XX)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.9.0...3.10.0)
 
-### Notes on this release
+**Notes on this release**
 
 - The "Single Sign-On" setting has been deprecated and will be removed in the next major release. This setting is used to attempt SSO on the `wp-login.php`. To use SSO going forward, please activate the "Universal Login Page" setting in the **Features** tab of the plugin settings. If you are already using the Universal Login Page on your site then expect no changes in functionality.
 - The "Single Logout" functionality has been changed. This setting now logs users out of Auth0 automatically when they log out of WordPress. It no longer logs users out of WordPress automatically if they have already been logged out of Auth0.
@@ -20,13 +20,66 @@
 - An Auth0 login form (or link to login) will now appear on the WooCommerce Checkout page for sites that allow or require an account to check out.  
 - The connection with the WP JWT Auth plugin has been deprecated and will be removed in the next major.
 
-### Notes for developers
+**Notes for developers**
 
 - As mentioned above, a Management API token can no longer be provided manually (except in the Setup Wizard). The token is now obtained automatically using a Client Credentials grant and stored in a transient along with the allowed scopes. You can get the existing token with `WP_Auth0_Api_Client_Credentials::get_stored_token()` and check for necessary scopes with `WP_Auth0_Api_Client_Credentials::check_stored_scope()`. If you need to get a new token, use `\WP_Auth0_Api_Client_Credentials::call()`.
 - If you are using any of the `WP_Auth_*` classes in a custom plugin or theme, please note that there have been many deprecations in the last several releases. All deprecated classes, methods, and functions will be removed in the next major release so please review your custom code and make the appropriate changes. 
 - The `auth0_sso_auth0js_url` filter has been added that lets you override the default CDN URL for Auth0.js when doing an SSO check on the `wp-login.php` page.
 - The `auth0_coo_auth0js_url` filter has been added that lets you override the default CDN URL for Auth0.js when loading the COO fallback page.
 - The `auth0_slo_return_to` filter has been added that lets you override the default `returnTo` URL when logging out of Auth0.
+
+**Closed issues**
+- Sign in with OTP MFA doesn't work unless "Remember this browser" is enabled [\#667](https://github.com/auth0/wp-auth0/issues/667)
+- WP_Auth0_Routes::migration_ws_login, 401	Invalid Credentials [\#633](https://github.com/auth0/wp-auth0/issues/633)
+- OpenSSL error in WP_Auth0_Api_Client_Credentials::call [\#631](https://github.com/auth0/wp-auth0/issues/631)
+- 1Password Compatibility [\#627](https://github.com/auth0/wp-auth0/issues/627)
+- User Migration set as PHP constant causes token to not be generated [\#620](https://github.com/auth0/wp-auth0/issues/620)
+
+**Added**
+- Add wp_auth0_get_option function to get option values [\#665](https://github.com/auth0/wp-auth0/pull/665) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update translations [\#663](https://github.com/auth0/wp-auth0/pull/663) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add new options for WordPress Login Enabled [\#642](https://github.com/auth0/wp-auth0/pull/642) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add ability to generate a new migration token [\#640](https://github.com/auth0/wp-auth0/pull/640) ([joshcanhelp](https://github.com/joshcanhelp))
+- add auto-redirect if it is set for woocommerce pages too [\#630](https://github.com/auth0/wp-auth0/pull/630) ([mostekcm](https://github.com/mostekcm))
+
+**Changed**
+- Combine all Lock-related settings on an Embedded tab [\#668](https://github.com/auth0/wp-auth0/pull/668) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change API scopes needed in the Setup Wizard [\#650](https://github.com/auth0/wp-auth0/pull/650) ([joshcanhelp](https://github.com/joshcanhelp))
+- Set OIDC conformant for new installs [\#649](https://github.com/auth0/wp-auth0/pull/649) ([joshcanhelp](https://github.com/joshcanhelp))
+- Do not store the API token on install [\#639](https://github.com/auth0/wp-auth0/pull/639) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change ULP setting to be on by default [\#638](https://github.com/auth0/wp-auth0/pull/638) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update Lock, Auth0.js; add setting to use default [\#635](https://github.com/auth0/wp-auth0/pull/635) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove CSS and JS fields for new installs and ones an without existing value [\#634](https://github.com/auth0/wp-auth0/pull/634) ([joshcanhelp](https://github.com/joshcanhelp))
+- Do not update Auth0 Application when SSO is turned on [\#625](https://github.com/auth0/wp-auth0/pull/625) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Deprecated**
+- Deprecate WP_Auth0_Options_Generic class [\#669](https://github.com/auth0/wp-auth0/pull/669) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecations for render_sso method [\#662](https://github.com/auth0/wp-auth0/pull/662) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecations for init functions calling add_action or add_filter [\#661](https://github.com/auth0/wp-auth0/pull/661) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecations for API token handling [\#660](https://github.com/auth0/wp-auth0/pull/660) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate methods that control field rendering and validation [\#659](https://github.com/auth0/wp-auth0/pull/659) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP_Auth0_Profile_Delete_Mfa and WP_Auth0_Api_Delete_User_Mfa [\#658](https://github.com/auth0/wp-auth0/pull/658) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP_Auth0_Api_Client methods [\#657](https://github.com/auth0/wp-auth0/pull/657) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP_Auth0_Api_Operations methods [\#656](https://github.com/auth0/wp-auth0/pull/656) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP_Auth0_LoginManager methods [\#655](https://github.com/auth0/wp-auth0/pull/655) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP_Auth0_Lock10_Options class [\#654](https://github.com/auth0/wp-auth0/pull/654) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP_Auth0_RulesLib class [\#653](https://github.com/auth0/wp-auth0/pull/653) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP_Auth0_UsersRepo methods [\#652](https://github.com/auth0/wp-auth0/pull/652) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove automatic client grant creation [\#637](https://github.com/auth0/wp-auth0/pull/637) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP JWT Auth plugin configuration [\#636](https://github.com/auth0/wp-auth0/pull/636) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Removed**
+- Remove auto-logout; deprecation notice for SSO setting [\#651](https://github.com/auth0/wp-auth0/pull/651) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove Delete MFA control on user profile; add link to user in dashboard [\#644](https://github.com/auth0/wp-auth0/pull/644) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove auth0_app_token setting [\#641](https://github.com/auth0/wp-auth0/pull/641) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove password policy admin setting [\#629](https://github.com/auth0/wp-auth0/pull/629) ([joshcanhelp](https://github.com/joshcanhelp))
+- Replace Rules-based settings with prompt to the dashboard [SDK-474] [\#624](https://github.com/auth0/wp-auth0/pull/624) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Redirect to logout of Auth0 on callback error [\#666](https://github.com/auth0/wp-auth0/pull/666) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix all translate-able text issues [\#648](https://github.com/auth0/wp-auth0/pull/648) ([joshcanhelp](https://github.com/joshcanhelp))
+- Better Management API token handling [\#632](https://github.com/auth0/wp-auth0/pull/632) ([joshcanhelp](https://github.com/joshcanhelp))
+- clarify that custom sign up fields should be an array [\#626](https://github.com/auth0/wp-auth0/pull/626) ([ShayMe21](https://github.com/ShayMe21))
 
 ## [3.9.0](https://github.com/auth0/wp-auth0/tree/3.9.0) (2019-01-11)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.8.1...3.9.0)
