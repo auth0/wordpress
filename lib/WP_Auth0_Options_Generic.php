@@ -7,6 +7,8 @@
 
 /**
  * Class WP_Auth0_Options_Generic.
+ *
+ * @deprecated - 3.10.0, will be merged into WP_Auth0_Options on the next major.
  */
 class WP_Auth0_Options_Generic {
 
@@ -34,6 +36,8 @@ class WP_Auth0_Options_Generic {
 	/**
 	 * WP_Auth0_Options_Generic constructor.
 	 * Finds and stores all constant-defined settings values.
+	 *
+	 * @deprecated - 3.10.0, will be merged into WP_Auth0_Options on the next major.
 	 */
 	public function __construct() {
 		$option_keys = $this->get_defaults( true );
