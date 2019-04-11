@@ -16,9 +16,9 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	/**
 	 * WP_Auth0_Admin_Appearance constructor.
 	 *
-	 * @param WP_Auth0_Options_Generic $options
+	 * @param WP_Auth0_Options $options
 	 */
-	public function __construct( WP_Auth0_Options_Generic $options ) {
+	public function __construct( WP_Auth0_Options $options ) {
 		parent::__construct( $options );
 		$this->_description =
 			__( 'Change the how the embedded Auth0 login form is displayed. ', 'wp-auth0' ) .
