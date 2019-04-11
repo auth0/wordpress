@@ -34,9 +34,6 @@ class TestWPAuth0Options extends WP_Auth0_Test_Case {
 		// Make sure the number of options has not changed unintentionally.
 		$this->assertEquals( self::DEFAULT_OPTIONS_COUNT, count( $opts->get_options() ) );
 		$this->assertEquals( self::DEFAULT_OPTIONS_COUNT, count( $opts->get_defaults() ) );
-
-		$opts_generic = new WP_Auth0_Options_Generic();
-		$this->assertEmpty( $opts_generic->get_defaults() );
 	}
 
 	/**

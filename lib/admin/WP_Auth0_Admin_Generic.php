@@ -15,9 +15,9 @@ class WP_Auth0_Admin_Generic {
 	/**
 	 * WP_Auth0_Admin_Generic constructor.
 	 *
-	 * @param WP_Auth0_Options_Generic $options
+	 * @param WP_Auth0_Options $options
 	 */
-	public function __construct( WP_Auth0_Options_Generic $options ) {
+	public function __construct( WP_Auth0_Options $options ) {
 		$this->options      = $options;
 		$this->_option_name = $options->get_options_name();
 	}

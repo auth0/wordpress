@@ -18,7 +18,7 @@ class TestConstantSettings extends WP_Auth0_Test_Case {
 	/**
 	 * Default constant setting prefix.
 	 *
-	 * @see WP_Auth0_Options_Generic::get_constant_name()
+	 * @see WP_Auth0_Options::get_constant_name()
 	 */
 	const CONSTANT_PREFIX = 'AUTH0_ENV_';
 

@@ -22,9 +22,9 @@ class WP_Auth0_Admin_Dashboard extends WP_Auth0_Admin_Generic {
 	 *
 	 * @deprecated - 3.6.0, the plugin no longer supports the dashboard widgets functionality.
 	 *
-	 * @param WP_Auth0_Options_Generic $options
+	 * @param WP_Auth0_Options $options
 	 */
-	public function __construct( WP_Auth0_Options_Generic $options ) {
+	public function __construct( WP_Auth0_Options $options ) {
 		// phpcs:ignore
 		@trigger_error( sprintf( __( 'Class %s is deprecated.', 'wp-auth0' ), __CLASS__ ), E_USER_DEPRECATED );
 		parent::__construct( $options );

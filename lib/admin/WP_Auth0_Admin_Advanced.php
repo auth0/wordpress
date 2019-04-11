@@ -22,10 +22,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	/**
 	 * WP_Auth0_Admin_Advanced constructor.
 	 *
-	 * @param WP_Auth0_Options_Generic $options
-	 * @param WP_Auth0_Routes          $router
+	 * @param WP_Auth0_Options $options
+	 * @param WP_Auth0_Routes  $router
 	 */
-	public function __construct( WP_Auth0_Options_Generic $options, WP_Auth0_Routes $router ) {
+	public function __construct( WP_Auth0_Options $options, WP_Auth0_Routes $router ) {
 		parent::__construct( $options );
 		$this->router       = $router;
 		$this->_description = __( 'Settings related to specific scenarios.', 'wp-auth0' );
