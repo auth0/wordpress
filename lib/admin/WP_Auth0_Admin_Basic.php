@@ -73,7 +73,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				'function' => 'render_client_signing_algorithm',
 			),
 			array(
-				'name'     => __( 'Cache Time (in minutes)', 'wp-auth0' ),
+				'name'     => __( 'JWKS Cache Time (in minutes)', 'wp-auth0' ),
 				'opt'      => 'cache_expiration',
 				'id'       => 'wpa0_cache_expiration',
 				'function' => 'render_cache_expiration',
