@@ -34,28 +34,10 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	public function init() {
 		$options = array(
 			array(
-				'name'     => __( 'Use Custom Lock JS URL', 'wp-auth0' ),
-				'opt'      => 'custom_cdn_url',
-				'id'       => 'wpa0_custom_cdn_url',
-				'function' => 'render_custom_cdn_url',
-			),
-			array(
-				'name'     => __( 'Custom Lock JS URL', 'wp-auth0' ),
-				'opt'      => 'cdn_url',
-				'id'       => 'wpa0_cdn_url',
-				'function' => 'render_cdn_url',
-			),
-			array(
 				'name'     => __( 'Passwordless Login', 'wp-auth0' ),
 				'opt'      => 'passwordless_enabled',
 				'id'       => 'wpa0_passwordless_enabled',
 				'function' => 'render_passwordless_enabled',
-			),
-			array(
-				'name'     => __( 'Connections to Show', 'wp-auth0' ),
-				'opt'      => 'lock_connections',
-				'id'       => 'wpa0_connections',
-				'function' => 'render_connections',
 			),
 			array(
 				'name'     => __( 'Icon URL', 'wp-auth0' ),
@@ -135,6 +117,24 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 				'opt'      => 'extra_conf',
 				'id'       => 'wpa0_extra_conf',
 				'function' => 'render_extra_conf',
+			),
+			array(
+				'name'     => __( 'Use Custom Lock JS URL', 'wp-auth0' ),
+				'opt'      => 'custom_cdn_url',
+				'id'       => 'wpa0_custom_cdn_url',
+				'function' => 'render_custom_cdn_url',
+			),
+			array(
+				'name'     => __( 'Custom Lock JS URL', 'wp-auth0' ),
+				'opt'      => 'cdn_url',
+				'id'       => 'wpa0_cdn_url',
+				'function' => 'render_cdn_url',
+			),
+			array(
+				'name'     => __( 'Connections to Show', 'wp-auth0' ),
+				'opt'      => 'lock_connections',
+				'id'       => 'wpa0_connections',
+				'function' => 'render_connections',
 			),
 		);
 		$this->init_option_section( '', 'appearance', $options );
