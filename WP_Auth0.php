@@ -1,8 +1,9 @@
 <?php
 /**
  * Plugin Name: Login by Auth0
- * Description: Login by Auth0 provides improved username/password login, Passwordless login, Social login and Single Sign On for all your sites.
- * Version: 3.9.0
+ * Plugin URL: https://auth0.com/docs/cms/wordpress
+ * Description: Login by Auth0 provides improved username/password login, Passwordless login, Social login, MFA, and Single Sign On for all your sites.
+ * Version: 3.10.0
  * Author: Auth0
  * Author URI: https://auth0.com
  * Text Domain: wp-auth0
