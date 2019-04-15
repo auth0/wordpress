@@ -1,12 +1,12 @@
 === Login by Auth0 ===
 Tags: login, oauth, authentication, single sign on, ldap, active directory, saml, windows azure ad, google apps, two factor, two-factor, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer, passwordless, sms, magiclink, totp, social
-Tested up to: 5.0.2
+Tested up to: 5.1.1
 Requires at least: 3.8
 Requires PHP: 5.3
 License: GPLv2
 License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE
 Stable tag: trunk
-Contributors: auth0, glena, rrauch, auth0josh
+Contributors: auth0, auth0josh
 
 Login by Auth0 provides improved username/password login, Passwordless login, Social login and Single Sign On for all your sites.
 
@@ -31,7 +31,10 @@ This plugin replaces standard WordPress login forms with one powered by [Auth0](
 
 == Installation ==
 
-This plugin requires a [free or paid](https://auth0.com/pricing) Auth0 account. [Sign up here](https://auth0.com/signup) then follow the [installation instructions here](https://auth0.com/docs/cms/wordpress/installation).
+This plugin requires a [free or paid](https://auth0.com/pricing) Auth0 account.
+
+1. [Sign up here](https://auth0.com/signup).
+2. Follow the [installation instructions here](https://auth0.com/docs/cms/wordpress/installation).
 
 == Screenshots ==
 
@@ -54,21 +57,6 @@ Auth0 allows multiple authentication providers. You can have social providers li
 If the email was not verified and there is an account with that email in WordPress, the user will be presented with a page saying that the email was not verified and a link to "Re-send the verification email." For either scenario, you can choose whether it is mandatory that the user has a verified email or not in the plugin settings.
 
 **Please note:** In order for a user to login using Auth0, they will need to sign up via the Auth0 login form (or have an account created for them in Auth0). Once signup is complete, their Auth0 user will be automatically associated with their WordPress user.
-
-= Enabling dual (Auth0 and WordPress) login =
-
-You can enable the standard WordPress login by turning on the "WordPress login enabled" setting (enabled by default). This will make visible a link on the login page to swap between both. Please note that logins using the standard WordPress form **will not** be tracked in Auth0.
-
-== Usage ==
-
-Once the plugin is configured, the login form on your wp-login.php page will be replaced with an Auth0 login form automatically. You can add additional login forms on the front-end of your site with widgets and/or shortcodes.
-
-**Please note:**
-
-- Only one login form can be displayed on the page at a time.
-- The widget and shortcode login forms will not display if the user is already logged in.
-- After logging in via widget or shortcode, the user will be redirected back to the same page where they logged in instead of the default login URL shown on the settings page.
-- Both widget and shortcode login forms have an option to display a button that triggers the form in a modal.
 
 = Widget =
 
@@ -135,14 +123,24 @@ All is not lost!
 
 == Changelog ==
 
-**v3.9.0**
+**v3.10.0**
 
-- Added a complete Spanish translation!
-- Email changes for WordPress users now work properly and are rejected clearly if Auth0 rejects the change. This does not affect the email verification process in WordPress; the email is changed only after the verification happens. A current API token is not required but your Application does need to allow for a Client Credentials grant with the Management API (this configured for you by default, [more information here](https://auth0.com/docs/cms/wordpress/configuration#authorize-the-application-for-the-management-api)).
-- Sibling sub-domains are now allowed for the Login Redirect URL. Anything within the same domain name as the site URL can now be saved.
-- Default Auth0 IP addresses are now allowed by default on the user migration endpoints. Adding or changing the IP addresses for the "Migration IPs Whitelist" field will not affect default IPs.
-- User migration endpoints were improved to provide better errors when requests are rejected and more clear custom database scripts that can be used as an example when setting up the migration manually. Switching this setting on or off does not make any changes in the Auth0 dashboard or to the existing token, it only makes the endpoints available or not.
-- The Social Amplificator functionality has been removed.
+- The "Single Logout" functionality has been changed. This setting now logs users out of Auth0 automatically when they log out of WordPress. It no longer logs users out of WordPress automatically if they have already been logged out of Auth0.
+- Core WordPress login form display handling has been changed to improve security and maintainability. Please review the "Original Login Form on wp-login.php" option on the **Basic** tab of the plugin settings to make sure this is set properly for your site.
+- The following settings have been deprecated and will be removed in the next major release if they are still being used:
+    - **Features > "Single Sign-On"**: To use SSO going forward, please activate the "Universal Login Page" setting in the **Features** tab of the plugin settings.
+    - **Appearance > "Custom CSS" and "Custom JS"**: If you already have CSS and/or JS stored, the setting will continue to work until the next major release. If not, these fields have been removed.
+- The following settings have been removed from the plugin. Please use the Auth Dashboard to manage these going forward. The functionality has not been removed from Auth0, only the ability to manage it from WordPress:
+    - **Basic >API Token**
+    - **Features > "Password Policy"**
+    - **Features > "Multifactor Authentication (MFA)"**
+    - **Features > "FullContact"**
+    - **Features > "Store Geolocation"**
+    - **Features > "Store Zipcode Income"**
+    - **Advanced > "Link Users with Same Email"**
+- The default Lock version has been updated from 11.5 to 11.14. If you have never changed the Lock URL, this update will be automatic for this and future releases.
+- An Auth0 login form (or link to login) will now appear on the WooCommerce Checkout page for sites that allow or require an account to check out.
+- The connection with the WP JWT Auth plugin has been deprecated and will be removed in the next major.
 - And more!
 
-[Complete list of changes for this and other releases](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#390-2019-01-11)
+[Complete list of changes for this and other releases](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#3100-2019-04-16)
