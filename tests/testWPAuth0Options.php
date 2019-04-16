@@ -170,6 +170,34 @@ class TestWPAuth0Options extends WP_Auth0_Test_Case {
 	}
 
 	/**
+	 * Test that the remove method will only update options in memory when indicated.
+	 */
+	public function testThatRemoveWithoutDbUpdateStaysInMemory() {
+		$opts = new WP_Auth0_Options();
+		$opts->set( 'domain', '__test_domain__' );
+		$this->assertNotNull( $opts->get( 'domain' ) );
+
+		$opts->remove( 'domain', false );
+		$this->assertNull( $opts->get( 'domain' ) );
+		$db_options = get_option( $opts->get_options_name() );
+		$this->assertEquals( '__test_domain__', $db_options['domain'] );
+	}
+
+	/**
+	 * Test that the remove method update options in the database by default.
+	 */
+	public function testThatRemoveWithDbUpdateIsSaved() {
+		$opts = new WP_Auth0_Options();
+		$opts->set( 'client_id', '__test_client_id__' );
+		$this->assertNotNull( $opts->get( 'client_id' ) );
+
+		$opts->remove( 'client_id' );
+		$this->assertNull( $opts->get( 'client_id' ) );
+		$db_options = get_option( $opts->get_options_name() );
+		$this->assertArrayNotHasKey( 'client_id', $db_options );
+	}
+
+	/**
 	 * Test that the can_show_wp_login_form returns the right bool depending on settings and globals.
 	 */
 	public function testThatCanShowWpLoginFormReturnsCorrectly() {

@@ -174,6 +174,8 @@ class WP_Auth0_Options_Generic {
 		return $this->update_all();
 	}
 
+	public function remove( $key, $should_update = true ) {}
+
 	/**
 	 * Save the options array as it exists in memory.
 	 *
