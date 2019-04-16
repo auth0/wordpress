@@ -49,6 +49,22 @@ class TestWPAuth0Options extends WP_Auth0_Test_Case {
 	}
 
 	/**
+	 * Test that a missing option (considered an empty value) is not updated to a default "on" value.
+	 */
+	public function testThatGetOptionsDoesNotUseDefaultsWhenNotEmpty() {
+
+		$db_options = get_option( self::OPTIONS_NAME );
+		unset( $db_options['auto_login'] );
+		unset( $db_options['singlelogout'] );
+		update_option( self::OPTIONS_NAME, $db_options );
+
+		$opts = new WP_Auth0_Options();
+
+		$this->assertEmpty( $opts->get( 'auto_login' ) );
+		$this->assertEmpty( $opts->get( 'singlelogout' ) );
+	}
+
+	/**
 	 * Test the wp_auth0_get_option filter.
 	 */
 	public function testThatFiltersOverrideValues() {
