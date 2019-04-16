@@ -174,7 +174,27 @@ class WP_Auth0_Options_Generic {
 		return $this->update_all();
 	}
 
-	public function remove( $key, $should_update = true ) {}
+	/**
+	 * Remove a setting from the options array.
+	 *
+	 * @param string $key - Option key name to remove.
+	 * @param bool   $should_update - Flag to update DB options array with value stored in memory.
+	 */
+	public function remove( $key, $should_update = true ) {
+		$options = $this->get_options();
+
+		// Cannot remove a setting that is being overridden by a constant.
+		if ( $this->has_constant_val( $key ) ) {
+			return;
+		}
+
+		unset( $options[ $key ] );
+		$this->_opts = $options;
+
+		if ( $should_update ) {
+			$this->update_all();
+		}
+	}
 
 	/**
 	 * Save the options array as it exists in memory.
@@ -182,10 +202,12 @@ class WP_Auth0_Options_Generic {
 	 * @return bool
 	 */
 	public function update_all() {
+		$options = $this->get_options();
+
 		foreach ( $this->get_all_constant_keys() as $key ) {
-			unset( $this->_opts[ $key ] );
+			unset( $options[ $key ] );
 		}
-		return update_option( $this->_options_name, $this->_opts );
+		return update_option( $this->_options_name, $options );
 	}
 
 	/**
