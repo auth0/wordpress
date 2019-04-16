@@ -47,9 +47,9 @@ class WP_Auth0_DBManager {
 			if ( ! empty( $dict ) ) {
 
 				if ( json_decode( $dict ) === null ) {
-					$options->set( 'language', $dict );
+					$options->set( 'language', $dict, false );
 				} else {
-					$options->set( 'language_dictionary', $dict );
+					$options->set( 'language_dictionary', $dict, false );
 				}
 			}
 		}
@@ -57,20 +57,20 @@ class WP_Auth0_DBManager {
 		// Plugin version < 3.2.22
 		if ( $this->current_db_version < 14 && is_null( $options->get( 'client_secret_b64_encoded' ) ) ) {
 			if ( $options->get( 'client_id' ) ) {
-				$options->set( 'client_secret_b64_encoded', true );
+				$options->set( 'client_secret_b64_encoded', true, false );
 			} else {
-				$options->set( 'client_secret_b64_encoded', false );
+				$options->set( 'client_secret_b64_encoded', false, false );
 			}
 		}
 
 		// Plugin version < 3.4.0
 		if ( $this->current_db_version < 15 || 15 === $version_to_install ) {
-			$options->set( 'cdn_url', WPA0_LOCK_CDN_URL );
-			$options->set( 'cache_expiration', 1440 );
+			$options->set( 'cdn_url', WPA0_LOCK_CDN_URL, false );
+			$options->set( 'cache_expiration', 1440, false );
 
 			// Update Client
 			if ( WP_Auth0::ready() ) {
-				$options->set( 'client_signing_algorithm', 'HS256' );
+				$options->set( 'client_signing_algorithm', 'HS256', false );
 			}
 		}
 
@@ -79,7 +79,7 @@ class WP_Auth0_DBManager {
 
 			// Update Lock and Auth versions
 			if ( '//cdn.auth0.com/js/lock/11.0.0/lock.min.js' === $options->get( 'cdn_url' ) ) {
-				$options->set( 'cdn_url', WPA0_LOCK_CDN_URL );
+				$options->set( 'cdn_url', WPA0_LOCK_CDN_URL, false );
 			}
 		}
 
@@ -93,7 +93,7 @@ class WP_Auth0_DBManager {
 
 					// SMS passwordless just needs 'sms' as a connection
 					case 'sms':
-						$options->set( 'lock_connections', 'sms' );
+						$options->set( 'lock_connections', 'sms', false );
 						break;
 
 					// Social + SMS means there are existing social connections we want to keep
@@ -104,7 +104,7 @@ class WP_Auth0_DBManager {
 					// Email link passwordless just needs 'email' as a connection
 					case 'emailcode':
 					case 'magiclink':
-						$options->set( 'lock_connections', 'email' );
+						$options->set( 'lock_connections', 'email', false );
 						break;
 
 					// Social + Email means there are social connections be want to keep
@@ -118,28 +118,10 @@ class WP_Auth0_DBManager {
 				$lock_json                               = trim( $options->get( 'extra_conf' ) );
 				$lock_json_decoded                       = ! empty( $lock_json ) ? json_decode( $lock_json, true ) : array();
 				$lock_json_decoded['passwordlessMethod'] = strpos( $pwl_method, 'code' ) ? 'code' : 'link';
-				$options->set( 'extra_conf', json_encode( $lock_json_decoded ) );
+				$options->set( 'extra_conf', json_encode( $lock_json_decoded ), false );
 			}
 
-			// Force passwordless_method to delete
-			$update_options = $options->get_options();
-			unset( $update_options['passwordless_method'] );
-			update_option( $options->get_options_name(), $update_options );
-		}
-
-		// Plugin version < 3.7.0
-		if ( ( $this->current_db_version < 19 && 0 !== $this->current_db_version ) || 19 === $version_to_install ) {
-			// Need to move settings values from child array to main array.
-			$connection_settings = $options->get( 'connections' );
-			if ( is_array( $connection_settings ) && ! empty( $connection_settings ) ) {
-				foreach ( $connection_settings as $setting => $value ) {
-					// If the setting is empty or if the main array has a value, skip.
-					if ( empty( $value ) || $options->get( $setting ) ) {
-						continue;
-					}
-					$options->set( $setting, $value );
-				}
-			}
+			$options->remove( 'passwordless_method' );
 		}
 
 		// 3.9.0
@@ -152,7 +134,7 @@ class WP_Auth0_DBManager {
 				$ip_check      = new WP_Auth0_Ip_Check( $options );
 				$default_ips   = explode( ',', $ip_check->get_ips_by_domain() );
 				$custom_ips    = array_diff( $migration_ips, $default_ips );
-				$options->set( 'migration_ips', implode( ',', $custom_ips ) );
+				$options->set( 'migration_ips', implode( ',', $custom_ips ), false );
 			}
 		}
 
@@ -160,40 +142,34 @@ class WP_Auth0_DBManager {
 		if ( ( $this->current_db_version < 21 && 0 !== $this->current_db_version ) || 21 === $version_to_install ) {
 
 			if ( 'https://cdn.auth0.com/js/lock/11.5/lock.min.js' === $options->get( 'cdn_url' ) ) {
-				$options->set( 'cdn_url', WPA0_LOCK_CDN_URL );
-				$options->set( 'custom_cdn_url', null );
+				$options->set( 'cdn_url', WPA0_LOCK_CDN_URL, false );
+				$options->set( 'custom_cdn_url', null, false );
 			} else {
-				$options->set( 'custom_cdn_url', 1 );
+				$options->set( 'custom_cdn_url', 1, false );
 			}
 
 			// Nullify and delete all removed options.
-			$options->set( 'auth0js-cdn', null );
-			$options->set( 'passwordless_cdn_url', null );
-			$options->set( 'cdn_url_legacy', null );
+			$options->remove( 'auth0js-cdn', false );
+			$options->remove( 'passwordless_cdn_url', false );
+			$options->remove( 'cdn_url_legacy', false );
+
+			$options->remove( 'social_twitter_key', false );
+			$options->remove( 'social_twitter_secret', false );
+			$options->remove( 'social_facebook_key', false );
+			$options->remove( 'social_facebook_secret', false );
+			$options->remove( 'connections', false );
+
+			$options->remove( 'chart_idp_type', false );
+			$options->remove( 'chart_gender_type', false );
+			$options->remove( 'chart_age_type', false );
+			$options->remove( 'chart_age_from', false );
+			$options->remove( 'chart_age_to', false );
+			$options->remove( 'chart_age_step', false );
 
 			// Migrate WLE setting
 			$new_wle_value = $options->get( 'wordpress_login_enabled' ) ? 'link' : 'isset';
-			$options->set( 'wordpress_login_enabled', $new_wle_value );
-			$options->set( 'wle_code', str_shuffle( uniqid() . uniqid() ) );
-
-			$update_options = $options->get_options();
-			unset( $update_options['auth0js-cdn'] );
-			unset( $update_options['passwordless_cdn_url'] );
-			unset( $update_options['cdn_url_legacy'] );
-
-			unset( $update_options['social_twitter_key'] );
-			unset( $update_options['social_twitter_secret'] );
-			unset( $update_options['social_facebook_key'] );
-			unset( $update_options['social_facebook_secret'] );
-			unset( $update_options['connections'] );
-
-			unset( $update_options['chart_idp_type'] );
-			unset( $update_options['chart_gender_type'] );
-			unset( $update_options['chart_age_type'] );
-			unset( $update_options['chart_age_from'] );
-			unset( $update_options['chart_age_to'] );
-			unset( $update_options['chart_age_step'] );
-			update_option( $options->get_options_name(), $update_options );
+			$options->set( 'wordpress_login_enabled', $new_wle_value, false );
+			$options->set( 'wle_code', str_shuffle( uniqid() . uniqid() ), false );
 
 			// Remove Client Grant update notifications.
 			delete_option( 'wp_auth0_client_grant_failed' );
@@ -201,6 +177,8 @@ class WP_Auth0_DBManager {
 			delete_option( 'wp_auth0_client_grant_success' );
 			delete_option( 'wp_auth0_grant_types_success' );
 		}
+
+		$options->update_all();
 
 		$this->current_db_version = AUTH0_DB_VERSION;
 		update_option( 'auth0_db_version', AUTH0_DB_VERSION );
