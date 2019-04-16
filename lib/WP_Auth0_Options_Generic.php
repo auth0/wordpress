@@ -110,14 +110,9 @@ class WP_Auth0_Options_Generic {
 	public function get_options() {
 		if ( empty( $this->_opts ) ) {
 			$options = get_option( $this->_options_name, array() );
+			// Brand new install, no saved options so get all defaults.
 			if ( empty( $options ) || ! is_array( $options ) ) {
-
-				// Brand new install, no saved options so get all defaults.
 				$options = $this->defaults();
-			} else {
-
-				// Make sure we have settings for everything we need.
-				$options = array_merge( $this->defaults(), $options );
 			}
 
 			// Check for constant overrides and replace.
