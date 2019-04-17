@@ -149,22 +149,22 @@ class WP_Auth0_DBManager {
 			}
 
 			// Nullify and delete all removed options.
-			$options->remove( 'auth0js-cdn', false );
-			$options->remove( 'passwordless_cdn_url', false );
-			$options->remove( 'cdn_url_legacy', false );
+			$options->remove( 'auth0js-cdn' );
+			$options->remove( 'passwordless_cdn_url' );
+			$options->remove( 'cdn_url_legacy' );
 
-			$options->remove( 'social_twitter_key', false );
-			$options->remove( 'social_twitter_secret', false );
-			$options->remove( 'social_facebook_key', false );
-			$options->remove( 'social_facebook_secret', false );
-			$options->remove( 'connections', false );
+			$options->remove( 'social_twitter_key' );
+			$options->remove( 'social_twitter_secret' );
+			$options->remove( 'social_facebook_key' );
+			$options->remove( 'social_facebook_secret' );
+			$options->remove( 'connections' );
 
-			$options->remove( 'chart_idp_type', false );
-			$options->remove( 'chart_gender_type', false );
-			$options->remove( 'chart_age_type', false );
-			$options->remove( 'chart_age_from', false );
-			$options->remove( 'chart_age_to', false );
-			$options->remove( 'chart_age_step', false );
+			$options->remove( 'chart_idp_type' );
+			$options->remove( 'chart_gender_type' );
+			$options->remove( 'chart_age_type' );
+			$options->remove( 'chart_age_from' );
+			$options->remove( 'chart_age_to' );
+			$options->remove( 'chart_age_step' );
 
 			// Migrate WLE setting
 			$new_wle_value = $options->get( 'wordpress_login_enabled' ) ? 'link' : 'isset';
