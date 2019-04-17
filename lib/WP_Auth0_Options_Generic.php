@@ -170,12 +170,11 @@ class WP_Auth0_Options_Generic {
 	}
 
 	/**
-	 * Remove a setting from the options array.
+	 * Remove a setting from the options array in memory.
 	 *
 	 * @param string $key - Option key name to remove.
-	 * @param bool   $should_update - Flag to update DB options array with value stored in memory.
 	 */
-	public function remove( $key, $should_update = true ) {
+	public function remove( $key ) {
 		$options = $this->get_options();
 
 		// Cannot remove a setting that is being overridden by a constant.
@@ -185,10 +184,6 @@ class WP_Auth0_Options_Generic {
 
 		unset( $options[ $key ] );
 		$this->_opts = $options;
-
-		if ( $should_update ) {
-			$this->update_all();
-		}
 	}
 
 	/**
