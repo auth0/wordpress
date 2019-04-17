@@ -151,13 +151,13 @@ class WP_Auth0_Options_Generic {
 	 * @return bool
 	 */
 	public function set( $key, $value, $should_update = true ) {
-		$options = $this->get_options();
 
 		// Cannot set a setting that is being overridden by a constant.
 		if ( $this->has_constant_val( $key ) ) {
 			return false;
 		}
 
+		$options         = $this->get_options();
 		$options[ $key ] = $value;
 		$this->_opts     = $options;
 
@@ -175,13 +175,13 @@ class WP_Auth0_Options_Generic {
 	 * @param string $key - Option key name to remove.
 	 */
 	public function remove( $key ) {
-		$options = $this->get_options();
 
 		// Cannot remove a setting that is being overridden by a constant.
 		if ( $this->has_constant_val( $key ) ) {
 			return;
 		}
 
+		$options = $this->get_options();
 		unset( $options[ $key ] );
 		$this->_opts = $options;
 	}
