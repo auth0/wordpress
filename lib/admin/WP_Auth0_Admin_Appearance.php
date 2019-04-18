@@ -479,7 +479,8 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$input['language']           = sanitize_text_field( $input['language'] );
 		$input['primary_color']      = sanitize_text_field( $input['primary_color'] );
 
-		if ( trim( $input['language_dictionary'] ) !== '' ) {
+		$input['language_dictionary'] = isset( $input['language_dictionary'] ) ? trim( $input['language_dictionary'] ) : '';
+		if ( ! empty( $input['language_dictionary'] ) ) {
 			if ( json_decode( $input['language_dictionary'] ) === null ) {
 				$error = __( 'The language dictionary parameter should be a valid json object.', 'wp-auth0' );
 				$this->add_validation_error( $error );

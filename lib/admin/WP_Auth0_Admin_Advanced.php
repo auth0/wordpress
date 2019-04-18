@@ -588,18 +588,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			self::add_validation_error( __( 'The Lock JS CDN URL used is not a valid URL.', 'wp-auth0' ) );
 		}
 
-		$input['social_twitter_key'] = isset( $input['social_twitter_key'] ) ?
-			sanitize_text_field( $input['social_twitter_key'] ) : '';
-
-		$input['social_twitter_secret'] = isset( $input['social_twitter_secret'] ) ?
-			sanitize_text_field( $input['social_twitter_secret'] ) : '';
-
-		$input['social_facebook_key'] = isset( $input['social_facebook_key'] ) ?
-			sanitize_text_field( $input['social_facebook_key'] ) : '';
-
-		$input['social_facebook_secret'] = isset( $input['social_facebook_secret'] ) ?
-			sanitize_text_field( $input['social_facebook_secret'] ) : '';
-
 		$input['migration_ips_filter'] = ( ! empty( $input['migration_ips_filter'] ) ? 1 : 0 );
 
 		$input['migration_ips'] = isset( $input['migration_ips'] ) ?
