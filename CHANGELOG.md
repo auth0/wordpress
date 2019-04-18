@@ -1,6 +1,6 @@
 # Change Log
 
-## [3.10.0](https://github.com/auth0/wp-auth0/tree/3.10.0) (2019-04-16)
+## [3.10.0](https://github.com/auth0/wp-auth0/tree/3.10.0) (2019-04-18)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.9.0...3.10.0)
 
 **Notes on this release**
