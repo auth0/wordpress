@@ -9,6 +9,8 @@
 
 /**
  * Class WP_Auth0_Api_Delete_User_Mfa to perform a client credentials grant.
+ *
+ * @deprecated - 3.10.0, no longer used.
  */
 class WP_Auth0_Api_Delete_User_Mfa extends WP_Auth0_Api_Abstract {
 
@@ -33,6 +35,8 @@ class WP_Auth0_Api_Delete_User_Mfa extends WP_Auth0_Api_Abstract {
 
 	/**
 	 * WP_Auth0_Api_Delete_User_Mfa constructor.
+	 *
+	 * @deprecated - 3.10.0, no longer used.
 	 *
 	 * @param WP_Auth0_Options                $options - WP_Auth0_Options instance.
 	 * @param WP_Auth0_Api_Client_Credentials $api_client_creds - WP_Auth0_Api_Client_Credentials instance.

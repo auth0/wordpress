@@ -13,6 +13,11 @@ class WP_Auth0_Admin {
 		$this->router     = $router;
 	}
 
+	/**
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
 	public function init() {
 		add_action( 'admin_init', array( $this, 'init_admin' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ), 1 );
@@ -35,9 +40,11 @@ class WP_Auth0_Admin {
 			array(
 				'media_title'             => __( 'Choose your icon', 'wp-auth0' ),
 				'media_button'            => __( 'Choose icon', 'wp-auth0' ),
-				'clear_cache_working'     => __( 'Working ...', 'wp-auth0' ),
-				'clear_cache_done'        => __( 'Done!', 'wp-auth0' ),
+				'ajax_working'            => __( 'Working ...', 'wp-auth0' ),
+				'ajax_done'               => __( 'Done!', 'wp-auth0' ),
+				'refresh_prompt'          => __( 'Save or refresh this page to see changes.', 'wp-auth0' ),
 				'clear_cache_nonce'       => wp_create_nonce( 'auth0_delete_cache_transient' ),
+				'rotate_token_nonce'      => wp_create_nonce( WP_Auth0_Admin_Advanced::ROTATE_TOKEN_NONCE_ACTION ),
 				'form_confirm_submit_msg' => __( 'Are you sure?', 'wp-auth0' ),
 				'ajax_url'                => admin_url( 'admin-ajax.php' ),
 			)
@@ -64,8 +71,7 @@ class WP_Auth0_Admin {
 		wp_enqueue_style( 'wpa0_admin_initial_settup' );
 
 		if ( 'wpa0-setup' === $wpa0_curr_page && isset( $_REQUEST['signup'] ) ) {
-			$cdn_url = $this->a0_options->get( 'cdn_url' );
-			wp_enqueue_script( 'wpa0_lock', $cdn_url, array( 'jquery' ) );
+			wp_enqueue_script( 'wpa0_lock', $this->a0_options->get_lock_url(), array( 'jquery' ) );
 		}
 
 		wp_enqueue_style( 'media' );

@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * @deprecated - 3.8.0, not used and no replacement provided.
  *

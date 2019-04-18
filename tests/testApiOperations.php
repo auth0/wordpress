@@ -7,41 +7,12 @@
  * @since 3.8.1
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestApiOperations.
  */
-class TestApiOperations extends TestCase {
+class TestApiOperations extends WP_Auth0_Test_Case {
 
 	use HttpHelpers;
-
-	use RedirectHelpers;
-
-	use SetUpTestDb;
-
-	/**
-	 * Instance of WP_Auth0_Options.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $opts;
-
-	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	protected static $error_log;
-
-	/**
-	 * Setup for entire test class.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$opts      = WP_Auth0_Options::Instance();
-		self::$error_log = new WP_Auth0_ErrorLog();
-	}
 
 	/**
 	 * Test that a basic create connection command requests properly.
@@ -151,23 +122,5 @@ class TestApiOperations extends TestCase {
 		$result = $api_ops->create_wordpress_connection( $test_token, false );
 
 		$this->assertFalse( $result );
-	}
-
-	/**
-	 * Runs after each test method.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-
-		self::$opts->set( 'domain', self::$opts->get_default( 'domain' ) );
-		self::$opts->set( 'client_id', self::$opts->get_default( 'client_id' ) );
-		self::$opts->set( 'migration_ips', self::$opts->get_default( 'migration_ips' ) );
-		self::$opts->set( 'migration_ips_filter', self::$opts->get_default( 'migration_ips_filter' ) );
-		self::$opts->set( 'db_connection_name', null );
-
-		$this->stopHttpHalting();
-		$this->stopHttpMocking();
-
-		self::$error_log->clear();
 	}
 }

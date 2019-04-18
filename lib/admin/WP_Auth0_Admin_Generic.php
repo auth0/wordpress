@@ -15,9 +15,9 @@ class WP_Auth0_Admin_Generic {
 	/**
 	 * WP_Auth0_Admin_Generic constructor.
 	 *
-	 * @param WP_Auth0_Options_Generic $options
+	 * @param WP_Auth0_Options $options
 	 */
-	public function __construct( WP_Auth0_Options_Generic $options ) {
+	public function __construct( WP_Auth0_Options $options ) {
 		$this->options      = $options;
 		$this->_option_name = $options->get_options_name();
 	}
@@ -97,7 +97,14 @@ class WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * @deprecated - 3.10.0, no longer used.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
 	protected function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$input[ $key ] = ( isset( $input[ $key ] ) ? $input[ $key ] : null );
 
 		if ( ( $input[ $key ] !== null && $old_options[ $key ] === null ) || ( $input[ $key ] === null && $old_options[ $key ] !== null ) ) {
@@ -105,7 +112,12 @@ class WP_Auth0_Admin_Generic {
 			try {
 
 				$operations    = new WP_Auth0_Api_Operations( $this->options );
-				$input[ $key ] = $operations->toggle_rule( $this->options->get( 'auth0_app_token' ), ( is_null( $input[ $key ] ) ? $old_options[ $key ] : null ), $rule_name, $rule_script );
+				$input[ $key ] = $operations->toggle_rule(
+					$this->options->get( 'auth0_app_token' ),
+					( is_null( $input[ $key ] ) ? $old_options[ $key ] : null ),
+					$rule_name,
+					$rule_script
+				);
 
 			} catch ( Exception $e ) {
 				$this->add_validation_error( $e->getMessage() );
@@ -203,8 +215,9 @@ class WP_Auth0_Admin_Generic {
 	 * @param string           $id - Input ID attribute.
 	 * @param string           $input_name - Option name saved to the options array.
 	 * @param int|float|string $curr_value - Current option value.
+	 * @param bool             $vert - True to use vertical orientation for buttons.
 	 */
-	protected function render_radio_buttons( array $buttons, $id, $input_name, $curr_value ) {
+	protected function render_radio_buttons( array $buttons, $id, $input_name, $curr_value, $vert = false ) {
 		if ( $field_is_const = $this->options->has_constant_val( $input_name ) ) {
 			$this->render_const_notice( $input_name );
 		}
@@ -212,8 +225,10 @@ class WP_Auth0_Admin_Generic {
 			$id_attr = $id . '_' . $index;
 			$label   = is_array( $button ) ? $button['label'] : ucfirst( $button );
 			$value   = is_array( $button ) ? $button['value'] : $button;
+			$desc    = isset( $button['desc'] ) ? '<p class="description">' . $button['desc'] . '</p>' : '';
 			printf(
-				'<label for="%s"><input type="radio" name="%s[%s]" id="%s" value="%s" %s %s>&nbsp;%s</label>',
+				'%s<label for="%s"><input type="radio" name="%s[%s]" id="%s" value="%s" %s %s>%s</label> %s',
+				$vert ? '<div class="a0-vert-radio">' : '',
 				esc_attr( $id_attr ),
 				esc_attr( $this->_option_name ),
 				esc_attr( $input_name ),
@@ -221,7 +236,8 @@ class WP_Auth0_Admin_Generic {
 				esc_attr( $value ),
 				checked( $value === $curr_value, true, false ),
 				$field_is_const ? 'disabled' : '',
-				sanitize_text_field( $label )
+				sanitize_text_field( $label ),
+				$vert ? $desc . '</div>' : ''
 			);
 		}
 	}
@@ -243,7 +259,7 @@ class WP_Auth0_Admin_Generic {
 	 */
 	protected function render_const_notice( $input_name ) {
 		printf(
-			'<p><span class="description">%s <code>%s</code></span></p>',
+			'<p class="const-setting-notice"><span class="description">%s <code>%s</code></span></p>',
 			__( 'Value is set in the constant ', 'wp-auth0' ),
 			$this->options->get_constant_name( $input_name )
 		);

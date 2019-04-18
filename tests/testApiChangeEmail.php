@@ -7,38 +7,15 @@
  * @since 3.9.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestApiChangeEmail.
  * Test the WP_Auth0_Api_Change_Email class.
  */
-class TestApiChangeEmail extends TestCase {
+class TestApiChangeEmail extends WP_Auth0_Test_Case {
 
-	use httpHelpers {
+	use HttpHelpers {
 		httpMock as protected httpMockDefault;
 	}
-
-	use SetUpTestDb;
-
-	/**
-	 * Test API domain to use.
-	 */
-	const TEST_DOMAIN = 'test.domain.com';
-
-	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	protected static $options;
-
-	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	protected static $error_log;
 
 	/**
 	 * WP_Auth0_Api_Client_Credentials instance.
@@ -52,20 +29,16 @@ class TestApiChangeEmail extends TestCase {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$options          = WP_Auth0_Options::Instance();
-		self::$error_log        = new WP_Auth0_ErrorLog();
-		self::$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$options );
+		self::$api_client_creds = new WP_Auth0_Api_Client_Credentials( self::$opts );
 	}
 
 	/**
-	 * Run after each test.
+	 * Runs after each test completes.
 	 */
 	public function tearDown() {
 		parent::tearDown();
-		self::$options->set( 'domain', null );
-		$this->stopHttpHalting();
-		$this->stopHttpMocking();
-		self::$error_log->clear();
+		delete_transient( 'auth0_api_token' );
+		delete_transient( 'auth0_api_token_scope' );
 	}
 
 	/**
@@ -94,7 +67,7 @@ class TestApiChangeEmail extends TestCase {
 	 */
 	public function testThatApiCallIsFormedCorrectly() {
 		$this->startHttpHalting();
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		// Should succeed with a user_id + provider and set_bearer returning true.
 		$change_email = $this->getStub( true );
@@ -121,7 +94,7 @@ class TestApiChangeEmail extends TestCase {
 	 */
 	public function testThatWpErrorIsHandledProperly() {
 		$this->startHttpMocking();
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		// Mock for a successful API call.
 		$change_email = $this->getStub( true );
@@ -138,7 +111,7 @@ class TestApiChangeEmail extends TestCase {
 	 */
 	public function testThatApiErrorIsHandledProperly() {
 		$this->startHttpMocking();
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		// Mock for a successful API call.
 		$change_email = $this->getStub( true );
@@ -155,7 +128,7 @@ class TestApiChangeEmail extends TestCase {
 	 */
 	public function testThatSuccessfulApiCallReturnsTrue() {
 		$this->startHttpMocking();
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		// Mock for a successful API call.
 		$change_email = $this->getStub( true );
@@ -163,6 +136,65 @@ class TestApiChangeEmail extends TestCase {
 		$this->http_request_type = 'success_empty_body';
 		$this->assertTrue( $change_email->call( uniqid(), uniqid() ) );
 		$this->assertEmpty( self::$error_log->get() );
+	}
+
+	/**
+	 * Test that the API call succeeds if there is a token stored with the correct scope.
+	 */
+	public function testThatApiCallSucceedsWithStoredToken() {
+		$this->startHttpMocking();
+
+		set_transient( 'auth0_api_token', uniqid() );
+		set_transient( 'auth0_api_token_scope', 'update:users' );
+
+		$this->http_request_type = 'success_empty_body';
+		$api                     = new WP_Auth0_Api_Change_Email( self::$opts, self::$api_client_creds );
+		$this->assertTrue( $api->call( uniqid(), uniqid() ) );
+	}
+
+	/**
+	 * Test that the API call fails if there is a token stored with insufficient scope.
+	 */
+	public function testThatApiCallFailsWithInsufficientScope() {
+		$this->startHttpMocking();
+
+		set_transient( 'auth0_api_token', uniqid() );
+		set_transient( 'auth0_api_token_scope', 'read:users' );
+
+		$api = new WP_Auth0_Api_Change_Email( self::$opts, self::$api_client_creds );
+		$this->assertFalse( $api->call( uniqid(), uniqid() ) );
+
+		$log = self::$error_log->get();
+		$this->assertCount( 1, $log );
+		$this->assertEquals( 'insufficient_scope', $log[0]['code'] );
+	}
+
+	/**
+	 * Test that set bearer fails if there is no stored token and a CC grant fails.
+	 */
+	public function testThatSetBearerFailsWhenCannotGetToken() {
+		$this->startHttpMocking();
+
+		$this->http_request_type = [ 'wp_error', 'success_empty_body' ];
+		$api                     = new WP_Auth0_Api_Change_Email( self::$opts, self::$api_client_creds );
+		$this->assertFalse( $api->call( uniqid(), uniqid() ) );
+
+		$this->assertFalse( get_transient( 'auth0_api_token' ) );
+		$this->assertFalse( get_transient( 'auth0_api_token_scope' ) );
+	}
+
+	/**
+	 * Test that set bearer succeeds if a token with the correct scope can be retrieved.
+	 */
+	public function testThatSetBearerSucceedsWhenCanGetToken() {
+		$this->startHttpMocking();
+
+		$this->http_request_type = [ 'success_access_token', 'success_empty_body' ];
+		$api                     = new WP_Auth0_Api_Change_Email( self::$opts, self::$api_client_creds );
+		$this->assertTrue( $api->call( uniqid(), uniqid() ) );
+
+		$this->assertEquals( '__test_access_token__', get_transient( 'auth0_api_token' ) );
+		$this->assertEquals( 'update:users', get_transient( 'auth0_api_token_scope' ) );
 	}
 
 	/*
@@ -180,7 +212,7 @@ class TestApiChangeEmail extends TestCase {
 		$mock = $this
 			->getMockBuilder( WP_Auth0_Api_Change_Email::class )
 			->setMethods( [ 'set_bearer' ] )
-			->setConstructorArgs( [ self::$options, self::$api_client_creds ] )
+			->setConstructorArgs( [ self::$opts, self::$api_client_creds ] )
 			->getMock();
 		$mock->method( 'set_bearer' )->willReturn( $set_bearer_returns );
 		return $mock;

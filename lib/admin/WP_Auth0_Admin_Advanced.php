@@ -7,12 +7,13 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 */
 	const ADVANCED_DESCRIPTION = '';
 
+	const ROTATE_TOKEN_NONCE_ACTION = 'auth0_rotate_migration_token';
+
 	protected $_description;
 
 	protected $actions_middlewares = array(
 		'basic_validation',
 		'migration_ws_validation',
-		'link_accounts_validation',
 		'loginredirection_validation',
 	);
 
@@ -21,10 +22,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	/**
 	 * WP_Auth0_Admin_Advanced constructor.
 	 *
-	 * @param WP_Auth0_Options_Generic $options
-	 * @param WP_Auth0_Routes          $router
+	 * @param WP_Auth0_Options $options
+	 * @param WP_Auth0_Routes  $router
 	 */
-	public function __construct( WP_Auth0_Options_Generic $options, WP_Auth0_Routes $router ) {
+	public function __construct( WP_Auth0_Options $options, WP_Auth0_Routes $router ) {
 		parent::__construct( $options );
 		$this->router       = $router;
 		$this->_description = __( 'Settings related to specific scenarios.', 'wp-auth0' );
@@ -37,6 +38,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @see \WP_Auth0_Admin_Generic::init_option_section
 	 */
 	public function init() {
+		add_action( 'wp_ajax_' . self::ROTATE_TOKEN_NONCE_ACTION, array( $this, self::ROTATE_TOKEN_NONCE_ACTION ) );
+
 		$options = array(
 			array(
 				'name'     => __( 'Require Verified Email', 'wp-auth0' ),
@@ -63,30 +66,25 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_default_login_redirection',
 			),
 			array(
-				'name'     => __( 'Connections to Show', 'wp-auth0' ),
-				'opt'      => 'lock_connections',
-				'id'       => 'wpa0_connections',
-				'function' => 'render_connections',
-			),
-			array(
 				'name'     => __( 'Force HTTPS Callback', 'wp-auth0' ),
 				'opt'      => 'force_https_callback',
 				'id'       => 'wpa0_force_https_callback',
 				'function' => 'render_force_https_callback',
 			),
-			array(
-				'name'     => __( 'Lock JS CDN URL', 'wp-auth0' ),
-				'opt'      => 'cdn_url',
-				'id'       => 'wpa0_cdn_url',
-				'function' => 'render_cdn_url',
-			),
-			array(
+		);
+
+		// TODO: Remove this once feature has been removed
+		if ( $this->options->get( 'link_auth0_users' ) ) {
+			$options[] = array(
 				'name'     => __( 'Link Users with Same Email', 'wp-auth0' ),
 				'opt'      => 'link_auth0_users',
 				'id'       => 'wpa0_link_auth0_users',
 				'function' => 'render_link_auth0_users',
-			),
-			array(
+			);
+		}
+
+		$options = $options + array(
+			( count( $options ) ) => array(
 				'name'     => __( 'Auto Provisioning', 'wp-auth0' ),
 				'opt'      => 'auto_provisioning',
 				'id'       => 'wpa0_auto_provisioning',
@@ -127,18 +125,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'opt'      => 'valid_proxy_ip',
 				'id'       => 'wpa0_valid_proxy_ip',
 				'function' => 'render_valid_proxy_ip',
-			),
-			array(
-				'name'     => __( 'Extra Settings', 'wp-auth0' ),
-				'opt'      => 'extra_conf',
-				'id'       => 'wpa0_extra_conf',
-				'function' => 'render_extra_conf',
-			),
-			array(
-				'name'     => __( 'Custom Signup Fields', 'wp-auth0' ),
-				'opt'      => 'custom_signup_fields',
-				'id'       => 'wpa0_custom_signup_fields',
-				'function' => 'render_custom_signup_fields',
 			),
 			array(
 				'name'     => __( 'Auth0 Server Domain', 'wp-auth0' ),
@@ -237,10 +223,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `lock_connections` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated - 3.10.0, moved to Features section.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_connections( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'eg: "sms, google-oauth2, github"' );
@@ -249,6 +239,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			__( 'If this is empty, all enabled connections for this Application will be shown. ', 'wp-auth0' ) .
 			__( 'Separate multiple connection names with a comma. ', 'wp-auth0' ) .
 			sprintf(
+				// translators: HTML link to the Auth0 dashboard.
 				__( 'Connections listed here must already be active in your %s', 'wp-auth0' ),
 				$this->get_dashboard_link( 'connections/social' )
 			) .
@@ -275,16 +266,45 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Render form field and description for the `cdn_url` option.
+	 * Render form field and description for the `custom_cdn_url` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.10.0, moved to Features section.
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
+	public function render_custom_cdn_url( $args = array() ) {
+		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_cdn_url' );
+		$this->render_field_description( __( 'Use a custom Lock CDN URL instead of the default. ', 'wp-auth0' ) );
+
+		if ( ! $this->options->get( $args['opt_name'] ) ) {
+			$this->render_field_description(
+				__( 'Currently using:', 'wp-auth0' ) .
+				' <code>' . WPA0_LOCK_CDN_URL . '</code>'
+			);
+		}
+	}
+
+	/**
+	 * Render form field and description for the `cdn_url` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @deprecated - 3.10.0, moved to Features section.
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_cdn_url( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'url' );
 		$this->render_field_description(
 			__( 'This should point to the latest Lock JS available in the CDN and rarely needs to change', 'wp-auth0' )
 		);
@@ -294,16 +314,20 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `link_auth0_users` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated - 3.10.0, account linking should be administered in the Auth0 dashboard.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_link_auth0_users( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Link accounts with the same verified e-mail address. ', 'wp-auth0' ) .
-			__( 'See the "Require Verified Email" setting above for more information on email verification', 'wp-auth0' )
+			__( 'This feature may currently be active. ', 'wp-auth0' ) .
+			__( 'Manage it with the "Account-Linking-Do-Not-Rename" Rule in the ', 'wp-auth0' ) .
+			$this->get_dashboard_link( 'rules' )
 		);
 	}
 
@@ -342,16 +366,31 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				__( 'User migration endpoints activated. ', 'wp-auth0' ) .
 				__( 'See below for the token to use. ', 'wp-auth0' ) .
 				__( 'The custom database scripts need to be configured manually as described ', 'wp-auth0' ) .
-				$this->get_docs_link( 'users/migrations/automatic' )
+				$this->get_docs_link( 'cms/wordpress/user-migration' )
 			);
-			$this->render_field_description( 'Security token:' );
+			$this->render_field_description( 'Migration token:' );
 			if ( $this->options->has_constant_val( 'migration_token' ) ) {
 				$this->render_const_notice( 'migration_token' );
 			}
+
+			$migration_token = $this->options->get( 'migration_token' );
 			printf(
-				'<code class="code-block" disabled>%s</code>',
-				sanitize_text_field( $this->options->get( 'migration_token' ) )
+				'<code class="code-block" id="auth0_migration_token" disabled>%s</code><br>',
+				$migration_token ? sanitize_text_field( $migration_token ) : __( 'No migration token', 'wp-auth0' )
 			);
+
+			if ( ! $this->options->has_constant_val( 'migration_token' ) ) {
+				printf(
+					'<button id="%s" class="button button-secondary" data-confirm-msg="%s">%s</button>',
+					esc_attr( self::ROTATE_TOKEN_NONCE_ACTION ),
+					esc_attr(
+						__( 'This will change your migration token immediately. ', 'wp-auth0' ) .
+						__( 'The new token must be changed in the custom scripts for your database Connection. ', 'wp-auth0' ) .
+						__( 'Continue?', 'wp-auth0' )
+					),
+					__( 'Generate New Migration Token', 'wp-auth0' )
+				);
+			}
 		} else {
 			$this->render_field_description(
 				__( 'User migration endpoints deactivated. ', 'wp-auth0' ) .
@@ -418,9 +457,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$this->render_field_description(
 			__( 'Turns on implicit login flow, which most sites will not need. ', 'wp-auth0' ) .
 			__( 'Only enable this if outbound connections to auth0.com are disabled on your server. ', 'wp-auth0' ) .
-			__( 'Your Application should be set to "Single Page App" in your ', 'wp-auth0' ) .
-			$this->get_dashboard_link( 'clients' ) .
-			__( ' for this setting to work properly. ', 'wp-auth0' ) .
 			__( 'This will limit profile changes and other functionality in the plugin', 'wp-auth0' )
 		);
 	}
@@ -445,10 +481,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `extra_conf` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated - 3.10.0, moved to Features section.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_extra_conf( $args = array() ) {
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
@@ -462,15 +502,19 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `custom_signup_fields` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated - 3.10.0, moved to Features section.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_custom_signup_fields( $args = array() ) {
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Valid JSON for additional signup fields in the Auth0 signup form. ', 'wp-auth0' ) .
+			__( 'Valid array of JSON objects for additional signup fields in the Auth0 signup form. ', 'wp-auth0' ) .
 			$this->get_docs_link(
 				'libraries/lock/v11/configuration#additionalsignupfields-array-',
 				__( 'More information and examples', 'wp-auth0' )
@@ -498,14 +542,27 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `jwt_auth_integration` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated 3.10.0, plugin is deprecated and removed from the WP plugin repo.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_jwt_auth_integration( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description( __( 'This will enable the JWT Auth Users Repository override', 'wp-auth0' ) );
+		$this->render_field_description(
+			__( 'This setting is deprecated and will be removed in the next major version. ', 'wp-auth0' ) .
+			__( 'This will enable the JWT Auth Users Repository override', 'wp-auth0' )
+		);
+	}
+
+	public function auth0_rotate_migration_token() {
+		check_ajax_referer( self::ROTATE_TOKEN_NONCE_ACTION );
+		$this->options->set( 'migration_token', $this->generate_token() );
+		wp_send_json_success();
 	}
 
 	public function basic_validation( $old_options, $input ) {
@@ -521,17 +578,15 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
 		$input['force_https_callback']    = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
 
-		$input['social_twitter_key'] = isset( $input['social_twitter_key'] ) ?
-			sanitize_text_field( $input['social_twitter_key'] ) : '';
+		$input['custom_cdn_url'] = empty( $input['custom_cdn_url'] ) ? 0 : 1;
 
-		$input['social_twitter_secret'] = isset( $input['social_twitter_secret'] ) ?
-			sanitize_text_field( $input['social_twitter_secret'] ) : '';
+		$input['cdn_url'] = empty( $input['cdn_url'] ) ? WPA0_LOCK_CDN_URL : sanitize_text_field( $input['cdn_url'] );
 
-		$input['social_facebook_key'] = isset( $input['social_facebook_key'] ) ?
-			sanitize_text_field( $input['social_facebook_key'] ) : '';
-
-		$input['social_facebook_secret'] = isset( $input['social_facebook_secret'] ) ?
-			sanitize_text_field( $input['social_facebook_secret'] ) : '';
+		// If an invalid URL is used, default to previously saved (if there is one) or default URL.
+		if ( ! filter_var( $input['cdn_url'], FILTER_VALIDATE_URL ) ) {
+			$input['cdn_url'] = isset( $old_options['cdn_url'] ) ? $old_options['cdn_url'] : WPA0_LOCK_CDN_URL;
+			self::add_validation_error( __( 'The Lock JS CDN URL used is not a valid URL.', 'wp-auth0' ) );
+		}
 
 		$input['migration_ips_filter'] = ( ! empty( $input['migration_ips_filter'] ) ? 1 : 0 );
 
@@ -581,7 +636,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
 		// If we don't have a token yet, generate one.
 		if ( empty( $input['migration_token'] ) ) {
-			$input['migration_token'] = JWT::urlsafeB64Encode( openssl_random_pseudo_bytes( 64 ) );
+			$input['migration_token'] = $this->generate_token();
 			return $input;
 		}
 
@@ -601,7 +656,14 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		return $input;
 	}
 
+	/**
+	 * @deprecated - 3.10.0, no longer used.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
 	public function link_accounts_validation( $old_options, $input ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$link_script = WP_Auth0_RulesLib::$link_accounts['script'];
 		$link_script = str_replace( 'REPLACE_WITH_YOUR_CLIENT_ID', $input['client_id'], $link_script );
 		$link_script = str_replace( 'REPLACE_WITH_YOUR_DOMAIN', $input['domain'], $link_script );
@@ -662,6 +724,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		return $domain;
 	}
 
+	private function generate_token() {
+		return JWT::urlsafeB64Encode( openssl_random_pseudo_bytes( 64 ) );
+	}
+
 	/*
 	 * DEPRECATED
 	 */
@@ -680,6 +746,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_ip_range_check( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_ip_ranges' );
 	}
 
@@ -697,6 +765,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @codeCoverageIgnore - Deprecated
 	 */
 	public function render_ip_ranges( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Only one range per line! Range format should be as follows (spaces ignored): ', 'wp-auth0' ) .

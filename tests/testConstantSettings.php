@@ -3,25 +3,22 @@
  * Contains Class TestConstantSettings.
  *
  * @package WP-Auth0
+ *
  * @since 3.7.0
  */
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestConstantSettings.
  * Tests that constant-defined settings work as expected.
  */
-class TestConstantSettings extends TestCase {
+class TestConstantSettings extends WP_Auth0_Test_Case {
 
-	use setUpTestDb;
-
-	use domDocumentHelpers;
+	use DomDocumentHelpers;
 
 	/**
 	 * Default constant setting prefix.
 	 *
-	 * @see WP_Auth0_Options_Generic::get_constant_name()
+	 * @see WP_Auth0_Options::get_constant_name()
 	 */
 	const CONSTANT_PREFIX = 'AUTH0_ENV_';
 
@@ -91,19 +88,22 @@ class TestConstantSettings extends TestCase {
 	 * @runInSeparateProcess
 	 */
 	public function testSetWithConstant() {
-		$opt_name     = 'domain';
 		$constant_val = rand();
 
 		// Set a constant and make sure it works.
 		define( self::CONSTANT_PREFIX . 'DOMAIN', $constant_val );
 		$opts = new WP_Auth0_Options();
-		$this->assertEquals( $constant_val, $opts->get( $opt_name ) );
+		$this->assertEquals( $constant_val, $opts->get( 'domain' ) );
 
 		// Try to set an option with the constant set.
 		$new_value  = str_shuffle( $constant_val );
-		$set_result = $opts->set( $opt_name, $new_value, false );
+		$set_result = $opts->set( 'domain', $new_value );
 		$this->assertFalse( $set_result );
-		$this->assertEquals( $constant_val, $opts->get( $opt_name ) );
+		$this->assertEquals( $constant_val, $opts->get( 'domain' ) );
+
+		// Test that the constant value remains if a new option is set.
+		$opts->set( 'client_id', $new_value );
+		$this->assertEquals( $constant_val, $opts->get( 'domain' ) );
 	}
 
 	/**
@@ -132,12 +132,6 @@ class TestConstantSettings extends TestCase {
 				'render_function' => 'render_client_secret',
 				'value'           => rand(),
 			],
-			[
-				'opt_name'        => 'auth0_app_token',
-				'label_for'       => 'wpa0_auth0_app_token',
-				'render_function' => 'render_auth0_app_token',
-				'value'           => rand(),
-			],
 		];
 
 		// Set all constant values before initializing the options class.
@@ -161,7 +155,7 @@ class TestConstantSettings extends TestCase {
 			$this->assertContains( $constant_name, $field_html );
 
 			// Sensitive fields will not output the current value.
-			$is_sensitive = in_array( $field['opt_name'], [ 'client_secret', 'auth0_app_token' ] );
+			$is_sensitive = in_array( $field['opt_name'], [ 'client_secret' ] );
 			$this->assertContains( 'value="' . ( $is_sensitive ? '' : $field['value'] ) . '"', $field_html );
 		}
 	}

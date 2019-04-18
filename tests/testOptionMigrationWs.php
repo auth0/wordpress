@@ -7,27 +7,16 @@
  * @since 3.9.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestOptionMigrationWs.
  */
-class TestOptionMigrationWs extends TestCase {
+class TestOptionMigrationWs extends WP_Auth0_Test_Case {
+
+	use AjaxHelpers;
 
 	use DomDocumentHelpers;
 
-	use SetUpTestDb {
-		setUp as setUpDb;
-	}
-
 	use UsersHelper;
-
-	/**
-	 * Instance of WP_Auth0_Options.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $opts;
 
 	/**
 	 * Instance of WP_Auth0_Admin_Advanced.
@@ -37,38 +26,133 @@ class TestOptionMigrationWs extends TestCase {
 	public static $admin;
 
 	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	protected static $error_log;
-
-	/**
-	 * Setup for entire test class.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$opts      = WP_Auth0_Options::Instance();
-		self::$error_log = new WP_Auth0_ErrorLog();
-	}
-
-	/**
 	 * Runs before each test starts.
 	 */
 	public function setUp() {
 		parent::setUp();
-		self::setUpDb();
-		self::$opts->reset();
 		$router      = new WP_Auth0_Routes( self::$opts );
 		self::$admin = new WP_Auth0_Admin_Advanced( self::$opts, $router );
 	}
 
 	/**
-	 * Runs after each test completes.
+	 * Test that the migration WS setting field is rendered properly.
 	 */
-	public function tearDown() {
-		parent::tearDown();
-		self::$error_log->clear();
+	public function testThatSettingsFieldRendersProperly() {
+		$field_args = [
+			'label_for' => 'wpa0_migration_ws',
+			'opt_name'  => 'migration_ws',
+		];
+
+		// Get the field HTML.
+		ob_start();
+		self::$admin->render_migration_ws( $field_args );
+		$field_html = ob_get_clean();
+
+		$input = $this->getDomListFromTagName( $field_html, 'input' );
+		$this->assertEquals( 1, $input->length );
+		$this->assertEquals( $field_args['label_for'], $input->item( 0 )->getAttribute( 'id' ) );
+		$this->assertEquals( 'checkbox', $input->item( 0 )->getAttribute( 'type' ) );
+		$this->assertEquals(
+			self::OPTIONS_NAME . '[' . $field_args['opt_name'] . ']',
+			$input->item( 0 )->getAttribute( 'name' )
+		);
+	}
+
+	/**
+	 * Test that correct settings field documentation appears when the setting is off.
+	 */
+	public function testThatCorrectFieldDocsShowWhenMigrationIsOff() {
+		$field_args = [
+			'label_for' => 'wpa0_migration_ws',
+			'opt_name'  => 'migration_ws',
+		];
+
+		$this->assertFalse( self::$opts->get( $field_args['opt_name'] ) );
+
+		// Get the field HTML.
+		ob_start();
+		self::$admin->render_migration_ws( $field_args );
+		$field_html = ob_get_clean();
+
+		$this->assertContains( 'User migration endpoints deactivated', $field_html );
+		$this->assertContains( 'Custom database connections can be deactivated', $field_html );
+		$this->assertContains( 'https://manage.auth0.com/#/connections/database', $field_html );
+	}
+
+	/**
+	 * Test that correct settings field documentation and additional controls appear when the setting is on.
+	 */
+	public function testThatCorrectFieldDocsShowWhenMigrationIsOn() {
+		$field_args = [
+			'label_for' => 'wpa0_migration_ws',
+			'opt_name'  => 'migration_ws',
+		];
+
+		self::$opts->set( $field_args['opt_name'], 1 );
+
+		// Get the field HTML.
+		ob_start();
+		self::$admin->render_migration_ws( $field_args );
+		$field_html = ob_get_clean();
+
+		$this->assertContains( 'User migration endpoints activated', $field_html );
+		$this->assertContains( 'The custom database scripts need to be configured manually', $field_html );
+		$this->assertContains( 'https://auth0.com/docs/cms/wordpress/user-migration', $field_html );
+
+		$code_block = $this->getDomListFromTagName( $field_html, 'code' );
+		$this->assertEquals( 'code-block', $code_block->item( 0 )->getAttribute( 'class' ) );
+		$this->assertEquals( 'auth0_migration_token', $code_block->item( 0 )->getAttribute( 'id' ) );
+		$this->assertEquals( 'disabled', $code_block->item( 0 )->getAttribute( 'disabled' ) );
+		$this->assertEquals( 'No migration token', $code_block->item( 0 )->nodeValue );
+
+		$token_button = $this->getDomListFromTagName( $field_html, 'button' );
+		$this->assertEquals( 'auth0_rotate_migration_token', $token_button->item( 0 )->getAttribute( 'id' ) );
+		$this->assertEquals( 'Generate New Migration Token', trim( $token_button->item( 0 )->nodeValue ) );
+		$this->assertContains(
+			'This will change your migration token immediately',
+			$token_button->item( 0 )->getAttribute( 'data-confirm-msg' )
+		);
+		$this->assertContains(
+			'The new token must be changed in the custom scripts for your database Connection',
+			$token_button->item( 0 )->getAttribute( 'data-confirm-msg' )
+		);
+	}
+
+	/**
+	 * Test that the AJAX rotate token endpoint fails when there is a bad nonce value.
+	 */
+	public function testThatAjaxTokenRotationFailsWithBadNonce() {
+		$this->startAjaxHalting();
+
+		$caught_exception = false;
+		$error_msg        = 'No exception';
+		try {
+			$_REQUEST['_ajax_nonce'] = uniqid();
+			self::$admin->auth0_rotate_migration_token();
+		} catch ( Exception $e ) {
+			$error_msg        = $e->getMessage();
+			$caught_exception = ( 'bad_nonce' === $error_msg );
+		}
+		$this->assertTrue( $caught_exception, $error_msg );
+	}
+
+	/**
+	 * Test that the AJAX rotate token endpoint saves a new token when the endpoint succeeds.
+	 */
+	public function testThatAjaxTokenRotationSavesNewToken() {
+		$this->startAjaxReturn();
+
+		$old_token = uniqid();
+		self::$opts->set( 'migration_token', $old_token );
+
+		ob_start();
+		$_REQUEST['_ajax_nonce'] = wp_create_nonce( 'auth0_rotate_migration_token' );
+		self::$admin->auth0_rotate_migration_token();
+		$return_json = explode( PHP_EOL, ob_get_clean() );
+
+		$this->assertEquals( '{"success":true}', end( $return_json ) );
+		$this->assertNotEquals( $old_token, self::$opts->get( 'migration_token' ) );
+		$this->assertGreaterThanOrEqual( 64, strlen( self::$opts->get( 'migration_token' ) ) );
 	}
 
 	/**

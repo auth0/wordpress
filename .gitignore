@@ -10,3 +10,4 @@ wp-phptidy.php
 /rules/
 .phpcs.xml
 phpcs.xml
+composer.lock

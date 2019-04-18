@@ -32,7 +32,9 @@ class WP_Auth0_Profile_Delete_Data {
 	/**
 	 * Add actions and filters for the profile page.
 	 *
-	 * @codeCoverageIgnore - Tested in TestProfileDeleteData::testInitHooks()
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
 		add_action( 'edit_user_profile', array( $this, 'show_delete_identity' ) );
@@ -51,7 +53,8 @@ class WP_Auth0_Profile_Delete_Data {
 			return;
 		}
 
-		if ( ! get_auth0userinfo( $GLOBALS['user_id'] ) ) {
+		$auth0_user = get_auth0userinfo( $GLOBALS['user_id'] );
+		if ( ! $auth0_user ) {
 			return;
 		}
 
@@ -59,11 +62,15 @@ class WP_Auth0_Profile_Delete_Data {
 		<table class="form-table">
 			<tr>
 				<th>
-					<label><?php _e( 'Delete Auth0 Data' ); ?></label>
+					<label><?php _e( 'Delete Auth0 Data', 'wp-auth0' ); ?></label>
 				</th>
 				<td>
 					<input type="button" id="auth0_delete_data" class="button button-secondary"
-								 value="<?php _e( 'Delete Auth0 Data', 'wp-auth0' ); ?>" />
+						value="<?php _e( 'Delete Auth0 Data', 'wp-auth0' ); ?>" />
+					<br><br>
+					<a href="https://manage.auth0.com/#/users/<?php echo rawurlencode( $auth0_user->sub ); ?>" target="_blank">
+						<?php _e( 'View in Auth0', 'wp-auth0' ); ?>
+					</a>
 				</td>
 			</tr>
 		</table>

@@ -117,6 +117,16 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	/**
+	 * Get a custom Lock URL or the default, depending on settings.
+	 *
+	 * @return string
+	 */
+	public function get_lock_url() {
+		$cdn_url = $this->get( 'cdn_url' );
+		return $cdn_url && $this->get( 'custom_cdn_url' ) ? $cdn_url : WPA0_LOCK_CDN_URL;
+	}
+
+	/**
 	 * Get the authentication domain.
 	 *
 	 * @return string
@@ -180,6 +190,32 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function can_show_wp_login_form() {
+
+		if ( ! isset( $_GET['wle'] ) ) {
+			return false;
+		}
+
+		$wle_setting = $this->get( 'wordpress_login_enabled' );
+		if ( 'no' === $wle_setting ) {
+			return false;
+		}
+
+		if ( in_array( $wle_setting, array( 'link', 'isset' ) ) ) {
+			return true;
+		}
+
+		$wle_code = $this->get( 'wle_code' );
+		if ( 'code' === $wle_setting && $wle_code === $_GET['wle'] ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Default settings when plugin is installed or reset
 	 *
 	 * @return array
@@ -192,7 +228,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'last_step'                 => 1,
 			'migration_token_id'        => null,
 			'jwt_auth_integration'      => false,
-			'auth0js-cdn'               => WPA0_AUTH0_JS_CDN_URL,
 
 			// Basic
 			'domain'                    => '',
@@ -202,27 +237,19 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'client_secret_b64_encoded' => null,
 			'client_signing_algorithm'  => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
 			'cache_expiration'          => 1440,
-			'auth0_app_token'           => null,
-			'wordpress_login_enabled'   => true,
+			'wordpress_login_enabled'   => 'link',
+			'wle_code'                  => '',
 
 			// Features
-			'password_policy'           => 'fair',
-			'sso'                       => false,
-			'singlelogout'              => false,
-			'mfa'                       => null,
-			'fullcontact'               => null,
-			'fullcontact_apikey'        => null,
-			'geo_rule'                  => null,
-			'income_rule'               => null,
-			'override_wp_avatars'       => true,
+			'sso'                       => 0,
+			'singlelogout'              => 1,
+			'override_wp_avatars'       => 1,
 
 			// Appearance
 			'icon_url'                  => '',
 			'form_title'                => '',
 			'social_big_buttons'        => false,
 			'gravatar'                  => true,
-			'custom_css'                => '',
-			'custom_js'                 => '',
 			'username_style'            => '',
 			'primary_color'             => '',
 			'language'                  => '',
@@ -236,34 +263,20 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'passwordless_enabled'      => false,
 			'force_https_callback'      => false,
 			'cdn_url'                   => WPA0_LOCK_CDN_URL,
-			'cdn_url_legacy'            => 'https://cdn.auth0.com/js/lock-9.2.min.js',
-			'passwordless_cdn_url'      => WPA0_LOCK_CDN_URL,
+			'custom_cdn_url'            => null,
 			'lock_connections'          => '',
-			'link_auth0_users'          => null,
 			'auto_provisioning'         => false,
 			'migration_ws'              => false,
 			'migration_token'           => null,
 			'migration_ips_filter'      => false,
 			'migration_ips'             => null,
-			'auto_login'                => 0,
+			'auto_login'                => 1,
 			'auto_login_method'         => '',
 			'auth0_implicit_workflow'   => false,
 			'valid_proxy_ip'            => null,
 			'custom_signup_fields'      => '',
 			'extra_conf'                => '',
-			'social_twitter_key'        => '',
-			'social_twitter_secret'     => '',
-			'social_facebook_key'       => '',
-			'social_facebook_secret'    => '',
 			'auth0_server_domain'       => 'auth0.auth0.com',
-
-			// Dashboard
-			'chart_idp_type'            => 'donut',
-			'chart_gender_type'         => 'donut',
-			'chart_age_type'            => 'donut',
-			'chart_age_from'            => '10',
-			'chart_age_to'              => '70',
-			'chart_age_step'            => '5',
 		);
 	}
 

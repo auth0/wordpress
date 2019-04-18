@@ -10,6 +10,8 @@
 /**
  * Class WP_Auth0_Profile_Delete_Mfa.
  * Provides UI and AJAX handlers to delete a user's MFA.
+ *
+ * @deprecated - 3.10.0, no longer used.
  */
 class WP_Auth0_Profile_Delete_Mfa {
 
@@ -29,6 +31,8 @@ class WP_Auth0_Profile_Delete_Mfa {
 
 	/**
 	 * WP_Auth0_Profile_Delete_Mfa constructor.
+	 *
+	 * @deprecated - 3.10.0, no longer used.
 	 *
 	 * @param WP_Auth0_Options             $a0_options - WP_Auth0_Options instance.
 	 * @param WP_Auth0_Api_Delete_User_Mfa $api_delete_mfa - WP_Auth0_Api_Delete_User_Mfa instance.
@@ -74,11 +78,11 @@ class WP_Auth0_Profile_Delete_Mfa {
 		<table class="form-table">
 			<tr>
 				<th>
-					<label><?php _e( 'Delete MFA Provider' ); ?></label>
+					<label><?php _e( 'Delete MFA Provider', 'wp-auth0' ); ?></label>
 				</th>
 				<td>
 					<input type="button" id="auth0_delete_mfa" class="button button-secondary"
-						   value="<?php _e( 'Delete MFA Provider' ); ?>" />
+						value="<?php _e( 'Delete MFA Provider', 'wp-auth0' ); ?>" />
 				</td>
 			</tr>
 		</table>

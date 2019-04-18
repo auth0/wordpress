@@ -3,33 +3,15 @@
  * Contains Class TestLockOptions.
  *
  * @package WP-Auth0
+ *
  * @since 3.7.0
  */
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestLockOptions.
  * Tests that Lock options output expected values based on given conditions.
  */
-class TestLockOptions extends TestCase {
-
-	use setUpTestDb;
-
-	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	protected static $opts;
-
-	/**
-	 * Run before test suite.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$opts = WP_Auth0_Options::Instance();
-	}
+class TestLockOptions extends WP_Auth0_Test_Case {
 
 	/**
 	 * Test that a custom domain adds a correct key for CDN configuration to Lock options.
@@ -79,13 +61,5 @@ class TestLockOptions extends TestCase {
 		$this->assertEquals( WP_Auth0_Nonce_Handler::get_instance()->get_unique(), $sso_opts['nonce'] );
 		$this->assertEquals( $lock_options->get_state_obj(), $sso_opts['state'] );
 		$this->assertArrayNotHasKey( 'authParams', $sso_opts );
-	}
-
-	/**
-	 * Run after each test.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		self::$opts->set( 'force_https_callback', null );
 	}
 }

@@ -53,6 +53,10 @@ class WP_Auth0_EditProfile {
 
 	/**
 	 * Add actions and filters for the profile page.
+	 *
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
@@ -92,7 +96,6 @@ class WP_Auth0_EditProfile {
 				'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
 				'i18n'           => array(
 					'confirmDeleteId'   => __( 'Are you sure you want to delete the Auth0 user data for this user?', 'wp-auth0' ),
-					'confirmDeleteMfa'  => __( 'Are you sure you want to delete the Auth0 MFA data for this user?', 'wp-auth0' ),
 					'actionComplete'    => __( 'Deleted', 'wp-auth0' ),
 					'actionFailed'      => __( 'Action failed, please see the Auth0 error log for details.', 'wp-auth0' ),
 					'cannotChangeEmail' => __( 'Email cannot be changed for non-database connections.', 'wp-auth0' ),

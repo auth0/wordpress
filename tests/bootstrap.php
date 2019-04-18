@@ -5,7 +5,7 @@
  * @package WP-Auth0
  */
 
-echo 'PHP version: ' . phpversion() . "\n";
+ini_set( 'error_log', '/dev/null' );
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
@@ -36,16 +36,4 @@ if ( ! file_exists( $_tests_dir . '/includes/bootstrap.php' ) ) {
 }
 
 require $_tests_dir . '/includes/bootstrap.php';
-
 require dirname( __FILE__ ) . '/../vendor/autoload.php';
-
-// TODO: Move these to an autoloader.
-require dirname( __FILE__ ) . '/classes/Test_WP_Auth0_Api_Abstract.php';
-require dirname( __FILE__ ) . '/traits/ajaxHelpers.php';
-require dirname( __FILE__ ) . '/traits/domDocumentHelpers.php';
-require dirname( __FILE__ ) . '/traits/hookHelpers.php';
-require dirname( __FILE__ ) . '/traits/httpHelpers.php';
-require dirname( __FILE__ ) . '/traits/optionsHelpers.php';
-require dirname( __FILE__ ) . '/traits/redirectHelpers.php';
-require dirname( __FILE__ ) . '/traits/setUpTestDb.php';
-require dirname( __FILE__ ) . '/traits/usersHelper.php';

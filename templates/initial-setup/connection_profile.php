@@ -35,7 +35,7 @@
 				<li><?php _e( 'Delete the Domain and Client ID and save changes.', 'wp-auth0' ); ?></li>
 				<li><?php _e( 'Delete the created Application ', 'wp-auth0' ); ?>
 					<a target="_blank"
-					   href="https://manage.auth0.com/#/applications/<?php echo WP_Auth0_Options::Instance()->get( 'client_id' ); ?>/settings" >
+					   href="https://manage.auth0.com/#/applications/<?php echo wp_auth0_get_option( 'client_id' ); ?>/settings" >
 						<?php _e( 'here', 'wp-auth0' ); ?>
 					</a>
 				</li>
@@ -54,7 +54,7 @@
 	  <div class="a0-step-text a0-message a0-warning">
 
 		<b>Important:</b>
-		<?php _e( 'To continue you need an Auth0 account.', 'wp-auth0' ); ?>
+			<?php _e( 'To continue you need an Auth0 account.', 'wp-auth0' ); ?>
 
 		<a class="a0-button default pull-right" target="_blank" href="https://auth0.com/signup" >
 			<?php _e( 'Sign up for free', 'wp-auth0' ); ?>
@@ -161,29 +161,16 @@
 					<?php _e( 'Manually create an API token with the', 'wp-auth0' ); ?>
 				  <a href="https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually" target="_blank">
 						<?php _e( 'token generator', 'wp-auth0' ); ?></a>
-					<?php _e( ' and paste it here:', 'wp-auth0' ); ?>
+					<?php _e( ' and paste it below:', 'wp-auth0' ); ?>
 				</p>
+				  <p>
+					  <small>
+						  <?php _e( 'Scopes required', 'wp-auth0' ); ?>:
+						  <code><?php echo implode( '</code> <code>', WP_Auth0_Api_Client::ConsentRequiredScopes() ); ?></code>
+					  </small>
+				  </p>
 				<input type="password" name="apitoken" class="js-a0-setup-input" autocomplete="off" required>
-				<p>
-				  <small>
-					Scopes required:
-					<?php
-					$a      = 0;
-					$scopes = WP_Auth0_Api_Client::GetConsentScopestoShow();
-					foreach ( $scopes as $resource => $actions ) {
-						$a++;
-						?>
-					  <code><?php echo $actions; ?> <?php echo $resource; ?></code>
-						<?php
-						if ( $a < count( $scopes ) - 1 ) {
-							echo ', ';
-						} elseif ( $a === count( $scopes ) - 1 ) {
-							echo ' and ';
-						}
-						?>
-					<?php } ?>.
-				  </small>
-				</p>
+
 			  </div>
 			  <div class="modal-footer">
 				<input type="submit" class="a0-button primary" value="<?php _e( 'Continue', 'wp-auth0' ); ?>"/>

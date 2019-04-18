@@ -7,6 +7,8 @@
 
 /**
  * Class WP_Auth0_Options_Generic.
+ *
+ * @deprecated - 3.10.0, will be merged into WP_Auth0_Options on the next major.
  */
 class WP_Auth0_Options_Generic {
 
@@ -34,6 +36,8 @@ class WP_Auth0_Options_Generic {
 	/**
 	 * WP_Auth0_Options_Generic constructor.
 	 * Finds and stores all constant-defined settings values.
+	 *
+	 * @deprecated - 3.10.0, will be merged into WP_Auth0_Options on the next major.
 	 */
 	public function __construct() {
 		$option_keys = $this->get_defaults( true );
@@ -106,14 +110,9 @@ class WP_Auth0_Options_Generic {
 	public function get_options() {
 		if ( empty( $this->_opts ) ) {
 			$options = get_option( $this->_options_name, array() );
+			// Brand new install, no saved options so get all defaults.
 			if ( empty( $options ) || ! is_array( $options ) ) {
-
-				// Brand new install, no saved options so get all defaults.
 				$options = $this->defaults();
-			} else {
-
-				// Make sure we have settings for everything we need.
-				$options = array_merge( $this->defaults(), $options );
 			}
 
 			// Check for constant overrides and replace.
@@ -152,13 +151,13 @@ class WP_Auth0_Options_Generic {
 	 * @return bool
 	 */
 	public function set( $key, $value, $should_update = true ) {
-		$options = $this->get_options();
 
 		// Cannot set a setting that is being overridden by a constant.
 		if ( $this->has_constant_val( $key ) ) {
 			return false;
 		}
 
+		$options         = $this->get_options();
 		$options[ $key ] = $value;
 		$this->_opts     = $options;
 
@@ -171,15 +170,34 @@ class WP_Auth0_Options_Generic {
 	}
 
 	/**
+	 * Remove a setting from the options array in memory.
+	 *
+	 * @param string $key - Option key name to remove.
+	 */
+	public function remove( $key ) {
+
+		// Cannot remove a setting that is being overridden by a constant.
+		if ( $this->has_constant_val( $key ) ) {
+			return;
+		}
+
+		$options = $this->get_options();
+		unset( $options[ $key ] );
+		$this->_opts = $options;
+	}
+
+	/**
 	 * Save the options array as it exists in memory.
 	 *
 	 * @return bool
 	 */
 	public function update_all() {
+		$options = $this->get_options();
+
 		foreach ( $this->get_all_constant_keys() as $key ) {
-			unset( $this->_opts[ $key ] );
+			unset( $options[ $key ] );
 		}
-		return update_option( $this->_options_name, $this->_opts );
+		return update_option( $this->_options_name, $options );
 	}
 
 	/**
@@ -205,7 +223,7 @@ class WP_Auth0_Options_Generic {
 	public function reset() {
 		$this->_opts = null;
 		$this->delete();
-		$this->get_options();
+		$this->save();
 	}
 
 	/**

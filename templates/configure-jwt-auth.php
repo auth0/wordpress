@@ -6,6 +6,11 @@
 
 		<h1><?php _e( 'JWT Auth authentication', 'wp-auth0' ); ?></h1>
 
+		<p>
+			<?php _e( 'NOTE: The WP JWT Auth plugin is deprecated.', 'wp-auth0' ); ?>
+			<?php _e( 'This page will be removed in the next major version.', 'wp-auth0' ); ?>
+		</p>
+
 		<?php if ( ! $ready ) { ?>
 			<form action="options.php" method="post">
 				<input type="hidden" name="action" value="wpauth0_configure_jwt" />

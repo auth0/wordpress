@@ -85,6 +85,8 @@ trait HttpHelpers {
 	 * @param string|null $url - Remote URL.
 	 *
 	 * @return array|WP_Error
+	 *
+	 * @throws Exception - If set to halt on response.
 	 */
 	public function httpMock( $response_type = null, array $args = null, $url = null ) {
 		switch ( $response_type ?: $this->getResponseType() ) {
@@ -146,6 +148,12 @@ trait HttpHelpers {
 						"enabled_clients":["TEST_CLIENT_ID"],
 						"options":{"passwordPolicy":"poor"}
 					}]',
+					'response' => [ 'code' => 200 ],
+				];
+
+			case 'success_access_token':
+				return [
+					'body'     => '{"access_token":"__test_access_token__","scope":"update:users","expires_in":1000}',
 					'response' => [ 'code' => 200 ],
 				];
 

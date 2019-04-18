@@ -34,6 +34,11 @@ class WP_Auth0_Routes {
 		$this->ip_check   = $ip_check instanceof WP_Auth0_Ip_Check ? $ip_check : new WP_Auth0_Ip_Check( $a0_options );
 	}
 
+	/**
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
 	public function init() {
 		add_action( 'parse_request', array( $this, 'custom_requests' ) );
 	}
@@ -128,7 +133,7 @@ class WP_Auth0_Routes {
 			var auth0 = new auth0.WebAuth({clientID:"%s",domain:"%s",redirectUri:"%s"});
 			auth0.crossOriginAuthenticationCallback();
 			</script></head><body></body></html>',
-			esc_url( $this->a0_options->get( 'auth0js-cdn' ) ),
+			esc_url( apply_filters( 'auth0_coo_auth0js_url', WPA0_AUTH0_JS_CDN_URL ) ),
 			sanitize_text_field( $this->a0_options->get( 'client_id' ) ),
 			sanitize_text_field( $this->a0_options->get_auth_domain() ),
 			esc_url( $this->a0_options->get_wp_auth0_url( $protocol ) )

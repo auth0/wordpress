@@ -42,12 +42,7 @@ jQuery(document).ready(function($) {
     Generic form confirm stop
      */
     $('form.js-a0-confirm-submit').submit(function (e) {
-        var message = $(this).attr('data-confirm-msg');
-        if ( !message || !message.length ) {
-            message = wpa0.form_confirm_submit_msg;
-        }
-
-        if ( ! window.confirm(message) ) {
+        if ( cancelAction($(this)) ) {
             e.preventDefault();
         }
     });
@@ -124,14 +119,37 @@ jQuery(document).ready(function($) {
     var $deleteCacheButton = $( '#' + deleteCacheId );
     $deleteCacheButton.click( function(e) {
         e.preventDefault();
-        $deleteCacheButton.prop( 'disabled', true ).val( wpa0.clear_cache_working );
+        $deleteCacheButton.prop( 'disabled', true ).text( wpa0.ajax_working );
         var postData = {
             'action': deleteCacheId,
             '_ajax_nonce': wpa0.clear_cache_nonce
         };
 
         $.post(wpa0.ajax_url, postData, function() {
-            $deleteCacheButton.prop( 'disabled', false ).val( wpa0.clear_cache_done );
+            $deleteCacheButton.prop( 'disabled', false ).text( wpa0.ajax_done );
+        }, 'json');
+    } );
+
+    /*
+    Generate new migration token button on Advanced settings page
+     */
+    var rotateTokenId = 'auth0_rotate_migration_token';
+    var $rotateTokenButton = $( '#' + rotateTokenId );
+    $rotateTokenButton.click( function(e) {
+        e.preventDefault();
+
+        if (cancelAction($rotateTokenButton) ) {
+            return;
+        }
+
+        $rotateTokenButton.prop( 'disabled', true ).text( wpa0.ajax_working );
+        var postData = {
+            'action': rotateTokenId,
+            '_ajax_nonce': wpa0.rotate_token_nonce
+        };
+        $.post(wpa0.ajax_url, postData, function() {
+            $( '#auth0_migration_token' ).text(wpa0.refresh_prompt);
+            $rotateTokenButton.remove();
         }, 'json');
     } );
 
@@ -162,6 +180,22 @@ jQuery(document).ready(function($) {
         e.preventDefault();
         $('#profile-form').submit();
     });
+
+  /**
+   * Show a JS confirm box to give a chance to cancel an on-page action.
+   *
+   * @param {object} $el - jQuery selector for confirmation message.
+   *
+   * @returns {boolean}
+   */
+  function cancelAction( $el ) {
+      var message = $el.attr('data-confirm-msg');
+      if ( !message || !message.length ) {
+        message = wpa0.form_confirm_submit_msg;
+      }
+
+      return !window.confirm(message);
+    }
 
     /**
      * Can we use localStorage?

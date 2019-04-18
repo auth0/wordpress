@@ -13,14 +13,15 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 
 	protected $actions_middlewares = array(
 		'basic_validation',
+		'wle_validation',
 	);
 
 	/**
 	 * WP_Auth0_Admin_Basic constructor.
 	 *
-	 * @param WP_Auth0_Options_Generic $options
+	 * @param WP_Auth0_Options $options
 	 */
-	public function __construct( WP_Auth0_Options_Generic $options ) {
+	public function __construct( WP_Auth0_Options $options ) {
 		parent::__construct( $options );
 		$this->_description = __( 'Basic settings related to the Auth0 integration.', 'wp-auth0' );
 	}
@@ -72,19 +73,13 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				'function' => 'render_client_signing_algorithm',
 			),
 			array(
-				'name'     => __( 'Cache Time (in minutes)', 'wp-auth0' ),
+				'name'     => __( 'JWKS Cache Time (in minutes)', 'wp-auth0' ),
 				'opt'      => 'cache_expiration',
 				'id'       => 'wpa0_cache_expiration',
 				'function' => 'render_cache_expiration',
 			),
 			array(
-				'name'     => __( 'API Token', 'wp-auth0' ),
-				'opt'      => 'auth0_app_token',
-				'id'       => 'wpa0_auth0_app_token',
-				'function' => 'render_auth0_app_token',
-			),
-			array(
-				'name'     => __( 'WordPress Login Enabled', 'wp-auth0' ),
+				'name'     => __( 'Original Login Form on wp-login.php', 'wp-auth0' ),
 				'opt'      => 'wordpress_login_enabled',
 				'id'       => 'wpa0_login_enabled',
 				'function' => 'render_allow_wordpress_login',
@@ -204,7 +199,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			$curr_value
 		);
 		$this->render_field_description(
-			__( 'This value can be found the Application settings in the ' ) .
+			__( 'This value can be found the Application settings in the ', 'wp-auth0' ) .
 			$this->get_dashboard_link( 'applications' ) .
 			__( ' under Show Advanced Settings > OAuth > "JsonWebToken Signature Algorithm"', 'wp-auth0' )
 		);
@@ -222,7 +217,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	public function render_cache_expiration( $args = array() ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'number' );
 		printf(
-			' <input type="button" id="auth0_delete_cache_transient" value="%s" class="button button-secondary">',
+			' <button id="auth0_delete_cache_transient" class="button button-secondary">%s</button>',
 			__( 'Delete Cache', 'wp-auth0' )
 		);
 		$this->render_field_description( __( 'JWKS cache expiration in minutes (use 0 for no caching)', 'wp-auth0' ) );
@@ -241,12 +236,18 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `auth0_app_token` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
+	 * @deprecated - 3.10.0, no longer used.
+	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function render_auth0_app_token( $args = array() ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password' );
 		$this->render_field_description(
 			__( 'This token should include the following scopes: ', 'wp-auth0' ) .
@@ -268,11 +269,52 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_allow_wordpress_login( $args = array() ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Turn on to enable a link on wp-login.php pointing to the core login form. ', 'wp-auth0' ) .
-			__( 'Logins and signups using the WordPress form will NOT be pushed to Auth0. ', 'wp-auth0' ) .
-			__( 'This is typically only used while testing the plugin initially', 'wp-auth0' )
+
+		$isset_desc = sprintf(
+			'<code class="code-block"><a href="%s?wle" target="_blank">%s?wle</a></code>',
+			wp_login_url(),
+			wp_login_url()
+		);
+
+		$code_desc = '<code class="code-block">' . __( 'Save settings to generate URL.', 'wp-auth0' ) . '</code>';
+		$wle_code  = $this->options->get( 'wle_code' );
+		if ( $wle_code ) {
+			$code_desc = str_replace( '?wle', '?wle=' . $wle_code, $isset_desc );
+		}
+
+		$buttons = array(
+			array(
+				'label' => __( 'Never', 'wp-auth0' ),
+				'value' => 'no',
+			),
+			array(
+				'label' => __( 'Via a link under the Auth0 form', 'wp-auth0' ),
+				'value' => 'link',
+				'desc'  => __( 'URL is the same as below', 'wp-auth0' ),
+			),
+			array(
+				'label' => __( 'When "wle" query parameter is present', 'wp-auth0' ),
+				'value' => 'isset',
+				'desc'  => $isset_desc,
+			),
+			array(
+				'label' => __( 'When "wle" query parameter contains specific code', 'wp-auth0' ),
+				'value' => 'code',
+				'desc'  => $code_desc,
+			),
+		);
+
+		printf(
+			'<div class="subelement"><span class="description">%s.</span></div><br>',
+			__( 'Logins and signups using the original form will NOT be pushed to Auth0', 'wp-auth0' )
+		);
+
+		$this->render_radio_buttons(
+			$buttons,
+			$args['label_for'],
+			$args['opt_name'],
+			$this->options->get( $args['opt_name'] ),
+			true
 		);
 	}
 
@@ -296,7 +338,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$this->render_field_description(
 			__( 'Signups are currently ', 'wp-auth0' ) . '<b>' .
 			( $allow_signup ? __( 'enabled', 'wp-auth0' ) : __( 'disabled', 'wp-auth0' ) ) .
-			'</b>' . __( ' by this setting ' ) . $settings_text
+			'</b>' . __( ' by this setting ', 'wp-auth0' ) . $settings_text
 		);
 	}
 
@@ -315,10 +357,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$input['client_id']        = sanitize_text_field( $input['client_id'] );
 		$input['cache_expiration'] = absint( $input['cache_expiration'] );
 
-		$input['wordpress_login_enabled'] = ( isset( $input['wordpress_login_enabled'] )
-			? $input['wordpress_login_enabled']
-			: 0 );
-
 		$input['allow_signup'] = ( isset( $input['allow_signup'] ) ? $input['allow_signup'] : 0 );
 
 		// Only replace the secret or token if a new value was set. If not, we will keep the last one entered.
@@ -329,23 +367,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$input['client_secret_b64_encoded'] = ( isset( $input['client_secret_b64_encoded'] )
 			? $input['client_secret_b64_encoded'] == 1
 			: false );
-
-		$input['auth0_app_token'] = ( ! empty( $input['auth0_app_token'] )
-			? $input['auth0_app_token']
-			: $old_options['auth0_app_token'] );
-
-		// If we have an app token, get and store the audience
-		if ( ! empty( $input['auth0_app_token'] ) ) {
-			$db_manager = new WP_Auth0_DBManager( WP_Auth0_Options::Instance() );
-
-			if ( get_option( 'wp_auth0_client_grant_failed' ) ) {
-				$db_manager->install_db( 16, $input['auth0_app_token'] );
-			}
-
-			if ( get_option( 'wp_auth0_grant_types_failed' ) ) {
-				$db_manager->install_db( 17, $input['auth0_app_token'] );
-			}
-		}
 
 		if ( empty( $input['domain'] ) ) {
 			$this->add_validation_error( __( 'You need to specify a domain', 'wp-auth0' ) );
@@ -359,6 +380,22 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			$this->add_validation_error( __( 'You need to specify a Client Secret', 'wp-auth0' ) );
 		}
 
+		return $input;
+	}
+
+	/**
+	 * Validation for the WordPress Login Enabled setting.
+	 *
+	 * @param array $old_options - Previous option values.
+	 * @param array $input - Option values being saved.
+	 *
+	 * @return mixed
+	 */
+	public function wle_validation( $old_options, $input ) {
+		if ( ! in_array( $input['wordpress_login_enabled'], array( 'link', 'isset', 'code', 'no' ) ) ) {
+			$input['wordpress_login_enabled'] = $this->options->get_default( 'wordpress_login_enabled' );
+		}
+		$input['wle_code'] = $this->options->get( 'wle_code' ) ?: str_shuffle( uniqid() . uniqid() );
 		return $input;
 	}
 

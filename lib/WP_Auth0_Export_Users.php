@@ -8,6 +8,11 @@ class WP_Auth0_Export_Users {
 		$this->db_manager = $db_manager;
 	}
 
+	/**
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
+	 */
 	public function init() {
 		add_action( 'admin_footer', array( $this, 'a0_add_users_export' ) );
 		add_action( 'load-users.php', array( $this, 'a0_export_selected_users' ) );

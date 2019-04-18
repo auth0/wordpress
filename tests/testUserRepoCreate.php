@@ -3,27 +3,17 @@
  * Contains Class TestUserRepoCreate.
  *
  * @package WP-Auth0
+ *
  * @since 3.8.0
  */
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestUserRepoCreate.
  * Tests that users are created and joined properly.
  */
-class TestUserRepoCreate extends TestCase {
-
-	use setUpTestDb;
+class TestUserRepoCreate extends WP_Auth0_Test_Case {
 
 	use UsersHelper;
-
-	/**
-	 * Instance of WP_Auth0_Options.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $opts;
 
 	/**
 	 * Instance of WP_Auth0_UsersRepo.
@@ -44,7 +34,6 @@ class TestUserRepoCreate extends TestCase {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$opts = WP_Auth0_Options::Instance();
 		self::$repo = new WP_Auth0_UsersRepo( self::$opts );
 	}
 
@@ -209,14 +198,5 @@ class TestUserRepoCreate extends TestCase {
 
 		$expected_uid = self::$repo->create( $userinfo, self::TOKEN );
 		$this->assertEquals( $expected_uid, $user->ID );
-	}
-
-	/**
-	 * Run after every test.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		update_option( 'users_can_register', null );
-		self::$opts->set( 'requires_verified_email', null );
 	}
 }

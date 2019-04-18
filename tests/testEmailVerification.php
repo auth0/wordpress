@@ -7,28 +7,17 @@
  * @since 3.8.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestEmailVerification.
  * Tests for class WP_Auth0_Email_Verification.
  */
-class TestEmailVerification extends TestCase {
+class TestEmailVerification extends WP_Auth0_Test_Case {
 
 	use AjaxHelpers;
 
 	use HookHelpers;
 
-	use SetUpTestDb;
-
 	use UsersHelper;
-
-	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	protected static $options;
 
 	/**
 	 * WP_Auth0_Api_Jobs_Verification instance.
@@ -50,14 +39,6 @@ class TestEmailVerification extends TestCase {
 	 * @var WP_Auth0_Email_Verification
 	 */
 	protected static $email_verification;
-
-	/**
-	 * Set up before entire test suite.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$options = WP_Auth0_Options::Instance();
-	}
 
 	/**
 	 * Test the the AJAX handler function is hooked properly.
@@ -166,8 +147,8 @@ class TestEmailVerification extends TestCase {
 			->setMethods( [ 'call' ] )
 			->setConstructorArgs(
 				[
-					self::$options,
-					new WP_Auth0_Api_Client_Credentials( self::$options ),
+					self::$opts,
+					new WP_Auth0_Api_Client_Credentials( self::$opts ),
 					$_POST['sub'],
 				]
 			)

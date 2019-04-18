@@ -30,7 +30,7 @@
 	</div>
 
 	<div class="a0-buttons">
-	  <a href="https://manage.auth0.com/#/applications/<?php echo WP_Auth0_Options::Instance()->get( 'client_id' ); ?>/connections" class="a0-button primary" target="_blank"><?php _e( 'GO TO DASHBOARD', 'wp-auth0' ); ?></a>
+	  <a href="https://manage.auth0.com/#/applications/<?php echo wp_auth0_get_option( 'client_id' ); ?>/connections" class="a0-button primary" target="_blank"><?php _e( 'GO TO DASHBOARD', 'wp-auth0' ); ?></a>
 	  <a href="<?php echo admin_url( 'admin.php?page=wpa0-setup&step=4' ); ?>"class="a0-button link"><?php _e( 'Skip this step', 'wp-auth0' ); ?></a>
 	</div>
   </div>

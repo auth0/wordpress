@@ -3,11 +3,18 @@ class WP_Auth0_Api_Operations {
 
 	protected $a0_options;
 
-	public function __construct( WP_Auth0_Options_Generic $a0_options ) {
+	public function __construct( WP_Auth0_Options $a0_options ) {
 		$this->a0_options = $a0_options;
 	}
 
+	/**
+	 * @deprecated - 3.10.0, not used and no replacement provided.
+	 *
+	 * @codeCoverageIgnore - To be deprecated
+	 */
 	public function update_wordpress_connection( $app_token, $connection_id, $password_policy, $migration_token ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$domain = $this->a0_options->get( 'domain' );
 
@@ -89,9 +96,14 @@ class WP_Auth0_Api_Operations {
 		return $response->id;
 	}
 
-	// $input['geo_rule'] = ( isset( $input['geo_rule'] ) ? $input['geo_rule'] : 0 );
-	// $enable = ($old_options['geo_rule'] == null && 1 == $input['geo_rule'])
+	/**
+	 * @deprecated - 3.10.0, Rules are no longer managed in the plugin, use the Auth0 dashboard.
+	 *
+	 * @codeCoverageIgnore - To be deprecated
+	 */
 	public function toggle_rule( $app_token, $rule_id, $rule_name, $rule_script ) {
+		// phpcs:ignore
+		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
 		$domain = $this->a0_options->get( 'domain' );
 

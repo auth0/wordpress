@@ -7,19 +7,15 @@
  * @since 3.8.0
  */
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class TestApiAbstract.
  * Test the WP_Auth0_Api_Abstract class.
  */
-class TestApiAbstract extends TestCase {
+class TestApiAbstract extends WP_Auth0_Test_Case {
 
 	use HookHelpers;
 
 	use HttpHelpers;
-
-	use SetUpTestDb;
 
 	/**
 	 * Test domain to use.
@@ -27,36 +23,13 @@ class TestApiAbstract extends TestCase {
 	const TEST_DOMAIN = 'test.domain.com';
 
 	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	protected static $options;
-
-	/**
-	 * WP_Auth0_ErrorLog instance.
-	 *
-	 * @var WP_Auth0_ErrorLog
-	 */
-	protected static $error_log;
-
-	/**
-	 * Set up before test class.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$options   = WP_Auth0_Options::Instance();
-		self::$error_log = new WP_Auth0_ErrorLog();
-	}
-
-	/**
 	 * Test that the basic class setup happens properly.
 	 */
 	public function testSetup() {
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		// 1. Test that the default URL was set correctly.
-		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$options );
+		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$opts );
 		$this->assertEquals( 'https://' . self::TEST_DOMAIN . '/', $api_abstract->get_request( 'url' ) );
 
 		// 2. Test that we have an analytics header being sent with the correct data.
@@ -85,15 +58,15 @@ class TestApiAbstract extends TestCase {
 		$method->setAccessible( true );
 
 		// 1. Test a basic value.
-		$class = $method->invoke( new Test_WP_Auth0_Api_Abstract( self::$options ), '__test_key_1__', '__test_val_1__' );
+		$class = $method->invoke( new Test_WP_Auth0_Api_Abstract( self::$opts ), '__test_key_1__', '__test_val_1__' );
 		$this->assertEquals( '__test_val_1__', $class->get_request( 'headers' )['__test_key_1__'] );
 
 		// 2. Test another basic value.
-		$class = $method->invoke( new Test_WP_Auth0_Api_Abstract( self::$options ), '__test_key_2__', '__test_val_2__' );
+		$class = $method->invoke( new Test_WP_Auth0_Api_Abstract( self::$opts ), '__test_key_2__', '__test_val_2__' );
 		$this->assertEquals( '__test_val_2__', $class->get_request( 'headers' )['__test_key_2__'] );
 
 		// 3. Test that existing values are overwritten.
-		$class = $method->invoke( new Test_WP_Auth0_Api_Abstract( self::$options ), '__test_key_1__', '__test_val_3__' );
+		$class = $method->invoke( new Test_WP_Auth0_Api_Abstract( self::$opts ), '__test_key_1__', '__test_val_3__' );
 		$this->assertEquals( '__test_val_3__', $class->get_request( 'headers' )['__test_key_1__'] );
 	}
 
@@ -101,7 +74,7 @@ class TestApiAbstract extends TestCase {
 	 * Test that the path is set properly.
 	 */
 	public function testSetPath() {
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
 		// Reflect the Test_WP_Auth0_Api_Abstract class to set 2 methods as public.
 		$mock_abstract = new ReflectionClass( Test_WP_Auth0_Api_Abstract::class );
@@ -111,27 +84,27 @@ class TestApiAbstract extends TestCase {
 		$build_url->setAccessible( true );
 
 		// 1. Make sure a basic path is added successfully.
-		$class = $set_path->invoke( new Test_WP_Auth0_Api_Abstract( self::$options ), 'path' );
+		$class = $set_path->invoke( new Test_WP_Auth0_Api_Abstract( self::$opts ), 'path' );
 		$this->assertEquals( 'https://' . self::TEST_DOMAIN . '/path', $class->get_request( 'url' ) );
 		$this->assertEquals( $class->get_request( 'url' ), $build_url->invoke( $class ) );
 
 		// 2. Make sure a leading slash is cleared before adding.
-		$class = $set_path->invoke( new Test_WP_Auth0_Api_Abstract( self::$options ), '/path' );
+		$class = $set_path->invoke( new Test_WP_Auth0_Api_Abstract( self::$opts ), '/path' );
 		$this->assertEquals( 'https://' . self::TEST_DOMAIN . '/path', $class->get_request( 'url' ) );
 		$this->assertEquals( $class->get_request( 'url' ), $build_url->invoke( $class ) );
 
 		// 3. Make sure a trailing slash is included.
-		$class = $set_path->invoke( new Test_WP_Auth0_Api_Abstract( self::$options ), 'path/' );
+		$class = $set_path->invoke( new Test_WP_Auth0_Api_Abstract( self::$opts ), 'path/' );
 		$this->assertEquals( 'https://' . self::TEST_DOMAIN . '/path/', $class->get_request( 'url' ) );
 		$this->assertEquals( $class->get_request( 'url' ), $build_url->invoke( $class ) );
 
 		// 4. Make sure a more complex path can be added.
-		$class = $set_path->invoke( new Test_WP_Auth0_Api_Abstract( self::$options ), 'multi/path' );
+		$class = $set_path->invoke( new Test_WP_Auth0_Api_Abstract( self::$opts ), 'multi/path' );
 		$this->assertEquals( 'https://' . self::TEST_DOMAIN . '/multi/path', $class->get_request( 'url' ) );
 		$this->assertEquals( $class->get_request( 'url' ), $build_url->invoke( $class ) );
 
 		// 5. Make sure the path is overwritten, not appended.
-		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$options );
+		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$opts );
 		$set_path->invoke( $api_abstract, 'path1' );
 		$set_path->invoke( $api_abstract, 'path2' );
 		$this->assertEquals( 'https://' . self::TEST_DOMAIN . '/path2', $api_abstract->get_request( 'url' ) );
@@ -144,11 +117,11 @@ class TestApiAbstract extends TestCase {
 	public function testSendBodyMethods() {
 		$this->startHttpHalting();
 
-		self::$options->set( 'domain', self::TEST_DOMAIN );
-		self::$options->set( 'client_id', '__test_client_id__' );
-		self::$options->set( 'client_secret', '__test_client_secret__' );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'client_id', '__test_client_id__' );
+		self::$opts->set( 'client_secret', '__test_client_secret__' );
 
-		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$options );
+		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$opts );
 
 		// Reflect the class to set 1 method as public.
 		$mock_abstract = new ReflectionClass( Test_WP_Auth0_Api_Abstract::class );
@@ -200,9 +173,9 @@ class TestApiAbstract extends TestCase {
 	 */
 	public function testHttpRequests() {
 		$this->startHttpHalting();
-		self::$options->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'domain', self::TEST_DOMAIN );
 
-		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$options );
+		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$opts );
 
 		// 1. Test a basic GET request.
 		$decoded_res = [];
@@ -259,7 +232,7 @@ class TestApiAbstract extends TestCase {
 	public function testHandleWpError() {
 		$this->startHttpMocking();
 
-		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$options );
+		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$opts );
 
 		$this->http_request_type = 'wp_error';
 		$this->assertEquals( 'caught_wp_error', $api_abstract->set_http_method( 'get' )->call() );
@@ -274,7 +247,7 @@ class TestApiAbstract extends TestCase {
 	public function testHandleAuth0FailedResponse() {
 		$this->startHttpMocking();
 
-		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$options );
+		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$opts );
 
 		// 1. Test that a successful call does not log an error.
 		$this->http_request_type = 'success_empty_body';
@@ -304,22 +277,12 @@ class TestApiAbstract extends TestCase {
 	public function testHandleOtherFailedResponse() {
 		$this->startHttpMocking();
 
-		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$options );
+		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$opts );
 
 		$this->http_request_type = 'other_error';
 		$this->assertEquals( 'caught_failed_response', $api_abstract->call() );
 		$log = self::$error_log->get();
 		$this->assertCount( 1, $log );
 		$this->assertEquals( '{"other_error":"Other error"}', $log[0]['message'] );
-	}
-
-	/**
-	 * Runs after each test method.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		$this->stopHttpHalting();
-		$this->stopHttpMocking();
-		self::$error_log->clear();
 	}
 }

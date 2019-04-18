@@ -1,15 +1,16 @@
 <?php
 /**
  * Plugin Name: Login by Auth0
- * Description: Login by Auth0 provides improved username/password login, Passwordless login, Social login and Single Sign On for all your sites.
- * Version: 3.9.0
+ * Plugin URL: https://auth0.com/docs/cms/wordpress
+ * Description: Login by Auth0 provides improved username/password login, Passwordless login, Social login, MFA, and Single Sign On for all your sites.
+ * Version: 3.10.0
  * Author: Auth0
  * Author URI: https://auth0.com
  * Text Domain: wp-auth0
  */
 
-define( 'WPA0_VERSION', '3.9.0' );
-define( 'AUTH0_DB_VERSION', 20 );
+define( 'WPA0_VERSION', '3.10.0' );
+define( 'AUTH0_DB_VERSION', 21 );
 
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
@@ -20,14 +21,16 @@ define( 'WPA0_PLUGIN_IMG_URL', WPA0_PLUGIN_URL . 'assets/img/' );
 define( 'WPA0_PLUGIN_LIB_URL', WPA0_PLUGIN_URL . 'assets/lib/' );
 define( 'WPA0_PLUGIN_BS_URL', WPA0_PLUGIN_URL . 'assets/bootstrap/' );
 
-define( 'WPA0_LOCK_CDN_URL', 'https://cdn.auth0.com/js/lock/11.5/lock.min.js' );
-define( 'WPA0_AUTH0_JS_CDN_URL', 'https://cdn.auth0.com/js/auth0/9.4/auth0.min.js' );
+define( 'WPA0_LOCK_CDN_URL', 'https://cdn.auth0.com/js/lock/11.15/lock.min.js' );
+define( 'WPA0_AUTH0_JS_CDN_URL', 'https://cdn.auth0.com/js/auth0/9.10/auth0.min.js' );
 
 define( 'WPA0_AUTH0_LOGIN_FORM_ID', 'auth0-login-form' );
 define( 'WPA0_CACHE_GROUP', 'wp_auth0' );
 define( 'WPA0_JWKS_CACHE_TRANSIENT_NAME', 'WP_Auth0_JWKS_cache' );
 
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
+
+require_once 'functions.php';
 
 /*
  * Localization
@@ -78,16 +81,17 @@ class WP_Auth0 {
 	public function __construct( $options = null ) {
 		spl_autoload_register( array( $this, 'autoloader' ) );
 		$this->a0_options = $options instanceof WP_Auth0_Options ? $options : WP_Auth0_Options::Instance();
+		$this->basename   = plugin_basename( __FILE__ );
 	}
 
 	/**
-	 * Initialize the plugin and its modules setting all the hooks
+	 * Initialize the plugin and its modules setting all the hooks.
+	 *
+	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
+	 *
+	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
-		$this->basename = plugin_basename( __FILE__ );
-
-		$ip_checker = new WP_Auth0_Ip_Check();
-		$ip_checker->init();
 
 		$this->db_manager = new WP_Auth0_DBManager( $this->a0_options );
 		$this->db_manager->init();
@@ -119,10 +123,6 @@ class WP_Auth0 {
 
 		add_filter( 'plugin_action_links_' . $this->basename, array( $this, 'wp_add_plugin_settings_link' ) );
 
-		if ( isset( $_GET['message'] ) ) {
-			add_action( 'wp_footer', array( $this, 'a0_render_message' ) );
-		}
-
 		$initial_setup = new WP_Auth0_InitialSetup( $this->a0_options );
 		$initial_setup->init();
 
@@ -144,7 +144,7 @@ class WP_Auth0 {
 		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH( $this->a0_options );
 		$configure_jwt_auth->init();
 
-		$woocommerce_override = new WP_Auth0_WooCommerceOverrides( $this );
+		$woocommerce_override = new WP_Auth0_WooCommerceOverrides( $this, $this->a0_options );
 		$woocommerce_override->init();
 
 		$users_exporter = new WP_Auth0_Export_Users( $this->db_manager );
@@ -171,10 +171,6 @@ class WP_Auth0 {
 
 		$profile_delete_data = new WP_Auth0_Profile_Delete_Data( $users_repo );
 		$profile_delete_data->init();
-
-		$api_delete_mfa     = new WP_Auth0_Api_Delete_User_Mfa( $this->a0_options, $api_client_creds );
-		$profile_delete_mfa = new WP_Auth0_Profile_Delete_Mfa( $this->a0_options, $api_delete_mfa );
-		$profile_delete_mfa->init();
 
 		WP_Auth0_Email_Verification::init();
 	}
@@ -441,11 +437,6 @@ class WP_Auth0 {
 		delete_option( 'widget_wp_auth0_widget' );
 		delete_option( 'widget_wp_auth0_social_amplification_widget' );
 
-		delete_option( 'wp_auth0_client_grant_failed' );
-		delete_option( 'wp_auth0_client_grant_success' );
-		delete_option( 'wp_auth0_grant_types_failed' );
-		delete_option( 'wp_auth0_grant_types_success' );
-
 		delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
 	}
 
@@ -583,52 +574,25 @@ class WP_Auth0 {
 $a0_plugin = new WP_Auth0();
 $a0_plugin->init();
 
-if ( ! function_exists( 'get_auth0userinfo' ) ) {
-	function get_auth0userinfo( $user_id ) {
-		$profile = WP_Auth0_UsersRepo::get_meta( $user_id, 'auth0_obj' );
-		return $profile ? WP_Auth0_Serializer::unserialize( $profile ) : false;
+/*
+ * Core WP hooks
+ */
+
+/**
+ * Add new classes to the body element on all front-end and login pages.
+ *
+ * @param array $classes - Array of existing classes.
+ *
+ * @return array
+ */
+function wp_auth0_filter_body_class( array $classes ) {
+	if ( WP_Auth0_Options::Instance()->can_show_wp_login_form() ) {
+		$classes[] = 'a0-show-core-login';
 	}
+	return $classes;
 }
-
-if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
-	function get_currentauth0userinfo() {
-		global $currentauth0_user;
-		$currentauth0_user = get_auth0userinfo( get_current_user_id() );
-		return $currentauth0_user;
-	}
-}
-
-if ( ! function_exists( 'get_currentauth0user' ) ) {
-	function get_currentauth0user() {
-		return (object) array(
-			'auth0_obj'   => get_auth0userinfo( get_current_user_id() ),
-			'last_update' => WP_Auth0_UsersRepo::get_meta( get_current_user_id(), 'last_update' ),
-			'auth0_id'    => WP_Auth0_UsersRepo::get_meta( get_current_user_id(), 'auth0_id' ),
-		);
-	}
-}
-
-if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
-	function get_auth0_curatedBlogName() {
-
-		$name = get_bloginfo( 'name' );
-
-		// WordPress can have a blank site title, which will cause initial client creation to fail
-		if ( empty( $name ) ) {
-			$name = wp_parse_url( home_url(), PHP_URL_HOST );
-
-			if ( $port = wp_parse_url( home_url(), PHP_URL_PORT ) ) {
-				$name .= ':' . $port;
-			}
-		}
-
-		$name = preg_replace( '/[^A-Za-z0-9 ]/', '', $name );
-		$name = preg_replace( '/\s+/', ' ', $name );
-		$name = str_replace( ' ', '-', $name );
-
-		return $name;
-	}
-}
+add_filter( 'body_class', 'wp_auth0_filter_body_class' );
+add_filter( 'login_body_class', 'wp_auth0_filter_body_class' );
 
 /*
  * Beta plugin deactivation
