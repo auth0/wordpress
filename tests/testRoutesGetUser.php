@@ -49,15 +49,14 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 		$_REQUEST = [];
 
 		parent::setUp();
-		self::$wp = new WP();
+		self::$wp                          = new WP();
+		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 	}
 
 	/**
 	 * If migration services are off, the route should fail with an error.
 	 */
 	public function testThatGetUserRouteIsForbiddenByDefault() {
-		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
-
 		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 403, $output->status );
@@ -72,13 +71,11 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	public function testThatGetUserRouteIsUnauthorizedIfWrongIp() {
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'migration_ips_filter', 1 );
-		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Unauthorized', $output->error );
-
 		$this->assertEmpty( self::$error_log->get() );
 	}
 
@@ -87,7 +84,6 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	 */
 	public function testThatGetUserRouteIsUnauthorizedIfNoToken() {
 		self::$opts->set( 'migration_ws', 1 );
-		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
@@ -108,8 +104,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token_id', '__test_token_id__' );
 
-		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
-		$_POST['access_token']             = JWT::encode( [ 'jti' => uniqid() ], $client_secret );
+		$_POST['access_token'] = JWT::encode( [ 'jti' => uniqid() ], $client_secret );
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
@@ -125,15 +120,11 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	 * If there is no username POSTed, the route should fail with an error.
 	 */
 	public function testThatGetUserRouteIsBadRequestIfNoUsername() {
-		$client_secret   = '__test_client_secret__';
-		$token_id        = '__test_token_id__';
-		$migration_token = JWT::encode( [ 'jti' => $token_id ], $client_secret );
+		$migration_token = uniqid();
 		self::$opts->set( 'migration_ws', 1 );
-		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
 
-		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
-		$_POST['access_token']             = $migration_token;
+		$_POST['access_token'] = $migration_token;
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
@@ -149,14 +140,9 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	 * If there the username cannot be found, the route should fail with an error.
 	 */
 	public function testThatGetUserRouteIsUnauthorizedIfUserNotFound() {
-		$client_secret   = '__test_client_secret__';
-		$token_id        = '__test_token_id__';
-		$migration_token = JWT::encode( [ 'jti' => $token_id ], $client_secret );
+		$migration_token = uniqid();
 		self::$opts->set( 'migration_ws', 1 );
-		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
-
-		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
 
 		$_POST['access_token'] = $migration_token;
 		$_POST['username']     = uniqid();
@@ -164,7 +150,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
-		$this->assertEquals( 'Invalid Credentials', $output->error );
+		$this->assertEquals( 'User not found', $output->error );
 
 		$log = self::$error_log->get();
 		$this->assertCount( 1, $log );
@@ -172,26 +158,39 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	}
 
 	/**
+	 * Route should return a blank user profile when email is being updated.
+	 */
+	public function testThatGetUserRouteReturnsEmptyIfEmailUpdate() {
+		$migration_token = uniqid();
+		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_token', $migration_token );
+
+		$_POST['access_token'] = $migration_token;
+		$_POST['username']     = uniqid() . '@' . uniqid() . '.com';
+
+		$user = $this->createUser( [ 'user_email' => $_POST['username'] ] );
+		WP_Auth0_UsersRepo::update_meta( $user->ID, 'auth0_transient_email_update', $_POST['username'] );
+
+		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+
+		$this->assertFalse( isset( $output->ID ) );
+		$this->assertEquals( 200, $output->status );
+		$this->assertEquals( 'Email update in process', $output->error );
+		$this->assertEmpty( self::$error_log->get() );
+	}
+
+	/**
 	 * Route should return a user with no password set if provided a valid username or email.
 	 */
 	public function testThatGetUserRouteReturnsUserIfSuccessful() {
-		$client_secret     = '__test_client_secret__';
-		$token_id          = '__test_token_id__';
 		$_POST['username'] = uniqid() . '@' . uniqid() . '.com';
 		$user              = $this->createUser( [ 'user_email' => $_POST['username'] ] );
-		$migration_token   = JWT::encode(
-			[
-				'jti'   => $token_id,
-				'scope' => 'migration_ws',
-			],
-			$client_secret
-		);
+
+		$migration_token = uniqid();
 		self::$opts->set( 'migration_ws', 1 );
-		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
 
-		self::$wp->query_vars['a0_action'] = 'migration-ws-get-user';
-		$_POST['access_token']             = $migration_token;
+		$_POST['access_token'] = $migration_token;
 
 		$output_em = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
