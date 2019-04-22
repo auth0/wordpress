@@ -170,9 +170,12 @@ class WP_Auth0_InitialSetup_Consent {
 		if ( $should_create_and_update_connection ) {
 
 			if ( $connection_exists === false ) {
-				$migration_token = JWT::urlsafeB64Encode( openssl_random_pseudo_bytes( 64 ) );
-				$operations      = new WP_Auth0_Api_Operations( $this->a0_options );
-				$response        = $operations->create_wordpress_connection(
+				$migration_token = $this->a0_options->get( 'migration_token' );
+				if ( empty( $migration_token ) ) {
+					$migration_token = JWT::urlsafeB64Encode( openssl_random_pseudo_bytes( 64 ) );
+				}
+				$operations = new WP_Auth0_Api_Operations( $this->a0_options );
+				$response   = $operations->create_wordpress_connection(
 					$this->access_token,
 					$this->hasInternetConnection,
 					'fair',
