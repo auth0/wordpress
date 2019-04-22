@@ -181,7 +181,7 @@ class WP_Auth0_Routes {
 			$user = wp_authenticate( $_POST['username'], $_POST['password'] );
 
 			if ( is_wp_error( $user ) ) {
-				throw new Exception( __( 'Invalid Credentials', 'wp-auth0' ), 401 );
+				throw new Exception( __( 'Invalid credentials', 'wp-auth0' ), 401 );
 			}
 
 			unset( $user->data->user_pass );
@@ -198,6 +198,7 @@ class WP_Auth0_Routes {
 
 	/**
 	 * User migration get user route used by custom database Login script.
+	 * This is used for email changes made in Auth0.
 	 *
 	 * @return array
 	 *
@@ -221,7 +222,15 @@ class WP_Auth0_Routes {
 			}
 
 			if ( ! $user ) {
-				throw new Exception( __( 'Invalid Credentials', 'wp-auth0' ), 401 );
+				throw new Exception( __( 'User not found', 'wp-auth0' ), 401 );
+			}
+
+			$updated_email = WP_Auth0_UsersRepo::get_meta( $user->ID, WP_Auth0_Profile_Change_Email::UPDATED_EMAIL );
+			if ( $updated_email === $user->data->user_email ) {
+				return array(
+					'status' => 200,
+					'error'  => 'Email update in process',
+				);
 			}
 
 			unset( $user->data->user_pass );
