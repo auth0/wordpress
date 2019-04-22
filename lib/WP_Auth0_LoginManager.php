@@ -574,7 +574,7 @@ class WP_Auth0_LoginManager {
 		}
 
 		// If auto-login is in use, cannot redirect back to login page.
-		if ( (bool) $this->a0_options->get( 'auto_login' ) ) {
+		if ( $this->a0_options->get( 'auto_login' ) ) {
 			wp_redirect( home_url() );
 			exit;
 		}
