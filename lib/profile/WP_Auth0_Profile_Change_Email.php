@@ -13,6 +13,11 @@
 class WP_Auth0_Profile_Change_Email {
 
 	/**
+	 * Usermeta key used when updating the email address at Auth0.
+	 */
+	const UPDATED_EMAIL = 'auth0_transient_email_update';
+
+	/**
 	 * WP_Auth0_Api_Change_Email instance.
 	 *
 	 * @var WP_Auth0_Api_Change_Email
@@ -42,7 +47,8 @@ class WP_Auth0_Profile_Change_Email {
 	}
 
 	/**
-	 * Update the user's email at Auth0
+	 * Update the user's email at Auth0 when changing email for a database connection user.
+	 * This runs AFTER a successful email change is saved in WP.
 	 * Hooked to: profile_update
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
@@ -74,10 +80,21 @@ class WP_Auth0_Profile_Change_Email {
 			return false;
 		}
 
-		// Password change was successful, nothing else to do.
+		// Set a flag so the Get User call to other processes know the email is in the process of changing.
+		WP_Auth0_UsersRepo::update_meta( $wp_user_id, self::UPDATED_EMAIL, $current_email );
+
+		// Attempt to update the email address at Auth0.
+		// For custom database setups, this will trigger a Get User script call from Auth0.
+		// See: WP_Auth0_Routes::migration_ws_get_user()
 		if ( $this->api_change_email->call( $auth0_id, $current_email ) ) {
+			WP_Auth0_UsersRepo::delete_meta( $wp_user_id, self::UPDATED_EMAIL );
 			return true;
 		}
+
+		// Past this point, email update with Auth0 has failed so we need to revert changes saved in WP.
+		// Remove the pending email address change flags so it can be tried again.
+		delete_user_meta( $wp_user_id, '_new_email' );
+		WP_Auth0_UsersRepo::delete_meta( $wp_user_id, self::UPDATED_EMAIL );
 
 		// Suppress the notification for email change.
 		add_filter( 'email_change_email', array( $this, 'suppress_email_change_notification' ), 100 );
@@ -89,12 +106,9 @@ class WP_Auth0_Profile_Change_Email {
 		$wp_user->data->user_email = $old_email;
 		wp_update_user( $wp_user );
 
-		// Revert hooks.
+		// Revert hooks from above.
 		add_action( 'profile_update', array( $this, __FUNCTION__ ), 100, 2 );
 		remove_filter( 'email_change_email', array( $this, 'suppress_email_change_notification' ), 100 );
-
-		// Remove the pending email address change so it can be tried again.
-		delete_user_meta( $wp_user_id, '_new_email' );
 
 		// Can't set a custom message here so redirect with an error for WP to pick up.
 		if ( in_array( $GLOBALS['pagenow'], array( 'user-edit.php', 'profile.php' ) ) ) {
