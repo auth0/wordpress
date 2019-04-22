@@ -560,12 +560,12 @@ class WP_Auth0_LoginManager {
 	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/wp_logout
 	 */
 	public function logout() {
-		$is_sso        = (bool) $this->a0_options->get( 'sso' );
-		$is_slo        = (bool) $this->a0_options->get( 'singlelogout' );
-		$is_auto_login = (bool) $this->a0_options->get( 'auto_login' );
+		if ( ! WP_Auth0::ready() ) {
+			return;
+		}
 
 		// If SSO/SLO is in use, redirect to Auth0 to logout there as well.
-		if ( $is_sso || $is_slo ) {
+		if ( $this->a0_options->get( 'sso' ) || $this->a0_options->get( 'singlelogout' ) ) {
 			$return_to    = apply_filters( 'auth0_slo_return_to', home_url() );
 			$redirect_url = $this->auth0_logout_url( $return_to );
 			$redirect_url = apply_filters( 'auth0_logout_url', $redirect_url );
@@ -574,7 +574,7 @@ class WP_Auth0_LoginManager {
 		}
 
 		// If auto-login is in use, cannot redirect back to login page.
-		if ( $is_auto_login ) {
+		if ( (bool) $this->a0_options->get( 'auto_login' ) ) {
 			wp_redirect( home_url() );
 			exit;
 		}

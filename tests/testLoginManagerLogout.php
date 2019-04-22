@@ -4,7 +4,7 @@
  *
  * @package WP-Auth0
  *
- * @since 3.10.0
+ * @since 3.11.0
  */
 
 /**
