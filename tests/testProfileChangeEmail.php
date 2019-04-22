@@ -14,6 +14,8 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 
 	use HookHelpers;
 
+	use HttpHelpers;
+
 	use RedirectHelpers;
 
 	use UsersHelper;
@@ -64,6 +66,7 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 
 		$this->assertTrue( $change_email->update_email( $user->ID, $old_user ) );
 		$this->assertEquals( $new_email, get_user_by( 'id', $user->ID )->data->user_email );
+		$this->assertEmpty( WP_Auth0_UsersRepo::get_meta( $user->ID, 'auth0_transient_email_update' ) );
 	}
 
 	/**
@@ -137,6 +140,7 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 		$this->assertFalse( $change_email->update_email( $user->ID, $old_user ) );
 		$this->assertEquals( $old_user->data->user_email, get_user_by( 'id', $user->ID )->data->user_email );
 		$this->assertEmpty( get_user_meta( $user->ID, '_new_email', true ) );
+		$this->assertEmpty( WP_Auth0_UsersRepo::get_meta( $user->ID, 'auth0_transient_email_update' ) );
 	}
 
 	/**
@@ -175,6 +179,30 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 		$this->assertContains( 'wp-admin/user-edit.php', $caught_redirect['location'] );
 		$this->assertContains( 'user_id=' . $user->ID, $caught_redirect['location'] );
 		$this->assertContains( 'error=new-email', $caught_redirect['location'] );
+	}
+
+	/**
+	 * Test that the email update flag is set for a user before the Auth0 API call is made.
+	 */
+	public function testThatEmailUpdateFlagIsSetBeforeApiCall() {
+		$this->startHttpHalting();
+
+		$user                       = $this->createUser( [], false );
+		$new_email                  = $user->data->user_email;
+		$old_user                   = clone $user;
+		$old_user->data->user_email = 'OLD-' . $new_email;
+		$this->storeAuth0Data( $user->ID, 'auth0' );
+
+		$api_change_email = new WP_Auth0_Api_Change_Email( self::$opts, self::$api_client_creds );
+		$change_email     = new WP_Auth0_Profile_Change_Email( $api_change_email );
+
+		try {
+			$change_email->update_email( $user->ID, $old_user );
+		} catch ( Exception $e ) {
+			// Just need to stop the API call.
+		}
+
+		$this->assertEquals( $new_email, WP_Auth0_UsersRepo::get_meta( $user->ID, 'auth0_transient_email_update' ) );
 	}
 
 	/**
