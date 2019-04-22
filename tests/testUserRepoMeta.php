@@ -94,20 +94,19 @@ class TestUserRepoMeta extends WP_Auth0_Test_Case {
 	 */
 	public function testThatDeleteMetaDeletesData() {
 		$users_repo = new WP_Auth0_UsersRepo( self::$opts );
-		$this->assertEmpty( $users_repo::get_meta( 1, 'auth0_id' ) );
-		$this->assertEmpty( $users_repo::get_meta( 1, 'auth0_obj' ) );
-		$this->assertEmpty( $users_repo::get_meta( 1, 'last_update' ) );
-
 		$this->storeAuth0Data( 1 );
+		update_user_meta( 1, 'wp_auth0_transient_email_update', uniqid() );
 
 		$this->assertNotEmpty( $users_repo::get_meta( 1, 'auth0_id' ) );
 		$this->assertNotEmpty( $users_repo::get_meta( 1, 'auth0_obj' ) );
 		$this->assertNotEmpty( $users_repo::get_meta( 1, 'last_update' ) );
+		$this->assertNotEmpty( $users_repo::get_meta( 1, 'auth0_transient_email_update' ) );
 
 		$users_repo->delete_auth0_object( 1 );
 
 		$this->assertEmpty( $users_repo::get_meta( 1, 'auth0_id' ) );
 		$this->assertEmpty( $users_repo::get_meta( 1, 'auth0_obj' ) );
 		$this->assertEmpty( $users_repo::get_meta( 1, 'last_update' ) );
+		$this->assertEmpty( $users_repo::get_meta( 1, 'auth0_transient_email_update' ) );
 	}
 }
