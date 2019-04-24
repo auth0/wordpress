@@ -39,7 +39,7 @@
         "sniffs": "\"vendor/bin/phpcs\" --standard=phpcs-ruleset.xml -e",
         "test": "\"vendor/bin/phpunit\" --coverage-text",
         "test-group": "\"vendor/bin/phpunit\" --coverage-text --group",
-        "test-ci": "\"vendor/bin/phpunit\" --debug --coverage-clover=coverage.xml",
+        "test-ci": "\"vendor/bin/phpunit\" --coverage-clover=coverage.xml",
         "pre-commit": [ "@compat", "@phpcs-i18n", "@phpcbf", "@phpcbf-tests", "@phpcs-tests", "@test" ]
     },
     "autoload": {

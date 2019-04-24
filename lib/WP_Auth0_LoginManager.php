@@ -197,31 +197,14 @@ class WP_Auth0_LoginManager {
 
 			// Errors encountered during the WordPress login flow.
 			$this->die_on_login( $e->getMessage(), $e->getCode() );
-		} catch ( DomainException $e ) {
-
-			// JWT:decode error - Algorithm was not provided.
-			$this->die_on_login( __( 'Invalid ID token (no algorithm)', 'wp-auth0' ), $e->getCode() );
-		} catch ( InvalidArgumentException $e ) {
-
-			// JWT:decode error - Key provided to decode was empty.
-			$this->die_on_login( __( 'Invalid ID token (failed signature verification)', 'wp-auth0' ), $e->getCode() );
-		} catch ( SignatureInvalidException $e ) {
-
-			// JWT:decode error - Provided JWT was invalid because the signature verification failed.
-			$this->die_on_login( __( 'Invalid ID token (failed signature verification)', 'wp-auth0' ), $e->getCode() );
-		} catch ( BeforeValidException $e ) {
-
-			// JWT:decode error - Provided JWT is trying to be used before it's eligible as defined by 'nbf'.
-			// JWT:decode error - Provided JWT is trying to be used before it's been created as defined by 'iat'.
-			$this->die_on_login( __( 'Invalid ID token (used too early)', 'wp-auth0' ), $e->getCode() );
-		} catch ( ExpiredException $e ) {
-
-			// JWT:decode error - Provided JWT has since expired, as defined by the 'exp' claim.
-			$this->die_on_login( __( 'Expired ID token', 'wp-auth0' ), $e->getCode() );
-		} catch ( UnexpectedValueException $e ) {
-
-			// JWT:decode error - Provided JWT was invalid.
-			$this->die_on_login( __( 'Invalid ID token', 'wp-auth0' ), $e->getCode() );
+		} catch ( WP_Auth0_InvalidIdTokenException $e ) {
+			$code            = 'invalid_id_token';
+			$display_message = __( 'Invalid ID token', 'wp-auth0' );
+			WP_Auth0_ErrorManager::insert_auth0_error(
+				__METHOD__ . ' L:' . __LINE__,
+				new WP_Error( $code, $display_message . ': ' . $e->getMessage() )
+			);
+			$this->die_on_login( $display_message, $code );
 		}
 	}
 
@@ -232,6 +215,8 @@ class WP_Auth0_LoginManager {
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
 	 *
 	 * @link https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
+	 *
+	 * @throws WP_Auth0_InvalidIdTokenException If the ID token does not validate.
 	 */
 	public function redirect_login() {
 		$domain             = $this->a0_options->get( 'domain' );
@@ -290,11 +275,8 @@ class WP_Auth0_LoginManager {
 		$refresh_token = isset( $data->refresh_token ) ? $data->refresh_token : null;
 
 		// Decode the incoming ID token for the Auth0 user.
-		$decoded_token = JWT::decode(
-			$id_token,
-			$this->a0_options->get_client_secret_as_key(),
-			array( $this->a0_options->get_client_signing_algorithm() )
-		);
+		$jwt_verifier  = new WP_Auth0_Id_Token_Validator( $id_token, $this->a0_options );
+		$decoded_token = $jwt_verifier->decode();
 
 		// Attempt to authenticate with the Management API.
 		$client_credentials_api   = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
@@ -340,6 +322,7 @@ class WP_Auth0_LoginManager {
 	 *
 	 * @throws WP_Auth0_LoginFlowValidationException - OAuth login flow errors.
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
+	 * @throws WP_Auth0_InvalidIdTokenException - If the ID token does not validate.
 	 *
 	 * @link https://auth0.com/docs/api-auth/tutorials/implicit-grant
 	 */
@@ -352,27 +335,8 @@ class WP_Auth0_LoginManager {
 		$id_token_param = ! empty( $_POST['id_token'] ) ? $_POST['id_token'] : $_POST['token'];
 		$id_token       = sanitize_text_field( wp_unslash( $id_token_param ) );
 
-		$decoded_token = JWT::decode(
-			$id_token,
-			$this->a0_options->get_client_secret_as_key(),
-			array( $this->a0_options->get_client_signing_algorithm() )
-		);
-
-		// Validate that this JWT was made for us.
-		if ( $this->a0_options->get( 'client_id' ) !== $decoded_token->aud ) {
-			throw new WP_Auth0_LoginFlowValidationException(
-				__( 'This token is not intended for us', 'wp-auth0' )
-			);
-		}
-
-		// Validate the nonce if one was included in the request if using auto-login.
-		$nonce = isset( $decoded_token->nonce ) ? $decoded_token->nonce : null;
-		if ( ! WP_Auth0_Nonce_Handler::get_instance()->validate( $nonce ) ) {
-			throw new WP_Auth0_LoginFlowValidationException(
-				__( 'Invalid nonce', 'wp-auth0' )
-			);
-		}
-
+		$jwt_verifier  = new WP_Auth0_Id_Token_Validator( $id_token, $this->a0_options );
+		$decoded_token = $jwt_verifier->decode( true );
 		$decoded_token = $this->clean_id_token( $decoded_token );
 
 		if ( $this->login_user( $decoded_token, $id_token ) ) {
