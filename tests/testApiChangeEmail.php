@@ -194,7 +194,7 @@ class TestApiChangeEmail extends WP_Auth0_Test_Case {
 		$this->assertTrue( $api->call( uniqid(), uniqid() ) );
 
 		$this->assertEquals( '__test_access_token__', get_transient( 'auth0_api_token' ) );
-		$this->assertEquals( 'update:users', get_transient( 'auth0_api_token_scope' ) );
+		$this->assertEquals( 'update:users read:users', get_transient( 'auth0_api_token_scope' ) );
 	}
 
 	/*

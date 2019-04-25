@@ -268,7 +268,7 @@ class TestApiAbstract extends WP_Auth0_Test_Case {
 		$log = self::$error_log->get();
 		$this->assertCount( 2, $log );
 		$this->assertEquals( 'caught_callback_error', $log[0]['code'] );
-		$this->assertEquals( 'Error returned - Error', $log[0]['message'] );
+		$this->assertEquals( 'Error returned - Auth0 callback error', $log[0]['message'] );
 	}
 
 	/**

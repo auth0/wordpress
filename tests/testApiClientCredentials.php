@@ -116,7 +116,7 @@ class TestApiClientCredentials extends WP_Auth0_Test_Case {
 		$timeout                 = time() + 1000;
 		$this->assertEquals( '__test_access_token__', $api_client_creds->call() );
 		$this->assertEquals( '__test_access_token__', get_transient( 'auth0_api_token' ) );
-		$this->assertEquals( 'update:users', get_transient( 'auth0_api_token_scope' ) );
+		$this->assertEquals( 'update:users read:users', get_transient( 'auth0_api_token_scope' ) );
 		$this->assertLessThan( $timeout, (int) get_transient( '_transient_timeout_auth0_api_token_scope' ) );
 		$this->assertLessThan( $timeout, (int) get_transient( '_transient_timeout_auth0_api_token' ) );
 		$log = self::$error_log->get();
