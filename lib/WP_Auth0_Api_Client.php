@@ -102,6 +102,11 @@ class WP_Auth0_Api_Client {
 		return $headers;
 	}
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
 	public static function get_token( $domain, $client_id, $client_secret, $grantType = 'client_credentials', $extraBody = null ) {
 		if ( ! is_array( $extraBody ) ) {
 			$body = array();
@@ -201,6 +206,11 @@ class WP_Auth0_Api_Client {
 		);
 	}
 
+	/**
+	 * TODO: Deprecate
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
 	public static function get_user( $domain, $jwt, $user_id ) {
 		$endpoint = "https://$domain/api/v2/users/" . urlencode( $user_id );
 

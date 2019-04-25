@@ -244,7 +244,7 @@ class WP_Auth0_LoginManager {
 			$cc_api        = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
 			$get_user_api  = new WP_Auth0_Api_Get_User( $this->a0_options, $cc_api );
 			$get_user_resp = $get_user_api->call( $decoded_token->sub );
-			$userinfo      = ! empty( $get_user_resp ) ? json_decode( $get_user_resp ) : $get_user_resp;
+			$userinfo      = ! empty( $get_user_resp ) ? json_decode( $get_user_resp ) : null;
 		}
 
 		// Management API call failed, fallback to ID token.
