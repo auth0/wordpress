@@ -23,13 +23,6 @@ class TestApiGetUser extends WP_Auth0_Test_Case {
 	protected static $api_client_creds;
 
 	/**
-	 * WP_Auth0_Api_Get_User instance.
-	 *
-	 * @var WP_Auth0_Api_Get_User
-	 */
-	protected static $get_user_api;
-
-	/**
 	 * Run before the test suite.
 	 */
 	public static function setUpBeforeClass() {
@@ -71,7 +64,7 @@ class TestApiGetUser extends WP_Auth0_Test_Case {
 
 		$this->assertEquals( 'https://test.auth0.com/api/v2/users/__test_user_id__', $http_data['url'] );
 		$this->assertEquals(
-			'eyJuYW1lIjoid3AtYXV0aDAiLCJ2ZXJzaW9uIjoiMy4xMC4wIiwiZW52Ijp7InBocCI6IjcuMS4yNyIsIndwIjoiNS4xLjEifX0=',
+			WP_Auth0_Api_Abstract::get_info_headers()['Auth0-Client'],
 			$http_data['headers']['Auth0-Client']
 		);
 		$this->assertEquals( 'Bearer __test_access_token__', $http_data['headers']['Authorization'] );
