@@ -49,31 +49,31 @@ commands:
             dockerize -wait tcp://127.0.0.1:3306 -timeout 120s
             bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 latest
       - run: composer test-ci
-      - run: 
+      - run:
           command: bash <(curl -s https://codecov.io/bash)
           when: on_success
 
-jobs: 
-  php_5: 
-    docker: 
+jobs:
+  php_5:
+    docker:
       - image: circleci/php:5.6
       - image: circleci/mysql:5.6
         environment:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
     steps:
       - prepare
-      - run-formatting
       - run-tests
-  php_7: 
-    docker: 
+      - run-formatting
+  php_7:
+    docker:
       - image: circleci/php:7.1
       - image: circleci/mysql:5.6
         environment:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
     steps:
       - prepare
-      - run-formatting
       - run-tests
+      - run-formatting
   snyk:
     docker:
       - image: snyk/snyk-cli:composer
@@ -102,6 +102,6 @@ workflows:
       - php_7
       - snyk:
           # Must define SNYK_TOKEN env
-          context: snyk-env 
-          requires: 
-            - php_7 
+          context: snyk-env
+          requires:
+            - php_7
