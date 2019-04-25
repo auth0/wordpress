@@ -213,64 +213,23 @@ class WP_Auth0_LoginManager {
 	 *
 	 * @throws WP_Auth0_LoginFlowValidationException - OAuth login flow errors.
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
+	 * @throws WP_Auth0_InvalidIdTokenException If the ID token does not validate.
 	 *
 	 * @link https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
-	 *
-	 * @throws WP_Auth0_InvalidIdTokenException If the ID token does not validate.
 	 */
 	public function redirect_login() {
-		$domain             = $this->a0_options->get( 'domain' );
-		$auth_domain        = $this->a0_options->get_auth_domain();
-		$client_id          = $this->a0_options->get( 'client_id' );
-		$client_secret      = $this->a0_options->get( 'client_secret' );
-		$userinfo_resp_code = null;
-		$userinfo_resp_body = null;
 
-		// Exchange authorization code for an access token.
-		$exchange_resp = WP_Auth0_Api_Client::get_token(
-			$auth_domain,
-			$client_id,
-			$client_secret,
-			'authorization_code',
-			array(
-				'redirect_uri' => $this->a0_options->get_wp_auth0_url(),
-				'code'         => $this->query_vars( 'code' ),
-			)
-		);
+		// Exchange authorization code for tokens.
+		$exchange_api       = new WP_Auth0_Api_Exchange_Code( $this->a0_options, $this->a0_options->get_auth_domain() );
+		$exchange_resp_body = $exchange_api->call( $this->query_vars( 'code' ) );
 
-		$exchange_resp_code = (int) wp_remote_retrieve_response_code( $exchange_resp );
-		$exchange_resp_body = wp_remote_retrieve_body( $exchange_resp );
-
-		if ( 401 === $exchange_resp_code ) {
-
-			// Not authorized to access the site.
-			WP_Auth0_ErrorManager::insert_auth0_error(
-				__METHOD__ . ' L:' . __LINE__,
-				__( 'An /oauth/token call triggered a 401 response from Auth0. ', 'wp-auth0' ) .
-				__( 'Please check the Client Secret saved in the Auth0 plugin settings. ', 'wp-auth0' )
-			);
-			throw new WP_Auth0_LoginFlowValidationException( __( 'Not Authorized', 'wp-auth0' ), 401 );
-
-		} elseif ( empty( $exchange_resp_body ) ) {
-
-			// Unsuccessful for another reason.
-			if ( $exchange_resp instanceof WP_Error ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' L:' . __LINE__, $exchange_resp );
-			}
-
-			throw new WP_Auth0_LoginFlowValidationException( __( 'Unknown error', 'wp-auth0' ), $exchange_resp_code );
+		if ( ! $exchange_resp_body ) {
+			throw new WP_Auth0_LoginFlowValidationException( __( 'Error exchanging code', 'wp-auth0' ) );
 		}
 
 		$data = json_decode( $exchange_resp_body );
 
-		if ( empty( $data->access_token ) ) {
-
-			// Look for clues as to what went wrong.
-			$e_message = ! empty( $data->error_description ) ? $data->error_description : __( 'Unknown error', 'wp-auth0' );
-			throw new WP_Auth0_LoginFlowValidationException( $e_message, $exchange_resp_code );
-		}
-
-		$access_token  = $data->access_token;
+		$access_token  = isset( $data->access_token ) ? $data->access_token : null;
 		$id_token      = $data->id_token;
 		$refresh_token = isset( $data->refresh_token ) ? $data->refresh_token : null;
 
@@ -278,20 +237,18 @@ class WP_Auth0_LoginManager {
 		$jwt_verifier  = new WP_Auth0_Id_Token_Validator( $id_token, $this->a0_options );
 		$decoded_token = $jwt_verifier->decode();
 
-		// Attempt to authenticate with the Management API.
-		$client_credentials_api   = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
-		$client_credentials_token = $client_credentials_api->call();
-
-		if ( $client_credentials_token ) {
-			$userinfo_resp      = WP_Auth0_Api_Client::get_user( $domain, $client_credentials_token, $decoded_token->sub );
-			$userinfo_resp_code = (int) wp_remote_retrieve_response_code( $userinfo_resp );
-			$userinfo_resp_body = wp_remote_retrieve_body( $userinfo_resp );
+		// Attempt to authenticate with the Management API, if allowed.
+		$userinfo     = null;
+		$is_migration = $this->a0_options->get( 'migration_ws' );
+		if ( apply_filters( 'wp_auth0_use_management_api_for_userinfo', ! $is_migration ) ) {
+			$cc_api        = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
+			$get_user_api  = new WP_Auth0_Api_Get_User( $this->a0_options, $cc_api );
+			$get_user_resp = $get_user_api->call( $decoded_token->sub );
+			$userinfo      = ! empty( $get_user_resp ) ? json_decode( $get_user_resp ) : $get_user_resp;
 		}
 
 		// Management API call failed, fallback to ID token.
-		if ( 200 === $userinfo_resp_code && ! empty( $userinfo_resp_body ) ) {
-			$userinfo = json_decode( $userinfo_resp_body );
-		} else {
+		if ( ! $userinfo ) {
 			$userinfo = $this->clean_id_token( $decoded_token );
 		}
 

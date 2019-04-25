@@ -117,12 +117,13 @@ abstract class WP_Auth0_Api_Abstract {
 	 * WP_Auth0_Api_Abstract constructor.
 	 *
 	 * @param WP_Auth0_Options $options - WP_Auth0_Options instance.
+	 * @param string|null      $domain - Domain to use.
 	 */
-	public function __construct( WP_Auth0_Options $options ) {
+	public function __construct( WP_Auth0_Options $options, $domain = null ) {
 		$this->options = $options;
 
 		// Required settings in the plugin.
-		$this->domain        = $this->options->get( 'domain' );
+		$this->domain        = $domain ?: $this->options->get( 'domain' );
 		$this->client_id     = $this->options->get( 'client_id' );
 		$this->client_secret = $this->options->get( 'client_secret' );
 
