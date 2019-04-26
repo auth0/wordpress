@@ -260,15 +260,8 @@ class WP_Auth0_Api_Client {
 
 	public static function get_required_scopes() {
 		return array(
-			'update:clients',
-			'update:connections',
-			'create:connections',
-			'read:connections',
-			'create:rules',
-			'delete:rules',
 			'read:users',
 			'update:users',
-			'update:guardian_factors',
 		);
 	}
 
