@@ -18,10 +18,8 @@ body.a0-widget-open>* {
 }
 #auth0-login-form {
     width: 300px;
-    margin: 0 auto 15px;
-}
-#auth0-login-form {
     min-height: 250px;
+    margin: 0 auto 15px;
 }
 .auth0-login{
     margin-bottom: 20px;
