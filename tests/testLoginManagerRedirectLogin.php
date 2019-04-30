@@ -56,6 +56,8 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 
 		delete_transient( WP_Auth0_Api_Client_Credentials::TOKEN_TRANSIENT_KEY );
 		delete_transient( WP_Auth0_Api_Client_Credentials::SCOPE_TRANSIENT_KEY );
+
+		remove_filter( 'wp_auth0_use_management_api_for_userinfo', '__return_false', 10 );
 	}
 
 	/**
@@ -377,7 +379,7 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 	/**
 	 * Test that the user information is from the ID token if migrations are being used.
 	 */
-	public function testThatLoginUserIsCalledWithIdTokenIfMigration() {
+	public function testThatLoginUserIsCalledWithIdTokenIfFilterIsSetToFalse() {
 		$this->startHttpMocking();
 		$this->http_request_type = [
 			// Mocked successful code exchange with a valid ID token.
@@ -390,7 +392,7 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		self::$opts->set( 'client_id', '__test_client_id__' );
 		self::$opts->set( 'client_secret', '__test_client_secret__' );
 		self::$opts->set( 'client_signing_algorithm', 'HS256' );
-		self::$opts->set( 'migration_ws', 1 );
+		add_filter( 'wp_auth0_use_management_api_for_userinfo', '__return_false', 10 );
 		$_REQUEST['code'] = uniqid();
 
 		try {

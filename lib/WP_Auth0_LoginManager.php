@@ -238,9 +238,8 @@ class WP_Auth0_LoginManager {
 		$decoded_token = $jwt_verifier->decode();
 
 		// Attempt to authenticate with the Management API, if allowed.
-		$userinfo     = null;
-		$is_migration = $this->a0_options->get( 'migration_ws' );
-		if ( apply_filters( 'wp_auth0_use_management_api_for_userinfo', ! $is_migration ) ) {
+		$userinfo = null;
+		if ( apply_filters( 'wp_auth0_use_management_api_for_userinfo', true ) ) {
 			$cc_api        = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
 			$get_user_api  = new WP_Auth0_Api_Get_User( $this->a0_options, $cc_api );
 			$get_user_resp = $get_user_api->call( $decoded_token->sub );
