@@ -74,7 +74,6 @@ Like widgets, shortcode login forms will use the main plugins settings. It can b
 - `form_title` - Text to appear at top of the login form
 - `gravatar` - Display the user's Gravatar; set to `1` for yes
 - `redirect_to` - A direct URL to use after successful login
-- `social_big_buttons` - Display full-width social login buttons; set to `1` for yes
 - `custom_css` - Valid CSS to alter the login form
 - `custom_js` - Valid JS to alter the login form
 - `dict` - Valid JSON to override form text ([see options here](https://github.com/auth0/lock/blob/master/src/i18n/en.js))
@@ -84,7 +83,7 @@ Like widgets, shortcode login forms will use the main plugins settings. It can b
 
 Example:
 
-    [auth0 show_as_modal="1" social_big_buttons="1" modal_trigger_name="Login button: This text is configurable!"]
+    [auth0 show_as_modal="1" modal_trigger_name="Login button: This text is configurable!"]
 
 == Frequently Asked Questions ==
 

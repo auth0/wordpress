@@ -1,13 +1,12 @@
 <?php
-$form_title         = isset( $instance['form_title'] ) ? $instance['form_title'] : '';
-$social_big_buttons = isset( $instance['social_big_buttons'] ) ? $instance['social_big_buttons'] : '';
-$gravatar           = isset( $instance['gravatar'] ) ? $instance['gravatar'] : '';
-$icon_url           = isset( $instance['icon_url'] ) ? $instance['icon_url'] : '';
-$dict               = isset( $instance['dict'] ) ? $instance['dict'] : '';
-$extra_conf         = isset( $instance['extra_conf'] ) ? $instance['extra_conf'] : '';
-$custom_css         = isset( $instance['custom_css'] ) ? $instance['custom_css'] : '';
-$custom_js          = isset( $instance['custom_js'] ) ? $instance['custom_js'] : '';
-$redirect_to        = isset( $instance['redirect_to'] ) ? $instance['redirect_to'] : '';
+$form_title  = isset( $instance['form_title'] ) ? $instance['form_title'] : '';
+$gravatar    = isset( $instance['gravatar'] ) ? $instance['gravatar'] : '';
+$icon_url    = isset( $instance['icon_url'] ) ? $instance['icon_url'] : '';
+$dict        = isset( $instance['dict'] ) ? $instance['dict'] : '';
+$extra_conf  = isset( $instance['extra_conf'] ) ? $instance['extra_conf'] : '';
+$custom_css  = isset( $instance['custom_css'] ) ? $instance['custom_css'] : '';
+$custom_js   = isset( $instance['custom_js'] ) ? $instance['custom_js'] : '';
+$redirect_to = isset( $instance['redirect_to'] ) ? $instance['redirect_to'] : '';
 
 if ( $this->showAsModal() ) :
 	$modal_trigger_name = isset( $instance['modal_trigger_name'] ) ? $instance['modal_trigger_name'] : '';
@@ -30,26 +29,6 @@ if ( $this->showAsModal() ) :
 	<input class="widefat" id="<?php echo $this->get_field_id( 'redirect_to' ); ?>"
 		   name="<?php echo $this->get_field_name( 'redirect_to' ); ?>"
 		   type="text" value="<?php echo esc_attr( $redirect_to ); ?>" />
-</p>
-<p>
-	<label><?php _e( 'Show big social buttons:' ); ?></label>
-	<br>
-	<div class="radio-wrapper">
-		<input id="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>_yes"
-			   name="<?php echo $this->get_field_name( 'social_big_buttons' ); ?>"
-			   type="radio" value="1" <?php echo esc_attr( $social_big_buttons ) == 1 ? 'checked="true"' : ''; ?> />
-		<label for="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>_yes"><?php _e( 'Yes' ); ?></label>
-		&nbsp;
-		<input id="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>_no"
-			   name="<?php echo $this->get_field_name( 'social_big_buttons' ); ?>"
-			   type="radio" value="0" <?php echo esc_attr( $social_big_buttons ) == 0 ? 'checked="true"' : ''; ?> />
-		<label for="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>_no"><?php _e( 'No' ); ?></label>
-		&nbsp;
-		<input id="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>_inherit"
-			   name="<?php echo $this->get_field_name( 'social_big_buttons' ); ?>"
-			   type="radio" value="" <?php echo esc_attr( $social_big_buttons ) === '' ? 'checked="true"' : ''; ?> />
-		<label for="<?php echo $this->get_field_id( 'social_big_buttons' ); ?>_no"><?php _e( 'Default Setting' ); ?></label>
-	</div>
 </p>
 <p>
 	<label><?php _e( 'Enable Gravatar integration:' ); ?></label>

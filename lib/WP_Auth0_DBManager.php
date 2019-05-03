@@ -178,6 +178,11 @@ class WP_Auth0_DBManager {
 			delete_option( 'wp_auth0_grant_types_success' );
 		}
 
+		// 3.11.0
+		if ( ( $this->current_db_version < 22 && 0 !== $this->current_db_version ) || 22 === $version_to_install ) {
+			$options->remove( 'social_big_buttons' );
+		}
+
 		$options->update_all();
 
 		$this->current_db_version = AUTH0_DB_VERSION;

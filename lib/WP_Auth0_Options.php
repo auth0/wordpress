@@ -248,7 +248,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			// Appearance
 			'icon_url'                  => '',
 			'form_title'                => '',
-			'social_big_buttons'        => false,
 			'gravatar'                  => true,
 			'username_style'            => '',
 			'primary_color'             => '',
