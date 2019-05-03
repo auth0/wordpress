@@ -9,8 +9,8 @@
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
         "wp-coding-standards/wpcs": "^1",
-        "phpunit/phpunit": "^5.7.26 || ^6.5.0",
-        "phpcompatibility/phpcompatibility-wp": "*"
+        "phpcompatibility/phpcompatibility-wp": "*",
+        "phpunit/phpunit": "^5.0 || ^6.0"
     },
     "authors": [
         {
@@ -41,9 +41,9 @@
         "test-group": "\"vendor/bin/phpunit\" --coverage-text --group",
         "test-ci": "\"vendor/bin/phpunit\" --coverage-clover=coverage.xml",
         "pre-commit-no-tests": [ "@compat", "@phpcs-i18n", "@phpcbf", "@phpcbf-tests", "@phpcs-tests" ],
-        "pre-commit": [ "@compat", "@phpcs-i18n", "@phpcbf", "@phpcbf-tests", "@phpcs-tests", "@test" ]
+        "pre-commit": [ "@phpcbf", "@phpcbf-tests", "@phpcs-tests", "@compat", "@phpcs-i18n", "@test" ]
     },
-    "autoload": {
+    "autoload-dev": {
         "classmap": ["tests/classes/", "tests/traits/"]
     }
 }
