@@ -36,4 +36,4 @@ if ( ! file_exists( $_tests_dir . '/includes/bootstrap.php' ) ) {
 }
 
 require $_tests_dir . '/includes/bootstrap.php';
-require dirname( __FILE__ ) . '/../vendor/autoload.php';
+require dirname( dirname( __FILE__ ) ) . '/vendor/autoload.php';

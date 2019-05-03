@@ -30,7 +30,7 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		self::$opts->set( 'migration_ips', '1.2.3.4,2.3.4.5,34.195.142.251,35.160.3.103,34.253.4.94,13.54.254.182' );
 
 		// Run the update.
-		$db_manager->install_db( $test_version, null );
+		$db_manager->install_db( $test_version );
 
 		// Check that the correct IPs were removed.
 		$remaining_ips = explode( ',', self::$opts->get( 'migration_ips' ) );
@@ -66,7 +66,7 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		update_option( 'wp_auth0_grant_types_success', 1 );
 
 		// Run the update.
-		$db_manager->install_db( $test_version, null );
+		$db_manager->install_db( $test_version );
 
 		// Check that unused settings were nullified.
 		$this->assertNull( self::$opts->get( 'auth0js-cdn' ) );
@@ -99,7 +99,7 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		// Set the previous default CDN URL.
 		self::$opts->set( 'cdn_url', 'https://cdn.auth0.com/js/lock/11.5/lock.min.js' );
 
-		$db_manager->install_db( $test_version, null );
+		$db_manager->install_db( $test_version );
 
 		// Check that Lock URL was updated.
 		$this->assertEquals( 'https://cdn.auth0.com/js/lock/11.15/lock.min.js', self::$opts->get( 'cdn_url' ) );
@@ -113,7 +113,7 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		// Set CDN URL to something other than previous version.
 		self::$opts->set( 'cdn_url', 'https://cdn.auth0.com/js/lock/12.0/lock.min.js' );
 
-		$db_manager->install_db( $test_version, null );
+		$db_manager->install_db( $test_version );
 
 		// Check that Lock URL was not updated.
 		$this->assertEquals( 'https://cdn.auth0.com/js/lock/12.0/lock.min.js', self::$opts->get( 'cdn_url' ) );
@@ -131,16 +131,31 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		$db_manager->init();
 
 		self::$opts->set( 'wordpress_login_enabled', 1 );
-		$db_manager->install_db( $test_version, null );
+		$db_manager->install_db( $test_version );
 		$wle_code_1 = self::$opts->get( 'wle_code' );
 		$this->assertEquals( 'link', self::$opts->get( 'wordpress_login_enabled' ) );
 		$this->assertGreaterThan( 24, strlen( $wle_code_1 ) );
 
 		self::$opts->set( 'wordpress_login_enabled', 0 );
 		self::$opts->set( 'wle_code', '' );
-		$db_manager->install_db( $test_version, null );
+		$db_manager->install_db( $test_version );
 		$this->assertEquals( 'isset', self::$opts->get( 'wordpress_login_enabled' ) );
 		$this->assertGreaterThan( 24, strlen( self::$opts->get( 'wle_code' ) ) );
 		$this->assertNotEquals( $wle_code_1, self::$opts->get( 'wle_code' ) );
+	}
+
+	/**
+	 * Test that 21 -> 22 DB migration removes the social_big_buttons option.
+	 */
+	public function testThatV22RemovesSocialBigButtons() {
+		$test_version = 22;
+
+		update_option( 'auth0_db_version', $test_version - 1 );
+		$db_manager = new WP_Auth0_DBManager( self::$opts );
+		$db_manager->init();
+
+		self::$opts->set( 'social_big_buttons', '__test_val__' );
+		$db_manager->install_db( $test_version );
+		$this->assertNull( self::$opts->get( 'social_big_buttons' ) );
 	}
 }
