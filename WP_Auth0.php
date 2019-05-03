@@ -9,8 +9,8 @@
  * Text Domain: wp-auth0
  */
 
-define( 'WPA0_VERSION', '3.10.0' );
-define( 'AUTH0_DB_VERSION', 21 );
+define( 'WPA0_VERSION', '3.11.0-beta' );
+define( 'AUTH0_DB_VERSION', 22 );
 
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );

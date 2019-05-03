@@ -52,12 +52,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 				'function' => 'render_form_title',
 			),
 			array(
-				'name'     => __( 'Large Social Buttons', 'wp-auth0' ),
-				'opt'      => 'social_big_buttons',
-				'id'       => 'wpa0_social_big_buttons',
-				'function' => 'render_social_big_buttons',
-			),
-			array(
 				'name'     => __( 'Enable Gravatar Integration', 'wp-auth0' ),
 				'opt'      => 'gravatar',
 				'id'       => 'wpa0_gravatar',
@@ -257,6 +251,8 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	/**
 	 * Render form field and description for the `social_big_buttons` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * TODO: Deprecate, option being removed in Lock
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
@@ -472,19 +468,18 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	}
 
 	public function basic_validation( $old_options, $input ) {
-		$input['form_title']         = sanitize_text_field( $input['form_title'] );
-		$input['icon_url']           = esc_url( $input['icon_url'], array( 'http', 'https' ) );
-		$input['social_big_buttons'] = ( isset( $input['social_big_buttons'] ) ? $input['social_big_buttons'] : 0 );
-		$input['gravatar']           = ( isset( $input['gravatar'] ) ? $input['gravatar'] : 0 );
-		$input['language']           = sanitize_text_field( $input['language'] );
-		$input['primary_color']      = sanitize_text_field( $input['primary_color'] );
+		$input['form_title']    = empty( $input['form_title'] ) ? '' : sanitize_text_field( $input['form_title'] );
+		$input['icon_url']      = empty( $input['icon_url'] ) ? '' : esc_url( $input['icon_url'], array( 'http', 'https' ) );
+		$input['gravatar']      = isset( $input['gravatar'] ) ? $input['gravatar'] : 0;
+		$input['language']      = empty( $input['language'] ) ? '' : sanitize_text_field( $input['language'] );
+		$input['primary_color'] = empty( $input['primary_color'] ) ? '' : sanitize_text_field( $input['primary_color'] );
 
 		$input['language_dictionary'] = isset( $input['language_dictionary'] ) ? trim( $input['language_dictionary'] ) : '';
 		if ( ! empty( $input['language_dictionary'] ) ) {
 			if ( json_decode( $input['language_dictionary'] ) === null ) {
-				$error = __( 'The language dictionary parameter should be a valid json object.', 'wp-auth0' );
+				$error = __( 'The language dictionary parameter should be a valid JSON object.', 'wp-auth0' );
 				$this->add_validation_error( $error );
-				$input['language'] = $old_options['language'];
+				$input['language_dictionary'] = isset( $old_options['language_dictionary'] ) ? $old_options['language_dictionary'] : '';
 			}
 		}
 		return $input;

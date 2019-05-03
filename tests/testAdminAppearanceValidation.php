@@ -92,7 +92,7 @@ class TestAdminAppearanceValidation extends WP_Auth0_Test_Case {
 		$this->assertCount( 1, $wp_settings_errors );
 		$this->assertEquals( 'wp_auth0_settings', $wp_settings_errors[0]['setting'] );
 		$this->assertEquals( 'error', $wp_settings_errors[0]['type'] );
-		$this->assertEquals( 'The language dictionary parameter should be a valid JSON object', $wp_settings_errors[0]['message'] );
+		$this->assertEquals( 'The language dictionary parameter should be a valid JSON object.', $wp_settings_errors[0]['message'] );
 	}
 
 	/**
@@ -109,7 +109,7 @@ class TestAdminAppearanceValidation extends WP_Auth0_Test_Case {
 		$this->assertCount( 1, $wp_settings_errors );
 		$this->assertEquals( 'wp_auth0_settings', $wp_settings_errors[0]['setting'] );
 		$this->assertEquals( 'error', $wp_settings_errors[0]['type'] );
-		$this->assertEquals( 'The language dictionary parameter should be a valid JSON object', $wp_settings_errors[0]['message'] );
+		$this->assertEquals( 'The language dictionary parameter should be a valid JSON object.', $wp_settings_errors[0]['message'] );
 	}
 
 	/**

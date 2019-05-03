@@ -111,9 +111,8 @@ class WP_Auth0_Lock10_Options {
 
 		}
 
-		if ( $this->_is_valid( $settings, 'social_big_buttons' ) ) {
-			$options_obj['socialButtonStyle'] = $settings['social_big_buttons'] ? 'big' : 'small';
-		}
+		$options_obj['socialButtonStyle'] = 'big';
+
 		if ( isset( $settings['gravatar'] ) && empty( $settings['gravatar'] ) ) {
 			$options_obj['avatar'] = null;
 		}
