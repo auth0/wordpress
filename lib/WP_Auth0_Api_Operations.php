@@ -135,12 +135,10 @@ class WP_Auth0_Api_Operations {
 	 *
 	 * @param string $name  - Database script name.
 	 *
-	 * @return bool|string
+	 * @return string
 	 */
 	protected function get_script( $name ) {
-		$script = (string) file_get_contents( WPA0_PLUGIN_DIR . 'lib/scripts-js/db-' . $name . '.js' );
-		$script = str_replace( '{AUTH0_ACTION}', 'migration-ws-' . $name, $script );
-		return $script;
+		return (string) file_get_contents( WPA0_PLUGIN_DIR . 'lib/scripts-js/db-' . $name . '.js' );
 	}
 
 	/*
