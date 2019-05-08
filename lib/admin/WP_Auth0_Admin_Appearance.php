@@ -252,7 +252,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * Render form field and description for the `social_big_buttons` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
-	 * TODO: Deprecate, option being removed in Lock
+	 * @deprecated - 3.11.0, no longer used and no replacement provided.
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
 	 *
