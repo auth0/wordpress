@@ -102,7 +102,7 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		$db_manager->install_db( $test_version );
 
 		// Check that Lock URL was updated.
-		$this->assertEquals( 'https://cdn.auth0.com/js/lock/11.15/lock.min.js', self::$opts->get( 'cdn_url' ) );
+		$this->assertEquals( WPA0_LOCK_CDN_URL, self::$opts->get( 'cdn_url' ) );
 		$this->assertNull( self::$opts->get( 'custom_cdn_url' ) );
 
 		self::$opts->reset();
