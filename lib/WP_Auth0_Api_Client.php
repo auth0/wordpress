@@ -103,7 +103,7 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.11.0, use WP_Auth0_Api_Client_Credentials instead.
 	 *
 	 * @codeCoverageIgnore - Deprecated
 	 */
@@ -207,7 +207,7 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.11.0, use WP_Auth0_Api_Get_User instead.
 	 *
 	 * @codeCoverageIgnore - Deprecated
 	 */
