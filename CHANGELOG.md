@@ -1,5 +1,48 @@
 # Change Log
 
+## [3.11.0](https://github.com/auth0/wp-auth0/tree/3.11.0) (2019-05-30)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.10.0...3.11.0)
+
+**Notes on this release**
+
+- Lock was updated from 11.15 to 11.16. The option to display social connections in small styled buttons is no longer available due to branding compliance reasons with third party identity providers. All the social connections will now be displayed as large styled buttons.
+- New installs using user migration will now have a namespaced user ID returned to Auth0 on first login. If you have or plan on having multiple custom databases, please see the [User Migration documentation](https://auth0.com/docs/cms/wordpress/user-migration) for more information. New installs will also use configuration variables instead of hard-coded values for the URL, migration token, and user namespace.
+- The WordPress core login override has been refactored to improve the user experience and overall security. 
+- Added more complete ID token validation during login.
+- Sites using VIP Go are now able to use MFA.
+- Fixed a bug that prevented sites using user migration from changing the WordPress user's email. 
+
+**Closed issues**
+- WordPress.com VIP Go MFA incompatibility [\#687](https://github.com/auth0/wp-auth0/issues/687)
+
+**Added**
+- Add auth0_lock_options filter [\#691](https://github.com/auth0/wp-auth0/pull/691) ([joshcanhelp](https://github.com/joshcanhelp))
+- Spanish translations for new UI text [\#685](https://github.com/auth0/wp-auth0/pull/685) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Changed**
+- Fix migration namespace and callback [\#694](https://github.com/auth0/wp-auth0/pull/694) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change JWT leeway filter name and add tests [\#692](https://github.com/auth0/wp-auth0/pull/692) ([joshcanhelp](https://github.com/joshcanhelp))
+- Translate plugin links and remove error log [\#682](https://github.com/auth0/wp-auth0/pull/682) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove small social icons [\#680](https://github.com/auth0/wp-auth0/pull/680) ([joshcanhelp](https://github.com/joshcanhelp))
+- Edit login.css [\#679](https://github.com/auth0/wp-auth0/pull/679) ([frooeyzanny](https://github.com/frooeyzanny))
+- Refactor Auth Code login and add tests [\#678](https://github.com/auth0/wp-auth0/pull/678) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Deprecated**
+- Deprecate WP_Auth0_Options::can_show_wp_login_form() [\#690](https://github.com/auth0/wp-auth0/pull/690) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate WP_Auth0_Api_Client methods [\#684](https://github.com/auth0/wp-auth0/pull/684) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate Render Big Social Buttons method [\#683](https://github.com/auth0/wp-auth0/pull/683) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix VIP Go MFA screen [\#689](https://github.com/auth0/wp-auth0/pull/689) ([joshcanhelp](https://github.com/joshcanhelp))
+- Namespace user IDs and use DB configuration for new user migration installs [\#681](https://github.com/auth0/wp-auth0/pull/681) ([joshcanhelp](https://github.com/joshcanhelp))
+- Use existing migration token during setup [\#676](https://github.com/auth0/wp-auth0/pull/676) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix Auth0 logout redirect [\#675](https://github.com/auth0/wp-auth0/pull/675) ([joshcanhelp](https://github.com/joshcanhelp))
+- Check for email update in migration-ws-get-user endpoint [\#674](https://github.com/auth0/wp-auth0/pull/674) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Security**
+- Improve WordPress core login override for security and UX [\#686](https://github.com/auth0/wp-auth0/pull/686) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add issuer and audience ID token validation [\#677](https://github.com/auth0/wp-auth0/pull/677) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [3.10.0](https://github.com/auth0/wp-auth0/tree/3.10.0) (2019-04-18)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.9.0...3.10.0)
 
