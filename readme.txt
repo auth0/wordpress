@@ -1,6 +1,6 @@
 === Login by Auth0 ===
 Tags: login, oauth, authentication, single sign on, ldap, active directory, saml, windows azure ad, google apps, two factor, two-factor, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer, passwordless, sms, magiclink, totp, social
-Tested up to: 5.1.1
+Tested up to: 5.2.1
 Requires at least: 3.8
 Requires PHP: 5.3
 License: GPLv2
@@ -24,10 +24,6 @@ This plugin replaces standard WordPress login forms with one powered by [Auth0](
     - Password policies
     - Email validation
     - Mitigate brute force attacks
-- **Easy access to your users data**
-    - User stats
-    - Profile data
-    - Login history and locations
 
 == Installation ==
 
@@ -122,24 +118,11 @@ All is not lost!
 
 == Changelog ==
 
-**v3.10.0**
+**v3.11.0**
 
-- The "Single Logout" functionality has been changed. This setting now logs users out of Auth0 automatically when they log out of WordPress. It no longer logs users out of WordPress automatically if they have already been logged out of Auth0.
-- Core WordPress login form display handling has been changed to improve security and maintainability. Please review the "Original Login Form on wp-login.php" option on the **Basic** tab of the plugin settings to make sure this is set properly for your site.
-- The following settings have been deprecated and will be removed in the next major release if they are still being used:
-    - **Features > "Single Sign-On"**: To use SSO going forward, please activate the "Universal Login Page" setting in the **Features** tab of the plugin settings.
-    - **Appearance > "Custom CSS" and "Custom JS"**: If you already have CSS and/or JS stored, the setting will continue to work until the next major release. If not, these fields have been removed.
-- The following settings have been removed from the plugin. Please use the Auth Dashboard to manage these going forward. The functionality has not been removed from Auth0, only the ability to manage it from WordPress:
-    - **Basic >API Token**
-    - **Features > "Password Policy"**
-    - **Features > "Multifactor Authentication (MFA)"**
-    - **Features > "FullContact"**
-    - **Features > "Store Geolocation"**
-    - **Features > "Store Zipcode Income"**
-    - **Advanced > "Link Users with Same Email"**
-- The default Lock version has been updated from 11.5 to 11.14. If you have never changed the Lock URL, this update will be automatic for this and future releases.
-- An Auth0 login form (or link to login) will now appear on the WooCommerce Checkout page for sites that allow or require an account to check out.
-- The connection with the WP JWT Auth plugin has been deprecated and will be removed in the next major.
-- And more!
+- Lock was updated from 11.15 to 11.16. The option to display social connections in small styled buttons is no longer available due to branding compliance reasons with third party identity providers. All the social connections will now be displayed as large styled buttons.
+- New installs using user migration will now have a namespaced user ID returned to Auth0 on first login. If you have or plan on having multiple custom databases, please see the [User Migration documentation](https://auth0.com/docs/cms/wordpress/user-migration) for more information. New installs will also use configuration variables instead of hard-coded values for the URL, migration token, and user namespace.
+- Added more complete ID token validation during login.
+- Fixed a bug that prevented sites using user migration from changing the WordPress user's email.
 
-[Complete list of changes for this and other releases](https://github.com/auth0/wp-auth0/blob/master/CHANGELOG.md#3100-2019-04-16)
+[Complete list of changes for this and other releases](https://github.com/auth0/wp-auth0/releases)
