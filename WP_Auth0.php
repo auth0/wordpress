@@ -21,7 +21,7 @@ define( 'WPA0_PLUGIN_IMG_URL', WPA0_PLUGIN_URL . 'assets/img/' );
 define( 'WPA0_PLUGIN_LIB_URL', WPA0_PLUGIN_URL . 'assets/lib/' );
 define( 'WPA0_PLUGIN_BS_URL', WPA0_PLUGIN_URL . 'assets/bootstrap/' );
 
-define( 'WPA0_LOCK_CDN_URL', 'https://cdn.auth0.com/js/lock/11.15/lock.min.js' );
+define( 'WPA0_LOCK_CDN_URL', 'https://cdn.auth0.com/js/lock/11.16/lock.min.js' );
 define( 'WPA0_AUTH0_JS_CDN_URL', 'https://cdn.auth0.com/js/auth0/9.10/auth0.min.js' );
 
 define( 'WPA0_AUTH0_LOGIN_FORM_ID', 'auth0-login-form' );
@@ -309,19 +309,24 @@ class WP_Auth0 {
 	 */
 	public function wp_add_plugin_settings_link( $links ) {
 
-		$settings_link = '<a href="admin.php?page=wpa0-errors">Error Log</a>';
-		array_unshift( $links, $settings_link );
+		array_unshift(
+			$links,
+			sprintf(
+				'<a href="%s">%s</a>',
+				admin_url( 'admin.php?page=wpa0' ),
+				__( 'Settings', 'wp-auth0' )
+			)
+		);
 
-		$settings_link = '<a href="admin.php?page=wpa0">Settings</a>';
-		array_unshift( $links, $settings_link );
-
-		$client_id     = $this->a0_options->get( 'client_id' );
-		$client_secret = $this->a0_options->get( 'client_secret' );
-		$domain        = $this->a0_options->get( 'domain' );
-
-		if ( ( ! $client_id ) || ( ! $client_secret ) || ( ! $domain ) ) {
-			$settings_link = '<a href="admin.php?page=wpa0-setup">Quick Setup</a>';
-			array_unshift( $links, $settings_link );
+		if ( ! self::ready() ) {
+			array_unshift(
+				$links,
+				sprintf(
+					'<a href="%s">%s</a>',
+					admin_url( 'admin.php?page=wpa0-setup' ),
+					__( 'Setup Wizard', 'wp-auth0' )
+				)
+			);
 		}
 
 		return $links;
