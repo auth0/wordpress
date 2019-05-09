@@ -141,7 +141,7 @@ class WP_Auth0_Lock10_Options {
 		}
 		if ( $this->signup_mode ) {
 			$options_obj['allowLogin'] = false;
-		} elseif ( isset( $_GET['action'] ) && $_GET['action'] == 'register' ) {
+		} elseif ( wp_auth0_is_current_login_action( array( 'register' ) ) ) {
 			$options_obj['allowLogin'] = true;
 		}
 		return $options_obj;
@@ -219,7 +219,7 @@ class WP_Auth0_Lock10_Options {
 			$options_obj['disableSignupAction'] = true;
 		}
 
-		if ( function_exists( 'login_header' ) && isset( $_GET['action'] ) && 'register' === $_GET['action'] ) {
+		if ( wp_auth0_is_current_login_action( array( 'register' ) ) ) {
 			$options_obj['initialScreen'] = 'signUp';
 		}
 
