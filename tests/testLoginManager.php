@@ -231,7 +231,8 @@ class TestLoginManager extends WP_Auth0_Test_Case {
 		// First, check that a redirect is happening.
 		self::$opts->set( 'auto_login', 1 );
 		self::auth0Ready( true );
-		$caught_redirect = [];
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+		$caught_redirect           = [];
 		try {
 			// Need to hide error messages here because a cookie is set.
 			// phpcs:ignore
@@ -240,13 +241,6 @@ class TestLoginManager extends WP_Auth0_Test_Case {
 			$caught_redirect = unserialize( $e->getMessage() );
 		}
 		$this->assertEquals( 302, $caught_redirect['status'] );
-
-		// Test that request method will stop redirect.
-		$_SERVER['REQUEST_METHOD'] = 'POST';
-		$this->assertFalse( $login_manager->login_auto() );
-
-		$_SERVER['REQUEST_METHOD'] = 'PATCH';
-		$this->assertFalse( $login_manager->login_auto() );
 	}
 
 	/**
@@ -272,7 +266,7 @@ class TestLoginManager extends WP_Auth0_Test_Case {
 		$this->assertEquals( 302, $caught_redirect['status'] );
 
 		// Test that WP login override will skip the redirect.
-		$_GET['wle'] = 1;
+		$_REQUEST['wle'] = 1;
 		$this->assertFalse( $login_manager->login_auto() );
 	}
 
@@ -299,7 +293,8 @@ class TestLoginManager extends WP_Auth0_Test_Case {
 		$this->assertEquals( 302, $caught_redirect['status'] );
 
 		// Test that logout will skip the redirect.
-		$_GET['action'] = 'logout';
+		$GLOBALS['pagenow'] = 'wp-login.php';
+		$_REQUEST['action'] = 'logout';
 		$this->assertFalse( $login_manager->login_auto() );
 	}
 }
