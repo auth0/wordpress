@@ -33,22 +33,22 @@ class TestWpLoginHooks extends WP_Auth0_Test_Case {
 	public function testThatWpRedirectIsNotChangedIfNotLostpasswordAction() {
 		$GLOBALS['pagenow'] = 'wp-login.php';
 		$_REQUEST['action'] = '__not_lostpassword__';
-		$location = 'wp-login.php?checkemail=confirm';
+		$location           = 'wp-login.php?checkemail=confirm';
 		$this->assertEquals( $location, wp_auth0_filter_wp_redirect_lostpassword( $location ) );
 	}
 
 	public function testThatWpRedirectIsNotChangedIfIncorrectReferrer() {
-		$GLOBALS['pagenow'] = 'wp-login.php';
-		$_REQUEST['action'] = 'lostpassword';
-		$location = 'wp-login.php?checkemail=confirm';
+		$GLOBALS['pagenow']      = 'wp-login.php';
+		$_REQUEST['action']      = 'lostpassword';
+		$location                = 'wp-login.php?checkemail=confirm';
 		$_SERVER['HTTP_REFERER'] = '__incorrect_referrer__';
 		$this->assertEquals( $location, wp_auth0_filter_wp_redirect_lostpassword( $location ) );
 	}
 
 	public function testThatWpRedirectIsChangedIfCorrectReferrer() {
-		$GLOBALS['pagenow'] = 'wp-login.php';
-		$_REQUEST['action'] = 'lostpassword';
-		$location = 'wp-login.php?checkemail=confirm';
+		$GLOBALS['pagenow']      = 'wp-login.php';
+		$_REQUEST['action']      = 'lostpassword';
+		$location                = 'wp-login.php?checkemail=confirm';
 		$_SERVER['HTTP_REFERER'] = wp_login_url() . '?action=lostpassword&wle';
 		$this->assertEquals( $location . '&wle', wp_auth0_filter_wp_redirect_lostpassword( $location ) );
 	}
