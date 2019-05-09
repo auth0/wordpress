@@ -38,5 +38,8 @@
             <property name="text_domain" type="array" value="wp-auth0" />
         </properties>
     </rule>
+    <rule ref="Squiz.Commenting.FunctionComment">
+        <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+    </rule>
 
 </ruleset>

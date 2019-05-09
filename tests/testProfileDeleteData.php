@@ -49,8 +49,8 @@ class TestProfileDeleteData extends WP_Auth0_Test_Case {
 			],
 		];
 		// Same method hooked to both actions.
-		$this->assertHooked( 'edit_user_profile', 'WP_Auth0_Profile_Delete_Data', $expect_hooked );
-		$this->assertHooked( 'show_user_profile', 'WP_Auth0_Profile_Delete_Data', $expect_hooked );
+		$this->assertHookedClass( 'edit_user_profile', 'WP_Auth0_Profile_Delete_Data', $expect_hooked );
+		$this->assertHookedClass( 'show_user_profile', 'WP_Auth0_Profile_Delete_Data', $expect_hooked );
 
 		$expect_hooked = [
 			'delete_user_data' => [
@@ -58,7 +58,7 @@ class TestProfileDeleteData extends WP_Auth0_Test_Case {
 				'accepted_args' => 1,
 			],
 		];
-		$this->assertHooked( 'wp_ajax_auth0_delete_data', 'WP_Auth0_Profile_Delete_Data', $expect_hooked );
+		$this->assertHookedClass( 'wp_ajax_auth0_delete_data', 'WP_Auth0_Profile_Delete_Data', $expect_hooked );
 	}
 
 	/**
