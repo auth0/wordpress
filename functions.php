@@ -19,6 +19,36 @@ function wp_auth0_get_option( $key, $default = null ) {
 	return WP_Auth0_Options::Instance()->get( $key, $default );
 }
 
+/**
+ * @param array $action
+ *
+ * @return bool
+ */
+function wp_auth0_is_current_login_action( array $action ) {
+
+	// Not on wp-login.php.
+	if ( ! isset( $GLOBALS['pagenow'] ) || 'wp-login.php' !== $GLOBALS['pagenow'] ) {
+		return false;
+	}
+
+	$current_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : null;
+	return in_array( $current_action, $action );
+}
+
+function wp_auth0_login_override_url( $login_url = null ) {
+	$wle = WP_Auth0_Options::Instance()->get( 'wordpress_login_enabled' );
+	if ( 'no' === $wle ) {
+		return '';
+	}
+
+	$wle_code = '';
+	if ( 'code' === $wle ) {
+		$wle_code = WP_Auth0_Options::Instance()->get( 'wle_code' );
+	}
+
+	$login_url = $login_url ?: wp_login_url();
+	return add_query_arg( 'wle', $wle_code, $login_url );
+}
 
 if ( ! function_exists( 'get_auth0userinfo' ) ) {
 	function get_auth0userinfo( $user_id ) {

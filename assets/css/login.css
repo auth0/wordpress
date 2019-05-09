@@ -59,6 +59,8 @@ body.a0-widget-open>* {
 
 #registerform,
 #loginform,
+#lostpasswordform,
+#login_error,
 #login #nav,
 .woocommerce-checkout .woocommerce-info,
 .woocommerce-account .woocommerce h2,
@@ -68,6 +70,8 @@ body.a0-widget-open>* {
 
 .a0-show-core-login #registerform,
 .a0-show-core-login #loginform,
+.a0-show-core-login #lostpasswordform,
+.a0-show-core-login #login_error,
 .a0-show-core-login #login #nav,
 .a0-show-core-login.woocommerce-checkout .woocommerce-info,
 .a0-show-core-login.woocommerce-account .woocommerce h2,

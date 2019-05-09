@@ -194,7 +194,16 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 */
 	public function can_show_wp_login_form() {
 
-		if ( ! isset( $_GET['wle'] ) ) {
+		if ( ! WP_Auth0::ready() ) {
+			return true;
+		}
+
+		$current_login_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : null;
+		if ( in_array( $current_login_action, array( 'resetpass', 'rp' ) ) ) {
+			return true;
+		}
+
+		if ( ! isset( $_REQUEST['wle'] ) ) {
 			return false;
 		}
 
@@ -208,7 +217,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 		}
 
 		$wle_code = $this->get( 'wle_code' );
-		if ( 'code' === $wle_setting && $wle_code === $_GET['wle'] ) {
+		if ( 'code' === $wle_setting && $wle_code === $_REQUEST['wle'] ) {
 			return true;
 		}
 

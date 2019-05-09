@@ -395,22 +395,11 @@ class WP_Auth0 {
 	 * @return string
 	 */
 	public function render_form( $html ) {
-		// Do not show Auth0 form when ...
-		if (
-			// .. processing lost password
-			( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'lostpassword', 'rp' ) ) )
-			// ... handling an Auth0 callback
-			|| ! empty( $_GET['auth0'] )
-			// ... plugin is not configured
-			|| ! self::ready()
-		) {
-			return $html;
-		}
-
 		ob_start();
 		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
 		renderAuth0Form();
-		return ob_get_clean();
+		$auth0_form = ob_get_clean();
+		return $auth0_form ? $auth0_form : $html;
 	}
 
 	public function wp_init() {
@@ -582,6 +571,77 @@ $a0_plugin->init();
 /*
  * Core WP hooks
  */
+
+/**
+ * Redirect the lost password submission to a login override page.
+ *
+ * @param string $location - Redirect in process.
+ *
+ * @return string
+ */
+function wp_auth0_filter_wp_redirect_lostpassword( $location ) {
+	// Make sure we're going to the check email action on the login page.
+	if ( 'wp-login.php?checkemail=confirm' !== $location ) {
+		return $location;
+	}
+
+	// Make sure we're on the lost password action on the login page.
+	if ( ! wp_auth0_is_current_login_action( array( 'lostpassword' ) ) ) {
+		return $location;
+	}
+
+	// Make sure we can allow core WP login form overrides
+	if ( 'never' === wp_auth0_get_option( 'wordpress_login_enabled' ) ) {
+		return $location;
+	}
+
+	$required_referrer = remove_query_arg( 'wle', wp_login_url() );
+	$required_referrer = add_query_arg( 'action', 'lostpassword', $required_referrer );
+	$required_referrer = wp_auth0_login_override_url( $required_referrer );
+
+	// Make sure we're coming from an override page.
+	if ( ! isset( $_SERVER['HTTP_REFERER'] ) || $required_referrer !== $_SERVER['HTTP_REFERER'] ) {
+		return $location;
+	}
+
+	return wp_auth0_login_override_url( $location );
+}
+
+add_filter( 'wp_redirect', 'wp_auth0_filter_wp_redirect_lostpassword', 100 );
+
+/**
+ * Add an override code to the lost password URL if authorized.
+ *
+ * @param string $wp_login_url - Existing lost password URL.
+ *
+ * @return string
+ */
+function wp_auth0_filter_login_override_url( $wp_login_url ) {
+	if ( WP_Auth0_Options::Instance()->can_show_wp_login_form() && isset( $_REQUEST['wle'] ) ) {
+		// We are on an override page.
+		$wp_login_url = add_query_arg( 'wle', $_REQUEST['wle'], $wp_login_url );
+	} elseif ( wp_auth0_is_current_login_action( array( 'resetpass' ) ) ) {
+		// We are on the reset password page with a link to login.
+		// This page will not be shown unless we get here via a valid reset password request.
+		$wp_login_url = wp_auth0_login_override_url( $wp_login_url );
+	}
+	return $wp_login_url;
+}
+
+add_filter( 'lostpassword_url', 'wp_auth0_filter_login_override_url', 100 );
+add_filter( 'login_url', 'wp_auth0_filter_login_override_url', 100 );
+
+/**
+ * Add the core WP form override to the lost password form.
+ */
+function wp_auth0_filter_login_override_form() {
+	if ( WP_Auth0_Options::Instance()->can_show_wp_login_form() && isset( $_REQUEST['wle'] ) ) {
+		printf( '<input type="hidden" name="wle" value="%s" />', $_REQUEST['wle'] );
+	}
+}
+
+add_action( 'login_form', 'wp_auth0_filter_login_override_form', 100 );
+add_action( 'lostpassword_form', 'wp_auth0_filter_login_override_form', 100 );
 
 /**
  * Add new classes to the body element on all front-end and login pages.

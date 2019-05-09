@@ -105,17 +105,12 @@ class WP_Auth0_LoginManager {
 	public function login_auto() {
 
 		// Do not redirect anywhere if this is a logout action.
-		if ( isset( $_GET['action'] ) && 'logout' === $_GET['action'] ) {
+		if ( wp_auth0_is_current_login_action( array( 'logout' ) ) ) {
 			return false;
 		}
 
 		// Do not redirect login page override.
 		if ( $this->a0_options->can_show_wp_login_form() ) {
-			return false;
-		}
-
-		// Do not redirect non-GET requests.
-		if ( strtolower( $_SERVER['REQUEST_METHOD'] ) !== 'get' ) {
 			return false;
 		}
 
@@ -132,7 +127,7 @@ class WP_Auth0_LoginManager {
 		}
 
 		// Do not use the ULP if the setting is off or if the plugin is not configured.
-		if ( ! $this->a0_options->get( 'auto_login', false ) || ! WP_Auth0::ready() ) {
+		if ( ! $this->a0_options->get( 'auto_login', false ) ) {
 			return false;
 		}
 
