@@ -46,7 +46,7 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 				'accepted_args' => 2,
 			],
 		];
-		$this->assertHooked( 'profile_update', 'WP_Auth0_Profile_Change_Email', $expect_hooked );
+		$this->assertHookedClass( 'profile_update', 'WP_Auth0_Profile_Change_Email', $expect_hooked );
 	}
 
 	/**

@@ -83,11 +83,11 @@ class TestEditProfile extends WP_Auth0_Test_Case {
 		$pagenow = 'profile.php';
 		$this->clear_hooks( 'admin_enqueue_scripts' );
 		self::$editProfile->init();
-		$this->assertHooked( 'admin_enqueue_scripts', 'WP_Auth0_EditProfile', $expect_hooked );
+		$this->assertHookedClass( 'admin_enqueue_scripts', 'WP_Auth0_EditProfile', $expect_hooked );
 
 		$pagenow = 'user-edit.php';
 		$this->clear_hooks( 'admin_enqueue_scripts' );
 		self::$editProfile->init();
-		$this->assertHooked( 'admin_enqueue_scripts', 'WP_Auth0_EditProfile', $expect_hooked );
+		$this->assertHookedClass( 'admin_enqueue_scripts', 'WP_Auth0_EditProfile', $expect_hooked );
 	}
 }

@@ -79,12 +79,11 @@ trait HookHelpers {
 	 *
 	 * @return void
 	 */
-	public function assertHooked( $hook_name, $function, array $hooked ) {
+	public function assertHookedClass( $hook_name, $function, array $hooked ) {
 		$hooks = $this->get_hook( $hook_name );
 		$found = 0;
 
 		foreach ( $hooks as $hook ) {
-			$method_name = $hook['function'][1];
 
 			if ( ! is_array( $hook['function'] ) ) {
 				continue;
@@ -94,9 +93,40 @@ trait HookHelpers {
 				continue;
 			}
 
+			$method_name = $hook['function'][1];
+
 			if ( ! empty( $hooked[ $method_name ] ) ) {
 				$this->assertEquals( $hooked[ $method_name ]['priority'], $hook['priority'] );
 				$this->assertEquals( $hooked[ $method_name ]['accepted_args'], $hook['accepted_args'] );
+				$found++;
+			}
+		}
+		$this->assertEquals( count( $hooked ), $found );
+	}
+
+	/**
+	 * Assert that hooked functions exists with the correct priority and arg numbers.
+	 *
+	 * @param string $hook_name - Hook name in WP.
+	 * @param array  $hooked - Array of functions to check.
+	 *
+	 * @return void
+	 */
+	public function assertHookedFunction( $hook_name, array $hooked ) {
+		$hooks = $this->get_hook( $hook_name );
+		$found = 0;
+
+		foreach ( $hooks as $hook ) {
+
+			if ( is_array( $hook['function'] ) ) {
+				continue;
+			}
+
+			$function_name = $hook['function'];
+
+			if ( ! empty( $hooked[ $function_name ] ) ) {
+				$this->assertEquals( $hooked[ $function_name ]['priority'], $hook['priority'] );
+				$this->assertEquals( $hooked[ $function_name ]['accepted_args'], $hook['accepted_args'] );
 				$found++;
 			}
 		}

@@ -74,9 +74,9 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 		];
 		// Same method hooked to all 3 actions.
 		$class_name = 'WP_Auth0_Profile_Change_Password';
-		$this->assertHooked( 'user_profile_update_errors', $class_name, $expect_hooked );
-		$this->assertHooked( 'validate_password_reset', $class_name, $expect_hooked );
-		$this->assertHooked( 'woocommerce_save_account_details_errors', $class_name, $expect_hooked );
+		$this->assertHookedClass( 'user_profile_update_errors', $class_name, $expect_hooked );
+		$this->assertHookedClass( 'validate_password_reset', $class_name, $expect_hooked );
+		$this->assertHookedClass( 'woocommerce_save_account_details_errors', $class_name, $expect_hooked );
 	}
 
 	/**
