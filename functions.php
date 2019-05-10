@@ -20,11 +20,15 @@ function wp_auth0_get_option( $key, $default = null ) {
 }
 
 /**
- * @param array $action
+ * Determine if we're on the wp-login.php page and if the current action matches a given set.
+ *
+ * @since 3.11.0
+ *
+ * @param array $actions - An array of actions to check the current action against.
  *
  * @return bool
  */
-function wp_auth0_is_current_login_action( array $action ) {
+function wp_auth0_is_current_login_action( array $actions ) {
 
 	// Not on wp-login.php.
 	if ( ! isset( $GLOBALS['pagenow'] ) || 'wp-login.php' !== $GLOBALS['pagenow'] ) {
@@ -32,9 +36,16 @@ function wp_auth0_is_current_login_action( array $action ) {
 	}
 
 	$current_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : null;
-	return in_array( $current_action, $action );
+	return in_array( $current_action, $actions );
 }
 
+/**
+ * Generate a valid WordPress login override URL, if plugin settings allow.
+ *
+ * @param null $login_url - An existing URL to modify; default is wp-login.php.
+ *
+ * @return string
+ */
 function wp_auth0_login_override_url( $login_url = null ) {
 	$wle = WP_Auth0_Options::Instance()->get( 'wordpress_login_enabled' );
 	if ( 'no' === $wle ) {

@@ -3,7 +3,7 @@
  * Plugin Name: Login by Auth0
  * Plugin URL: https://auth0.com/docs/cms/wordpress
  * Description: Login by Auth0 provides improved username/password login, Passwordless login, Social login, MFA, and Single Sign On for all your sites.
- * Version: 3.10.0
+ * Version: 3.11.0-beta
  * Author: Auth0
  * Author URI: https://auth0.com
  * Text Domain: wp-auth0
@@ -573,33 +573,32 @@ $a0_plugin->init();
  */
 
 /**
- * Redirect the lost password submission to a login override page.
+ * Redirect a successful lost password submission to a login override page.
  *
  * @param string $location - Redirect in process.
  *
  * @return string
  */
 function wp_auth0_filter_wp_redirect_lostpassword( $location ) {
-	// Make sure we're going to the check email action on the login page.
+	// Make sure we're going to the check email action on the wp-login page.
 	if ( 'wp-login.php?checkemail=confirm' !== $location ) {
 		return $location;
 	}
 
-	// Make sure we're on the lost password action on the login page.
+	// Make sure we're on the lost password action on the wp-login page.
 	if ( ! wp_auth0_is_current_login_action( array( 'lostpassword' ) ) ) {
 		return $location;
 	}
 
-	// Make sure we can allow core WP login form overrides
+	// Make sure plugin settings allow core WP login form overrides
 	if ( 'never' === wp_auth0_get_option( 'wordpress_login_enabled' ) ) {
 		return $location;
 	}
 
+	// Make sure we're coming from an override page.
 	$required_referrer = remove_query_arg( 'wle', wp_login_url() );
 	$required_referrer = add_query_arg( 'action', 'lostpassword', $required_referrer );
 	$required_referrer = wp_auth0_login_override_url( $required_referrer );
-
-	// Make sure we're coming from an override page.
 	if ( ! isset( $_SERVER['HTTP_REFERER'] ) || $required_referrer !== $_SERVER['HTTP_REFERER'] ) {
 		return $location;
 	}
@@ -632,7 +631,7 @@ add_filter( 'lostpassword_url', 'wp_auth0_filter_login_override_url', 100 );
 add_filter( 'login_url', 'wp_auth0_filter_login_override_url', 100 );
 
 /**
- * Add the core WP form override to the lost password form.
+ * Add the core WP form override to the lost password and login forms.
  */
 function wp_auth0_filter_login_override_form() {
 	if ( WP_Auth0_Options::Instance()->can_show_wp_login_form() && isset( $_REQUEST['wle'] ) ) {

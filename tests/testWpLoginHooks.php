@@ -46,11 +46,13 @@ class TestWpLoginHooks extends WP_Auth0_Test_Case {
 	}
 
 	public function testThatWpRedirectIsChangedIfCorrectReferrer() {
+		self::$opts->set( 'wordpress_login_enabled', 'code' );
+		self::$opts->set( 'wle_code', 'test_wle_code' );
 		$GLOBALS['pagenow']      = 'wp-login.php';
 		$_REQUEST['action']      = 'lostpassword';
 		$location                = 'wp-login.php?checkemail=confirm';
-		$_SERVER['HTTP_REFERER'] = wp_login_url() . '?action=lostpassword&wle';
-		$this->assertEquals( $location . '&wle', wp_auth0_filter_wp_redirect_lostpassword( $location ) );
+		$_SERVER['HTTP_REFERER'] = wp_login_url() . '?action=lostpassword&wle=test_wle_code';
+		$this->assertEquals( $location . '&wle=test_wle_code', wp_auth0_filter_wp_redirect_lostpassword( $location ) );
 	}
 
 	public function testThatWpLoginOverrideUrlHooksAreSet() {
