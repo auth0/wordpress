@@ -139,11 +139,7 @@ class WP_Auth0_Lock10_Options {
 			$extra_conf_arr = json_decode( $settings['extra_conf'], true );
 			$options_obj    = array_merge_recursive( $extra_conf_arr, $options_obj );
 		}
-		if ( $this->signup_mode ) {
-			$options_obj['allowLogin'] = false;
-		} elseif ( wp_auth0_is_current_login_action( array( 'register' ) ) ) {
-			$options_obj['allowLogin'] = true;
-		}
+
 		return $options_obj;
 	}
 
