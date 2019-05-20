@@ -190,38 +190,12 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	/**
+	 * TODO: Deprecate
+	 *
 	 * @return bool
 	 */
 	public function can_show_wp_login_form() {
-
-		if ( ! WP_Auth0::ready() ) {
-			return true;
-		}
-
-		$current_login_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : null;
-		if ( in_array( $current_login_action, array( 'resetpass', 'rp' ) ) ) {
-			return true;
-		}
-
-		if ( ! isset( $_REQUEST['wle'] ) ) {
-			return false;
-		}
-
-		$wle_setting = $this->get( 'wordpress_login_enabled' );
-		if ( 'no' === $wle_setting ) {
-			return false;
-		}
-
-		if ( in_array( $wle_setting, array( 'link', 'isset' ) ) ) {
-			return true;
-		}
-
-		$wle_code = $this->get( 'wle_code' );
-		if ( 'code' === $wle_setting && $wle_code === $_REQUEST['wle'] ) {
-			return true;
-		}
-
-		return false;
+		return wp_auth0_can_show_wp_login_form();
 	}
 
 	/**

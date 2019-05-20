@@ -47,18 +47,54 @@ function wp_auth0_is_current_login_action( array $actions ) {
  * @return string
  */
 function wp_auth0_login_override_url( $login_url = null ) {
-	$wle = WP_Auth0_Options::Instance()->get( 'wordpress_login_enabled' );
+	$wle = wp_auth0_get_option( 'wordpress_login_enabled' );
 	if ( 'no' === $wle ) {
 		return '';
 	}
 
 	$wle_code = '';
 	if ( 'code' === $wle ) {
-		$wle_code = WP_Auth0_Options::Instance()->get( 'wle_code' );
+		$wle_code = wp_auth0_get_option( 'wle_code' );
 	}
 
 	$login_url = $login_url ?: wp_login_url();
 	return add_query_arg( 'wle', $wle_code, $login_url );
+}
+
+/**
+ * Can the core WP login form be shown?
+ *
+ * @return bool
+ */
+function wp_auth0_can_show_wp_login_form() {
+	if ( ! WP_Auth0::ready() ) {
+		return true;
+	}
+
+	$current_login_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : null;
+	if ( in_array( $current_login_action, array( 'resetpass', 'rp' ) ) ) {
+		return true;
+	}
+
+	if ( ! isset( $_REQUEST['wle'] ) ) {
+		return false;
+	}
+
+	$wle_setting = wp_auth0_get_option( 'wordpress_login_enabled' );
+	if ( 'no' === $wle_setting ) {
+		return false;
+	}
+
+	if ( in_array( $wle_setting, array( 'link', 'isset' ) ) ) {
+		return true;
+	}
+
+	$wle_code = wp_auth0_get_option( 'wle_code' );
+	if ( 'code' === $wle_setting && $wle_code === $_REQUEST['wle'] ) {
+		return true;
+	}
+
+	return false;
 }
 
 if ( ! function_exists( 'get_auth0userinfo' ) ) {
