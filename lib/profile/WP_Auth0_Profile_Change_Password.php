@@ -45,6 +45,9 @@ class WP_Auth0_Profile_Change_Password {
 
 		// Used during WooCommerce edit account save.
 		add_action( 'woocommerce_save_account_details_errors', array( $this, 'validate_new_password' ), 10, 2 );
+
+		// Used during Buddypress account settings save.
+		add_action( 'bp_core_general_settings_after_save', array( $this, 'validate_new_password_for_current_user' ), 10, 0 );
 	}
 
 	/**
@@ -106,5 +109,16 @@ class WP_Auth0_Profile_Change_Password {
 		$error_msg = is_string( $result ) ? $result : __( 'Password could not be updated.', 'wp-auth0' );
 		$errors->add( 'auth0_password', $error_msg, array( 'form-field' => $field_name ) );
 		return false;
+	}
+
+	/**
+	 * Update the current user's password at Auth0
+	 * Hooked to: bp_core_general_settings_after_save
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @return boolean
+	 */
+	public function validate_new_password_for_current_user() {
+		return $this->validate_new_password(new WP_Error(), get_current_user_id());
 	}
 }
