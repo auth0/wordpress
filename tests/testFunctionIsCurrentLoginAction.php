@@ -37,4 +37,13 @@ class TestFunctionIsCurrentLoginAction extends WP_Auth0_Test_Case {
 		$_REQUEST['action'] = '__valid_action__';
 		$this->assertTrue( wp_auth0_is_current_login_action( [ '__valid_action__' ] ) );
 	}
+
+	/**
+	 * @runInSeparateProcess
+	 */
+	public function testThatCurrentActionIsTrueIfActionDoesMatchAndLoginHeaderExists() {
+		function login_header() {}
+		$_REQUEST['action'] = '__valid_action__';
+		$this->assertTrue( wp_auth0_is_current_login_action( [ '__valid_action__' ] ) );
+	}
 }
