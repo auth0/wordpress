@@ -32,6 +32,14 @@ class TestOptionCanShowWpLogin extends WP_Auth0_Test_Case {
 		$this->assertTrue( wp_auth0_can_show_wp_login_form() );
 	}
 
+	public function testThatWpLoginCanBeShownIfOn2faPage() {
+		self::auth0Ready();
+		$GLOBALS['pagenow'] = 'wp-login.php';
+		$_REQUEST['action'] = 'validate_2fa';
+		self::$opts->set( 'wordpress_login_enabled', 'link' );
+		$this->assertTrue( wp_auth0_can_show_wp_login_form() );
+	}
+
 	public function testThatWpLoginCannotBeShownIfNotWle() {
 		self::auth0Ready();
 		self::$opts->set( 'wordpress_login_enabled', 'link' );
@@ -69,6 +77,20 @@ class TestOptionCanShowWpLogin extends WP_Auth0_Test_Case {
 		$_REQUEST['wle'] = '__invalid_wle_code__';
 		self::$opts->set( 'wordpress_login_enabled', 'code' );
 		self::$opts->set( 'wle_code', '__test_wle_code__' );
+		$this->assertFalse( wp_auth0_can_show_wp_login_form() );
+	}
+
+	public function testThatWpLoginCanBeShownIfLoginSuccessful() {
+		self::auth0Ready();
+		self::$opts->set( 'wordpress_login_enabled', 'link' );
+		set_query_var( 'auth0_login_successful', true );
+		$this->assertTrue( wp_auth0_can_show_wp_login_form() );
+	}
+
+	public function testThatWpLoginCannotBeShownIfLoginNotSuccessful() {
+		self::auth0Ready();
+		self::$opts->set( 'wordpress_login_enabled', 'link' );
+		set_query_var( 'auth0_login_successful', false );
 		$this->assertFalse( wp_auth0_can_show_wp_login_form() );
 	}
 }
