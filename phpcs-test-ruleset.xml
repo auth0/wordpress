@@ -41,5 +41,8 @@
     <rule ref="Squiz.Commenting.FunctionComment">
         <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
     </rule>
+    <rule ref="Generic.Commenting">
+        <exclude name="Generic.Commenting.DocComment.MissingShort"/>
+    </rule>
 
 </ruleset>

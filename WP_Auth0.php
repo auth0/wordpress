@@ -616,7 +616,7 @@ add_filter( 'wp_redirect', 'wp_auth0_filter_wp_redirect_lostpassword', 100 );
  * @return string
  */
 function wp_auth0_filter_login_override_url( $wp_login_url ) {
-	if ( WP_Auth0_Options::Instance()->can_show_wp_login_form() && isset( $_REQUEST['wle'] ) ) {
+	if ( wp_auth0_can_show_wp_login_form() && isset( $_REQUEST['wle'] ) ) {
 		// We are on an override page.
 		$wp_login_url = add_query_arg( 'wle', $_REQUEST['wle'], $wp_login_url );
 	} elseif ( wp_auth0_is_current_login_action( array( 'resetpass' ) ) ) {
@@ -634,7 +634,7 @@ add_filter( 'login_url', 'wp_auth0_filter_login_override_url', 100 );
  * Add the core WP form override to the lost password and login forms.
  */
 function wp_auth0_filter_login_override_form() {
-	if ( WP_Auth0_Options::Instance()->can_show_wp_login_form() && isset( $_REQUEST['wle'] ) ) {
+	if ( wp_auth0_can_show_wp_login_form() && isset( $_REQUEST['wle'] ) ) {
 		printf( '<input type="hidden" name="wle" value="%s" />', $_REQUEST['wle'] );
 	}
 }
@@ -650,7 +650,7 @@ add_action( 'lostpassword_form', 'wp_auth0_filter_login_override_form', 100 );
  * @return array
  */
 function wp_auth0_filter_body_class( array $classes ) {
-	if ( WP_Auth0_Options::Instance()->can_show_wp_login_form() ) {
+	if ( wp_auth0_can_show_wp_login_form() ) {
 		$classes[] = 'a0-show-core-login';
 	}
 	return $classes;

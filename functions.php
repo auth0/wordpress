@@ -31,7 +31,10 @@ function wp_auth0_get_option( $key, $default = null ) {
 function wp_auth0_is_current_login_action( array $actions ) {
 
 	// Not on wp-login.php.
-	if ( ! isset( $GLOBALS['pagenow'] ) || 'wp-login.php' !== $GLOBALS['pagenow'] ) {
+	if (
+		( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' !== $GLOBALS['pagenow'] ) &&
+		! function_exists( 'login_header' )
+	) {
 		return false;
 	}
 
@@ -71,8 +74,11 @@ function wp_auth0_can_show_wp_login_form() {
 		return true;
 	}
 
-	$current_login_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : null;
-	if ( in_array( $current_login_action, array( 'resetpass', 'rp' ) ) ) {
+	if ( wp_auth0_is_current_login_action( array( 'resetpass', 'rp', 'validate_2fa' ) ) ) {
+		return true;
+	}
+
+	if ( get_query_var( 'auth0_login_successful' ) ) {
 		return true;
 	}
 

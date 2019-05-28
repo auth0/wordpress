@@ -110,7 +110,7 @@ class WP_Auth0_LoginManager {
 		}
 
 		// Do not redirect login page override.
-		if ( $this->a0_options->can_show_wp_login_form() ) {
+		if ( wp_auth0_can_show_wp_login_form() ) {
 			return false;
 		}
 
@@ -151,6 +151,8 @@ class WP_Auth0_LoginManager {
 	 * Handles errors and state validation
 	 */
 	public function init_auth0() {
+
+		set_query_var( 'auth0_login_successful', false );
 
 		// Not an Auth0 login process or settings are not configured to allow logins.
 		if ( ! $this->query_vars( 'auth0' ) || ! WP_Auth0::ready() ) {
@@ -446,6 +448,8 @@ class WP_Auth0_LoginManager {
 		} catch ( Exception $e ) {
 			throw new WP_Auth0_BeforeLoginException( $e->getMessage() );
 		}
+
+		set_query_var( 'auth0_login_successful', true );
 
 		$secure_cookie = is_ssl();
 

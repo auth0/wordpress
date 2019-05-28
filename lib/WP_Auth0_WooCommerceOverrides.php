@@ -45,7 +45,7 @@ class WP_Auth0_WooCommerceOverrides {
 	public function override_woocommerce_checkout_login_form( $html ) {
 		$this->render_login_form( 'checkout' );
 
-		if ( $this->options->can_show_wp_login_form() ) {
+		if ( wp_auth0_can_show_wp_login_form() ) {
 			echo '<style>.woocommerce-checkout .woocommerce-info{display:block;}</style>';
 		}
 	}
