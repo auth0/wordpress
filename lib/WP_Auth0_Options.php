@@ -190,9 +190,11 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	/**
-	 * TODO: Deprecate
+	 * @deprecated - 3.11.0, use wp_auth0_can_show_wp_login_form() instead.
 	 *
 	 * @return bool
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function can_show_wp_login_form() {
 		return wp_auth0_can_show_wp_login_form();
