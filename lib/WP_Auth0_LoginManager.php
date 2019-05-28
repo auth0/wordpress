@@ -234,7 +234,7 @@ class WP_Auth0_LoginManager {
 
 		// Attempt to authenticate with the Management API, if allowed.
 		$userinfo = null;
-		if ( apply_filters( 'wp_auth0_use_management_api_for_userinfo', true ) ) {
+		if ( apply_filters( 'auth0_use_management_api_for_userinfo', true ) ) {
 			$cc_api        = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
 			$get_user_api  = new WP_Auth0_Api_Get_User( $this->a0_options, $cc_api );
 			$get_user_resp = $get_user_api->call( $decoded_token->sub );

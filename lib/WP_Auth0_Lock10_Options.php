@@ -219,7 +219,7 @@ class WP_Auth0_Lock10_Options {
 			$options_obj['initialScreen'] = 'signUp';
 		}
 
-		return $options_obj;
+		return apply_filters( 'auth0_lock_options', $options_obj );
 	}
 
 	/**
