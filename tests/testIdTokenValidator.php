@@ -244,4 +244,24 @@ class TestIdTokenValidator extends WP_Auth0_Test_Case {
 		$decoded_token = @$decoder->decode( true );
 		$this->assertEquals( '__test_data__', $decoded_token->data );
 	}
+
+	/**
+	 * Test that the JWT leeway filter works.
+	 */
+	public function testThatJwtFilterChangesLeewayTimeUsed() {
+		add_filter( 'auth0_jwt_leeway', [ self::class, 'jwtLeewayFilter' ], 10 );
+		new WP_Auth0_Id_Token_Validator( uniqid(), self::$opts );
+		remove_filter( 'auth0_jwt_leeway', [ self::class, 'jwtLeewayFilter' ], 10 );
+
+		$this->assertEquals( 1234, JWT::$leeway );
+	}
+
+	/**
+	 * Use this function to filter the JWT leeway.
+	 *
+	 * @return int
+	 */
+	public static function jwtLeewayFilter() {
+		return 1234;
+	}
 }
