@@ -1,6 +1,6 @@
 <?php
 /**
- * Contains Class TestOptionCanShowWpLogin.
+ * Contains Class TestFunctionCanShowWpLoginForm.
  *
  * @package WP-Auth0
  *
@@ -8,9 +8,9 @@
  */
 
 /**
- * Class TestOptionCanShowWpLogin.
+ * Class TestFunctionCanShowWpLoginForm.
  */
-class TestOptionCanShowWpLogin extends WP_Auth0_Test_Case {
+class TestFunctionCanShowWpLoginForm extends WP_Auth0_Test_Case {
 
 	public function testThatWpLoginCanBeShownIfPluginNotReady() {
 		$this->assertTrue( wp_auth0_can_show_wp_login_form() );

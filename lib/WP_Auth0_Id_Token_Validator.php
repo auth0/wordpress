@@ -62,7 +62,7 @@ class WP_Auth0_Id_Token_Validator {
 		$this->issuer    = 'https://' . $opts->get_auth_domain() . '/';
 		$this->audience  = $opts->get( 'client_id' );
 
-		JWT::$leeway = apply_filters( 'wp_auth0_jwt_leeway', \JWT::$leeway );
+		JWT::$leeway = absint( apply_filters( 'auth0_jwt_leeway', \JWT::$leeway ) );
 	}
 
 	/**
