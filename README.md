@@ -6,6 +6,7 @@ This plugin replaces standard WordPress login forms with one powered by Auth0 th
 
 **Please note:** As of 9/28/2018, the `master` branch is now the latest reviewed and tested functionality rather than the latest WP.org release. The code here should be considered pre-release and should not be used on production.
 
+[![CircleCI](https://img.shields.io/circleci/project/github/auth0/wp-auth0/master.svg)](https://circleci.com/gh/auth0/wp-auth0)
 [![WordPress plugin downloads](https://img.shields.io/wordpress/plugin/dt/auth0.svg)](https://wordpress.org/plugins/auth0/)
 [![WordPress plugin rating](https://img.shields.io/wordpress/plugin/r/auth0.svg)](https://wordpress.org/plugins/auth0/)
 [![WordPress plugin version](https://img.shields.io/wordpress/plugin/v/auth0.svg)](https://wordpress.org/plugins/auth0/)
