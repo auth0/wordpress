@@ -68,6 +68,7 @@ class TestApiChangeEmail extends WP_Auth0_Test_Case {
 	public function testThatApiCallIsFormedCorrectly() {
 		$this->startHttpHalting();
 		self::$opts->set( 'domain', self::TEST_DOMAIN );
+		self::$opts->set( 'client_id', '__test_client_id__' );
 
 		// Should succeed with a user_id + provider and set_bearer returning true.
 		$change_email = $this->getStub( true );
@@ -86,7 +87,10 @@ class TestApiChangeEmail extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'PATCH', $decoded_res['method'] );
 		$this->assertArrayHasKey( 'email', $decoded_res['body'] );
 		$this->assertEquals( 'email@address.com', $decoded_res['body']['email'] );
+		$this->assertArrayHasKey( 'email_verified', $decoded_res['body'] );
 		$this->assertTrue( $decoded_res['body']['email_verified'] );
+		$this->assertArrayHasKey( 'client_id', $decoded_res['body'] );
+		$this->assertEquals( '__test_client_id__', $decoded_res['body']['client_id'] );
 	}
 
 	/**
