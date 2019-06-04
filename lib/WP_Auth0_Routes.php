@@ -217,9 +217,6 @@ class WP_Auth0_Routes {
 			$username = $_POST['username'];
 
 			$user = get_user_by( 'email', $username );
-			if ( ! $user ) {
-				$user = get_user_by( 'slug', $username );
-			}
 
 			if ( ! $user ) {
 				throw new Exception( __( 'User not found', 'wp-auth0' ), 401 );

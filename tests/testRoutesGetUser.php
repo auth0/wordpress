@@ -200,12 +200,5 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 		$this->assertEquals( $user->display_name, $output_em->data->display_name );
 		$this->assertObjectNotHasAttribute( 'user_pass', $output_em->data );
 		$this->assertEmpty( self::$error_log->get() );
-
-		// Test username lookup.
-		$_POST['username'] = $user->user_login;
-		$output_un         = json_decode( self::$routes->custom_requests( self::$wp, true ) );
-
-		$this->assertEquals( $output_em, $output_un );
-		$this->assertEmpty( self::$error_log->get() );
 	}
 }
