@@ -66,6 +66,7 @@ class WP_Auth0_Api_Change_Email extends WP_Auth0_Api_Abstract {
 			->add_body( 'email', $email )
 			// Email is either changed by an admin or verified by WP.
 			->add_body( 'email_verified', true )
+			->add_body( 'client_id', $this->options->get( 'client_id' ) )
 			->patch()
 			->handle_response( __METHOD__ );
 	}
