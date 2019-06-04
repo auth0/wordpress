@@ -84,7 +84,7 @@ class WP_Auth0_Api_Operations {
 				'bareConfiguration'            => array(
 					'endpointUrl'    => site_url( 'index.php?a0_action=' ),
 					'migrationToken' => $migration_token,
-					'userNamespace'  => get_auth0_curatedBlogName(),
+					'userNamespace'  => 'DB-' . get_auth0_curatedBlogName(),
 				),
 			);
 

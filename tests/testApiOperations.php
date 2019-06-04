@@ -111,7 +111,7 @@ class TestApiOperations extends WP_Auth0_Test_Case {
 		);
 
 		$this->assertEquals(
-			get_auth0_curatedBlogName(),
+			'DB-' . get_auth0_curatedBlogName(),
 			$caught_http['body']['options']['bareConfiguration']['userNamespace']
 		);
 	}
