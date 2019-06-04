@@ -111,9 +111,8 @@ class WP_Auth0_Lock10_Options {
 
 		}
 
-		if ( $this->_is_valid( $settings, 'social_big_buttons' ) ) {
-			$options_obj['socialButtonStyle'] = $settings['social_big_buttons'] ? 'big' : 'small';
-		}
+		$options_obj['socialButtonStyle'] = 'big';
+
 		if ( isset( $settings['gravatar'] ) && empty( $settings['gravatar'] ) ) {
 			$options_obj['avatar'] = null;
 		}
@@ -140,11 +139,7 @@ class WP_Auth0_Lock10_Options {
 			$extra_conf_arr = json_decode( $settings['extra_conf'], true );
 			$options_obj    = array_merge_recursive( $extra_conf_arr, $options_obj );
 		}
-		if ( $this->signup_mode ) {
-			$options_obj['allowLogin'] = false;
-		} elseif ( isset( $_GET['action'] ) && $_GET['action'] == 'register' ) {
-			$options_obj['allowLogin'] = true;
-		}
+
 		return $options_obj;
 	}
 
@@ -220,11 +215,11 @@ class WP_Auth0_Lock10_Options {
 			$options_obj['disableSignupAction'] = true;
 		}
 
-		if ( function_exists( 'login_header' ) && isset( $_GET['action'] ) && 'register' === $_GET['action'] ) {
+		if ( wp_auth0_is_current_login_action( array( 'register' ) ) ) {
 			$options_obj['initialScreen'] = 'signUp';
 		}
 
-		return $options_obj;
+		return apply_filters( 'auth0_lock_options', $options_obj );
 	}
 
 	/**

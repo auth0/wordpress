@@ -219,16 +219,14 @@ class WP_Auth0_UsersRepo {
 	 * @param stdClass $userinfo - User profile object from Auth0.
 	 */
 	public function update_auth0_object( $user_id, $userinfo ) {
-		global $wpdb;
-
 		$auth0_user_id = isset( $userinfo->user_id ) ? $userinfo->user_id : $userinfo->sub;
-		update_user_meta( $user_id, $wpdb->prefix . 'auth0_id', $auth0_user_id );
+		self::update_meta( $user_id, 'auth0_id', $auth0_user_id );
 
 		$userinfo_encoded = WP_Auth0_Serializer::serialize( $userinfo );
 		$userinfo_encoded = wp_slash( $userinfo_encoded );
-		update_user_meta( $user_id, $wpdb->prefix . 'auth0_obj', $userinfo_encoded );
+		self::update_meta( $user_id, 'auth0_obj', $userinfo_encoded );
 
-		update_user_meta( $user_id, $wpdb->prefix . 'last_update', date( 'c' ) );
+		self::update_meta( $user_id, 'last_update', date( 'c' ) );
 	}
 
 	/**
@@ -237,10 +235,10 @@ class WP_Auth0_UsersRepo {
 	 * @param int $user_id - WordPress user ID.
 	 */
 	public function delete_auth0_object( $user_id ) {
-		global $wpdb;
-		delete_user_meta( $user_id, $wpdb->prefix . 'auth0_id' );
-		delete_user_meta( $user_id, $wpdb->prefix . 'auth0_obj' );
-		delete_user_meta( $user_id, $wpdb->prefix . 'last_update' );
+		self::delete_meta( $user_id, 'auth0_id' );
+		self::delete_meta( $user_id, 'auth0_obj' );
+		self::delete_meta( $user_id, 'last_update' );
+		self::delete_meta( $user_id, 'auth0_transient_email_update' );
 	}
 
 	/**
@@ -256,5 +254,36 @@ class WP_Auth0_UsersRepo {
 	public static function get_meta( $user_id, $key ) {
 		global $wpdb;
 		return get_user_meta( $user_id, $wpdb->prefix . $key, true );
+	}
+
+	/**
+	 * Update a user's Auth0 meta data.
+	 *
+	 * @param integer $user_id - WordPress user ID.
+	 * @param string  $key - Usermeta key to update.
+	 * @param mixed   $value - Usermeta value to use.
+	 *
+	 * @return int|bool
+	 *
+	 * @since 3.11.0
+	 */
+	public static function update_meta( $user_id, $key, $value ) {
+		global $wpdb;
+		return update_user_meta( $user_id, $wpdb->prefix . $key, $value );
+	}
+
+	/**
+	 * Delete a user's Auth0 meta data.
+	 *
+	 * @param integer $user_id - WordPress user ID.
+	 * @param string  $key - Usermeta key to delete.
+	 *
+	 * @return bool
+	 *
+	 * @since 3.11.0
+	 */
+	public static function delete_meta( $user_id, $key ) {
+		global $wpdb;
+		return delete_user_meta( $user_id, $wpdb->prefix . $key );
 	}
 }

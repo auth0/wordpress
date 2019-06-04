@@ -75,29 +75,18 @@ class WP_Auth0_InitialSetup_Consent {
 			return null;
 		}
 
-		$code         = $_REQUEST['code'];
-		$callback_url = urlencode( admin_url( 'admin.php?page=wpa0-setup&step=2' ) );
+		$client_id    = site_url();
+		$redirect_uri = home_url();
 
-		$client_id = get_bloginfo( 'url' );
+		$exchange_api       = new WP_Auth0_Api_Exchange_Code( $this->a0_options, $this->domain );
+		$exchange_resp_body = $exchange_api->call( $_REQUEST['code'], $client_id, $redirect_uri );
 
-		$response = WP_Auth0_Api_Client::get_token(
-			$this->domain,
-			$client_id,
-			null,
-			'authorization_code',
-			array(
-				'redirect_uri' => home_url(),
-				'code'         => $code,
-			)
-		);
-
-		$obj = json_decode( $response['body'] );
-
-		if ( isset( $obj->error ) ) {
+		if ( ! $exchange_resp_body ) {
 			return null;
 		}
 
-		return $obj->access_token;
+		$tokens = json_decode( $exchange_resp_body );
+		return isset( $tokens->access_token ) ? $tokens->access_token : null;
 	}
 
 	/**
@@ -170,9 +159,12 @@ class WP_Auth0_InitialSetup_Consent {
 		if ( $should_create_and_update_connection ) {
 
 			if ( $connection_exists === false ) {
-				$migration_token = JWT::urlsafeB64Encode( openssl_random_pseudo_bytes( 64 ) );
-				$operations      = new WP_Auth0_Api_Operations( $this->a0_options );
-				$response        = $operations->create_wordpress_connection(
+				$migration_token = $this->a0_options->get( 'migration_token' );
+				if ( empty( $migration_token ) ) {
+					$migration_token = JWT::urlsafeB64Encode( openssl_random_pseudo_bytes( 64 ) );
+				}
+				$operations = new WP_Auth0_Api_Operations( $this->a0_options );
+				$response   = $operations->create_wordpress_connection(
 					$this->access_token,
 					$this->hasInternetConnection,
 					'fair',

@@ -13,6 +13,11 @@
  */
 class TestLockOptions extends WP_Auth0_Test_Case {
 
+	public function tearDown() {
+		remove_filter( 'auth0_lock_options', [ __CLASS__, 'setLockLanguage' ] );
+		parent::tearDown();
+	}
+
 	/**
 	 * Test that a custom domain adds a correct key for CDN configuration to Lock options.
 	 */
@@ -61,5 +66,42 @@ class TestLockOptions extends WP_Auth0_Test_Case {
 		$this->assertEquals( WP_Auth0_Nonce_Handler::get_instance()->get_unique(), $sso_opts['nonce'] );
 		$this->assertEquals( $lock_options->get_state_obj(), $sso_opts['state'] );
 		$this->assertArrayNotHasKey( 'authParams', $sso_opts );
+	}
+
+	/**
+	 * Test that the social_big_buttons option is not used.
+	 */
+	public function testThatSocialButtonStyleStaysBig() {
+		self::$opts->set( 'social_big_buttons', false );
+		$lock_options = new WP_Auth0_Lock10_Options( [], self::$opts );
+
+		$lock_opts = $lock_options->get_lock_options();
+		$this->assertEquals( 'big', $lock_opts['socialButtonStyle'] );
+	}
+
+	/**
+	 * Test that the social_big_buttons option cannot be overridden.
+	 */
+	public function testThatSocialButtonStyleCannotBeOverridden() {
+		$lock_options = new WP_Auth0_Lock10_Options( [ 'social_big_buttons' => false ], self::$opts );
+
+		$lock_opts = $lock_options->get_lock_options();
+		$this->assertEquals( 'big', $lock_opts['socialButtonStyle'] );
+	}
+
+	public function testThatLockOptionsFilterWorks() {
+		$lock_options = new WP_Auth0_Lock10_Options( [ 'language' => '__test_language__' ], self::$opts );
+
+		$lock_opts = $lock_options->get_lock_options();
+		$this->assertEquals( '__test_language__', $lock_opts['language'] );
+
+		add_filter( 'auth0_lock_options', [ __CLASS__, 'setLockLanguage' ] );
+		$lock_opts = $lock_options->get_lock_options();
+		$this->assertEquals( '__test_filtered_language__', $lock_opts['language'] );
+	}
+
+	public static function setLockLanguage( $options ) {
+		$options['language'] = '__test_filtered_language__';
+		return $options;
 	}
 }

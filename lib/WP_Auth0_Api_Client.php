@@ -102,6 +102,11 @@ class WP_Auth0_Api_Client {
 		return $headers;
 	}
 
+	/**
+	 * @deprecated - 3.11.0, use WP_Auth0_Api_Client_Credentials instead.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
 	public static function get_token( $domain, $client_id, $client_secret, $grantType = 'client_credentials', $extraBody = null ) {
 		if ( ! is_array( $extraBody ) ) {
 			$body = array();
@@ -201,6 +206,11 @@ class WP_Auth0_Api_Client {
 		);
 	}
 
+	/**
+	 * @deprecated - 3.11.0, use WP_Auth0_Api_Get_User instead.
+	 *
+	 * @codeCoverageIgnore - Deprecated
+	 */
 	public static function get_user( $domain, $jwt, $user_id ) {
 		$endpoint = "https://$domain/api/v2/users/" . urlencode( $user_id );
 
@@ -250,15 +260,8 @@ class WP_Auth0_Api_Client {
 
 	public static function get_required_scopes() {
 		return array(
-			'update:clients',
-			'update:connections',
-			'create:connections',
-			'read:connections',
-			'create:rules',
-			'delete:rules',
 			'read:users',
 			'update:users',
-			'update:guardian_factors',
 		);
 	}
 

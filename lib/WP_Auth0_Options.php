@@ -190,29 +190,14 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	}
 
 	/**
+	 * @deprecated - 3.11.0, use wp_auth0_can_show_wp_login_form() instead.
+	 *
 	 * @return bool
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function can_show_wp_login_form() {
-
-		if ( ! isset( $_GET['wle'] ) ) {
-			return false;
-		}
-
-		$wle_setting = $this->get( 'wordpress_login_enabled' );
-		if ( 'no' === $wle_setting ) {
-			return false;
-		}
-
-		if ( in_array( $wle_setting, array( 'link', 'isset' ) ) ) {
-			return true;
-		}
-
-		$wle_code = $this->get( 'wle_code' );
-		if ( 'code' === $wle_setting && $wle_code === $_GET['wle'] ) {
-			return true;
-		}
-
-		return false;
+		return wp_auth0_can_show_wp_login_form();
 	}
 
 	/**
@@ -248,7 +233,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			// Appearance
 			'icon_url'                  => '',
 			'form_title'                => '',
-			'social_big_buttons'        => false,
 			'gravatar'                  => true,
 			'username_style'            => '',
 			'primary_color'             => '',

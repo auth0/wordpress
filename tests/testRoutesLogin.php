@@ -212,7 +212,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
-		$this->assertEquals( 'Invalid Credentials', $output->error );
+		$this->assertEquals( 'Invalid credentials', $output->error );
 
 		$log = self::$error_log->get();
 		$this->assertCount( 1, $log );

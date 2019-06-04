@@ -1,36 +1,30 @@
 <?php
 /**
- * Contains WP_Auth0_Api_Change_Email.
+ * Contains WP_Auth0_Api_Get_User.
  *
  * @package WP-Auth0
  *
- * @since 3.9.0
+ * @since 3.11.0
  */
 
 /**
- * Class WP_Auth0_Api_Change_Email to update a user's email at Auth0.
+ * Class WP_Auth0_Api_Get_User
+ * Get user information for an Auth0 user ID.
  */
-class WP_Auth0_Api_Change_Email extends WP_Auth0_Api_Abstract {
+class WP_Auth0_Api_Get_User extends WP_Auth0_Api_Abstract {
 
 	/**
 	 * Default value to return on failure.
 	 */
-	const RETURN_ON_FAILURE = false;
+	const RETURN_ON_FAILURE = null;
 
 	/**
 	 * Required scope for Management API token.
 	 */
-	const API_SCOPE = 'update:users';
+	const API_SCOPE = 'read:users';
 
 	/**
-	 * Decoded token received for the Management API.
-	 *
-	 * @var null|object
-	 */
-	protected $token_decoded = null;
-
-	/**
-	 * WP_Auth0_Api_Change_Email constructor.
+	 * WP_Auth0_Api_Get_User constructor.
 	 *
 	 * @param WP_Auth0_Options                $options - WP_Auth0_Options instance.
 	 * @param WP_Auth0_Api_Client_Credentials $api_client_creds - WP_Auth0_Api_Client_Credentials instance.
@@ -44,16 +38,15 @@ class WP_Auth0_Api_Change_Email extends WP_Auth0_Api_Abstract {
 	}
 
 	/**
-	 * Set the user_id and email, make the API call, and handle the response.
+	 * Check the user_id, make the API call, and handle the response.
 	 *
-	 * @param string|null $user_id - Auth0 user ID to change the email for.
-	 * @param string|null $email - New email.
+	 * @param string|null $user_id - Auth0 user ID to get.
 	 *
-	 * @return bool|string
+	 * @return null|string
 	 */
-	public function call( $user_id = null, $email = null ) {
+	public function call( $user_id = null ) {
 
-		if ( empty( $user_id ) || empty( $email ) ) {
+		if ( empty( $user_id ) ) {
 			return self::RETURN_ON_FAILURE;
 		}
 
@@ -63,11 +56,7 @@ class WP_Auth0_Api_Change_Email extends WP_Auth0_Api_Abstract {
 
 		return $this
 			->set_path( 'api/v2/users/' . rawurlencode( $user_id ) )
-			->add_body( 'email', $email )
-			// Email is either changed by an admin or verified by WP.
-			->add_body( 'email_verified', true )
-			->add_body( 'client_id', $this->options->get( 'client_id' ) )
-			->patch()
+			->get()
 			->handle_response( __METHOD__ );
 	}
 
@@ -88,6 +77,6 @@ class WP_Auth0_Api_Change_Email extends WP_Auth0_Api_Abstract {
 			return self::RETURN_ON_FAILURE;
 		}
 
-		return true;
+		return $this->response_body;
 	}
 }

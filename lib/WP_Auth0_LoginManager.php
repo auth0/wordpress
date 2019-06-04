@@ -105,17 +105,12 @@ class WP_Auth0_LoginManager {
 	public function login_auto() {
 
 		// Do not redirect anywhere if this is a logout action.
-		if ( isset( $_GET['action'] ) && 'logout' === $_GET['action'] ) {
+		if ( wp_auth0_is_current_login_action( array( 'logout' ) ) ) {
 			return false;
 		}
 
 		// Do not redirect login page override.
-		if ( $this->a0_options->can_show_wp_login_form() ) {
-			return false;
-		}
-
-		// Do not redirect non-GET requests.
-		if ( strtolower( $_SERVER['REQUEST_METHOD'] ) !== 'get' ) {
+		if ( wp_auth0_can_show_wp_login_form() ) {
 			return false;
 		}
 
@@ -132,7 +127,7 @@ class WP_Auth0_LoginManager {
 		}
 
 		// Do not use the ULP if the setting is off or if the plugin is not configured.
-		if ( ! $this->a0_options->get( 'auto_login', false ) || ! WP_Auth0::ready() ) {
+		if ( ! $this->a0_options->get( 'auto_login', false ) ) {
 			return false;
 		}
 
@@ -156,6 +151,8 @@ class WP_Auth0_LoginManager {
 	 * Handles errors and state validation
 	 */
 	public function init_auth0() {
+
+		set_query_var( 'auth0_login_successful', false );
 
 		// Not an Auth0 login process or settings are not configured to allow logins.
 		if ( ! $this->query_vars( 'auth0' ) || ! WP_Auth0::ready() ) {
@@ -197,31 +194,14 @@ class WP_Auth0_LoginManager {
 
 			// Errors encountered during the WordPress login flow.
 			$this->die_on_login( $e->getMessage(), $e->getCode() );
-		} catch ( DomainException $e ) {
-
-			// JWT:decode error - Algorithm was not provided.
-			$this->die_on_login( __( 'Invalid ID token (no algorithm)', 'wp-auth0' ), $e->getCode() );
-		} catch ( InvalidArgumentException $e ) {
-
-			// JWT:decode error - Key provided to decode was empty.
-			$this->die_on_login( __( 'Invalid ID token (failed signature verification)', 'wp-auth0' ), $e->getCode() );
-		} catch ( SignatureInvalidException $e ) {
-
-			// JWT:decode error - Provided JWT was invalid because the signature verification failed.
-			$this->die_on_login( __( 'Invalid ID token (failed signature verification)', 'wp-auth0' ), $e->getCode() );
-		} catch ( BeforeValidException $e ) {
-
-			// JWT:decode error - Provided JWT is trying to be used before it's eligible as defined by 'nbf'.
-			// JWT:decode error - Provided JWT is trying to be used before it's been created as defined by 'iat'.
-			$this->die_on_login( __( 'Invalid ID token (used too early)', 'wp-auth0' ), $e->getCode() );
-		} catch ( ExpiredException $e ) {
-
-			// JWT:decode error - Provided JWT has since expired, as defined by the 'exp' claim.
-			$this->die_on_login( __( 'Expired ID token', 'wp-auth0' ), $e->getCode() );
-		} catch ( UnexpectedValueException $e ) {
-
-			// JWT:decode error - Provided JWT was invalid.
-			$this->die_on_login( __( 'Invalid ID token', 'wp-auth0' ), $e->getCode() );
+		} catch ( WP_Auth0_InvalidIdTokenException $e ) {
+			$code            = 'invalid_id_token';
+			$display_message = __( 'Invalid ID token', 'wp-auth0' );
+			WP_Auth0_ErrorManager::insert_auth0_error(
+				__METHOD__ . ' L:' . __LINE__,
+				new WP_Error( $code, $display_message . ': ' . $e->getMessage() )
+			);
+			$this->die_on_login( $display_message, $code );
 		}
 	}
 
@@ -230,86 +210,41 @@ class WP_Auth0_LoginManager {
 	 *
 	 * @throws WP_Auth0_LoginFlowValidationException - OAuth login flow errors.
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
+	 * @throws WP_Auth0_InvalidIdTokenException If the ID token does not validate.
 	 *
 	 * @link https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
 	 */
 	public function redirect_login() {
-		$domain             = $this->a0_options->get( 'domain' );
-		$auth_domain        = $this->a0_options->get_auth_domain();
-		$client_id          = $this->a0_options->get( 'client_id' );
-		$client_secret      = $this->a0_options->get( 'client_secret' );
-		$userinfo_resp_code = null;
-		$userinfo_resp_body = null;
 
-		// Exchange authorization code for an access token.
-		$exchange_resp = WP_Auth0_Api_Client::get_token(
-			$auth_domain,
-			$client_id,
-			$client_secret,
-			'authorization_code',
-			array(
-				'redirect_uri' => $this->a0_options->get_wp_auth0_url(),
-				'code'         => $this->query_vars( 'code' ),
-			)
-		);
+		// Exchange authorization code for tokens.
+		$exchange_api       = new WP_Auth0_Api_Exchange_Code( $this->a0_options, $this->a0_options->get_auth_domain() );
+		$exchange_resp_body = $exchange_api->call( $this->query_vars( 'code' ) );
 
-		$exchange_resp_code = (int) wp_remote_retrieve_response_code( $exchange_resp );
-		$exchange_resp_body = wp_remote_retrieve_body( $exchange_resp );
-
-		if ( 401 === $exchange_resp_code ) {
-
-			// Not authorized to access the site.
-			WP_Auth0_ErrorManager::insert_auth0_error(
-				__METHOD__ . ' L:' . __LINE__,
-				__( 'An /oauth/token call triggered a 401 response from Auth0. ', 'wp-auth0' ) .
-				__( 'Please check the Client Secret saved in the Auth0 plugin settings. ', 'wp-auth0' )
-			);
-			throw new WP_Auth0_LoginFlowValidationException( __( 'Not Authorized', 'wp-auth0' ), 401 );
-
-		} elseif ( empty( $exchange_resp_body ) ) {
-
-			// Unsuccessful for another reason.
-			if ( $exchange_resp instanceof WP_Error ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' L:' . __LINE__, $exchange_resp );
-			}
-
-			throw new WP_Auth0_LoginFlowValidationException( __( 'Unknown error', 'wp-auth0' ), $exchange_resp_code );
+		if ( ! $exchange_resp_body ) {
+			throw new WP_Auth0_LoginFlowValidationException( __( 'Error exchanging code', 'wp-auth0' ) );
 		}
 
 		$data = json_decode( $exchange_resp_body );
 
-		if ( empty( $data->access_token ) ) {
-
-			// Look for clues as to what went wrong.
-			$e_message = ! empty( $data->error_description ) ? $data->error_description : __( 'Unknown error', 'wp-auth0' );
-			throw new WP_Auth0_LoginFlowValidationException( $e_message, $exchange_resp_code );
-		}
-
-		$access_token  = $data->access_token;
+		$access_token  = isset( $data->access_token ) ? $data->access_token : null;
 		$id_token      = $data->id_token;
 		$refresh_token = isset( $data->refresh_token ) ? $data->refresh_token : null;
 
 		// Decode the incoming ID token for the Auth0 user.
-		$decoded_token = JWT::decode(
-			$id_token,
-			$this->a0_options->get_client_secret_as_key(),
-			array( $this->a0_options->get_client_signing_algorithm() )
-		);
+		$jwt_verifier  = new WP_Auth0_Id_Token_Validator( $id_token, $this->a0_options );
+		$decoded_token = $jwt_verifier->decode();
 
-		// Attempt to authenticate with the Management API.
-		$client_credentials_api   = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
-		$client_credentials_token = $client_credentials_api->call();
-
-		if ( $client_credentials_token ) {
-			$userinfo_resp      = WP_Auth0_Api_Client::get_user( $domain, $client_credentials_token, $decoded_token->sub );
-			$userinfo_resp_code = (int) wp_remote_retrieve_response_code( $userinfo_resp );
-			$userinfo_resp_body = wp_remote_retrieve_body( $userinfo_resp );
+		// Attempt to authenticate with the Management API, if allowed.
+		$userinfo = null;
+		if ( apply_filters( 'auth0_use_management_api_for_userinfo', true ) ) {
+			$cc_api        = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
+			$get_user_api  = new WP_Auth0_Api_Get_User( $this->a0_options, $cc_api );
+			$get_user_resp = $get_user_api->call( $decoded_token->sub );
+			$userinfo      = ! empty( $get_user_resp ) ? json_decode( $get_user_resp ) : null;
 		}
 
 		// Management API call failed, fallback to ID token.
-		if ( 200 === $userinfo_resp_code && ! empty( $userinfo_resp_body ) ) {
-			$userinfo = json_decode( $userinfo_resp_body );
-		} else {
+		if ( ! $userinfo ) {
 			$userinfo = $this->clean_id_token( $decoded_token );
 		}
 
@@ -340,6 +275,7 @@ class WP_Auth0_LoginManager {
 	 *
 	 * @throws WP_Auth0_LoginFlowValidationException - OAuth login flow errors.
 	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
+	 * @throws WP_Auth0_InvalidIdTokenException - If the ID token does not validate.
 	 *
 	 * @link https://auth0.com/docs/api-auth/tutorials/implicit-grant
 	 */
@@ -352,27 +288,8 @@ class WP_Auth0_LoginManager {
 		$id_token_param = ! empty( $_POST['id_token'] ) ? $_POST['id_token'] : $_POST['token'];
 		$id_token       = sanitize_text_field( wp_unslash( $id_token_param ) );
 
-		$decoded_token = JWT::decode(
-			$id_token,
-			$this->a0_options->get_client_secret_as_key(),
-			array( $this->a0_options->get_client_signing_algorithm() )
-		);
-
-		// Validate that this JWT was made for us.
-		if ( $this->a0_options->get( 'client_id' ) !== $decoded_token->aud ) {
-			throw new WP_Auth0_LoginFlowValidationException(
-				__( 'This token is not intended for us', 'wp-auth0' )
-			);
-		}
-
-		// Validate the nonce if one was included in the request if using auto-login.
-		$nonce = isset( $decoded_token->nonce ) ? $decoded_token->nonce : null;
-		if ( ! WP_Auth0_Nonce_Handler::get_instance()->validate( $nonce ) ) {
-			throw new WP_Auth0_LoginFlowValidationException(
-				__( 'Invalid nonce', 'wp-auth0' )
-			);
-		}
-
+		$jwt_verifier  = new WP_Auth0_Id_Token_Validator( $id_token, $this->a0_options );
+		$decoded_token = $jwt_verifier->decode( true );
 		$decoded_token = $this->clean_id_token( $decoded_token );
 
 		if ( $this->login_user( $decoded_token, $id_token ) ) {
@@ -532,6 +449,8 @@ class WP_Auth0_LoginManager {
 			throw new WP_Auth0_BeforeLoginException( $e->getMessage() );
 		}
 
+		set_query_var( 'auth0_login_successful', true );
+
 		$secure_cookie = is_ssl();
 
 		// See wp_signon() for documentation on this filter.
@@ -560,12 +479,12 @@ class WP_Auth0_LoginManager {
 	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/wp_logout
 	 */
 	public function logout() {
-		$is_sso        = (bool) $this->a0_options->get( 'sso' );
-		$is_slo        = (bool) $this->a0_options->get( 'singlelogout' );
-		$is_auto_login = (bool) $this->a0_options->get( 'auto_login' );
+		if ( ! WP_Auth0::ready() ) {
+			return;
+		}
 
 		// If SSO/SLO is in use, redirect to Auth0 to logout there as well.
-		if ( $is_sso || $is_slo ) {
+		if ( $this->a0_options->get( 'sso' ) || $this->a0_options->get( 'singlelogout' ) ) {
 			$return_to    = apply_filters( 'auth0_slo_return_to', home_url() );
 			$redirect_url = $this->auth0_logout_url( $return_to );
 			$redirect_url = apply_filters( 'auth0_logout_url', $redirect_url );
@@ -574,7 +493,7 @@ class WP_Auth0_LoginManager {
 		}
 
 		// If auto-login is in use, cannot redirect back to login page.
-		if ( $is_auto_login ) {
+		if ( $this->a0_options->get( 'auto_login' ) ) {
 			wp_redirect( home_url() );
 			exit;
 		}

@@ -78,8 +78,13 @@ class WP_Auth0_Api_Operations {
 					),
 				),
 				'customScripts'                => array(
-					'login'    => $this->get_script( 'login', $migration_token ),
-					'get_user' => $this->get_script( 'get-user', $migration_token ),
+					'login'    => $this->get_script( 'login' ),
+					'get_user' => $this->get_script( 'get-user' ),
+				),
+				'bareConfiguration'            => array(
+					'endpointUrl'    => site_url( 'index.php?a0_action=' ),
+					'migrationToken' => $migration_token,
+					'userNamespace'  => 'DB-' . get_auth0_curatedBlogName(),
 				),
 			);
 
@@ -129,15 +134,11 @@ class WP_Auth0_Api_Operations {
 	 * Get JS to use in the custom database script.
 	 *
 	 * @param string $name  - Database script name.
-	 * @param string $token - Migration token.
 	 *
-	 * @return bool|string
+	 * @return string
 	 */
-	protected function get_script( $name, $token ) {
-		$script = (string) file_get_contents( WPA0_PLUGIN_DIR . 'lib/scripts-js/db-' . $name . '.js' );
-		$script = str_replace( '{THE_WS_TOKEN}', $token, $script );
-		$script = str_replace( '{THE_WS_URL}', site_url( 'index.php?a0_action=migration-ws-' . $name ), $script );
-		return $script;
+	protected function get_script( $name ) {
+		return (string) file_get_contents( WPA0_PLUGIN_DIR . 'lib/scripts-js/db-' . $name . '.js' );
 	}
 
 	/*
