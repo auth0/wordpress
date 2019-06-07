@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Login by Auth0\n"
-"POT-Creation-Date: 2019-05-08 08:52-0700\n"
-"PO-Revision-Date: 2019-05-08 12:29-0700\n"
+"POT-Creation-Date: 2019-06-07 09:50-0700\n"
+"PO-Revision-Date: 2019-06-07 09:53-0700\n"
 "Last-Translator: Josh Cunningham <josh.cunningham@auth0.com>\n"
 "Language-Team: Carlos Longarela https://tabernawp.com/\n"
 "Language: es_ES\n"
@@ -31,7 +31,7 @@ msgstr "Ajustes"
 msgid "Setup Wizard"
 msgstr "Asistente de configuración"
 
-#: WP_Auth0.php:510 WP_Auth0.php:532 WP_Auth0.php:574
+#: WP_Auth0.php:499 WP_Auth0.php:521 WP_Auth0.php:563
 #: lib/WP_Auth0_Amplificator.php:25 lib/WP_Auth0_Api_Client.php:76
 #: lib/WP_Auth0_Api_Client.php:156 lib/WP_Auth0_Api_Client.php:202
 #: lib/WP_Auth0_Api_Client.php:284 lib/WP_Auth0_Api_Client.php:391
@@ -52,17 +52,17 @@ msgstr "Asistente de configuración"
 #: lib/WP_Auth0_EditProfile.php:462 lib/WP_Auth0_EditProfile.php:519
 #: lib/WP_Auth0_Email_Verification.php:115 lib/WP_Auth0_ErrorLog.php:135
 #: lib/WP_Auth0_Export_Users.php:29 lib/WP_Auth0_Lock10_Options.php:39
-#: lib/WP_Auth0_Lock10_Options.php:50 lib/WP_Auth0_Lock10_Options.php:247
-#: lib/WP_Auth0_Lock10_Options.php:264 lib/WP_Auth0_Lock10_Options.php:277
-#: lib/WP_Auth0_Lock10_Options.php:290 lib/WP_Auth0_Lock10_Options.php:303
-#: lib/WP_Auth0_Lock10_Options.php:316 lib/WP_Auth0_Lock10_Options.php:329
-#: lib/WP_Auth0_Lock10_Options.php:342 lib/WP_Auth0_Lock10_Options.php:355
-#: lib/WP_Auth0_Lock10_Options.php:368 lib/WP_Auth0_Lock10_Options.php:385
-#: lib/WP_Auth0_Lock10_Options.php:404 lib/WP_Auth0_LoginManager.php:518
-#: lib/WP_Auth0_LoginManager.php:543 lib/WP_Auth0_LoginManager.php:744
-#: lib/WP_Auth0_LoginManager.php:771 lib/WP_Auth0_LoginManager.php:817
-#: lib/WP_Auth0_Metrics.php:17 lib/WP_Auth0_Options.php:295
-#: lib/WP_Auth0_Options.php:310 lib/WP_Auth0_Options.php:329
+#: lib/WP_Auth0_Lock10_Options.php:50 lib/WP_Auth0_Lock10_Options.php:243
+#: lib/WP_Auth0_Lock10_Options.php:260 lib/WP_Auth0_Lock10_Options.php:273
+#: lib/WP_Auth0_Lock10_Options.php:286 lib/WP_Auth0_Lock10_Options.php:299
+#: lib/WP_Auth0_Lock10_Options.php:312 lib/WP_Auth0_Lock10_Options.php:325
+#: lib/WP_Auth0_Lock10_Options.php:338 lib/WP_Auth0_Lock10_Options.php:351
+#: lib/WP_Auth0_Lock10_Options.php:364 lib/WP_Auth0_Lock10_Options.php:381
+#: lib/WP_Auth0_Lock10_Options.php:400 lib/WP_Auth0_LoginManager.php:517
+#: lib/WP_Auth0_LoginManager.php:542 lib/WP_Auth0_LoginManager.php:743
+#: lib/WP_Auth0_LoginManager.php:770 lib/WP_Auth0_LoginManager.php:816
+#: lib/WP_Auth0_Metrics.php:17 lib/WP_Auth0_Options.php:280
+#: lib/WP_Auth0_Options.php:295 lib/WP_Auth0_Options.php:314
 #: lib/WP_Auth0_Referer_Check.php:22
 #: lib/WP_Auth0_SocialAmplification_Widget.php:28
 #: lib/WP_Auth0_SocialAmplification_Widget.php:197
@@ -342,7 +342,7 @@ msgstr "Este sitio requiere una dirección de correo electrónico verificada."
 msgid "Resend verification email."
 msgstr "Reenviar verificación de correo electrónico."
 
-#: lib/WP_Auth0_Email_Verification.php:65 lib/WP_Auth0_LoginManager.php:680
+#: lib/WP_Auth0_Email_Verification.php:65 lib/WP_Auth0_LoginManager.php:679
 msgid "← Login"
 msgstr "← Entrar"
 
@@ -451,23 +451,23 @@ msgstr "La clase %s está obsoleta."
 msgid "$admin_role and $ignore_unverified_email are deprecated."
 msgstr "$admin_role y $ignore_unverified_email están obsoletos."
 
-#: lib/WP_Auth0_LoginManager.php:183
+#: lib/WP_Auth0_LoginManager.php:180
 msgid "Invalid state"
 msgstr "Estado no válido"
 
-#: lib/WP_Auth0_LoginManager.php:202
+#: lib/WP_Auth0_LoginManager.php:199
 msgid "Invalid ID token"
 msgstr "ID token no válido"
 
-#: lib/WP_Auth0_LoginManager.php:227
+#: lib/WP_Auth0_LoginManager.php:224
 msgid "Error exchanging code"
 msgstr "Error intercambiando el código"
 
-#: lib/WP_Auth0_LoginManager.php:287
+#: lib/WP_Auth0_LoginManager.php:284
 msgid "No ID token found"
 msgstr "No se encontró ningún ID token"
 
-#: lib/WP_Auth0_LoginManager.php:346
+#: lib/WP_Auth0_LoginManager.php:343
 msgid ""
 "This account does not have an email associated, as required by your site "
 "administrator."
@@ -475,7 +475,7 @@ msgstr ""
 "Esta cuenta no tiene un correo electrónico asociado, como lo requiere el "
 "administrador de tu sitio."
 
-#: lib/WP_Auth0_LoginManager.php:422
+#: lib/WP_Auth0_LoginManager.php:419
 msgid ""
 "Could not create user. The registration process is not available. Please "
 "contact your site’s administrator."
@@ -483,19 +483,19 @@ msgstr ""
 "No se pudo crear el usuario. El proceso de registro no está disponible. "
 "Pónte en contacto con el administrador de tu sitio web."
 
-#: lib/WP_Auth0_LoginManager.php:673
+#: lib/WP_Auth0_LoginManager.php:672
 msgid "There was a problem with your log in"
 msgstr "Hubo un problema con el inicio de sesión"
 
-#: lib/WP_Auth0_LoginManager.php:676
+#: lib/WP_Auth0_LoginManager.php:675
 msgid "Please see the site administrator"
 msgstr "Por favor, consulta al administrador del sitio"
 
-#: lib/WP_Auth0_LoginManager.php:677
+#: lib/WP_Auth0_LoginManager.php:676
 msgid "error code"
 msgstr "código de error"
 
-#: lib/WP_Auth0_LoginManager.php:678
+#: lib/WP_Auth0_LoginManager.php:677
 msgid "unknown"
 msgstr "desconocido"
 
@@ -513,31 +513,31 @@ msgstr ""
 msgid "Invalid credentials"
 msgstr "Credenciales no válidas"
 
-#: lib/WP_Auth0_Routes.php:225
+#: lib/WP_Auth0_Routes.php:222
 msgid "User not found"
 msgstr "Usuario no encontrado"
 
-#: lib/WP_Auth0_Routes.php:292
+#: lib/WP_Auth0_Routes.php:289
 msgid "Unauthorized: missing authorization header"
 msgstr "No autorizado: falta el header de autorización"
 
-#: lib/WP_Auth0_Routes.php:296
+#: lib/WP_Auth0_Routes.php:293
 msgid "Invalid token"
 msgstr "ID token no válido"
 
-#: lib/WP_Auth0_Routes.php:300
+#: lib/WP_Auth0_Routes.php:297
 msgid "Username is required"
 msgstr "El nombre de usuario es obligatorio"
 
-#: lib/WP_Auth0_Routes.php:304
+#: lib/WP_Auth0_Routes.php:301
 msgid "Password is required"
 msgstr "La contraseña es obligatoria"
 
-#: lib/WP_Auth0_Routes.php:321
+#: lib/WP_Auth0_Routes.php:318
 msgid "Unauthorized"
 msgstr "No autorizado"
 
-#: lib/WP_Auth0_Routes.php:327 lib/profile/WP_Auth0_Profile_Delete_Data.php:95
+#: lib/WP_Auth0_Routes.php:324 lib/profile/WP_Auth0_Profile_Delete_Data.php:95
 #: lib/profile/WP_Auth0_Profile_Delete_Mfa.php:107
 msgid "Forbidden"
 msgstr "Prohibido"
@@ -1811,7 +1811,6 @@ msgstr ""
 "en el "
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:135
-#: templates/initial-setup/connections.php:32
 msgid "Auth0 Dashboard"
 msgstr "Auth0 dashboard"
 
@@ -2303,20 +2302,19 @@ msgstr ""
 "tu organización, como ActiveDirectory"
 
 #: templates/initial-setup/connection_profile.php:110
-#: templates/initial-setup/connection_profile.php:149
+#: templates/initial-setup/connection_profile.php:156
 msgid "Close"
 msgstr "Cerrar"
 
 #: templates/initial-setup/connection_profile.php:113
-#: templates/initial-setup/connection_profile.php:152
-msgid "Important"
-msgstr "Importante"
+msgid "Select a Setup Type"
+msgstr "Seleccione un tipo de configuración"
 
 #: templates/initial-setup/connection_profile.php:116
 msgid "Standard Setup"
 msgstr "Configuración estándar"
 
-#: templates/initial-setup/connection_profile.php:117
+#: templates/initial-setup/connection_profile.php:118
 msgid ""
 "This will create and configure an Application and a database connection for "
 "this site."
@@ -2324,15 +2322,19 @@ msgstr ""
 "Esto creará y configurará una Aplicación y una conexión de base de datos "
 "para este sitio."
 
-#: templates/initial-setup/connection_profile.php:118
+#: templates/initial-setup/connection_profile.php:120
+msgid "Detailed instructions for this option are here."
+msgstr "Las instrucciones detalladas para esta opción están aquí."
+
+#: templates/initial-setup/connection_profile.php:123
 msgid "Start Standard Setup"
 msgstr "Iniciar la configuración estándar"
 
-#: templates/initial-setup/connection_profile.php:121
+#: templates/initial-setup/connection_profile.php:126
 msgid "User Migration Setup"
 msgstr "Configuración de la migración de usuarios"
 
-#: templates/initial-setup/connection_profile.php:123
+#: templates/initial-setup/connection_profile.php:128
 msgid ""
 "This includes everything above plus data migration from your WordPress "
 "database."
@@ -2340,7 +2342,7 @@ msgstr ""
 "Esto incluye todo lo anterior más la migración de datos de tu base de datos "
 "de WordPress."
 
-#: templates/initial-setup/connection_profile.php:124
+#: templates/initial-setup/connection_profile.php:129
 msgid ""
 "This requires an inbound connection from Auth0 servers and cannot be changed "
 "later without losing data."
@@ -2348,19 +2350,19 @@ msgstr ""
 "Esto requiere una conexión entrante de los servidores de Auth0 y no se puede "
 "cambiar más tarde sin perder datos."
 
-#: templates/initial-setup/connection_profile.php:126
+#: templates/initial-setup/connection_profile.php:131
 msgid "More information here."
 msgstr "Más información aquí."
 
-#: templates/initial-setup/connection_profile.php:130
+#: templates/initial-setup/connection_profile.php:137
 msgid "Start User Migration Setup"
 msgstr "Iniciar la configuración de la migración de usuario"
 
-#: templates/initial-setup/connection_profile.php:135
+#: templates/initial-setup/connection_profile.php:142
 msgid "Manual Setup"
 msgstr "Configuración Manual"
 
-#: templates/initial-setup/connection_profile.php:136
+#: templates/initial-setup/connection_profile.php:143
 msgid ""
 "If you already have an Application or want to use an existing database "
 "connection, please follow the steps below."
@@ -2368,51 +2370,59 @@ msgstr ""
 "Si ya tienes una Aplicación o deseas utilizar una conexión de base de datos "
 "existente, sigue los pasos que se indican a continuación."
 
-#: templates/initial-setup/connection_profile.php:138
+#: templates/initial-setup/connection_profile.php:145
 msgid "Manual Setup Instructions"
 msgstr "Instrucciones de configuración manual"
 
-#: templates/initial-setup/connection_profile.php:156
+#: templates/initial-setup/connection_profile.php:159
+msgid "Management API Token"
+msgstr "Token para la Management API"
+
+#: templates/initial-setup/connection_profile.php:163
 msgid "Enter your tenant Domain:"
 msgstr "Introduce el dominio de tu tenant:"
 
-#: templates/initial-setup/connection_profile.php:161
-msgid "Manually create an API token with the"
-msgstr "Crear manualmente un API token con el"
+#: templates/initial-setup/connection_profile.php:168
+msgid "More about tenant Domains here"
+msgstr "Más información sobre los Dominios aquí"
 
-#: templates/initial-setup/connection_profile.php:163
-msgid "token generator"
-msgstr "generador de tokens"
+#: templates/initial-setup/connection_profile.php:175
+msgid "Create a Management API token using these steps"
+msgstr "Crear un nuevo token para la Management API"
 
-#: templates/initial-setup/connection_profile.php:164
+#: templates/initial-setup/connection_profile.php:177
 msgid " and paste it below:"
 msgstr " y pégalo aquí:"
 
-#: templates/initial-setup/connection_profile.php:168
+#: templates/initial-setup/connection_profile.php:183
 msgid "Scopes required"
 msgstr "Scopes requeridos"
 
-#: templates/initial-setup/connection_profile.php:176
+#: templates/initial-setup/connection_profile.php:189
 msgid "Continue"
 msgstr "Continuar"
 
 #: templates/initial-setup/connections.php:18
-msgid "Configure your social connections"
-msgstr "Configura tus conexiones sociales"
+msgid "Configure your Connections"
+msgstr "Configura tus Conexiones"
 
 #: templates/initial-setup/connections.php:20
 msgid ""
 "If your site visitors already have social network accounts, they can "
 "authenticate using their existing credentials, or they can set up a username "
 "and password combination safeguarded by Auth0's password policies and brute "
-"force protection. To configure these connections, use the Auth0 Dashboard "
-"button below."
+"force protection. To configure these connections, use the Configure "
+"Connections button below."
 msgstr ""
 "Si los visitantes de tu sitio ya tienen cuentas de redes sociales, pueden "
 "autenticarse usando sus credenciales existentes, o pueden configurar una "
 "combinación de nombre de usuario y contraseña protegida por las políticas de "
 "contraseña de Auth0 y la protección de fuerza bruta. Para configurar estas "
-"conexiones, utiliza el botón del dashboard de Auth0 a continuación."
+"conexiones, utiliza el botón del Configura Conexiones a continuación."
+
+#: templates/initial-setup/connections.php:32
+msgid "Configure Connections"
+msgstr "Configura Conexiones"
 
 #: templates/initial-setup/connections.php:41
 #: templates/initial-setup/data-migration.php:26
@@ -2738,6 +2748,15 @@ msgstr ""
 #. Author URI of the plugin/theme
 msgid "https://auth0.com"
 msgstr ""
+
+#~ msgid "Important"
+#~ msgstr "Importante"
+
+#~ msgid "Manually create an API token with the"
+#~ msgstr "Crear manualmente un API token con el"
+
+#~ msgid "token generator"
+#~ msgstr "generador de tokens"
 
 #~ msgid "Invalid ID token (no algorithm)"
 #~ msgstr "ID token no válido (sin algoritmo)"
