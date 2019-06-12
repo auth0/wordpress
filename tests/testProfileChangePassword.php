@@ -161,6 +161,30 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 		$this->assertEmpty( $errors->get_error_messages() );
 	}
 
+
+	/**
+	 * Test that password update succeeds when run in the bp_core_general_settings_after_save hook.
+	 */
+	public function testSuccessfulPasswordChangeDuringBuddypressProfileEdit() {
+		$user   = $this->createUser();
+		$this->setGlobalUser( $user->ID );
+
+		// API call mocked to succeed.
+		$change_password = $this->getStub( true );
+
+		// Buddypress form fields sent for password update.
+		$password = uniqid();
+		$_POST['pass1'] = $password;
+		$_POST['pass2'] = $password;
+
+		// Store userinfo for a DB strategy user.
+		$this->storeAuth0Data( $user->ID, 'auth0' );
+
+		$this->assertTrue( $change_password->validate_new_password_for_current_user() );
+		$this->assertEquals( $password, $_POST['pass1'] );
+		$this->assertEquals( $password, $_POST['pass2'] );
+	}
+
 	/**
 	 * Test that the change password process handles escaped data.
 	 */
