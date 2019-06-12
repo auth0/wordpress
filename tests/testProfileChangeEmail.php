@@ -82,6 +82,26 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 	}
 
 	/**
+	 * Test that an email update works for current user.
+	 */
+	public function testSuccessfulEmailUpdateForCurrentUser() {
+		$user                       = $this->createUser( [], false );
+		$new_email                  = $user->data->user_email;
+		$old_user                   = clone $user;
+		$old_user->data->user_email = 'OLD-' . $new_email;
+		$this->setGlobalUser( $user->ID );
+
+		// API call mocked to succeed.
+		$change_email = $this->getStub( true );
+
+		// Store userinfo for a DB strategy user.
+		$this->storeAuth0Data( $user->ID, 'auth0' );
+
+		$this->assertTrue( $change_email->update_email_for_current_user() );
+		$this->assertEquals( $new_email, get_user_by( 'id', $user->ID )->data->user_email );
+	}
+
+	/**
 	 * Test that a non-Auth0 user will skip the email update.
 	 */
 	public function testThatNonAuth0UserSkipsUpdate() {
