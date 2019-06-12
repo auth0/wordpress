@@ -44,6 +44,8 @@ class WP_Auth0_Profile_Change_Email {
 
 		// Used during profile update in wp-admin or email verification link.
 		add_action( 'profile_update', array( $this, 'update_email' ), 100, 2 );
+		// Used during Buddypress account settings save.
+		add_action( 'bp_core_general_settings_after_save', array( $this, 'update_email_for_current_user' ), 100, 0 );
 	}
 
 	/**
@@ -122,6 +124,16 @@ class WP_Auth0_Profile_Change_Email {
 		return false;
 	}
 
+	/**
+	 * Update the current user's email at Auth0
+	 * Hooked to: bp_core_general_settings_after_save
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @return boolean
+	 */
+	public function update_email_for_current_user() {
+		return $this->update_email(new WP_Error(), get_current_user_id());
+	}
 	/**
 	 * Modify the user email change notification when the Auth0 API call fails.
 	 *
