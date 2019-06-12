@@ -79,6 +79,9 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 		$this->assertHookedClass( 'woocommerce_save_account_details_errors', $class_name, $expect_hooked );
 	}
 
+	/**
+	 * Test that correct hooks are loaded for buddypress.
+	 */
 	public function testBuddypressInitHooks() {
 
 		$expect_hooked = [
