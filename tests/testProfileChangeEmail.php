@@ -49,6 +49,18 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 		$this->assertHookedClass( 'profile_update', 'WP_Auth0_Profile_Change_Email', $expect_hooked );
 	}
 
+	public function testBuddypressInitHooks() {
+
+		$expect_hooked = [
+			'update_email_for_current_user' => [
+				'priority'      => 100,
+				'accepted_args' => 0,
+			],
+		];
+		$this->assertHooked( 'bp_core_general_settings_after_save', 'WP_Auth0_Profile_Change_Email', $expect_hooked );
+
+	}
+
 	/**
 	 * Test that an email update works.
 	 */

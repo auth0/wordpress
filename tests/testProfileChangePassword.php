@@ -79,6 +79,19 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 		$this->assertHookedClass( 'woocommerce_save_account_details_errors', $class_name, $expect_hooked );
 	}
 
+	public function testBuddypressInitHooks() {
+
+		$expect_hooked = [
+			'validate_new_password_for_current_user' => [
+				'priority'      => 10,
+				'accepted_args' => 0,
+			],
+		];
+		// Same method hooked to all 3 actions.
+		$this->assertHooked( 'bp_core_general_settings_after_save', 'WP_Auth0_Profile_Change_Password', $expect_hooked );
+
+	}
+
 	/**
 	 * Test that password update succeeds when run in the user_profile_update_errors hook.
 	 */
