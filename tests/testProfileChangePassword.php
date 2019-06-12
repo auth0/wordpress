@@ -166,14 +166,14 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 	 * Test that password update succeeds when run in the bp_core_general_settings_after_save hook.
 	 */
 	public function testSuccessfulPasswordChangeDuringBuddypressProfileEdit() {
-		$user   = $this->createUser();
+		$user = $this->createUser();
 		$this->setGlobalUser( $user->ID );
 
 		// API call mocked to succeed.
 		$change_password = $this->getStub( true );
 
 		// Buddypress form fields sent for password update.
-		$password = uniqid();
+		$password       = uniqid();
 		$_POST['pass1'] = $password;
 		$_POST['pass2'] = $password;
 
