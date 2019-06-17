@@ -24,7 +24,7 @@
     <!-- Show coloured output, if available. -->
     <arg name="colors"/>
 
-    <config name="testVersion" value="5.3-"/>
+    <config name="testVersion" value="5.6-"/>
     <config name="minimum_supported_wp_version" value="3.8"/>
 
     <rule ref="PHPCompatibility"/>

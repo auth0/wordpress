@@ -6,7 +6,7 @@ class WP_Auth0_Admin {
 
 	protected $router;
 
-	protected $sections = array();
+	protected $sections = [];
 
 	public function __construct( WP_Auth0_Options $a0_options, WP_Auth0_Routes $router ) {
 		$this->a0_options = $a0_options;
@@ -19,8 +19,8 @@ class WP_Auth0_Admin {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
-		add_action( 'admin_init', array( $this, 'init_admin' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ), 1 );
+		add_action( 'admin_init', [ $this, 'init_admin' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue' ], 1 );
 	}
 
 	/**
@@ -32,12 +32,12 @@ class WP_Auth0_Admin {
 		wp_register_style( 'wpa0_admin_initial_settup', WPA0_PLUGIN_CSS_URL . 'initial-setup.css', false, WPA0_VERSION );
 
 		// Register admin scripts
-		wp_register_script( 'wpa0_bootstrap', WPA0_PLUGIN_BS_URL . 'js/bootstrap.min.js', array( 'jquery' ), '3.3.6' );
-		wp_register_script( 'wpa0_admin', WPA0_PLUGIN_JS_URL . 'admin.js', array( 'wpa0_bootstrap' ), WPA0_VERSION );
+		wp_register_script( 'wpa0_bootstrap', WPA0_PLUGIN_BS_URL . 'js/bootstrap.min.js', [ 'jquery' ], '3.3.6' );
+		wp_register_script( 'wpa0_admin', WPA0_PLUGIN_JS_URL . 'admin.js', [ 'wpa0_bootstrap' ], WPA0_VERSION );
 		wp_localize_script(
 			'wpa0_admin',
 			'wpa0',
-			array(
+			[
 				'media_title'             => __( 'Choose your icon', 'wp-auth0' ),
 				'media_button'            => __( 'Choose icon', 'wp-auth0' ),
 				'ajax_working'            => __( 'Working ...', 'wp-auth0' ),
@@ -47,21 +47,21 @@ class WP_Auth0_Admin {
 				'rotate_token_nonce'      => wp_create_nonce( WP_Auth0_Admin_Advanced::ROTATE_TOKEN_NONCE_ACTION ),
 				'form_confirm_submit_msg' => __( 'Are you sure?', 'wp-auth0' ),
 				'ajax_url'                => admin_url( 'admin-ajax.php' ),
-			)
+			]
 		);
 		wp_register_script( 'wpa0_async', WPA0_PLUGIN_LIB_URL . 'async.min.js', false, WPA0_VERSION );
 
-		$wpa0_pages     = array( 'wpa0', 'wpa0-errors', 'wpa0-users-export', 'wpa0-import-settings', 'wpa0-setup' );
+		$wpa0_pages     = [ 'wpa0', 'wpa0-errors', 'wpa0-users-export', 'wpa0-import-settings', 'wpa0-setup' ];
 		$wpa0_curr_page = ! empty( $_REQUEST['page'] ) ? $_REQUEST['page'] : '';
 		if ( ! in_array( $wpa0_curr_page, $wpa0_pages ) ) {
 			return;
 		}
 
 		if ( ! WP_Auth0::ready() && 'wpa0-setup' !== $_REQUEST['page'] ) {
-			add_action( 'admin_notices', array( $this, 'create_account_message' ) );
+			add_action( 'admin_notices', [ $this, 'create_account_message' ] );
 		}
 
-		if ( in_array( $wpa0_curr_page, array( 'wpa0', 'wpa0-setup', 'wpa0-import-settings', 'wpa0-errors' ) ) ) {
+		if ( in_array( $wpa0_curr_page, [ 'wpa0', 'wpa0-setup', 'wpa0-import-settings', 'wpa0-errors' ] ) ) {
 			wp_enqueue_script( 'wpa0_admin' );
 			wp_enqueue_script( 'wpa0_async' );
 		}
@@ -71,7 +71,7 @@ class WP_Auth0_Admin {
 		wp_enqueue_style( 'wpa0_admin_initial_settup' );
 
 		if ( 'wpa0-setup' === $wpa0_curr_page && isset( $_REQUEST['signup'] ) ) {
-			wp_enqueue_script( 'wpa0_lock', $this->a0_options->get_lock_url(), array( 'jquery' ) );
+			wp_enqueue_script( 'wpa0_lock', $this->a0_options->get_lock_url(), [ 'jquery' ] );
 		}
 
 		wp_enqueue_style( 'media' );
@@ -103,7 +103,7 @@ class WP_Auth0_Admin {
 		register_setting(
 			$this->a0_options->get_options_name() . '_basic',
 			$this->a0_options->get_options_name(),
-			array( $this, 'input_validator' )
+			[ $this, 'input_validator' ]
 		);
 	}
 

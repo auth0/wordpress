@@ -25,8 +25,8 @@ class WP_Auth0_WooCommerceOverrides {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
-		add_filter( 'woocommerce_checkout_login_message', array( $this, 'override_woocommerce_checkout_login_form' ) );
-		add_filter( 'woocommerce_before_customer_login_form', array( $this, 'override_woocommerce_login_form' ) );
+		add_filter( 'woocommerce_checkout_login_message', [ $this, 'override_woocommerce_checkout_login_form' ] );
+		add_filter( 'woocommerce_before_customer_login_form', [ $this, 'override_woocommerce_login_form' ] );
 	}
 
 	private function render_login_form( $redirectPage ) {

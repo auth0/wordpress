@@ -28,35 +28,35 @@ class WP_Auth0_InitialSetup {
 	 */
 	public function init() {
 
-		add_action( 'init', array( $this, 'init_setup' ), 1 );
+		add_action( 'init', [ $this, 'init_setup' ], 1 );
 
-		add_action( 'admin_action_wpauth0_callback_step1', array( $this->connection_profile, 'callback' ) );
-		add_action( 'admin_action_wpauth0_callback_step3_social', array( $this->adminuser_step, 'callback' ) );
+		add_action( 'admin_action_wpauth0_callback_step1', [ $this->connection_profile, 'callback' ] );
+		add_action( 'admin_action_wpauth0_callback_step3_social', [ $this->adminuser_step, 'callback' ] );
 
 		if ( isset( $_REQUEST['page'] ) && 'wpa0-setup' === $_REQUEST['page'] ) {
 			if ( isset( $_REQUEST['error'] ) ) {
-				add_action( 'admin_notices', array( $this, 'notify_error' ) );
+				add_action( 'admin_notices', [ $this, 'notify_error' ] );
 			}
 		}
 
 		if ( isset( $_REQUEST['error'] ) && 'cant_create_client' == $_REQUEST['error'] ) {
-			add_action( 'admin_notices', array( $this, 'cant_create_client_message' ) );
+			add_action( 'admin_notices', [ $this, 'cant_create_client_message' ] );
 		}
 
 		if ( isset( $_REQUEST['error'] ) && 'cant_create_client_grant' == $_REQUEST['error'] ) {
-			add_action( 'admin_notices', array( $this, 'cant_create_client_grant_message' ) );
+			add_action( 'admin_notices', [ $this, 'cant_create_client_grant_message' ] );
 		}
 
 		if ( isset( $_REQUEST['error'] ) && 'cant_exchange_token' == $_REQUEST['error'] ) {
-			add_action( 'admin_notices', array( $this, 'cant_exchange_token_message' ) );
+			add_action( 'admin_notices', [ $this, 'cant_exchange_token_message' ] );
 		}
 
 		if ( isset( $_REQUEST['error'] ) && 'rejected' == $_REQUEST['error'] ) {
-			add_action( 'admin_notices', array( $this, 'rejected_message' ) );
+			add_action( 'admin_notices', [ $this, 'rejected_message' ] );
 		}
 
 		if ( isset( $_REQUEST['error'] ) && 'access_denied' == $_REQUEST['error'] ) {
-			add_action( 'admin_notices', array( $this, 'access_denied' ) );
+			add_action( 'admin_notices', [ $this, 'access_denied' ] );
 		}
 
 	}

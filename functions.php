@@ -74,7 +74,7 @@ function wp_auth0_can_show_wp_login_form() {
 		return true;
 	}
 
-	if ( wp_auth0_is_current_login_action( array( 'resetpass', 'rp', 'validate_2fa' ) ) ) {
+	if ( wp_auth0_is_current_login_action( [ 'resetpass', 'rp', 'validate_2fa' ] ) ) {
 		return true;
 	}
 
@@ -91,7 +91,7 @@ function wp_auth0_can_show_wp_login_form() {
 		return false;
 	}
 
-	if ( in_array( $wle_setting, array( 'link', 'isset' ) ) ) {
+	if ( in_array( $wle_setting, [ 'link', 'isset' ] ) ) {
 		return true;
 	}
 
@@ -112,11 +112,11 @@ if ( ! function_exists( 'get_auth0userinfo' ) ) {
 
 if ( ! function_exists( 'get_currentauth0user' ) ) {
 	function get_currentauth0user() {
-		return (object) array(
+		return (object) [
 			'auth0_obj'   => get_auth0userinfo( get_current_user_id() ),
 			'last_update' => WP_Auth0_UsersRepo::get_meta( get_current_user_id(), 'last_update' ),
 			'auth0_id'    => WP_Auth0_UsersRepo::get_meta( get_current_user_id(), 'auth0_id' ),
-		);
+		];
 	}
 }
 

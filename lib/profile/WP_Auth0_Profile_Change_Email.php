@@ -43,7 +43,7 @@ class WP_Auth0_Profile_Change_Email {
 	public function init() {
 
 		// Used during profile update in wp-admin or email verification link.
-		add_action( 'profile_update', array( $this, 'update_email' ), 100, 2 );
+		add_action( 'profile_update', [ $this, 'update_email' ], 100, 2 );
 	}
 
 	/**
@@ -97,21 +97,21 @@ class WP_Auth0_Profile_Change_Email {
 		WP_Auth0_UsersRepo::delete_meta( $wp_user_id, self::UPDATED_EMAIL );
 
 		// Suppress the notification for email change.
-		add_filter( 'email_change_email', array( $this, 'suppress_email_change_notification' ), 100 );
+		add_filter( 'email_change_email', [ $this, 'suppress_email_change_notification' ], 100 );
 
 		// Remove this method from profile_update, which is called by wp_update_user, to avoid an infinite loop.
-		remove_action( 'profile_update', array( $this, __FUNCTION__ ), 100 );
+		remove_action( 'profile_update', [ $this, __FUNCTION__ ], 100 );
 
 		// Revert the email address to previous.
 		$wp_user->data->user_email = $old_email;
 		wp_update_user( $wp_user );
 
 		// Revert hooks from above.
-		add_action( 'profile_update', array( $this, __FUNCTION__ ), 100, 2 );
-		remove_filter( 'email_change_email', array( $this, 'suppress_email_change_notification' ), 100 );
+		add_action( 'profile_update', [ $this, __FUNCTION__ ], 100, 2 );
+		remove_filter( 'email_change_email', [ $this, 'suppress_email_change_notification' ], 100 );
 
 		// Can't set a custom message here so redirect with an error for WP to pick up.
-		if ( in_array( $GLOBALS['pagenow'], array( 'user-edit.php', 'profile.php' ) ) ) {
+		if ( in_array( $GLOBALS['pagenow'], [ 'user-edit.php', 'profile.php' ] ) ) {
 			$redirect_url = admin_url( $GLOBALS['pagenow'] );
 			$redirect_url = add_query_arg( 'user_id', $wp_user_id, $redirect_url );
 			$redirect_url = add_query_arg( 'error', 'new-email', $redirect_url );

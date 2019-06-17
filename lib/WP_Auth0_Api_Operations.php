@@ -41,16 +41,16 @@ class WP_Auth0_Api_Operations {
 		$client_id          = $this->a0_options->get( 'client_id' );
 		$db_connection_name = 'DB-' . get_auth0_curatedBlogName();
 
-		$body = array(
+		$body = [
 			'name'            => $db_connection_name,
 			'strategy'        => 'auth0',
-			'options'         => array(
+			'options'         => [
 				'passwordPolicy' => $password_policy,
-			),
-			'enabled_clients' => array(
+			],
+			'enabled_clients' => [
 				$client_id,
-			),
-		);
+			],
+		];
 
 		if ( $migration_enabled ) {
 
@@ -65,28 +65,28 @@ class WP_Auth0_Api_Operations {
 				$this->a0_options->set( 'migration_ips_filter', false );
 			}
 
-			$body['options'] = array(
+			$body['options'] = [
 				'enabledDatabaseCustomization' => true,
 				'requires_username'            => true,
 				'import_mode'                  => true,
 				'passwordPolicy'               => $password_policy,
 				'brute_force_protection'       => true,
-				'validation'                   => array(
-					'username' => array(
+				'validation'                   => [
+					'username' => [
 						'min' => 1,
 						'max' => 100,
-					),
-				),
-				'customScripts'                => array(
+					],
+				],
+				'customScripts'                => [
 					'login'    => $this->get_script( 'login' ),
 					'get_user' => $this->get_script( 'get-user' ),
-				),
-				'bareConfiguration'            => array(
+				],
+				'bareConfiguration'            => [
 					'endpointUrl'    => site_url( 'index.php?a0_action=' ),
 					'migrationToken' => $migration_token,
 					'userNamespace'  => 'DB-' . get_auth0_curatedBlogName(),
-				),
-			);
+				],
+			];
 
 		}
 
@@ -245,7 +245,7 @@ class WP_Auth0_Api_Operations {
 			}
 
 			if ( empty( $connection_options ) ) {
-				$connection_options = array();
+				$connection_options = [];
 			}
 
 			if ( $input[ $main_key ] ) {
@@ -254,10 +254,10 @@ class WP_Auth0_Api_Operations {
 					 ( empty( $selected_connection->options->client_id ) || ( empty( $input[ "{$main_key}_key" ] ) && empty( $old_input[ "{$main_key}_key" ] ) ) || $selected_connection->options->client_id === $input[ "{$main_key}_key" ] ) &&
 					 ( empty( $selected_connection->options->client_secret ) || ( empty( $input[ "{$main_key}_secret" ] ) && empty( $old_input[ "{$main_key}_secret" ] ) ) || $selected_connection->options->client_secret === $input[ "{$main_key}_secret" ] ) ) {
 
-					$data = array(
+					$data = [
 						'options'         => $connection_options,
 						'enabled_clients' => $connection->enabled_clients,
-					);
+					];
 
 					if ( ! empty( $input[ "{$main_key}_key" ] ) && ! empty( $input[ "{$main_key}_secret" ] ) ) {
 						$data['options']['client_id']     = $input[ "{$main_key}_key" ];
@@ -286,16 +286,16 @@ class WP_Auth0_Api_Operations {
 
 					throw new Exception( $error );
 
-					$data = array(
+					$data = [
 						'options'         => array_merge(
 							$connection_options,
-							array(
+							[
 								'client_id'     => $input[ "{$main_key}_key" ],
 								'client_secret' => $input[ "{$main_key}_secret" ],
-							)
+							]
 						),
 						'enabled_clients' => $connection->enabled_clients,
-					);
+					];
 
 					$response = WP_Auth0_Api_Client::update_connection( $domain, $app_token, $selected_connection->id, $data );
 
@@ -309,18 +309,18 @@ class WP_Auth0_Api_Operations {
 					}
 				} elseif ( ! $selected_connection ) {
 
-					$data = array(
+					$data = [
 						'name'            => $strategy,
 						'strategy'        => $strategy,
-						'enabled_clients' => array( $client_id ),
+						'enabled_clients' => [ $client_id ],
 						'options'         => array_merge(
 							$connection_options,
-							array(
+							[
 								'client_id'     => $input[ "{$main_key}_key" ],
 								'client_secret' => $input[ "{$main_key}_secret" ],
-							)
+							]
 						),
-					);
+					];
 
 					if ( false === WP_Auth0_Api_Client::create_connection( $domain, $app_token, $data ) ) {
 						$error = __( 'There was an error creating your social connection', 'wp-auth0' );
@@ -333,7 +333,7 @@ class WP_Auth0_Api_Operations {
 				}
 			} else {
 				if ( $selected_connection ) {
-					$data['enabled_clients'] = array();
+					$data['enabled_clients'] = [];
 					foreach ( $selected_connection->enabled_clients as $client ) {
 						if ( $client != $client_id ) {
 							$data['enabled_clients'][] = $client;

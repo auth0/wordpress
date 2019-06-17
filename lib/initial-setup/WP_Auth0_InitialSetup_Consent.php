@@ -33,7 +33,7 @@ class WP_Auth0_InitialSetup_Consent {
 		$this->state                 = $type;
 		$this->hasInternetConnection = $hasInternetConnection;
 
-		if ( ! in_array( $this->state, array( 'social', 'enterprise' ) ) ) {
+		if ( ! in_array( $this->state, [ 'social', 'enterprise' ] ) ) {
 			wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=invalid_state' ) );
 			exit;
 		}
@@ -67,7 +67,7 @@ class WP_Auth0_InitialSetup_Consent {
 	protected function parse_token_domain( $token ) {
 		$parts   = explode( '.', $token );
 		$payload = json_decode( JWT::urlsafeB64Decode( $parts[1] ) );
-		return trim( str_replace( array( '/api/v2', 'https://' ), '', $payload->aud ), ' /' );
+		return trim( str_replace( [ '/api/v2', 'https://' ], '', $payload->aud ), ' /' );
 	}
 
 	public function exchange_code() {
@@ -151,7 +151,7 @@ class WP_Auth0_InitialSetup_Consent {
 
 				// Different Connection, update to remove the Application created above.
 				$u_connection                  = clone $connection;
-				$u_connection->enabled_clients = array_diff( $u_connection->enabled_clients, array( $client_id ) );
+				$u_connection->enabled_clients = array_diff( $u_connection->enabled_clients, [ $client_id ] );
 				WP_Auth0_Api_Client::update_connection( $domain, $this->access_token, $u_connection->id, $u_connection );
 			}
 		}

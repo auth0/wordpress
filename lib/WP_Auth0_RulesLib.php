@@ -11,7 +11,7 @@ class WP_Auth0_RulesLib {
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public static $link_accounts = array(
+	public static $link_accounts = [
 
 		'name'   => 'Account-Linking-Do-Not-Rename',
 		'script' => "
@@ -77,14 +77,14 @@ function (user, context, callback) {
     }
   });
 }",
-	);
+	];
 
 	/**
 	 * @deprecated - 3.10.0, not used and no replacement provided.
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public static $guardian_MFA = array(
+	public static $guardian_MFA = [
 		'name'   => 'Multifactor-Guardian-Do-Not-Rename',
 		'script' => "
 function (user, context, callback) {
@@ -101,14 +101,14 @@ function (user, context, callback) {
   }
   callback(null, user, context);
 }",
-	);
+	];
 
 	/**
 	 * @deprecated - 3.10.0, not used and no replacement provided.
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public static $geo = array(
+	public static $geo = [
 		'name'   => 'Store-Geo-Location-Do-Not-Rename',
 		'script' => "
 function (user, context, callback) {
@@ -129,14 +129,14 @@ function (user, context, callback) {
       callback(err);
     });
 }",
-	);
+	];
 
 	/**
 	 * @deprecated - 3.10.0, not used and no replacement provided.
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public static $fullcontact = array(
+	public static $fullcontact = [
 		'name'   => 'Enrich-profile-with-FullContact-Do-Not-Rename',
 		'script' => "
 function (user, context, callback) {
@@ -181,14 +181,14 @@ function (user, context, callback) {
     }
   });
 }",
-	);
+	];
 
 	/**
 	 * @deprecated - 3.10.0, not used and no replacement provided.
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public static $income = array(
+	public static $income = [
 		'name'   => 'Enrich-profile-with-Zipcode-Income-Do-Not-Rename',
 		'script' => "
 function (user, context, callback) {
@@ -242,14 +242,14 @@ function (user, context, callback) {
         }
     }
 }",
-	);
+	];
 
 	/**
 	 * @deprecated - 3.8.0, not used and no replacement provided.
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public static $disable_social_signup = array(
+	public static $disable_social_signup = [
 
 		'name'   => 'Disable-Social-Signup-Do-Not-Rename',
 		'script' => "
@@ -292,14 +292,14 @@ function (user, context, callback) {
   callback(null, user, context);
 }
 		",
-	);
+	];
 
 	/**
 	 * @deprecated - 3.8.0, not used and no replacement provided.
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public static $google_MFA = array(
+	public static $google_MFA = [
 		'name'   => 'Multifactor-Google-Authenticator-Do-Not-Rename',
 		'script' => "
 function (user, context, callback) {
@@ -318,5 +318,5 @@ function (user, context, callback) {
   }
   callback(null, user, context);
 }",
-	);
+	];
 }

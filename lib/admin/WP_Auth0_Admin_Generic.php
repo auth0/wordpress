@@ -10,7 +10,7 @@ class WP_Auth0_Admin_Generic {
 
 	protected $_textarea_rows = 4;
 
-	protected $actions_middlewares = array();
+	protected $actions_middlewares = [];
 
 	/**
 	 * WP_Auth0_Admin_Generic constructor.
@@ -36,7 +36,7 @@ class WP_Auth0_Admin_Generic {
 		add_settings_section(
 			$section_id,
 			$section_name,
-			array( $this, 'render_description' ),
+			[ $this, 'render_description' ],
 			$options_name
 		);
 
@@ -45,7 +45,7 @@ class WP_Auth0_Admin_Generic {
 		foreach ( $options as $setting ) {
 			$callback = function_exists( $setting['function'] )
 				? $setting['function']
-				: array( $this, $setting['function'] );
+				: [ $this, $setting['function'] ];
 
 			add_settings_field(
 				$setting['id'],
@@ -53,10 +53,10 @@ class WP_Auth0_Admin_Generic {
 				$callback,
 				$options_name,
 				$section_id,
-				array(
+				[
 					'label_for' => $setting['id'],
 					'opt_name'  => isset( $setting['opt'] ) ? $setting['opt'] : null,
-				)
+				]
 			);
 		}
 	}
@@ -248,7 +248,7 @@ class WP_Auth0_Admin_Generic {
 	 * @param string $text - description text to display
 	 */
 	protected function render_field_description( $text ) {
-		$period = ! in_array( $text[ strlen( $text ) - 1 ], array( '.', ':' ) ) ? '.' : '';
+		$period = ! in_array( $text[ strlen( $text ) - 1 ], [ '.', ':' ] ) ? '.' : '';
 		printf( '<div class="subelement"><span class="description">%s%s</span></div>', $text, $period );
 	}
 

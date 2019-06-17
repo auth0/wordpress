@@ -55,7 +55,7 @@ class TwitterAPIExchangeTest extends \PHPUnit_Framework_TestCase {
 	 * {@inheritDoc}
 	 */
 	public function setUp() {
-		$settings = array();
+		$settings = [];
 
 		/** Because I'm lazy... */
 		$reflector = new \ReflectionClass( $this );
@@ -174,9 +174,9 @@ class TwitterAPIExchangeTest extends \PHPUnit_Framework_TestCase {
 
 		$url    = 'https://upload.twitter.com/1.1/media/upload.json';
 		$method = 'POST';
-		$params = array(
+		$params = [
 			'media_data' => $data,
-		);
+		];
 
 		$data     = $this->exchange->request( $url, $method, $params );
 		$expected = 'image\/png';
@@ -186,7 +186,7 @@ class TwitterAPIExchangeTest extends \PHPUnit_Framework_TestCase {
 		/** Store the media id for later */
 		$data = @json_decode( $data, true );
 
-		$this->assertArrayHasKey( 'media_id', is_array( $data ) ? $data : array() );
+		$this->assertArrayHasKey( 'media_id', is_array( $data ) ? $data : [] );
 
 		self::$mediaId = $data['media_id'];
 	}
@@ -203,10 +203,10 @@ class TwitterAPIExchangeTest extends \PHPUnit_Framework_TestCase {
 
 		$url    = 'https://api.twitter.com/1.1/statuses/update.json';
 		$method = 'POST';
-		$params = array(
+		$params = [
 			'status'    => 'TEST TWEET TO BE DELETED' . rand(),
 			'media_ids' => self::$mediaId,
-		);
+		];
 
 		$data     = $this->exchange->request( $url, $method, $params );
 		$expected = 'TEST TWEET TO BE DELETED';
@@ -216,7 +216,7 @@ class TwitterAPIExchangeTest extends \PHPUnit_Framework_TestCase {
 		/** Store the tweet id for testStatusesDestroy() */
 		$data = @json_decode( $data, true );
 
-		$this->assertArrayHasKey( 'id_str', is_array( $data ) ? $data : array() );
+		$this->assertArrayHasKey( 'id_str', is_array( $data ) ? $data : [] );
 
 		self::$tweetId = $data['id_str'];
 
@@ -236,9 +236,9 @@ class TwitterAPIExchangeTest extends \PHPUnit_Framework_TestCase {
 
 		$url    = sprintf( 'https://api.twitter.com/1.1/statuses/destroy/%d.json', self::$tweetId );
 		$method = 'POST';
-		$params = array(
+		$params = [
 			'id' => self::$tweetId,
-		);
+		];
 
 		$data     = $this->exchange->request( $url, $method, $params );
 		$expected = 'TEST TWEET TO BE DELETED';
@@ -273,7 +273,7 @@ class TwitterAPIExchangeTest extends \PHPUnit_Framework_TestCase {
 		$method = 'GET';
 		$params = '?q=#twitter';
 
-		$data = $this->exchange->request( $url, $method, $params, array( CURLOPT_ENCODING => '' ) );
+		$data = $this->exchange->request( $url, $method, $params, [ CURLOPT_ENCODING => '' ] );
 		$data = (array) @json_decode( $data, true );
 
 		$this->assertNotCount( 1, $data );
@@ -287,9 +287,9 @@ class TwitterAPIExchangeTest extends \PHPUnit_Framework_TestCase {
 	public function testIssue70() {
 		$url    = 'https://api.twitter.com/1.1/users/lookup.json';
 		$method = 'POST';
-		$params = array(
+		$params = [
 			'screen_name' => 'lifehacker',
-		);
+		];
 
 		$data = $this->exchange->request( $url, $method, $params );
 		$this->assertContains( 'created_at', $data );

@@ -14,9 +14,9 @@ class WP_Auth0_Export_Users {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
-		add_action( 'admin_footer', array( $this, 'a0_add_users_export' ) );
-		add_action( 'load-users.php', array( $this, 'a0_export_selected_users' ) );
-		add_action( 'admin_action_wpauth0_export_users', array( $this, 'a0_export_users' ) );
+		add_action( 'admin_footer', [ $this, 'a0_add_users_export' ] );
+		add_action( 'load-users.php', [ $this, 'a0_export_selected_users' ] );
+		add_action( 'admin_action_wpauth0_export_users', [ $this, 'a0_export_users' ] );
 	}
 
 	/**

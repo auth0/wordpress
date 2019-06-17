@@ -44,7 +44,7 @@ class WP_Auth0_Api_Client {
 		if ( is_null( self::$connect_info ) ) {
 			$a0_options = WP_Auth0_Options::Instance();
 
-			self::$connect_info = array(
+			self::$connect_info = [
 				'domain'                => $a0_options->get( 'domain' ),
 				'client_id'             => $a0_options->get( 'client_id' ),
 				'client_secret'         => $a0_options->get( 'client_secret' ),
@@ -52,7 +52,7 @@ class WP_Auth0_Api_Client {
 				'connection'            => $a0_options->get( 'db_connection_name' ),
 				'app_token'             => null,
 				'audience'              => self::get_endpoint( 'api/v2/' ),
-			);
+			];
 		}
 
 		if ( empty( $opt ) ) {
@@ -109,7 +109,7 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function get_token( $domain, $client_id, $client_secret, $grantType = 'client_credentials', $extraBody = null ) {
 		if ( ! is_array( $extraBody ) ) {
-			$body = array();
+			$body = [];
 		} else {
 			$body = $extraBody;
 		}
@@ -125,10 +125,10 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			$endpoint . 'oauth/token',
-			array(
+			[
 				'headers' => $headers,
 				'body'    => $body,
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -157,17 +157,17 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			self::get_endpoint( 'oauth/token' ),
-			array(
+			[
 				'headers' => self::get_headers(),
 				'body'    => json_encode(
-					array(
+					[
 						'client_id'     => self::get_connect_info( 'client_id' ),
 						'client_secret' => self::get_connect_info( 'client_secret' ),
 						'audience'      => self::get_connect_info( 'audience' ),
 						'grant_type'    => 'client_credentials',
-					)
+					]
 				),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -202,7 +202,7 @@ class WP_Auth0_Api_Client {
 		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		return wp_remote_get(
 			self::get_endpoint( 'userinfo', $domain ),
-			array( 'headers' => self::get_headers( $access_token ) )
+			[ 'headers' => self::get_headers( $access_token ) ]
 		);
 	}
 
@@ -220,9 +220,9 @@ class WP_Auth0_Api_Client {
 
 		return wp_remote_get(
 			$endpoint,
-			array(
+			[
 				'headers' => $headers,
-			)
+			]
 		);
 
 	}
@@ -237,10 +237,10 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			$endpoint,
-			array(
+			[
 				'headers' => $headers,
 				'body'    => json_encode( $data ),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -259,10 +259,10 @@ class WP_Auth0_Api_Client {
 	}
 
 	public static function get_required_scopes() {
-		return array(
+		return [
 			'read:users',
 			'update:users',
-		);
+		];
 	}
 
 	/**
@@ -284,9 +284,9 @@ class WP_Auth0_Api_Client {
 		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$response = wp_remote_get(
 			self::get_endpoint( '/api/v2/clients/' . urlencode( $client_id ) ),
-			array(
+			[
 				'headers' => self::get_headers( $app_token ),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -320,14 +320,14 @@ class WP_Auth0_Api_Client {
 
 		$options = WP_Auth0_Options::Instance();
 
-		$payload = array(
+		$payload = [
 			'name'                => $name,
 			'app_type'            => 'regular_web',
 
 			// Callback URLs for Auth Code and Hybrid/Implicit
-			'callbacks'           => array(
+			'callbacks'           => [
 				$options->get_wp_auth0_url(),
-			),
+			],
 
 			// Web origins do not take into account the path
 			'web_origins'         => $options->get_web_origins(),
@@ -337,18 +337,18 @@ class WP_Auth0_Api_Client {
 			'cross_origin_auth'   => true,
 
 			// A set of URLs that are valid to redirect to after logout from Auth0
-			'allowed_logout_urls' => array(
+			'allowed_logout_urls' => [
 				home_url(),
 				wp_login_url(),
-			),
+			],
 
 			// Advanced > Grant Types
 			'grant_types'         => self::get_client_grant_types(),
 
 			// Advanced > OAuth > JsonWebToken Signature Algorithm
-			'jwt_configuration'   => array(
+			'jwt_configuration'   => [
 				'alg' => self::DEFAULT_CLIENT_ALG,
-			),
+			],
 
 			// "Use Auth0 to do Single Sign On"
 			'sso'                 => true,
@@ -356,14 +356,14 @@ class WP_Auth0_Api_Client {
 			// Advanced > OAuth > OIDC Conformant
 			// https://auth0.com/docs/api-auth/intro#legacy-vs-new
 			'oidc_conformant'     => true,
-		);
+		];
 
 		$response = wp_remote_post(
 			self::get_endpoint( 'api/v2/clients', $domain ),
-			array(
+			[
 				'headers' => self::get_headers( $app_token ),
 				'body'    => json_encode( $payload ),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -386,7 +386,7 @@ class WP_Auth0_Api_Client {
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public static function update_client( $domain, $app_token, $client_id, $sso, $payload = array() ) {
+	public static function update_client( $domain, $app_token, $client_id, $sso, $payload = [] ) {
 		// phpcs:ignore
 		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
@@ -399,11 +399,11 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			$endpoint,
-			array(
+			[
 				'method'  => 'PATCH',
 				'headers' => $headers,
-				'body'    => json_encode( array_merge( array( 'sso' => (bool) $sso ), $payload ) ),
-			)
+				'body'    => json_encode( array_merge( [ 'sso' => (bool) $sso ], $payload ) ),
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -429,12 +429,12 @@ class WP_Auth0_Api_Client {
 	public static function create_rule( $domain, $app_token, $name, $script, $enabled = true ) {
 		// phpcs:ignore
 		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		$payload = array(
+		$payload = [
 			'name'    => $name,
 			'script'  => $script,
 			'enabled' => $enabled,
 			'stage'   => 'login_success',
-		);
+		];
 
 		$endpoint = "https://$domain/api/v2/rules";
 
@@ -445,11 +445,11 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			$endpoint,
-			array(
+			[
 				'method'  => 'POST',
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -485,10 +485,10 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			$endpoint,
-			array(
+			[
 				'method'  => 'DELETE',
 				'headers' => $headers,
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -516,18 +516,18 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function create_client_grant( $app_token, $client_id ) {
 
-		$data = array(
+		$data = [
 			'client_id' => $client_id,
 			'audience'  => self::get_connect_info( 'audience' ),
 			'scope'     => self::get_required_scopes(),
-		);
+		];
 
 		$response = wp_remote_post(
 			self::get_endpoint( 'api/v2/client-grants' ),
-			array(
+			[
 				'headers' => self::get_headers( $app_token ),
 				'body'    => json_encode( $data ),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -572,11 +572,11 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			$endpoint,
-			array(
+			[
 				'method'  => 'POST',
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -607,9 +607,9 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_get(
 			$endpoint,
-			array(
+			[
 				'headers' => $headers,
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -647,9 +647,9 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_get(
 			$endpoint,
-			array(
+			[
 				'headers' => $headers,
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -700,11 +700,11 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			$endpoint,
-			array(
+			[
 				'method'  => 'PATCH',
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -743,11 +743,11 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			$endpoint,
-			array(
+			[
 				'method'  => 'PATCH',
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -775,7 +775,7 @@ class WP_Auth0_Api_Client {
 	 * @return array
 	 */
 	public static function ConsentRequiredScopes() {
-		return array(
+		return [
 			'create:clients',
 			'create:client_grants',
 			'update:connections',
@@ -783,7 +783,7 @@ class WP_Auth0_Api_Client {
 			'read:connections',
 			'read:users',
 			'update:users',
-		);
+		];
 	}
 
 	/**
@@ -795,8 +795,8 @@ class WP_Auth0_Api_Client {
 		// phpcs:ignore
 		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$scopes    = self::ConsentRequiredScopes();
-		$grouped   = array();
-		$processed = array();
+		$grouped   = [];
+		$processed = [];
 
 		foreach ( $scopes as $scope ) {
 			list($action, $resource) = explode( ':', $scope );
@@ -838,17 +838,17 @@ class WP_Auth0_Api_Client {
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type']  = 'application/json';
 
-		$payload = array(
+		$payload = [
 			'enabled' => $enabled,
-		);
+		];
 
 		$response = wp_remote_post(
 			$endpoint,
-			array(
+			[
 				'method'  => 'PUT',
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -893,9 +893,9 @@ class WP_Auth0_Api_Client {
 
 		if ( false === ( $secret = get_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME ) ) ) {
 
-			$secret = array();
+			$secret = [];
 
-			$response = wp_remote_get( $endpoint, array() );
+			$response = wp_remote_get( $endpoint, [] );
 
 			if ( $response instanceof WP_Error ) {
 				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
@@ -934,12 +934,12 @@ class WP_Auth0_Api_Client {
 	 */
 	public static function get_client_grant_types() {
 
-		return array(
+		return [
 			'authorization_code',
 			'implicit',
 			'refresh_token',
 			'client_credentials',
-		);
+		];
 	}
 
 	/*
@@ -974,21 +974,21 @@ class WP_Auth0_Api_Client {
 
 		$headers                 = WP_Auth0_Api_Abstract::get_info_headers();
 		$headers['content-type'] = 'application/x-www-form-urlencoded';
-		$body                    = array(
+		$body                    = [
 			'client_id'  => $client_id,
 			'username'   => $username,
 			'password'   => $password,
 			'connection' => $connection,
 			'grant_type' => 'password',
 			'scope'      => $scope,
-		);
+		];
 
 		$response = wp_remote_post(
 			$endpoint . 'oauth/ro',
-			array(
+			[
 				'headers' => $headers,
 				'body'    => $body,
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -1067,9 +1067,9 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_get(
 			$endpoint,
-			array(
+			[
 				'headers' => $headers,
-			)
+			]
 		);
 
 		return json_decode( $response['body'] );
@@ -1094,15 +1094,15 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			self::get_endpoint( 'api/v2/jobs/verification-email' ),
-			array(
+			[
 				'headers' => self::get_headers( self::get_client_token() ),
 				'body'    => json_encode(
-					array(
+					[
 						'user_id'   => $user_id,
 						'client_id' => self::get_connect_info( 'client_id' ),
-					)
+					]
 				),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -1138,10 +1138,10 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			$endpoint,
-			array(
+			[
 				'headers' => $headers,
 				'body'    => json_encode( $data ),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -1176,9 +1176,9 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_get(
 			$endpoint,
-			array(
+			[
 				'headers' => $headers,
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -1233,10 +1233,10 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			$endpoint,
-			array(
+			[
 				'method'  => 'DELETE',
 				'headers' => $headers,
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -1272,10 +1272,10 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			$endpoint,
-			array(
+			[
 				'method'  => 'DELETE',
 				'headers' => $headers,
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -1310,11 +1310,11 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			$endpoint,
-			array(
+			[
 				'method'  => 'POST',
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {
@@ -1352,7 +1352,7 @@ class WP_Auth0_Api_Client {
 		$headers['Authorization'] = "Bearer $app_token";
 		$headers['content-type']  = 'application/json';
 
-		$payload             = array();
+		$payload             = [];
 		$payload['provider'] = $provider;
 		$payload['user_id']  = $user_id;
 		if ( $connection_id ) {
@@ -1361,10 +1361,10 @@ class WP_Auth0_Api_Client {
 
 		$response = wp_remote_post(
 			$endpoint,
-			array(
+			[
 				'headers' => $headers,
 				'body'    => json_encode( $payload ),
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {

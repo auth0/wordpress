@@ -6,7 +6,7 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 		parent::__construct(
 			$this->getWidgetId(),
 			$this->getWidgetName(),
-			array( 'description' => $this->getWidgetDescription() )
+			[ 'description' => $this->getWidgetDescription() ]
 		);
 	}
 

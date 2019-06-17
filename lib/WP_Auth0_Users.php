@@ -74,7 +74,7 @@ class WP_Auth0_Users {
 			}
 		}
 		// Create the user data array for updating first- and lastname
-		$user_data = array(
+		$user_data = [
 			'user_email'   => $email,
 			'user_login'   => $username,
 			'user_pass'    => $password,
@@ -82,7 +82,7 @@ class WP_Auth0_Users {
 			'last_name'    => $lastname,
 			'display_name' => $username,
 			'description'  => $description,
-		);
+		];
 
 		if ( $role ) {
 			// phpcs:ignore

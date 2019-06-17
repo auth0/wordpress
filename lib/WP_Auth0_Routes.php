@@ -40,7 +40,7 @@ class WP_Auth0_Routes {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
-		add_action( 'parse_request', array( $this, 'custom_requests' ) );
+		add_action( 'parse_request', [ $this, 'custom_requests' ] );
 	}
 
 	public function setup_rewrites() {
@@ -106,7 +106,7 @@ class WP_Auth0_Routes {
 		}
 
 		if ( $json_header ) {
-			add_filter( 'wp_headers', array( $this, 'add_json_header' ) );
+			add_filter( 'wp_headers', [ $this, 'add_json_header' ] );
 			$wp->send_headers();
 		}
 
@@ -189,10 +189,10 @@ class WP_Auth0_Routes {
 
 		} catch ( Exception $e ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
-			return array(
+			return [
 				'status' => $e->getCode() ?: 400,
 				'error'  => $e->getMessage(),
-			);
+			];
 		}
 	}
 
@@ -224,10 +224,10 @@ class WP_Auth0_Routes {
 
 			$updated_email = WP_Auth0_UsersRepo::get_meta( $user->ID, WP_Auth0_Profile_Change_Email::UPDATED_EMAIL );
 			if ( $updated_email === $user->data->user_email ) {
-				return array(
+				return [
 					'status' => 200,
 					'error'  => 'Email update in process',
-				);
+				];
 			}
 
 			unset( $user->data->user_pass );
@@ -235,19 +235,19 @@ class WP_Auth0_Routes {
 
 		} catch ( Exception $e ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
-			return array(
+			return [
 				'status' => $e->getCode() ?: 400,
 				'error'  => $e->getMessage(),
-			);
+			];
 		}
 	}
 
 	protected function oauth2_config() {
 
-		return array(
+		return [
 			'client_name'   => get_bloginfo( 'name' ),
-			'redirect_uris' => array( admin_url( 'admin.php?page=wpa0-setup&callback=1' ) ),
-		);
+			'redirect_uris' => [ admin_url( 'admin.php?page=wpa0-setup&callback=1' ) ],
+		];
 
 	}
 
@@ -313,16 +313,16 @@ class WP_Auth0_Routes {
 
 		switch ( $code ) {
 			case 401:
-				return array(
+				return [
 					'status' => 401,
 					'error'  => __( 'Unauthorized', 'wp-auth0' ),
-				);
+				];
 
 			default:
-				return array(
+				return [
 					'status' => 403,
 					'error'  => __( 'Forbidden', 'wp-auth0' ),
-				);
+				];
 				break;
 		}
 	}
@@ -345,7 +345,7 @@ class WP_Auth0_Routes {
 		}
 
 		try {
-			$decoded = JWT::decode( $token, $client_secret, array( 'HS256' ) );
+			$decoded = JWT::decode( $token, $client_secret, [ 'HS256' ] );
 			return isset( $decoded->jti ) && $decoded->jti === $this->a0_options->get( 'migration_token_id' );
 		} catch ( Exception $e ) {
 			return false;

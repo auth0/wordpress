@@ -51,9 +51,9 @@ class WP_Auth0_Profile_Delete_Mfa {
 	 * @codeCoverageIgnore - Tested in TestProfileDeleteMfa::testInitHooks()
 	 */
 	public function init() {
-		add_action( 'edit_user_profile', array( $this, 'show_delete_mfa' ) );
-		add_action( 'show_user_profile', array( $this, 'show_delete_mfa' ) );
-		add_action( 'wp_ajax_auth0_delete_mfa', array( $this, 'delete_mfa' ) );
+		add_action( 'edit_user_profile', [ $this, 'show_delete_mfa' ] );
+		add_action( 'show_user_profile', [ $this, 'show_delete_mfa' ] );
+		add_action( 'wp_ajax_auth0_delete_mfa', [ $this, 'delete_mfa' ] );
 	}
 
 	/**
@@ -98,23 +98,23 @@ class WP_Auth0_Profile_Delete_Mfa {
 		check_ajax_referer( 'delete_auth0_mfa' );
 
 		if ( empty( $_POST['user_id'] ) ) {
-			wp_send_json_error( array( 'error' => __( 'Empty user_id', 'wp-auth0' ) ) );
+			wp_send_json_error( [ 'error' => __( 'Empty user_id', 'wp-auth0' ) ] );
 		}
 
 		$user_id = $_POST['user_id'];
 
 		if ( ! current_user_can( 'edit_users', $user_id ) ) {
-			wp_send_json_error( array( 'error' => __( 'Forbidden', 'wp-auth0' ) ) );
+			wp_send_json_error( [ 'error' => __( 'Forbidden', 'wp-auth0' ) ] );
 		}
 
 		$profile = get_auth0userinfo( $user_id );
 
 		if ( ! $profile || empty( $profile->sub ) ) {
-			wp_send_json_error( array( 'error' => __( 'Auth0 profile data not found', 'wp-auth0' ) ) );
+			wp_send_json_error( [ 'error' => __( 'Auth0 profile data not found', 'wp-auth0' ) ] );
 		}
 
 		if ( ! $this->api_delete_mfa->call( $profile->sub ) ) {
-			wp_send_json_error( array( 'error' => __( 'API call failed', 'wp-auth0' ) ) );
+			wp_send_json_error( [ 'error' => __( 'API call failed', 'wp-auth0' ) ] );
 		}
 
 		wp_send_json_success();

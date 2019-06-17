@@ -20,7 +20,7 @@ class WP_Auth0_DBManager {
 			$this->current_db_version = (int) get_site_option( 'auth0_db_version', 0 );
 		}
 
-		add_action( 'plugins_loaded', array( $this, 'check_update' ) );
+		add_action( 'plugins_loaded', [ $this, 'check_update' ] );
 	}
 
 	public function check_update() {
@@ -116,7 +116,7 @@ class WP_Auth0_DBManager {
 
 				// Need to set a special passwordlessMethod flag if using email code
 				$lock_json                               = trim( $options->get( 'extra_conf' ) );
-				$lock_json_decoded                       = ! empty( $lock_json ) ? json_decode( $lock_json, true ) : array();
+				$lock_json_decoded                       = ! empty( $lock_json ) ? json_decode( $lock_json, true ) : [];
 				$lock_json_decoded['passwordlessMethod'] = strpos( $pwl_method, 'code' ) ? 'code' : 'link';
 				$options->set( 'extra_conf', json_encode( $lock_json_decoded ), false );
 			}
@@ -338,15 +338,15 @@ class WP_Auth0_DBManager {
 		global $wpdb;
 
 		if ( $user_ids === null ) {
-			$query = array( 'meta_key' => $wpdb->prefix . 'auth0_id' );
+			$query = [ 'meta_key' => $wpdb->prefix . 'auth0_id' ];
 		} else {
-			$query = array(
-				'meta_query' => array(
+			$query = [
+				'meta_query' => [
 					'key'     => $wpdb->prefix . 'auth0_id',
 					'value'   => $user_ids,
 					'compare' => 'IN',
-				),
-			);
+				],
+			];
 		}
 		$query['blog_id'] = 0;
 
@@ -354,7 +354,7 @@ class WP_Auth0_DBManager {
 
 		if ( $results instanceof WP_Error ) {
 			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $results->get_error_message() );
-			return array();
+			return [];
 		}
 
 		return $results;

@@ -21,11 +21,11 @@ class WP_Auth0_ErrorManager {
 	 */
 	public static function insert_auth0_error( $section, $error ) {
 
-		$new_entry = array(
+		$new_entry = [
 			'section' => $section,
 			'code'    => 'unknown_code',
 			'message' => __( 'Unknown error message', 'wp-auth0' ),
-		);
+		];
 
 		if ( $error instanceof WP_Error ) {
 			$new_entry['code']    = $error->get_error_code();

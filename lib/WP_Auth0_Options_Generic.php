@@ -31,7 +31,7 @@ class WP_Auth0_Options_Generic {
 	 *
 	 * @var array
 	 */
-	protected $constant_opts = array();
+	protected $constant_opts = [];
 
 	/**
 	 * WP_Auth0_Options_Generic constructor.
@@ -109,7 +109,7 @@ class WP_Auth0_Options_Generic {
 	 */
 	public function get_options() {
 		if ( empty( $this->_opts ) ) {
-			$options = get_option( $this->_options_name, array() );
+			$options = get_option( $this->_options_name, [] );
 			// Brand new install, no saved options so get all defaults.
 			if ( empty( $options ) || ! is_array( $options ) ) {
 				$options = $this->defaults();
@@ -244,6 +244,6 @@ class WP_Auth0_Options_Generic {
 	 * @return array
 	 */
 	protected function defaults() {
-		return array();
+		return [];
 	}
 }

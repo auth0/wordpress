@@ -51,7 +51,7 @@ class WP_Auth0_ErrorLog {
 		$log = get_option( self::OPTION_NAME );
 
 		if ( empty( $log ) ) {
-			$log = array();
+			$log = [];
 		}
 
 		return $log;
@@ -74,7 +74,7 @@ class WP_Auth0_ErrorLog {
 			$last_entry = $log[0];
 
 			// Remove date and count fields so it can be compared with the new error.
-			$last_entry = array_diff_key( $last_entry, array_flip( array( 'date', 'count' ) ) );
+			$last_entry = array_diff_key( $last_entry, array_flip( [ 'date', 'count' ] ) );
 		}
 
 		if ( serialize( $last_entry ) === serialize( $new_entry ) ) {
@@ -97,7 +97,7 @@ class WP_Auth0_ErrorLog {
 	 * @return bool
 	 */
 	public function clear() {
-		return update_option( self::OPTION_NAME, array() );
+		return update_option( self::OPTION_NAME, [] );
 	}
 
 	/**
