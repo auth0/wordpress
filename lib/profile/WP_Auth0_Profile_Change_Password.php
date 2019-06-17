@@ -38,13 +38,13 @@ class WP_Auth0_Profile_Change_Password {
 	public function init() {
 
 		// Used during profile update in wp-admin.
-		add_action( 'user_profile_update_errors', array( $this, 'validate_new_password' ), 10, 2 );
+		add_action( 'user_profile_update_errors', [ $this, 'validate_new_password' ], 10, 2 );
 
 		// Used during password reset on wp-login.php.
-		add_action( 'validate_password_reset', array( $this, 'validate_new_password' ), 10, 2 );
+		add_action( 'validate_password_reset', [ $this, 'validate_new_password' ], 10, 2 );
 
 		// Used during WooCommerce edit account save.
-		add_action( 'woocommerce_save_account_details_errors', array( $this, 'validate_new_password' ), 10, 2 );
+		add_action( 'woocommerce_save_account_details_errors', [ $this, 'validate_new_password' ], 10, 2 );
 	}
 
 	/**
@@ -104,7 +104,7 @@ class WP_Auth0_Profile_Change_Password {
 
 		// Add an error message to appear at the top of the page.
 		$error_msg = is_string( $result ) ? $result : __( 'Password could not be updated.', 'wp-auth0' );
-		$errors->add( 'auth0_password', $error_msg, array( 'form-field' => $field_name ) );
+		$errors->add( 'auth0_password', $error_msg, [ 'form-field' => $field_name ] );
 		return false;
 	}
 }

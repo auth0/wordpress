@@ -9,9 +9,9 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
 	protected $_description;
 
-	protected $actions_middlewares = array(
+	protected $actions_middlewares = [
 		'basic_validation',
-	);
+	];
 
 	/**
 	 * WP_Auth0_Admin_Appearance constructor.
@@ -32,105 +32,105 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see \WP_Auth0_Admin_Generic::init_option_section
 	 */
 	public function init() {
-		$options = array(
-			array(
+		$options = [
+			[
 				'name'     => __( 'Passwordless Login', 'wp-auth0' ),
 				'opt'      => 'passwordless_enabled',
 				'id'       => 'wpa0_passwordless_enabled',
 				'function' => 'render_passwordless_enabled',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Icon URL', 'wp-auth0' ),
 				'opt'      => 'icon_url',
 				'id'       => 'wpa0_icon_url',
 				'function' => 'render_icon_url',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Form Title', 'wp-auth0' ),
 				'opt'      => 'form_title',
 				'id'       => 'wpa0_form_title',
 				'function' => 'render_form_title',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Enable Gravatar Integration', 'wp-auth0' ),
 				'opt'      => 'gravatar',
 				'id'       => 'wpa0_gravatar',
 				'function' => 'render_gravatar',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Login Form CSS', 'wp-auth0' ),
 				'opt'      => 'custom_css',
 				'id'       => 'wpa0_custom_css',
 				'function' => 'render_custom_css',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Login Form JS', 'wp-auth0' ),
 				'opt'      => 'custom_js',
 				'id'       => 'wpa0_custom_js',
 				'function' => 'render_custom_js',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Login Name Style', 'wp-auth0' ),
 				'opt'      => 'username_style',
 				'id'       => 'wpa0_username_style',
 				'function' => 'render_username_style',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Primary Color', 'wp-auth0' ),
 				'opt'      => 'primary_color',
 				'id'       => 'wpa0_primary_color',
 				'function' => 'render_primary_color',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Language', 'wp-auth0' ),
 				'opt'      => 'language',
 				'id'       => 'wpa0_language',
 				'function' => 'render_language',
-			),
-		);
+			],
+		];
 
 		// TODO: Remove this once feature has been removed
 		if ( $this->options->get( 'language_dictionary' ) ) {
-			$options[] = array(
+			$options[] = [
 				'name'     => __( 'Language Dictionary', 'wp-auth0' ),
 				'opt'      => 'language_dictionary',
 				'id'       => 'wpa0_language_dictionary',
 				'function' => 'render_language_dictionary',
-			);
+			];
 		}
 
-		$options = $options + array(
-			( count( $options ) ) => array(
+		$options = $options + [
+			( count( $options ) ) => [
 				'name'     => __( 'Custom Signup Fields', 'wp-auth0' ),
 				'opt'      => 'custom_signup_fields',
 				'id'       => 'wpa0_custom_signup_fields',
 				'function' => 'render_custom_signup_fields',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Extra Settings', 'wp-auth0' ),
 				'opt'      => 'extra_conf',
 				'id'       => 'wpa0_extra_conf',
 				'function' => 'render_extra_conf',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Use Custom Lock JS URL', 'wp-auth0' ),
 				'opt'      => 'custom_cdn_url',
 				'id'       => 'wpa0_custom_cdn_url',
 				'function' => 'render_custom_cdn_url',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Custom Lock JS URL', 'wp-auth0' ),
 				'opt'      => 'cdn_url',
 				'id'       => 'wpa0_cdn_url',
 				'function' => 'render_cdn_url',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Connections to Show', 'wp-auth0' ),
 				'opt'      => 'lock_connections',
 				'id'       => 'wpa0_connections',
 				'function' => 'render_connections',
-			),
-		);
+			],
+		];
 		$this->init_option_section( '', 'appearance', $options );
 	}
 
@@ -143,7 +143,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_custom_cdn_url( $args = array() ) {
+	public function render_custom_cdn_url( $args = [] ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_cdn_url' );
 		$this->render_field_description( __( 'Use a custom Lock CDN URL instead of the default. ', 'wp-auth0' ) );
 
@@ -164,7 +164,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_cdn_url( $args = array() ) {
+	public function render_cdn_url( $args = [] ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'url' );
 		$this->render_field_description(
 			__( 'This should point to the latest Lock JS available in the CDN and rarely needs to change', 'wp-auth0' )
@@ -180,7 +180,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_passwordless_enabled( $args = array() ) {
+	public function render_passwordless_enabled( $args = [] ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Turn on Passwordless login (email or SMS) in the Auth0 form. ', 'wp-auth0' ) .
@@ -200,7 +200,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_connections( $args = array() ) {
+	public function render_connections( $args = [] ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', 'eg: "sms, google-oauth2, github"' );
 		$this->render_field_description(
 			__( 'Specify which Social, Database, or Passwordless connections to display in the Auth0 form. ', 'wp-auth0' ) .
@@ -225,7 +225,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_icon_url( $args = array() ) {
+	public function render_icon_url( $args = [] ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		printf( ' <a id="wpa0_choose_icon" class="button-secondary">%s</a>', __( 'Choose Icon', 'wp-auth0' ) );
 		$this->render_field_description(
@@ -243,7 +243,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_form_title( $args = array() ) {
+	public function render_form_title( $args = [] ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description( __( 'Title used on the Auth0 login form', 'wp-auth0' ) );
 	}
@@ -259,7 +259,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_social_big_buttons( $args = array() ) {
+	public function render_social_big_buttons( $args = [] ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description( __( 'Use large social login buttons on the Auth0 login form', 'wp-auth0' ) );
 	}
@@ -273,7 +273,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_gravatar( $args = array() ) {
+	public function render_gravatar( $args = [] ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Automatically display an avatar (from Gravatar) on the Auth0 login form', 'wp-auth0' )
@@ -291,7 +291,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_custom_css( $args = array() ) {
+	public function render_custom_css( $args = [] ) {
 		if ( $this->options->get( 'custom_css' ) ) {
 			$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 			$this->render_field_description(
@@ -318,7 +318,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_custom_js( $args = array() ) {
+	public function render_custom_js( $args = [] ) {
 		if ( $this->options->get( 'custom_js' ) ) {
 			$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 			$this->render_field_description(
@@ -342,16 +342,16 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_username_style( $args = array() ) {
+	public function render_username_style( $args = [] ) {
 		$this->render_radio_buttons(
-			array(
-				array(
+			[
+				[
 					'label' => 'Auto',
 					'value' => '',
-				),
+				],
 				'email',
 				'username',
-			),
+			],
 			$args['label_for'],
 			$args['opt_name'],
 			$this->options->get( $args['opt_name'], '' )
@@ -371,7 +371,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_primary_color( $args = array() ) {
+	public function render_primary_color( $args = [] ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Primary color for the Auth0 login form in hex format. ', 'wp-auth0' ) .
@@ -391,7 +391,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_language( $args = array() ) {
+	public function render_language( $args = [] ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'The language parameter for the Auth0 login form. ', 'wp-auth0' ) .
@@ -415,7 +415,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 *
 	 * @codeCoverageIgnores - Deprecated.
 	 */
-	public function render_language_dictionary( $args = array() ) {
+	public function render_language_dictionary( $args = [] ) {
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'The languageDictionary parameter for the Auth0 login form. ', 'wp-auth0' ) .
@@ -439,7 +439,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_extra_conf( $args = array() ) {
+	public function render_extra_conf( $args = [] ) {
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Valid JSON for Lock options configuration; will override all options set elsewhere. ', 'wp-auth0' ) .
@@ -456,7 +456,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_custom_signup_fields( $args = array() ) {
+	public function render_custom_signup_fields( $args = [] ) {
 		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Valid array of JSON objects for additional signup fields in the Auth0 signup form. ', 'wp-auth0' ) .
@@ -469,7 +469,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
 	public function basic_validation( $old_options, $input ) {
 		$input['form_title']    = empty( $input['form_title'] ) ? '' : sanitize_text_field( $input['form_title'] );
-		$input['icon_url']      = empty( $input['icon_url'] ) ? '' : esc_url( $input['icon_url'], array( 'http', 'https' ) );
+		$input['icon_url']      = empty( $input['icon_url'] ) ? '' : esc_url( $input['icon_url'], [ 'http', 'https' ] );
 		$input['gravatar']      = isset( $input['gravatar'] ) ? $input['gravatar'] : 0;
 		$input['language']      = empty( $input['language'] ) ? '' : sanitize_text_field( $input['language'] );
 		$input['primary_color'] = empty( $input['primary_color'] ) ? '' : sanitize_text_field( $input['primary_color'] );

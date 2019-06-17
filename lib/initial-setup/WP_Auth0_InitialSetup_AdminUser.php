@@ -16,12 +16,12 @@ class WP_Auth0_InitialSetup_AdminUser {
 
 		$current_user = wp_get_current_user();
 
-		$data = array(
+		$data = [
 			'client_id'  => $this->a0_options->get( 'client_id' ),
 			'email'      => $current_user->user_email,
 			'password'   => $_POST['admin-password'],
 			'connection' => $this->a0_options->get( 'db_connection_name' ),
-		);
+		];
 
 		$admin_user = WP_Auth0_Api_Client::signup_user( $this->a0_options->get_auth_domain(), $data );
 

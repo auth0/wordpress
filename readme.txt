@@ -2,7 +2,7 @@
 Tags: login, oauth, authentication, single sign on, ldap, active directory, saml, windows azure ad, google apps, two factor, two-factor, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer, passwordless, sms, magiclink, totp, social
 Tested up to: 5.2.1
 Requires at least: 3.8
-Requires PHP: 5.3
+Requires PHP: 5.6
 License: GPLv2
 License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE
 Stable tag: trunk

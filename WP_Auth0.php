@@ -3,13 +3,13 @@
  * Plugin Name: Login by Auth0
  * Plugin URL: https://auth0.com/docs/cms/wordpress
  * Description: Login by Auth0 provides improved username/password login, Passwordless login, Social login, MFA, and Single Sign On for all your sites.
- * Version: 3.11.0
+ * Version: 4.0.0-beta
  * Author: Auth0
  * Author URI: https://auth0.com
  * Text Domain: wp-auth0
  */
 
-define( 'WPA0_VERSION', '3.11.0' );
+define( 'WPA0_VERSION', '4.0.0-beta' );
 define( 'AUTH0_DB_VERSION', 22 );
 
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
@@ -79,7 +79,7 @@ class WP_Auth0 {
 	 * @param null|WP_Auth0_Options $options - WP_Auth0_Options instance.
 	 */
 	public function __construct( $options = null ) {
-		spl_autoload_register( array( $this, 'autoloader' ) );
+		spl_autoload_register( [ $this, 'autoloader' ] );
 		$this->a0_options = $options instanceof WP_Auth0_Options ? $options : WP_Auth0_Options::Instance();
 		$this->basename   = plugin_basename( __FILE__ );
 	}
@@ -96,32 +96,32 @@ class WP_Auth0 {
 		$this->db_manager = new WP_Auth0_DBManager( $this->a0_options );
 		$this->db_manager->init();
 
-		add_action( 'init', array( $this, 'wp_init' ) );
+		add_action( 'init', [ $this, 'wp_init' ] );
 
 		// Add hooks for install uninstall and update.
-		register_activation_hook( WPA0_PLUGIN_FILE, array( $this, 'install' ) );
-		register_deactivation_hook( WPA0_PLUGIN_FILE, array( $this, 'deactivate' ) );
-		register_uninstall_hook( WPA0_PLUGIN_FILE, array( 'WP_Auth0', 'uninstall' ) );
+		register_activation_hook( WPA0_PLUGIN_FILE, [ $this, 'install' ] );
+		register_deactivation_hook( WPA0_PLUGIN_FILE, [ $this, 'deactivate' ] );
+		register_uninstall_hook( WPA0_PLUGIN_FILE, [ 'WP_Auth0', 'uninstall' ] );
 
-		add_action( 'activated_plugin', array( $this, 'on_activate_redirect' ) );
+		add_action( 'activated_plugin', [ $this, 'on_activate_redirect' ] );
 
-		add_filter( 'get_avatar', array( $this, 'filter_get_avatar' ), 1, 5 );
+		add_filter( 'get_avatar', [ $this, 'filter_get_avatar' ], 1, 5 );
 
 		// Add an action to append a stylesheet for the login page.
-		add_action( 'login_enqueue_scripts', array( $this, 'render_auth0_login_css' ) );
+		add_action( 'login_enqueue_scripts', [ $this, 'render_auth0_login_css' ] );
 
 		// Add a hook to add Auth0 code on the login page.
-		add_filter( 'login_message', array( $this, 'render_form' ), 5 );
+		add_filter( 'login_message', [ $this, 'render_form' ], 5 );
 
-		add_shortcode( 'auth0', array( $this, 'shortcode' ) );
+		add_shortcode( 'auth0', [ $this, 'shortcode' ] );
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue' ) );
+		add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue' ] );
 
-		add_action( 'widgets_init', array( $this, 'wp_register_widget' ) );
+		add_action( 'widgets_init', [ $this, 'wp_register_widget' ] );
 
-		add_filter( 'query_vars', array( $this, 'a0_register_query_vars' ) );
+		add_filter( 'query_vars', [ $this, 'a0_register_query_vars' ] );
 
-		add_filter( 'plugin_action_links_' . $this->basename, array( $this, 'wp_add_plugin_settings_link' ) );
+		add_filter( 'plugin_action_links_' . $this->basename, [ $this, 'wp_add_plugin_settings_link' ] );
 
 		$initial_setup = new WP_Auth0_InitialSetup( $this->a0_options );
 		$initial_setup->init();
@@ -354,7 +354,7 @@ class WP_Auth0 {
 
 	public function shortcode( $atts ) {
 		if ( empty( $atts ) ) {
-			$atts = array();
+			$atts = [];
 		}
 
 		if ( empty( $atts['redirect_to'] ) ) {
@@ -463,7 +463,7 @@ class WP_Auth0 {
 			return false;
 		}
 
-		$paths = array(
+		$paths = [
 			$source_dir,
 			$source_dir . 'admin/',
 			$source_dir . 'api/',
@@ -471,7 +471,7 @@ class WP_Auth0 {
 			$source_dir . 'profile/',
 			$source_dir . 'wizard/',
 			$source_dir . 'initial-setup/',
-		);
+		];
 
 		foreach ( $paths as $path ) {
 			if ( file_exists( $path . $class . '.php' ) ) {
@@ -586,7 +586,7 @@ function wp_auth0_filter_wp_redirect_lostpassword( $location ) {
 	}
 
 	// Make sure we're on the lost password action on the wp-login page.
-	if ( ! wp_auth0_is_current_login_action( array( 'lostpassword' ) ) ) {
+	if ( ! wp_auth0_is_current_login_action( [ 'lostpassword' ] ) ) {
 		return $location;
 	}
 
@@ -619,7 +619,7 @@ function wp_auth0_filter_login_override_url( $wp_login_url ) {
 	if ( wp_auth0_can_show_wp_login_form() && isset( $_REQUEST['wle'] ) ) {
 		// We are on an override page.
 		$wp_login_url = add_query_arg( 'wle', $_REQUEST['wle'], $wp_login_url );
-	} elseif ( wp_auth0_is_current_login_action( array( 'resetpass' ) ) ) {
+	} elseif ( wp_auth0_is_current_login_action( [ 'resetpass' ] ) ) {
 		// We are on the reset password page with a link to login.
 		// This page will not be shown unless we get here via a valid reset password request.
 		$wp_login_url = wp_auth0_login_override_url( $wp_login_url );

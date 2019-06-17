@@ -81,8 +81,8 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			: site_url();
 
 		return $home_url_origin === $site_url_origin
-			? array( $home_url_origin )
-			: array( $home_url_origin, $site_url_origin );
+			? [ $home_url_origin ]
+			: [ $home_url_origin, $site_url_origin ];
 	}
 
 	/**
@@ -146,7 +146,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 */
 	public function get_lock_connections() {
 		$connections = $this->get( 'lock_connections' );
-		$connections = empty( $connections ) ? array() : explode( ',', $connections );
+		$connections = empty( $connections ) ? [] : explode( ',', $connections );
 		return array_map( 'trim', $connections );
 	}
 
@@ -206,7 +206,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 * @return array
 	 */
 	protected function defaults() {
-		return array(
+		return [
 
 			// System
 			'version'                   => 1,
@@ -261,7 +261,7 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'custom_signup_fields'      => '',
 			'extra_conf'                => '',
 			'auth0_server_domain'       => 'auth0.auth0.com',
-		);
+		];
 	}
 
 	/*
@@ -312,6 +312,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	public function get_enabled_connections() {
 		// phpcs:ignore
 		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		return array( 'facebook', 'twitter', 'google-oauth2' );
+		return [ 'facebook', 'twitter', 'google-oauth2' ];
 	}
 }

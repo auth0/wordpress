@@ -87,11 +87,11 @@ class WP_Auth0_Email_Verification {
 		check_ajax_referer( self::RESEND_NONCE_ACTION );
 
 		if ( empty( $_POST['sub'] ) ) {
-			wp_send_json_error( array( 'error' => __( 'No Auth0 user ID provided.', 'wp-auth0' ) ) );
+			wp_send_json_error( [ 'error' => __( 'No Auth0 user ID provided.', 'wp-auth0' ) ] );
 		}
 
 		if ( ! $this->api_jobs_resend->call( $_POST['sub'] ) ) {
-			wp_send_json_error( array( 'error' => __( 'API call failed.', 'wp-auth0' ) ) );
+			wp_send_json_error( [ 'error' => __( 'API call failed.', 'wp-auth0' ) ] );
 		}
 
 		wp_send_json_success();

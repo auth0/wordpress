@@ -60,13 +60,13 @@ class WP_Auth0_InitialSetup_Connections {
 
 		$connection = WP_Auth0_Api_Client::get_connection( $domain, $app_token, $connection_id );
 
-		$enabled_clients = array();
+		$enabled_clients = [];
 
 		if ( $_POST['enabled'] === 'true' ) {
 			$enabled_clients   = $connection->enabled_clients;
 			$enabled_clients[] = $client_id;
 		} else {
-			$enabled_clients = array_diff( $connection->enabled_clients, array( $client_id ) );
+			$enabled_clients = array_diff( $connection->enabled_clients, [ $client_id ] );
 		}
 
 		$connection->enabled_clients = array_values( $enabled_clients );
@@ -91,25 +91,25 @@ class WP_Auth0_InitialSetup_Connections {
 		// phpcs:ignore
 		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 
-		$provider_options = array(
-			'facebook'      => array(
+		$provider_options = [
+			'facebook'      => [
 				'public_profile'  => true,
 				'email'           => true,
 				'user_birthday'   => true,
 				'publish_actions' => true,
-			),
-			'twitter'       => array(
+			],
+			'twitter'       => [
 				'profile' => true,
-			),
-			'google-oauth2' => array(
+			],
+			'google-oauth2' => [
 				'google_plus' => true,
 				'email'       => true,
 				'profile'     => true,
-			),
-		);
+			],
+		];
 
-		$input     = array();
-		$old_input = array();
+		$input     = [];
+		$old_input = [];
 
 		$operations = new WP_Auth0_Api_Operations( $this->a0_options );
 

@@ -91,9 +91,9 @@ class WP_Auth0_LoginManager {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
-		add_action( 'login_init', array( $this, 'login_auto' ) );
-		add_action( 'template_redirect', array( $this, 'init_auth0' ), 1 );
-		add_action( 'wp_logout', array( $this, 'logout' ) );
+		add_action( 'login_init', [ $this, 'login_auto' ] );
+		add_action( 'template_redirect', [ $this, 'init_auth0' ], 1 );
+		add_action( 'wp_logout', [ $this, 'logout' ] );
 	}
 
 	/**
@@ -105,7 +105,7 @@ class WP_Auth0_LoginManager {
 	public function login_auto() {
 
 		// Do not redirect anywhere if this is a logout action.
-		if ( wp_auth0_is_current_login_action( array( 'logout' ) ) ) {
+		if ( wp_auth0_is_current_login_action( [ 'logout' ] ) ) {
 			return false;
 		}
 
@@ -384,11 +384,11 @@ class WP_Auth0_LoginManager {
 				}
 
 				wp_update_user(
-					(object) array(
+					(object) [
 						'ID'          => $user->data->ID,
 						'user_email'  => $userinfo->email,
 						'description' => $description,
-					)
+					]
 				);
 			}
 
@@ -457,11 +457,11 @@ class WP_Auth0_LoginManager {
 		$secure_cookie = apply_filters(
 			'secure_signon_cookie',
 			$secure_cookie,
-			array(
+			[
 				'user_login'    => $user->user_login,
 				'user_password' => null,
 				'remember'      => $remember_users_session,
-			)
+			]
 		);
 
 		wp_set_auth_cookie( $user->ID, $remember_users_session, $secure_cookie );
@@ -554,7 +554,7 @@ class WP_Auth0_LoginManager {
 	 * @return string
 	 */
 	public static function get_userinfo_scope( $context = '' ) {
-		$default_scope  = array( 'openid', 'email', 'profile' );
+		$default_scope  = [ 'openid', 'email', 'profile' ];
 		$filtered_scope = apply_filters( 'auth0_auth_scope', $default_scope, $context );
 		return implode( ' ', $filtered_scope );
 	}
@@ -568,7 +568,7 @@ class WP_Auth0_LoginManager {
 	 * @return array
 	 */
 	public static function get_authorize_params( $connection = null, $redirect_to = null ) {
-		$params       = array();
+		$params       = [];
 		$options      = WP_Auth0_Options::Instance();
 		$lock_options = new WP_Auth0_Lock10_Options();
 		$is_implicit  = (bool) $options->get( 'auth0_implicit_workflow', false );
@@ -600,11 +600,11 @@ class WP_Auth0_LoginManager {
 		// State parameter, checked during login callback.
 		$params['state'] = base64_encode(
 			json_encode(
-				array(
+				[
 					'interim'     => false,
 					'nonce'       => $nonce,
 					'redirect_to' => filter_var( $redirect_to, FILTER_SANITIZE_URL ),
-				)
+				]
 			)
 		);
 
@@ -618,7 +618,7 @@ class WP_Auth0_LoginManager {
 	 *
 	 * @return string
 	 */
-	public static function build_authorize_url( array $params = array() ) {
+	public static function build_authorize_url( array $params = [] ) {
 		$auth_url = 'https://' . WP_Auth0_Options::Instance()->get_auth_domain() . '/authorize';
 		$auth_url = add_query_arg( array_map( 'rawurlencode', $params ), $auth_url );
 		return apply_filters( 'auth0_authorize_url', $auth_url, $params );
@@ -693,7 +693,7 @@ class WP_Auth0_LoginManager {
 	 * @codeCoverageIgnore - Private method
 	 */
 	private function clean_id_token( $id_token_obj ) {
-		foreach ( array( 'iss', 'aud', 'iat', 'exp', 'nonce' ) as $attr ) {
+		foreach ( [ 'iss', 'aud', 'iat', 'exp', 'nonce' ] as $attr ) {
 			unset( $id_token_obj->$attr );
 		}
 		if ( ! isset( $id_token_obj->user_id ) && isset( $id_token_obj->sub ) ) {
@@ -784,7 +784,7 @@ class WP_Auth0_LoginManager {
 			$decoded_token = JWT::decode(
 				$response->id_token,
 				$secret,
-				array( $this->a0_options->get_client_signing_algorithm() )
+				[ $this->a0_options->get_client_signing_algorithm() ]
 			);
 			// Validate that this JWT was made for us.
 			if ( $this->a0_options->get( 'client_id' ) !== $decoded_token->aud ) {

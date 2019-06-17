@@ -15,7 +15,7 @@ class WP_Auth0_UsersRepo {
 	 */
 	public function init() {
 		if ( $this->a0_options->get( 'jwt_auth_integration' ) == 1 ) {
-			add_filter( 'wp_jwt_auth_get_user', array( $this, 'getUser' ), 0, 2 );
+			add_filter( 'wp_jwt_auth_get_user', [ $this, 'getUser' ], 0, 2 );
 		}
 	}
 
@@ -195,11 +195,11 @@ class WP_Auth0_UsersRepo {
 			return null;
 		}
 
-		$query = array(
+		$query = [
 			'meta_key'   => $wpdb->prefix . 'auth0_id',
 			'meta_value' => $id,
 			'blog_id'    => 0,
-		);
+		];
 
 		$users = get_users( $query );
 

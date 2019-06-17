@@ -25,8 +25,8 @@ class WP_Auth0_Ip_Check {
 	 *
 	 * @link https://auth0.com/docs/rules/current#outbound-calls
 	 */
-	protected $valid_webtask_ips = array(
-		'us' => array(
+	protected $valid_webtask_ips = [
+		'us' => [
 			'34.195.142.251',
 			'35.160.3.103',
 			'35.166.202.113',
@@ -43,8 +43,8 @@ class WP_Auth0_Ip_Check {
 			'54.183.64.135',
 			'54.183.204.205',
 			'138.91.154.99',
-		),
-		'eu' => array(
+		],
+		'eu' => [
 			'34.253.4.94',
 			'35.156.51.163',
 			'35.157.221.52',
@@ -61,8 +61,8 @@ class WP_Auth0_Ip_Check {
 			'52.213.38.246',
 			'52.213.74.69',
 			'52.213.216.142',
-		),
-		'au' => array(
+		],
+		'au' => [
 			'13.54.254.182',
 			'13.55.232.24',
 			'13.210.52.131',
@@ -74,8 +74,8 @@ class WP_Auth0_Ip_Check {
 			'54.66.205.24',
 			'54.79.46.4',
 			'54.153.131.0',
-		),
-	);
+		],
+	];
 
 	/**
 	 * Options object.
@@ -148,20 +148,20 @@ class WP_Auth0_Ip_Check {
 	protected function process_ip_list( $ip_list ) {
 		$raw = is_array( $ip_list ) ? $ip_list : explode( self::IP_STRING_GLUE, $ip_list );
 
-		$ranges = array();
+		$ranges = [];
 		foreach ( $raw as $r ) {
 			$d = explode( '-', $r );
 
 			if ( count( $d ) < 2 ) {
-				$ranges[] = array(
+				$ranges[] = [
 					'from' => trim( $d[0] ),
 					'to'   => trim( $d[0] ),
-				);
+				];
 			} else {
-				$ranges[] = array(
+				$ranges[] = [
 					'from' => trim( $d[0] ),
 					'to'   => trim( $d[1] ),
-				);
+				];
 			}
 		}
 		return $ranges;
@@ -219,7 +219,7 @@ class WP_Auth0_Ip_Check {
 			return;
 		}
 
-		add_filter( 'wp_auth0_get_option', array( $this, 'check_activate' ), 10, 2 );
+		add_filter( 'wp_auth0_get_option', [ $this, 'check_activate' ], 10, 2 );
 	}
 
 	/**
@@ -265,20 +265,20 @@ class WP_Auth0_Ip_Check {
 
 		$raw = explode( "\n", $data );
 
-		$ranges = array();
+		$ranges = [];
 		foreach ( $raw as $r ) {
 			$d = explode( '-', $r );
 
 			if ( count( $d ) < 2 ) {
-				$ranges[] = array(
+				$ranges[] = [
 					'from' => trim( $d[0] ),
 					'to'   => trim( $d[0] ),
-				);
+				];
 			} else {
-				$ranges[] = array(
+				$ranges[] = [
 					'from' => trim( $d[0] ),
 					'to'   => trim( $d[1] ),
-				);
+				];
 			}
 		}
 

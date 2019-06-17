@@ -46,7 +46,7 @@
 			<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_basic' ); ?>
 
 			<div class="tab-content">
-				<?php foreach ( array( 'basic', 'features', 'appearance', 'advanced' ) as $tab ) : ?>
+				<?php foreach ( [ 'basic', 'features', 'appearance', 'advanced' ] as $tab ) : ?>
 					<div role="tabpanel" class="tab-pane row" id="<?php echo $tab; ?>">
 						<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_' . $tab ); ?>
 					</div>

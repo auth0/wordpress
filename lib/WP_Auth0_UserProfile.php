@@ -12,18 +12,18 @@ class WP_Auth0_UserProfile {
 	}
 
 	public function get() {
-		return array(
+		return [
 			'gender'     => $this->get_gender(),
 			'age'        => $this->get_age(),
 			'created_at' => $this->get_created_at(),
 			'idp'        => $this->get_idp(),
-			'location'   => array(
+			'location'   => [
 				'latitude'  => $this->get_latitude(),
 				'longitude' => $this->get_longitude(),
-			),
+			],
 			'zipcode'    => $this->get_zipcode(),
 			'income'     => $this->get_income(),
-		);
+		];
 	}
 
 	public function get_email() {
@@ -138,10 +138,10 @@ class WP_Auth0_UserProfile {
 	public function get_idp() {
 
 		if ( ! isset( $this->profile->identities ) ) {
-			return array();
+			return [];
 		}
 
-		$idPs = array();
+		$idPs = [];
 		foreach ( $this->profile->identities as $identity ) {
 
 			$idPs[] = $identity->provider;

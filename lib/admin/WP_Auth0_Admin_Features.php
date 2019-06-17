@@ -9,9 +9,9 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
 	protected $_description;
 
-	protected $actions_middlewares = array(
+	protected $actions_middlewares = [
 		'basic_validation',
-	);
+	];
 
 	/**
 	 * WP_Auth0_Admin_Features constructor.
@@ -30,75 +30,75 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see \WP_Auth0_Admin_Generic::init_option_section
 	 */
 	public function init() {
-		$options = array(
-			array(
+		$options = [
+			[
 				'name'     => __( 'Universal Login Page', 'wp-auth0' ),
 				'opt'      => 'auto_login',
 				'id'       => 'wpa0_auto_login',
 				'function' => 'render_auto_login',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Auto Login Method', 'wp-auth0' ),
 				'opt'      => 'auto_login_method',
 				'id'       => 'wpa0_auto_login_method',
 				'function' => 'render_auto_login_method',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Single Logout', 'wp-auth0' ),
 				'opt'      => 'singlelogout',
 				'id'       => 'wpa0_singlelogout',
 				'function' => 'render_singlelogout',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Single Sign On (SSO)', 'wp-auth0' ),
 				'opt'      => 'sso',
 				'id'       => 'wpa0_sso',
 				'function' => 'render_sso',
-			),
-			array(
+			],
+			[
 				'name'     => __( 'Multifactor Authentication (MFA)', 'wp-auth0' ),
 				'opt'      => 'mfa',
 				'id'       => 'wpa0_mfa',
 				'function' => 'render_mfa',
-			),
-		);
+			],
+		];
 
 		// TODO: Remove this once feature has been removed
 		if ( $this->options->get( 'fullcontact' ) ) {
-			$options[] = array(
+			$options[] = [
 				'name'     => __( 'FullContact Integration', 'wp-auth0' ),
 				'opt'      => 'fullcontact',
 				'id'       => 'wpa0_fullcontact',
 				'function' => 'render_fullcontact',
-			);
+			];
 		}
 
 		// TODO: Remove this once feature has been removed
 		if ( $this->options->get( 'geo_rule' ) ) {
-			$options[] = array(
+			$options[] = [
 				'name'     => __( 'Store Geolocation', 'wp-auth0' ),
 				'opt'      => 'geo_rule',
 				'id'       => 'wpa0_geo',
 				'function' => 'render_geo',
-			);
+			];
 		}
 
 		// TODO: Remove this once feature has been removed
 		if ( $this->options->get( 'income_rule' ) ) {
-			$options[] = array(
+			$options[] = [
 				'name'     => __( 'Store Zipcode Income', 'wp-auth0' ),
 				'opt'      => 'income_rule',
 				'id'       => 'wpa0_income',
 				'function' => 'render_income',
-			);
+			];
 		}
 
-		$options[] = array(
+		$options[] = [
 			'name'     => __( 'Override WordPress Avatars', 'wp-auth0' ),
 			'opt'      => 'override_wp_avatars',
 			'id'       => 'wpa0_override_wp_avatars',
 			'function' => 'render_override_wp_avatars',
-		);
+		];
 
 		$this->init_option_section( '', 'features', $options );
 	}
@@ -116,20 +116,20 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public function render_password_policy( $args = array() ) {
+	public function render_password_policy( $args = [] ) {
 		// phpcs:ignore
 		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_radio_buttons(
-			array(
-				array(
+			[
+				[
 					'label' => 'None',
 					'value' => '',
-				),
+				],
 				'low',
 				'fair',
 				'good',
 				'excellent',
-			),
+			],
 			$args['label_for'],
 			$args['opt_name'],
 			$this->options->get( $args['opt_name'], 'fair' )
@@ -157,7 +157,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_sso( $args = array() ) {
+	public function render_sso( $args = [] ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'This setting is deprecated and will be removed in the next major release. ', 'wp-auth0' ) .
@@ -180,7 +180,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_singlelogout( $args = array() ) {
+	public function render_singlelogout( $args = [] ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Turning this on will log users out of Auth0 when they log out of WordPress.', 'wp-auth0' )
@@ -200,7 +200,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public function render_passwordless_enabled( $args = array() ) {
+	public function render_passwordless_enabled( $args = [] ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Turn on Passwordless login (email or SMS) in the Auth0 form. ', 'wp-auth0' ) .
@@ -220,7 +220,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_auto_login( $args = array() ) {
+	public function render_auto_login( $args = [] ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_auto_login_method' );
 		$this->render_field_description(
 			__( 'Use the Universal Login Page (ULP) for authentication and SSO. ', 'wp-auth0' ) .
@@ -239,7 +239,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_auto_login_method( $args = array() ) {
+	public function render_auto_login_method( $args = [] ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Enter a name here to automatically use a single, specific connection to login . ', 'wp-auth0' ) .
@@ -261,7 +261,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_mfa( $args = array() ) {
+	public function render_mfa( $args = [] ) {
 		$this->render_field_description(
 			__( 'MFA is a method to verify identity by checking a second factor in addition to the password. ', 'wp-auth0' ) .
 			__( 'This provides an additional layer of security, decreasing the likelihood of unauthorized access. ', 'wp-auth0' ) .
@@ -292,7 +292,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public function render_fullcontact( $args = array() ) {
+	public function render_fullcontact( $args = [] ) {
 		$this->render_field_description(
 			__( 'This feature may currently be active. ', 'wp-auth0' ) .
 			__( 'Manage it with the "Enrich-profile-with-FullContact-Do-Not-Rename" Rule in the ', 'wp-auth0' ) .
@@ -313,7 +313,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public function render_fullcontact_apikey( $args = array() ) {
+	public function render_fullcontact_apikey( $args = [] ) {
 		// phpcs:ignore
 		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
@@ -332,7 +332,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public function render_geo( $args = array() ) {
+	public function render_geo( $args = [] ) {
 		$this->render_field_description(
 			__( 'This feature may currently be active. ', 'wp-auth0' ) .
 			__( 'Manage it with the "Store-Geo-Location-Do-Not-Rename" Rule in the ', 'wp-auth0' ) .
@@ -353,7 +353,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 *
 	 * @codeCoverageIgnore - Deprecated.
 	 */
-	public function render_income( $args = array() ) {
+	public function render_income( $args = [] ) {
 		$this->render_field_description(
 			__( 'This feature may currently be active. ', 'wp-auth0' ) .
 			__( 'Manage it with the "Enrich-profile-with-Zipcode-Income-Do-Not-Rename" Rule in the ', 'wp-auth0' ) .
@@ -370,7 +370,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_override_wp_avatars( $args = array() ) {
+	public function render_override_wp_avatars( $args = [] ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Overrides the WordPress avatar with the Auth0 profile avatar', 'wp-auth0' )

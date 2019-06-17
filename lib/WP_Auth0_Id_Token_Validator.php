@@ -77,7 +77,7 @@ class WP_Auth0_Id_Token_Validator {
 	public function decode( $validate_nonce = false ) {
 
 		try {
-			$payload = JWT::decode( $this->id_token, $this->key, array( $this->algorithm ) );
+			$payload = JWT::decode( $this->id_token, $this->key, [ $this->algorithm ] );
 		} catch ( Exception $e ) {
 			throw new WP_Auth0_InvalidIdTokenException( $e->getMessage() );
 		}
@@ -90,7 +90,7 @@ class WP_Auth0_Id_Token_Validator {
 		// Check if the token audience is valid.
 		$token_audience = null;
 		if ( isset( $payload->aud ) ) {
-			$token_audience = is_array( $payload->aud ) ? $payload->aud : array( $payload->aud );
+			$token_audience = is_array( $payload->aud ) ? $payload->aud : [ $payload->aud ];
 		}
 		if ( ! $token_audience || ! in_array( $this->audience, $token_audience ) ) {
 			throw new WP_Auth0_InvalidIdTokenException( __( 'Invalid token audience', 'wp-auth0' ) );

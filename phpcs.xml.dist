@@ -39,12 +39,13 @@
     PHPCompatibility sniffs to check for PHP cross-version incompatible code.
     https://github.com/PHPCompatibility/PHPCompatibility
     -->
-    <config name="testVersion" value="5.3-"/>
+    <config name="testVersion" value="5.6-"/>
     <config name="minimum_supported_wp_version" value="3.8"/>
     <rule ref="PHPCompatibilityWP"/>
 
     <rule ref="Generic.CodeAnalysis"/>
     <rule ref="Generic.Commenting.Todo"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax.Found"/>
     <rule ref="PHPCompatibility"/>
     <rule ref="WordPress-Docs"/>
     <rule ref="WordPress-Core">

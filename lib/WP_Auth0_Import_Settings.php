@@ -14,11 +14,11 @@ class WP_Auth0_Import_Settings {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
-		add_action( 'admin_action_wpauth0_export_settings', array( $this, 'export_settings' ) );
-		add_action( 'admin_action_wpauth0_import_settings', array( $this, 'import_settings' ) );
+		add_action( 'admin_action_wpauth0_export_settings', [ $this, 'export_settings' ] );
+		add_action( 'admin_action_wpauth0_import_settings', [ $this, 'import_settings' ] );
 
 		if ( isset( $_REQUEST['error'] ) && isset( $_REQUEST['page'] ) && $_REQUEST['page'] === 'wpa0-import-settings' ) {
-			add_action( 'admin_notices', array( $this, 'show_error' ) );
+			add_action( 'admin_notices', [ $this, 'show_error' ] );
 		}
 	}
 
@@ -45,10 +45,10 @@ class WP_Auth0_Import_Settings {
 
 			if ( $_FILES['settings-file']['error'] === 0 ) {
 				$uploadedfile     = $_FILES['settings-file'];
-				$upload_overrides = array(
+				$upload_overrides = [
 					'test_form' => false,
-					'mimes'     => array( 'json' => 'application/json' ),
-				);
+					'mimes'     => [ 'json' => 'application/json' ],
+				];
 
 				$movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
 

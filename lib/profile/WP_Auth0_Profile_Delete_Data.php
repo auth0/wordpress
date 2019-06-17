@@ -37,9 +37,9 @@ class WP_Auth0_Profile_Delete_Data {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
-		add_action( 'edit_user_profile', array( $this, 'show_delete_identity' ) );
-		add_action( 'show_user_profile', array( $this, 'show_delete_identity' ) );
-		add_action( 'wp_ajax_auth0_delete_data', array( $this, 'delete_user_data' ) );
+		add_action( 'edit_user_profile', [ $this, 'show_delete_identity' ] );
+		add_action( 'show_user_profile', [ $this, 'show_delete_identity' ] );
+		add_action( 'wp_ajax_auth0_delete_data', [ $this, 'delete_user_data' ] );
 	}
 
 	/**
@@ -86,13 +86,13 @@ class WP_Auth0_Profile_Delete_Data {
 		check_ajax_referer( 'delete_auth0_identity' );
 
 		if ( empty( $_POST['user_id'] ) ) {
-			wp_send_json_error( array( 'error' => __( 'Empty user_id', 'wp-auth0' ) ) );
+			wp_send_json_error( [ 'error' => __( 'Empty user_id', 'wp-auth0' ) ] );
 		}
 
 		$user_id = $_POST['user_id'];
 
 		if ( ! current_user_can( 'edit_users' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Forbidden', 'wp-auth0' ) ) );
+			wp_send_json_error( [ 'error' => __( 'Forbidden', 'wp-auth0' ) ] );
 		}
 
 		$this->users_repo->delete_auth0_object( $user_id );

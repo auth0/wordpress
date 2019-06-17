@@ -14,7 +14,7 @@ class WP_Auth0_Lock10_Options {
 	 * @param array                 $extended_settings Argument in renderAuth0Form(), used by shortcode and widget.
 	 * @param null|WP_Auth0_Options $opts WP_Auth0_Options instance.
 	 */
-	public function __construct( $extended_settings = array(), $opts = null ) {
+	public function __construct( $extended_settings = [], $opts = null ) {
 		$this->wp_options        = ! empty( $opts ) ? $opts : WP_Auth0_Options::Instance();
 		$this->extended_settings = $extended_settings;
 	}
@@ -69,10 +69,10 @@ class WP_Auth0_Lock10_Options {
 
 	public function get_state_obj( $redirect_to = null ) {
 
-		$stateObj = array(
+		$stateObj = [
 			'interim' => ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ),
 			'nonce'   => WP_Auth0_State_Handler::get_instance()->get_unique(),
-		);
+		];
 
 		if ( ! empty( $redirect_to ) ) {
 			$stateObj['redirect_to'] = addslashes( $redirect_to );
@@ -92,7 +92,7 @@ class WP_Auth0_Lock10_Options {
 	}
 
 	protected function build_settings( $settings ) {
-		$options_obj = array();
+		$options_obj = [];
 
 		if ( isset( $settings['language'] ) && ! empty( $settings['language'] ) ) {
 			$options_obj['language'] = $settings['language'];
@@ -104,7 +104,7 @@ class WP_Auth0_Lock10_Options {
 		if ( isset( $settings['form_title'] ) && trim( $settings['form_title'] ) !== '' ) {
 
 			if ( ! isset( $options_obj['languageDictionary'] ) ) {
-				$options_obj['languageDictionary'] = array();
+				$options_obj['languageDictionary'] = [];
 			}
 
 			$options_obj['languageDictionary']['title'] = $settings['form_title'];
@@ -124,7 +124,7 @@ class WP_Auth0_Lock10_Options {
 		}
 
 		if ( $this->_is_valid( $settings, 'icon_url' ) || $this->_is_valid( $settings, 'primary_color' ) ) {
-			$options_obj['theme'] = array();
+			$options_obj['theme'] = [];
 			if ( $this->_is_valid( $settings, 'icon_url' ) ) {
 				$options_obj['theme']['logo'] = $settings['icon_url'];
 			}
@@ -170,14 +170,14 @@ class WP_Auth0_Lock10_Options {
 			$redirect_to = $this->extended_settings['redirect_to'];
 		}
 
-		$extraOptions = array(
-			'auth' => array(
-				'params' => array(
+		$extraOptions = [
+			'auth' => [
+				'params' => [
 					'state' => $this->get_state_obj( $redirect_to ),
 					'scope' => WP_Auth0_LoginManager::get_userinfo_scope( 'lock' ),
-				),
-			),
-		);
+				],
+			],
+		];
 
 		if ( $this->get_auth0_implicit_workflow() ) {
 			$extraOptions['auth']['responseType']    = 'id_token';
@@ -215,7 +215,7 @@ class WP_Auth0_Lock10_Options {
 			$options_obj['disableSignupAction'] = true;
 		}
 
-		if ( wp_auth0_is_current_login_action( array( 'register' ) ) ) {
+		if ( wp_auth0_is_current_login_action( [ 'register' ] ) ) {
 			$options_obj['initialScreen'] = 'signUp';
 		}
 

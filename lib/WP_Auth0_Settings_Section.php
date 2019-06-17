@@ -26,7 +26,7 @@ class WP_Auth0_Settings_Section {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
-		add_action( 'admin_menu', array( $this, 'init_menu' ), 95.55, 0 );
+		add_action( 'admin_menu', [ $this, 'init_menu' ], 95.55, 0 );
 	}
 
 	public function init_menu() {
@@ -44,29 +44,29 @@ class WP_Auth0_Settings_Section {
 			'manage_options',
 			$main_menu,
 			! WP_Auth0::ready() ?
-				array( $this->initial_setup, 'render_setup_page' ) :
-				array( $this->auth0_admin, 'render_settings_page' ),
+				[ $this->initial_setup, 'render_setup_page' ] :
+				[ $this->auth0_admin, 'render_settings_page' ],
 			WPA0_PLUGIN_IMG_URL . 'a0icon.png',
 			85.55
 		);
 
 		if ( ! WP_Auth0::ready() ) {
-			add_submenu_page( $main_menu, __( 'Auth0 for WordPress - Setup Wizard', 'wp-auth0' ), __( 'Setup Wizard', 'wp-auth0' ), 'manage_options', 'wpa0-setup', array( $this->initial_setup, 'render_setup_page' ) );
-			add_submenu_page( $main_menu, __( 'Settings', 'wp-auth0' ), __( 'Settings', 'wp-auth0' ), 'manage_options', 'wpa0', array( $this->auth0_admin, 'render_settings_page' ) );
+			add_submenu_page( $main_menu, __( 'Auth0 for WordPress - Setup Wizard', 'wp-auth0' ), __( 'Setup Wizard', 'wp-auth0' ), 'manage_options', 'wpa0-setup', [ $this->initial_setup, 'render_setup_page' ] );
+			add_submenu_page( $main_menu, __( 'Settings', 'wp-auth0' ), __( 'Settings', 'wp-auth0' ), 'manage_options', 'wpa0', [ $this->auth0_admin, 'render_settings_page' ] );
 		} else {
-			add_submenu_page( $main_menu, __( 'Settings', 'wp-auth0' ), __( 'Settings', 'wp-auth0' ), 'manage_options', 'wpa0', array( $this->auth0_admin, 'render_settings_page' ) );
+			add_submenu_page( $main_menu, __( 'Settings', 'wp-auth0' ), __( 'Settings', 'wp-auth0' ), 'manage_options', 'wpa0', [ $this->auth0_admin, 'render_settings_page' ] );
 
-			add_submenu_page( $main_menu, __( 'Help', 'wp-auth0' ), __( 'Help', 'wp-auth0' ), 'manage_options', 'wpa0-help', array( $this, 'redirect_to_help' ) );
+			add_submenu_page( $main_menu, __( 'Help', 'wp-auth0' ), __( 'Help', 'wp-auth0' ), 'manage_options', 'wpa0-help', [ $this, 'redirect_to_help' ] );
 
-			add_submenu_page( null, __( 'Auth0 for WordPress - Setup Wizard', 'wp-auth0' ), __( 'Setup Wizard', 'wp-auth0' ), 'manage_options', 'wpa0-setup', array( $this->initial_setup, 'render_setup_page' ) );
+			add_submenu_page( null, __( 'Auth0 for WordPress - Setup Wizard', 'wp-auth0' ), __( 'Setup Wizard', 'wp-auth0' ), 'manage_options', 'wpa0-setup', [ $this->initial_setup, 'render_setup_page' ] );
 		}
 
-		add_submenu_page( $main_menu, __( 'Export Users Data', 'wp-auth0' ), __( 'Export Users Data', 'wp-auth0' ), 'manage_options', 'wpa0-users-export', array( $this->users_exporter, 'render_export_users' ) );
-		add_submenu_page( $main_menu, __( 'Error Log', 'wp-auth0' ), __( 'Error Log', 'wp-auth0' ), 'manage_options', 'wpa0-errors', array( $this->error_log, 'render_settings_page' ) );
-		add_submenu_page( $main_menu, __( 'Import-Export settings', 'wp-auth0' ), __( 'Import-Export settings', 'wp-auth0' ), 'manage_options', 'wpa0-import-settings', array( $this->import_settings, 'render_import_settings_page' ) );
+		add_submenu_page( $main_menu, __( 'Export Users Data', 'wp-auth0' ), __( 'Export Users Data', 'wp-auth0' ), 'manage_options', 'wpa0-users-export', [ $this->users_exporter, 'render_export_users' ] );
+		add_submenu_page( $main_menu, __( 'Error Log', 'wp-auth0' ), __( 'Error Log', 'wp-auth0' ), 'manage_options', 'wpa0-errors', [ $this->error_log, 'render_settings_page' ] );
+		add_submenu_page( $main_menu, __( 'Import-Export settings', 'wp-auth0' ), __( 'Import-Export settings', 'wp-auth0' ), 'manage_options', 'wpa0-import-settings', [ $this->import_settings, 'render_import_settings_page' ] );
 
 		if ( WP_Auth0_Configure_JWTAUTH::is_jwt_auth_enabled() ) {
-			add_submenu_page( $main_menu, __( 'JWT Auth integration', 'wp-auth0' ), __( 'JWT Auth integration', 'wp-auth0' ), 'manage_options', 'wpa0-jwt-auth', array( $this->configure_jwt_auth, 'render_settings_page' ) );
+			add_submenu_page( $main_menu, __( 'JWT Auth integration', 'wp-auth0' ), __( 'JWT Auth integration', 'wp-auth0' ), 'manage_options', 'wpa0-jwt-auth', [ $this->configure_jwt_auth, 'render_settings_page' ] );
 		}
 	}
 
