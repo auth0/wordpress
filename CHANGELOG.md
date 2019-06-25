@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.0.0-beta
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.11.0...master)
+
+**Notes on this release**
+
+- The minimum PHP version has been updated from 5.3 to 5.6. All long arrays have been converted to short arrays with a PHPCS check. 
+
 ## [3.11.0](https://github.com/auth0/wp-auth0/tree/3.11.0) (2019-05-30)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.10.0...3.11.0)
 
