@@ -51,7 +51,6 @@ class WP_Auth0_Routes {
 		add_rewrite_tag( '%auth0_error%', '([^&]+)' );
 		add_rewrite_tag( '%a0_action%', '([^&]+)' );
 
-		add_rewrite_rule( '^auth0', 'index.php?auth0=1', 'top' );
 		add_rewrite_rule( '^\.well-known/oauth2-client-configuration', 'index.php?a0_action=oauth2-config', 'top' );
 	}
 
