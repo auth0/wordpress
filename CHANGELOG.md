@@ -6,6 +6,7 @@
 **Notes on this release**
 
 - The minimum PHP version has been updated from 5.3 to 5.6. All long arrays have been converted to short arrays with a PHPCS check. 
+- The site will no longer auto-redirect paths with `auth0` in them to the callback URL. Use `/index.php?auth0=1` to use the callback URL directly. Your site may require permalinks to be refreshed manually by going to **wp-admin > Settings > Permalinks** and clicking **Save Changes**.
 
 ## [3.11.0](https://github.com/auth0/wp-auth0/tree/3.11.0) (2019-05-30)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.10.0...3.11.0)
