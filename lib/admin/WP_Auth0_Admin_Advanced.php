@@ -14,6 +14,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	protected $actions_middlewares = array(
 		'basic_validation',
 		'migration_ws_validation',
+		'migration_ips_validation',
 		'loginredirection_validation',
 	);
 
@@ -590,9 +591,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
 		$input['migration_ips_filter'] = ( ! empty( $input['migration_ips_filter'] ) ? 1 : 0 );
 
-		$input['migration_ips'] = isset( $input['migration_ips'] ) ?
-			sanitize_text_field( $input['migration_ips'] ) : '';
-
 		$input['valid_proxy_ip'] = ( isset( $input['valid_proxy_ip'] ) ? $input['valid_proxy_ip'] : null );
 
 		$input['lock_connections'] = isset( $input['lock_connections'] ) ?
@@ -653,6 +651,29 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			// If the JWT cannot be decoded then we use the token as-is without storing the JTI.
 		}
 
+		return $input;
+	}
+
+	public function migration_ips_validation( array $old_options, array $input ) {
+
+		if ( empty( $input['migration_ips'] ) ) {
+			$input['migration_ips'] = '';
+			return $input;
+		}
+
+		$ip_addresses = explode( ',', $input['migration_ips'] );
+		$ip_addresses = array_map( 'trim', $ip_addresses );
+		$ip_addresses = array_map( 'sanitize_text_field', $ip_addresses );
+		$ip_addresses = array_filter( $ip_addresses );
+		$ip_addresses = array_unique( $ip_addresses );
+
+		if ( ! empty( $input['domain'] ) ) {
+			$ip_check      = new WP_Auth0_Ip_Check();
+			$whitelist_ips = $ip_check->get_ips_by_domain( $input['domain'], null );
+			$ip_addresses  = array_diff( $ip_addresses, $whitelist_ips );
+		}
+
+		$input['migration_ips'] = implode( ', ', $ip_addresses );
 		return $input;
 	}
 
