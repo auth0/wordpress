@@ -56,7 +56,7 @@ If the email was not verified and there is an account with that email in WordPre
 
 = Widget =
 
-You can enable the Auth0 as a WordPress widget in order to show it in a sidebar. The widget inherits the main plugin settings but can be overridden with its own settings in the widget form.
+You can enable the Auth0 as a WordPress widget in order to show it in a sidebar. The widget inherits the main plugin settings but can be overridden with its own settings in the widget form. Note: this form will not display for logged-in users.
 
 = Shortcode =
 
@@ -80,6 +80,8 @@ Like widgets, shortcode login forms will use the main plugins settings. It can b
 Example:
 
     [auth0 show_as_modal="1" modal_trigger_name="Login button: This text is configurable!"]
+
+Note: this form will not display for logged-in users.
 
 == Frequently Asked Questions ==
 
