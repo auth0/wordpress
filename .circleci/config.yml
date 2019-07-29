@@ -40,7 +40,6 @@ commands:
             composer phpcbf
             composer phpcbf-tests
             composer phpcs-tests
-            composer compat
   run-tests:
     steps:
       - run:
@@ -60,7 +59,8 @@ jobs:
     steps:
       - prepare
       - run-tests
-      - run-formatting
+      - run:
+          command: composer compat
   php_7:
     docker:
       - image: circleci/php:7.1
