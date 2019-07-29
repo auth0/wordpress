@@ -38,7 +38,7 @@ if ( $this->showAsModal() ) :
 		   type="text" value="<?php echo esc_attr( $redirect_to ); ?>" />
 </p>
 <p>
-	<label><?php _e( 'Enable Gravatar integration:' ); ?></label>
+	<label><?php _e( 'Enable Gravatar integration:', 'wp-auth0' ); ?></label>
 	<br>
 	<div class="radio-wrapper">
 		<input id="<?php echo $this->get_field_id( 'gravatar' ); ?>_yes"
@@ -71,9 +71,7 @@ if ( $this->showAsModal() ) :
 <p>
 	<label for="<?php echo $this->get_field_id( 'dict' ); ?>"><?php _e( 'Translation:', 'wp-auth0' ); ?></label>
 	<textarea class="widefat" id="<?php echo $this->get_field_id( 'dict' ); ?>"
-			  name="<?php echo $this->get_field_name( 'dict' ); ?>">
-		<?php echo esc_attr( $dict ); ?>
-	</textarea>
+			  name="<?php echo $this->get_field_name( 'dict' ); ?>"><?php echo $dict; ?></textarea>
 	<br><span class="description">
 			<?php _e( 'The languageDictionary parameter for the Auth0 login form. ', 'wp-auth0' ); ?>
 	</span>
@@ -86,23 +84,22 @@ if ( $this->showAsModal() ) :
 			?>
 		</span>
 	<br><span class="description">
-			<?php _e( 'NOTE: This field is deprecated and will be removed in the next major release. ', 'wp-auth0' ); ?>
-	</span>
-	<br><span class="description">
-			<?php _e( 'Use a languageDictionary property the Extra Settings field below to change text.', 'wp-auth0' ); ?>
+			<?php
+			_e( 'NOTE: This field is deprecated and will be removed in the next major release. ', 'wp-auth0' );
+			_e( 'Use a languageDictionary property the Extra Settings field below to change text.', 'wp-auth0' );
+			?>
 	</span>
 </p>
 <p>
 	<label for="<?php echo $this->get_field_id( 'extra_conf' ); ?>"><?php _e( 'Extra Settings', 'wp-auth0' ); ?></label>
 	<textarea class="widefat" id="<?php echo $this->get_field_id( 'extra_conf' ); ?>"
-			  name="<?php echo $this->get_field_name( 'extra_conf' ); ?>">
-		<?php echo esc_attr( $extra_conf ); ?>
-	</textarea>
+			  name="<?php echo $this->get_field_name( 'extra_conf' ); ?>"><?php echo $extra_conf; ?></textarea>
 	<br><span class="description">
 			<?php _e( 'Valid JSON for Lock options configuration; will override all options set elsewhere.', 'wp-auth0' ); ?>
 		<a target="_blank" href="https://auth0.com/docs/libraries/lock/v11/configuration"><?php _e( 'See options and examples', 'wp-auth0' ); ?></a>
 		</span>
 </p>
+
 <?php if ( $custom_css ) : ?>
 <p>
 	<label for="<?php echo $this->get_field_id( 'custom_css' ); ?>"><?php _e( 'Login Form CSS', 'wp-auth0' ); ?></label>
@@ -119,6 +116,7 @@ if ( $this->showAsModal() ) :
 		</span>
 </p>
 <?php endif; ?>
+
 <?php if ( $custom_js ) : ?>
 <p>
 	<label for="<?php echo $this->get_field_id( 'custom_js' ); ?>"><?php _e( 'Login Form JS', 'wp-auth0' ); ?></label>

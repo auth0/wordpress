@@ -12,8 +12,13 @@
 		<?php
 		  _e( 'For more information on installation and configuration, including manual steps, please see the', 'wp-auth0' );
 		printf(
+<<<<<<< HEAD
 			' <strong><a href="https://auth0.com/docs/cms/wordpress/installation" target="_blank">%s</a></strong>',
 			__( 'documentation pages here' )
+=======
+			' <strong><a href="https://auth0.com/docs/cms/wordpress" target="_blank">%s</a></strong>',
+			__( 'documentation pages here', 'wp-auth0' )
+>>>>>>> Add redirect validation, tests, translations
 		);
 		?>
 		  .</p>
@@ -62,10 +67,10 @@
 
 	  </div>
 		<div class="a0-step-text a0-message a0-tip">
-			<b><?php _e( 'Pro Tip' ); ?>:</b>
-			<?php _e( 'Already set up another WordPress instance with Auth0? ' ); ?>
-			<a href="<?php echo admin_url( 'admin.php?page=wpa0-import-settings' ); ?>"><?php _e( 'Click here' ); ?></a>
-			<?php _e( ' to save time and import existing Auth0 settings.' ); ?>
+			<b><?php _e( 'Pro Tip', 'wp-auth0' ); ?>:</b>
+			<?php _e( 'Already set up another WordPress instance with Auth0? ', 'wp-auth0' ); ?>
+			<a href="<?php echo admin_url( 'admin.php?page=wpa0-import-settings' ); ?>"><?php _e( 'Click here', 'wp-auth0' ); ?></a>
+			<?php _e( ' to save time and import existing Auth0 settings.', 'wp-auth0' ); ?>
 		</div>
 	</div>
 	<div class="a0-profiles row">
