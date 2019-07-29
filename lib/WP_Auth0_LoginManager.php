@@ -175,7 +175,7 @@ class WP_Auth0_LoginManager {
 
 		// Check for valid state nonce, set in WP_Auth0_Lock10_Options::get_state_obj().
 		// See https://auth0.com/docs/protocols/oauth2/oauth-state for more info.
-		$state_returned = isset( $_REQUEST['state'] ) ? rawurldecode( $_REQUEST['state'] ) : null;
+		$state_returned = $this->query_vars( 'state' );
 		if ( ! $state_returned || ! WP_Auth0_State_Handler::get_instance()->validate( $state_returned ) ) {
 			$this->die_on_login( __( 'Invalid state', 'wp-auth0' ) );
 		}
@@ -638,6 +638,12 @@ class WP_Auth0_LoginManager {
 		}
 		if ( isset( $_REQUEST[ $key ] ) ) {
 			return $_REQUEST[ $key ];
+		}
+		if ( isset( $_GET[ $key ] ) ) {
+			return $_GET[ $key ];
+		}
+		if ( isset( $_POST[ $key ] ) ) {
+			return $_POST[ $key ];
 		}
 		return null;
 	}
