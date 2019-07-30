@@ -80,7 +80,7 @@ if ( $this->showAsModal() ) :
 			printf(
 				'<a href="https://github.com/auth0/lock/blob/master/src/i18n/en.js" target="_blank">%s</a>',
 				__( 'List of all modifiable options', 'wp-auth0' )
-			)
+			);
 			?>
 		</span>
 	<br><span class="description">
@@ -110,7 +110,7 @@ if ( $this->showAsModal() ) :
 	<br><span class="description">
 			<?php
 				_e( 'NOTE: This field is deprecated and will be removed in the next major release. ', 'wp-auth0' );
-				_e( 'Valid CSS to customize the Auth0 login form', 'wp-auth0' )
+				_e( 'Valid CSS to customize the Auth0 login form', 'wp-auth0' );
 			?>
 			.
 		</span>
@@ -126,7 +126,7 @@ if ( $this->showAsModal() ) :
 	<span class="description">
 			<?php
 			_e( 'NOTE: This field is deprecated and will be removed in the next major release. ', 'wp-auth0' );
-			_e( 'Valid JS to customize the Auth0 login form', 'wp-auth0' )
+			_e( 'Valid JS to customize the Auth0 login form', 'wp-auth0' );
 			?>
 		  .
 		</span>
