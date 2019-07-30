@@ -165,7 +165,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_cdn_url( $args = array() ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'], 'url' );
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'This should point to the latest Lock JS available in the CDN and rarely needs to change', 'wp-auth0' )
 		);
@@ -482,6 +482,17 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 				$input['language_dictionary'] = isset( $old_options['language_dictionary'] ) ? $old_options['language_dictionary'] : '';
 			}
 		}
+
+		$input['custom_cdn_url'] = empty( $input['custom_cdn_url'] ) ? 0 : 1;
+
+		$input['cdn_url'] = empty( $input['cdn_url'] ) ? WPA0_LOCK_CDN_URL : sanitize_text_field( $input['cdn_url'] );
+
+		// If an invalid URL is used, default to previously saved (if there is one) or default URL.
+		if ( ! filter_var( $input['cdn_url'], FILTER_VALIDATE_URL ) ) {
+			$input['cdn_url'] = isset( $old_options['cdn_url'] ) ? $old_options['cdn_url'] : WPA0_LOCK_CDN_URL;
+			self::add_validation_error( __( 'The Lock JS CDN URL used is not a valid URL.', 'wp-auth0' ) );
+		}
+
 		return $input;
 	}
 
