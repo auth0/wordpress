@@ -12,13 +12,8 @@
 		<?php
 		  _e( 'For more information on installation and configuration, including manual steps, please see the', 'wp-auth0' );
 		printf(
-<<<<<<< HEAD
 			' <strong><a href="https://auth0.com/docs/cms/wordpress/installation" target="_blank">%s</a></strong>',
-			__( 'documentation pages here' )
-=======
-			' <strong><a href="https://auth0.com/docs/cms/wordpress" target="_blank">%s</a></strong>',
 			__( 'documentation pages here', 'wp-auth0' )
->>>>>>> Add redirect validation, tests, translations
 		);
 		?>
 		  .</p>
