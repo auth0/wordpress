@@ -27,7 +27,7 @@ class TestOptionLockCdn extends WP_Auth0_Test_Case {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$admin = new WP_Auth0_Admin_Advanced( self::$opts, new WP_Auth0_Routes( self::$opts ) );
+		self::$admin = new WP_Auth0_Admin_Appearance( self::$opts, new WP_Auth0_Routes( self::$opts ) );
 	}
 
 	/**
@@ -122,7 +122,7 @@ class TestOptionLockCdn extends WP_Auth0_Test_Case {
 		);
 
 		// Input should be a checkbox.
-		$this->assertEquals( 'url', $input->item( 0 )->getAttribute( 'type' ) );
+		$this->assertEquals( 'text', $input->item( 0 )->getAttribute( 'type' ) );
 
 		// Check that saving a custom domain appears in the field value.
 		self::$opts->set( $field_args['opt_name'], 'https://auth0.com' );
