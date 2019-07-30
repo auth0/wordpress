@@ -7,7 +7,7 @@
         "php": "^5.3 || ^7.0"
     },
     "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.5",
         "wp-coding-standards/wpcs": "^1",
         "phpcompatibility/phpcompatibility-wp": "*",
         "phpunit/phpunit": "^5.0 || ^6.0"

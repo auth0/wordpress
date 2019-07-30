@@ -177,7 +177,7 @@
 					<?php _e( ' and paste it below:', 'wp-auth0' ); ?>
 				</p>
 
-				<input type="password" name="apitoken" class="js-a0-setup-input" autocomplete="off" required>
+				<input type="text" name="apitoken" class="js-a0-setup-input" autocomplete="off" required>
 				  <p>
 					  <small>
 				<?php _e( 'Scopes required', 'wp-auth0' ); ?>:
