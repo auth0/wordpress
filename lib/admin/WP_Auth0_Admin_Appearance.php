@@ -470,7 +470,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	public function basic_validation( $old_options, $input ) {
 		$input['form_title']    = empty( $input['form_title'] ) ? '' : sanitize_text_field( $input['form_title'] );
 		$input['icon_url']      = empty( $input['icon_url'] ) ? '' : esc_url( $input['icon_url'], array( 'http', 'https' ) );
-		$input['gravatar']      = isset( $input['gravatar'] ) ? $input['gravatar'] : 0;
+		$input['gravatar']      = empty( $input['gravatar'] ) ? 0 : 1;
 		$input['language']      = empty( $input['language'] ) ? '' : sanitize_text_field( $input['language'] );
 		$input['primary_color'] = empty( $input['primary_color'] ) ? '' : sanitize_text_field( $input['primary_color'] );
 

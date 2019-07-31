@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Login by Auth0\n"
-"POT-Creation-Date: 2019-07-30 08:16-0700\n"
-"PO-Revision-Date: 2019-07-30 08:16-0700\n"
+"POT-Creation-Date: 2019-07-31 13:29-0700\n"
+"PO-Revision-Date: 2019-07-31 13:33-0700\n"
 "Last-Translator: Josh Cunningham <josh.cunningham@auth0.com>\n"
 "Language-Team: Carlos Longarela https://tabernawp.com/\n"
 "Language: es_ES\n"
@@ -52,13 +52,13 @@ msgstr "Asistente de configuración"
 #: lib/WP_Auth0_EditProfile.php:462 lib/WP_Auth0_EditProfile.php:519
 #: lib/WP_Auth0_Email_Verification.php:115 lib/WP_Auth0_ErrorLog.php:135
 #: lib/WP_Auth0_Export_Users.php:29 lib/WP_Auth0_Lock10_Options.php:39
-#: lib/WP_Auth0_Lock10_Options.php:50 lib/WP_Auth0_Lock10_Options.php:243
-#: lib/WP_Auth0_Lock10_Options.php:260 lib/WP_Auth0_Lock10_Options.php:273
-#: lib/WP_Auth0_Lock10_Options.php:286 lib/WP_Auth0_Lock10_Options.php:299
-#: lib/WP_Auth0_Lock10_Options.php:312 lib/WP_Auth0_Lock10_Options.php:325
-#: lib/WP_Auth0_Lock10_Options.php:338 lib/WP_Auth0_Lock10_Options.php:351
-#: lib/WP_Auth0_Lock10_Options.php:364 lib/WP_Auth0_Lock10_Options.php:381
-#: lib/WP_Auth0_Lock10_Options.php:400 lib/WP_Auth0_LoginManager.php:517
+#: lib/WP_Auth0_Lock10_Options.php:50 lib/WP_Auth0_Lock10_Options.php:253
+#: lib/WP_Auth0_Lock10_Options.php:270 lib/WP_Auth0_Lock10_Options.php:283
+#: lib/WP_Auth0_Lock10_Options.php:296 lib/WP_Auth0_Lock10_Options.php:309
+#: lib/WP_Auth0_Lock10_Options.php:322 lib/WP_Auth0_Lock10_Options.php:335
+#: lib/WP_Auth0_Lock10_Options.php:348 lib/WP_Auth0_Lock10_Options.php:361
+#: lib/WP_Auth0_Lock10_Options.php:374 lib/WP_Auth0_Lock10_Options.php:391
+#: lib/WP_Auth0_Lock10_Options.php:410 lib/WP_Auth0_LoginManager.php:517
 #: lib/WP_Auth0_LoginManager.php:542 lib/WP_Auth0_LoginManager.php:743
 #: lib/WP_Auth0_LoginManager.php:770 lib/WP_Auth0_LoginManager.php:816
 #: lib/WP_Auth0_Metrics.php:17 lib/WP_Auth0_Options.php:280
@@ -67,23 +67,23 @@ msgstr "Asistente de configuración"
 #: lib/WP_Auth0_SocialAmplification_Widget.php:28
 #: lib/WP_Auth0_SocialAmplification_Widget.php:197
 #: lib/WP_Auth0_UsersRepo.php:29 lib/WP_Auth0_UsersRepo.php:81
-#: lib/admin/WP_Auth0_Admin.php:87 lib/admin/WP_Auth0_Admin_Advanced.php:687
-#: lib/admin/WP_Auth0_Admin_Advanced.php:771
-#: lib/admin/WP_Auth0_Admin_Advanced.php:790
-#: lib/admin/WP_Auth0_Admin_Advanced.php:810
-#: lib/admin/WP_Auth0_Admin_Advanced.php:834
-#: lib/admin/WP_Auth0_Admin_Advanced.php:857
-#: lib/admin/WP_Auth0_Admin_Advanced.php:882
+#: lib/admin/WP_Auth0_Admin.php:87 lib/admin/WP_Auth0_Admin_Advanced.php:677
+#: lib/admin/WP_Auth0_Admin_Advanced.php:761
+#: lib/admin/WP_Auth0_Admin_Advanced.php:780
+#: lib/admin/WP_Auth0_Admin_Advanced.php:800
+#: lib/admin/WP_Auth0_Admin_Advanced.php:824
+#: lib/admin/WP_Auth0_Admin_Advanced.php:847
+#: lib/admin/WP_Auth0_Admin_Advanced.php:872
+#: lib/admin/WP_Auth0_Admin_Advanced.php:890
 #: lib/admin/WP_Auth0_Admin_Advanced.php:900
 #: lib/admin/WP_Auth0_Admin_Advanced.php:910
 #: lib/admin/WP_Auth0_Admin_Advanced.php:920
-#: lib/admin/WP_Auth0_Admin_Advanced.php:930
-#: lib/admin/WP_Auth0_Admin_Advanced.php:948
-#: lib/admin/WP_Auth0_Admin_Appearance.php:495
-#: lib/admin/WP_Auth0_Admin_Basic.php:250
-#: lib/admin/WP_Auth0_Admin_Basic.php:409
-#: lib/admin/WP_Auth0_Admin_Basic.php:419
-#: lib/admin/WP_Auth0_Admin_Basic.php:429
+#: lib/admin/WP_Auth0_Admin_Advanced.php:938
+#: lib/admin/WP_Auth0_Admin_Appearance.php:506
+#: lib/admin/WP_Auth0_Admin_Basic.php:253
+#: lib/admin/WP_Auth0_Admin_Basic.php:414
+#: lib/admin/WP_Auth0_Admin_Basic.php:424
+#: lib/admin/WP_Auth0_Admin_Basic.php:434
 #: lib/admin/WP_Auth0_Admin_Features.php:121
 #: lib/admin/WP_Auth0_Admin_Features.php:318
 #: lib/admin/WP_Auth0_Admin_Features.php:405
@@ -93,8 +93,8 @@ msgstr "Asistente de configuración"
 #: lib/admin/WP_Auth0_Admin_Features.php:537
 #: lib/admin/WP_Auth0_Admin_Features.php:550
 #: lib/admin/WP_Auth0_Admin_Features.php:563
-#: lib/admin/WP_Auth0_Admin_Generic.php:107
-#: lib/admin/WP_Auth0_Admin_Generic.php:304
+#: lib/admin/WP_Auth0_Admin_Generic.php:109
+#: lib/admin/WP_Auth0_Admin_Generic.php:306
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:70
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:79
 #: lib/initial-setup/WP_Auth0_InitialSetup_Connections.php:36
@@ -1027,63 +1027,59 @@ msgstr ""
 msgid "This will enable the JWT Auth Users Repository override"
 msgstr "Esto habilitará la anulación del Repositorio de Usuarios de JWT Auth"
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:589
-msgid "The Lock JS CDN URL used is not a valid URL."
-msgstr "La URL de la CDN de Lock JS no es una URL válida."
-
-#: lib/admin/WP_Auth0_Admin_Advanced.php:605
+#: lib/admin/WP_Auth0_Admin_Advanced.php:595
 msgid "The Extra settings parameter should be a valid json object"
 msgstr "El parámetro de configuración extra debe ser un objeto json válido"
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:728
+#: lib/admin/WP_Auth0_Admin_Advanced.php:718
 msgid "Advanced > \"Login Redirection URL\" cannot point to another site."
 msgstr ""
 "Avanzado > \"La URL de redirección de inicio de sesión\" no puede apuntar a "
 "otro sitio."
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:793
+#: lib/admin/WP_Auth0_Admin_Advanced.php:783
 msgid ""
 "Only one range per line! Range format should be as follows (spaces ignored): "
 msgstr ""
 "¡Sólo un rango por línea! El formato del rango debe ser el siguiente (se "
 "ignoran los espacios): "
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:794
+#: lib/admin/WP_Auth0_Admin_Advanced.php:784
 msgid "<br><code>xx.xx.xx.xx - yy.yy.yy.yy</code>"
 msgstr "<br><code>xx.xx.xx.xx - yy.yy.yy.yy</code>"
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:813
+#: lib/admin/WP_Auth0_Admin_Advanced.php:803
 msgid "Twitter app key for the Social Amplification Widget. "
 msgstr "App key de Twitter para el Widget de Amplificación Social. "
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:814
+#: lib/admin/WP_Auth0_Admin_Advanced.php:804
 msgid "The app used here needs to have \"read\" and \"write\" permissions. "
 msgstr ""
 "La aplicación utilizada aquí necesita tener permisos de \"lectura\" y "
 "\"escritura\". "
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:817
-#: lib/admin/WP_Auth0_Admin_Advanced.php:840
-#: lib/admin/WP_Auth0_Admin_Advanced.php:865
-#: lib/admin/WP_Auth0_Admin_Advanced.php:888
+#: lib/admin/WP_Auth0_Admin_Advanced.php:807
+#: lib/admin/WP_Auth0_Admin_Advanced.php:830
+#: lib/admin/WP_Auth0_Admin_Advanced.php:855
+#: lib/admin/WP_Auth0_Admin_Advanced.php:878
 msgid "Instructions here"
 msgstr "Instrucciones aquí"
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:837
-#: lib/admin/WP_Auth0_Admin_Advanced.php:885
+#: lib/admin/WP_Auth0_Admin_Advanced.php:827
+#: lib/admin/WP_Auth0_Admin_Advanced.php:875
 msgid "Secret for the app above. "
 msgstr "Secreto para la aplicación mencionada arriba. "
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:860
+#: lib/admin/WP_Auth0_Admin_Advanced.php:850
 msgid "Facebook app key for the Social Amplification Widget. "
 msgstr "App key de Facebook para el Widget de Amplificación Social. "
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:861
+#: lib/admin/WP_Auth0_Admin_Advanced.php:851
 msgid "The app used here needs to have \"publish_actions\" permission. "
 msgstr ""
 "La aplicación utilizada aquí necesita tener permiso \"publish_actions\". "
 
-#: lib/admin/WP_Auth0_Admin_Advanced.php:862
+#: lib/admin/WP_Auth0_Admin_Advanced.php:852
 msgid "Used for the Social Amplification Widget. "
 msgstr "Utilizado para el Widget de Amplificación Social. "
 
@@ -1108,6 +1104,7 @@ msgid "Form Title"
 msgstr "Título del formulario"
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:55
+#: templates/a0-widget-setup-form.php:41
 msgid "Enable Gravatar Integration"
 msgstr "Habilitar la integración de Gravatar"
 
@@ -1318,6 +1315,10 @@ msgid "The language dictionary parameter should be a valid JSON object."
 msgstr ""
 "El parámetro del diccionario de idiomas debe ser un objeto JSON válido."
 
+#: lib/admin/WP_Auth0_Admin_Appearance.php:493
+msgid "The Lock JS CDN URL used is not a valid URL."
+msgstr "La URL de la CDN de Lock JS no es una URL válida."
+
 #: lib/admin/WP_Auth0_Admin_Basic.php:26
 msgid "Basic settings related to the Auth0 integration."
 msgstr "Ajustes básicos relacionados con la integración con Auth0."
@@ -1358,96 +1359,96 @@ msgstr "Formulario de login original en wp-login.php"
 msgid "Allow Signups"
 msgstr "Permitir registros"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:108
+#: lib/admin/WP_Auth0_Admin_Basic.php:109
 msgid "Auth0 Domain, found in your Application settings in the "
 msgstr "Auth0 Domain, disponible en la configuración de tu aplicación en el "
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:127
+#: lib/admin/WP_Auth0_Admin_Basic.php:128
 msgid "Custom login domain. "
 msgstr "Dominio de inicio de sesión personalizado. "
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:128
+#: lib/admin/WP_Auth0_Admin_Basic.php:129
 msgid "More information here"
 msgstr "Más información aquí"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:144
+#: lib/admin/WP_Auth0_Admin_Basic.php:146
 msgid "Client ID, found in your Application settings in the "
 msgstr "Client ID, disponible en la configuración de tu aplicación en el "
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:161
+#: lib/admin/WP_Auth0_Admin_Basic.php:164
 msgid "Client Secret, found in your Application settings in the "
 msgstr "Client Secret, disponible en la configuración de tu aplicación en el "
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:178
+#: lib/admin/WP_Auth0_Admin_Basic.php:181
 msgid "Enable this if your Client Secret is base64 encoded. "
 msgstr "Habilita esta opción si tu Client Secret está codificado en base64. "
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:179
+#: lib/admin/WP_Auth0_Admin_Basic.php:182
 msgid "This information is found below the Client Secret field in the "
 msgstr "Esta información se encuentra debajo del campo Client Secret en la "
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:202
+#: lib/admin/WP_Auth0_Admin_Basic.php:205
 msgid "This value can be found the Application settings in the "
 msgstr "Este valor se encuentra en Application Settings en la "
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:204
+#: lib/admin/WP_Auth0_Admin_Basic.php:207
 msgid ""
 " under Show Advanced Settings > OAuth > \"JsonWebToken Signature Algorithm\""
 msgstr ""
 " en Show Advanced Settings > OAuth > \"JsonWebToken Signature Algorithm\""
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:221
+#: lib/admin/WP_Auth0_Admin_Basic.php:224
 msgid "Delete Cache"
 msgstr "Borrar caché"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:223
+#: lib/admin/WP_Auth0_Admin_Basic.php:226
 msgid "JWKS cache expiration in minutes (use 0 for no caching)"
 msgstr ""
 "Expiración de la caché JWKS en minutos (usa 0 para no almacenar en caché)"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:229
+#: lib/admin/WP_Auth0_Admin_Basic.php:232
 msgid "View your JWKS here"
 msgstr "Ver tus JWKS aquí"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:253
+#: lib/admin/WP_Auth0_Admin_Basic.php:256
 msgid "This token should include the following scopes: "
 msgstr "Este token debe incluir los siguientes scopes: "
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:257
+#: lib/admin/WP_Auth0_Admin_Basic.php:260
 msgid "More information on manually generating tokens"
 msgstr "Más información sobre la generación manual de tokens"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:279
+#: lib/admin/WP_Auth0_Admin_Basic.php:282
 msgid "Save settings to generate URL."
 msgstr "Guardar la configuración para generar la URL."
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:287
+#: lib/admin/WP_Auth0_Admin_Basic.php:290
 msgid "Never"
 msgstr "Nunca"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:291
+#: lib/admin/WP_Auth0_Admin_Basic.php:294
 msgid "Via a link under the Auth0 form"
 msgstr "Via un vinculo debajo del formulario Auth0"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:293
+#: lib/admin/WP_Auth0_Admin_Basic.php:296
 msgid "URL is the same as below"
 msgstr "La URL es la siguiente"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:296
+#: lib/admin/WP_Auth0_Admin_Basic.php:299
 msgid "When \"wle\" query parameter is present"
 msgstr "Cuando el parámetro “wle” de la query está presente"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:301
+#: lib/admin/WP_Auth0_Admin_Basic.php:304
 msgid "When \"wle\" query parameter contains specific code"
 msgstr "Cuando el parámetro “wle” de la query contiene código específico"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:309
+#: lib/admin/WP_Auth0_Admin_Basic.php:312
 msgid "Logins and signups using the original form will NOT be pushed to Auth0"
 msgstr ""
 "Los inicios de sesión y los registros que utilicen el formulario de "
 "WordPress NO se enviarán a Auth0"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:331
+#: lib/admin/WP_Auth0_Admin_Basic.php:334
 msgid ""
 "\"Allow new registrations\" in the Network Admin > Settings > Network "
 "Settings"
@@ -1455,36 +1456,41 @@ msgstr ""
 "\"Permitir nuevos registros\" en el Administrador de red > Configuración > "
 "Configuración de red"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:335
+#: lib/admin/WP_Auth0_Admin_Basic.php:338
 msgid "\"Anyone can register\" in the WordPress General Settings"
 msgstr ""
 "\"Cualquiera puede registrarse\" en la Configuración General de WordPress"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:339
+#: lib/admin/WP_Auth0_Admin_Basic.php:342
 msgid "Signups are currently "
 msgstr "Los registros están actualmente "
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:340
+#: lib/admin/WP_Auth0_Admin_Basic.php:343
 msgid "enabled"
 msgstr "activado"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:340
+#: lib/admin/WP_Auth0_Admin_Basic.php:343
 msgid "disabled"
 msgstr "desactivado"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:341
+#: lib/admin/WP_Auth0_Admin_Basic.php:344
 msgid " by this setting "
 msgstr " por este ajuste "
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:372
+#: lib/admin/WP_Auth0_Admin_Basic.php:366
+#: lib/admin/WP_Auth0_Admin_Generic.php:172
+msgid "[REDACTED]"
+msgstr "[NO MOSTRADO]"
+
+#: lib/admin/WP_Auth0_Admin_Basic.php:377
 msgid "You need to specify a domain"
 msgstr "Necesitas especificar un domain"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:376
+#: lib/admin/WP_Auth0_Admin_Basic.php:381
 msgid "You need to specify a Client ID"
 msgstr "Necesitas especificar un Client ID"
 
-#: lib/admin/WP_Auth0_Admin_Basic.php:380
+#: lib/admin/WP_Auth0_Admin_Basic.php:385
 msgid "You need to specify a Client Secret"
 msgstr "Necesitas especificar un Client Secret"
 
@@ -1751,16 +1757,18 @@ msgstr "Se ha producido un problema al actualizar la política de contraseñas. 
 msgid "Please manually review and update the policy. "
 msgstr "Por favor, revisa y actualiza la política manualmente. "
 
-#: lib/admin/WP_Auth0_Admin_Generic.php:263
+#: lib/admin/WP_Auth0_Admin_Generic.php:265
 msgid "Value is set in the constant "
 msgstr "El valor se establece en la constante "
 
-#: lib/admin/WP_Auth0_Admin_Generic.php:279
+#: lib/admin/WP_Auth0_Admin_Generic.php:281
 #: templates/initial-setup/rules.php:22 templates/settings.php:61
 msgid "Auth0 dashboard"
 msgstr "Auth0 dashboard"
 
-#: lib/admin/WP_Auth0_Admin_Generic.php:293 templates/settings.php:12
+#: lib/admin/WP_Auth0_Admin_Generic.php:295
+#: templates/initial-setup/connection_profile.php:39
+#: templates/initial-setup/connection_profile.php:45 templates/settings.php:12
 msgid "here"
 msgstr "aquí"
 
@@ -1949,10 +1957,6 @@ msgstr "Título del formulario:"
 #: templates/a0-widget-setup-form.php:35
 msgid "Redirect after login:"
 msgstr "Redireccionar después de acceder:"
-
-#: templates/a0-widget-setup-form.php:41
-msgid "Enable Gravatar integration:"
-msgstr "Habilitar la integración de Gravatar:"
 
 #: templates/a0-widget-setup-form.php:47 templates/configure-jwt-auth.php:22
 msgid "Yes"
@@ -2191,6 +2195,191 @@ msgid ""
 msgstr ""
 "Para obtener más información sobre la instalación y configuración, incluidos "
 "los pasos manuales, consulta las"
+
+#: templates/initial-setup/connection_profile.php:16
+msgid "documentation pages here"
+msgstr "páginas de documentación aquí"
+
+#: templates/initial-setup/connection_profile.php:26
+msgid "Login by Auth0 is set up and ready for use."
+msgstr "Login by Auth0 está configurado y listo para usar."
+
+#: templates/initial-setup/connection_profile.php:27
+msgid "To start over and re-run the Setup Wizard:"
+msgstr "Para empezar de nuevo y correr el asistente de configuración:"
+
+#: templates/initial-setup/connection_profile.php:32
+msgid "Go to Auth0 > Settings > Basic."
+msgstr "Ir a Auth0 > Ajustes > Básico."
+
+#: templates/initial-setup/connection_profile.php:35
+msgid "Delete the Domain and Client ID and save changes."
+msgstr "Elimina el Domain y el Client ID y guarda los cambios."
+
+#: templates/initial-setup/connection_profile.php:36
+msgid "Delete the created Application "
+msgstr "Elimina la Aplicación creada "
+
+#: templates/initial-setup/connection_profile.php:43
+msgid "Delete the created Database Connection "
+msgstr "Ver todas las conexiones de la base de datos "
+
+#: templates/initial-setup/connection_profile.php:47
+msgid "Please note that this will delete all Auth0 users for this connection."
+msgstr ""
+"Por favor ten en cuenta que esto eliminará todos los usuarios de Auth0 para "
+"esta conexión."
+
+#: templates/initial-setup/connection_profile.php:57
+msgid "To continue you need an Auth0 account."
+msgstr "Para continuar necesitas una cuenta de Auth0."
+
+#: templates/initial-setup/connection_profile.php:60
+msgid "Sign up for free"
+msgstr "Regístrate gratis"
+
+#: templates/initial-setup/connection_profile.php:65
+msgid "Pro Tip"
+msgstr "Consejo profesional"
+
+#: templates/initial-setup/connection_profile.php:66
+msgid "Already set up another WordPress instance with Auth0? "
+msgstr "¿Ya has configurado otra instancia de WordPress con Auth0? "
+
+#: templates/initial-setup/connection_profile.php:67
+msgid "Click here"
+msgstr "Haz clic aquí"
+
+#: templates/initial-setup/connection_profile.php:68
+msgid " to save time and import existing Auth0 settings."
+msgstr " para ahorrar tiempo e importar los ajustes existentes de Auth0."
+
+#: templates/initial-setup/connection_profile.php:80
+#: templates/initial-setup/connection_profile.php:85
+msgid "Standard"
+msgstr "Estándar"
+
+#: templates/initial-setup/connection_profile.php:82
+msgid ""
+"Allow users to login using social, username and password, or passwordless "
+"connections."
+msgstr ""
+"Permitir que los usuarios inicien sesión mediante conexiones sociales, con "
+"nombre de usuario y contraseña, o Passwordless."
+
+#: templates/initial-setup/connection_profile.php:94
+#: templates/initial-setup/connection_profile.php:99
+msgid "Enterprise"
+msgstr "Empresarial"
+
+#: templates/initial-setup/connection_profile.php:96
+msgid ""
+"Secure this WordPress instance with your organization's login system, like "
+"ActiveDirectory"
+msgstr ""
+"Asegurar esta instancia de WordPress con el sistema de inicio de sesión de "
+"tu organización, como ActiveDirectory"
+
+#: templates/initial-setup/connection_profile.php:110
+#: templates/initial-setup/connection_profile.php:156
+msgid "Close"
+msgstr "Cerrar"
+
+#: templates/initial-setup/connection_profile.php:113
+msgid "Select a Setup Type"
+msgstr "Seleccione un tipo de configuración"
+
+#: templates/initial-setup/connection_profile.php:116
+msgid "Standard Setup"
+msgstr "Configuración estándar"
+
+#: templates/initial-setup/connection_profile.php:118
+msgid ""
+"This will create and configure an Application and a database connection for "
+"this site."
+msgstr ""
+"Esto creará y configurará una Aplicación y una conexión de base de datos "
+"para este sitio."
+
+#: templates/initial-setup/connection_profile.php:120
+msgid "Detailed instructions for this option are here."
+msgstr "Las instrucciones detalladas para esta opción están aquí."
+
+#: templates/initial-setup/connection_profile.php:123
+msgid "Start Standard Setup"
+msgstr "Iniciar la configuración estándar"
+
+#: templates/initial-setup/connection_profile.php:126
+msgid "User Migration Setup"
+msgstr "Configuración de la migración de usuarios"
+
+#: templates/initial-setup/connection_profile.php:128
+msgid ""
+"This includes everything above plus data migration from your WordPress "
+"database."
+msgstr ""
+"Esto incluye todo lo anterior más la migración de datos de tu base de datos "
+"de WordPress."
+
+#: templates/initial-setup/connection_profile.php:129
+msgid ""
+"This requires an inbound connection from Auth0 servers and cannot be changed "
+"later without losing data."
+msgstr ""
+"Esto requiere una conexión entrante de los servidores de Auth0 y no se puede "
+"cambiar más tarde sin perder datos."
+
+#: templates/initial-setup/connection_profile.php:131
+msgid "More information here."
+msgstr "Más información aquí."
+
+#: templates/initial-setup/connection_profile.php:137
+msgid "Start User Migration Setup"
+msgstr "Iniciar la configuración de la migración de usuario"
+
+#: templates/initial-setup/connection_profile.php:142
+msgid "Manual Setup"
+msgstr "Configuración Manual"
+
+#: templates/initial-setup/connection_profile.php:143
+msgid ""
+"If you already have an Application or want to use an existing database "
+"connection, please follow the steps below."
+msgstr ""
+"Si ya tienes una Aplicación o deseas utilizar una conexión de base de datos "
+"existente, sigue los pasos que se indican a continuación."
+
+#: templates/initial-setup/connection_profile.php:145
+msgid "Manual Setup Instructions"
+msgstr "Instrucciones de configuración manual"
+
+#: templates/initial-setup/connection_profile.php:159
+msgid "Management API Token"
+msgstr "Token para la Management API"
+
+#: templates/initial-setup/connection_profile.php:163
+msgid "Enter your tenant Domain:"
+msgstr "Introduce el dominio de tu tenant:"
+
+#: templates/initial-setup/connection_profile.php:168
+msgid "More about tenant Domains here"
+msgstr "Más información sobre los Dominios aquí"
+
+#: templates/initial-setup/connection_profile.php:175
+msgid "Create a Management API token using these steps"
+msgstr "Crear un nuevo token para la Management API"
+
+#: templates/initial-setup/connection_profile.php:177
+msgid " and paste it below:"
+msgstr " y pégalo aquí:"
+
+#: templates/initial-setup/connection_profile.php:183
+msgid "Scopes required"
+msgstr "Scopes requeridos"
+
+#: templates/initial-setup/connection_profile.php:189
+msgid "Continue"
+msgstr "Continuar"
 
 #: templates/initial-setup/connections.php:18
 msgid "Configure your Connections"
@@ -2546,149 +2735,8 @@ msgstr ""
 msgid "https://auth0.com"
 msgstr ""
 
-#~ msgid "documentation pages here"
-#~ msgstr "páginas de documentación aquí"
-
-#~ msgid "Login by Auth0 is set up and ready for use."
-#~ msgstr "Login by Auth0 está configurado y listo para usar."
-
-#~ msgid "To start over and re-run the Setup Wizard:"
-#~ msgstr "Para empezar de nuevo y correr el asistente de configuración:"
-
-#~ msgid "Go to Auth0 > Settings > Basic."
-#~ msgstr "Ir a Auth0 > Ajustes > Básico."
-
-#~ msgid "Delete the Domain and Client ID and save changes."
-#~ msgstr "Elimina el Domain y el Client ID y guarda los cambios."
-
-#~ msgid "Delete the created Application "
-#~ msgstr "Elimina la Aplicación creada "
-
-#~ msgid "Delete the created Database Connection "
-#~ msgstr "Ver todas las conexiones de la base de datos "
-
-#~ msgid ""
-#~ "Please note that this will delete all Auth0 users for this connection."
-#~ msgstr ""
-#~ "Por favor ten en cuenta que esto eliminará todos los usuarios de Auth0 "
-#~ "para esta conexión."
-
-#~ msgid "To continue you need an Auth0 account."
-#~ msgstr "Para continuar necesitas una cuenta de Auth0."
-
-#~ msgid "Sign up for free"
-#~ msgstr "Regístrate gratis"
-
-#~ msgid "Pro Tip"
-#~ msgstr "Consejo profesional"
-
-#~ msgid "Already set up another WordPress instance with Auth0? "
-#~ msgstr "¿Ya has configurado otra instancia de WordPress con Auth0? "
-
-#~ msgid "Click here"
-#~ msgstr "Haz clic aquí"
-
-#~ msgid " to save time and import existing Auth0 settings."
-#~ msgstr " para ahorrar tiempo e importar los ajustes existentes de Auth0."
-
-#~ msgid "Standard"
-#~ msgstr "Estándar"
-
-#~ msgid ""
-#~ "Allow users to login using social, username and password, or passwordless "
-#~ "connections."
-#~ msgstr ""
-#~ "Permitir que los usuarios inicien sesión mediante conexiones sociales, "
-#~ "con nombre de usuario y contraseña, o Passwordless."
-
-#~ msgid "Enterprise"
-#~ msgstr "Empresarial"
-
-#~ msgid ""
-#~ "Secure this WordPress instance with your organization's login system, "
-#~ "like ActiveDirectory"
-#~ msgstr ""
-#~ "Asegurar esta instancia de WordPress con el sistema de inicio de sesión "
-#~ "de tu organización, como ActiveDirectory"
-
-#~ msgid "Close"
-#~ msgstr "Cerrar"
-
-#~ msgid "Select a Setup Type"
-#~ msgstr "Seleccione un tipo de configuración"
-
-#~ msgid "Standard Setup"
-#~ msgstr "Configuración estándar"
-
-#~ msgid ""
-#~ "This will create and configure an Application and a database connection "
-#~ "for this site."
-#~ msgstr ""
-#~ "Esto creará y configurará una Aplicación y una conexión de base de datos "
-#~ "para este sitio."
-
-#~ msgid "Detailed instructions for this option are here."
-#~ msgstr "Las instrucciones detalladas para esta opción están aquí."
-
-#~ msgid "Start Standard Setup"
-#~ msgstr "Iniciar la configuración estándar"
-
-#~ msgid "User Migration Setup"
-#~ msgstr "Configuración de la migración de usuarios"
-
-#~ msgid ""
-#~ "This includes everything above plus data migration from your WordPress "
-#~ "database."
-#~ msgstr ""
-#~ "Esto incluye todo lo anterior más la migración de datos de tu base de "
-#~ "datos de WordPress."
-
-#~ msgid ""
-#~ "This requires an inbound connection from Auth0 servers and cannot be "
-#~ "changed later without losing data."
-#~ msgstr ""
-#~ "Esto requiere una conexión entrante de los servidores de Auth0 y no se "
-#~ "puede cambiar más tarde sin perder datos."
-
-#~ msgid "More information here."
-#~ msgstr "Más información aquí."
-
-#~ msgid "Start User Migration Setup"
-#~ msgstr "Iniciar la configuración de la migración de usuario"
-
-#~ msgid "Manual Setup"
-#~ msgstr "Configuración Manual"
-
-#~ msgid ""
-#~ "If you already have an Application or want to use an existing database "
-#~ "connection, please follow the steps below."
-#~ msgstr ""
-#~ "Si ya tienes una Aplicación o deseas utilizar una conexión de base de "
-#~ "datos existente, sigue los pasos que se indican a continuación."
-
-#~ msgid "Manual Setup Instructions"
-#~ msgstr "Instrucciones de configuración manual"
-
-#~ msgid "Management API Token"
-#~ msgstr "Token para la Management API"
-
-#~ msgid "Enter your tenant Domain:"
-#~ msgstr "Introduce el dominio de tu tenant:"
-
-#~ msgid "More about tenant Domains here"
-#~ msgstr "Más información sobre los Dominios aquí"
-
-#~ msgid "Create a Management API token using these steps"
-#~ msgstr "Crear un nuevo token para la Management API"
-
-#~ msgid " and paste it below:"
-#~ msgstr " y pégalo aquí:"
-
-#~ msgid "Scopes required"
-#~ msgstr "Scopes requeridos"
-
-#~ msgid "Continue"
-#~ msgstr "Continuar"
+#~ msgid "Enable Gravatar integration:"
+#~ msgstr "Habilitar la integración de Gravatar:"
 
 #~ msgid "Important"
 #~ msgstr "Importante"
