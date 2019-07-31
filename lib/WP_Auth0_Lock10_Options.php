@@ -97,6 +97,11 @@ class WP_Auth0_Lock10_Options {
 		if ( isset( $settings['language'] ) && ! empty( $settings['language'] ) ) {
 			$options_obj['language'] = $settings['language'];
 		}
+
+		if ( ! empty( $settings['dict'] ) ) {
+			$settings['language_dictionary'] = $settings['dict'];
+		}
+
 		if ( isset( $settings['language_dictionary'] ) && ! empty( $settings['language_dictionary'] ) ) {
 			$options_obj['languageDictionary'] = json_decode( $settings['language_dictionary'], true );
 		}
@@ -113,9 +118,14 @@ class WP_Auth0_Lock10_Options {
 
 		$options_obj['socialButtonStyle'] = 'big';
 
-		if ( isset( $settings['gravatar'] ) && empty( $settings['gravatar'] ) ) {
+		if ( isset( $settings['gravatar'] ) && '' !== $settings['gravatar'] && empty( $settings['gravatar'] ) ) {
 			$options_obj['avatar'] = null;
 		}
+
+		if ( ! empty( $settings['gravatar'] ) ) {
+			$options_obj['avatar'] = true;
+		}
+
 		if ( $this->_is_valid( $settings, 'username_style' ) ) {
 			$options_obj['usernameStyle'] = $settings['username_style'];
 		}

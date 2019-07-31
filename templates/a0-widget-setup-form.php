@@ -38,7 +38,7 @@ if ( $this->showAsModal() ) :
 		   type="text" value="<?php echo esc_attr( $redirect_to ); ?>" />
 </p>
 <p>
-	<label><?php _e( 'Enable Gravatar integration:', 'wp-auth0' ); ?></label>
+	<label><?php _e( 'Enable Gravatar Integration', 'wp-auth0' ); ?></label>
 	<br>
 	<div class="radio-wrapper">
 		<input id="<?php echo $this->get_field_id( 'gravatar' ); ?>_yes"
@@ -54,7 +54,7 @@ if ( $this->showAsModal() ) :
 		<input id="<?php echo $this->get_field_id( 'gravatar' ); ?>_inherit"
 			   name="<?php echo $this->get_field_name( 'gravatar' ); ?>"
 			   type="radio" value="" <?php echo esc_attr( $gravatar ) === '' ? 'checked="true"' : ''; ?> />
-		<label for="<?php echo $this->get_field_id( 'gravatar' ); ?>_no"><?php _e( 'Default Setting', 'wp-auth0' ); ?></label>
+		<label for="<?php echo $this->get_field_id( 'gravatar' ); ?>_inherit"><?php _e( 'Default Setting', 'wp-auth0' ); ?></label>
 	</div>
 
 </p>
