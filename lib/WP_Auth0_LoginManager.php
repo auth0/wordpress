@@ -640,12 +640,6 @@ class WP_Auth0_LoginManager {
 		if ( isset( $_REQUEST[ $key ] ) ) {
 			return $_REQUEST[ $key ];
 		}
-		if ( isset( $_GET[ $key ] ) ) {
-			return $_GET[ $key ];
-		}
-		if ( isset( $_POST[ $key ] ) ) {
-			return $_POST[ $key ];
-		}
 		return null;
 	}
 
