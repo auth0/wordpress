@@ -625,7 +625,7 @@ class WP_Auth0_LoginManager {
 	}
 
 	/**
-	 * Get a value from query_vars or $_REQUEST global.
+	 * Get a value from query_vars or request global.
 	 *
 	 * @param string $key - query var key to return.
 	 *
