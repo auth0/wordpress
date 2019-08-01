@@ -110,6 +110,51 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 		$this->assertContains( '<a href="https://test.auth0.com/v2/logout?client_id=__test_client_id__', $output );
 	}
 
+	public function testThatQueryVarIsFound() {
+		self::auth0Ready();
+		set_query_var( 'auth0', 1 );
+
+		$output = '';
+		try {
+			$this->login->init_auth0();
+		} catch ( Exception $e ) {
+			$output = $e->getMessage();
+		}
+
+		// This error means that the callback was triggered, which is what we are testing for.
+		$this->assertContains( 'There was a problem with your log in: Invalid state', $output );
+	}
+
+	public function testThatGetVarIsFound() {
+		self::auth0Ready();
+		$_GET['auth0'] = 1;
+
+		$output = '';
+		try {
+			$this->login->init_auth0();
+		} catch ( Exception $e ) {
+			$output = $e->getMessage();
+		}
+
+		// This error means that the callback was triggered, which is what we are testing for.
+		$this->assertContains( 'There was a problem with your log in: Invalid state', $output );
+	}
+
+	public function testThatPostVarIsFound() {
+		self::auth0Ready();
+		$_POST['auth0'] = 1;
+
+		$output = '';
+		try {
+			$this->login->init_auth0();
+		} catch ( Exception $e ) {
+			$output = $e->getMessage();
+		}
+
+		// This error means that the callback was triggered, which is what we are testing for.
+		$this->assertContains( 'There was a problem with your log in: Invalid state', $output );
+	}
+
 	/**
 	 * Test that an error in the URL parameter logs the current user out.
 	 */
