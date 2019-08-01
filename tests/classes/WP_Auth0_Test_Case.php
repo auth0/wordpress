@@ -94,6 +94,10 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 			$this->stopRedirectHalting();
 		}
 
+		if ( method_exists( $this, 'stopWpDieHalting' ) ) {
+			$this->stopWpDieHalting();
+		}
+
 		global $wpdb;
 		delete_user_meta( 1, $wpdb->prefix . 'auth0_id' );
 		delete_user_meta( 1, $wpdb->prefix . 'auth0_obj' );
