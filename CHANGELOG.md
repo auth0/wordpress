@@ -1,5 +1,19 @@
 # Change Log
 
+## [3.11.1](https://github.com/auth0/wp-auth0/tree/3.11.1) (2019-08-05)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.11.0...3.11.1)
+
+**Fixed**
+- Check state in specific global based on callback type [\#708](https://github.com/auth0/wp-auth0/pull/708) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix widget gravatar and language settings [\#706](https://github.com/auth0/wp-auth0/pull/706) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change CDN URL field type [\#704](https://github.com/auth0/wp-auth0/pull/704) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix sensitive field handling; add Basic settings tab validations [\#703](https://github.com/auth0/wp-auth0/pull/703) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix embed widget documentation and validation [\#702](https://github.com/auth0/wp-auth0/pull/702) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add new Auth0 IPs; do not save duplicate or whitelisted IPs [\#700](https://github.com/auth0/wp-auth0/pull/700) ([joshcanhelp](https://github.com/joshcanhelp))
+- Improve setup wizard documentation [\#699](https://github.com/auth0/wp-auth0/pull/699) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix post passwords getting redirected [\#698](https://github.com/auth0/wp-auth0/pull/698) ([joshcanhelp](https://github.com/joshcanhelp))
+
+
 ## [3.11.0](https://github.com/auth0/wp-auth0/tree/3.11.0) (2019-05-30)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.10.0...3.11.0)
 
