@@ -658,17 +658,32 @@ add_filter( 'login_body_class', 'wp_auth0_filter_body_class' );
 /*
  * WooCommerce hooks
  */
+
+/**
+ * Add the Auth0 login form to the checkout page.
+ *
+ * @param string $html - Original HTML passed to this hook.
+ *
+ * @return mixed
+ */
 function wp_auth0_filter_woocommerce_checkout_login_message( $html ) {
 	$wp_auth0_opts        = WP_Auth0_Options::Instance();
 	$wp_auth0_woocommerce = new WP_Auth0_WooCommerceOverrides( new WP_Auth0( $wp_auth0_opts ), $wp_auth0_opts );
-	$wp_auth0_woocommerce->override_woocommerce_checkout_login_form( $html );
+	return $wp_auth0_woocommerce->override_woocommerce_checkout_login_form( $html );
 }
 add_filter( 'woocommerce_checkout_login_message', 'wp_auth0_filter_woocommerce_checkout_login_message' );
 
+/**
+ * Add the Auth0 login form to the account page.
+ *
+ * @param string $html - Original HTML passed to this hook.
+ *
+ * @return mixed
+ */
 function wp_auth0_filter_woocommerce_before_customer_login_form( $html ) {
 	$wp_auth0_opts        = WP_Auth0_Options::Instance();
 	$wp_auth0_woocommerce = new WP_Auth0_WooCommerceOverrides( new WP_Auth0( $wp_auth0_opts ), $wp_auth0_opts );
-	$wp_auth0_woocommerce->override_woocommerce_login_form( $html );
+	return $wp_auth0_woocommerce->override_woocommerce_login_form( $html );
 }
 add_filter( 'woocommerce_before_customer_login_form', 'wp_auth0_filter_woocommerce_before_customer_login_form' );
 
