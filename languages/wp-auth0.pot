@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Login by Auth0\n"
-"POT-Creation-Date: 2019-08-09 09:58-0700\n"
+"POT-Creation-Date: 2019-08-09 13:22-0700\n"
 "PO-Revision-Date: 2018-07-25 08:37-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -382,15 +382,7 @@ msgstr ""
 msgid "The settings json is not valid."
 msgstr ""
 
-#: lib/WP_Auth0_Lock_Options.php:26 lib/admin/WP_Auth0_Admin_Dashboard.php:29
-#: lib/dashboard-widgets/WP_Auth0_Dashboard_Plugins_Age.php:25
-#: lib/dashboard-widgets/WP_Auth0_Dashboard_Plugins_Gender.php:29
-#: lib/dashboard-widgets/WP_Auth0_Dashboard_Plugins_Generic.php:19
-#: lib/dashboard-widgets/WP_Auth0_Dashboard_Plugins_IdP.php:27
-#: lib/dashboard-widgets/WP_Auth0_Dashboard_Plugins_Income.php:22
-#: lib/dashboard-widgets/WP_Auth0_Dashboard_Plugins_Location.php:22
-#: lib/dashboard-widgets/WP_Auth0_Dashboard_Plugins_Signups.php:22
-#: lib/dashboard-widgets/WP_Auth0_Dashboard_Widgets.php:27
+#: lib/WP_Auth0_Lock_Options.php:26
 #, php-format
 msgid "Class %s is deprecated."
 msgstr ""
@@ -1280,28 +1272,6 @@ msgstr ""
 msgid "You need to specify a Client Secret"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Dashboard.php:31
-msgid "Settings related to the dashboard widgets"
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Dashboard.php:117
-#: lib/admin/WP_Auth0_Admin_Dashboard.php:134
-#: lib/admin/WP_Auth0_Admin_Dashboard.php:151
-msgid "Donut"
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Dashboard.php:120
-#: lib/admin/WP_Auth0_Admin_Dashboard.php:137
-#: lib/admin/WP_Auth0_Admin_Dashboard.php:154
-msgid "Pie"
-msgstr ""
-
-#: lib/admin/WP_Auth0_Admin_Dashboard.php:123
-#: lib/admin/WP_Auth0_Admin_Dashboard.php:140
-#: lib/admin/WP_Auth0_Admin_Dashboard.php:157
-msgid "Bars"
-msgstr ""
-
 #: lib/admin/WP_Auth0_Admin_Features.php:23
 msgid "Settings related to specific features provided by the plugin."
 msgstr ""
@@ -1528,13 +1498,6 @@ msgstr ""
 
 #: lib/api/WP_Auth0_Api_Exchange_Code.php:70
 msgid "Please check the Client Secret saved in the Auth0 plugin settings. "
-msgstr ""
-
-#: lib/dashboard-widgets/WP_Auth0_Dashboard_Widgets.php:51
-#, php-format
-msgid ""
-"Auth0 tip: You can filter the data by clicking on the charts. Click again to clear "
-"the selection.  | <a href=\"%1$s\">Hide</a>"
 msgstr ""
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:132
