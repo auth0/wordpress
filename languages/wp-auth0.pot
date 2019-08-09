@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Login by Auth0\n"
-"POT-Creation-Date: 2019-08-09 13:22-0700\n"
+"POT-Creation-Date: 2019-08-12 09:54-0700\n"
 "PO-Revision-Date: 2018-07-25 08:37-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -31,40 +31,38 @@ msgstr ""
 msgid "Setup Wizard"
 msgstr ""
 
-#: WP_Auth0.php:496 WP_Auth0.php:518 WP_Auth0.php:560 lib/WP_Auth0_Amplificator.php:25
-#: lib/WP_Auth0_Api_Client.php:76 lib/WP_Auth0_Api_Client.php:156
-#: lib/WP_Auth0_Api_Client.php:202 lib/WP_Auth0_Api_Client.php:284
-#: lib/WP_Auth0_Api_Client.php:391 lib/WP_Auth0_Api_Client.php:431
-#: lib/WP_Auth0_Api_Client.php:477 lib/WP_Auth0_Api_Client.php:641
-#: lib/WP_Auth0_Api_Client.php:736 lib/WP_Auth0_Api_Client.php:796
-#: lib/WP_Auth0_Api_Client.php:833 lib/WP_Auth0_Api_Client.php:971
-#: lib/WP_Auth0_Api_Client.php:1023 lib/WP_Auth0_Api_Client.php:1058
-#: lib/WP_Auth0_Api_Client.php:1093 lib/WP_Auth0_Api_Client.php:1130
-#: lib/WP_Auth0_Api_Client.php:1169 lib/WP_Auth0_Api_Client.php:1210
-#: lib/WP_Auth0_Api_Client.php:1225 lib/WP_Auth0_Api_Client.php:1264
-#: lib/WP_Auth0_Api_Client.php:1303 lib/WP_Auth0_Api_Client.php:1346
-#: lib/WP_Auth0_Api_Operations.php:17 lib/WP_Auth0_Api_Operations.php:111
-#: lib/WP_Auth0_Api_Operations.php:157 lib/WP_Auth0_Api_Operations.php:201
-#: lib/WP_Auth0_Configure_JWTAUTH.php:54 lib/WP_Auth0_EditProfile.php:221
-#: lib/WP_Auth0_EditProfile.php:240 lib/WP_Auth0_EditProfile.php:303
-#: lib/WP_Auth0_EditProfile.php:323 lib/WP_Auth0_EditProfile.php:354
-#: lib/WP_Auth0_EditProfile.php:407 lib/WP_Auth0_EditProfile.php:462
-#: lib/WP_Auth0_EditProfile.php:519 lib/WP_Auth0_Email_Verification.php:115
-#: lib/WP_Auth0_ErrorLog.php:135 lib/WP_Auth0_Export_Users.php:29
-#: lib/WP_Auth0_Lock10_Options.php:39 lib/WP_Auth0_Lock10_Options.php:50
-#: lib/WP_Auth0_Lock10_Options.php:253 lib/WP_Auth0_Lock10_Options.php:270
-#: lib/WP_Auth0_Lock10_Options.php:283 lib/WP_Auth0_Lock10_Options.php:296
-#: lib/WP_Auth0_Lock10_Options.php:309 lib/WP_Auth0_Lock10_Options.php:322
-#: lib/WP_Auth0_Lock10_Options.php:335 lib/WP_Auth0_Lock10_Options.php:348
-#: lib/WP_Auth0_Lock10_Options.php:361 lib/WP_Auth0_Lock10_Options.php:374
-#: lib/WP_Auth0_Lock10_Options.php:391 lib/WP_Auth0_Lock10_Options.php:410
-#: lib/WP_Auth0_LoginManager.php:518 lib/WP_Auth0_LoginManager.php:543
-#: lib/WP_Auth0_LoginManager.php:744 lib/WP_Auth0_LoginManager.php:771
-#: lib/WP_Auth0_LoginManager.php:817 lib/WP_Auth0_Metrics.php:17
-#: lib/WP_Auth0_Options.php:280 lib/WP_Auth0_Options.php:295
-#: lib/WP_Auth0_Options.php:314 lib/WP_Auth0_Referer_Check.php:22
-#: lib/WP_Auth0_SocialAmplification_Widget.php:28
-#: lib/WP_Auth0_SocialAmplification_Widget.php:197 lib/WP_Auth0_UsersRepo.php:29
+#: WP_Auth0.php:496 WP_Auth0.php:518 WP_Auth0.php:560 lib/WP_Auth0_Api_Client.php:76
+#: lib/WP_Auth0_Api_Client.php:156 lib/WP_Auth0_Api_Client.php:202
+#: lib/WP_Auth0_Api_Client.php:284 lib/WP_Auth0_Api_Client.php:391
+#: lib/WP_Auth0_Api_Client.php:431 lib/WP_Auth0_Api_Client.php:477
+#: lib/WP_Auth0_Api_Client.php:641 lib/WP_Auth0_Api_Client.php:736
+#: lib/WP_Auth0_Api_Client.php:796 lib/WP_Auth0_Api_Client.php:833
+#: lib/WP_Auth0_Api_Client.php:971 lib/WP_Auth0_Api_Client.php:1023
+#: lib/WP_Auth0_Api_Client.php:1058 lib/WP_Auth0_Api_Client.php:1093
+#: lib/WP_Auth0_Api_Client.php:1130 lib/WP_Auth0_Api_Client.php:1169
+#: lib/WP_Auth0_Api_Client.php:1210 lib/WP_Auth0_Api_Client.php:1225
+#: lib/WP_Auth0_Api_Client.php:1264 lib/WP_Auth0_Api_Client.php:1303
+#: lib/WP_Auth0_Api_Client.php:1346 lib/WP_Auth0_Api_Operations.php:17
+#: lib/WP_Auth0_Api_Operations.php:111 lib/WP_Auth0_Api_Operations.php:157
+#: lib/WP_Auth0_Api_Operations.php:201 lib/WP_Auth0_Configure_JWTAUTH.php:54
+#: lib/WP_Auth0_EditProfile.php:221 lib/WP_Auth0_EditProfile.php:240
+#: lib/WP_Auth0_EditProfile.php:303 lib/WP_Auth0_EditProfile.php:323
+#: lib/WP_Auth0_EditProfile.php:354 lib/WP_Auth0_EditProfile.php:407
+#: lib/WP_Auth0_EditProfile.php:462 lib/WP_Auth0_EditProfile.php:519
+#: lib/WP_Auth0_Email_Verification.php:115 lib/WP_Auth0_ErrorLog.php:135
+#: lib/WP_Auth0_Export_Users.php:29 lib/WP_Auth0_Lock10_Options.php:39
+#: lib/WP_Auth0_Lock10_Options.php:50 lib/WP_Auth0_Lock10_Options.php:253
+#: lib/WP_Auth0_Lock10_Options.php:270 lib/WP_Auth0_Lock10_Options.php:283
+#: lib/WP_Auth0_Lock10_Options.php:296 lib/WP_Auth0_Lock10_Options.php:309
+#: lib/WP_Auth0_Lock10_Options.php:322 lib/WP_Auth0_Lock10_Options.php:335
+#: lib/WP_Auth0_Lock10_Options.php:348 lib/WP_Auth0_Lock10_Options.php:361
+#: lib/WP_Auth0_Lock10_Options.php:374 lib/WP_Auth0_Lock10_Options.php:391
+#: lib/WP_Auth0_Lock10_Options.php:410 lib/WP_Auth0_LoginManager.php:518
+#: lib/WP_Auth0_LoginManager.php:543 lib/WP_Auth0_LoginManager.php:744
+#: lib/WP_Auth0_LoginManager.php:771 lib/WP_Auth0_LoginManager.php:817
+#: lib/WP_Auth0_Metrics.php:17 lib/WP_Auth0_Options.php:280
+#: lib/WP_Auth0_Options.php:295 lib/WP_Auth0_Options.php:314
+#: lib/WP_Auth0_Referer_Check.php:22 lib/WP_Auth0_UsersRepo.php:29
 #: lib/WP_Auth0_UsersRepo.php:81 lib/admin/WP_Auth0_Admin.php:87
 #: lib/admin/WP_Auth0_Admin_Advanced.php:677 lib/admin/WP_Auth0_Admin_Advanced.php:761
 #: lib/admin/WP_Auth0_Admin_Advanced.php:780 lib/admin/WP_Auth0_Admin_Advanced.php:800
@@ -90,18 +88,6 @@ msgstr ""
 #: lib/initial-setup/WP_Auth0_InitialSetup_Signup.php:17
 #, php-format
 msgid "Method %s is deprecated."
-msgstr ""
-
-#: lib/WP_Auth0_Amplificator.php:80
-msgid "Facebook does not allow to share the same content twice."
-msgstr ""
-
-#: lib/WP_Auth0_Amplificator.php:87
-msgid "An error has occurred."
-msgstr ""
-
-#: lib/WP_Auth0_Amplificator.php:132
-msgid "Twitter does not allow to share the same content twice."
 msgstr ""
 
 #. translators: placeholders are machine names stored for this WP instance and must be included.
@@ -494,46 +480,6 @@ msgstr ""
 
 #: lib/WP_Auth0_Settings_Section.php:69
 msgid "JWT Auth integration"
-msgstr ""
-
-#: lib/WP_Auth0_SocialAmplification_Widget.php:42
-msgid "Auth0 Social Amplification"
-msgstr ""
-
-#: lib/WP_Auth0_SocialAmplification_Widget.php:47
-msgid "Shows Auth0 Social Amplification widget in a sidebar"
-msgstr ""
-
-#: lib/WP_Auth0_SocialAmplification_Widget.php:57
-msgid "Widget title"
-msgstr ""
-
-#: lib/WP_Auth0_SocialAmplification_Widget.php:58
-msgid "Widget subtitle"
-msgstr ""
-
-#: lib/WP_Auth0_SocialAmplification_Widget.php:59
-msgid "Twitter message"
-msgstr ""
-
-#: lib/WP_Auth0_SocialAmplification_Widget.php:79
-msgid "App keys are required and are set on the Advanced tab of the"
-msgstr ""
-
-#: lib/WP_Auth0_SocialAmplification_Widget.php:81
-msgid "Auth0 settings page"
-msgstr ""
-
-#: lib/WP_Auth0_SocialAmplification_Widget.php:82
-msgid "You can use the following tags in the messages above:"
-msgstr ""
-
-#: lib/WP_Auth0_SocialAmplification_Widget.php:84
-msgid "This will be replaced by the current page URL"
-msgstr ""
-
-#: lib/WP_Auth0_SocialAmplification_Widget.php:86
-msgid "This will be replaced by the site URL"
 msgstr ""
 
 #: lib/WP_Auth0_Users.php:89
