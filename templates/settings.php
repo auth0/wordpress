@@ -113,48 +113,6 @@
 							<?php _e( 'Customers on a paid Auth0 plan can submit trouble tickets for a quick response.', 'wp-auth0' ); ?>
 						</li>
 					</ul>
-
-					<div class="a0-feedback">
-						<div>
-
-							<h2><?php _e( 'How is the Auth0 WP plugin working for you?', 'wp-auth0' ); ?></h2>
-
-							<div>
-								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_1" value="1" />
-								<label for="feedback_calification_1" class="feedback-face calification-1"></label>
-
-								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_2" value="2" />
-								<label for="feedback_calification_2" class="feedback-face calification-2"></label>
-
-								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_3" value="3" />
-								<label for="feedback_calification_3" class="feedback-face calification-3"></label>
-
-								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_4" value="4" />
-								<label for="feedback_calification_4" class="feedback-face calification-4"></label>
-
-								<input type="radio" name="feedback_calification" class="feedback_calification" id="feedback_calification_5" value="5" />
-								<label for="feedback_calification_5" class="feedback-face calification-5"></label>
-							</div>
-						</div>
-
-						<div class="a0-separator"></div>
-
-						<div>
-							<h2><?php _e( 'What one thing would you change?', 'wp-auth0' ); ?></h2>
-							<textarea id="feedback_text" placeholder="
-							<?php
-							_e( 'Be as brief or detailed as you like!', 'wp-auth0' )
-							?>
-			  "></textarea>
-						</div>
-
-						<div>
-							<div class="a0-buttons">
-								<span class="a0-button primary" onclick="send_feedback()"><?php _e( 'Send Feedback', 'wp-auth0' ); ?></span>
-							</div>
-						</div>
-					</div>
-
 				</div>
 			</div>
 
@@ -166,18 +124,3 @@
 		</form>
 	</div>
 </div>
-
-<script type="text/javascript">
-	function send_feedback() {
-		var url = 'https://sandbox.it.auth0.com/api/run/wptest/wp-auth0-slack?webtask_no_cache=1';
-		var data = {
-			"score": jQuery('.feedback_calification:checked').val(),
-			"account": '<?php echo WP_Auth0::get_tenant(); ?>',
-			"feedback": jQuery('#feedback_text').val()
-		};
-		var successMsg = "<?php _e( 'Done! Thank you for your feedback.', 'wp-auth0' ); ?>";
-		jQuery.post(url, data, function(response) {
-			jQuery('.a0-feedback').html('<h2 class="message">' + successMsg + '</h2>')
-		});
-	}
-</script>
