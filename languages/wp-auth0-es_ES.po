@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Login by Auth0\n"
-"POT-Creation-Date: 2019-07-31 13:29-0700\n"
-"PO-Revision-Date: 2019-07-31 13:33-0700\n"
+"POT-Creation-Date: 2019-08-09 09:58-0700\n"
+"PO-Revision-Date: 2019-08-09 09:58-0700\n"
 "Last-Translator: Josh Cunningham <josh.cunningham@auth0.com>\n"
 "Language-Team: Carlos Longarela https://tabernawp.com/\n"
 "Language: es_ES\n"
@@ -21,17 +21,17 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: WP_Auth0.php:317 lib/WP_Auth0_Settings_Section.php:55
+#: WP_Auth0.php:314 lib/WP_Auth0_Settings_Section.php:55
 #: lib/WP_Auth0_Settings_Section.php:57
 msgid "Settings"
 msgstr "Ajustes"
 
-#: WP_Auth0.php:327 lib/WP_Auth0_Settings_Section.php:54
+#: WP_Auth0.php:324 lib/WP_Auth0_Settings_Section.php:54
 #: lib/WP_Auth0_Settings_Section.php:61 lib/admin/WP_Auth0_Admin.php:148
 msgid "Setup Wizard"
 msgstr "Asistente de configuración"
 
-#: WP_Auth0.php:499 WP_Auth0.php:521 WP_Auth0.php:563
+#: WP_Auth0.php:496 WP_Auth0.php:518 WP_Auth0.php:560
 #: lib/WP_Auth0_Amplificator.php:25 lib/WP_Auth0_Api_Client.php:76
 #: lib/WP_Auth0_Api_Client.php:156 lib/WP_Auth0_Api_Client.php:202
 #: lib/WP_Auth0_Api_Client.php:284 lib/WP_Auth0_Api_Client.php:391
@@ -58,9 +58,9 @@ msgstr "Asistente de configuración"
 #: lib/WP_Auth0_Lock10_Options.php:322 lib/WP_Auth0_Lock10_Options.php:335
 #: lib/WP_Auth0_Lock10_Options.php:348 lib/WP_Auth0_Lock10_Options.php:361
 #: lib/WP_Auth0_Lock10_Options.php:374 lib/WP_Auth0_Lock10_Options.php:391
-#: lib/WP_Auth0_Lock10_Options.php:410 lib/WP_Auth0_LoginManager.php:517
-#: lib/WP_Auth0_LoginManager.php:542 lib/WP_Auth0_LoginManager.php:743
-#: lib/WP_Auth0_LoginManager.php:770 lib/WP_Auth0_LoginManager.php:816
+#: lib/WP_Auth0_Lock10_Options.php:410 lib/WP_Auth0_LoginManager.php:518
+#: lib/WP_Auth0_LoginManager.php:543 lib/WP_Auth0_LoginManager.php:744
+#: lib/WP_Auth0_LoginManager.php:771 lib/WP_Auth0_LoginManager.php:817
 #: lib/WP_Auth0_Metrics.php:17 lib/WP_Auth0_Options.php:280
 #: lib/WP_Auth0_Options.php:295 lib/WP_Auth0_Options.php:314
 #: lib/WP_Auth0_Referer_Check.php:22
@@ -342,7 +342,7 @@ msgstr "Este sitio requiere una dirección de correo electrónico verificada."
 msgid "Resend verification email."
 msgstr "Reenviar verificación de correo electrónico."
 
-#: lib/WP_Auth0_Email_Verification.php:65 lib/WP_Auth0_LoginManager.php:679
+#: lib/WP_Auth0_Email_Verification.php:65 lib/WP_Auth0_LoginManager.php:680
 msgid "← Login"
 msgstr "← Entrar"
 
@@ -370,7 +370,7 @@ msgstr "Inicio de sesión de Auth0"
 msgid "Shows Auth0 login form in your sidebar"
 msgstr "Muestra el formulario de inicio de sesión de Auth0 en tu barra lateral"
 
-#: lib/WP_Auth0_Embed_Widget.php:43 lib/WP_Auth0_WooCommerceOverrides.php:39
+#: lib/WP_Auth0_Embed_Widget.php:43 lib/WP_Auth0_WooCommerceOverrides.php:52
 #: templates/login-form.php:41
 msgid "Login"
 msgstr "Acceder"
@@ -463,11 +463,11 @@ msgstr "ID token no válido"
 msgid "Error exchanging code"
 msgstr "Error intercambiando el código"
 
-#: lib/WP_Auth0_LoginManager.php:284
+#: lib/WP_Auth0_LoginManager.php:285
 msgid "No ID token found"
 msgstr "No se encontró ningún ID token"
 
-#: lib/WP_Auth0_LoginManager.php:343
+#: lib/WP_Auth0_LoginManager.php:344
 msgid ""
 "This account does not have an email associated, as required by your site "
 "administrator."
@@ -475,7 +475,7 @@ msgstr ""
 "Esta cuenta no tiene un correo electrónico asociado, como lo requiere el "
 "administrador de tu sitio."
 
-#: lib/WP_Auth0_LoginManager.php:419
+#: lib/WP_Auth0_LoginManager.php:420
 msgid ""
 "Could not create user. The registration process is not available. Please "
 "contact your site’s administrator."
@@ -483,19 +483,19 @@ msgstr ""
 "No se pudo crear el usuario. El proceso de registro no está disponible. "
 "Pónte en contacto con el administrador de tu sitio web."
 
-#: lib/WP_Auth0_LoginManager.php:672
+#: lib/WP_Auth0_LoginManager.php:673
 msgid "There was a problem with your log in"
 msgstr "Hubo un problema con el inicio de sesión"
 
-#: lib/WP_Auth0_LoginManager.php:675
+#: lib/WP_Auth0_LoginManager.php:676
 msgid "Please see the site administrator"
 msgstr "Por favor, consulta al administrador del sitio"
 
-#: lib/WP_Auth0_LoginManager.php:676
+#: lib/WP_Auth0_LoginManager.php:677
 msgid "error code"
 msgstr "código de error"
 
-#: lib/WP_Auth0_LoginManager.php:677
+#: lib/WP_Auth0_LoginManager.php:678
 msgid "unknown"
 msgstr "desconocido"
 
@@ -509,35 +509,35 @@ msgstr ""
 "Muestra un botón para que aparezca un formulario de inicio de sesión de "
 "Auth0 en la barra lateral"
 
-#: lib/WP_Auth0_Routes.php:184
+#: lib/WP_Auth0_Routes.php:183
 msgid "Invalid credentials"
 msgstr "Credenciales no válidas"
 
-#: lib/WP_Auth0_Routes.php:222
+#: lib/WP_Auth0_Routes.php:221
 msgid "User not found"
 msgstr "Usuario no encontrado"
 
-#: lib/WP_Auth0_Routes.php:289
+#: lib/WP_Auth0_Routes.php:288
 msgid "Unauthorized: missing authorization header"
 msgstr "No autorizado: falta el header de autorización"
 
-#: lib/WP_Auth0_Routes.php:293
+#: lib/WP_Auth0_Routes.php:292
 msgid "Invalid token"
 msgstr "ID token no válido"
 
-#: lib/WP_Auth0_Routes.php:297
+#: lib/WP_Auth0_Routes.php:296
 msgid "Username is required"
 msgstr "El nombre de usuario es obligatorio"
 
-#: lib/WP_Auth0_Routes.php:301
+#: lib/WP_Auth0_Routes.php:300
 msgid "Password is required"
 msgstr "La contraseña es obligatoria"
 
-#: lib/WP_Auth0_Routes.php:318
+#: lib/WP_Auth0_Routes.php:317
 msgid "Unauthorized"
 msgstr "No autorizado"
 
-#: lib/WP_Auth0_Routes.php:324 lib/profile/WP_Auth0_Profile_Delete_Data.php:95
+#: lib/WP_Auth0_Routes.php:323 lib/profile/WP_Auth0_Profile_Delete_Data.php:95
 #: lib/profile/WP_Auth0_Profile_Delete_Mfa.php:107
 msgid "Forbidden"
 msgstr "Prohibido"
@@ -2690,29 +2690,9 @@ msgstr ""
 "Los clientes en un plan Auth0 de pago pueden enviar tickets de problemas "
 "para una respuesta rápida."
 
-#: templates/settings.php:120
-msgid "How is the Auth0 WP plugin working for you?"
-msgstr "¿Cómo está funcionando el plugin Auth0 WP para ti?"
-
-#: templates/settings.php:143
-msgid "What one thing would you change?"
-msgstr "¿Una cosa que cambiarías?"
-
-#: templates/settings.php:146
-msgid "Be as brief or detailed as you like!"
-msgstr "¡Sé tan breve o detallado como quieras!"
-
-#: templates/settings.php:153
-msgid "Send Feedback"
-msgstr "Envía tu opinión"
-
-#: templates/settings.php:163
+#: templates/settings.php:121
 msgid "Save Changes"
 msgstr "Guardar cambios"
-
-#: templates/settings.php:178
-msgid "Done! Thank you for your feedback."
-msgstr "¡Listo! Gracias por tus comentarios."
 
 #. Plugin Name of the plugin/theme
 msgid "Login by Auth0"
@@ -2734,6 +2714,21 @@ msgstr ""
 #. Author URI of the plugin/theme
 msgid "https://auth0.com"
 msgstr ""
+
+#~ msgid "How is the Auth0 WP plugin working for you?"
+#~ msgstr "¿Cómo está funcionando el plugin Auth0 WP para ti?"
+
+#~ msgid "What one thing would you change?"
+#~ msgstr "¿Una cosa que cambiarías?"
+
+#~ msgid "Be as brief or detailed as you like!"
+#~ msgstr "¡Sé tan breve o detallado como quieras!"
+
+#~ msgid "Send Feedback"
+#~ msgstr "Envía tu opinión"
+
+#~ msgid "Done! Thank you for your feedback."
+#~ msgstr "¡Listo! Gracias por tus comentarios."
 
 #~ msgid "Enable Gravatar integration:"
 #~ msgstr "Habilitar la integración de Gravatar:"
