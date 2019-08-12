@@ -8,10 +8,6 @@
     <!-- Dev tools only, currently -->
     <exclude-pattern>/vendor/*</exclude-pattern>
 
-    <!-- Deprecated so no changes needed -->
-    <exclude-pattern>/lib/admin/WP_Auth0_Admin_Dashboard.php</exclude-pattern>
-    <exclude-pattern>/lib/dashboard-widgets/*</exclude-pattern>
-
     <!-- Only check PHP files. -->
     <arg name="extensions" value="php"/>
 
