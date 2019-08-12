@@ -443,10 +443,6 @@ class WP_Auth0 {
 
 		// Catch non-name-spaced classes that still need auto-loading.
 		switch ( $class ) {
-			case 'TwitterAPIExchange':
-				require_once $source_dir . 'twitter-api-php/' . $class . '.php';
-				return true;
-
 			case 'JWT':
 			case 'BeforeValidException':
 			case 'ExpiredException':
