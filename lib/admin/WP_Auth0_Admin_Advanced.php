@@ -135,15 +135,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			],
 		];
 
-		if ( WP_Auth0_Configure_JWTAUTH::is_jwt_auth_enabled() ) {
-			$options[] = [
-				'name'     => 'Enable JWT Auth Integration',
-				'opt'      => 'jwt_auth_integration',
-				'id'       => 'wpa0_jwt_auth_integration',
-				'function' => 'render_jwt_auth_integration',
-			];
-		}
-
 		$this->init_option_section( '', 'advanced', $options );
 	}
 
@@ -539,27 +530,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		);
 	}
 
-	/**
-	 * Render form field and description for the `jwt_auth_integration` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @deprecated 3.10.0, plugin is deprecated and removed from the WP plugin repo.
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function render_jwt_auth_integration( $args = [] ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'This setting is deprecated and will be removed in the next major version. ', 'wp-auth0' ) .
-			__( 'This will enable the JWT Auth Users Repository override', 'wp-auth0' )
-		);
-	}
-
 	public function auth0_rotate_migration_token() {
 		check_ajax_referer( self::ROTATE_TOKEN_NONCE_ACTION );
 		$this->options->set( 'migration_token', $this->generate_token() );
@@ -575,7 +545,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$input['auto_provisioning']       = ( isset( $input['auto_provisioning'] ) ? $input['auto_provisioning'] : 0 );
 		$input['remember_users_session']  = ( isset( $input['remember_users_session'] ) ? $input['remember_users_session'] : 0 ) == 1;
 		$input['passwordless_enabled']    = ( isset( $input['passwordless_enabled'] ) ? $input['passwordless_enabled'] : 0 ) == 1;
-		$input['jwt_auth_integration']    = ( isset( $input['jwt_auth_integration'] ) ? $input['jwt_auth_integration'] : 0 );
 		$input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
 		$input['force_https_callback']    = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
 

@@ -5,19 +5,17 @@ class WP_Auth0_Settings_Section {
 	protected $a0_options;
 	protected $initial_setup;
 	protected $users_exporter;
-	protected $configure_jwt_auth;
 	protected $error_log;
 	protected $auth0_admin;
 	protected $import_settings;
 
-	public function __construct( WP_Auth0_Options $a0_options, WP_Auth0_InitialSetup $initial_setup, WP_Auth0_Export_Users $users_exporter, WP_Auth0_Configure_JWTAUTH $configure_jwt_auth, WP_Auth0_ErrorLog $error_log, WP_Auth0_Admin $auth0_admin, WP_Auth0_Import_Settings $import_settings ) {
-		$this->a0_options         = $a0_options;
-		$this->initial_setup      = $initial_setup;
-		$this->users_exporter     = $users_exporter;
-		$this->configure_jwt_auth = $configure_jwt_auth;
-		$this->error_log          = $error_log;
-		$this->auth0_admin        = $auth0_admin;
-		$this->import_settings    = $import_settings;
+	public function __construct( WP_Auth0_Options $a0_options, WP_Auth0_InitialSetup $initial_setup, WP_Auth0_Export_Users $users_exporter, WP_Auth0_ErrorLog $error_log, WP_Auth0_Admin $auth0_admin, WP_Auth0_Import_Settings $import_settings ) {
+		$this->a0_options      = $a0_options;
+		$this->initial_setup   = $initial_setup;
+		$this->users_exporter  = $users_exporter;
+		$this->error_log       = $error_log;
+		$this->auth0_admin     = $auth0_admin;
+		$this->import_settings = $import_settings;
 	}
 
 	/**
@@ -64,10 +62,6 @@ class WP_Auth0_Settings_Section {
 		add_submenu_page( $main_menu, __( 'Export Users Data', 'wp-auth0' ), __( 'Export Users Data', 'wp-auth0' ), 'manage_options', 'wpa0-users-export', [ $this->users_exporter, 'render_export_users' ] );
 		add_submenu_page( $main_menu, __( 'Error Log', 'wp-auth0' ), __( 'Error Log', 'wp-auth0' ), 'manage_options', 'wpa0-errors', [ $this->error_log, 'render_settings_page' ] );
 		add_submenu_page( $main_menu, __( 'Import-Export settings', 'wp-auth0' ), __( 'Import-Export settings', 'wp-auth0' ), 'manage_options', 'wpa0-import-settings', [ $this->import_settings, 'render_import_settings_page' ] );
-
-		if ( WP_Auth0_Configure_JWTAUTH::is_jwt_auth_enabled() ) {
-			add_submenu_page( $main_menu, __( 'JWT Auth integration', 'wp-auth0' ), __( 'JWT Auth integration', 'wp-auth0' ), 'manage_options', 'wpa0-jwt-auth', [ $this->configure_jwt_auth, 'render_settings_page' ] );
-		}
 	}
 
 	public function redirect_to_help() {}

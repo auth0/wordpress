@@ -10,7 +10,7 @@
  */
 
 define( 'WPA0_VERSION', '4.0.0-beta' );
-define( 'AUTH0_DB_VERSION', 22 );
+define( 'AUTH0_DB_VERSION', 23 );
 
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
@@ -127,7 +127,6 @@ class WP_Auth0 {
 		$initial_setup->init();
 
 		$users_repo = new WP_Auth0_UsersRepo( $this->a0_options );
-		$users_repo->init();
 
 		$login_manager = new WP_Auth0_LoginManager( $users_repo, $this->a0_options );
 		$login_manager->init();
@@ -141,16 +140,13 @@ class WP_Auth0 {
 		$error_log = new WP_Auth0_ErrorLog();
 		$error_log->init();
 
-		$configure_jwt_auth = new WP_Auth0_Configure_JWTAUTH( $this->a0_options );
-		$configure_jwt_auth->init();
-
 		$users_exporter = new WP_Auth0_Export_Users( $this->db_manager );
 		$users_exporter->init();
 
 		$import_settings = new WP_Auth0_Import_Settings( $this->a0_options );
 		$import_settings->init();
 
-		$settings_section = new WP_Auth0_Settings_Section( $this->a0_options, $initial_setup, $users_exporter, $configure_jwt_auth, $error_log, $auth0_admin, $import_settings );
+		$settings_section = new WP_Auth0_Settings_Section( $this->a0_options, $initial_setup, $users_exporter, $error_log, $auth0_admin, $import_settings );
 		$settings_section->init();
 
 		$edit_profile = new WP_Auth0_EditProfile( $this->db_manager, $users_repo, $this->a0_options );

@@ -183,6 +183,11 @@ class WP_Auth0_DBManager {
 			$options->remove( 'social_big_buttons' );
 		}
 
+		// 3.11.0
+		if ( ( $this->current_db_version < 23 && 0 !== $this->current_db_version ) || 23 === $version_to_install ) {
+			$options->remove( 'jwt_auth_integration' );
+		}
+
 		$options->update_all();
 
 		$this->current_db_version = AUTH0_DB_VERSION;
