@@ -212,7 +212,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'version'                   => 1,
 			'last_step'                 => 1,
 			'migration_token_id'        => null,
-			'jwt_auth_integration'      => false,
 
 			// Basic
 			'domain'                    => '',
