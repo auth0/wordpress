@@ -4,9 +4,6 @@
 
     <file>.</file>
 
-    <!-- Internal tool, will be removed-->
-    <exclude-pattern>/account_cleanup/*</exclude-pattern>
-
     <!-- Not currently checking JS or CSS -->
     <exclude-pattern>/assets/*</exclude-pattern>
 
@@ -15,13 +12,6 @@
 
     <!-- Dev tools only, currently -->
     <exclude-pattern>/vendor/*</exclude-pattern>
-
-    <!-- Not currently checking JS -->
-    <exclude-pattern>/webtask/*</exclude-pattern>
-
-    <!-- Deprecated so no changes needed -->
-    <exclude-pattern>/lib/admin/WP_Auth0_Admin_Dashboard.php</exclude-pattern>
-    <exclude-pattern>/lib/dashboard-widgets/*</exclude-pattern>
 
     <!-- Only check PHP files. -->
     <arg name="extensions" value="php"/>
