@@ -569,22 +569,21 @@ class WP_Auth0_LoginManager {
 	 * @return array
 	 */
 	public static function get_authorize_params( $connection = null, $redirect_to = null ) {
-		$params       = [];
-		$options      = WP_Auth0_Options::Instance();
+		$opts         = WP_Auth0_Options::Instance();
 		$lock_options = new WP_Auth0_Lock10_Options();
-		$is_implicit  = (bool) $options->get( 'auth0_implicit_workflow', false );
+		$is_implicit  = (bool) $opts->get( 'auth0_implicit_workflow', false );
 		$nonce        = WP_Auth0_Nonce_Handler::get_instance()->get_unique();
 
-		$params['client_id']     = $options->get( 'client_id' );
-		$params['scope']         = self::get_userinfo_scope( 'authorize_url' );
-		$params['response_type'] = $is_implicit ? 'id_token' : 'code';
-		$params['redirect_uri']  = $is_implicit
-			? $lock_options->get_implicit_callback_url()
-			: $options->get_wp_auth0_url();
+		$params = [
+			'client_id'     => $opts->get( 'client_id' ),
+			'scope'         => self::get_userinfo_scope( 'authorize_url' ),
+			'response_type' => $is_implicit ? 'id_token' : 'code',
+			'response_mode' => $is_implicit ? 'form_post' : 'query',
+			'redirect_uri'  => $is_implicit ? $lock_options->get_implicit_callback_url() : $opts->get_wp_auth0_url(),
+		];
 
 		if ( $is_implicit ) {
-			$params['nonce']         = $nonce;
-			$params['response_mode'] = 'form_post';
+			$params['nonce'] = $nonce;
 		}
 
 		if ( ! empty( $connection ) ) {
@@ -592,24 +591,26 @@ class WP_Auth0_LoginManager {
 		}
 
 		// Where should the user be redirected after logging in?
-		if ( empty( $redirect_to ) && ! empty( $_GET['redirect_to'] ) ) {
-			$redirect_to = $_GET['redirect_to'];
-		} elseif ( empty( $redirect_to ) ) {
-			$redirect_to = $options->get( 'default_login_redirection' );
+		if ( empty( $redirect_to ) ) {
+			$redirect_to = empty( $_GET['redirect_to'] )
+				? $opts->get( 'default_login_redirection' )
+				: $_GET['redirect_to'];
 		}
 
-		// State parameter, checked during login callback.
-		$params['state'] = base64_encode(
-			json_encode(
-				[
-					'interim'     => false,
-					'nonce'       => $nonce,
-					'redirect_to' => filter_var( $redirect_to, FILTER_SANITIZE_URL ),
-				]
-			)
-		);
+		$filtered_params = apply_filters( 'auth0_authorize_url_params', $params, $connection, $redirect_to );
 
-		return apply_filters( 'auth0_authorize_url_params', $params, $connection, $redirect_to );
+		// State parameter, checked during login callback.
+		if ( empty( $filtered_params['state'] ) ) {
+			$state                    = [
+				'interim'     => false,
+				'nonce'       => WP_Auth0_State_Handler::get_instance()->get_unique(),
+				'redirect_to' => filter_var( $redirect_to, FILTER_SANITIZE_URL ),
+			];
+			$filtered_state           = apply_filters( 'auth0_authorize_state', $state, $filtered_params );
+			$filtered_params['state'] = base64_encode( json_encode( $filtered_state ) );
+		}
+
+		return $filtered_params;
 	}
 
 	/**
