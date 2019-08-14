@@ -84,6 +84,8 @@ class WP_Auth0_Users {
 			'description'  => $description,
 		];
 
+		$user_data = apply_filters( 'wpa0_user_data', $user_data, $userinfo, $firstname, $lastname );
+
 		if ( $role ) {
 			// phpcs:ignore
 			@trigger_error( sprintf( __( '$role parameter is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
