@@ -139,8 +139,7 @@ class WP_Auth0_Nonce_Handler {
 	}
 
 	/**
-	 * Generate a unique value to use.
-	 * If using on PHP 7, it will be cryptographically secure.
+	 * Generate a cryptographically secure unique value to use.
 	 *
 	 * @see https://secure.php.net/manual/en/function.random-bytes.php
 	 *
@@ -149,11 +148,7 @@ class WP_Auth0_Nonce_Handler {
 	 * @return string
 	 */
 	public function generate_unique( $bytes = 32 ) {
-		$nonce_bytes = function_exists( 'random_bytes' )
-			// phpcs:ignore
-			? random_bytes( $bytes )
-			: openssl_random_pseudo_bytes( $bytes );
-		return bin2hex( $nonce_bytes );
+		return bin2hex( random_bytes( $bytes ) );
 	}
 
 	/**
