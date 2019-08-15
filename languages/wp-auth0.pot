@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Login by Auth0\n"
-"POT-Creation-Date: 2019-08-12 15:14-0700\n"
+"POT-Creation-Date: 2019-08-15 14:02-0700\n"
 "PO-Revision-Date: 2018-07-25 08:37-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -77,14 +77,6 @@ msgstr ""
 #: lib/admin/WP_Auth0_Admin_Features.php:512 lib/admin/WP_Auth0_Admin_Features.php:537
 #: lib/admin/WP_Auth0_Admin_Features.php:550 lib/admin/WP_Auth0_Admin_Features.php:563
 #: lib/admin/WP_Auth0_Admin_Generic.php:109 lib/admin/WP_Auth0_Admin_Generic.php:306
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:70
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:79
-#: lib/initial-setup/WP_Auth0_InitialSetup_Connections.php:36
-#: lib/initial-setup/WP_Auth0_InitialSetup_Connections.php:54
-#: lib/initial-setup/WP_Auth0_InitialSetup_Connections.php:92
-#: lib/initial-setup/WP_Auth0_InitialSetup_Migration.php:17
-#: lib/initial-setup/WP_Auth0_InitialSetup_Rules.php:17
-#: lib/initial-setup/WP_Auth0_InitialSetup_Signup.php:17
 #, php-format
 msgid "Method %s is deprecated."
 msgstr ""
@@ -469,7 +461,7 @@ msgstr ""
 msgid "Import-Export settings"
 msgstr ""
 
-#: lib/WP_Auth0_Users.php:89
+#: lib/WP_Auth0_Users.php:91
 msgid "$role parameter is deprecated."
 msgstr ""
 
@@ -1388,8 +1380,7 @@ msgstr ""
 msgid "Value is set in the constant "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Generic.php:281 templates/initial-setup/rules.php:22
-#: templates/settings.php:61
+#: lib/admin/WP_Auth0_Admin_Generic.php:281 templates/settings.php:61
 msgid "Auth0 dashboard"
 msgstr ""
 
@@ -1425,65 +1416,65 @@ msgstr ""
 msgid "Please check the Client Secret saved in the Auth0 plugin settings. "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:132
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:113
 msgid "There was an error creating the Auth0 App. Check the "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:133
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:158
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:172
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:114
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:139
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:153
 msgid "Error log"
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:134
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:115
 msgid ""
 " for more information. If the problem persists, please create it manually in the "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:135
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:116
 msgid "Auth0 Dashboard"
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:136
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:117
 msgid " and copy the Client ID and Client Secret."
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:148
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:129
 msgid "There was an error creating the necessary client grants. "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:151
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:132
 msgid ""
 "Go to your Auth0 dashboard > APIs > Auth0 Management API > Machine to Machine "
 "Applications tab and authorize this Application. "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:155
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:136
 msgid "Make sure to add the following scopes: "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:157
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:138
 msgid "You can also check the "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:159
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:173
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:140
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:154
 msgid " for more information."
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:171
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:152
 msgid "There was an error retrieving your Auth0 credentials. Check the "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:174
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:155
 msgid "Please check that your server has internet access and can reach "
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:187
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:168
 msgid "The required scoped were rejected."
 msgstr ""
 
-#: lib/initial-setup/WP_Auth0_InitialSetup.php:199
+#: lib/initial-setup/WP_Auth0_InitialSetup.php:180
 msgid "Please create your Auth0 account first at "
 msgstr ""
 
@@ -1927,38 +1918,7 @@ msgid "Configure Connections"
 msgstr ""
 
 #: templates/initial-setup/connections.php:41
-#: templates/initial-setup/data-migration.php:27
 msgid "Next"
-msgstr ""
-
-#. translators: the $step variable is a number representing the step that the setup wizard is on.
-#: templates/initial-setup/data-migration.php:5 templates/initial-setup/rules.php:5
-#, php-format
-msgid "Auth0 for WordPress - Setup Wizard (step %d)"
-msgstr ""
-
-#: templates/initial-setup/data-migration.php:8 templates/initial-setup/rules.php:8
-msgid ""
-"This will create a new database connection, expose 2 endpoints, and populate the "
-"custom scripts to call this endpoints to migrate the users to Auth0."
-msgstr ""
-
-#: templates/initial-setup/data-migration.php:9 templates/initial-setup/rules.php:9
-msgid "The users will not be changed in WordPress."
-msgstr ""
-
-#: templates/initial-setup/data-migration.php:16
-msgid "Mark this to expose a web service to handle the user migration process."
-msgstr ""
-
-#: templates/initial-setup/data-migration.php:17
-msgid "Security token:"
-msgstr ""
-
-#: templates/initial-setup/data-migration.php:19
-msgid ""
-"This action will create a new Database connection with the custom scripts required "
-"to import your WordPress Users."
 msgstr ""
 
 #: templates/initial-setup/end.php:9
@@ -2007,47 +1967,6 @@ msgstr ""
 
 #: templates/initial-setup/partials/steps.php:7
 msgid "Migrate your administrator account"
-msgstr ""
-
-#: templates/initial-setup/rules.php:19
-msgid ""
-"Mark this if you want to enable multifactor authentication with Google "
-"Authenticator. More info "
-msgstr ""
-
-#: templates/initial-setup/rules.php:20 templates/initial-setup/rules.php:59
-msgid "HERE"
-msgstr ""
-
-#: templates/initial-setup/rules.php:21
-msgid "You can enable other MFA providers from the "
-msgstr ""
-
-#: templates/initial-setup/rules.php:31
-msgid ""
-"Mark this if you want to store geo location information based on your users IP in "
-"the user_metadata"
-msgstr ""
-
-#: templates/initial-setup/rules.php:40
-msgid ""
-"Mark this if you want to store income data based on the zipcode (calculated using "
-"the users IP)."
-msgstr ""
-
-#: templates/initial-setup/rules.php:43
-msgid ""
-"Represents the median income of the users zipcode, based on last US census data."
-msgstr ""
-
-#: templates/initial-setup/rules.php:57
-msgid ""
-"Mark this if you want to augment user profiles with data provided by FullContact. A "
-"valid API key is required."
-msgstr ""
-
-#: templates/initial-setup/rules.php:58
-msgid "More info "
 msgstr ""
 
 #: templates/login-form.php:37
