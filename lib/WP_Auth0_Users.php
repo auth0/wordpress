@@ -84,7 +84,7 @@ class WP_Auth0_Users {
 			'description'  => $description,
 		];
 
-		$user_data = apply_filters( 'wpa0_user_data', $user_data, $userinfo, $firstname, $lastname );
+		$user_data = apply_filters( 'auth0_create_user_data', $user_data, $userinfo );
 
 		if ( $role ) {
 			// phpcs:ignore
