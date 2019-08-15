@@ -58,25 +58,6 @@ class WP_Auth0_InitialSetup {
 		if ( isset( $_REQUEST['error'] ) && 'access_denied' == $_REQUEST['error'] ) {
 			add_action( 'admin_notices', [ $this, 'access_denied' ] );
 		}
-
-	}
-
-	/**
-	 *
-	 * @deprecated 3.6.0 - Not needed, handled in WP_Auth0_Admin::admin_enqueue()
-	 */
-	public function admin_enqueue() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-	}
-
-	/**
-	 *
-	 * @deprecated 3.6.0 - Duplicate functionality, replaced by WP_Auth0_Admin::create_account_message()
-	 */
-	public function notify_setup() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
 	}
 
 	public function notify_error() {
