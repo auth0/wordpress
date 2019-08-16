@@ -186,6 +186,7 @@ class WP_Auth0_DBManager {
 		// 3.11.0
 		if ( ( $this->current_db_version < 23 && 0 !== $this->current_db_version ) || 23 === $version_to_install ) {
 			$options->remove( 'jwt_auth_integration' );
+			$options->remove( 'link_auth0_users' );
 		}
 
 		$options->update_all();
