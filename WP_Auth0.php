@@ -562,6 +562,22 @@ $a0_plugin->init();
  */
 
 /**
+ * AJAX endpoint to rotate the migration token.
+ */
+function wp_auth0_ajax_rotate_migration_token() {
+	check_ajax_referer( WP_Auth0_Admin_Advanced::ROTATE_TOKEN_NONCE_ACTION );
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( [ 'error' => __( 'Not authorized.', 'wp-auth0' ) ] );
+		return;
+	}
+
+	WP_Auth0_Options::Instance()->set( 'migration_token', wp_auth0_generate_token() );
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_auth0_rotate_migration_token', 'wp_auth0_ajax_rotate_migration_token' );
+
+/**
  * Redirect a successful lost password submission to a login override page.
  *
  * @param string $location - Redirect in process.

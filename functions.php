@@ -2,8 +2,22 @@
 /**
  * Global WP-Auth0 functions.
  *
+ * @package WP-Auth0
+ *
  * @since 3.10.0
  */
+
+/**
+ * Generate a secure, random, URL-safe token.
+ *
+ * @since 4.0.0
+ *
+ * @return string
+ */
+function wp_auth0_generate_token() {
+	$token = WP_Auth0_Nonce_Handler::get_instance()->generate_unique( 64 );
+	return JWT::urlsafeB64Encode( $token );
+}
 
 /**
  * Return a stored option value.
@@ -104,13 +118,27 @@ function wp_auth0_can_show_wp_login_form() {
 }
 
 if ( ! function_exists( 'get_auth0userinfo' ) ) {
-	function get_auth0userinfo( $user_id ) {
-		$profile = WP_Auth0_UsersRepo::get_meta( $user_id, 'auth0_obj' );
+	/**
+	 * Get the Auth0 profile from the database, if one exists.
+	 *
+	 * @param string $auth0_user_id - Auth0 user ID to find.
+	 *
+	 * @return mixed
+	 */
+	//phpcs:ignore
+	function get_auth0userinfo( $auth0_user_id ) {
+		$profile = WP_Auth0_UsersRepo::get_meta( $auth0_user_id, 'auth0_obj' );
 		return $profile ? WP_Auth0_Serializer::unserialize( $profile ) : false;
 	}
 }
 
 if ( ! function_exists( 'get_currentauth0user' ) ) {
+	/**
+	 * Get all Auth0 data for the currently logged-in user.
+	 *
+	 * @return object
+	 */
+	//phpcs:ignore
 	function get_currentauth0user() {
 		return (object) [
 			'auth0_obj'   => get_auth0userinfo( get_current_user_id() ),
@@ -121,15 +149,22 @@ if ( ! function_exists( 'get_currentauth0user' ) ) {
 }
 
 if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
+	/**
+	 * Get the Auth0 application name from the current site name.
+	 *
+	 * @return mixed
+	 */
+	//phpcs:ignore
 	function get_auth0_curatedBlogName() {
 
 		$name = get_bloginfo( 'name' );
 
-		// WordPress can have a blank site title, which will cause initial client creation to fail
+		// WordPress can have a blank site title, which will cause initial client creation to fail.
 		if ( empty( $name ) ) {
 			$name = wp_parse_url( home_url(), PHP_URL_HOST );
+			$port = wp_parse_url( home_url(), PHP_URL_PORT );
 
-			if ( $port = wp_parse_url( home_url(), PHP_URL_PORT ) ) {
+			if ( $port ) {
 				$name .= ':' . $port;
 			}
 		}
@@ -143,8 +178,15 @@ if ( ! function_exists( 'get_auth0_curatedBlogName' ) ) {
 }
 
 if ( ! function_exists( 'get_currentauth0userinfo' ) ) {
+	/**
+	 * Set the global $currentauth0_user and return the Auth0 data for the currently logged-in user.
+	 *
+	 * @return mixed
+	 */
+	//phpcs:ignore
 	function get_currentauth0userinfo() {
 		global $currentauth0_user;
+		//phpcs:ignore
 		$currentauth0_user = get_auth0userinfo( get_current_user_id() );
 		return $currentauth0_user;
 	}

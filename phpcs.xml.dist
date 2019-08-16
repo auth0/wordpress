@@ -33,7 +33,9 @@
     <config name="minimum_supported_wp_version" value="3.8"/>
     <rule ref="PHPCompatibilityWP"/>
 
-    <rule ref="Generic.CodeAnalysis"/>
+    <rule ref="Generic.CodeAnalysis">
+        <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed"/>
+    </rule>
     <rule ref="Generic.Commenting.Todo"/>
     <rule ref="Generic.Arrays.DisallowLongArraySyntax.Found"/>
     <rule ref="PHPCompatibility"/>
