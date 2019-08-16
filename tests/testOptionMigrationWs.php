@@ -119,43 +119,6 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that the AJAX rotate token endpoint fails when there is a bad nonce value.
-	 */
-	public function testThatAjaxTokenRotationFailsWithBadNonce() {
-		$this->startAjaxHalting();
-
-		$caught_exception = false;
-		$error_msg        = 'No exception';
-		try {
-			$_REQUEST['_ajax_nonce'] = uniqid();
-			self::$admin->auth0_rotate_migration_token();
-		} catch ( Exception $e ) {
-			$error_msg        = $e->getMessage();
-			$caught_exception = ( 'bad_nonce' === $error_msg );
-		}
-		$this->assertTrue( $caught_exception, $error_msg );
-	}
-
-	/**
-	 * Test that the AJAX rotate token endpoint saves a new token when the endpoint succeeds.
-	 */
-	public function testThatAjaxTokenRotationSavesNewToken() {
-		$this->startAjaxReturn();
-
-		$old_token = uniqid();
-		self::$opts->set( 'migration_token', $old_token );
-
-		ob_start();
-		$_REQUEST['_ajax_nonce'] = wp_create_nonce( 'auth0_rotate_migration_token' );
-		self::$admin->auth0_rotate_migration_token();
-		$return_json = explode( PHP_EOL, ob_get_clean() );
-
-		$this->assertEquals( '{"success":true}', end( $return_json ) );
-		$this->assertNotEquals( $old_token, self::$opts->get( 'migration_token' ) );
-		$this->assertGreaterThanOrEqual( 64, strlen( self::$opts->get( 'migration_token' ) ) );
-	}
-
-	/**
 	 * Test that turning migration endpoints off does not affect new input.
 	 */
 	public function testThatChangingMigrationToOffKeepsTokenData() {
