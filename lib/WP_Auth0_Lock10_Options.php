@@ -94,12 +94,9 @@ class WP_Auth0_Lock10_Options {
 	protected function build_settings( $settings ) {
 		$options_obj = [];
 
+		// Widget or shortcode languageDictionary.
 		if ( ! empty( $settings['dict'] ) ) {
-			$settings['language_dictionary'] = $settings['dict'];
-		}
-
-		if ( isset( $settings['language_dictionary'] ) && ! empty( $settings['language_dictionary'] ) ) {
-			$options_obj['languageDictionary'] = json_decode( $settings['language_dictionary'], true );
+			$options_obj['languageDictionary'] = $settings['dict'];
 		}
 
 		if ( isset( $settings['form_title'] ) && trim( $settings['form_title'] ) !== '' ) {
@@ -109,7 +106,6 @@ class WP_Auth0_Lock10_Options {
 			}
 
 			$options_obj['languageDictionary']['title'] = $settings['form_title'];
-
 		}
 
 		$options_obj['socialButtonStyle'] = 'big';

@@ -64,20 +64,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 				'id'       => 'wpa0_primary_color',
 				'function' => 'render_primary_color',
 			],
-		];
-
-		// TODO: Remove this once feature has been removed
-		if ( $this->options->get( 'language_dictionary' ) ) {
-			$options[] = [
-				'name'     => __( 'Language Dictionary', 'wp-auth0' ),
-				'opt'      => 'language_dictionary',
-				'id'       => 'wpa0_language_dictionary',
-				'function' => 'render_language_dictionary',
-			];
-		}
-
-		$options = $options + [
-			( count( $options ) ) => [
+			[
 				'name'     => __( 'Custom Signup Fields', 'wp-auth0' ),
 				'opt'      => 'custom_signup_fields',
 				'id'       => 'wpa0_custom_signup_fields',
@@ -291,34 +278,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Render form field and description for the `language_dictionary` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @deprecated - 3.10.0, will be combined with the Extra Settings field below in the next major.
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 *
-	 * @codeCoverageIgnores - Deprecated.
-	 */
-	public function render_language_dictionary( $args = [] ) {
-		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'The languageDictionary parameter for the Auth0 login form. ', 'wp-auth0' ) .
-			sprintf(
-				'<a href="https://github.com/auth0/lock/blob/master/src/i18n/en.js" target="_blank">%s</a>',
-				__( 'List of all modifiable options', 'wp-auth0' )
-			)
-		);
-		$this->render_field_description(
-			__( 'NOTE: This field is deprecated and will be removed in the next major release. ', 'wp-auth0' ) .
-			__( 'Use a languageDictionary property the Extra Settings field below to change text.', 'wp-auth0' )
-		);
-	}
-
-	/**
 	 * Render form field and description for the `extra_conf` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
@@ -360,15 +319,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$input['icon_url']      = empty( $input['icon_url'] ) ? '' : esc_url( $input['icon_url'], [ 'http', 'https' ] );
 		$input['gravatar']      = empty( $input['gravatar'] ) ? 0 : 1;
 		$input['primary_color'] = empty( $input['primary_color'] ) ? '' : sanitize_text_field( $input['primary_color'] );
-
-		$input['language_dictionary'] = isset( $input['language_dictionary'] ) ? trim( $input['language_dictionary'] ) : '';
-		if ( ! empty( $input['language_dictionary'] ) ) {
-			if ( json_decode( $input['language_dictionary'] ) === null ) {
-				$error = __( 'The language dictionary parameter should be a valid JSON object.', 'wp-auth0' );
-				$this->add_validation_error( $error );
-				$input['language_dictionary'] = isset( $old_options['language_dictionary'] ) ? $old_options['language_dictionary'] : '';
-			}
-		}
 
 		$input['custom_cdn_url'] = empty( $input['custom_cdn_url'] ) ? 0 : 1;
 
