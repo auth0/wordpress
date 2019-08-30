@@ -230,23 +230,24 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'override_wp_avatars'       => 1,
 
 			// Appearance
+			'passwordless_enabled'      => false,
 			'icon_url'                  => '',
 			'form_title'                => '',
 			'gravatar'                  => true,
 			'username_style'            => '',
 			'primary_color'             => '',
-			'language_dictionary'       => '',
+			'custom_signup_fields'      => '',
+			'extra_conf'                => '',
+			'custom_cdn_url'            => null,
+			'cdn_url'                   => WPA0_LOCK_CDN_URL,
+			'lock_connections'          => '',
 
 			// Advanced
 			'requires_verified_email'   => true,
 			'skip_strategies'           => '',
 			'remember_users_session'    => false,
 			'default_login_redirection' => home_url(),
-			'passwordless_enabled'      => false,
 			'force_https_callback'      => false,
-			'cdn_url'                   => WPA0_LOCK_CDN_URL,
-			'custom_cdn_url'            => null,
-			'lock_connections'          => '',
 			'auto_provisioning'         => false,
 			'migration_ws'              => false,
 			'migration_token'           => null,
@@ -256,8 +257,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'auto_login_method'         => '',
 			'auth0_implicit_workflow'   => false,
 			'valid_proxy_ip'            => null,
-			'custom_signup_fields'      => '',
-			'extra_conf'                => '',
 			'auth0_server_domain'       => 'auth0.auth0.com',
 		];
 	}

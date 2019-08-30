@@ -40,18 +40,6 @@ class WP_Auth0_DBManager {
 			$this->migrate_users_data();
 		}
 
-		// Plugin version < 3.2.3
-		if ( $this->current_db_version < 10 ) {
-			$dict = $options->get( 'dict' );
-
-			if ( ! empty( $dict ) ) {
-
-				if ( json_decode( $dict ) !== null ) {
-					$options->set( 'language_dictionary', $dict, false );
-				}
-			}
-		}
-
 		// Plugin version < 3.2.22
 		if ( $this->current_db_version < 14 && is_null( $options->get( 'client_secret_b64_encoded' ) ) ) {
 			if ( $options->get( 'client_id' ) ) {
@@ -183,23 +171,31 @@ class WP_Auth0_DBManager {
 
 		// 4.0.0
 		if ( ( $this->current_db_version < 23 && 0 !== $this->current_db_version ) || 23 === $version_to_install ) {
+			$extra_conf = json_decode( $options->get( 'extra_conf' ), true );
+			if ( empty( $extra_conf ) ) {
+				$extra_conf = [];
+			}
+
+			$language = $options->get( 'language' );
+			if ( $language ) {
+				$extra_conf['language'] = $language;
+			}
+			$options->remove( 'language' );
+
+			$language_dict = json_decode( $options->get( 'language_dictionary' ), true );
+			if ( $language_dict ) {
+				$extra_conf['languageDictionary'] = $language_dict;
+			}
+			$options->remove( 'language_dictionary' );
+
+			if ( ! empty( $extra_conf ) ) {
+				$options->set( 'extra_conf', wp_json_encode( $extra_conf ) );
+			}
+
 			$options->remove( 'jwt_auth_integration' );
 			$options->remove( 'link_auth0_users' );
 			$options->remove( 'custom_css' );
 			$options->remove( 'custom_js' );
-
-			$extra_conf = json_decode( $options->get( 'extra_conf' ), true );
-
-			$language = $options->get( 'language' );
-			if ( $language && empty( $extra_conf['language'] ) ) {
-				if ( empty( $extra_conf ) ) {
-					$extra_conf = [];
-				}
-				$extra_conf['language'] = $language;
-				$options->set( 'extra_conf', wp_json_encode( $extra_conf ) );
-			}
-
-			$options->remove( 'language' );
 		}
 
 		$options->update_all();

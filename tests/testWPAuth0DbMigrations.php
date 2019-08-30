@@ -181,7 +181,7 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that 22 -> 23 DB migration adds the language setting into extra configuration.
+	 * Test that 22 -> 23 DB migration adds the language setting into extra Lock conf.
 	 */
 	public function testThatV23AddsLanguageValue() {
 		$test_version = 23;
@@ -191,6 +191,7 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		$db_manager->init();
 
 		self::$opts->set( 'language', 'es' );
+
 		$db_manager->install_db( $test_version );
 		$this->assertNull( self::$opts->get( 'language' ) );
 
@@ -199,9 +200,9 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that 22 -> 23 DB migration does not replace an existing value in the extra configuration.
+	 * Test that 22 -> 23 DB migration does not replace an existing language value in the extra Lock conf.
 	 */
-	public function testThatV23DoesNotReplaceLanguageValue() {
+	public function testThatV23ReplacesLanguageValue() {
 		$test_version = 23;
 
 		update_option( 'auth0_db_version', $test_version - 1 );
@@ -210,10 +211,63 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 
 		self::$opts->set( 'language', 'es' );
 		self::$opts->set( 'extra_conf', json_encode( [ 'language' => 'pt' ] ) );
+
 		$db_manager->install_db( $test_version );
 		$this->assertNull( self::$opts->get( 'language' ) );
 
 		$extra_conf = json_decode( self::$opts->get( 'extra_conf' ), true );
-		$this->assertEquals( 'pt', $extra_conf['language'] );
+		$this->assertEquals( 'es', $extra_conf['language'] );
+	}
+
+	/**
+	 * Test that 22 -> 23 DB migration adds the language_dictionary setting into extra Lock conf.
+	 */
+	public function testThatV23AddsLanguageDictionaryValue() {
+		$test_version = 23;
+
+		update_option( 'auth0_db_version', $test_version - 1 );
+		$db_manager = new WP_Auth0_DBManager( self::$opts );
+		$db_manager->init();
+
+		self::$opts->set( 'language_dictionary', json_encode( [ 'key' => 'value' ] ) );
+
+		$db_manager->install_db( $test_version );
+		$this->assertNull( self::$opts->get( 'language_dictionary' ) );
+
+		$extra_conf = json_decode( self::$opts->get( 'extra_conf' ), true );
+		$this->assertArrayHasKey( 'languageDictionary', $extra_conf );
+		$this->assertArrayHasKey( 'key', $extra_conf['languageDictionary'] );
+		$this->assertEquals( 'value', $extra_conf['languageDictionary']['key'] );
+	}
+
+	/**
+	 * Test that 22 -> 23 DB migration does not replace an existing language_dictionary value in the extra Lock conf.
+	 */
+	public function testThatV23ReplacesLanguageDictionaryValue() {
+		$test_version = 23;
+
+		update_option( 'auth0_db_version', $test_version - 1 );
+		$db_manager = new WP_Auth0_DBManager( self::$opts );
+		$db_manager->init();
+
+		self::$opts->set( 'language_dictionary', json_encode( [ '__migrate_key__' => '__migrate_value__' ] ) );
+		self::$opts->set(
+			'extra_conf',
+			json_encode(
+				[
+					'languageDictionary' => [
+						'__existing_key__' => '__existing_value__',
+					],
+				]
+			)
+		);
+
+		$db_manager->install_db( $test_version );
+		$this->assertNull( self::$opts->get( 'language_dictionary' ) );
+
+		$extra_conf = json_decode( self::$opts->get( 'extra_conf' ), true );
+		$this->assertArrayNotHasKey( '__existing_key__', $extra_conf['languageDictionary'] );
+		$this->assertArrayHasKey( '__migrate_key__', $extra_conf['languageDictionary'] );
+		$this->assertEquals( '__migrate_value__', $extra_conf['languageDictionary']['__migrate_key__'] );
 	}
 }

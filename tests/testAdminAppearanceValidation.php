@@ -63,45 +63,6 @@ class TestAdminAppearanceValidation extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that the language_dictionary setting is skipped if empty and removes HTML.
-	 */
-	public function testThatLanguageDictIsBlankIfNotSet() {
-		$validated = self::$admin->basic_validation( [], [] );
-		$this->assertEquals( '', $validated['language_dictionary'] );
-	}
-
-	/**
-	 * Test that the language_dictionary setting is blank and error is set if invalid JSON and no fallback value.
-	 */
-	public function testThatLanguageDictIsBlankIfInvalidJson() {
-		$validated = self::$admin->basic_validation( [], [ 'language_dictionary' => uniqid() ] );
-		$this->assertEquals( '', $validated['language_dictionary'] );
-
-		global $wp_settings_errors;
-		$this->assertCount( 1, $wp_settings_errors );
-		$this->assertEquals( 'wp_auth0_settings', $wp_settings_errors[0]['setting'] );
-		$this->assertEquals( 'error', $wp_settings_errors[0]['type'] );
-		$this->assertEquals( 'The language dictionary parameter should be a valid JSON object.', $wp_settings_errors[0]['message'] );
-	}
-
-	/**
-	 * Test that the language_dictionary setting is set to the previous value and an error is set if invalid JSON.
-	 */
-	public function testThatLanguageDictIsPreviousValIfInvalidJson() {
-		$validated = self::$admin->basic_validation(
-			[ 'language_dictionary' => '{"previous":"value"}' ],
-			[ 'language_dictionary' => uniqid() ]
-		);
-		$this->assertEquals( '{"previous":"value"}', $validated['language_dictionary'] );
-
-		global $wp_settings_errors;
-		$this->assertCount( 1, $wp_settings_errors );
-		$this->assertEquals( 'wp_auth0_settings', $wp_settings_errors[0]['setting'] );
-		$this->assertEquals( 'error', $wp_settings_errors[0]['type'] );
-		$this->assertEquals( 'The language dictionary parameter should be a valid JSON object.', $wp_settings_errors[0]['message'] );
-	}
-
-	/**
 	 * Test that the social_big_buttons option is gone.
 	 */
 	public function testThatSocialBigButtonsIsNotAdded() {
