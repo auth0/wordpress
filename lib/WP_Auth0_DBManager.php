@@ -46,9 +46,7 @@ class WP_Auth0_DBManager {
 
 			if ( ! empty( $dict ) ) {
 
-				if ( json_decode( $dict ) === null ) {
-					$options->set( 'language', $dict, false );
-				} else {
+				if ( json_decode( $dict ) !== null ) {
 					$options->set( 'language_dictionary', $dict, false );
 				}
 			}
@@ -189,6 +187,19 @@ class WP_Auth0_DBManager {
 			$options->remove( 'link_auth0_users' );
 			$options->remove( 'custom_css' );
 			$options->remove( 'custom_js' );
+
+			$extra_conf = json_decode( $options->get( 'extra_conf' ), true );
+
+			$language = $options->get( 'language' );
+			if ( $language && empty( $extra_conf['language'] ) ) {
+				if ( empty( $extra_conf ) ) {
+					$extra_conf = [];
+				}
+				$extra_conf['language'] = $language;
+				$options->set( 'extra_conf', wp_json_encode( $extra_conf ) );
+			}
+
+			$options->remove( 'language' );
 		}
 
 		$options->update_all();

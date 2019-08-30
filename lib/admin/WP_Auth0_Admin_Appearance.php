@@ -64,12 +64,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 				'id'       => 'wpa0_primary_color',
 				'function' => 'render_primary_color',
 			],
-			[
-				'name'     => __( 'Language', 'wp-auth0' ),
-				'opt'      => 'language',
-				'id'       => 'wpa0_language',
-				'function' => 'render_language',
-			],
 		];
 
 		// TODO: Remove this once feature has been removed
@@ -297,26 +291,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Render form field and description for the `language` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_language( $args = [] ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'The language parameter for the Auth0 login form. ', 'wp-auth0' ) .
-			sprintf(
-				'<a href="https://github.com/auth0/lock/tree/master/src/i18n" target="_blank">%s</a>',
-				__( 'Available languages list', 'wp-auth0' )
-			)
-		);
-	}
-
-	/**
 	 * Render form field and description for the `language_dictionary` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
@@ -385,7 +359,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$input['form_title']    = empty( $input['form_title'] ) ? '' : sanitize_text_field( $input['form_title'] );
 		$input['icon_url']      = empty( $input['icon_url'] ) ? '' : esc_url( $input['icon_url'], [ 'http', 'https' ] );
 		$input['gravatar']      = empty( $input['gravatar'] ) ? 0 : 1;
-		$input['language']      = empty( $input['language'] ) ? '' : sanitize_text_field( $input['language'] );
 		$input['primary_color'] = empty( $input['primary_color'] ) ? '' : sanitize_text_field( $input['primary_color'] );
 
 		$input['language_dictionary'] = isset( $input['language_dictionary'] ) ? trim( $input['language_dictionary'] ) : '';

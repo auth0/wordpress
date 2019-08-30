@@ -179,4 +179,41 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		$this->assertNull( self::$opts->get( 'custom_css' ) );
 		$this->assertNull( self::$opts->get( 'custom_js' ) );
 	}
+
+	/**
+	 * Test that 22 -> 23 DB migration adds the language setting into extra configuration.
+	 */
+	public function testThatV23AddsLanguageValue() {
+		$test_version = 23;
+
+		update_option( 'auth0_db_version', $test_version - 1 );
+		$db_manager = new WP_Auth0_DBManager( self::$opts );
+		$db_manager->init();
+
+		self::$opts->set( 'language', 'es' );
+		$db_manager->install_db( $test_version );
+		$this->assertNull( self::$opts->get( 'language' ) );
+
+		$extra_conf = json_decode( self::$opts->get( 'extra_conf' ), true );
+		$this->assertEquals( 'es', $extra_conf['language'] );
+	}
+
+	/**
+	 * Test that 22 -> 23 DB migration does not replace an existing value in the extra configuration.
+	 */
+	public function testThatV23DoesNotReplaceLanguageValue() {
+		$test_version = 23;
+
+		update_option( 'auth0_db_version', $test_version - 1 );
+		$db_manager = new WP_Auth0_DBManager( self::$opts );
+		$db_manager->init();
+
+		self::$opts->set( 'language', 'es' );
+		self::$opts->set( 'extra_conf', json_encode( [ 'language' => 'pt' ] ) );
+		$db_manager->install_db( $test_version );
+		$this->assertNull( self::$opts->get( 'language' ) );
+
+		$extra_conf = json_decode( self::$opts->get( 'extra_conf' ), true );
+		$this->assertEquals( 'pt', $extra_conf['language'] );
+	}
 }
