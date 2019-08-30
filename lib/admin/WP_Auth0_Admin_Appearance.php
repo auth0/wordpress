@@ -2,11 +2,6 @@
 
 class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 
-	/**
-	 * @deprecated - 3.6.0, use $this->_description instead
-	 */
-	const APPEARANCE_DESCRIPTION = '';
-
 	protected $_description;
 
 	protected $actions_middlewares = [
@@ -237,22 +232,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Render form field and description for the `social_big_buttons` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @deprecated - 3.11.0, no longer used and no replacement provided.
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_social_big_buttons( $args = [] ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description( __( 'Use large social login buttons on the Auth0 login form', 'wp-auth0' ) );
-	}
-
-	/**
 	 * Render form field and description for the `gravatar` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
@@ -429,16 +408,5 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		}
 
 		return $input;
-	}
-
-	/**
-	 * @deprecated - 3.6.0, handled by WP_Auth0_Admin_Generic::render_description()
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	public function render_appearance_description() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 }
