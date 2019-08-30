@@ -285,32 +285,6 @@ class WP_Auth0_Lock10_Options {
 	}
 
 	/**
-	 * @deprecated - 3.6.0, not used, use WP_Auth0_Options::Instance->get( 'custom_css' ) instead.
-	 *
-	 * @return string
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	public function get_custom_css() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		return $this->wp_options->get( 'custom_css' );
-	}
-
-	/**
-	 * @deprecated - 3.6.0, not used, use WP_Auth0_Options::Instance->get( 'custom_js' ) instead.
-	 *
-	 * @return string
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	public function get_custom_js() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		return $this->wp_options->get( 'custom_js' );
-	}
-
-	/**
 	 * @deprecated - 3.6.0, not used, call WP_Auth0::ready() instead.
 	 *
 	 * @return string

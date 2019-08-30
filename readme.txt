@@ -70,8 +70,6 @@ Like widgets, shortcode login forms will use the main plugins settings. It can b
 - `form_title` - Text to appear at top of the login form
 - `gravatar` - Display the user's Gravatar; set to `1` for yes
 - `redirect_to` - A direct URL to use after successful login
-- `custom_css` - Valid CSS to alter the login form
-- `custom_js` - Valid JS to alter the login form
 - `dict` - Valid JSON to override form text ([see options here](https://github.com/auth0/lock/blob/master/src/i18n/en.js))
 - `extra_conf` - Valid JSON to override Lock configuration ([see options here](https://auth0.com/docs/libraries/lock/v11/configuration))
 - `show_as_modal` - Display a button which triggers the login form in a modal; set to `1` for yes

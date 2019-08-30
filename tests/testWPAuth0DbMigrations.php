@@ -160,7 +160,7 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that 22 -> 23 DB migration removes the jwt_auth_integration option.
+	 * Test that 22 -> 23 DB migration deletes removed settings from the options.
 	 */
 	public function testThatV23RemovesSettings() {
 		$test_version = 23;
@@ -171,8 +171,12 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 
 		self::$opts->set( 'jwt_auth_integration', 1 );
 		self::$opts->set( 'link_auth0_users', 1 );
+		self::$opts->set( 'custom_css', '__test_css__' );
+		self::$opts->set( 'custom_js', '__test_js__' );
 		$db_manager->install_db( $test_version );
 		$this->assertNull( self::$opts->get( 'jwt_auth_integration' ) );
 		$this->assertNull( self::$opts->get( 'link_auth0_users' ) );
+		$this->assertNull( self::$opts->get( 'custom_css' ) );
+		$this->assertNull( self::$opts->get( 'custom_js' ) );
 	}
 }
