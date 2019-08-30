@@ -4,8 +4,6 @@ $gravatar    = isset( $instance['gravatar'] ) ? $instance['gravatar'] : '';
 $icon_url    = isset( $instance['icon_url'] ) ? $instance['icon_url'] : '';
 $dict        = isset( $instance['dict'] ) ? $instance['dict'] : '';
 $extra_conf  = isset( $instance['extra_conf'] ) ? $instance['extra_conf'] : '';
-$custom_css  = isset( $instance['custom_css'] ) ? trim( $instance['custom_css'] ) : '';
-$custom_js   = isset( $instance['custom_js'] ) ? trim( $instance['custom_js'] ) : '';
 $redirect_to = isset( $instance['redirect_to'] ) ? $instance['redirect_to'] : '';
 ?>
 
@@ -99,36 +97,3 @@ if ( $this->showAsModal() ) :
 		<a target="_blank" href="https://auth0.com/docs/libraries/lock/v11/configuration"><?php _e( 'See options and examples', 'wp-auth0' ); ?></a>
 		</span>
 </p>
-
-<?php if ( $custom_css ) : ?>
-<p>
-	<label for="<?php echo $this->get_field_id( 'custom_css' ); ?>"><?php _e( 'Login Form CSS', 'wp-auth0' ); ?></label>
-	<textarea class="widefat" id="<?php echo $this->get_field_id( 'custom_css' ); ?>"
-			  name="<?php echo $this->get_field_name( 'custom_css' ); ?>">
-		<?php echo $custom_css; ?>
-	</textarea>
-	<br><span class="description">
-			<?php
-				_e( 'NOTE: This field is deprecated and will be removed in the next major release. ', 'wp-auth0' );
-				_e( 'Valid CSS to customize the Auth0 login form', 'wp-auth0' );
-			?>
-			.
-		</span>
-</p>
-<?php endif; ?>
-
-<?php if ( $custom_js ) : ?>
-<p>
-	<label for="<?php echo $this->get_field_id( 'custom_js' ); ?>"><?php _e( 'Login Form JS', 'wp-auth0' ); ?></label>
-	<textarea class="widefat" id="<?php echo $this->get_field_id( 'custom_js' ); ?>"
-			  name="<?php echo $this->get_field_name( 'custom_js' ); ?>"><?php echo $custom_js; ?></textarea>
-	<br>
-	<span class="description">
-			<?php
-			_e( 'NOTE: This field is deprecated and will be removed in the next major release. ', 'wp-auth0' );
-			_e( 'Valid JS to customize the Auth0 login form', 'wp-auth0' );
-			?>
-		  .
-		</span>
-</p>
-<?php endif; ?>

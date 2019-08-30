@@ -58,18 +58,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 				'function' => 'render_gravatar',
 			],
 			[
-				'name'     => __( 'Login Form CSS', 'wp-auth0' ),
-				'opt'      => 'custom_css',
-				'id'       => 'wpa0_custom_css',
-				'function' => 'render_custom_css',
-			],
-			[
-				'name'     => __( 'Login Form JS', 'wp-auth0' ),
-				'opt'      => 'custom_js',
-				'id'       => 'wpa0_custom_js',
-				'function' => 'render_custom_js',
-			],
-			[
 				'name'     => __( 'Login Name Style', 'wp-auth0' ),
 				'opt'      => 'username_style',
 				'id'       => 'wpa0_username_style',
@@ -278,59 +266,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$this->render_field_description(
 			__( 'Automatically display an avatar (from Gravatar) on the Auth0 login form', 'wp-auth0' )
 		);
-	}
-
-	/**
-	 * Render form field and description for the `custom_css` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @deprecated - 3.10.0, CSS must be added as an external file starting in the next major release.
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_custom_css( $args = [] ) {
-		if ( $this->options->get( 'custom_css' ) ) {
-			$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
-			$this->render_field_description(
-				__( 'NOTE: This field is deprecated and will be removed in the next major release. ', 'wp-auth0' ) .
-				__( 'Valid CSS to customize the Auth0 login form', 'wp-auth0' )
-			);
-		} else {
-			$this->render_field_description(
-				__( 'Custom styles should be loaded in an external file using the instructions ', 'wp-auth0' ) .
-				$this->get_docs_link( 'cms/wordpress/troubleshoot#how-can-i-modify-the-embedded-auth0-login-form-' )
-			);
-		}
-
-	}
-
-	/**
-	 * Render form field and description for the `custom_js` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @deprecated - 3.10.0, JS must be added as an external file starting in the next major release.
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_custom_js( $args = [] ) {
-		if ( $this->options->get( 'custom_js' ) ) {
-			$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
-			$this->render_field_description(
-				__( 'NOTE: This field is deprecated and will be removed in the next major release. ', 'wp-auth0' ) .
-				__( 'Valid JS to customize the Auth0 login form', 'wp-auth0' )
-			);
-		} else {
-			$this->render_field_description(
-				__( 'Custom JavaScript should be loaded in an external file using the instructions ', 'wp-auth0' ) .
-				$this->get_docs_link( 'cms/wordpress/troubleshoot#how-can-i-modify-the-embedded-auth0-login-form-' )
-			);
-		}
 	}
 
 	/**

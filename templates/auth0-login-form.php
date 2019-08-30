@@ -17,18 +17,13 @@ $wle           = $auth0_options->get( 'wordpress_login_enabled' );
 
 	<style type="text/css">
 		<?php echo apply_filters( 'auth0_login_css', '' ); ?>
-		<?php echo $auth0_options->get( 'custom_css' ); ?>
 	</style>
 
 <?php
-$custom_js            = (string) trim( $auth0_options->get( 'custom_js' ) );
 $custom_signup_fields = (string) trim( $auth0_options->get( 'custom_signup_fields' ) );
 
-if ( $custom_js || $custom_signup_fields ) {
+if ( $custom_signup_fields ) {
 	echo '<script type="text/javascript">';
-	if ( $custom_js ) {
-		echo 'document.addEventListener("DOMContentLoaded", function() {' . $custom_js . '});';
-	}
 	if ( $custom_signup_fields ) {
 		echo 'var ' . WP_Auth0_Lock10_Options::LOCK_GLOBAL_JS_VAR_NAME . 'Fields=' . $custom_signup_fields . ';';
 	}
