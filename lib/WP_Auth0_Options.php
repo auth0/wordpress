@@ -235,7 +235,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'gravatar'                  => true,
 			'username_style'            => '',
 			'primary_color'             => '',
-			'language'                  => '',
 			'language_dictionary'       => '',
 
 			// Advanced

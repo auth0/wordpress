@@ -52,17 +52,6 @@ class TestAdminAppearanceValidation extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that the language setting is skipped if empty and removes HTML.
-	 */
-	public function testThatLanguageIsValidatedProperly() {
-		$validated = self::$admin->basic_validation( [], [] );
-		$this->assertEquals( '', $validated['language'] );
-
-		$validated = self::$admin->basic_validation( [], [ 'language' => '<script>alert("hi")</script>' ] );
-		$this->assertNotContains( '<script>', $validated['language'] );
-	}
-
-	/**
 	 * Test that the primary_color setting is skipped if empty and removes HTML.
 	 */
 	public function testThatPrimaryColorIsValidatedProperly() {

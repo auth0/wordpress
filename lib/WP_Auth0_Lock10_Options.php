@@ -94,10 +94,6 @@ class WP_Auth0_Lock10_Options {
 	protected function build_settings( $settings ) {
 		$options_obj = [];
 
-		if ( isset( $settings['language'] ) && ! empty( $settings['language'] ) ) {
-			$options_obj['language'] = $settings['language'];
-		}
-
 		if ( ! empty( $settings['dict'] ) ) {
 			$settings['language_dictionary'] = $settings['dict'];
 		}
