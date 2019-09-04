@@ -1,17 +1,22 @@
 <?php
+/**
+ * Contains WP_Auth0_Admin_Appearance.
+ *
+ * @package WP-Auth0
+ *
+ * @since 2.0.0
+ */
 
+/**
+ * Class WP_Auth0_Admin_Appearance.
+ * Fields and validations for the Embedded settings tab.
+ */
 class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
-
-	protected $_description;
-
-	protected $actions_middlewares = [
-		'basic_validation',
-	];
 
 	/**
 	 * WP_Auth0_Admin_Appearance constructor.
 	 *
-	 * @param WP_Auth0_Options $options
+	 * @param WP_Auth0_Options $options - Instance of the WP_Auth0_Options class.
 	 */
 	public function __construct( WP_Auth0_Options $options ) {
 		parent::__construct( $options );
@@ -314,6 +319,14 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		);
 	}
 
+	/**
+	 * Validation for Basic settings tab.
+	 *
+	 * @param array $old_options - Options before saving the settings form.
+	 * @param array $input - New options being saved.
+	 *
+	 * @return array
+	 */
 	public function basic_validation( $old_options, $input ) {
 		$input['form_title']    = empty( $input['form_title'] ) ? '' : sanitize_text_field( $input['form_title'] );
 		$input['icon_url']      = empty( $input['icon_url'] ) ? '' : esc_url( $input['icon_url'], [ 'http', 'https' ] );
