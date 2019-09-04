@@ -8,11 +8,22 @@ class WP_Auth0_Admin_Generic {
 
 	protected $_option_name;
 
-	protected $_description;
+	/**
+	 * Description to show on the settings tab.
+	 * Set in the constructor to be able to use translations.
+	 *
+	 * @var string
+	 */
+	protected $_description = '';
 
 	protected $_textarea_rows = 4;
 
-	protected $actions_middlewares = [];
+	/**
+	 * Validation methods to run in individual settings classes.
+	 *
+	 * @var array
+	 */
+	protected $actions_middlewares = [ 'basic_validation' ];
 
 	/**
 	 * WP_Auth0_Admin_Generic constructor.

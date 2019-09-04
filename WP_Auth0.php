@@ -561,6 +561,13 @@ $a0_plugin->init();
  * Core WP hooks
  */
 
+function wp_auth0_ajax_delete_cache_transient() {
+	check_ajax_referer( 'auth0_delete_cache_transient' );
+	delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_auth0_delete_cache_transient', 'wp_auth0_ajax_delete_cache_transient' );
+
 /**
  * AJAX endpoint to rotate the migration token.
  */

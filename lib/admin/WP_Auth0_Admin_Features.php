@@ -1,17 +1,17 @@
 <?php
+/**
+ * Contains WP_Auth0_Admin_Features.
+ *
+ * @package WP-Auth0
+ *
+ * @since 2.0.0
+ */
 
+/**
+ * Class WP_Auth0_Admin_Features.
+ * Fields and validations for the Features settings tab.
+ */
 class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
-
-	/**
-	 * @deprecated - 3.6.0, use $this->_description instead
-	 */
-	const FEATURES_DESCRIPTION = '';
-
-	protected $_description;
-
-	protected $actions_middlewares = [
-		'basic_validation',
-	];
 
 	/**
 	 * WP_Auth0_Admin_Features constructor.

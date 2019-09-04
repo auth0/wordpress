@@ -1,29 +1,27 @@
 <?php
+/**
+ * Contains WP_Auth0_Admin_Basic.
+ *
+ * @package WP-Auth0
+ *
+ * @since 2.0.0
+ */
 
+/**
+ * Class WP_Auth0_Admin_Basic.
+ * Fields and validations for the Basic settings tab.
+ */
 class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
-
-	/**
-	 * @deprecated - 3.6.0, use $this->_description instead
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	const BASIC_DESCRIPTION = '';
-
-	protected $_description;
-
-	protected $actions_middlewares = [
-		'basic_validation',
-		'wle_validation',
-	];
 
 	/**
 	 * WP_Auth0_Admin_Basic constructor.
 	 *
-	 * @param WP_Auth0_Options $options
+	 * @param WP_Auth0_Options $options - Instance of the WP_Auth0_Options class.
 	 */
 	public function __construct( WP_Auth0_Options $options ) {
 		parent::__construct( $options );
-		$this->_description = __( 'Basic settings related to the Auth0 integration.', 'wp-auth0' );
+		$this->_description          = __( 'Basic settings related to the Auth0 integration.', 'wp-auth0' );
+		$this->actions_middlewares[] = 'wle_validation';
 	}
 
 	/**
@@ -33,8 +31,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 * @see \WP_Auth0_Admin_Generic::init_option_section
 	 */
 	public function init() {
-		add_action( 'wp_ajax_auth0_delete_cache_transient', [ $this, 'auth0_delete_cache_transient' ] );
-
 		$options = [
 			[
 				'name'     => __( 'Domain', 'wp-auth0' ),
@@ -224,7 +220,9 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 			__( 'Delete Cache', 'wp-auth0' )
 		);
 		$this->render_field_description( __( 'JWKS cache expiration in minutes (use 0 for no caching)', 'wp-auth0' ) );
-		if ( $domain = $this->options->get( 'domain' ) ) {
+
+		$domain = $this->options->get( 'domain' );
+		if ( $domain ) {
 			$this->render_field_description(
 				sprintf(
 					'<a href="https://%s/.well-known/jwks.json" target="_blank">%s</a>',
@@ -233,33 +231,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				)
 			);
 		}
-	}
-
-	/**
-	 * Render form field and description for the `auth0_app_token` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @deprecated - 3.10.0, no longer used.
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function render_auth0_app_token( $args = [] ) {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password' );
-		$this->render_field_description(
-			__( 'This token should include the following scopes: ', 'wp-auth0' ) .
-			'<br><br><code>' . implode( '</code> <code>', WP_Auth0_Api_Client::ConsentRequiredScopes() ) .
-			'</code><br><br>' . $this->get_docs_link(
-				'api/management/v2/tokens#get-a-token-manually',
-				__( 'More information on manually generating tokens', 'wp-auth0' )
-			)
-		);
 	}
 
 	/**
@@ -345,12 +316,14 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		);
 	}
 
-	public function auth0_delete_cache_transient() {
-		check_ajax_referer( 'auth0_delete_cache_transient' );
-		delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
-		exit;
-	}
-
+	/**
+	 * Validation for Basic settings tab.
+	 *
+	 * @param array $old_options - Options before saving the settings form.
+	 * @param array $input - New options being saved.
+	 *
+	 * @return array
+	 */
 	public function basic_validation( $old_options, $input ) {
 
 		if ( wp_cache_get( 'doing_db_update', WPA0_CACHE_GROUP ) ) {
@@ -402,36 +375,5 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		}
 		$input['wle_code'] = $this->options->get( 'wle_code' ) ?: str_shuffle( uniqid() . uniqid() );
 		return $input;
-	}
-
-	/**
-	 * @deprecated - 3.6.0, should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	public function render_allow_signup_regular_multisite() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-	}
-
-	/**
-	 * @deprecated - 3.6.0, should not be called directly, handled within WP_Auth0_Admin_Basic::render_allow_signup()
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	public function render_allow_signup_regular() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-	}
-
-	/**
-	 * @deprecated - 3.6.0, handled by WP_Auth0_Admin_Generic::render_description()
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	public function render_basic_description() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		printf( '<p class="a0-step-text">%s</p>', $this->_description );
 	}
 }
