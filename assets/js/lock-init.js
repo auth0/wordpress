@@ -5,16 +5,6 @@ jQuery(document).ready(function ($) {
     var opts = wpAuth0LockGlobal;
     var loginForm = $( '#' + opts.loginFormId );
 
-    // Check SSO if Auth0.js is loaded and we have options.
-    if ( opts.ssoOpts && typeof(auth0) !== 'undefined' ) {
-        loginForm.hide();
-        var webAuth = new auth0.WebAuth({
-            clientID: opts.clientId,
-            domain: opts.domain
-        });
-        webAuth.checkSession(opts.ssoOpts, processSso);
-    }
-
     // Missing critical Auth0 settings.
     if ( ! opts.ready ) {
         resetWpLoginForm();
@@ -72,35 +62,6 @@ jQuery(document).ready(function ($) {
      */
     function setNonceCookie(val) {
         Cookies.set( opts.nonceCookieName, val );
-    }
-
-    /**
-     * Callback function for webAuth.checkSession() SSO processing.
-     *
-     * @param err    null|object Error returned from Auth0 or null if none.
-     * @param result object      Result from Auth0.
-     */
-    function processSso(err, result) {
-
-        // No session with Auth0 or error, show login form.
-        if (err || typeof(result) === 'undefined' || ! result || ! result.idToken) {
-            loginForm.show();
-            return;
-        }
-
-        // Set state and nonce cookies for validation.
-        setStateCookie(result.state);
-        setNonceCookie(result.idTokenPayload.nonce);
-
-        // Create a form to submit the necessary auth parameters to the callback URL.
-        $(document.createElement('form'))
-            .css({display: 'none'})
-            .attr('method', 'POST')
-            .attr('action', opts.ssoOpts.redirectUri)
-            .append($(document.createElement('input')).attr('name','id_token').val(result.idToken))
-            .append($(document.createElement('input')).attr('name','state').val(result.state))
-            .appendTo($('body'))
-            .submit();
     }
 
     /**

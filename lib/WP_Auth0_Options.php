@@ -225,7 +225,8 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'wle_code'                  => '',
 
 			// Features
-			'sso'                       => 0,
+			'auto_login'                => 1,
+			'auto_login_method'         => '',
 			'singlelogout'              => 1,
 			'override_wp_avatars'       => 1,
 
@@ -253,8 +254,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'migration_token'           => null,
 			'migration_ips_filter'      => false,
 			'migration_ips'             => null,
-			'auto_login'                => 1,
-			'auto_login_method'         => '',
 			'auth0_implicit_workflow'   => false,
 			'valid_proxy_ip'            => null,
 			'auth0_server_domain'       => 'auth0.auth0.com',
