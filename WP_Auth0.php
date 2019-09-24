@@ -128,9 +128,6 @@ class WP_Auth0 {
 
 		$users_repo = new WP_Auth0_UsersRepo( $this->a0_options );
 
-		$login_manager = new WP_Auth0_LoginManager( $users_repo, $this->a0_options );
-		$login_manager->init();
-
 		$this->router = new WP_Auth0_Routes( $this->a0_options );
 		$this->router->init();
 
@@ -560,6 +557,27 @@ $a0_plugin->init();
 /*
  * Core WP hooks
  */
+
+function wp_auth0_process_auth_callback() {
+	$users_repo    = new WP_Auth0_UsersRepo( WP_Auth0_Options::Instance() );
+	$login_manager = new WP_Auth0_LoginManager( $users_repo, WP_Auth0_Options::Instance() );
+	return $login_manager->init_auth0();
+}
+add_action( 'template_redirect', 'wp_auth0_process_auth_callback' );
+
+function wp_auth0_login_ulp_redirect() {
+	$users_repo    = new WP_Auth0_UsersRepo( WP_Auth0_Options::Instance() );
+	$login_manager = new WP_Auth0_LoginManager( $users_repo, WP_Auth0_Options::Instance() );
+	return $login_manager->login_auto();
+}
+add_action( 'login_init', 'wp_auth0_login_ulp_redirect' );
+
+function wp_auth0_process_logout() {
+	$users_repo    = new WP_Auth0_UsersRepo( WP_Auth0_Options::Instance() );
+	$login_manager = new WP_Auth0_LoginManager( $users_repo, WP_Auth0_Options::Instance() );
+	$login_manager->logout();
+}
+add_action( 'wp_logout', 'wp_auth0_process_logout' );
 
 function wp_auth0_ajax_delete_cache_transient() {
 	check_ajax_referer( 'auth0_delete_cache_transient' );

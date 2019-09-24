@@ -37,7 +37,7 @@ class TestLoginManagerLogout extends WP_Auth0_Test_Case {
 	public function testThatNothingHappensIfNotReady() {
 		$this->startRedirectHalting();
 
-		$this->assertNull( $this->login->logout() );
+		$this->assertNull( wp_auth0_process_logout() );
 	}
 
 	/**
@@ -49,7 +49,7 @@ class TestLoginManagerLogout extends WP_Auth0_Test_Case {
 		self::$opts->set( 'singlelogout', 0 );
 		self::$opts->set( 'auto_login', 0 );
 
-		$this->assertNull( $this->login->logout() );
+		$this->assertNull( wp_auth0_process_logout() );
 	}
 
 	/**
@@ -64,7 +64,7 @@ class TestLoginManagerLogout extends WP_Auth0_Test_Case {
 
 		$redirect_data_slo = [];
 		try {
-			$this->login->logout();
+			wp_auth0_process_logout();
 		} catch ( Exception $e ) {
 			$redirect_data_slo = unserialize( $e->getMessage() );
 		}
@@ -94,7 +94,7 @@ class TestLoginManagerLogout extends WP_Auth0_Test_Case {
 
 		$redirect_data = [];
 		try {
-			$this->login->logout();
+			wp_auth0_process_logout();
 		} catch ( Exception $e ) {
 			$redirect_data = unserialize( $e->getMessage() );
 		}

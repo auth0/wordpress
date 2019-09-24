@@ -22,24 +22,6 @@ class WP_Auth0_LoginManager {
 	protected $a0_options;
 
 	/**
-	 * Should the new user have an administrator role?
-	 *
-	 * @deprecated - 3.8.0
-	 *
-	 * @var bool|null
-	 */
-	protected $admin_role;
-
-	/**
-	 * Ignore verified email requirement in Settings > Advanced.
-	 *
-	 * @deprecated - 3.8.0
-	 *
-	 * @var bool
-	 */
-	protected $ignore_unverified_email;
-
-	/**
 	 * User strategy to use.
 	 *
 	 * @var WP_Auth0_UsersRepo
@@ -51,49 +33,10 @@ class WP_Auth0_LoginManager {
 	 *
 	 * @param WP_Auth0_UsersRepo    $users_repo - see member variable doc comment.
 	 * @param WP_Auth0_Options|null $a0_options - see member variable doc comment.
-	 * @param null|bool             $admin_role - @deprecated - 3.8.0.
-	 * @param bool                  $ignore_unverified_email - @deprecated - 3.8.0.
 	 */
-	public function __construct(
-		WP_Auth0_UsersRepo $users_repo,
-		$a0_options = null,
-		$admin_role = null,
-		$ignore_unverified_email = false
-	) {
+	public function __construct( WP_Auth0_UsersRepo $users_repo, WP_Auth0_Options $a0_options ) {
 		$this->users_repo = $users_repo;
-
-		if ( $a0_options instanceof WP_Auth0_Options ) {
-			$this->a0_options = $a0_options;
-		} else {
-			$this->a0_options = WP_Auth0_Options::Instance();
-		}
-
-		$this->admin_role              = $admin_role;
-		$this->ignore_unverified_email = $ignore_unverified_email;
-
-		if ( func_num_args() > 2 ) {
-			// phpcs:ignore
-			@trigger_error(
-				sprintf( __( '$admin_role and $ignore_unverified_email are deprecated.', 'wp-auth0' ), __METHOD__ ),
-				E_USER_DEPRECATED
-			);
-		}
-	}
-
-	/**
-	 * Attach methods to hooks.
-	 * See method comments for functionality.
-	 *
-	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
-	 *
-	 * @see WP_Auth0::init()
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function init() {
-		add_action( 'login_init', [ $this, 'login_auto' ] );
-		add_action( 'template_redirect', [ $this, 'init_auth0' ], 1 );
-		add_action( 'wp_logout', [ $this, 'logout' ] );
+		$this->a0_options = $a0_options;
 	}
 
 	/**
@@ -332,8 +275,6 @@ class WP_Auth0_LoginManager {
 		if (
 			// Admin settings enforce verified email.
 			$this->a0_options->get( 'requires_verified_email' ) &&
-			// Email verification is not ignored (set at class initialization).
-			! $this->ignore_unverified_email &&
 			// Strategy for the user is not skipped.
 			! $this->a0_options->strategy_skips_verified_email( $strategy )
 		) {
@@ -402,13 +343,7 @@ class WP_Auth0_LoginManager {
 			try {
 
 				$creator = new WP_Auth0_UsersRepo( $this->a0_options );
-				$user_id = $creator->create(
-					$userinfo,
-					$id_token,
-					$access_token,
-					$this->admin_role,
-					$this->ignore_unverified_email
-				);
+				$user_id = $creator->create( $userinfo, $id_token, $access_token );
 				$user    = get_user_by( 'id', $user_id );
 				$this->do_login( $user, $userinfo, true, $id_token, $access_token, $refresh_token );
 			} catch ( WP_Auth0_CouldNotCreateUserException $e ) {
@@ -678,97 +613,5 @@ class WP_Auth0_LoginManager {
 			$this->a0_options->get( 'client_id' ),
 			rawurlencode( $return_to )
 		);
-	}
-
-	/*
-	 *
-	 * DEPRECATED
-	 *
-	 */
-
-	/**
-	 * End the PHP session.
-	 *
-	 * @deprecated - 3.8.0, not used and no replacement provided.
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	public function end_session() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-
-		if ( session_id() ) {
-			session_destroy();
-		}
-	}
-
-	/**
-	 * Login using oauth/ro endpoint
-	 *
-	 * @deprecated - 3.6.0, not used and no replacement provided.
-	 *
-	 * @param string $username - Username from the login form.
-	 * @param string $password - Password from the login form.
-	 * @param string $connection - Database connection to use.
-	 *
-	 * @return bool
-	 *
-	 * @throws WP_Auth0_LoginFlowValidationException - OAuth login flow errors.
-	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
-	 *
-	 * @link https://auth0.com/docs/api-auth/intro#other-authentication-api-endpoints
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	public function login_with_credentials( $username, $password, $connection = 'Username-Password-Authentication' ) {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		$domain    = $this->a0_options->get( 'domain' );
-		$client_id = $this->a0_options->get( 'client_id' );
-		$secret    = $this->a0_options->get_client_secret_as_key();
-		$response  = WP_Auth0_Api_Client::ro(
-			$domain,
-			$client_id,
-			$username,
-			$password,
-			$connection,
-			'openid name email nickname email_verified identities'
-		);
-		try {
-			// Decode the returned ID token.
-			$decoded_token = JWT::decode(
-				$response->id_token,
-				$secret,
-				[ $this->a0_options->get_client_signing_algorithm() ]
-			);
-			// Validate that this JWT was made for us.
-			if ( $this->a0_options->get( 'client_id' ) !== $decoded_token->aud ) {
-				throw new WP_Auth0_LoginFlowValidationException( 'This token is not intended for us.' );
-			}
-			$decoded_token->user_id = $decoded_token->sub;
-			if ( $this->login_user( $decoded_token, $response->id_token, $response->access_token ) ) {
-				return false;
-			}
-		} catch ( UnexpectedValueException $e ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
-		}
-		return false;
-	}
-
-	/**
-	 * Deprecated to improve the functionality and move to a new class
-	 *
-	 * @deprecated - 3.5.0, use WP_Auth0_Email_Verification::render_die().
-	 *
-	 * @param object $userinfo - Auth0 profile.
-	 * @param string $id_token - ID token.
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	// phpcs:ignore
-	private function dieWithVerifyEmail( $userinfo, $id_token = '' ) {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		WP_Auth0_Email_Verification::render_die( $userinfo );
 	}
 }

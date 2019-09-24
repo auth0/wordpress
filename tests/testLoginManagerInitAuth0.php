@@ -41,17 +41,17 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 	 */
 	public function testThatNothingHappensIfNotReady() {
 		$this->startWpDieHalting();
-		$this->assertFalse( $this->login->init_auth0() );
+		$this->assertFalse( wp_auth0_process_auth_callback() );
 		$_REQUEST['auth0'] = 1;
-		$this->assertFalse( $this->login->init_auth0() );
+		$this->assertFalse( wp_auth0_process_auth_callback() );
 		self::auth0Ready( true );
 		unset( $_REQUEST['auth0'] );
-		$this->assertFalse( $this->login->init_auth0() );
+		$this->assertFalse( wp_auth0_process_auth_callback() );
 
 		$output = '';
 		try {
 			$_REQUEST['auth0'] = 1;
-			$this->login->init_auth0();
+			wp_auth0_process_auth_callback();
 		} catch ( Exception $e ) {
 			$output = $e->getMessage();
 		}
@@ -74,7 +74,7 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 
 		$output = '';
 		try {
-			$this->login->init_auth0();
+			wp_auth0_process_auth_callback();
 		} catch ( Exception $e ) {
 			$output = $e->getMessage();
 		}
@@ -99,7 +99,7 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 		$this->setGlobalUser();
 
 		try {
-			$this->login->init_auth0();
+			wp_auth0_process_auth_callback();
 		} catch ( Exception $e ) {
 			// Just need to call the above ...
 		}
@@ -120,7 +120,7 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 
 		$output = '';
 		try {
-			$this->login->init_auth0();
+			wp_auth0_process_auth_callback();
 		} catch ( Exception $e ) {
 			$output = $e->getMessage();
 		}
@@ -141,7 +141,7 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 
 		$caught_redirect = [];
 		try {
-			$this->login->init_auth0();
+			wp_auth0_process_auth_callback();
 		} catch ( Exception $e ) {
 			$caught_redirect = unserialize( $e->getMessage() );
 		}
@@ -162,7 +162,7 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 
 		$output = '';
 		try {
-			$this->login->init_auth0();
+			wp_auth0_process_auth_callback();
 		} catch ( Exception $e ) {
 			$output = $e->getMessage();
 		}
