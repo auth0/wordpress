@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Login by Auth0\n"
-"POT-Creation-Date: 2019-09-24 07:38-0700\n"
+"POT-Creation-Date: 2019-09-24 08:31-0700\n"
 "PO-Revision-Date: 2018-07-25 08:37-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -21,17 +21,17 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: WP_Auth0.php:310 lib/WP_Auth0_Settings_Section.php:53
+#: WP_Auth0.php:307 lib/WP_Auth0_Settings_Section.php:53
 #: lib/WP_Auth0_Settings_Section.php:55
 msgid "Settings"
 msgstr ""
 
-#: WP_Auth0.php:320 lib/WP_Auth0_Settings_Section.php:52
+#: WP_Auth0.php:317 lib/WP_Auth0_Settings_Section.php:52
 #: lib/WP_Auth0_Settings_Section.php:59 lib/admin/WP_Auth0_Admin.php:148
 msgid "Setup Wizard"
 msgstr ""
 
-#: WP_Auth0.php:488 WP_Auth0.php:510 WP_Auth0.php:552 lib/WP_Auth0_Api_Client.php:76
+#: WP_Auth0.php:485 WP_Auth0.php:507 WP_Auth0.php:549 lib/WP_Auth0_Api_Client.php:76
 #: lib/WP_Auth0_Api_Client.php:156 lib/WP_Auth0_Api_Client.php:202
 #: lib/WP_Auth0_Api_Client.php:284 lib/WP_Auth0_Api_Client.php:391
 #: lib/WP_Auth0_Api_Client.php:431 lib/WP_Auth0_Api_Client.php:477
@@ -55,17 +55,16 @@ msgstr ""
 #: lib/WP_Auth0_Lock10_Options.php:258 lib/WP_Auth0_Lock10_Options.php:271
 #: lib/WP_Auth0_Lock10_Options.php:284 lib/WP_Auth0_Lock10_Options.php:297
 #: lib/WP_Auth0_Lock10_Options.php:310 lib/WP_Auth0_Lock10_Options.php:327
-#: lib/WP_Auth0_Lock10_Options.php:346 lib/WP_Auth0_LoginManager.php:698
-#: lib/WP_Auth0_LoginManager.php:725 lib/WP_Auth0_LoginManager.php:771
-#: lib/WP_Auth0_Metrics.php:17 lib/WP_Auth0_Options.php:276
-#: lib/WP_Auth0_Options.php:291 lib/WP_Auth0_Options.php:310
-#: lib/WP_Auth0_Referer_Check.php:22 lib/admin/WP_Auth0_Admin.php:87
-#: lib/admin/WP_Auth0_Admin_Generic.php:120 lib/admin/WP_Auth0_Admin_Generic.php:317
+#: lib/WP_Auth0_Lock10_Options.php:346 lib/WP_Auth0_Metrics.php:17
+#: lib/WP_Auth0_Options.php:276 lib/WP_Auth0_Options.php:291
+#: lib/WP_Auth0_Options.php:310 lib/WP_Auth0_Referer_Check.php:22
+#: lib/admin/WP_Auth0_Admin.php:87 lib/admin/WP_Auth0_Admin_Generic.php:120
+#: lib/admin/WP_Auth0_Admin_Generic.php:317
 #, php-format
 msgid "Method %s is deprecated."
 msgstr ""
 
-#: WP_Auth0.php:578 lib/WP_Auth0_ErrorLog.php:151
+#: WP_Auth0.php:596 lib/WP_Auth0_ErrorLog.php:151
 msgid "Not authorized."
 msgstr ""
 
@@ -250,7 +249,7 @@ msgstr ""
 msgid "Resend verification email."
 msgstr ""
 
-#: lib/WP_Auth0_Email_Verification.php:65 lib/WP_Auth0_LoginManager.php:634
+#: lib/WP_Auth0_Email_Verification.php:65 lib/WP_Auth0_LoginManager.php:569
 msgid "← Login"
 msgstr ""
 
@@ -340,51 +339,47 @@ msgstr ""
 msgid "Class %s is deprecated."
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:77
-msgid "$admin_role and $ignore_unverified_email are deprecated."
-msgstr ""
-
-#: lib/WP_Auth0_LoginManager.php:180
+#: lib/WP_Auth0_LoginManager.php:123
 msgid "Invalid state"
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:199
+#: lib/WP_Auth0_LoginManager.php:142
 msgid "Invalid ID token"
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:224
+#: lib/WP_Auth0_LoginManager.php:167
 msgid "Error exchanging code"
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:285
+#: lib/WP_Auth0_LoginManager.php:228
 msgid "No ID token found"
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:344
+#: lib/WP_Auth0_LoginManager.php:285
 msgid ""
 "This account does not have an email associated, as required by your site "
 "administrator."
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:420
+#: lib/WP_Auth0_LoginManager.php:355
 msgid ""
 "Could not create user. The registration process is not available. Please contact "
 "your site’s administrator."
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:627
+#: lib/WP_Auth0_LoginManager.php:562
 msgid "There was a problem with your log in"
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:630
+#: lib/WP_Auth0_LoginManager.php:565
 msgid "Please see the site administrator"
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:631
+#: lib/WP_Auth0_LoginManager.php:566
 msgid "error code"
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:632
+#: lib/WP_Auth0_LoginManager.php:567
 msgid "unknown"
 msgstr ""
 
