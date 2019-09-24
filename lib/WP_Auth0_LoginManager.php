@@ -484,8 +484,8 @@ class WP_Auth0_LoginManager {
 			return;
 		}
 
-		// If SSO/SLO is in use, redirect to Auth0 to logout there as well.
-		if ( $this->a0_options->get( 'sso' ) || $this->a0_options->get( 'singlelogout' ) ) {
+		// If SLO is in use, redirect to Auth0 to logout there as well.
+		if ( $this->a0_options->get( 'singlelogout' ) ) {
 			$return_to    = apply_filters( 'auth0_slo_return_to', home_url() );
 			$redirect_url = $this->auth0_logout_url( $return_to );
 			$redirect_url = apply_filters( 'auth0_logout_url', $redirect_url );
@@ -497,53 +497,6 @@ class WP_Auth0_LoginManager {
 		if ( $this->a0_options->get( 'auto_login' ) ) {
 			wp_redirect( home_url() );
 			exit;
-		}
-	}
-
-	/**
-	 * Outputs JS on wp-login.php to log a user in if an Auth0 session is found.
-	 * Hooked to `login_message` filter.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @deprecated - 3.10.0, moved to assets/js/lock-init.js
-	 *
-	 * @param string $previous_html - HTML passed into the login_message filter.
-	 *
-	 * @return mixed
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function auth0_sso_footer( $previous_html ) {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-
-		// No need to checkSession if already logged in.
-		// URL parameter `skip_sso` is set to skip checkSession.
-		if ( is_user_logged_in() || isset( $_GET['skip_sso'] ) || ! $this->a0_options->get( 'sso' ) ) {
-			return $previous_html;
-		}
-
-		wp_enqueue_script( 'wpa0_auth0js', apply_filters( 'auth0_sso_auth0js_url', WPA0_AUTH0_JS_CDN_URL ) );
-		ob_start();
-		include WPA0_PLUGIN_DIR . 'templates/auth0-sso-handler-lock10.php';
-		return $previous_html . ob_get_clean();
-	}
-
-	/**
-	 * Outputs JS on all pages to log a user out if no Auth0 session is found.
-	 * Hooked to `wp_footer` action.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @deprecated - 3.10.0, removed.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function auth0_singlelogout_footer() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		$tpl_path = WPA0_PLUGIN_DIR . 'templates/auth0-singlelogout-handler.php';
-		if ( is_user_logged_in() && $this->a0_options->get( 'singlelogout' ) && file_exists( $tpl_path ) ) {
-			include $tpl_path;
 		}
 	}
 
@@ -677,7 +630,7 @@ class WP_Auth0_LoginManager {
 				: __( 'Please see the site administrator', 'wp-auth0' ),
 			__( 'error code', 'wp-auth0' ),
 			$code ? sanitize_text_field( $code ) : __( 'unknown', 'wp-auth0' ),
-			$this->auth0_logout_url( add_query_arg( 'skip_sso', '', wp_login_url() ) ),
+			$this->auth0_logout_url( wp_login_url() ),
 			__( '← Login', 'wp-auth0' )
 		);
 

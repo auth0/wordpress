@@ -26,20 +26,6 @@ class WP_Auth0_Lock10_Options {
 	public function get_implicit_callback_url() {
 		return $this->wp_options->get_wp_auth0_url( $this->get_callback_protocol(), true );
 	}
-
-	/**
-	 * @deprecated - 3.10.0, not used.
-	 *
-	 * @return bool
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function get_sso() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		return $this->_get_boolean( $this->wp_options->get( 'sso' ) );
-	}
-
 	/**
 	 * @deprecated - 3.10.0, not used.
 	 *
@@ -121,9 +107,6 @@ class WP_Auth0_Lock10_Options {
 		if ( $this->_is_valid( $settings, 'username_style' ) ) {
 			$options_obj['usernameStyle'] = $settings['username_style'];
 		}
-		if ( $this->_is_valid( $settings, 'sso' ) ) {
-			$options_obj['auth']['sso'] = $this->_get_boolean( $settings['sso'] );
-		}
 
 		if ( $this->_is_valid( $settings, 'icon_url' ) || $this->_is_valid( $settings, 'primary_color' ) ) {
 			$options_obj['theme'] = [];
@@ -143,19 +126,6 @@ class WP_Auth0_Lock10_Options {
 		}
 
 		return $options_obj;
-	}
-
-	public function get_sso_options() {
-		$options['scope']        = WP_Auth0_LoginManager::get_userinfo_scope( 'sso' );
-		$options['responseType'] = 'id_token';
-		$options['redirectUri']  = $this->get_implicit_callback_url();
-		$options['nonce']        = WP_Auth0_Nonce_Handler::get_instance()->get_unique();
-		unset( $options['authParams'] );
-
-		$redirect_to      = ! empty( $_SERVER['REQUEST_URI'] ) ? home_url( $_SERVER['REQUEST_URI'] ) : null;
-		$options['state'] = $this->get_state_obj( $redirect_to );
-
-		return $options;
 	}
 
 	public function get_lock_options() {

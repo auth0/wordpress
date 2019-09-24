@@ -7,14 +7,6 @@ function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = [] ) {
 	$options = WP_Auth0_Options::Instance();
 	if ( ! $canShowLegacyLogin || ! wp_auth0_can_show_wp_login_form() ) {
 		$lock_options = new WP_Auth0_Lock10_Options( $specialSettings );
-		$use_sso      = ! isset( $_GET['skip_sso'] ) && $options->get( 'sso', false );
-
-		// If we're on wp-login.php and SSO is enabled, load Auth0.js.
-		$check_sso = $GLOBALS['pagenow'] === 'wp-login.php' && $use_sso;
-		if ( $check_sso ) {
-			$auth0_js_url = apply_filters( 'auth0_sso_auth0js_url', WPA0_AUTH0_JS_CDN_URL );
-			wp_enqueue_script( 'wpa0_auth0js', $auth0_js_url, false, null, true );
-		}
 
 		wp_enqueue_script( 'wpa0_lock', $options->get_lock_url(), [ 'jquery' ], false, true );
 		wp_enqueue_script( 'js-cookie', WPA0_PLUGIN_LIB_URL . 'js.cookie.min.js', false, '2.2.0', true );
@@ -32,7 +24,6 @@ function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = [] ) {
 				'usePasswordless' => $options->get( 'passwordless_enabled', false ),
 				'loginFormId'     => WPA0_AUTH0_LOGIN_FORM_ID,
 				'showAsModal'     => ! empty( $specialSettings['show_as_modal'] ),
-				'ssoOpts'         => $check_sso ? $lock_options->get_sso_options() : null,
 				'i18n'            => [
 					'notReadyText'       => __( 'Auth0 is not configured', 'wp-auth0' ),
 					'cannotFindNodeText' => __( 'Auth0 cannot find node with id ', 'wp-auth0' ),

@@ -36,8 +36,6 @@ class TestOptionLockCdn extends WP_Auth0_Test_Case {
 	public function testThatCdnConstantsAreValidValues() {
 		$this->assertEquals( WPA0_LOCK_CDN_URL, filter_var( WPA0_LOCK_CDN_URL, FILTER_VALIDATE_URL ) );
 		$this->assertEquals( 'https://', substr( WPA0_LOCK_CDN_URL, 0, 8 ) );
-		$this->assertEquals( WPA0_AUTH0_JS_CDN_URL, filter_var( WPA0_AUTH0_JS_CDN_URL, FILTER_VALIDATE_URL ) );
-		$this->assertEquals( 'https://', substr( WPA0_AUTH0_JS_CDN_URL, 0, 8 ) );
 	}
 
 	/**

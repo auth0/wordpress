@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Login by Auth0\n"
-"POT-Creation-Date: 2019-09-05 15:50-0700\n"
-"PO-Revision-Date: 2019-09-05 15:50-0700\n"
+"POT-Creation-Date: 2019-09-24 07:39-0700\n"
+"PO-Revision-Date: 2019-09-24 07:39-0700\n"
 "Last-Translator: Josh Cunningham <josh.cunningham@auth0.com>\n"
 "Language-Team: Carlos Longarela https://tabernawp.com/\n"
 "Language: es_ES\n"
@@ -50,28 +50,17 @@ msgstr "Asistente de configuración"
 #: lib/WP_Auth0_EditProfile.php:354 lib/WP_Auth0_EditProfile.php:407
 #: lib/WP_Auth0_EditProfile.php:462 lib/WP_Auth0_EditProfile.php:519
 #: lib/WP_Auth0_Email_Verification.php:115 lib/WP_Auth0_ErrorLog.php:135
-#: lib/WP_Auth0_Export_Users.php:29 lib/WP_Auth0_Lock10_Options.php:39
-#: lib/WP_Auth0_Lock10_Options.php:50 lib/WP_Auth0_Lock10_Options.php:245
-#: lib/WP_Auth0_Lock10_Options.php:262 lib/WP_Auth0_Lock10_Options.php:275
-#: lib/WP_Auth0_Lock10_Options.php:288 lib/WP_Auth0_Lock10_Options.php:301
-#: lib/WP_Auth0_Lock10_Options.php:314 lib/WP_Auth0_Lock10_Options.php:327
-#: lib/WP_Auth0_Lock10_Options.php:340 lib/WP_Auth0_Lock10_Options.php:357
-#: lib/WP_Auth0_Lock10_Options.php:376 lib/WP_Auth0_LoginManager.php:518
-#: lib/WP_Auth0_LoginManager.php:543 lib/WP_Auth0_LoginManager.php:745
-#: lib/WP_Auth0_LoginManager.php:772 lib/WP_Auth0_LoginManager.php:818
-#: lib/WP_Auth0_Metrics.php:17 lib/WP_Auth0_Options.php:277
-#: lib/WP_Auth0_Options.php:292 lib/WP_Auth0_Options.php:311
-#: lib/WP_Auth0_Referer_Check.php:22 lib/admin/WP_Auth0_Admin.php:87
-#: lib/admin/WP_Auth0_Admin_Features.php:121
-#: lib/admin/WP_Auth0_Admin_Features.php:318
-#: lib/admin/WP_Auth0_Admin_Features.php:405
-#: lib/admin/WP_Auth0_Admin_Features.php:453
-#: lib/admin/WP_Auth0_Admin_Features.php:498
-#: lib/admin/WP_Auth0_Admin_Features.php:512
-#: lib/admin/WP_Auth0_Admin_Features.php:537
-#: lib/admin/WP_Auth0_Admin_Features.php:550
-#: lib/admin/WP_Auth0_Admin_Features.php:563
-#: lib/admin/WP_Auth0_Admin_Generic.php:120
+#: lib/WP_Auth0_Export_Users.php:29 lib/WP_Auth0_Lock10_Options.php:36
+#: lib/WP_Auth0_Lock10_Options.php:215 lib/WP_Auth0_Lock10_Options.php:232
+#: lib/WP_Auth0_Lock10_Options.php:245 lib/WP_Auth0_Lock10_Options.php:258
+#: lib/WP_Auth0_Lock10_Options.php:271 lib/WP_Auth0_Lock10_Options.php:284
+#: lib/WP_Auth0_Lock10_Options.php:297 lib/WP_Auth0_Lock10_Options.php:310
+#: lib/WP_Auth0_Lock10_Options.php:327 lib/WP_Auth0_Lock10_Options.php:346
+#: lib/WP_Auth0_LoginManager.php:698 lib/WP_Auth0_LoginManager.php:725
+#: lib/WP_Auth0_LoginManager.php:771 lib/WP_Auth0_Metrics.php:17
+#: lib/WP_Auth0_Options.php:276 lib/WP_Auth0_Options.php:291
+#: lib/WP_Auth0_Options.php:310 lib/WP_Auth0_Referer_Check.php:22
+#: lib/admin/WP_Auth0_Admin.php:87 lib/admin/WP_Auth0_Admin_Generic.php:120
 #: lib/admin/WP_Auth0_Admin_Generic.php:317
 #, php-format
 msgid "Method %s is deprecated."
@@ -296,7 +285,7 @@ msgstr "Este sitio requiere una dirección de correo electrónico verificada."
 msgid "Resend verification email."
 msgstr "Reenviar verificación de correo electrónico."
 
-#: lib/WP_Auth0_Email_Verification.php:65 lib/WP_Auth0_LoginManager.php:681
+#: lib/WP_Auth0_Email_Verification.php:65 lib/WP_Auth0_LoginManager.php:634
 msgid "← Login"
 msgstr "← Entrar"
 
@@ -325,7 +314,7 @@ msgid "Shows Auth0 login form in your sidebar"
 msgstr "Muestra el formulario de inicio de sesión de Auth0 en tu barra lateral"
 
 #: lib/WP_Auth0_Embed_Widget.php:43 lib/WP_Auth0_WooCommerceOverrides.php:52
-#: templates/login-form.php:41
+#: templates/login-form.php:32
 msgid "Login"
 msgstr "Acceder"
 
@@ -425,19 +414,19 @@ msgstr ""
 "No se pudo crear el usuario. El proceso de registro no está disponible. "
 "Pónte en contacto con el administrador de tu sitio web."
 
-#: lib/WP_Auth0_LoginManager.php:674
+#: lib/WP_Auth0_LoginManager.php:627
 msgid "There was a problem with your log in"
 msgstr "Hubo un problema con el inicio de sesión"
 
-#: lib/WP_Auth0_LoginManager.php:677
+#: lib/WP_Auth0_LoginManager.php:630
 msgid "Please see the site administrator"
 msgstr "Por favor, consulta al administrador del sitio"
 
-#: lib/WP_Auth0_LoginManager.php:678
+#: lib/WP_Auth0_LoginManager.php:631
 msgid "error code"
 msgstr "código de error"
 
-#: lib/WP_Auth0_LoginManager.php:679
+#: lib/WP_Auth0_LoginManager.php:632
 msgid "unknown"
 msgstr "desconocido"
 
@@ -895,19 +884,16 @@ msgstr ""
 "necesita cambiar"
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:155
-#: lib/admin/WP_Auth0_Admin_Features.php:206
 msgid "Turn on Passwordless login (email or SMS) in the Auth0 form. "
 msgstr ""
 "Activa el inicio de sesión Passwordless (utilizando correo electrónico o "
 "SMS) en el formulario Auth0. "
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:156
-#: lib/admin/WP_Auth0_Admin_Features.php:207
 msgid "Passwordless connections are managed in the "
 msgstr "Las conexiones Passwordless se gestionan en el "
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:158
-#: lib/admin/WP_Auth0_Admin_Features.php:209
 msgid ""
 " and at least one must be active and enabled on this Application for this to "
 "work. "
@@ -916,7 +902,6 @@ msgstr ""
 "esto funcione. "
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:159
-#: lib/admin/WP_Auth0_Admin_Features.php:210
 msgid "Username/password login is not enabled when Passwordless is on"
 msgstr ""
 "El inicio de sesión con nombre de usuario/contraseña no está habilitado "
@@ -1220,99 +1205,21 @@ msgid "Single Logout"
 msgstr "Cierre de sesión único"
 
 #: lib/admin/WP_Auth0_Admin_Features.php:53
-msgid "Single Sign On (SSO)"
-msgstr "Inicio de sesión único (SSO)"
-
-#: lib/admin/WP_Auth0_Admin_Features.php:59
-msgid "Multifactor Authentication (MFA)"
-msgstr "Autenticación multifactor (MFA)"
-
-#: lib/admin/WP_Auth0_Admin_Features.php:69
-msgid "FullContact Integration"
-msgstr "Integración FullContact"
-
-#: lib/admin/WP_Auth0_Admin_Features.php:79
-msgid "Store Geolocation"
-msgstr "Geolocalización de la tienda"
-
-#: lib/admin/WP_Auth0_Admin_Features.php:89
-msgid "Store Zipcode Income"
-msgstr "Almacena los Zipcode de entrada"
-
-#: lib/admin/WP_Auth0_Admin_Features.php:97
 msgid "Override WordPress Avatars"
 msgstr "Sobrescribir avatares de WordPress"
 
-#: lib/admin/WP_Auth0_Admin_Features.php:138
-msgid ""
-"Password security policy for the database connection used by this "
-"application. "
-msgstr ""
-"Política de seguridad de contraseñas para la conexión de base de datos "
-"utilizada por esta aplicación. "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:139
-msgid ""
-"Changing the policy here will change it for all other applications using "
-"this database. "
-msgstr ""
-"Cambiar la política aquí la cambiará para todas las demás aplicaciones que "
-"utilicen esta base de datos. "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:140
-msgid "For information on policy levels, see our "
-msgstr ""
-"Para obtener información sobre los niveles de políticas, consulta nuestra "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:143
-msgid "help page on password strength"
-msgstr "página de ayuda sobre la seguridad de la contraseña"
-
-#: lib/admin/WP_Auth0_Admin_Features.php:163
-msgid ""
-"This setting is deprecated and will be removed in the next major release. "
-msgstr ""
-"Esta configuración está deprecada y va a ser removida en el próximo release "
-"mayor. "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:164
-msgid "To enable SSO, please use the Universal Login Page setting above"
-msgstr ""
-"Para habilitar SSO, por favor utilizar la opción de Universal Login Page que "
-"está debajo"
-
-#: lib/admin/WP_Auth0_Admin_Features.php:167
-msgid "Turning this on will attempt SSO on wp-login.php. "
-msgstr ""
-"Al activar esta opción, se intentará iniciar sesión automáticamente cuando "
-"un usuario visite wp-login.php. "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:168
-msgid "This setting will not affect how shortcodes and widgets work. "
-msgstr ""
-"Esta configuración no afectará al funcionamiento de los shortcodes y los "
-"widgets. "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:169
-msgid "For more information, see our "
-msgstr "Para obtener más información, consulta nuestra "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:170
-msgid "help page on SSO"
-msgstr "página de ayuda sobre SSO"
-
-#: lib/admin/WP_Auth0_Admin_Features.php:186
+#: lib/admin/WP_Auth0_Admin_Features.php:75
 msgid ""
 "Turning this on will log users out of Auth0 when they log out of WordPress."
 msgstr ""
 "Habilitar esto hará que los usuarios cierren su sesión de Auth0 cuando "
 "cierren su sesión de WordPress."
 
-#: lib/admin/WP_Auth0_Admin_Features.php:226
+#: lib/admin/WP_Auth0_Admin_Features.php:91
 msgid "Use the Universal Login Page (ULP) for authentication and SSO. "
 msgstr "Utilizar la Universal Login Page (ULP) para la autenticación y SSO. "
 
-#: lib/admin/WP_Auth0_Admin_Features.php:227
+#: lib/admin/WP_Auth0_Admin_Features.php:92
 msgid ""
 "When turned on, <code>wp-login.php</code> will redirect to the hosted login "
 "page. "
@@ -1320,18 +1227,18 @@ msgstr ""
 "Cuando se activa, <code>wp-login.php</code> redireccionará a Hosted Login "
 "Page "
 
-#: lib/admin/WP_Auth0_Admin_Features.php:228
+#: lib/admin/WP_Auth0_Admin_Features.php:93
 msgid ""
 "When turned off, <code>wp-login.php</code> will show an embedded login form. "
 msgstr ""
 "Cuando se desactiva, <code>wp-login.php</code> mostrará un formulario de "
 "inicio de sesión embebido. "
 
-#: lib/admin/WP_Auth0_Admin_Features.php:229
+#: lib/admin/WP_Auth0_Admin_Features.php:94
 msgid "More on ULP vs embedded here"
 msgstr "Más sobre ULP vs embebido aquí"
 
-#: lib/admin/WP_Auth0_Admin_Features.php:245
+#: lib/admin/WP_Auth0_Admin_Features.php:110
 msgid ""
 "Enter a name here to automatically use a single, specific connection to "
 "login . "
@@ -1340,7 +1247,7 @@ msgstr ""
 "particular para iniciar sesión. "
 
 #. translators: Placeholder is an HTML link to the Auth0 dashboard.
-#: lib/admin/WP_Auth0_Admin_Features.php:248
+#: lib/admin/WP_Auth0_Admin_Features.php:113
 #, php-format
 msgid ""
 "Find the method name to use under Connections > [Connection Type] in your "
@@ -1349,7 +1256,7 @@ msgstr ""
 "Encuentra el nombre del método a usar bajo Connections > [Tipo de conexión] "
 "en tus %s. "
 
-#: lib/admin/WP_Auth0_Admin_Features.php:251
+#: lib/admin/WP_Auth0_Admin_Features.php:116
 msgid ""
 "Click the expand icon and use the value in the \"Name\" field (like \"google-"
 "oauth2\")"
@@ -1357,97 +1264,9 @@ msgstr ""
 "Haz clic en el icono de expandir y utiliza el valor del campo \"Name\" (como "
 "\"google-oauth2\")."
 
-#: lib/admin/WP_Auth0_Admin_Features.php:266
-msgid ""
-"MFA is a method to verify identity by checking a second factor in addition "
-"to the password. "
-msgstr ""
-"MFA es un método para verificar la identidad comprobando un segundo factor "
-"además de la contraseña. "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:267
-msgid ""
-"This provides an additional layer of security, decreasing the likelihood of "
-"unauthorized access. "
-msgstr ""
-"Esto provee una capa adicional de seguridad, disminuyendo la posibilidad de "
-"acceso no autorizado. "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:268
-msgid "To configure MFA for this site, please see this "
-msgstr "Para configurar MFA para este sitio, por favor leer esto "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:269
-msgid "help page on MFA"
-msgstr "página de ayuda sobre MFA"
-
-#: lib/admin/WP_Auth0_Admin_Features.php:275
-#: lib/admin/WP_Auth0_Admin_Features.php:297
-#: lib/admin/WP_Auth0_Admin_Features.php:337
-#: lib/admin/WP_Auth0_Admin_Features.php:358
-msgid "This feature may currently be active. "
-msgstr "This feature may currently be active. "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:276
-msgid "Manage it with the \"Multifactor-Guardian-Do-Not-Rename\" Rule in the "
-msgstr "Configurala con la regla “Multifactor-Guardian-Do-Not-Rename” en el "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:298
-msgid ""
-"Manage it with the \"Enrich-profile-with-FullContact-Do-Not-Rename\" Rule in "
-"the "
-msgstr ""
-"Configurala con la regla “Enrich-profile-with-FullContact-Do-Not-Rename” en "
-"el "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:338
-msgid "Manage it with the \"Store-Geo-Location-Do-Not-Rename\" Rule in the "
-msgstr "Configurala con la regla “Store-Geo-Location-Do-Not-Rename” en el "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:359
-msgid ""
-"Manage it with the \"Enrich-profile-with-Zipcode-Income-Do-Not-Rename\" Rule "
-"in the "
-msgstr ""
-"Configurala con la regla “Enrich-profile-with-Zipcode-Income-Do-Not-Rename” "
-"en el "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:376
+#: lib/admin/WP_Auth0_Admin_Features.php:132
 msgid "Overrides the WordPress avatar with the Auth0 profile avatar"
 msgstr "Sobreescribe el avatar de WordPress con el avatar de perfil Auth0"
-
-#: lib/admin/WP_Auth0_Admin_Features.php:432
-msgid ""
-"The SSO setting for your Application could not be updated automatically. "
-msgstr ""
-"La configuración de SSO para tu Aplicación no se ha podido actualizar "
-"automáticamente. "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:433
-msgid ""
-"Check that \"Use Auth0 instead of the IdP to do Single Sign On\" is turned "
-"on in the "
-msgstr ""
-"Comprueba que \"Use Auth0 instead of the IdP to do Single Sign On\" está "
-"activado en el "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:463
-msgid "No database connections found for this application. "
-msgstr ""
-"No se han encontrado conexiones de base de datos para esta aplicación. "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:464
-#: lib/admin/WP_Auth0_Admin_Features.php:481
-msgid "See all database connections"
-msgstr "Ver todas las conexiones de la base de datos"
-
-#: lib/admin/WP_Auth0_Admin_Features.php:479
-msgid "There was a problem updating the password policy. "
-msgstr "Se ha producido un problema al actualizar la política de contraseñas. "
-
-#: lib/admin/WP_Auth0_Admin_Features.php:480
-msgid "Please manually review and update the policy. "
-msgstr "Por favor, revisa y actualiza la política manualmente. "
 
 #: lib/admin/WP_Auth0_Admin_Generic.php:276
 msgid "Value is set in the constant "
@@ -2147,11 +1966,11 @@ msgstr "Configuración del inicio de sesión único (SSO) social"
 msgid "Migrate your administrator account"
 msgstr "Migrar tu cuenta de administrador"
 
-#: templates/login-form.php:37
+#: templates/login-form.php:28
 msgid "Auth0 is not configured"
 msgstr "Auth0 no está configurado"
 
-#: templates/login-form.php:38
+#: templates/login-form.php:29
 msgid "Auth0 cannot find node with id "
 msgstr "Auth0 no puede encontrar un nodo con id "
 
@@ -2301,3 +2120,138 @@ msgstr ""
 #. Author URI of the plugin/theme
 msgid "https://auth0.com"
 msgstr ""
+
+#~ msgid "Single Sign On (SSO)"
+#~ msgstr "Inicio de sesión único (SSO)"
+
+#~ msgid "Multifactor Authentication (MFA)"
+#~ msgstr "Autenticación multifactor (MFA)"
+
+#~ msgid "FullContact Integration"
+#~ msgstr "Integración FullContact"
+
+#~ msgid "Store Geolocation"
+#~ msgstr "Geolocalización de la tienda"
+
+#~ msgid "Store Zipcode Income"
+#~ msgstr "Almacena los Zipcode de entrada"
+
+#~ msgid ""
+#~ "Password security policy for the database connection used by this "
+#~ "application. "
+#~ msgstr ""
+#~ "Política de seguridad de contraseñas para la conexión de base de datos "
+#~ "utilizada por esta aplicación. "
+
+#~ msgid ""
+#~ "Changing the policy here will change it for all other applications using "
+#~ "this database. "
+#~ msgstr ""
+#~ "Cambiar la política aquí la cambiará para todas las demás aplicaciones "
+#~ "que utilicen esta base de datos. "
+
+#~ msgid "For information on policy levels, see our "
+#~ msgstr ""
+#~ "Para obtener información sobre los niveles de políticas, consulta nuestra "
+
+#~ msgid "help page on password strength"
+#~ msgstr "página de ayuda sobre la seguridad de la contraseña"
+
+#~ msgid ""
+#~ "This setting is deprecated and will be removed in the next major release. "
+#~ msgstr ""
+#~ "Esta configuración está deprecada y va a ser removida en el próximo "
+#~ "release mayor. "
+
+#~ msgid "To enable SSO, please use the Universal Login Page setting above"
+#~ msgstr ""
+#~ "Para habilitar SSO, por favor utilizar la opción de Universal Login Page "
+#~ "que está debajo"
+
+#~ msgid "Turning this on will attempt SSO on wp-login.php. "
+#~ msgstr ""
+#~ "Al activar esta opción, se intentará iniciar sesión automáticamente "
+#~ "cuando un usuario visite wp-login.php. "
+
+#~ msgid "This setting will not affect how shortcodes and widgets work. "
+#~ msgstr ""
+#~ "Esta configuración no afectará al funcionamiento de los shortcodes y los "
+#~ "widgets. "
+
+#~ msgid "For more information, see our "
+#~ msgstr "Para obtener más información, consulta nuestra "
+
+#~ msgid "help page on SSO"
+#~ msgstr "página de ayuda sobre SSO"
+
+#~ msgid ""
+#~ "MFA is a method to verify identity by checking a second factor in "
+#~ "addition to the password. "
+#~ msgstr ""
+#~ "MFA es un método para verificar la identidad comprobando un segundo "
+#~ "factor además de la contraseña. "
+
+#~ msgid ""
+#~ "This provides an additional layer of security, decreasing the likelihood "
+#~ "of unauthorized access. "
+#~ msgstr ""
+#~ "Esto provee una capa adicional de seguridad, disminuyendo la posibilidad "
+#~ "de acceso no autorizado. "
+
+#~ msgid "To configure MFA for this site, please see this "
+#~ msgstr "Para configurar MFA para este sitio, por favor leer esto "
+
+#~ msgid "help page on MFA"
+#~ msgstr "página de ayuda sobre MFA"
+
+#~ msgid "This feature may currently be active. "
+#~ msgstr "This feature may currently be active. "
+
+#~ msgid ""
+#~ "Manage it with the \"Multifactor-Guardian-Do-Not-Rename\" Rule in the "
+#~ msgstr ""
+#~ "Configurala con la regla “Multifactor-Guardian-Do-Not-Rename” en el "
+
+#~ msgid ""
+#~ "Manage it with the \"Enrich-profile-with-FullContact-Do-Not-Rename\" Rule "
+#~ "in the "
+#~ msgstr ""
+#~ "Configurala con la regla “Enrich-profile-with-FullContact-Do-Not-Rename” "
+#~ "en el "
+
+#~ msgid "Manage it with the \"Store-Geo-Location-Do-Not-Rename\" Rule in the "
+#~ msgstr "Configurala con la regla “Store-Geo-Location-Do-Not-Rename” en el "
+
+#~ msgid ""
+#~ "Manage it with the \"Enrich-profile-with-Zipcode-Income-Do-Not-Rename\" "
+#~ "Rule in the "
+#~ msgstr ""
+#~ "Configurala con la regla “Enrich-profile-with-Zipcode-Income-Do-Not-"
+#~ "Rename” en el "
+
+#~ msgid ""
+#~ "The SSO setting for your Application could not be updated automatically. "
+#~ msgstr ""
+#~ "La configuración de SSO para tu Aplicación no se ha podido actualizar "
+#~ "automáticamente. "
+
+#~ msgid ""
+#~ "Check that \"Use Auth0 instead of the IdP to do Single Sign On\" is "
+#~ "turned on in the "
+#~ msgstr ""
+#~ "Comprueba que \"Use Auth0 instead of the IdP to do Single Sign On\" está "
+#~ "activado en el "
+
+#~ msgid "No database connections found for this application. "
+#~ msgstr ""
+#~ "No se han encontrado conexiones de base de datos para esta aplicación. "
+
+#~ msgid "See all database connections"
+#~ msgstr "Ver todas las conexiones de la base de datos"
+
+#~ msgid "There was a problem updating the password policy. "
+#~ msgstr ""
+#~ "Se ha producido un problema al actualizar la política de contraseñas. "
+
+#~ msgid "Please manually review and update the policy. "
+#~ msgstr "Por favor, revisa y actualiza la política manualmente. "
