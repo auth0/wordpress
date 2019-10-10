@@ -187,7 +187,7 @@ msgstr "Log de Erro"
 #: lib/WP_Auth0_DBManager.php:315
 msgid "As a part of this upgrade, your Client Grant Types have been updated, if needed."
 msgstr ""
-"Como parte dessa atualização, seus tipos de Client Grant foram atualizados, se "
+"Como parte dessa atualização, seus tipos de 'Client Grant' foram atualizados, se "
 "necessário."
 
 #: lib/WP_Auth0_EditProfile.php:98
