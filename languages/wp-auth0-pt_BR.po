@@ -1264,7 +1264,7 @@ msgstr "Por favor, crie sua conta da Auth0 primeiro em "
 
 #: lib/profile/WP_Auth0_Profile_Change_Email.php:137
 msgid "Email suppressed - Auth0 email change failed."
-msgstr "E-mail removido - A alteração de e-mail do Auth0 falhou."
+msgstr "E-mail removido - A alteração de e-mail da Auth0 falhou."
 
 #: lib/profile/WP_Auth0_Profile_Change_Password.php:106
 msgid "Password could not be updated."
