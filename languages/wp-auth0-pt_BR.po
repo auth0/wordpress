@@ -201,7 +201,7 @@ msgstr "Excluído"
 
 #: lib/WP_Auth0_EditProfile.php:100
 msgid "Action failed, please see the Auth0 error log for details."
-msgstr "A ação falhou. Consulte o log de erros do Auth0 para obter detalhes."
+msgstr "A ação falhou. Consulte o log de erros da Auth0 para obter detalhes."
 
 #: lib/WP_Auth0_EditProfile.php:101
 msgid "Email cannot be changed for non-database connections."
