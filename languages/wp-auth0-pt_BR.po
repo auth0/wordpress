@@ -176,7 +176,7 @@ msgid ""
 "Please check the plugin error log for any additional instructions to complete the "
 "upgrade."
 msgstr ""
-"Por favor, verifique o log de erro do plugin para obter instruções adicionais para "
+"Por favor, verifique o log de erros do plugin para obter instruções adicionais para "
 "concluir a atualização."
 
 #: lib/WP_Auth0_DBManager.php:293 lib/WP_Auth0_Settings_Section.php:63
