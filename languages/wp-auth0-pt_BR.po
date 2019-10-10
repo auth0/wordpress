@@ -346,7 +346,7 @@ msgstr "Ocorreu um erro ao importar suas configurações, tente novamente."
 #: lib/WP_Auth0_Import_Settings.php:138
 msgid "Please upload the Auth0 for WordPress setting file or copy the content."
 msgstr ""
-"Faça o upload do arquivo de configuração do Auth0 para WordPress ou copie o conteúdo."
+"Faça o upload do arquivo de configuração da Auth0 para WordPress ou copie o conteúdo."
 
 #: lib/WP_Auth0_Import_Settings.php:151
 msgid "The settings json is not valid."
