@@ -100,7 +100,7 @@ msgstr "Ocorreu um erro ao atualizar sua conexão por rede social"
 
 #: lib/WP_Auth0_Api_Operations.php:283
 msgid "The connection has already set an API key and secret and can not be overridden. "
-msgstr "A conexão já definiu uma chave de API e secret e não pode ser substituída. "
+msgstr "A conexão já definiu uma chave e segredo de API e não pode ser substituída. "
 
 #: lib/WP_Auth0_Api_Operations.php:285
 msgid "Please update them in the Auth0 dashboard. "
