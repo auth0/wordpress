@@ -205,7 +205,7 @@ msgstr "A ação falhou. Consulte o log de erros da Auth0 para obter detalhes."
 
 #: lib/WP_Auth0_EditProfile.php:101
 msgid "Email cannot be changed for non-database connections."
-msgstr "O e-mail não pode ser alterado para conexões que não são do banco de dados."
+msgstr "O e-mail não pode ser alterado para conexões que não são do tipo 'banco de dados'."
 
 #: lib/WP_Auth0_EditProfile.php:155
 msgid ""
