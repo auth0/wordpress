@@ -1260,7 +1260,7 @@ msgstr "O escopo necessário foi rejeitado."
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:180
 msgid "Please create your Auth0 account first at "
-msgstr "Por favor, crie sua conta do Auth0 primeiro em "
+msgstr "Por favor, crie sua conta da Auth0 primeiro em "
 
 #: lib/profile/WP_Auth0_Profile_Change_Email.php:137
 msgid "Email suppressed - Auth0 email change failed."
