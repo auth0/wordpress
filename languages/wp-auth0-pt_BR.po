@@ -125,7 +125,7 @@ msgid ""
 "WP-Auth0 has upgraded to %s but could not complete the upgrade in your Auth0 "
 "dashboard."
 msgstr ""
-"O WP-Auth0 foi atualizado para %s, mas não pôde concluir a atualização no painel do "
+"O WP-Auth0 foi atualizado para %s, mas não concluiu a atualização no painel do "
 "Auth0."
 
 #: lib/WP_Auth0_DBManager.php:238
