@@ -138,7 +138,7 @@ msgstr "Crie um novo token da API de Gerenciamento"
 
 #: lib/WP_Auth0_DBManager.php:245
 msgid "and save it in the Auth0 > Settings > Basic tab > API Token field."
-msgstr "e salve-o na guia Auth0 > Configurações > Básico > campo Token da API."
+msgstr "e salve-o na aba Auth0 > Settings > Basic > campo 'API Token'."
 
 #: lib/WP_Auth0_DBManager.php:246
 msgid "This will run the update process again."
