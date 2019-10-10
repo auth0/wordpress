@@ -182,7 +182,7 @@ msgstr ""
 #: lib/WP_Auth0_DBManager.php:293 lib/WP_Auth0_Settings_Section.php:63
 #: templates/initial-setup/admin-creation.php:22
 msgid "Error Log"
-msgstr "Log de Erro"
+msgstr "Log de Erros"
 
 #: lib/WP_Auth0_DBManager.php:315
 msgid "As a part of this upgrade, your Client Grant Types have been updated, if needed."
