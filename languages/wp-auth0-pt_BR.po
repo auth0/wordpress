@@ -317,7 +317,7 @@ msgstr "Emissor de token inválido"
 
 #: lib/WP_Auth0_Id_Token_Validator.php:96
 msgid "Invalid token audience"
-msgstr "Token audience inválido"
+msgstr "'audience' do token inválida"
 
 #: lib/WP_Auth0_Id_Token_Validator.php:102
 msgid "Invalid token nonce"
