@@ -150,7 +150,7 @@ msgstr "Revise suas Configurações avançadas do aplicativo"
 
 #: lib/WP_Auth0_DBManager.php:254
 msgid "specifically the Grant Types, and "
-msgstr "especificamente os Grant Types, e "
+msgstr "especificamente os 'Grant Types', e "
 
 #: lib/WP_Auth0_DBManager.php:258
 msgid "authorize your client for the Management API"
