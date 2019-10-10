@@ -321,7 +321,7 @@ msgstr "'audience' do token inválida"
 
 #: lib/WP_Auth0_Id_Token_Validator.php:102
 msgid "Invalid token nonce"
-msgstr "Token nonce inválido"
+msgstr "'nonce' do token inválido"
 
 #: lib/WP_Auth0_Import_Settings.php:65
 msgid "The settings file is empty."
