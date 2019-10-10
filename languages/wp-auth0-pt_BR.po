@@ -92,7 +92,7 @@ msgid ""
 "dashboard."
 msgstr ""
 "Ocorreu um erro ao excluir a regra Auth0. Você pode fazer isso manualmente no painel "
-"de controle do Auth0."
+"de controle da Auth0."
 
 #: lib/WP_Auth0_Api_Operations.php:270 lib/WP_Auth0_Api_Operations.php:303
 msgid "There was an error updating your social connection"
