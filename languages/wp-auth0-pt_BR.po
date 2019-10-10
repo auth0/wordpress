@@ -75,7 +75,7 @@ msgid ""
 "A client grant for %1$s to %2$s already exists. Make sure this grant at least "
 "includes %3$s."
 msgstr ""
-"Uma client grant para %1$s para %2$s já existe. Certifique-se de que esta permissão "
+"Uma 'client grant' para %1$s para %2$s já existe. Certifique-se de que esta permissão "
 "inclua pelo menos %3$s."
 
 #: lib/WP_Auth0_Api_Operations.php:119
