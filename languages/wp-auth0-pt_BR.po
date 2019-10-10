@@ -193,7 +193,7 @@ msgstr ""
 #: lib/WP_Auth0_EditProfile.php:98
 msgid "Are you sure you want to delete the Auth0 user data for this user?"
 msgstr ""
-"Tem certeza de que deseja excluir os dados do usuário do Auth0 para esse usuário?"
+"Tem certeza de que deseja excluir os dados do usuário da Auth0 para esse usuário?"
 
 #: lib/WP_Auth0_EditProfile.php:99
 msgid "Deleted"
