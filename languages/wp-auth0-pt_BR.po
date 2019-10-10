@@ -168,7 +168,7 @@ msgstr "Este banner desaparecerá quando o processo estiver concluído."
 msgid ""
 "As a part of this upgrade, a Client Grant was created for the Auth0 Management API."
 msgstr ""
-"Como parte dessa atualização, foi criado um Client Grant para a API de gerenciamento "
+"Como parte dessa atualização, foi criado um 'Client Grant' para a API de gerenciamento "
 "Auth0."
 
 #: lib/WP_Auth0_DBManager.php:290
