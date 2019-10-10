@@ -313,7 +313,7 @@ msgstr "Mensagem de erro desconhecida"
 
 #: lib/WP_Auth0_Id_Token_Validator.php:87
 msgid "Invalid token issuer"
-msgstr "Token issuer inválido"
+msgstr "Emissor de token inválido"
 
 #: lib/WP_Auth0_Id_Token_Validator.php:96
 msgid "Invalid token audience"
