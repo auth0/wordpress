@@ -1496,7 +1496,7 @@ msgid ""
 msgstr ""
 "Última etapa: a Auth0 migrará sua própria conta do banco de dados do usuário do "
 "WordPress para Auth0. Você pode optar por usar a mesma senha que você usa atualmente "
-"ou escolher uma nova. De qualquer forma, o Auth0 vinculará sua conta existente e sua "
+"ou escolher uma nova. De qualquer forma, a Auth0 vinculará sua conta existente e sua "
 "função administrativa à nova conta em Auth0. Digite a senha que você deseja usar para "
 "esta conta abaixo."
 
