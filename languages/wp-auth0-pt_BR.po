@@ -363,7 +363,7 @@ msgstr "Estado inválido"
 
 #: lib/WP_Auth0_LoginManager.php:142
 msgid "Invalid ID token"
-msgstr "Token ID inválido"
+msgstr "ID Token inválido"
 
 #: lib/WP_Auth0_LoginManager.php:167
 msgid "Error exchanging code"
@@ -371,7 +371,7 @@ msgstr "Erro ao trocar código"
 
 #: lib/WP_Auth0_LoginManager.php:228
 msgid "No ID token found"
-msgstr "Nenhum token de ID encontrado"
+msgstr "Nenhum ID Token encontrado"
 
 #: lib/WP_Auth0_LoginManager.php:285
 msgid ""
@@ -706,7 +706,7 @@ msgstr "Separe os IPs por vírgulas. "
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:323
 msgid "The following Auth0 IPs are automatically whitelisted: "
-msgstr "Os seguintes IPs de Auth0 são automaticamente permitidos: "
+msgstr "Os seguintes IPs da Auth0 são automaticamente permitidos: "
 
 #: lib/admin/WP_Auth0_Admin_Advanced.php:334
 msgid "Please see the \"Universal Login Page\" setting on the Features tab"
@@ -791,11 +791,11 @@ msgstr "Configurações Extras"
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:85
 msgid "Use Custom Lock JS URL"
-msgstr "Use o Custom Lock JS URL"
+msgstr "Carregue o 'Lock' de uma URL customizada"
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:91
 msgid "Custom Lock JS URL"
-msgstr "Custom Lock JS URL"
+msgstr "URL do 'Lock'"
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:97
 msgid "Connections to Show"
@@ -803,7 +803,7 @@ msgstr "Conexões para Exibir"
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:117
 msgid "Use a custom Lock CDN URL instead of the default. "
-msgstr "Utilize um Lock CND URL personalizado ao invés do padrão. "
+msgstr "Carregue o 'Lock' de uma URL customizada ao invés da URL padrão"
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:121
 msgid "Currently using:"
@@ -915,7 +915,7 @@ msgid ""
 "Valid JSON for Lock options configuration; will override all options set elsewhere. "
 msgstr ""
 "JSON válido para configuração de opções de Lock; substituirá todas as opções "
-"definidasem outro lugar. "
+"definidas em outro lugar. "
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:314
 msgid ""
@@ -929,7 +929,7 @@ msgstr "Mais informações e exemplos"
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:343
 msgid "The Lock JS CDN URL used is not a valid URL."
-msgstr "O URL do Lock JS CDN usado não é um URL válido."
+msgstr "A URL utilizada para carregar o 'Lock' não é válida."
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:23
 msgid "Basic settings related to the Auth0 integration."
@@ -1064,11 +1064,11 @@ msgstr "Os cadastros estão atualmente "
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:314
 msgid "enabled"
-msgstr "ativado"
+msgstr "ativados"
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:314
 msgid "disabled"
-msgstr "desativado"
+msgstr "desativados"
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:315
 msgid " by this setting "
