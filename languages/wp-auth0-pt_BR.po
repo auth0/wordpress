@@ -1006,7 +1006,7 @@ msgstr "Este valor pode ser encontrado nas Configurações do Aplicativo em "
 #: lib/admin/WP_Auth0_Admin_Basic.php:203
 msgid " under Show Advanced Settings > OAuth > \"JsonWebToken Signature Algorithm\""
 msgstr ""
-" em Mostrar Configurações Avançadas > OAuth > \"Algoritmo de Assinatura JsonWebToken\""
+" em Show Advanced Settings > OAuth > \"JsonWebToken Signature Algorithm\""
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:220
 msgid "Delete Cache"
