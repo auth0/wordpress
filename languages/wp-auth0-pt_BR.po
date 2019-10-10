@@ -84,7 +84,7 @@ msgid ""
 "dashboard."
 msgstr ""
 "Ocorreu um erro ao criar a regra Auth0. Você pode fazer isso manualmente no painel de "
-"controle do Auth0."
+"controle da Auth0."
 
 #: lib/WP_Auth0_Api_Operations.php:126
 msgid ""
