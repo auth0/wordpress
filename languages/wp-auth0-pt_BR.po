@@ -1196,7 +1196,7 @@ msgstr "Uma chamada /oauth/token acionou uma resposta 401 do Auth0. "
 
 #: lib/api/WP_Auth0_Api_Exchange_Code.php:70
 msgid "Please check the Client Secret saved in the Auth0 plugin settings. "
-msgstr "Por favor, verifique o Client Secret salvo nas configurações do plugin Auth0. "
+msgstr "Por favor, verifique o 'Client Secret' salvo nas configurações do plugin Auth0. "
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:113
 msgid "There was an error creating the Auth0 App. Check the "
