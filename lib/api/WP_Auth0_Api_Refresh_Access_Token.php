@@ -3,6 +3,8 @@
  * Contains CUSTOM WP_Auth0_Api_Refresh_Access_Token.
  *
  * @package WP-Auth0
+ *
+ * @since 4.0.0
  */
 
 /**
@@ -10,6 +12,7 @@
  * Get a new access token using the refresh token of a user.
  *
  * @see https://auth0.com/docs/tokens/refresh-token/current
+ * @see https://auth0.com/docs/api/authentication#refresh-token
  */
 class WP_Auth0_Api_Refresh_Access_Token extends WP_Auth0_Api_Abstract {
 
@@ -21,9 +24,9 @@ class WP_Auth0_Api_Refresh_Access_Token extends WP_Auth0_Api_Abstract {
 	/**
 	 * Make the API call and handle the response.
 	 *
-	 * @param string|null $code - Authorization code to exchange for tokens.
 	 * @param string|null $client_id - Client ID to use.
-	 * @param string|null $redirect_uri - Redirect URI to use.
+	 * @param string|null $client_secret - Client Secret to use.
+	 * @param string|null $refresh_token - Client's refresh token to use.
 	 *
 	 * @return null|string
 	 */
@@ -51,7 +54,6 @@ class WP_Auth0_Api_Refresh_Access_Token extends WP_Auth0_Api_Abstract {
 			->add_body( 'refresh_token', $refresh_token )
 			->post()
 			->handle_response( __METHOD__ );
-
 	}
 
 	/**
@@ -67,7 +69,7 @@ class WP_Auth0_Api_Refresh_Access_Token extends WP_Auth0_Api_Abstract {
 			WP_Auth0_ErrorManager::insert_auth0_error(
 				__METHOD__ . ' L:' . __LINE__,
 				__( 'An /oauth/token call triggered a 401 response from Auth0. ', 'wp-auth0' ) .
-				__( 'Please check the Client Secret saved in the Auth0 plugin settings. ', 'wp-auth0' )
+				__( 'Please check the Client ID and Client Secret saved in the Auth0 plugin settings. ', 'wp-auth0' )
 			);
 			return self::RETURN_ON_FAILURE;
 		}
