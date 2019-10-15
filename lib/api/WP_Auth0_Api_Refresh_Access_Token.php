@@ -1,6 +1,6 @@
 <?php
 /**
- * Contains CUSTOM WP_Auth0_Api_Refresh_Access_Token.
+ * Contains WP_Auth0_Api_Refresh_Access_Token.
  *
  * @package WP-Auth0
  *
