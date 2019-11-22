@@ -31,7 +31,7 @@ class WP_Auth0_Api_Refresh_Access_Token extends WP_Auth0_Api_Abstract {
 	 * @return null|string
 	 */
 	public function call( $client_id = null, $client_secret = null, $refresh_token = null ) {
-		
+
 		if ( empty( $refresh_token ) ) {
 			return self::RETURN_ON_FAILURE;
 		}
