@@ -80,3 +80,4 @@ Auth0 helps you to easily:
 ## License
 
 Login by Auth0 is licensed under GPLv2 - [LICENSE](LICENSE)
+
