@@ -42,6 +42,7 @@ commands:
             composer phpcbf-tests
             composer phpcs-tests
             composer phpcs-i18n
+            composer compat
   run-tests:
     steps:
       - run:
@@ -52,17 +53,6 @@ commands:
       - run: composer test-ci
 
 jobs:
-  php_5:
-    docker:
-      - image: circleci/php:5.6
-      - image: circleci/mysql:5.6
-        environment:
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
-    steps:
-      - prepare
-      - run-tests
-      - run:
-          command: composer compat
   php_7:
     docker:
       - image: circleci/php:7.1
@@ -93,9 +83,6 @@ jobs:
 
 #Each workflow represents a Github check
 workflows:
-  build_php_5:
-    jobs:
-      - php_5
   build_php_7:
     jobs:
       - php_7
