@@ -383,32 +383,6 @@ abstract class WP_Auth0_Api_Abstract {
 	}
 
 	/**
-	 * Decode an RS256 Auth0 Management API token.
-	 *
-	 * @deprecated - 3.10.0, not used.
-	 *
-	 * @param string $token - API JWT to decode.
-	 *
-	 * @return object
-	 *
-	 * @throws DomainException              Algorithm was not provided.
-	 * @throws UnexpectedValueException     Provided JWT was invalid.
-	 * @throws SignatureInvalidException    Provided JWT was invalid because the signature verification failed.
-	 * @throws BeforeValidException         Provided JWT used before it's eligible as defined by 'nbf'.
-	 * @throws BeforeValidException         Provided JWT used before it's been created as defined by 'iat'.
-	 * @throws ExpiredException             Provided JWT has since expired, as defined by the 'exp' claim.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	protected function decode_jwt( $token ) {
-		return JWT::decode(
-			$token,
-			WP_Auth0_Api_Client::JWKfetch( $this->domain ),
-			[ 'RS256' ]
-		);
-	}
-
-	/**
 	 * Send the HTTP request.
 	 *
 	 * @param string $method - HTTP method to use.

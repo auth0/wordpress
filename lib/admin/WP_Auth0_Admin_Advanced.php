@@ -461,8 +461,9 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		}
 
 		try {
-			$token_decoded               = JWT::decode( $input['migration_token'], $secret, [ 'HS256' ] );
-			$input['migration_token_id'] = isset( $token_decoded->jti ) ? $token_decoded->jti : null;
+			$signature_verifier          = new WP_Auth0_SymmetricVerifier( $secret );
+			$token_decoded               = $signature_verifier->verifyAndDecode( $input['migration_token'] );
+			$input['migration_token_id'] = $token_decoded->getClaim('jti');
 
 			// phpcs:ignore
 		} catch ( Exception $e ) {

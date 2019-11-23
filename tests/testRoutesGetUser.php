@@ -16,6 +16,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 
 	use HookHelpers;
 
+	use TokenHelper;
 	use UsersHelper;
 
 	/**
@@ -104,7 +105,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token_id', '__test_token_id__' );
 
-		$_POST['access_token'] = JWT::encode( [ 'jti' => uniqid() ], $client_secret );
+		$_POST['access_token'] = self::makeToken( [ 'jti' => uniqid() ], $client_secret );
 
 		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
 

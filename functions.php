@@ -16,7 +16,7 @@
  */
 function wp_auth0_generate_token() {
 	$token = WP_Auth0_Nonce_Handler::get_instance()->generate_unique( 64 );
-	return JWT::urlsafeB64Encode( $token );
+	return wp_auth0_url_base64_encode( $token );
 }
 
 /**
@@ -115,6 +115,33 @@ function wp_auth0_can_show_wp_login_form() {
 	}
 
 	return false;
+}
+
+/**
+ * @param $input
+ *
+ * @return mixed
+ *
+ * @see https://github.com/firebase/php-jwt/blob/v5.0.0/src/JWT.php#L337
+ */
+function wp_auth0_url_base64_encode( $input ) {
+	return str_replace( '=', '', strtr( base64_encode( $input ), '+/', '-_' ) );
+}
+
+/**
+ * @param $input
+ *
+ * @return bool|string
+ *
+ * @see https://github.com/firebase/php-jwt/blob/v5.0.0/src/JWT.php#L320
+ */
+function wp_auth0_url_base64_decode( $input ) {
+	$remainder = strlen( $input ) % 4;
+	if ( $remainder ) {
+		$padlen = 4 - $remainder;
+		$input .= str_repeat( '=', $padlen );
+	}
+	return base64_decode( strtr( $input, '-_', '+/' ) );
 }
 
 if ( ! function_exists( 'get_auth0userinfo' ) ) {
