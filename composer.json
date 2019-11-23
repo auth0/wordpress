@@ -4,7 +4,8 @@
     "homepage": "https://auth0.com/wordpress",
     "license": "GPLv2",
     "require": {
-        "php": "^7.0"
+        "php": "^7.0",
+        "lcobucci/jwt": "^3.3.0"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.5",

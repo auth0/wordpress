@@ -66,7 +66,7 @@ class WP_Auth0_InitialSetup_Consent {
 
 	protected function parse_token_domain( $token ) {
 		$parts   = explode( '.', $token );
-		$payload = json_decode( JWT::urlsafeB64Decode( $parts[1] ) );
+		$payload = json_decode( wp_auth0_url_base64_decode( $parts[1] ) );
 		return trim( str_replace( [ '/api/v2', 'https://' ], '', $payload->aud ), ' /' );
 	}
 
@@ -161,7 +161,7 @@ class WP_Auth0_InitialSetup_Consent {
 			if ( $connection_exists === false ) {
 				$migration_token = $this->a0_options->get( 'migration_token' );
 				if ( empty( $migration_token ) ) {
-					$migration_token = JWT::urlsafeB64Encode( openssl_random_pseudo_bytes( 64 ) );
+					$migration_token = wp_auth0_url_base64_encode( openssl_random_pseudo_bytes( 64 ) );
 				}
 				$operations = new WP_Auth0_Api_Operations( $this->a0_options );
 				$response   = $operations->create_wordpress_connection(

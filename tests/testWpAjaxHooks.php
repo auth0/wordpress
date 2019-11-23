@@ -45,8 +45,8 @@ class TestWpAjaxHooks extends WP_Auth0_Test_Case {
 	public function testThatAjaxJwksCacheDeleteSucceeds() {
 		$this->startAjaxReturn();
 
-		set_transient( 'WP_Auth0_JWKS_cache', '__test_cached_jwks__' );
-		$this->assertEquals( '__test_cached_jwks__', WP_Auth0_Api_Client::JWKfetch( uniqid() ) );
+		set_transient( 'WP_Auth0_JWKS_cache', ['__test_cached_jwks__'] );
+		$this->assertEquals( ['__test_cached_jwks__'], (new WP_Auth0_JwksFetcher())->getKeys() );
 		$_REQUEST['_ajax_nonce'] = wp_create_nonce( 'auth0_delete_cache_transient' );
 
 		ob_start();

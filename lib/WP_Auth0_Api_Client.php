@@ -447,68 +447,6 @@ class WP_Auth0_Api_Client {
 	}
 
 	/**
-	 * Convert a certificate to PEM format.
-	 *
-	 * @param string $cert - Certificate, like from .well-known/jwks.json.
-	 *
-	 * @return string
-	 */
-	protected static function convertCertToPem( $cert ) {
-		return '-----BEGIN CERTIFICATE-----' . PHP_EOL
-			   . chunk_split( $cert, 64, PHP_EOL )
-			   . '-----END CERTIFICATE-----' . PHP_EOL;
-	}
-
-	/**
-	 * Get and cache a JWKS.
-	 *
-	 * @param string $domain - Issuer domain.
-	 *
-	 * @return array|bool|mixed
-	 */
-	public static function JWKfetch( $domain ) {
-
-		$a0_options = WP_Auth0_Options::Instance();
-
-		$endpoint = "https://$domain/.well-known/jwks.json";
-
-		if ( false === ( $secret = get_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME ) ) ) {
-
-			$secret = [];
-
-			$response = wp_remote_get( $endpoint, [] );
-
-			if ( $response instanceof WP_Error ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
-				error_log( $response->get_error_message() );
-				return false;
-			}
-
-			if ( $response['response']['code'] != 200 ) {
-				WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
-				error_log( $response['body'] );
-				return false;
-			}
-
-			if ( $response['response']['code'] >= 300 ) {
-				return false;
-			}
-
-			$jwks = json_decode( $response['body'], true );
-
-			foreach ( $jwks['keys'] as $key ) {
-				$secret[ $key['kid'] ] = self::convertCertToPem( $key['x5c'][0] );
-			}
-
-			if ( $cache_expiration = $a0_options->get( 'cache_expiration' ) ) {
-				set_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME, $secret, $cache_expiration * MINUTE_IN_SECONDS );
-			}
-		}
-
-		return $secret;
-	}
-
-	/**
 	 * Return the grant types needed for new clients.
 	 *
 	 * @return array

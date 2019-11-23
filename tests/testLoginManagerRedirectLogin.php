@@ -19,7 +19,10 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 
 	use RedirectHelpers;
 
+	use TokenHelper;
+
 	use UsersHelper;
+
 
 	/**
 	 * WP_Auth0_LoginManager instance to test.
@@ -98,8 +101,11 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 					'sub' => '__test_id_token_sub__',
 					'iss' => 'https://test.auth0.com/',
 					'aud' => '__test_client_id__',
+					'nonce' => '__test_nonce__',
+					'exp' => time() + 1000,
+					'iat' => time() - 1000,
 				];
-				$id_token         = JWT::encode( $id_token_payload, '__test_client_secret__' );
+				$id_token         = self::makeToken( $id_token_payload, '__test_client_secret__' );
 				return [
 					'body'     => sprintf(
 						'{"access_token":"__test_access_token__","id_token":"%s"}',
@@ -274,13 +280,13 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		$_REQUEST['code'] = uniqid();
 
 		try {
-			$caught_exception = false;
+			$e_message = 'No exception caught';
 			$this->login->redirect_login();
 		} catch ( WP_Auth0_InvalidIdTokenException $e ) {
-			$caught_exception = ( 'Wrong number of segments' === $e->getMessage() );
+			$e_message = $e->getMessage();
 		}
 
-		$this->assertTrue( $caught_exception );
+		$this->assertEquals( 'ID token could not be decoded', $e_message );
 	}
 
 	/**
@@ -300,6 +306,7 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		self::$opts->set( 'client_secret', '__test_client_secret__' );
 		self::$opts->set( 'client_signing_algorithm', 'HS256' );
 		$_REQUEST['code'] = uniqid();
+		$_COOKIE[ 'auth0_nonce' ] = '__test_nonce__';
 
 		try {
 			$http_data = [];

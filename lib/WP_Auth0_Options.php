@@ -58,9 +58,9 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 */
 	public function convert_client_secret_to_key( $secret, $is_encoded, $is_RS256, $domain ) {
 		if ( $is_RS256 ) {
-			return WP_Auth0_Api_Client::JWKfetch( $domain );
+			return ( new WP_Auth0_JwksFetcher() )->getKeys();
 		} else {
-			return $is_encoded ? JWT::urlsafeB64Decode( $secret ) : $secret;
+			return $is_encoded ? wp_auth0_url_base64_decode( $secret ) : $secret;
 		}
 	}
 

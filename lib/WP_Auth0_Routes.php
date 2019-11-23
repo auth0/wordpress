@@ -338,14 +338,16 @@ class WP_Auth0_Routes {
 		if ( $token === $authorization ) {
 			return true;
 		}
+
 		$client_secret = $this->a0_options->get( 'client_secret' );
 		if ( $this->a0_options->get( 'client_secret_base64_encoded' ) ) {
-			$client_secret = JWT::urlsafeB64Decode( $client_secret );
+			$client_secret = wp_auth0_url_base64_decode( $client_secret );
 		}
 
 		try {
-			$decoded = JWT::decode( $token, $client_secret, [ 'HS256' ] );
-			return isset( $decoded->jti ) && $decoded->jti === $this->a0_options->get( 'migration_token_id' );
+			$signature_verifier = new WP_Auth0_SymmetricVerifier( $client_secret );
+			$decoded            = $signature_verifier->verifyAndDecode( $authorization );
+			return $decoded->getClaim( 'jti' ) === $this->a0_options->get( 'migration_token_id' );
 		} catch ( Exception $e ) {
 			return false;
 		}

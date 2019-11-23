@@ -16,6 +16,8 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 
 	use DomDocumentHelpers;
 
+	use TokenHelper;
+
 	use UsersHelper;
 
 	/**
@@ -156,7 +158,7 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 	 */
 	public function testThatChangingMigrationToOnKeepsWithJwtSetsId() {
 		$client_secret   = '__test_client_secret__';
-		$migration_token = JWT::encode( [ 'jti' => '__test_token_id__' ], $client_secret );
+		$migration_token = self::makeToken( [ 'jti' => '__test_token_id__' ], $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
 		$input = [
 			'migration_ws'  => 1,
@@ -175,10 +177,10 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 	 */
 	public function testThatChangingMigrationToOnKeepsWithBase64JwtSetsId() {
 		$client_secret = '__test_client_secret__';
-		self::$opts->set( 'migration_token', JWT::encode( [ 'jti' => '__test_token_id__' ], $client_secret ) );
+		self::$opts->set( 'migration_token', self::makeToken( [ 'jti' => '__test_token_id__' ], $client_secret ) );
 		$input = [
 			'migration_ws'              => 1,
-			'client_secret'             => JWT::urlsafeB64Encode( $client_secret ),
+			'client_secret'             => wp_auth0_url_base64_encode( $client_secret ),
 			'client_secret_b64_encoded' => 1,
 		];
 

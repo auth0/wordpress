@@ -27,9 +27,11 @@ define( 'WPA0_AUTH0_JS_CDN_URL', 'https://cdn.auth0.com/js/auth0/9.10/auth0.min.
 define( 'WPA0_AUTH0_LOGIN_FORM_ID', 'auth0-login-form' );
 define( 'WPA0_CACHE_GROUP', 'wp_auth0' );
 define( 'WPA0_JWKS_CACHE_TRANSIENT_NAME', 'WP_Auth0_JWKS_cache' );
+define( 'WPA0_ID_TOKEN_LEEWAY', 60 );
 
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 
+require_once 'vendor/autoload.php';
 require_once 'functions.php';
 
 /*
@@ -434,16 +436,6 @@ class WP_Auth0 {
 	private function autoloader( $class ) {
 		$source_dir = WPA0_PLUGIN_DIR . 'lib/';
 
-		// Catch non-name-spaced classes that still need auto-loading.
-		switch ( $class ) {
-			case 'JWT':
-			case 'BeforeValidException':
-			case 'ExpiredException':
-			case 'SignatureInvalidException':
-				require_once $source_dir . 'php-jwt/' . $class . '.php';
-				return true;
-		}
-
 		// Anything that's not part of the above and not name-spaced can be skipped.
 		if ( 0 !== strpos( $class, 'WP_Auth0' ) ) {
 			return false;
@@ -457,6 +449,7 @@ class WP_Auth0 {
 			$source_dir . 'profile/',
 			$source_dir . 'wizard/',
 			$source_dir . 'initial-setup/',
+			$source_dir . 'token-verifier/',
 		];
 
 		foreach ( $paths as $path ) {

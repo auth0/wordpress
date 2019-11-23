@@ -36,11 +36,8 @@ commands:
   run-formatting:
     steps:
       - run:
-          name: Running Linter and Formatting
+          name: Run i18n check and PHP compatibility
           command: |
-            composer phpcbf
-            composer phpcbf-tests
-            composer phpcs-tests
             composer phpcs-i18n
             composer compat
   run-tests:
@@ -55,7 +52,7 @@ commands:
 jobs:
   php_7:
     docker:
-      - image: circleci/php:7.1
+      - image: circleci/php:7.0
       - image: circleci/mysql:5.6
         environment:
           MYSQL_ALLOW_EMPTY_PASSWORD: true

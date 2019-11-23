@@ -174,8 +174,7 @@ class WP_Auth0_LoginManager {
 		$refresh_token = isset( $data->refresh_token ) ? $data->refresh_token : null;
 
 		// Decode the incoming ID token for the Auth0 user.
-		$jwt_verifier  = new WP_Auth0_Id_Token_Validator( $id_token, $this->a0_options );
-		$decoded_token = $jwt_verifier->decode();
+		$decoded_token = (object) $this->decode_id_token( $id_token );
 
 		// Attempt to authenticate with the Management API, if allowed.
 		$userinfo = null;
@@ -232,8 +231,7 @@ class WP_Auth0_LoginManager {
 		$id_token_param = ! empty( $_POST['id_token'] ) ? $_POST['id_token'] : $_POST['token'];
 		$id_token       = sanitize_text_field( wp_unslash( $id_token_param ) );
 
-		$jwt_verifier  = new WP_Auth0_Id_Token_Validator( $id_token, $this->a0_options );
-		$decoded_token = $jwt_verifier->decode( true );
+		$decoded_token = $this->decode_id_token( $id_token );
 		$decoded_token = $this->clean_id_token( $decoded_token );
 
 		if ( $this->login_user( $decoded_token, $id_token ) ) {
@@ -571,6 +569,30 @@ class WP_Auth0_LoginManager {
 
 		$html = apply_filters( 'auth0_die_on_login_output', $html, $msg, $code, false );
 		wp_die( $html );
+	}
+
+	/**
+	 * @param $id_token
+	 * @return array
+	 * @throws WP_Auth0_InvalidIdTokenException
+	 */
+	private function decode_id_token( $id_token ) {
+		$idTokenIss  = 'https://' . $this->a0_options->get( 'domain' ) . '/';
+		$sigVerifier = null;
+		if ( 'RS256' === $this->a0_options->get( 'client_signing_algorithm' ) ) {
+			$jwks        = ( new WP_Auth0_JwksFetcher() )->getKeys();
+			$sigVerifier = new WP_Auth0_AsymmetricVerifier( $jwks );
+		} elseif ( 'HS256' === $this->a0_options->get( 'client_signing_algorithm' ) ) {
+			$sigVerifier = new WP_Auth0_SymmetricVerifier( $this->a0_options->get( 'client_secret' ) );
+		}
+
+		$verifierOptions          = [
+			'leeway'  => absint( apply_filters( 'auth0_jwt_leeway', WPA0_ID_TOKEN_LEEWAY ) ),
+			'max_age' => apply_filters( 'auth0_jwt_max_age', null ),
+		];
+
+		$idTokenVerifier = new WP_Auth0_IdTokenVerifier( $idTokenIss, $this->a0_options->get( 'client_id' ), $sigVerifier );
+		return $idTokenVerifier->verify( $id_token, $verifierOptions );
 	}
 
 	/**
