@@ -2,6 +2,8 @@
 
 /**
  * Class JWKFetcher.
+ *
+ * @codeCoverageIgnore - Classes are adapted from the PHP SDK and tested there.
  */
 class WP_Auth0_JwksFetcher {
 

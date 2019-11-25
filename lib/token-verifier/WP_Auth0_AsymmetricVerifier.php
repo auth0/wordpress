@@ -13,6 +13,8 @@ use Lcobucci\JWT\Token;
 
 /**
  * Class WP_Auth0_AsymmetricVerifier
+ *
+ * @codeCoverageIgnore - Classes are adapted from the PHP SDK and tested there.
  */
 final class WP_Auth0_AsymmetricVerifier extends WP_Auth0_SignatureVerifier {
 
