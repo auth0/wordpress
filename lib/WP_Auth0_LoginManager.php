@@ -171,7 +171,7 @@ class WP_Auth0_LoginManager {
 		$refresh_token = isset( $data->refresh_token ) ? $data->refresh_token : null;
 
 		// Decode the incoming ID token for the Auth0 user.
-		$decoded_token = (object) $this->decode_id_token( $id_token );
+		$decoded_token = $this->decode_id_token( $id_token );
 
 		// Attempt to authenticate with the Management API, if allowed.
 		$userinfo = null;
@@ -564,7 +564,7 @@ class WP_Auth0_LoginManager {
 
 	/**
 	 * @param $id_token
-	 * @return array
+	 * @return object
 	 * @throws WP_Auth0_InvalidIdTokenException
 	 */
 	private function decode_id_token( $id_token ) {
@@ -584,7 +584,7 @@ class WP_Auth0_LoginManager {
 		];
 
 		$idTokenVerifier = new WP_Auth0_IdTokenVerifier( $idTokenIss, $this->a0_options->get( 'client_id' ), $sigVerifier );
-		return $idTokenVerifier->verify( $id_token, $verifierOptions );
+		return (object) $idTokenVerifier->verify( $id_token, $verifierOptions );
 	}
 
 	/**
