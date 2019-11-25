@@ -21,6 +21,7 @@ class TestLoginManagerAuthParams extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'openid email profile', $auth_params['scope'] );
 		$this->assertEquals( 'code', $auth_params['response_type'] );
 		$this->assertEquals( 'query', $auth_params['response_mode'] );
+		$this->assertEquals( WP_Auth0_Nonce_Handler::get_instance()->get_unique(), $auth_params['nonce'] );
 		$this->assertEquals( site_url( 'index.php?auth0=1' ), $auth_params['redirect_uri'] );
 		$this->assertArrayNotHasKey( 'auth0Client', $auth_params );
 
@@ -92,6 +93,21 @@ class TestLoginManagerAuthParams extends WP_Auth0_Test_Case {
 		remove_filter( 'auth0_authorize_state', [ $this, 'filter_state_parms' ], 10 );
 	}
 
+	public function testThatMaxAgeFilterIsApplied() {
+		$auth_params = WP_Auth0_LoginManager::get_authorize_params();
+
+		$this->assertArrayNotHasKey( 'max_age', $auth_params );
+
+		add_filter( 'auth0_jwt_max_age', [ $this, 'filter_max_age' ], 10, 2 );
+
+		$auth_params = WP_Auth0_LoginManager::get_authorize_params();
+
+		$this->assertArrayHasKey( 'max_age', $auth_params );
+		$this->assertEquals( 1234, $auth_params['max_age'] );
+
+		remove_filter( 'auth0_jwt_max_age', [ $this, 'filter_max_age' ], 10 );
+	}
+
 	/**
 	 * Helper method to filter the auth params for testing.
 	 *
@@ -119,5 +135,16 @@ class TestLoginManagerAuthParams extends WP_Auth0_Test_Case {
 		$state['some_state_prop']      = '__test_param_value__';
 		$state['response_type_repeat'] = $filtered_params['response_type'];
 		return $state;
+	}
+
+	/**
+	 * Helper method to filter max_age for testing.
+	 *
+	 * @param null $max_age_null - Existing max_age setting.
+	 *
+	 * @return int
+	 */
+	public function filter_max_age( $max_age_null ) {
+		return 1234;
 	}
 }

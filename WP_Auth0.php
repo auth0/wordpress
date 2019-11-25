@@ -27,7 +27,6 @@ define( 'WPA0_AUTH0_JS_CDN_URL', 'https://cdn.auth0.com/js/auth0/9.10/auth0.min.
 define( 'WPA0_AUTH0_LOGIN_FORM_ID', 'auth0-login-form' );
 define( 'WPA0_CACHE_GROUP', 'wp_auth0' );
 define( 'WPA0_JWKS_CACHE_TRANSIENT_NAME', 'WP_Auth0_JWKS_cache' );
-define( 'WPA0_ID_TOKEN_LEEWAY', 60 );
 
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 

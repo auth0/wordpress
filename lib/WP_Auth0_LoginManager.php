@@ -78,10 +78,7 @@ class WP_Auth0_LoginManager {
 		$auth_params = self::get_authorize_params( $connection );
 
 		WP_Auth0_State_Handler::get_instance()->set_cookie( $auth_params['state'] );
-
-		if ( isset( $auth_params['nonce'] ) ) {
-			WP_Auth0_Nonce_Handler::get_instance()->set_cookie();
-		}
+		WP_Auth0_Nonce_Handler::get_instance()->set_cookie( $auth_params['nonce'] );
 
 		$auth_url = self::build_authorize_url( $auth_params );
 		wp_redirect( $auth_url );
@@ -458,23 +455,17 @@ class WP_Auth0_LoginManager {
 		$opts         = WP_Auth0_Options::Instance();
 		$lock_options = new WP_Auth0_Lock10_Options();
 		$is_implicit  = (bool) $opts->get( 'auth0_implicit_workflow', false );
-		$nonce        = WP_Auth0_Nonce_Handler::get_instance()->get_unique();
 
 		$params = [
+			'connection'    => $connection,
 			'client_id'     => $opts->get( 'client_id' ),
 			'scope'         => self::get_userinfo_scope( 'authorize_url' ),
+			'nonce'         => WP_Auth0_Nonce_Handler::get_instance()->get_unique(),
+			'max_age'       => apply_filters( 'auth0_jwt_max_age', null ),
 			'response_type' => $is_implicit ? 'id_token' : 'code',
 			'response_mode' => $is_implicit ? 'form_post' : 'query',
 			'redirect_uri'  => $is_implicit ? $lock_options->get_implicit_callback_url() : $opts->get_wp_auth0_url(),
 		];
-
-		if ( $is_implicit ) {
-			$params['nonce'] = $nonce;
-		}
-
-		if ( ! empty( $connection ) ) {
-			$params['connection'] = $connection;
-		}
 
 		// Where should the user be redirected after logging in?
 		if ( empty( $redirect_to ) ) {
@@ -496,7 +487,7 @@ class WP_Auth0_LoginManager {
 			$filtered_params['state'] = base64_encode( json_encode( $filtered_state ) );
 		}
 
-		return $filtered_params;
+		return array_filter( $filtered_params );
 	}
 
 	/**
@@ -586,8 +577,9 @@ class WP_Auth0_LoginManager {
 			$sigVerifier = new WP_Auth0_SymmetricVerifier( $this->a0_options->get( 'client_secret' ) );
 		}
 
-		$verifierOptions          = [
-			'leeway'  => absint( apply_filters( 'auth0_jwt_leeway', WPA0_ID_TOKEN_LEEWAY ) ),
+		$verifierOptions = [
+			'nonce'   => WP_Auth0_Nonce_Handler::get_instance()->get_once(),
+			'leeway'  => absint( apply_filters( 'auth0_jwt_leeway', null ) ),
 			'max_age' => apply_filters( 'auth0_jwt_max_age', null ),
 		];
 

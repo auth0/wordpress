@@ -195,6 +195,12 @@ trait HttpHelpers {
 					'response' => [ 'code' => 200 ],
 				];
 
+			case 'success_jwks':
+				return [
+					'body'     => '{"keys":[{"x5c":["__test_x5c_1__"],"kid":"__test_kid_1__"}]}',
+					'response' => [ 'code' => 200 ],
+				];
+
 			default:
 				return new WP_Error( 2, 'No mock type found.' );
 		}
