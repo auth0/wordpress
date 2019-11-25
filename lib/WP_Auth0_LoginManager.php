@@ -461,7 +461,7 @@ class WP_Auth0_LoginManager {
 			'client_id'     => $opts->get( 'client_id' ),
 			'scope'         => self::get_userinfo_scope( 'authorize_url' ),
 			'nonce'         => WP_Auth0_Nonce_Handler::get_instance()->get_unique(),
-			'max_age'       => apply_filters( 'auth0_jwt_max_age', null ),
+			'max_age'       => absint( apply_filters( 'auth0_jwt_max_age', null ) ),
 			'response_type' => $is_implicit ? 'id_token' : 'code',
 			'response_mode' => $is_implicit ? 'form_post' : 'query',
 			'redirect_uri'  => $is_implicit ? $lock_options->get_implicit_callback_url() : $opts->get_wp_auth0_url(),
@@ -580,7 +580,7 @@ class WP_Auth0_LoginManager {
 		$verifierOptions = [
 			'nonce'   => WP_Auth0_Nonce_Handler::get_instance()->get_once(),
 			'leeway'  => absint( apply_filters( 'auth0_jwt_leeway', null ) ),
-			'max_age' => apply_filters( 'auth0_jwt_max_age', null ),
+			'max_age' => absint( apply_filters( 'auth0_jwt_max_age', null ) ),
 		];
 
 		$idTokenVerifier = new WP_Auth0_IdTokenVerifier( $idTokenIss, $this->a0_options->get( 'client_id' ), $sigVerifier );
