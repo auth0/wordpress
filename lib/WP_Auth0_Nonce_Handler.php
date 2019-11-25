@@ -130,6 +130,18 @@ class WP_Auth0_Nonce_Handler {
 	}
 
 	/**
+	 * Get and delete the stored value.
+	 *
+	 * @return string|null
+	 */
+	public function get_once() {
+		$cookie_name = static::get_storage_cookie_name();
+		$value       = $_COOKIE[ $cookie_name ] ?? null;
+		$this->reset();
+		return $value;
+	}
+
+	/**
 	 * Reset/delete a cookie.
 	 *
 	 * @return bool
@@ -163,11 +175,11 @@ class WP_Auth0_Nonce_Handler {
 	protected function handle_cookie( $cookie_name, $cookie_value, $cookie_exp ) {
 		if ( $cookie_exp <= time() ) {
 			unset( $_COOKIE[ $cookie_name ] );
-			$cookie_exp = 0;
+			return setcookie( $cookie_name, $cookie_value, 0, '/' );
 		} else {
 			$_COOKIE[ $cookie_name ] = $cookie_value;
+			return setcookie( $cookie_name, $cookie_value, $cookie_exp, '/', '', false, true );
 		}
-		return setcookie( $cookie_name, $cookie_value, $cookie_exp, '/' );
 	}
 
 	/**

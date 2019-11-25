@@ -18,18 +18,20 @@ use Lcobucci\JWT\Token;
 trait TokenHelper {
 
 	/**
-	 * @param string $secret
-	 * @param array $claims
+	 * Create an HS256 token for testing.
+	 *
+	 * @param array  $claims Claims to include in the payload.
+	 * @param string $secret Signing key to use.
 	 *
 	 * @return string
 	 */
-	public function makeToken($claims = [], $secret = '__test_secret__') {
+	public function makeToken( $claims = [], $secret = '__test_secret__' ) {
 		$builder = new Builder();
 
-		foreach ($claims as $prop => $claim) {
-			$builder->withClaim($prop, $claim);
+		foreach ( $claims as $prop => $claim ) {
+			$builder->withClaim( $prop, $claim );
 		}
 
-		return (string) $builder->getToken( new HsSigner(), new Key($secret));
+		return (string) $builder->getToken( new HsSigner(), new Key( $secret ) );
 	}
 }

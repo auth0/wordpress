@@ -98,12 +98,12 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		switch ( $response_type ) {
 			case 'success_exchange_code_valid_id_token':
 				$id_token_payload = [
-					'sub' => '__test_id_token_sub__',
-					'iss' => 'https://test.auth0.com/',
-					'aud' => '__test_client_id__',
+					'sub'   => '__test_id_token_sub__',
+					'iss'   => 'https://test.auth0.com/',
+					'aud'   => '__test_client_id__',
 					'nonce' => '__test_nonce__',
-					'exp' => time() + 1000,
-					'iat' => time() - 1000,
+					'exp'   => time() + 1000,
+					'iat'   => time() - 1000,
 				];
 				$id_token         = self::makeToken( $id_token_payload, '__test_client_secret__' );
 				return [
@@ -281,7 +281,9 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 
 		try {
 			$e_message = 'No exception caught';
-			$this->login->redirect_login();
+			// Need to hide error messages here because a cookie is set.
+			// phpcs:ignore
+			@$this->login->redirect_login();
 		} catch ( WP_Auth0_InvalidIdTokenException $e ) {
 			$e_message = $e->getMessage();
 		}
@@ -305,12 +307,14 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		self::$opts->set( 'client_id', '__test_client_id__' );
 		self::$opts->set( 'client_secret', '__test_client_secret__' );
 		self::$opts->set( 'client_signing_algorithm', 'HS256' );
-		$_REQUEST['code'] = uniqid();
-		$_COOKIE[ 'auth0_nonce' ] = '__test_nonce__';
+		$_REQUEST['code']       = uniqid();
+		$_COOKIE['auth0_nonce'] = '__test_nonce__';
 
 		try {
 			$http_data = [];
-			$this->login->redirect_login();
+			// Need to hide error messages here because a cookie is set.
+			// phpcs:ignore
+			@$this->login->redirect_login();
 		} catch ( Exception $e ) {
 			$http_data = unserialize( $e->getMessage() );
 		}
@@ -336,11 +340,14 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		self::$opts->set( 'client_id', '__test_client_id__' );
 		self::$opts->set( 'client_secret', '__test_client_secret__' );
 		self::$opts->set( 'client_signing_algorithm', 'HS256' );
-		$_REQUEST['code'] = uniqid();
+		$_REQUEST['code']       = uniqid();
+		$_COOKIE['auth0_nonce'] = '__test_nonce__';
 
 		try {
 			$user_data = [];
-			$this->login->redirect_login();
+			// Need to hide error messages here because a cookie is set.
+			// phpcs:ignore
+			@$this->login->redirect_login();
 		} catch ( Exception $e ) {
 			$user_data = unserialize( $e->getMessage() );
 		}
@@ -369,11 +376,14 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		self::$opts->set( 'client_id', '__test_client_id__' );
 		self::$opts->set( 'client_secret', '__test_client_secret__' );
 		self::$opts->set( 'client_signing_algorithm', 'HS256' );
-		$_REQUEST['code'] = uniqid();
+		$_REQUEST['code']       = uniqid();
+		$_COOKIE['auth0_nonce'] = '__test_nonce__';
 
 		try {
 			$user_data = [];
-			$this->login->redirect_login();
+			// Need to hide error messages here because a cookie is set.
+			// phpcs:ignore
+			@$this->login->redirect_login();
 		} catch ( Exception $e ) {
 			$user_data = unserialize( $e->getMessage() );
 		}
@@ -400,11 +410,14 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		self::$opts->set( 'client_secret', '__test_client_secret__' );
 		self::$opts->set( 'client_signing_algorithm', 'HS256' );
 		add_filter( 'auth0_use_management_api_for_userinfo', '__return_false', 10 );
-		$_REQUEST['code'] = uniqid();
+		$_REQUEST['code']       = uniqid();
+		$_COOKIE['auth0_nonce'] = '__test_nonce__';
 
 		try {
 			$user_data = [];
-			$this->login->redirect_login();
+			// Need to hide error messages here because a cookie is set.
+			// phpcs:ignore
+			@$this->login->redirect_login();
 		} catch ( Exception $e ) {
 			$user_data = unserialize( $e->getMessage() );
 		}
