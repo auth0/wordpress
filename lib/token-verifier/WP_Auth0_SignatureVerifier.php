@@ -12,6 +12,8 @@ use Lcobucci\JWT\Token;
 
 /**
  * Class WP_Auth0_SignatureVerifier
+ *
+ * @codeCoverageIgnore - Classes are adapted from the PHP SDK and tested there.
  */
 abstract class WP_Auth0_SignatureVerifier {
 

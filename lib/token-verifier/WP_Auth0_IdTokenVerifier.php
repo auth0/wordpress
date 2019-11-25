@@ -9,6 +9,8 @@
 
 /**
  * Class WP_Auth0_IdTokenVerifier
+ *
+ * @codeCoverageIgnore - Classes are adapted from the PHP SDK and tested there.
  */
 final class WP_Auth0_IdTokenVerifier {
 
