@@ -173,11 +173,13 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		self::$opts->set( 'link_auth0_users', 1 );
 		self::$opts->set( 'custom_css', '__test_css__' );
 		self::$opts->set( 'custom_js', '__test_js__' );
+		self::$opts->set( 'auth0_implicit_workflow', 1 );
 		$db_manager->install_db( $test_version );
 		$this->assertNull( self::$opts->get( 'jwt_auth_integration' ) );
 		$this->assertNull( self::$opts->get( 'link_auth0_users' ) );
 		$this->assertNull( self::$opts->get( 'custom_css' ) );
 		$this->assertNull( self::$opts->get( 'custom_js' ) );
+		$this->assertNull( self::$opts->get( 'auth0_implicit_workflow' ) );
 	}
 
 	/**
