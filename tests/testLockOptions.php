@@ -38,22 +38,6 @@ class TestLockOptions extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that callback URLs are built properly
-	 */
-	public function testThatAuthCallbacksAreCorrect() {
-		$lock_options = new WP_Auth0_Lock10_Options( [], self::$opts );
-
-		$this->assertEquals( 'http://example.org/index.php?auth0=implicit', $lock_options->get_implicit_callback_url() );
-		$this->assertEquals( 'http://example.org/index.php?auth0=1', $lock_options->get_code_callback_url() );
-
-		self::$opts->set( 'force_https_callback', 1 );
-		$lock_options = new WP_Auth0_Lock10_Options( [], self::$opts );
-
-		$this->assertEquals( 'https://example.org/index.php?auth0=implicit', $lock_options->get_implicit_callback_url() );
-		$this->assertEquals( 'https://example.org/index.php?auth0=1', $lock_options->get_code_callback_url() );
-	}
-
-	/**
 	 * Test that the social_big_buttons option is not used.
 	 */
 	public function testThatSocialButtonStyleStaysBig() {
