@@ -115,17 +115,12 @@ class WP_Auth0_LoginManager {
 		}
 
 		// Check for valid state value returned from Auth0.
-		$cb_req = 'implicit' === $cb_type ? $_POST : $_GET;
-		if ( empty( $cb_req['state'] ) || ! WP_Auth0_State_Handler::get_instance()->validate( $cb_req['state'] ) ) {
+		if ( empty( $_GET['state'] ) || ! WP_Auth0_State_Handler::get_instance()->validate( $_GET['state'] ) ) {
 			$this->die_on_login( __( 'Invalid state', 'wp-auth0' ) );
 		}
 
 		try {
-			if ( $cb_type === 'implicit' ) {
-				$this->implicit_login();
-			} else {
-				$this->redirect_login();
-			}
+			$this->redirect_login();
 		} catch ( WP_Auth0_LoginFlowValidationException $e ) {
 
 			// Errors encountered during the OAuth login flow.
@@ -205,47 +200,6 @@ class WP_Auth0_LoginManager {
 				wp_safe_redirect( $redirect_url );
 			}
 			exit();
-		}
-	}
-
-	/**
-	 * Secondary login flow, Implicit Grant.
-	 * Application type must be set to "Single Page App" to use this flow.
-	 *
-	 * @throws WP_Auth0_LoginFlowValidationException - OAuth login flow errors.
-	 * @throws WP_Auth0_BeforeLoginException - Errors encountered during the auth0_before_login action.
-	 * @throws WP_Auth0_InvalidIdTokenException - If the ID token does not validate.
-	 *
-	 * @link https://auth0.com/docs/api-auth/tutorials/implicit-grant
-	 */
-	public function implicit_login() {
-
-		if ( empty( $_POST['id_token'] ) && empty( $_POST['token'] ) ) {
-			throw new WP_Auth0_LoginFlowValidationException( __( 'No ID token found', 'wp-auth0' ) );
-		}
-
-		// Posted from the login page to the callback URL.
-		$id_token_param = ! empty( $_POST['id_token'] ) ? $_POST['id_token'] : $_POST['token'];
-		$id_token       = sanitize_text_field( wp_unslash( $id_token_param ) );
-
-		$decoded_token = $this->decode_id_token( $id_token );
-		$decoded_token = $this->clean_id_token( $decoded_token );
-
-		if ( $this->login_user( $decoded_token, $id_token ) ) {
-
-			// Validated above in $this->init_auth0().
-			$state_decoded = $this->get_state();
-
-			if ( ! empty( $state_decoded->interim ) ) {
-				include WPA0_PLUGIN_DIR . 'templates/login-interim.php';
-			} else {
-				$redirect_to = ! empty( $state_decoded->redirect_to ) ? $state_decoded->redirect_to : null;
-				if ( ! $redirect_to || wp_login_url() === $redirect_to ) {
-					$redirect_to = $this->a0_options->get( 'default_login_redirection' );
-				}
-				wp_safe_redirect( $redirect_to );
-			}
-			exit;
 		}
 	}
 
@@ -452,9 +406,7 @@ class WP_Auth0_LoginManager {
 	 * @return array
 	 */
 	public static function get_authorize_params( $connection = null, $redirect_to = null ) {
-		$opts         = WP_Auth0_Options::Instance();
-		$lock_options = new WP_Auth0_Lock10_Options();
-		$is_implicit  = (bool) $opts->get( 'auth0_implicit_workflow', false );
+		$opts = WP_Auth0_Options::Instance();
 
 		$params = [
 			'connection'    => $connection,
@@ -462,9 +414,9 @@ class WP_Auth0_LoginManager {
 			'scope'         => self::get_userinfo_scope( 'authorize_url' ),
 			'nonce'         => WP_Auth0_Nonce_Handler::get_instance()->get_unique(),
 			'max_age'       => absint( apply_filters( 'auth0_jwt_max_age', null ) ),
-			'response_type' => $is_implicit ? 'id_token' : 'code',
-			'response_mode' => $is_implicit ? 'form_post' : 'query',
-			'redirect_uri'  => $is_implicit ? $lock_options->get_implicit_callback_url() : $opts->get_wp_auth0_url(),
+			'response_type' => 'code',
+			'response_mode' => 'query',
+			'redirect_uri'  => $opts->get_wp_auth0_url(),
 		];
 
 		// Where should the user be redirected after logging in?

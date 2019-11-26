@@ -196,6 +196,7 @@ class WP_Auth0_DBManager {
 			$options->remove( 'link_auth0_users' );
 			$options->remove( 'custom_css' );
 			$options->remove( 'custom_js' );
+			$options->remove( 'auth0_implicit_workflow' );
 		}
 
 		$options->update_all();

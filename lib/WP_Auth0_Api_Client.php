@@ -173,7 +173,7 @@ class WP_Auth0_Api_Client {
 			'name'                => $name,
 			'app_type'            => 'regular_web',
 
-			// Callback URLs for Auth Code and Hybrid/Implicit
+			// Callback URL to process login
 			'callbacks'           => [
 				$options->get_wp_auth0_url(),
 			],
@@ -455,7 +455,6 @@ class WP_Auth0_Api_Client {
 
 		return [
 			'authorization_code',
-			'implicit',
 			'refresh_token',
 			'client_credentials',
 		];

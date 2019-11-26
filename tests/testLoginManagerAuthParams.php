@@ -32,26 +32,6 @@ class TestLoginManagerAuthParams extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'http://example.org', $decoded_state->redirect_to );
 	}
 
-	public function testThatImplicitAuthParamsAreCorrect() {
-		self::$opts->set( 'client_id', '__test_client_id_2__' );
-		self::$opts->set( 'auth0_implicit_workflow', 1 );
-		$auth_params = WP_Auth0_LoginManager::get_authorize_params();
-
-		$this->assertEquals( '__test_client_id_2__', $auth_params['client_id'] );
-		$this->assertEquals( 'openid email profile', $auth_params['scope'] );
-		$this->assertEquals( 'id_token', $auth_params['response_type'] );
-		$this->assertEquals( 'form_post', $auth_params['response_mode'] );
-		$this->assertEquals( site_url( 'index.php?auth0=implicit' ), $auth_params['redirect_uri'] );
-		$this->assertEquals( WP_Auth0_Nonce_Handler::get_instance()->get_unique(), $auth_params['nonce'] );
-		$this->assertArrayNotHasKey( 'auth0Client', $auth_params );
-
-		$decoded_state = json_decode( base64_decode( $auth_params['state'] ) );
-
-		$this->assertFalse( $decoded_state->interim );
-		$this->assertEquals( WP_Auth0_State_Handler::get_instance()->get_unique(), $decoded_state->nonce );
-		$this->assertEquals( 'http://example.org', $decoded_state->redirect_to );
-	}
-
 	public function testThatRedirectInGetAppearsInState() {
 		$_GET['redirect_to'] = 'http://example.org/get-redirect';
 		$auth_params         = WP_Auth0_LoginManager::get_authorize_params();

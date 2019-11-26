@@ -19,13 +19,6 @@ class WP_Auth0_Lock10_Options {
 		$this->extended_settings = $extended_settings;
 	}
 
-	public function get_code_callback_url() {
-		return $this->wp_options->get_wp_auth0_url( $this->get_callback_protocol() );
-	}
-
-	public function get_implicit_callback_url() {
-		return $this->wp_options->get_wp_auth0_url( $this->get_callback_protocol(), true );
-	}
 	/**
 	 * @deprecated - 3.10.0, not used.
 	 *
@@ -39,10 +32,6 @@ class WP_Auth0_Lock10_Options {
 
 	public function get_domain() {
 		return $this->wp_options->get_auth_domain();
-	}
-
-	public function get_auth0_implicit_workflow() {
-		return $this->_get_boolean( $this->wp_options->get( 'auth0_implicit_workflow' ) );
 	}
 
 	public function is_registration_enabled() {
@@ -151,16 +140,9 @@ class WP_Auth0_Lock10_Options {
 			],
 		];
 
-		if ( $this->get_auth0_implicit_workflow() ) {
-			$extraOptions['auth']['responseType']    = 'id_token';
-			$extraOptions['auth']['responseMode']    = 'form_post';
-			$extraOptions['auth']['redirectUrl']     = $this->get_implicit_callback_url();
-			$extraOptions['autoParseHash']           = false;
-			$extraOptions['auth']['params']['nonce'] = WP_Auth0_Nonce_Handler::get_instance()->get_unique();
-		} else {
-			$extraOptions['auth']['responseType'] = 'code';
-			$extraOptions['auth']['redirectUrl']  = $this->get_code_callback_url();
-		}
+		$extraOptions['auth']['params']['nonce'] = WP_Auth0_Nonce_Handler::get_instance()->get_unique();
+		$extraOptions['auth']['responseType']    = 'code';
+		$extraOptions['auth']['redirectUrl']     = $this->wp_options->get_wp_auth0_url( $this->get_callback_protocol() );
 
 		if ( $this->wp_options->get( 'custom_domain' ) ) {
 			$tenant_region                        = WP_Auth0::get_tenant_region( $this->wp_options->get( 'domain' ) );

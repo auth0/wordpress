@@ -20,9 +20,8 @@ class TestApiClient extends WP_Auth0_Test_Case {
 	 */
 	public function testThatGrantTypesAreCorrect() {
 		$grant_types = WP_Auth0_Api_Client::get_client_grant_types();
-		$this->assertCount( 4, $grant_types );
+		$this->assertCount( 3, $grant_types );
 		$this->assertContains( 'authorization_code', $grant_types );
-		$this->assertContains( 'implicit', $grant_types );
 		$this->assertContains( 'refresh_token', $grant_types );
 		$this->assertContains( 'client_credentials', $grant_types );
 	}

@@ -111,12 +111,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_auto_login',
 			],
 			[
-				'name'     => __( 'Implicit Login Flow', 'wp-auth0' ),
-				'opt'      => 'auth0_implicit_workflow',
-				'id'       => 'wpa0_auth0_implicit_workflow',
-				'function' => 'render_auth0_implicit_workflow',
-			],
-			[
 				'name'     => __( 'Valid Proxy IP', 'wp-auth0' ),
 				'opt'      => 'valid_proxy_ip',
 				'id'       => 'wpa0_valid_proxy_ip',
@@ -336,24 +330,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Render form field and description for the `auth0_implicit_workflow` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_auth0_implicit_workflow( $args = [] ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Turns on implicit login flow, which most sites will not need. ', 'wp-auth0' ) .
-			__( 'Only enable this if outbound connections to auth0.com are disabled on your server. ', 'wp-auth0' ) .
-			__( 'This will limit profile changes and other functionality in the plugin', 'wp-auth0' )
-		);
-	}
-
-	/**
 	 * Render form field and description for the `valid_proxy_ip` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
@@ -399,11 +375,10 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$input['skip_strategies'] = isset( $input['skip_strategies'] ) ?
 			sanitize_text_field( trim( $input['skip_strategies'] ) ) : '';
 
-		$input['auto_provisioning']       = ( isset( $input['auto_provisioning'] ) ? $input['auto_provisioning'] : 0 );
-		$input['remember_users_session']  = ( isset( $input['remember_users_session'] ) ? $input['remember_users_session'] : 0 ) == 1;
-		$input['passwordless_enabled']    = ( isset( $input['passwordless_enabled'] ) ? $input['passwordless_enabled'] : 0 ) == 1;
-		$input['auth0_implicit_workflow'] = ( isset( $input['auth0_implicit_workflow'] ) ? $input['auth0_implicit_workflow'] : 0 );
-		$input['force_https_callback']    = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
+		$input['auto_provisioning']      = ( isset( $input['auto_provisioning'] ) ? $input['auto_provisioning'] : 0 );
+		$input['remember_users_session'] = ( isset( $input['remember_users_session'] ) ? $input['remember_users_session'] : 0 ) == 1;
+		$input['passwordless_enabled']   = ( isset( $input['passwordless_enabled'] ) ? $input['passwordless_enabled'] : 0 ) == 1;
+		$input['force_https_callback']   = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
 
 		$input['migration_ips_filter'] = ( ! empty( $input['migration_ips_filter'] ) ? 1 : 0 );
 

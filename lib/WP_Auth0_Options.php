@@ -89,13 +89,12 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 * Get the main site URL for Auth0 processing
 	 *
 	 * @param string|null $protocol - forced URL protocol, use default if empty
-	 * @param bool        $implicit - use the implicit flow in the callback
 	 *
 	 * @return string
 	 */
-	public function get_wp_auth0_url( $protocol = null, $implicit = false ) {
+	public function get_wp_auth0_url( $protocol = null ) {
 		$site_url = site_url( 'index.php', $protocol );
-		return add_query_arg( 'auth0', ( $implicit ? 'implicit' : '1' ), $site_url );
+		return add_query_arg( 'auth0', 1, $site_url );
 	}
 
 	/**
@@ -254,7 +253,6 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 			'migration_token'           => null,
 			'migration_ips_filter'      => false,
 			'migration_ips'             => null,
-			'auth0_implicit_workflow'   => false,
 			'valid_proxy_ip'            => null,
 			'auth0_server_domain'       => 'auth0.auth0.com',
 		];
