@@ -48,7 +48,7 @@ final class WP_Auth0_AsymmetricVerifier extends WP_Auth0_SignatureVerifier {
 	protected function checkSignature( Token $token ) : bool {
 		$tokenKid = $token->getHeader( 'kid', false );
 		if ( ! array_key_exists( $tokenKid, $this->jwks ) ) {
-			throw new WP_Auth0_InvalidIdTokenException( 'ID token key ID "' . $tokenKid . '" was not found in the JWKS' );
+			throw new WP_Auth0_InvalidIdTokenException( 'Could not find a public key for Key ID (kid) "' . $tokenKid . '"' );
 		}
 
 		return $token->verify( new RsSigner(), new Key( $this->jwks[ $tokenKid ] ) );

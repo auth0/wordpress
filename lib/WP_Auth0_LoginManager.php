@@ -568,13 +568,15 @@ class WP_Auth0_LoginManager {
 	 * @throws WP_Auth0_InvalidIdTokenException
 	 */
 	private function decode_id_token( $id_token ) {
-		$idTokenIss  = 'https://' . $this->a0_options->get( 'domain' ) . '/';
-		$sigVerifier = null;
-		if ( 'RS256' === $this->a0_options->get( 'client_signing_algorithm' ) ) {
+		$expectedIss = 'https://' . $this->a0_options->get( 'domain' ) . '/';
+		$expectedAlg = $this->a0_options->get( 'client_signing_algorithm' );
+		if ( 'RS256' === $expectedAlg ) {
 			$jwks        = ( new WP_Auth0_JwksFetcher() )->getKeys();
 			$sigVerifier = new WP_Auth0_AsymmetricVerifier( $jwks );
-		} elseif ( 'HS256' === $this->a0_options->get( 'client_signing_algorithm' ) ) {
+		} elseif ( 'HS256' === $expectedAlg ) {
 			$sigVerifier = new WP_Auth0_SymmetricVerifier( $this->a0_options->get( 'client_secret' ) );
+		} else {
+			throw new WP_Auth0_InvalidIdTokenException( 'Signing algorithm of "' . $expectedAlg . '" is not supported.' );
 		}
 
 		$verifierOptions = [
@@ -583,7 +585,7 @@ class WP_Auth0_LoginManager {
 			'max_age' => absint( apply_filters( 'auth0_jwt_max_age', null ) ),
 		];
 
-		$idTokenVerifier = new WP_Auth0_IdTokenVerifier( $idTokenIss, $this->a0_options->get( 'client_id' ), $sigVerifier );
+		$idTokenVerifier = new WP_Auth0_IdTokenVerifier( $expectedIss, $this->a0_options->get( 'client_id' ), $sigVerifier );
 		return (object) $idTokenVerifier->verify( $id_token, $verifierOptions );
 	}
 
