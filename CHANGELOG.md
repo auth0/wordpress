@@ -5,8 +5,9 @@
 
 **Notes on this release**
 
-- The minimum PHP version has been updated from 5.3 to 5.6. All long arrays have been converted to short arrays with a PHPCS check. 
+- The minimum PHP version has been updated from 5.3 to 7.0. All long arrays have been converted to short arrays with a PHPCS check. 
 - The site will no longer auto-redirect paths with `auth0` in them to the callback URL. Use `/index.php?auth0=1` to use the callback URL directly. Your site may require permalinks to be refreshed manually by going to **wp-admin > Settings > Permalinks** and clicking **Save Changes**.
+- The Client Secret Encoded option has been removed. If your WordPress site was using an encoded Client Secret, you'll need to regenerate one in the Auth0 dashboard and save it in wp-admin > Auth0 > Settings > Basic > Client Secret.
 
 **Closed issues**
 - Using the auth0 word in the URL path triggers an authorization code exchange [\#351](https://github.com/auth0/wp-auth0/issues/351)

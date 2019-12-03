@@ -63,7 +63,6 @@ class WP_Auth0_Api_Client {
 				'domain'                => $a0_options->get( 'domain' ),
 				'client_id'             => $a0_options->get( 'client_id' ),
 				'client_secret'         => $a0_options->get( 'client_secret' ),
-				'client_secret_encoded' => $a0_options->get( 'client_secret_b64_encoded' ),
 				'connection'            => $a0_options->get( 'db_connection_name' ),
 				'app_token'             => null,
 				'audience'              => self::get_endpoint( 'api/v2/' ),

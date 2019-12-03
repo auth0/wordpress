@@ -374,7 +374,6 @@ class WP_Auth0_Options {
 			'custom_domain'             => '',
 			'client_id'                 => '',
 			'client_secret'             => '',
-			'client_secret_b64_encoded' => null,
 			'client_signing_algorithm'  => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
 			'cache_expiration'          => 1440,
 			'wordpress_login_enabled'   => 'link',

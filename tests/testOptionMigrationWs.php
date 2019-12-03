@@ -173,23 +173,6 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that turning on migration keeps the existing token and sets an admin notification.
-	 */
-	public function testThatChangingMigrationToOnKeepsWithBase64JwtSetsId() {
-		$client_secret = '__test_client_secret__';
-		self::$opts->set( 'migration_token', self::makeToken( [ 'jti' => '__test_token_id__' ], $client_secret ) );
-		$input = [
-			'migration_ws'              => 1,
-			'client_secret'             => wp_auth0_url_base64_encode( $client_secret ),
-			'client_secret_b64_encoded' => 1,
-		];
-
-		$validated = self::$admin->migration_ws_validation( [], $input );
-
-		$this->assertEquals( '__test_token_id__', $validated['migration_token_id'] );
-	}
-
-	/**
 	 * Test that turning on migration endpoints without a stored token will generate one.
 	 */
 	public function testThatChangingMigrationToOnGeneratesNewToken() {
