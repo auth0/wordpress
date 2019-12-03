@@ -54,24 +54,6 @@ abstract class WP_Auth0_Api_Abstract {
 	protected $api_client_creds;
 
 	/**
-	 * API token from plugin settings or Client Credentials call.
-	 *
-	 * @deprecated - 3.10.0, not used.
-	 *
-	 * @var string
-	 */
-	protected $api_token;
-
-	/**
-	 * Decoded API token from plugin settings.
-	 *
-	 * @deprecated - 3.10.0, not used.
-	 *
-	 * @var object
-	 */
-	protected $api_token_decoded;
-
-	/**
 	 * API path.
 	 *
 	 * @var string
