@@ -28,15 +28,6 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 	const SCOPE_TRANSIENT_KEY = 'auth0_api_token_scope';
 
 	/**
-	 * Decoded token received.
-	 *
-	 * @deprecated - 3.10.0, not used.
-	 *
-	 * @var null|object
-	 */
-	protected $token_decoded = null;
-
-	/**
 	 * WP_Auth0_Api_Client_Credentials constructor.
 	 *
 	 * @param WP_Auth0_Options $options - WP_Auth0_Options instance.
@@ -57,19 +48,6 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 	 */
 	public function call() {
 		return $this->post()->handle_response( __METHOD__ );
-	}
-
-	/**
-	 * Return the decoded API token received.
-	 *
-	 * @deprecated - 3.10.0, not used.
-	 *
-	 * @return null|object
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function get_token_decoded() {
-		return $this->token_decoded;
 	}
 
 	/**

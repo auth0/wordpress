@@ -43,13 +43,6 @@ class TestEditProfile extends WP_Auth0_Test_Case {
 	public static $apiChangePassword;
 
 	/**
-	 * WP_Auth0_Api_Delete_User_Mfa instance.
-	 *
-	 * @var WP_Auth0_Api_Delete_User_Mfa
-	 */
-	public static $apiDeleteMfa;
-
-	/**
 	 * WP_Auth0_EditProfile instance.
 	 *
 	 * @var WP_Auth0_EditProfile
