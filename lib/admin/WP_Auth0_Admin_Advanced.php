@@ -431,9 +431,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 
 		// If we do have a token, try to decode and store the JTI.
 		$secret = $input['client_secret'];
-		if ( ! empty( $input['client_secret_b64_encoded'] ) ) {
-			$secret = base64_decode( $input['client_secret'] );
-		}
 
 		try {
 			$signature_verifier          = new WP_Auth0_SymmetricVerifier( $secret );

@@ -39,8 +39,7 @@ class TestAdminBasicValidation extends WP_Auth0_Test_Case {
 			'custom_domain'             => '',
 			'client_id'                 => '__test_client_id__',
 			'client_secret'             => '__test_client_secret__',
-			'client_secret_b64_encoded' => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
-			'client_signing_algorithm'  => '',
+			'client_signing_algorithm'  => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
 			'cache_expiration'          => '',
 		];
 	}
@@ -107,35 +106,6 @@ class TestAdminBasicValidation extends WP_Auth0_Test_Case {
 		$validated                             = self::$admin->basic_validation( $old_input, $new_input );
 
 		$this->assertEquals( 'RS256', $validated['client_signing_algorithm'] );
-	}
-
-	public function testThatSecretEncodedIsValidatedAsOffProperly() {
-		$new_input = array_merge( self::$fields, [ 'client_secret_b64_encoded' => 0 ] );
-		$validated = self::$admin->basic_validation( self::$fields, $new_input );
-
-		$this->assertEquals( 0, $validated['client_secret_b64_encoded'] );
-
-		$new_input = array_merge( self::$fields, [ 'client_secret_b64_encoded' => null ] );
-		$validated = self::$admin->basic_validation( self::$fields, $new_input );
-
-		$this->assertEquals( 0, $validated['client_secret_b64_encoded'] );
-
-		$new_input = array_merge( self::$fields, [ 'client_secret_b64_encoded' => false ] );
-		$validated = self::$admin->basic_validation( self::$fields, $new_input );
-
-		$this->assertEquals( 0, $validated['client_secret_b64_encoded'] );
-	}
-
-	public function testThatSecretEncodedIsValidatedAsOnProperly() {
-		$new_input = array_merge( self::$fields, [ 'client_secret_b64_encoded' => 1 ] );
-		$validated = self::$admin->basic_validation( self::$fields, $new_input );
-
-		$this->assertEquals( 1, $validated['client_secret_b64_encoded'] );
-
-		$new_input = array_merge( self::$fields, [ 'client_secret_b64_encoded' => uniqid() ] );
-		$validated = self::$admin->basic_validation( self::$fields, $new_input );
-
-		$this->assertEquals( 1, $validated['client_secret_b64_encoded'] );
 	}
 
 	public function testThatEmptyAlgorithmIsResetToDefault() {

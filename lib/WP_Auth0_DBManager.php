@@ -40,15 +40,6 @@ class WP_Auth0_DBManager {
 			$this->migrate_users_data();
 		}
 
-		// Plugin version < 3.2.22
-		if ( $this->current_db_version < 14 && is_null( $options->get( 'client_secret_b64_encoded' ) ) ) {
-			if ( $options->get( 'client_id' ) ) {
-				$options->set( 'client_secret_b64_encoded', true, false );
-			} else {
-				$options->set( 'client_secret_b64_encoded', false, false );
-			}
-		}
-
 		// Plugin version < 3.4.0
 		if ( $this->current_db_version < 15 || 15 === $version_to_install ) {
 			$options->set( 'cdn_url', WPA0_LOCK_CDN_URL, false );
@@ -197,6 +188,7 @@ class WP_Auth0_DBManager {
 			$options->remove( 'custom_css' );
 			$options->remove( 'custom_js' );
 			$options->remove( 'auth0_implicit_workflow' );
+			$options->remove( 'client_secret_b64_encoded' );
 		}
 
 		$options->update_all();

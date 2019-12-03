@@ -57,12 +57,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				'function' => 'render_client_secret',
 			],
 			[
-				'name'     => __( 'Client Secret Base64 Encoded', 'wp-auth0' ),
-				'opt'      => 'client_secret_b64_encoded',
-				'id'       => 'wpa0_client_secret_b64_encoded',
-				'function' => 'render_client_secret_b64_encoded',
-			],
-			[
 				'name'     => __( 'JWT Signature Algorithm', 'wp-auth0' ),
 				'opt'      => 'client_signing_algorithm',
 				'id'       => 'wpa0_client_signing_algorithm',
@@ -158,24 +152,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password', '', $style );
 		$this->render_field_description(
 			__( 'Client Secret, found in your Application settings in the ', 'wp-auth0' ) .
-			$this->get_dashboard_link( 'applications' )
-		);
-	}
-
-	/**
-	 * Render form field and description for the `client_secret_b64_encoded` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_client_secret_b64_encoded( $args = [] ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Enable this if your Client Secret is base64 encoded. ', 'wp-auth0' ) .
-			__( 'This information is found below the Client Secret field in the ', 'wp-auth0' ) .
 			$this->get_dashboard_link( 'applications' )
 		);
 	}
@@ -339,8 +315,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		if ( __( '[REDACTED]', 'wp-auth0' ) === $input['client_secret'] ) {
 			$input['client_secret'] = $old_options['client_secret'];
 		}
-
-		$input['client_secret_b64_encoded'] = empty( $input['client_secret_b64_encoded'] ) ? 0 : 1;
 
 		if ( ! in_array( $input['client_signing_algorithm'], [ 'HS256', 'RS256' ] ) ) {
 			$input['client_signing_algorithm'] = WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG;
