@@ -6,18 +6,18 @@ function renderAuth0Form( $canShowLegacyLogin = true, $specialSettings = [] ) {
 
 	$options = WP_Auth0_Options::Instance();
 	if ( ! $canShowLegacyLogin || ! wp_auth0_can_show_wp_login_form() ) {
-		$lock_options = new WP_Auth0_Lock10_Options( $specialSettings );
+		$lock_options = new WP_Auth0_Lock_Options( $specialSettings );
 
 		wp_enqueue_script( 'wpa0_lock', $options->get_lock_url(), [ 'jquery' ], false, true );
 		wp_enqueue_script( 'js-cookie', WPA0_PLUGIN_LIB_URL . 'js.cookie.min.js', false, '2.2.0', true );
 		wp_enqueue_script( 'wpa0_lock_init', WPA0_PLUGIN_JS_URL . 'lock-init.js', [ 'jquery' ], WPA0_VERSION, true );
 		wp_localize_script(
 			'wpa0_lock_init',
-			WP_Auth0_Lock10_Options::LOCK_GLOBAL_JS_VAR_NAME,
+			WP_Auth0_Lock_Options::LOCK_GLOBAL_JS_VAR_NAME,
 			[
 				'settings'        => $lock_options->get_lock_options(),
 				'ready'           => WP_Auth0::ready(),
-				'domain'          => $lock_options->get_domain(),
+				'domain'          => $options->get_auth_domain(),
 				'clientId'        => $options->get( 'client_id' ),
 				'stateCookieName' => WP_Auth0_State_Handler::get_storage_cookie_name(),
 				'nonceCookieName' => WP_Auth0_Nonce_Handler::get_storage_cookie_name(),
