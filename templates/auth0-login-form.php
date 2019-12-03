@@ -25,7 +25,7 @@ $custom_signup_fields = (string) trim( $auth0_options->get( 'custom_signup_field
 if ( $custom_signup_fields ) {
 	echo '<script type="text/javascript">';
 	if ( $custom_signup_fields ) {
-		echo 'var ' . WP_Auth0_Lock10_Options::LOCK_GLOBAL_JS_VAR_NAME . 'Fields=' . $custom_signup_fields . ';';
+		echo 'var ' . WP_Auth0_Lock_Options::LOCK_GLOBAL_JS_VAR_NAME . 'Fields=' . $custom_signup_fields . ';';
 	}
 	echo '</script>';
 }
