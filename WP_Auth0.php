@@ -13,7 +13,7 @@ define( 'WPA0_VERSION', '4.0.0-beta' );
 define( 'AUTH0_DB_VERSION', 23 );
 
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
-define( 'WPA0_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'WPA0_PLUGIN_DIR', plugin_dir_path( __FILE__ ) ); // Includes trailing slash
 define( 'WPA0_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'WPA0_PLUGIN_JS_URL', WPA0_PLUGIN_URL . 'assets/js/' );
 define( 'WPA0_PLUGIN_CSS_URL', WPA0_PLUGIN_URL . 'assets/css/' );
@@ -353,9 +353,7 @@ class WP_Auth0 {
 		}
 
 		ob_start();
-		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
-		renderAuth0Form( false, $atts );
-
+		\WP_Auth0_Lock::render( false, $atts );
 		return ob_get_clean();
 	}
 
@@ -387,8 +385,7 @@ class WP_Auth0 {
 	 */
 	public function render_form( $html ) {
 		ob_start();
-		require_once WPA0_PLUGIN_DIR . 'templates/login-form.php';
-		renderAuth0Form();
+		\WP_Auth0_Lock::render();
 		$auth0_form = ob_get_clean();
 		return $auth0_form ? $auth0_form : $html;
 	}
