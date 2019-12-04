@@ -182,7 +182,7 @@ class WP_Auth0_Api_Client {
 			'web_origins'         => $options->get_web_origins(),
 
 			// Force SSL, will not work without it
-			'cross_origin_loc'    => $options->get_cross_origin_loc(),
+			'cross_origin_loc'    => add_query_arg( 'auth0fallback', '1', site_url( 'index.php', 'https' ) ),
 			'cross_origin_auth'   => true,
 
 			// A set of URLs that are valid to redirect to after logout from Auth0
