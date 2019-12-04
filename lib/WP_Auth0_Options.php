@@ -251,49 +251,6 @@ class WP_Auth0_Options {
 	}
 
 	/**
-	 * Get the stored token signing algorithm
-	 *
-	 * @return string
-	 */
-	public function get_client_signing_algorithm() {
-		return $this->get( 'client_signing_algorithm', WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG );
-	}
-
-	/**
-	 * Get the currently-stored client ID as a JWT key
-	 *
-	 * @param bool $legacy - legacy installs did not provide RS256, forces HS256
-	 *
-	 * @return bool|string
-	 */
-	public function get_client_secret_as_key( $legacy = false ) {
-		return $this->convert_client_secret_to_key(
-			$this->get( 'client_secret', '' ),
-			$this->get( 'client_secret_b64_encoded', false ),
-			( $legacy ? false : $this->get_client_signing_algorithm() === 'RS256' ),
-			$this->get_auth_domain()
-		);
-	}
-
-	/**
-	 * Convert a client_secret value into a JWT key
-	 *
-	 * @param string $secret - client_secret value
-	 * @param bool   $is_encoded - is the client_secret base64 encoded?
-	 * @param bool   $is_RS256 - if true, use RS256; if false, use HS256
-	 * @param string $domain - tenant domain
-	 *
-	 * @return array|bool|mixed|string
-	 */
-	public function convert_client_secret_to_key( $secret, $is_encoded, $is_RS256, $domain ) {
-		if ( $is_RS256 ) {
-			return ( new WP_Auth0_JwksFetcher() )->getKeys();
-		} else {
-			return $is_encoded ? wp_auth0_url_base64_decode( $secret ) : $secret;
-		}
-	}
-
-	/**
 	 * Get web_origin settings for new Clients
 	 *
 	 * @return array
@@ -324,24 +281,6 @@ class WP_Auth0_Options {
 	public function get_wp_auth0_url( $protocol = null ) {
 		$site_url = site_url( 'index.php', $protocol );
 		return add_query_arg( 'auth0', 1, $site_url );
-	}
-
-	/**
-	 * Get get_cross_origin_loc URL for new Clients
-	 *
-	 * @return string
-	 */
-	public function get_cross_origin_loc() {
-		return add_query_arg( 'auth0fallback', '1', site_url( 'index.php', 'https' ) );
-	}
-
-	/**
-	 * Get the main site logout URL, minus a nonce
-	 *
-	 * @return string
-	 */
-	public function get_logout_url() {
-		return add_query_arg( 'action', 'logout', site_url( 'wp-login.php', 'login' ) );
 	}
 
 	/**
