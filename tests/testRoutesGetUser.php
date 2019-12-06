@@ -17,6 +17,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	use HookHelpers;
 
 	use TokenHelper;
+
 	use UsersHelper;
 
 	/**
@@ -32,14 +33,6 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	 * @var WP
 	 */
 	protected static $wp;
-
-	/**
-	 * Run before test suite.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$routes = new WP_Auth0_Routes( self::$opts );
-	}
 
 	/**
 	 * Runs before each test method.
@@ -58,7 +51,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	 * If migration services are off, the route should fail with an error.
 	 */
 	public function testThatGetUserRouteIsForbiddenByDefault() {
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 403, $output->status );
 		$this->assertEquals( 'Forbidden', $output->error );
@@ -73,7 +66,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 		self::$opts->set( 'migration_ws', 1 );
 		self::$opts->set( 'migration_ips_filter', 1 );
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Unauthorized', $output->error );
@@ -86,7 +79,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	public function testThatGetUserRouteIsUnauthorizedIfNoToken() {
 		self::$opts->set( 'migration_ws', 1 );
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Unauthorized: missing authorization header', $output->error );
@@ -107,7 +100,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 
 		$_POST['access_token'] = self::makeToken( [ 'jti' => uniqid() ], $client_secret );
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Invalid token', $output->error );
@@ -127,7 +120,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 
 		$_POST['access_token'] = $migration_token;
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 400, $output->status );
 		$this->assertEquals( 'Username is required', $output->error );
@@ -148,7 +141,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 		$_POST['access_token'] = $migration_token;
 		$_POST['username']     = uniqid();
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'User not found', $output->error );
@@ -172,7 +165,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 		$user = $this->createUser( [ 'user_email' => $_POST['username'] ] );
 		WP_Auth0_UsersRepo::update_meta( $user->ID, 'auth0_transient_email_update', $_POST['username'] );
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertFalse( isset( $output->ID ) );
 		$this->assertEquals( 200, $output->status );
@@ -193,7 +186,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 
 		$_POST['access_token'] = $migration_token;
 
-		$output_em = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output_em = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( $user->ID, $output_em->data->ID );
 		$this->assertEquals( $user->user_login, $output_em->data->user_login );

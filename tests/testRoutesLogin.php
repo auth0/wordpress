@@ -35,14 +35,6 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 	protected static $wp;
 
 	/**
-	 * Run before test suite.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$routes = new WP_Auth0_Routes( self::$opts );
-	}
-
-	/**
 	 * Runs before each test method.
 	 */
 	public function setUp() {
@@ -60,7 +52,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 	public function testThatLoginRouteIsForbiddenByDefault() {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 403, $output->status );
 		$this->assertEquals( 'Forbidden', $output->error );
@@ -76,7 +68,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		self::$opts->set( 'migration_ips_filter', 1 );
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Unauthorized', $output->error );
@@ -91,7 +83,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		self::$opts->set( 'migration_ws', 1 );
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Unauthorized: missing authorization header', $output->error );
@@ -113,7 +105,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 		$_POST['access_token']             = self::makeToken( [ 'jti' => uniqid() ], $client_secret );
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Invalid token', $output->error );
@@ -135,7 +127,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 		$_POST['access_token']             = self::makeToken( [ 'iss' => uniqid() ], $client_secret );
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Invalid token', $output->error );
@@ -159,7 +151,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 		$_POST['access_token']             = $migration_token;
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 400, $output->status );
 		$this->assertEquals( 'Username is required', $output->error );
@@ -184,7 +176,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		$_POST['access_token']             = $migration_token;
 		$_POST['username']                 = uniqid();
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 400, $output->status );
 		$this->assertEquals( 'Password is required', $output->error );
@@ -211,7 +203,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		$_POST['username']     = uniqid();
 		$_POST['password']     = uniqid();
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( 401, $output->status );
 		$this->assertEquals( 'Invalid credentials', $output->error );
@@ -243,7 +235,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 		$_POST['access_token']             = $migration_token;
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ) );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEquals( $user->ID, $output->data->ID );
 		$this->assertEquals( $user->user_login, $output->data->user_login );
