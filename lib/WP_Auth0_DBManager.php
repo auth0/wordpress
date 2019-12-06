@@ -9,39 +9,24 @@ class WP_Auth0_DBManager {
 		$this->a0_options = $a0_options;
 	}
 
-	/**
-	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function init() {
-		$this->current_db_version = (int) get_option( 'auth0_db_version', 0 );
-		if ( $this->current_db_version === 0 ) {
-			$this->current_db_version = (int) get_site_option( 'auth0_db_version', 0 );
-		}
-
-		add_action( 'plugins_loaded', [ $this, 'check_update' ] );
-	}
-
-	public function check_update() {
-		if ( $this->current_db_version && $this->current_db_version !== AUTH0_DB_VERSION ) {
-			$this->install_db();
-		}
-	}
-
 	public function install_db( $version_to_install = null ) {
+
+		$current_ver = (int) get_option( 'auth0_db_version', 0 );
+		if ( $current_ver === 0 ) {
+			$current_ver = (int) get_site_option( 'auth0_db_version', 0 );
+		}
+
+		if ( empty( $current_ver ) || $current_ver === AUTH0_DB_VERSION ) {
+			update_option( 'auth0_db_version', AUTH0_DB_VERSION );
+			return;
+		}
 
 		wp_cache_set( 'doing_db_update', true, WPA0_CACHE_GROUP );
 
 		$options = $this->a0_options;
 
-		// Plugin version < 3.1.6
-		if ( ( $this->current_db_version < 9 && 0 !== $this->current_db_version ) || 9 === $version_to_install ) {
-			$this->migrate_users_data();
-		}
-
 		// Plugin version < 3.4.0
-		if ( $this->current_db_version < 15 || 15 === $version_to_install ) {
+		if ( $current_ver < 15 || 15 === $version_to_install ) {
 			$options->set( 'cdn_url', WPA0_LOCK_CDN_URL, false );
 			$options->set( 'cache_expiration', 1440, false );
 
@@ -52,7 +37,7 @@ class WP_Auth0_DBManager {
 		}
 
 		// Plugin version < 3.5.0
-		if ( ( $this->current_db_version < 16 && 0 !== $this->current_db_version ) || 16 === $version_to_install ) {
+		if ( $current_ver < 16 || 16 === $version_to_install ) {
 
 			// Update Lock and Auth versions
 			if ( '//cdn.auth0.com/js/lock/11.0.0/lock.min.js' === $options->get( 'cdn_url' ) ) {
@@ -61,7 +46,7 @@ class WP_Auth0_DBManager {
 		}
 
 		// Plugin version < 3.6.0
-		if ( ( $this->current_db_version < 18 && 0 !== $this->current_db_version ) || 18 === $version_to_install ) {
+		if ( $current_ver < 18 || 18 === $version_to_install ) {
 
 			// Migrate passwordless_method
 			if ( $options->get( 'passwordless_enabled', false ) ) {
@@ -102,7 +87,7 @@ class WP_Auth0_DBManager {
 		}
 
 		// 3.9.0
-		if ( ( $this->current_db_version < 20 && 0 !== $this->current_db_version ) || 20 === $version_to_install ) {
+		if ( $current_ver < 20 || 20 === $version_to_install ) {
 
 			// Remove default IP addresses from saved field.
 			$migration_ips = trim( $options->get( 'migration_ips' ) );
@@ -116,7 +101,7 @@ class WP_Auth0_DBManager {
 		}
 
 		// 3.10.0
-		if ( ( $this->current_db_version < 21 && 0 !== $this->current_db_version ) || 21 === $version_to_install ) {
+		if ( $current_ver < 21 || 21 === $version_to_install ) {
 
 			if ( 'https://cdn.auth0.com/js/lock/11.5/lock.min.js' === $options->get( 'cdn_url' ) ) {
 				$options->set( 'cdn_url', WPA0_LOCK_CDN_URL, false );
@@ -156,12 +141,12 @@ class WP_Auth0_DBManager {
 		}
 
 		// 3.11.0
-		if ( ( $this->current_db_version < 22 && 0 !== $this->current_db_version ) || 22 === $version_to_install ) {
+		if ( $current_ver < 22 || 22 === $version_to_install ) {
 			$options->remove( 'social_big_buttons' );
 		}
 
 		// 4.0.0
-		if ( ( $this->current_db_version < 23 && 0 !== $this->current_db_version ) || 23 === $version_to_install ) {
+		if ( $current_ver < 23 || 23 === $version_to_install ) {
 			$extra_conf = json_decode( $options->get( 'extra_conf' ), true );
 			if ( empty( $extra_conf ) ) {
 				$extra_conf = [];
@@ -192,154 +177,8 @@ class WP_Auth0_DBManager {
 		}
 
 		$options->update_all();
-
-		$this->current_db_version = AUTH0_DB_VERSION;
 		update_option( 'auth0_db_version', AUTH0_DB_VERSION );
-
 		wp_cache_set( 'doing_db_update', false, WPA0_CACHE_GROUP );
-	}
-
-	/**
-	 * Display a banner if we are not able to get a Management API token.
-	 *
-	 * @deprecated - 3.10.0, not used.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function notice_failed_client_grant() {
-
-		if (
-			( get_option( 'wp_auth0_client_grant_failed' ) || get_option( 'wp_auth0_grant_types_failed' ) )
-			&& current_user_can( 'update_plugins' )
-		) {
-
-			if ( WP_Auth0_Api_Client::get_client_token() ) {
-				delete_option( 'wp_auth0_client_grant_failed' );
-				delete_option( 'wp_auth0_grant_types_failed' );
-			} else {
-				?>
-				<div class="notice notice-error">
-					<p><strong><?php _e( 'IMPORTANT!', 'wp-auth0' ); ?></strong></p>
-					<p>
-					<?php
-						printf(
-							// translators: Placeholder is the plugin version.
-							__( 'WP-Auth0 has upgraded to %s but could not complete the upgrade in your Auth0 dashboard.', 'wp-auth0' ),
-							WPA0_VERSION
-						);
-					?>
-						<?php _e( 'This can be fixed one of 2 ways:', 'wp-auth0' ); ?></p>
-					<p><strong>1.</strong>
-						<a href="https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually" target="_blank">
-						<?php
-							_e( 'Create a new Management API token', 'wp-auth0' )
-						?>
-							</a>
-						<?php _e( 'and save it in the Auth0 > Settings > Basic tab > API Token field.', 'wp-auth0' ); ?>
-						<?php _e( 'This will run the update process again.', 'wp-auth0' ); ?></p>
-					<p><strong>2.</strong>
-						<a href="https://auth0.com/docs/cms/wordpress/configuration#client-setup"
-						   target="_blank">
-						   <?php
-							_e( 'Review your Application advanced settings', 'wp-auth0' )
-							?>
-							</a>,
-						<?php _e( 'specifically the Grant Types, and ', 'wp-auth0' ); ?>
-						<a href="https://auth0.com/docs/cms/wordpress/configuration#authorize-the-application-for-the-management-api"
-						   target="_blank">
-						   <?php
-							_e( 'authorize your client for the Management API', 'wp-auth0' )
-							?>
-							</a>
-						<?php _e( 'to manually complete the setup.', 'wp-auth0' ); ?>
-					</p>
-					<p><?php _e( 'This banner will disappear once the process is complete.', 'wp-auth0' ); ?></p>
-				</div>
-				<?php
-			}
-		}
-	}
-
-	/**
-	 * Display a banner once after 3.5.0 upgrade.
-	 *
-	 * @deprecated - 3.10.0, not used.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function notice_successful_client_grant() {
-
-		if ( ! get_option( 'wp_auth0_client_grant_success' ) ) {
-			return;
-		}
-		?>
-		<div class="notice notice-success">
-			<p>
-			<?php
-				_e( 'As a part of this upgrade, a Client Grant was created for the Auth0 Management API.', 'wp-auth0' );
-			?>
-				<br>
-				<?php
-				_e( 'Please check the plugin error log for any additional instructions to complete the upgrade.', 'wp-auth0' );
-				?>
-			<br><a href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>">
-					<strong><?php _e( 'Error Log', 'wp-auth0' ); ?></strong></a></p>
-		</div>
-		<?php
-		delete_option( 'wp_auth0_client_grant_success' );
-	}
-
-	/**
-	 * Display a banner once after 3.5.1 upgrade.
-	 *
-	 * @deprecated - 3.10.0, not used.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function notice_successful_grant_types() {
-
-		if ( ! get_option( 'wp_auth0_grant_types_success' ) ) {
-			return;
-		}
-		?>
-		<div class="notice notice-success">
-			<p>
-			<?php
-				_e( 'As a part of this upgrade, your Client Grant Types have been updated, if needed.', 'wp-auth0' );
-			?>
-				</p>
-		</div>
-		<?php
-		delete_option( 'wp_auth0_grant_types_success' );
-	}
-
-	protected function migrate_users_data() {
-		global $wpdb;
-
-		$wpdb->auth0_user = $wpdb->prefix . 'auth0_user';
-
-		$sql = 'SELECT a.*
-				FROM ' . $wpdb->auth0_user . ' a
-				JOIN ' . $wpdb->users . ' u ON a.wp_id = u.id;';
-
-		$userRows = $wpdb->get_results( $sql );
-
-		if ( is_null( $userRows ) ) {
-			return;
-		} elseif ( $userRows instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $userRows );
-			return;
-		}
-
-		$repo = new WP_Auth0_UsersRepo( $this->a0_options );
-
-		foreach ( $userRows as $row ) {
-			$auth0_id = WP_Auth0_UsersRepo::get_meta( $row->wp_id, 'auth0_id' );
-
-			if ( ! $auth0_id ) {
-				$repo->update_auth0_object( $row->wp_id, WP_Auth0_Serializer::unserialize( $row->auth0_obj ) );
-			}
-		}
 	}
 
 	public function get_auth0_users( $user_ids = null ) {
