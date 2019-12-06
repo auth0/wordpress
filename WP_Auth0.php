@@ -147,9 +147,6 @@ class WP_Auth0 {
 		$settings_section = new WP_Auth0_Settings_Section( $this->a0_options, $initial_setup, $users_exporter, $error_log, $auth0_admin, $import_settings );
 		$settings_section->init();
 
-		$edit_profile = new WP_Auth0_EditProfile( $this->db_manager, $users_repo, $this->a0_options );
-		$edit_profile->init();
-
 		$api_client_creds = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
 
 		$api_change_password = new WP_Auth0_Api_Change_Password( $this->a0_options, $api_client_creds );
@@ -503,6 +500,44 @@ $a0_plugin->init();
 /*
  * Core WP hooks
  */
+
+function wp_auth0_profile_enqueue_scripts() {
+	global $pagenow;
+
+	if ( ! in_array( $pagenow, [ 'profile.php', 'user-edit.php' ] ) ) {
+		return false;
+	}
+
+	wp_enqueue_script(
+		'wpa0_user_profile',
+		WPA0_PLUGIN_JS_URL . 'edit-user-profile.js',
+		[ 'jquery' ],
+		WPA0_VERSION
+	);
+
+	$profile  = get_auth0userinfo( $GLOBALS['user_id'] );
+	$strategy = isset( $profile->sub ) ? WP_Auth0_Users::get_strategy( $profile->sub ) : '';
+
+	wp_localize_script(
+		'wpa0_user_profile',
+		'wpa0UserProfile',
+		[
+			'userId'        => intval( $GLOBALS['user_id'] ),
+			'userStrategy'  => sanitize_text_field( $strategy ),
+			'deleteIdNonce' => wp_create_nonce( 'delete_auth0_identity' ),
+			'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
+			'i18n'          => [
+				'confirmDeleteId'   => __( 'Are you sure you want to delete the Auth0 user data for this user?', 'wp-auth0' ),
+				'actionComplete'    => __( 'Deleted', 'wp-auth0' ),
+				'actionFailed'      => __( 'Action failed, please see the Auth0 error log for details.', 'wp-auth0' ),
+				'cannotChangeEmail' => __( 'Email cannot be changed for non-database connections.', 'wp-auth0' ),
+			],
+		]
+	);
+
+	return true;
+}
+add_action( 'admin_enqueue_scripts', 'wp_auth0_profile_enqueue_scripts' );
 
 function wp_auth0_process_auth_callback() {
 	$users_repo    = new WP_Auth0_UsersRepo( WP_Auth0_Options::Instance() );
