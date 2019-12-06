@@ -21,7 +21,6 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 
 		update_option( 'auth0_db_version', $test_version - 1 );
 		$db_manager = new WP_Auth0_DBManager( self::$opts );
-		$db_manager->init();
 
 		// Set a US domain.
 		self::$opts->set( 'domain', 'test.auth0.com' );
@@ -52,7 +51,6 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 
 		update_option( 'auth0_db_version', $test_version - 1 );
 		$db_manager = new WP_Auth0_DBManager( self::$opts );
-		$db_manager->init();
 
 		// Set CDN URL to previous default.
 		self::$opts->set( 'auth0js-cdn', uniqid() );
@@ -94,7 +92,6 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 
 		update_option( 'auth0_db_version', $test_version - 1 );
 		$db_manager = new WP_Auth0_DBManager( self::$opts );
-		$db_manager->init();
 
 		// Set the previous default CDN URL.
 		self::$opts->set( 'cdn_url', 'https://cdn.auth0.com/js/lock/11.5/lock.min.js' );
@@ -108,7 +105,6 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		self::$opts->reset();
 		update_option( 'auth0_db_version', $test_version - 1 );
 		$db_manager = new WP_Auth0_DBManager( self::$opts );
-		$db_manager->init();
 
 		// Set CDN URL to something other than previous version.
 		self::$opts->set( 'cdn_url', 'https://cdn.auth0.com/js/lock/12.0/lock.min.js' );
@@ -125,17 +121,16 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 	 */
 	public function testThatV21UpdatesWle() {
 		$test_version = 21;
+		$db_manager = new WP_Auth0_DBManager( self::$opts );
 
 		update_option( 'auth0_db_version', $test_version - 1 );
-		$db_manager = new WP_Auth0_DBManager( self::$opts );
-		$db_manager->init();
-
 		self::$opts->set( 'wordpress_login_enabled', 1 );
 		$db_manager->install_db( $test_version );
 		$wle_code_1 = self::$opts->get( 'wle_code' );
 		$this->assertEquals( 'link', self::$opts->get( 'wordpress_login_enabled' ) );
 		$this->assertGreaterThan( 24, strlen( $wle_code_1 ) );
 
+		update_option( 'auth0_db_version', $test_version - 1 );
 		self::$opts->set( 'wordpress_login_enabled', 0 );
 		self::$opts->set( 'wle_code', '' );
 		$db_manager->install_db( $test_version );
@@ -152,7 +147,6 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 
 		update_option( 'auth0_db_version', $test_version - 1 );
 		$db_manager = new WP_Auth0_DBManager( self::$opts );
-		$db_manager->init();
 
 		self::$opts->set( 'social_big_buttons', '__test_val__' );
 		$db_manager->install_db( $test_version );
@@ -167,7 +161,6 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 
 		update_option( 'auth0_db_version', $test_version - 1 );
 		$db_manager = new WP_Auth0_DBManager( self::$opts );
-		$db_manager->init();
 
 		self::$opts->set( 'jwt_auth_integration', 1 );
 		self::$opts->set( 'link_auth0_users', 1 );
@@ -192,7 +185,6 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 
 		update_option( 'auth0_db_version', $test_version - 1 );
 		$db_manager = new WP_Auth0_DBManager( self::$opts );
-		$db_manager->init();
 
 		self::$opts->set( 'language', 'es' );
 
@@ -211,7 +203,6 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 
 		update_option( 'auth0_db_version', $test_version - 1 );
 		$db_manager = new WP_Auth0_DBManager( self::$opts );
-		$db_manager->init();
 
 		self::$opts->set( 'language', 'es' );
 		self::$opts->set( 'extra_conf', json_encode( [ 'language' => 'pt' ] ) );
@@ -231,7 +222,6 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 
 		update_option( 'auth0_db_version', $test_version - 1 );
 		$db_manager = new WP_Auth0_DBManager( self::$opts );
-		$db_manager->init();
 
 		self::$opts->set( 'language_dictionary', json_encode( [ 'key' => 'value' ] ) );
 
@@ -252,7 +242,6 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 
 		update_option( 'auth0_db_version', $test_version - 1 );
 		$db_manager = new WP_Auth0_DBManager( self::$opts );
-		$db_manager->init();
 
 		self::$opts->set( 'language_dictionary', json_encode( [ '__migrate_key__' => '__migrate_value__' ] ) );
 		self::$opts->set(

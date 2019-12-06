@@ -95,7 +95,6 @@ class WP_Auth0 {
 	public function init() {
 
 		$this->db_manager = new WP_Auth0_DBManager( $this->a0_options );
-		$this->db_manager->init();
 
 		add_action( 'init', [ $this, 'wp_init' ] );
 
@@ -492,6 +491,16 @@ class WP_Auth0 {
 		return WPA0_PLUGIN_URL;
 	}
 }
+
+/*
+ * Startup
+ */
+
+function wp_auth0_db_check_update() {
+	$db_manager = new WP_Auth0_DBManager( WP_Auth0_Options::Instance() );
+	$db_manager->install_db();
+}
+add_action( 'plugins_loaded', 'wp_auth0_db_check_update' );
 
 $a0_plugin = new WP_Auth0();
 $a0_plugin->init();
