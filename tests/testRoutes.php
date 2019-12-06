@@ -33,14 +33,6 @@ class TestRoutes extends WP_Auth0_Test_Case {
 	protected static $wp;
 
 	/**
-	 * Run before test suite.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-		self::$routes = new WP_Auth0_Routes( self::$opts );
-	}
-
-	/**
 	 * Runs before each test method.
 	 */
 	public function setUp() {
@@ -52,7 +44,7 @@ class TestRoutes extends WP_Auth0_Test_Case {
 	 * If we have no query vars, the route should do nothing.
 	 */
 	public function testThatEmptyQueryVarsDoesNothing() {
-		$this->assertFalse( self::$routes->custom_requests( self::$wp, true ) );
+		$this->assertFalse( wp_auth0_custom_requests( self::$wp, true ) );
 	}
 
 	/**
@@ -60,11 +52,11 @@ class TestRoutes extends WP_Auth0_Test_Case {
 	 */
 	public function testThatUnknownRouteDoesNothing() {
 		self::$wp->query_vars['a0_action'] = uniqid();
-		$this->assertFalse( self::$routes->custom_requests( self::$wp, true ) );
+		$this->assertFalse( wp_auth0_custom_requests( self::$wp, true ) );
 
 		unset( self::$wp->query_vars['a0_action'] );
 		self::$wp->query_vars['pagename'] = uniqid();
-		$this->assertFalse( self::$routes->custom_requests( self::$wp, true ) );
+		$this->assertFalse( wp_auth0_custom_requests( self::$wp, true ) );
 
 		$this->assertEmpty( self::$error_log->get() );
 	}
@@ -75,7 +67,7 @@ class TestRoutes extends WP_Auth0_Test_Case {
 	public function testThatOauthConfigIsCorrect() {
 		self::$wp->set_query_var( 'a0_action', 'oauth2-config' );
 
-		$output = json_decode( self::$routes->custom_requests( self::$wp, true ), true );
+		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ), true );
 
 		$this->assertEquals( 'Test Blog', $output['client_name'] );
 		$this->assertCount( 1, $output['redirect_uris'] );
@@ -86,7 +78,7 @@ class TestRoutes extends WP_Auth0_Test_Case {
 
 		self::$wp->set_query_var( 'a0_action', null );
 		self::$wp->set_query_var( 'pagename', 'oauth2-config' );
-		$output_2 = json_decode( self::$routes->custom_requests( self::$wp, true ), true );
+		$output_2 = json_decode( wp_auth0_custom_requests( self::$wp, true ), true );
 		$this->assertEquals( $output, $output_2 );
 	}
 
@@ -97,7 +89,7 @@ class TestRoutes extends WP_Auth0_Test_Case {
 		self::auth0Ready( true );
 		self::$wp->set_query_var( 'a0_action', 'coo-fallback' );
 
-		$output = self::$routes->custom_requests( self::$wp, true );
+		$output = wp_auth0_custom_requests( self::$wp, true );
 
 		$this->assertContains( '<script src="' . WPA0_AUTH0_JS_CDN_URL . '"></script>', $output );
 		$this->assertContains( 'var auth0 = new auth0.WebAuth({', $output );
@@ -108,7 +100,7 @@ class TestRoutes extends WP_Auth0_Test_Case {
 
 		self::$wp->set_query_var( 'a0_action', null );
 		self::$wp->set_query_var( 'auth0fallback', 1 );
-		$output_2 = self::$routes->custom_requests( self::$wp, true );
+		$output_2 = wp_auth0_custom_requests( self::$wp, true );
 		$this->assertEquals( $output, $output_2 );
 	}
 }

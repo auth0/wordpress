@@ -14,11 +14,15 @@
 class WP_Auth0_Routes {
 
 	/**
+	 * WP_Auth0_Options instance for this class.
+	 *
 	 * @var WP_Auth0_Options
 	 */
 	protected $a0_options;
 
 	/**
+	 * WP_Auth0_Ip_Check instance for this class.
+	 *
 	 * @var WP_Auth0_Ip_Check
 	 */
 	protected $ip_check;
@@ -35,14 +39,8 @@ class WP_Auth0_Routes {
 	}
 
 	/**
-	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
+	 * Add rewrite tags and rules.
 	 */
-	public function init() {
-		add_action( 'parse_request', [ $this, 'custom_requests' ] );
-	}
-
 	public function setup_rewrites() {
 		add_rewrite_tag( '%auth0%', '([^&]+)' );
 		add_rewrite_tag( '%auth0fallback%', '([^&]+)' );

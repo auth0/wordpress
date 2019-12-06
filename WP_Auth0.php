@@ -130,7 +130,6 @@ class WP_Auth0 {
 		$users_repo = new WP_Auth0_UsersRepo( $this->a0_options );
 
 		$this->router = new WP_Auth0_Routes( $this->a0_options );
-		$this->router->init();
 
 		$auth0_admin = new WP_Auth0_Admin( $this->a0_options, $this->router );
 		$auth0_admin->init();
@@ -500,6 +499,12 @@ $a0_plugin->init();
 /*
  * Core WP hooks
  */
+
+function wp_auth0_custom_requests( $wp, $return = false ) {
+	$routes = new WP_Auth0_Routes( WP_Auth0_Options::Instance() );
+	return $routes->custom_requests( $wp, $return );
+}
+add_action( 'parse_request', 'wp_auth0_custom_requests' );
 
 function wp_auth0_profile_enqueue_scripts() {
 	global $pagenow;
