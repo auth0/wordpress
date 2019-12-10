@@ -121,7 +121,7 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 	 */
 	public function testThatV21UpdatesWle() {
 		$test_version = 21;
-		$db_manager = new WP_Auth0_DBManager( self::$opts );
+		$db_manager   = new WP_Auth0_DBManager( self::$opts );
 
 		update_option( 'auth0_db_version', $test_version - 1 );
 		self::$opts->set( 'wordpress_login_enabled', 1 );

@@ -130,17 +130,11 @@ class WP_Auth0 {
 
 		$this->router = new WP_Auth0_Routes( $this->a0_options );
 
-		$auth0_admin = new WP_Auth0_Admin( $this->a0_options, $this->router );
-		$auth0_admin->init();
-
 		$error_log = new WP_Auth0_ErrorLog();
 		$error_log->init();
 
 		$import_settings = new WP_Auth0_Import_Settings( $this->a0_options );
 		$import_settings->init();
-
-		$settings_section = new WP_Auth0_Settings_Section( $this->a0_options, $initial_setup, $error_log, $auth0_admin, $import_settings );
-		$settings_section->init();
 
 		$api_client_creds = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
 
@@ -505,6 +499,111 @@ $a0_plugin->init();
 /*
  * Core WP hooks
  */
+
+function wp_auth0_init_admin_menu() {
+
+	if ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] === 'wpa0-help' ) {
+		wp_redirect( admin_url( 'admin.php?page=wpa0#help' ), 301 );
+		exit;
+	}
+
+	$options       = WP_Auth0_Options::Instance();
+	$initial_setup = new WP_Auth0_InitialSetup( $options );
+	$routes        = new WP_Auth0_Routes( $options );
+	$admin         = new WP_Auth0_Admin( $options, $routes );
+
+	$setup_slug  = 'wpa0-setup';
+	$setup_title = __( 'Setup Wizard', 'wp-auth0' );
+	$setup_func  = [ $initial_setup, 'render_setup_page' ];
+
+	$settings_slug  = 'wpa0';
+	$settings_title = __( 'Settings', 'wp-auth0' );
+	$settings_func  = [ $admin, 'render_settings_page' ];
+
+	$menu_parent = ! WP_Auth0::ready() ? $setup_slug : $settings_slug;
+	$cap         = 'manage_options';
+
+	add_menu_page(
+		'Auth0',
+		'Auth0',
+		$cap,
+		$menu_parent,
+		! WP_Auth0::ready() ? $setup_func : $settings_func,
+		WPA0_PLUGIN_IMG_URL . 'a0icon.png',
+		86
+	);
+
+	if ( ! WP_Auth0::ready() ) {
+		add_submenu_page( $menu_parent, $setup_title, $setup_title, $cap, $setup_slug, $setup_func );
+		add_submenu_page( $menu_parent, $settings_title, $settings_title, $cap, $settings_slug, $settings_func );
+	} else {
+		add_submenu_page( $menu_parent, $settings_title, $settings_title, $cap, $settings_slug, $settings_func );
+		add_submenu_page(
+			$menu_parent,
+			__( 'Help', 'wp-auth0' ),
+			__( 'Help', 'wp-auth0' ),
+			$cap,
+			'wpa0-help',
+			'__return_false'
+		);
+		add_submenu_page( null, $setup_title, $setup_title, $cap, 'wpa0-setup', $setup_func );
+	}
+
+	add_submenu_page(
+		$menu_parent,
+		__( 'Error Log', 'wp-auth0' ),
+		__( 'Error Log', 'wp-auth0' ),
+		$cap,
+		'wpa0-errors',
+		[ new WP_Auth0_ErrorLog(), 'render_settings_page' ]
+	);
+
+	add_submenu_page(
+		$menu_parent,
+		__( 'Import-Export Settings', 'wp-auth0' ),
+		__( 'Import-Export settings', 'wp-auth0' ),
+		$cap,
+		'wpa0-import-settings',
+		[ new WP_Auth0_Import_Settings( $options ), 'render_import_settings_page' ]
+	);
+}
+add_action( 'admin_menu', 'wp_auth0_init_admin_menu', 96, 0 );
+
+function wp_auth0_create_account_message() {
+	$current_page = $_GET['page'] ?? null;
+	if ( WP_Auth0::ready() || ! $current_page || 0 !== strpos( $current_page, 'wpa' ) ) {
+		return false;
+	}
+
+	printf(
+		'<div class="update-nag">%s<strong><a href="%s">%s</a></strong>%s
+			<strong><a href="https://auth0.com/docs/cms/wordpress/installation#manual-setup" target="_blank">
+			%s</a></strong>.</div>',
+		__( 'Login by Auth0 is not yet configured. Please use the ', 'wp-auth0' ),
+		admin_url( 'admin.php?page=wpa0-setup' ),
+		__( 'Setup Wizard', 'wp-auth0' ),
+		__( ' or follow the ', 'wp-auth0' ),
+		__( 'Manual setup instructions', 'wp-auth0' )
+	);
+	return true;
+}
+add_action( 'admin_notices', 'wp_auth0_create_account_message' );
+
+function wp_auth0_init_admin() {
+	$options = WP_Auth0_Options::Instance();
+	$routes  = new WP_Auth0_Routes( $options );
+	$admin   = new WP_Auth0_Admin( $options, $routes );
+	$admin->init_admin();
+}
+add_action( 'admin_init', 'wp_auth0_init_admin' );
+
+function wp_auth0_admin_enqueue_scripts() {
+	$options = WP_Auth0_Options::Instance();
+	$routes  = new WP_Auth0_Routes( $options );
+	$admin   = new WP_Auth0_Admin( $options, $routes );
+	return $admin->admin_enqueue();
+}
+add_action( 'admin_enqueue_scripts', 'wp_auth0_admin_enqueue_scripts', 1 );
 
 function wp_auth0_custom_requests( $wp, $return = false ) {
 	$routes = new WP_Auth0_Routes( WP_Auth0_Options::Instance() );
