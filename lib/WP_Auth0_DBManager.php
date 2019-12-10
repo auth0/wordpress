@@ -180,30 +180,4 @@ class WP_Auth0_DBManager {
 		update_option( 'auth0_db_version', AUTH0_DB_VERSION );
 		wp_cache_set( 'doing_db_update', false, WPA0_CACHE_GROUP );
 	}
-
-	public function get_auth0_users( $user_ids = null ) {
-		global $wpdb;
-
-		if ( $user_ids === null ) {
-			$query = [ 'meta_key' => $wpdb->prefix . 'auth0_id' ];
-		} else {
-			$query = [
-				'meta_query' => [
-					'key'     => $wpdb->prefix . 'auth0_id',
-					'value'   => $user_ids,
-					'compare' => 'IN',
-				],
-			];
-		}
-		$query['blog_id'] = 0;
-
-		$results = get_users( $query );
-
-		if ( $results instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $results->get_error_message() );
-			return [];
-		}
-
-		return $results;
-	}
 }

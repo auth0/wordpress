@@ -51,7 +51,7 @@ class WP_Auth0_Admin {
 		);
 		wp_register_script( 'wpa0_async', WPA0_PLUGIN_LIB_URL . 'async.min.js', false, WPA0_VERSION );
 
-		$wpa0_pages     = [ 'wpa0', 'wpa0-errors', 'wpa0-users-export', 'wpa0-import-settings', 'wpa0-setup' ];
+		$wpa0_pages     = [ 'wpa0', 'wpa0-errors', 'wpa0-import-settings', 'wpa0-setup' ];
 		$wpa0_curr_page = ! empty( $_REQUEST['page'] ) ? $_REQUEST['page'] : '';
 		if ( ! in_array( $wpa0_curr_page, $wpa0_pages ) ) {
 			return;
