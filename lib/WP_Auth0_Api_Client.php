@@ -60,12 +60,12 @@ class WP_Auth0_Api_Client {
 			$a0_options = WP_Auth0_Options::Instance();
 
 			self::$connect_info = [
-				'domain'                => $a0_options->get( 'domain' ),
-				'client_id'             => $a0_options->get( 'client_id' ),
-				'client_secret'         => $a0_options->get( 'client_secret' ),
-				'connection'            => $a0_options->get( 'db_connection_name' ),
-				'app_token'             => null,
-				'audience'              => self::get_endpoint( 'api/v2/' ),
+				'domain'        => $a0_options->get( 'domain' ),
+				'client_id'     => $a0_options->get( 'client_id' ),
+				'client_secret' => $a0_options->get( 'client_secret' ),
+				'connection'    => $a0_options->get( 'db_connection_name' ),
+				'app_token'     => null,
+				'audience'      => self::get_endpoint( 'api/v2/' ),
 			];
 		}
 

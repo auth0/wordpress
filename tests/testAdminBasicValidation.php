@@ -35,12 +35,12 @@ class TestAdminBasicValidation extends WP_Auth0_Test_Case {
 		parent::setUpBeforeClass();
 		self::$admin  = new WP_Auth0_Admin_Basic( self::$opts );
 		self::$fields = [
-			'domain'                    => 'test.auth0.com',
-			'custom_domain'             => '',
-			'client_id'                 => '__test_client_id__',
-			'client_secret'             => '__test_client_secret__',
-			'client_signing_algorithm'  => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
-			'cache_expiration'          => '',
+			'domain'                   => 'test.auth0.com',
+			'custom_domain'            => '',
+			'client_id'                => '__test_client_id__',
+			'client_secret'            => '__test_client_secret__',
+			'client_signing_algorithm' => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
+			'cache_expiration'         => '',
 		];
 	}
 

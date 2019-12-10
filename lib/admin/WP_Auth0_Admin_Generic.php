@@ -111,37 +111,6 @@ class WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * @deprecated - 3.10.0, no longer used.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	protected function rule_validation( $old_options, $input, $key, $rule_name, $rule_script ) {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		$input[ $key ] = ( isset( $input[ $key ] ) ? $input[ $key ] : null );
-
-		if ( ( $input[ $key ] !== null && $old_options[ $key ] === null ) || ( $input[ $key ] === null && $old_options[ $key ] !== null ) ) {
-
-			try {
-
-				$operations    = new WP_Auth0_Api_Operations( $this->options );
-				$input[ $key ] = $operations->toggle_rule(
-					$this->options->get( 'auth0_app_token' ),
-					( is_null( $input[ $key ] ) ? $old_options[ $key ] : null ),
-					$rule_name,
-					$rule_script
-				);
-
-			} catch ( Exception $e ) {
-				$this->add_validation_error( $e->getMessage() );
-				$input[ $key ] = null;
-			}
-		}
-
-		return $input;
-	}
-
-	/**
 	 * Output a stylized switch on the options page
 	 *
 	 * @param string $id - input id attribute
@@ -305,16 +274,5 @@ class WP_Auth0_Admin_Generic {
 		$path = '/' === $path[0] ? substr( $path, 1 ) : $path;
 		$text = empty( $text ) ? __( 'here', 'wp-auth0' ) : sanitize_text_field( $text );
 		return sprintf( '<a href="https://auth0.com/docs/%s" target="_blank">%s</a>', $path, $text );
-	}
-
-	/**
-	 * @deprecated - 3.6.0, use WP_Auth0_Admin_Generic::render_switch() instead
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	protected function render_a0_switch( $id, $name, $value, $checked ) {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		$this->render_switch( $id, $name );
 	}
 }
