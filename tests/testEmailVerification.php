@@ -17,6 +17,8 @@ class TestEmailVerification extends WP_Auth0_Test_Case {
 
 	use HookHelpers;
 
+	use HttpHelpers;
+
 	use UsersHelper;
 
 	/**
@@ -39,6 +41,11 @@ class TestEmailVerification extends WP_Auth0_Test_Case {
 	 * @var WP_Auth0_Email_Verification
 	 */
 	protected static $email_verification;
+
+	public function tearDown() {
+		parent::tearDown();
+		WP_Auth0_Api_Client_Credentials::delete_store();
+	}
 
 	/**
 	 * Test the the AJAX handler function is hooked properly.
@@ -102,85 +109,76 @@ class TestEmailVerification extends WP_Auth0_Test_Case {
 		$this->assertEquals( '__test_auth0_verify_email_page__', ob_get_clean() );
 	}
 
-	/**
-	 * Test AJAX email verification send.
-	 *
-	 * @runInSeparateProcess
-	 */
-	public function testResendVerificationEmail() {
+	public function testThatResendActionFailsWhenBadAjaxNonce() {
 		$this->startAjaxHalting();
 
-		// 1. Should fail with a bad nonce.
-		$caught_exception = false;
-		$error_msg        = 'No exception';
+		$_REQUEST['_ajax_nonce'] = uniqid();
 		try {
-			// Use the hooked function to perform default DI.
 			wp_auth0_ajax_resend_verification_email();
+			$error_msg = 'No exception caught';
 		} catch ( Exception $e ) {
-			$error_msg        = $e->getMessage();
-			$caught_exception = ( 'bad_nonce' === $error_msg );
+			$error_msg = $e->getMessage();
 		}
-		$this->assertTrue( $caught_exception, $error_msg );
+		$this->assertEquals( 'bad_nonce', $error_msg );
+	}
 
-		// Set the nonce value that check_ajax_referrer looks for.
+	public function testThatResendActionFailsWithMissingSub() {
+		$this->startAjaxHalting();
+
 		$_REQUEST['_ajax_nonce'] = wp_create_nonce( WP_Auth0_Email_Verification::RESEND_NONCE_ACTION );
 
-		// 2. Should fail without a user sub value.
 		ob_start();
-		$caught_exception = false;
-		$error_msg        = 'No exception';
 		try {
 			wp_auth0_ajax_resend_verification_email();
+			$error_msg = 'No exception caught';
 		} catch ( Exception $e ) {
-			$error_msg        = $e->getMessage();
-			$caught_exception = ( 'die_ajax' === $error_msg );
+			$error_msg = $e->getMessage();
 		}
-		$return_json = ob_get_clean();
-		$this->assertTrue( $caught_exception, $error_msg );
-		$this->assertEquals( '{"success":false,"data":{"error":"No Auth0 user ID provided."}}', $return_json );
+		$this->assertEquals( 'die_ajax', $error_msg );
+		$this->assertEquals( '{"success":false,"data":{"error":"No Auth0 user ID provided."}}', ob_get_clean() );
+	}
 
-		// Set the sub value that the method looks for.
-		$_POST['sub'] = $this->getUserinfo()->sub;
+	public function testThatResendActionFailsWhenApiCallFails() {
+		$this->startAjaxHalting();
 
-		// Mock the API call.
-		$api_jobs_resend_mock = $this->getMockBuilder( WP_Auth0_Api_Jobs_Verification::class )
-			->setMethods( [ 'call' ] )
-			->setConstructorArgs(
-				[
-					self::$opts,
-					new WP_Auth0_Api_Client_Credentials( self::$opts ),
-					$_POST['sub'],
-				]
-			)
-			->getMock();
+		$_REQUEST['_ajax_nonce'] = wp_create_nonce( WP_Auth0_Email_Verification::RESEND_NONCE_ACTION );
+		$_POST['sub']            = $this->getUserinfo()->sub;
 
-		// Fail on first call (#3) and succeed on the second (#4).
-		$api_jobs_resend_mock->method( 'call' )->will( $this->onConsecutiveCalls( false, true ) );
-		$email_verification = new WP_Auth0_Email_Verification( $api_jobs_resend_mock );
-
-		// 3. Should fail when mocked API call fails.
 		ob_start();
-		$caught_exception = false;
 		try {
-			$email_verification->resend_verification_email();
+			wp_auth0_ajax_resend_verification_email();
+			$error_msg = 'No exception caught';
 		} catch ( Exception $e ) {
-			$caught_exception = ( 'die_ajax' === $e->getMessage() );
+			$error_msg = $e->getMessage();
 		}
-		$return_json = ob_get_clean();
-		$this->assertTrue( $caught_exception );
-		$this->assertEquals( '{"success":false,"data":{"error":"API call failed."}}', $return_json );
+		$this->assertEquals( 'die_ajax', $error_msg );
+		$this->assertEquals( '{"success":false,"data":{"error":"API call failed."}}', ob_get_clean() );
+	}
 
-		// 4. Should succeed when mocked API call returns true.
+	/**
+	 * Test AJAX email verification send.
+	 */
+	public function testResendVerificationEmail() {
+		$this->startHttpMocking();
+		$this->startAjaxHalting();
+
+		$_REQUEST['_ajax_nonce'] = wp_create_nonce( WP_Auth0_Email_Verification::RESEND_NONCE_ACTION );
+		$_POST['sub']            = $this->getUserinfo()->sub;
+		$this->http_request_type = 'success_create_empty_body';
+
+		set_transient( WP_Auth0_Api_Client_Credentials::TOKEN_TRANSIENT_KEY, uniqid(), 9999999 );
+		set_transient( WP_Auth0_Api_Client_Credentials::SCOPE_TRANSIENT_KEY, 'update:users', 9999999 );
+
 		ob_start();
-		$caught_exception = false;
 		try {
-			$email_verification->resend_verification_email();
+			wp_auth0_ajax_resend_verification_email();
+			$error_msg = 'No exception caught';
 		} catch ( Exception $e ) {
-			$caught_exception = ( 'die_ajax' === $e->getMessage() );
+			$error_msg = $e->getMessage();
 		}
-		$return_json = ob_get_clean();
-		$this->assertTrue( $caught_exception );
-		$this->assertEquals( '{"success":true}', $return_json );
+		$this->assertEquals( 'die_ajax', $error_msg );
+
+		$this->assertEquals( '{"success":true}', ob_get_clean() );
 	}
 
 	/**

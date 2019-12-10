@@ -148,8 +148,6 @@ class WP_Auth0 {
 
 		$profile_delete_data = new WP_Auth0_Profile_Delete_Data( $users_repo );
 		$profile_delete_data->init();
-
-		WP_Auth0_Email_Verification::init();
 	}
 
 	/**
@@ -692,6 +690,31 @@ function wp_auth0_ajax_rotate_migration_token() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_auth0_rotate_migration_token', 'wp_auth0_ajax_rotate_migration_token' );
+
+/**
+ * AJAX handler to re-send verification email.
+ * Hooked to: wp_ajax_nopriv_resend_verification_email
+ *
+ * @codeCoverageIgnore - Tested in TestEmailVerification::testResendVerificationEmail()
+ */
+function wp_auth0_ajax_resend_verification_email() {
+	check_ajax_referer( WP_Auth0_Email_Verification::RESEND_NONCE_ACTION );
+
+	$options               = WP_Auth0_Options::Instance();
+	$api_client_creds      = new WP_Auth0_Api_Client_Credentials( $options );
+	$api_jobs_verification = new WP_Auth0_Api_Jobs_Verification( $options, $api_client_creds );
+
+	if ( empty( $_POST['sub'] ) ) {
+		wp_send_json_error( [ 'error' => __( 'No Auth0 user ID provided.', 'wp-auth0' ) ] );
+	}
+
+	if ( ! $api_jobs_verification->call( $_POST['sub'] ) ) {
+		wp_send_json_error( [ 'error' => __( 'API call failed.', 'wp-auth0' ) ] );
+	}
+
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_nopriv_resend_verification_email', 'wp_auth0_ajax_resend_verification_email' );
 
 /**
  * Redirect a successful lost password submission to a login override page.
