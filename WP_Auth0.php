@@ -136,13 +136,10 @@ class WP_Auth0 {
 		$error_log = new WP_Auth0_ErrorLog();
 		$error_log->init();
 
-		$users_exporter = new WP_Auth0_Export_Users( $this->db_manager );
-		$users_exporter->init();
-
 		$import_settings = new WP_Auth0_Import_Settings( $this->a0_options );
 		$import_settings->init();
 
-		$settings_section = new WP_Auth0_Settings_Section( $this->a0_options, $initial_setup, $users_exporter, $error_log, $auth0_admin, $import_settings );
+		$settings_section = new WP_Auth0_Settings_Section( $this->a0_options, $initial_setup, $error_log, $auth0_admin, $import_settings );
 		$settings_section->init();
 
 		$api_client_creds = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
