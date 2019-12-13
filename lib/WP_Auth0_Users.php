@@ -4,7 +4,7 @@ class WP_Auth0_Users {
 	/**
 	 * Create a WordPress user with Auth0 data.
 	 *
-	 * @param object       $userinfo - User profile data from Auth0.
+	 * @param object $userinfo - User profile data from Auth0.
 	 *
 	 * @return int|WP_Error
 	 */

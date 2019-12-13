@@ -102,6 +102,9 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 		delete_user_meta( 1, $wpdb->prefix . 'auth0_id' );
 		delete_user_meta( 1, $wpdb->prefix . 'auth0_obj' );
 		delete_user_meta( 1, $wpdb->prefix . 'last_update' );
+
+		delete_transient( WP_Auth0_Api_Client_Credentials::TOKEN_TRANSIENT_KEY );
+		delete_transient( WP_Auth0_Api_Client_Credentials::SCOPE_TRANSIENT_KEY );
 	}
 
 	/**
@@ -114,5 +117,15 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 		self::$opts->set( 'domain', $value );
 		self::$opts->set( 'client_id', $value );
 		self::$opts->set( 'client_secret', $value );
+	}
+
+	/**
+	 * Set or delete the stored API token.
+	 *
+	 * @param string $scope - Scope string to use.
+	 */
+	public static function setApiToken( $scope ) {
+		set_transient( WP_Auth0_Api_Client_Credentials::TOKEN_TRANSIENT_KEY, '__test_access_token__', 9999 );
+		set_transient( WP_Auth0_Api_Client_Credentials::SCOPE_TRANSIENT_KEY, $scope, 9999 );
 	}
 }

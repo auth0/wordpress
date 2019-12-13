@@ -138,10 +138,6 @@ class WP_Auth0 {
 
 		$api_client_creds = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
 
-		$api_change_password = new WP_Auth0_Api_Change_Password( $this->a0_options, $api_client_creds );
-		$profile_change_pwd  = new WP_Auth0_Profile_Change_Password( $api_change_password );
-		$profile_change_pwd->init();
-
 		$api_change_email     = new WP_Auth0_Api_Change_Email( $this->a0_options, $api_client_creds );
 		$profile_change_email = new WP_Auth0_Profile_Change_Email( $api_change_email );
 		$profile_change_email->init();
@@ -497,6 +493,23 @@ $a0_plugin->init();
 /*
  * Core WP hooks
  */
+
+function wp_auth0_validate_new_password( $errors, $user ) {
+	$options             = WP_Auth0_Options::Instance();
+	$api_client_creds    = new WP_Auth0_Api_Client_Credentials( $options );
+	$api_change_password = new WP_Auth0_Api_Change_Password( $options, $api_client_creds );
+	$profile_change_pwd  = new WP_Auth0_Profile_Change_Password( $api_change_password );
+	return $profile_change_pwd->validate_new_password( $errors, $user );
+}
+
+// Used during profile update in wp-admin.
+add_action( 'user_profile_update_errors', 'wp_auth0_validate_new_password', 10, 2 );
+
+// Used during password reset on wp-login.php.
+add_action( 'validate_password_reset', 'wp_auth0_validate_new_password', 10, 2 );
+
+// Used during WooCommerce edit account save.
+add_action( 'woocommerce_save_account_details_errors', 'wp_auth0_validate_new_password', 10, 2 );
 
 function wp_auth0_init_admin_menu() {
 

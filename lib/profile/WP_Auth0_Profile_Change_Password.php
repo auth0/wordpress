@@ -29,25 +29,6 @@ class WP_Auth0_Profile_Change_Password {
 	}
 
 	/**
-	 * Add actions and filters for the profile page.
-	 *
-	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function init() {
-
-		// Used during profile update in wp-admin.
-		add_action( 'user_profile_update_errors', [ $this, 'validate_new_password' ], 10, 2 );
-
-		// Used during password reset on wp-login.php.
-		add_action( 'validate_password_reset', [ $this, 'validate_new_password' ], 10, 2 );
-
-		// Used during WooCommerce edit account save.
-		add_action( 'woocommerce_save_account_details_errors', [ $this, 'validate_new_password' ], 10, 2 );
-	}
-
-	/**
 	 * Update the user's password at Auth0
 	 * Hooked to: user_profile_update_errors, validate_password_reset, woocommerce_save_account_details_errors
 	 * IMPORTANT: Internal callback use only, do not call this function directly!

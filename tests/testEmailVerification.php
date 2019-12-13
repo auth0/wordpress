@@ -161,13 +161,11 @@ class TestEmailVerification extends WP_Auth0_Test_Case {
 	public function testResendVerificationEmail() {
 		$this->startHttpMocking();
 		$this->startAjaxHalting();
+		$this->setApiToken( 'update:users' );
 
 		$_REQUEST['_ajax_nonce'] = wp_create_nonce( WP_Auth0_Email_Verification::RESEND_NONCE_ACTION );
 		$_POST['sub']            = $this->getUserinfo()->sub;
 		$this->http_request_type = 'success_create_empty_body';
-
-		set_transient( WP_Auth0_Api_Client_Credentials::TOKEN_TRANSIENT_KEY, uniqid(), 9999999 );
-		set_transient( WP_Auth0_Api_Client_Credentials::SCOPE_TRANSIENT_KEY, 'update:users', 9999999 );
 
 		ob_start();
 		try {
