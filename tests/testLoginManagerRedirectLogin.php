@@ -46,8 +46,7 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 
 		add_filter( 'auth0_get_wp_user', [ $this, 'auth0_get_wp_user_handler' ], 1, 2 );
 
-		set_transient( WP_Auth0_Api_Client_Credentials::TOKEN_TRANSIENT_KEY, '__test_access_token__', 9999 );
-		set_transient( WP_Auth0_Api_Client_Credentials::SCOPE_TRANSIENT_KEY, 'read:users', 9990 );
+		$this->setApiToken( 'read:users' );
 	}
 
 	/**
@@ -56,10 +55,6 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 	public function tearDown() {
 		parent::tearDown();
 		remove_filter( 'auth0_get_wp_user', [ $this, 'auth0_get_wp_user_handler' ], 1 );
-
-		delete_transient( WP_Auth0_Api_Client_Credentials::TOKEN_TRANSIENT_KEY );
-		delete_transient( WP_Auth0_Api_Client_Credentials::SCOPE_TRANSIENT_KEY );
-
 		remove_filter( 'auth0_use_management_api_for_userinfo', '__return_false', 10 );
 	}
 
