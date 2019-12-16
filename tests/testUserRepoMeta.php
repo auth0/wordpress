@@ -102,7 +102,7 @@ class TestUserRepoMeta extends WP_Auth0_Test_Case {
 		$this->assertNotEmpty( $users_repo::get_meta( 1, 'last_update' ) );
 		$this->assertNotEmpty( $users_repo::get_meta( 1, 'auth0_transient_email_update' ) );
 
-		$users_repo->delete_auth0_object( 1 );
+		wp_auth0_delete_auth0_object( 1 );
 
 		$this->assertEmpty( $users_repo::get_meta( 1, 'auth0_id' ) );
 		$this->assertEmpty( $users_repo::get_meta( 1, 'auth0_obj' ) );

@@ -97,7 +97,7 @@ class TestUserMeta extends WP_Auth0_Test_Case {
 		$this->assertNotEmpty( get_user_meta( $uid, $wpdb->prefix . 'auth0_id', true ) );
 		$this->assertNotEmpty( get_user_meta( $uid, $wpdb->prefix . 'auth0_obj', true ) );
 
-		$user_repo->delete_auth0_object( $uid );
+		wp_auth0_delete_auth0_object( $uid );
 
 		$this->assertEmpty( get_user_meta( $uid, $wpdb->prefix . 'last_update', true ) );
 		$this->assertEmpty( get_user_meta( $uid, $wpdb->prefix . 'auth0_id', true ) );

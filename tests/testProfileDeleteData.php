@@ -21,20 +21,9 @@ class TestProfileDeleteData extends WP_Auth0_Test_Case {
 
 	use UsersHelper;
 
-	/**
-	 * WP_Auth0_Profile_Delete_Data instance.
-	 *
-	 * @var WP_Auth0_Profile_Delete_Data
-	 */
-	protected static $delete_data;
-
-	/**
-	 * Setup before the class starts.
-	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$users_repo  = new WP_Auth0_UsersRepo( self::$opts );
-		self::$delete_data = new WP_Auth0_Profile_Delete_Data( self::$users_repo );
+		self::$users_repo = new WP_Auth0_UsersRepo( self::$opts );
 	}
 
 	/**
@@ -43,22 +32,22 @@ class TestProfileDeleteData extends WP_Auth0_Test_Case {
 	public function testInitHooks() {
 
 		$expect_hooked = [
-			'show_delete_identity' => [
+			'wp_auth0_show_delete_identity' => [
 				'priority'      => 10,
 				'accepted_args' => 1,
 			],
 		];
 		// Same method hooked to both actions.
-		$this->assertHookedClass( 'edit_user_profile', 'WP_Auth0_Profile_Delete_Data', $expect_hooked );
-		$this->assertHookedClass( 'show_user_profile', 'WP_Auth0_Profile_Delete_Data', $expect_hooked );
+		$this->assertHookedFunction( 'edit_user_profile', $expect_hooked );
+		$this->assertHookedFunction( 'show_user_profile', $expect_hooked );
 
 		$expect_hooked = [
-			'delete_user_data' => [
+			'wp_auth0_delete_user_data' => [
 				'priority'      => 10,
 				'accepted_args' => 1,
 			],
 		];
-		$this->assertHookedClass( 'wp_ajax_auth0_delete_data', 'WP_Auth0_Profile_Delete_Data', $expect_hooked );
+		$this->assertHookedFunction( 'wp_ajax_auth0_delete_data', $expect_hooked );
 	}
 
 	/**
@@ -66,9 +55,10 @@ class TestProfileDeleteData extends WP_Auth0_Test_Case {
 	 */
 	public function testThatAjaxFailsWithNoNonce() {
 		$this->startAjaxHalting();
+		$delete_data      = new WP_Auth0_Profile_Delete_Data();
 		$caught_exception = false;
 		try {
-			self::$delete_data->delete_user_data();
+			$delete_data->delete_user_data();
 		} catch ( Exception $e ) {
 			$caught_exception = ( 'bad_nonce' === $e->getMessage() );
 		}
@@ -77,11 +67,10 @@ class TestProfileDeleteData extends WP_Auth0_Test_Case {
 
 	/**
 	 * Test that a delete_user_data AJAX call with no user_id fails.
-	 *
-	 * @runInSeparateProcess
 	 */
 	public function testThatAjaxFailsWithNoUserId() {
 		$this->startAjaxHalting();
+		$delete_data = new WP_Auth0_Profile_Delete_Data();
 
 		// Set the nonce.
 		$_REQUEST['_ajax_nonce'] = wp_create_nonce( 'delete_auth0_identity' );
@@ -89,7 +78,7 @@ class TestProfileDeleteData extends WP_Auth0_Test_Case {
 		$caught_exception = false;
 		ob_start();
 		try {
-			self::$delete_data->delete_user_data();
+			$delete_data->delete_user_data();
 		} catch ( Exception $e ) {
 			$caught_exception = ( 'die_ajax' === $e->getMessage() );
 		}
@@ -101,11 +90,10 @@ class TestProfileDeleteData extends WP_Auth0_Test_Case {
 
 	/**
 	 * Test that a delete_user_data AJAX call with a non-admin user fails.
-	 *
-	 * @runInSeparateProcess
 	 */
 	public function testThatAjaxFailsWithNoAdmin() {
 		$this->startAjaxHalting();
+		$delete_data = new WP_Auth0_Profile_Delete_Data();
 
 		// Set the nonce.
 		$_REQUEST['_ajax_nonce'] = wp_create_nonce( 'delete_auth0_identity' );
@@ -116,7 +104,7 @@ class TestProfileDeleteData extends WP_Auth0_Test_Case {
 		$caught_exception = false;
 		ob_start();
 		try {
-			self::$delete_data->delete_user_data();
+			$delete_data->delete_user_data();
 		} catch ( Exception $e ) {
 			$caught_exception = ( 'die_ajax' === $e->getMessage() );
 		}
@@ -128,11 +116,10 @@ class TestProfileDeleteData extends WP_Auth0_Test_Case {
 
 	/**
 	 * Test that a delete_user_data AJAX call can succeed.
-	 *
-	 * @runInSeparateProcess
 	 */
 	public function testThatAjaxCallSucceeds() {
 		$this->startAjaxReturn();
+		$delete_data = new WP_Auth0_Profile_Delete_Data();
 
 		// Set the user ID.
 		$_POST['user_id'] = 1;
@@ -148,7 +135,7 @@ class TestProfileDeleteData extends WP_Auth0_Test_Case {
 		$this->assertNotEmpty( WP_Auth0_UsersRepo::get_meta( 1, 'last_update' ) );
 
 		ob_start();
-		self::$delete_data->delete_user_data();
+		$delete_data->delete_user_data();
 		$this->assertEquals( '{"success":true}', ob_get_clean() );
 		$this->assertEmpty( WP_Auth0_UsersRepo::get_meta( 1, 'auth0_id' ) );
 		$this->assertEmpty( WP_Auth0_UsersRepo::get_meta( 1, 'auth0_obj' ) );
@@ -161,20 +148,20 @@ class TestProfileDeleteData extends WP_Auth0_Test_Case {
 	public function testShowDeleteIdentity() {
 		// Should not show this control if not an admin.
 		ob_start();
-		self::$delete_data->show_delete_identity();
+		wp_auth0_show_delete_identity();
 		$this->assertEmpty( ob_get_clean() );
 
 		$user_id = $this->setGlobalUser();
 
 		// Should not show this control if user is not an Auth0-connected user.
 		ob_start();
-		self::$delete_data->show_delete_identity();
+		wp_auth0_show_delete_identity();
 		$this->assertEmpty( ob_get_clean() );
 
 		$this->storeAuth0Data( $user_id );
 
 		ob_start();
-		self::$delete_data->show_delete_identity();
+		wp_auth0_show_delete_identity();
 		$delete_id_html = ob_get_clean();
 
 		// Make sure we have the id attribute that connects to the AJAX action.

@@ -155,18 +155,6 @@ class WP_Auth0_UsersRepo {
 	}
 
 	/**
-	 * Delete all Auth0 meta fields for a WordPress user.
-	 *
-	 * @param int $user_id - WordPress user ID.
-	 */
-	public function delete_auth0_object( $user_id ) {
-		self::delete_meta( $user_id, 'auth0_id' );
-		self::delete_meta( $user_id, 'auth0_obj' );
-		self::delete_meta( $user_id, 'last_update' );
-		self::delete_meta( $user_id, 'auth0_transient_email_update' );
-	}
-
-	/**
 	 * Get a user's Auth0 meta data.
 	 *
 	 * @param integer  $user_id - WordPress user ID.

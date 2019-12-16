@@ -144,6 +144,16 @@ function wp_auth0_url_base64_decode( $input ) {
 	return base64_decode( strtr( $input, '-_', '+/' ) );
 }
 
+/**
+ * @param $user_id
+ */
+function wp_auth0_delete_auth0_object( $user_id ) {
+	WP_Auth0_UsersRepo::delete_meta( $user_id, 'auth0_id' );
+	WP_Auth0_UsersRepo::delete_meta( $user_id, 'auth0_obj' );
+	WP_Auth0_UsersRepo::delete_meta( $user_id, 'last_update' );
+	WP_Auth0_UsersRepo::delete_meta( $user_id, 'auth0_transient_email_update' );
+}
+
 if ( ! function_exists( 'get_auth0userinfo' ) ) {
 	/**
 	 * Get the Auth0 profile from the database, if one exists.
