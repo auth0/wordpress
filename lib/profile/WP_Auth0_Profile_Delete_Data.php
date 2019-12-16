@@ -14,35 +14,6 @@
 class WP_Auth0_Profile_Delete_Data {
 
 	/**
-	 * WP_Auth0_UsersRepo instance.
-	 *
-	 * @var WP_Auth0_UsersRepo
-	 */
-	protected $users_repo;
-
-	/**
-	 * WP_Auth0_Profile_Delete_Data constructor.
-	 *
-	 * @param WP_Auth0_UsersRepo $users_repo - WP_Auth0_UsersRepo instance.
-	 */
-	public function __construct( WP_Auth0_UsersRepo $users_repo ) {
-		$this->users_repo = $users_repo;
-	}
-
-	/**
-	 * Add actions and filters for the profile page.
-	 *
-	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function init() {
-		add_action( 'edit_user_profile', [ $this, 'show_delete_identity' ] );
-		add_action( 'show_user_profile', [ $this, 'show_delete_identity' ] );
-		add_action( 'wp_ajax_auth0_delete_data', [ $this, 'delete_user_data' ] );
-	}
-
-	/**
 	 * Show the delete Auth0 user data button.
 	 * Hooked to: edit_user_profile, show_user_profile
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
@@ -95,7 +66,7 @@ class WP_Auth0_Profile_Delete_Data {
 			wp_send_json_error( [ 'error' => __( 'Forbidden', 'wp-auth0' ) ] );
 		}
 
-		$this->users_repo->delete_auth0_object( $user_id );
+		wp_auth0_delete_auth0_object( $user_id );
 		wp_send_json_success();
 	}
 }

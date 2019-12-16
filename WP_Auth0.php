@@ -141,9 +141,6 @@ class WP_Auth0 {
 		$api_change_email     = new WP_Auth0_Api_Change_Email( $this->a0_options, $api_client_creds );
 		$profile_change_email = new WP_Auth0_Profile_Change_Email( $api_change_email );
 		$profile_change_email->init();
-
-		$profile_delete_data = new WP_Auth0_Profile_Delete_Data( $users_repo );
-		$profile_delete_data->init();
 	}
 
 	/**
@@ -510,6 +507,19 @@ add_action( 'validate_password_reset', 'wp_auth0_validate_new_password', 10, 2 )
 
 // Used during WooCommerce edit account save.
 add_action( 'woocommerce_save_account_details_errors', 'wp_auth0_validate_new_password', 10, 2 );
+
+function wp_auth0_show_delete_identity() {
+	$profile_delete_data = new WP_Auth0_Profile_Delete_Data();
+	$profile_delete_data->show_delete_identity();
+}
+add_action( 'edit_user_profile', 'wp_auth0_show_delete_identity' );
+add_action( 'show_user_profile', 'wp_auth0_show_delete_identity' );
+
+function wp_auth0_delete_user_data() {
+	$profile_delete_data = new WP_Auth0_Profile_Delete_Data();
+	$profile_delete_data->delete_user_data();
+}
+add_action( 'wp_ajax_auth0_delete_data', 'wp_auth0_delete_user_data' );
 
 function wp_auth0_init_admin_menu() {
 
