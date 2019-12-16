@@ -34,19 +34,6 @@ class WP_Auth0_Profile_Change_Email {
 	}
 
 	/**
-	 * Add actions for the update user process.
-	 *
-	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function init() {
-
-		// Used during profile update in wp-admin or email verification link.
-		add_action( 'profile_update', [ $this, 'update_email' ], 100, 2 );
-	}
-
-	/**
 	 * Update the user's email at Auth0 when changing email for a database connection user.
 	 * This runs AFTER a successful email change is saved in WP.
 	 * Hooked to: profile_update
