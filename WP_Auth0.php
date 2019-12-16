@@ -126,8 +126,6 @@ class WP_Auth0 {
 		$initial_setup = new WP_Auth0_InitialSetup( $this->a0_options );
 		$initial_setup->init();
 
-		$users_repo = new WP_Auth0_UsersRepo( $this->a0_options );
-
 		$this->router = new WP_Auth0_Routes( $this->a0_options );
 
 		$error_log = new WP_Auth0_ErrorLog();
@@ -135,12 +133,6 @@ class WP_Auth0 {
 
 		$import_settings = new WP_Auth0_Import_Settings( $this->a0_options );
 		$import_settings->init();
-
-		$api_client_creds = new WP_Auth0_Api_Client_Credentials( $this->a0_options );
-
-		$api_change_email     = new WP_Auth0_Api_Change_Email( $this->a0_options, $api_client_creds );
-		$profile_change_email = new WP_Auth0_Profile_Change_Email( $api_change_email );
-		$profile_change_email->init();
 	}
 
 	/**
@@ -490,6 +482,15 @@ $a0_plugin->init();
 /*
  * Core WP hooks
  */
+
+function wp_auth0_profile_change_email( $wp_user_id, $old_user_data ) {
+	$options              = WP_Auth0_Options::Instance();
+	$api_client_creds     = new WP_Auth0_Api_Client_Credentials( $options );
+	$api_change_email     = new WP_Auth0_Api_Change_Email( $options, $api_client_creds );
+	$profile_change_email = new WP_Auth0_Profile_Change_Email( $api_change_email );
+	return $profile_change_email->update_email( $wp_user_id, $old_user_data );
+}
+add_action( 'profile_update', 'wp_auth0_profile_change_email', 100, 2 );
 
 function wp_auth0_validate_new_password( $errors, $user ) {
 	$options             = WP_Auth0_Options::Instance();
