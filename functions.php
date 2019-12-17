@@ -154,6 +154,19 @@ function wp_auth0_delete_auth0_object( $user_id ) {
 	WP_Auth0_UsersRepo::delete_meta( $user_id, 'auth0_transient_email_update' );
 }
 
+/**
+ * @param $page
+ *
+ * @return bool
+ */
+function wp_auth0_is_admin_page( $page ) {
+	if ( empty( $_REQUEST['page'] ) || ! is_admin() ) {
+		return false;
+	}
+
+	return $page === $_REQUEST['page'];
+}
+
 if ( ! function_exists( 'get_auth0userinfo' ) ) {
 	/**
 	 * Get the Auth0 profile from the database, if one exists.
