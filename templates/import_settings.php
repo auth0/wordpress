@@ -34,16 +34,8 @@ $constant_keys = $opts->get_all_constant_keys();
 		  <form action="options.php" method="post" enctype="multipart/form-data">
 			<input type="hidden" name="action" value="wpauth0_import_settings" />
 
-			<div id="js-a0-upload-file">
-			  <p class="a0-step-text top-margin"><?php _e( 'Please upload the exported json file or', 'wp-auth0' ); ?>
-					<span class="link js-a0-upload-toggle"><?php _e( 'paste the entire json', 'wp-auth0' ); ?></span>.</p>
-			  <div class="a0-step-text top-margin"><input type="file" name="settings-file" /></div>
-			</div>
-			<div id="js-a0-paste-json" style="display:none;">
-			  <p class="a0-step-text top-margin"><?php _e( 'Please paste the exported json file or', 'wp-auth0' ); ?>
-					<span class="link js-a0-upload-toggle"><?php _e( 'upload the exported file', 'wp-auth0' ); ?></span>.</p>
-			  <div class="a0-step-text top-margin"><textarea name="settings-json"></textarea></div>
-			</div>
+			  <p class="a0-step-text top-margin"><?php _e( 'Paste the settings JSON in the field below:', 'wp-auth0' ); ?>
+			  <div class="a0-step-text top-margin"><textarea name="settings-json" class="large-text code" rows="6"></textarea></div>
 
 			<div class="a0-buttons">
 			  <input type="submit" name="setup" class="a0-button primary" value="<?php _e( 'Import', 'wp-auth0' ); ?>" />

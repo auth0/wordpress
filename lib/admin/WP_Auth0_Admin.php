@@ -47,10 +47,8 @@ class WP_Auth0_Admin {
 			return false;
 		}
 
-		if ( in_array( $wpa0_curr_page, [ 'wpa0', 'wpa0-setup', 'wpa0-import-settings', 'wpa0-errors' ] ) ) {
-			wp_enqueue_script( 'wpa0_admin' );
-			wp_enqueue_script( 'wpa0_async' );
-		}
+		wp_enqueue_script( 'wpa0_admin' );
+		wp_enqueue_script( 'wpa0_async' );
 
 		if ( 'wpa0' === $wpa0_curr_page ) {
 			wp_enqueue_media();

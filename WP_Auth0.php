@@ -130,9 +130,6 @@ class WP_Auth0 {
 
 		$error_log = new WP_Auth0_ErrorLog();
 		$error_log->init();
-
-		$import_settings = new WP_Auth0_Import_Settings( $this->a0_options );
-		$import_settings->init();
 	}
 
 	/**
@@ -483,6 +480,33 @@ $a0_plugin->init();
  * Core WP hooks
  */
 
+function wp_auth0_export_settings_admin_action() {
+	$options         = WP_Auth0_Options::Instance();
+	$import_settings = new WP_Auth0_Import_Settings( $options );
+	$import_settings->export_settings();
+}
+add_action( 'admin_action_wpauth0_export_settings', 'wp_auth0_export_settings_admin_action' );
+
+function wp_auth0_import_settings_admin_action() {
+	$options         = WP_Auth0_Options::Instance();
+	$import_settings = new WP_Auth0_Import_Settings( $options );
+	$import_settings->import_settings();
+}
+add_action( 'admin_action_wpauth0_import_settings', 'wp_auth0_import_settings_admin_action' );
+
+function wp_auth0_settings_admin_action_error() {
+	if ( ! wp_auth0_is_admin_page( 'wpa0-import-settings' ) || empty( $_REQUEST['error'] ) ) {
+		return false;
+	}
+
+	printf(
+		'<div class="notice notice-error is-dismissible"><p><strong>%s</strong></p></div>',
+		sanitize_text_field( $_REQUEST['error'] )
+	);
+	return true;
+}
+add_action( 'admin_notices', 'wp_auth0_settings_admin_action_error' );
+
 function wp_auth0_profile_change_email( $wp_user_id, $old_user_data ) {
 	$options              = WP_Auth0_Options::Instance();
 	$api_client_creds     = new WP_Auth0_Api_Client_Credentials( $options );
@@ -524,7 +548,7 @@ add_action( 'wp_ajax_auth0_delete_data', 'wp_auth0_delete_user_data' );
 
 function wp_auth0_init_admin_menu() {
 
-	if ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] === 'wpa0-help' ) {
+	if ( wp_auth0_is_admin_page( 'wpa0-help' ) ) {
 		wp_redirect( admin_url( 'admin.php?page=wpa0#help' ), 301 );
 		exit;
 	}

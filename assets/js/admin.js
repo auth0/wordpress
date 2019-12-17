@@ -71,10 +71,6 @@ jQuery(document).ready(function($) {
     /*
     Import and Export settings tabs
      */
-    $('.js-a0-upload-toggle').click(function(){
-        $('#js-a0-upload-file').toggle();
-        $('#js-a0-paste-json').toggle();
-    });
 
     $('.js-a0-import-export-tabs').click(function (e) {
         e.preventDefault();
