@@ -191,7 +191,7 @@ abstract class WP_Auth0_Api_Abstract {
 		}
 
 		// API token is missing the required scope.
-		WP_Auth0_ErrorManager::insert_auth0_error(
+		WP_Auth0_ErrorLog::insert_error(
 			__METHOD__,
 			new WP_Error(
 				'insufficient_scope',
@@ -316,7 +316,7 @@ abstract class WP_Auth0_Api_Abstract {
 	 */
 	protected function handle_wp_error( $method ) {
 		if ( $this->response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( $method, $this->response );
+			WP_Auth0_ErrorLog::insert_error( $method, $this->response );
 			return true;
 		}
 		return false;
@@ -348,7 +348,7 @@ abstract class WP_Auth0_Api_Abstract {
 			if ( isset( $response_body['errorCode'] ) ) {
 				$message .= ' [' . sanitize_text_field( $response_body['errorCode'] ) . ']';
 			}
-			WP_Auth0_ErrorManager::insert_auth0_error( $method, new WP_Error( $response_body['statusCode'], $message ) );
+			WP_Auth0_ErrorLog::insert_error( $method, new WP_Error( $response_body['statusCode'], $message ) );
 			return true;
 		}
 
@@ -356,11 +356,11 @@ abstract class WP_Auth0_Api_Abstract {
 			if ( isset( $response_body['error_description'] ) ) {
 				$message .= ' - ' . sanitize_text_field( $response_body['error_description'] );
 			}
-			WP_Auth0_ErrorManager::insert_auth0_error( $method, new WP_Error( $response_body['error'], $message ) );
+			WP_Auth0_ErrorLog::insert_error( $method, new WP_Error( $response_body['error'], $message ) );
 			return true;
 		}
 
-		WP_Auth0_ErrorManager::insert_auth0_error( $method, $this->response_body );
+		WP_Auth0_ErrorLog::insert_error( $method, $this->response_body );
 		return true;
 	}
 

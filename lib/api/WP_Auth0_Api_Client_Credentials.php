@@ -71,7 +71,7 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 
 		// If we have no access token, something went wrong upstream.
 		if ( empty( $response_body->access_token ) ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( $method, __( 'No access_token returned.', 'wp-auth0' ) );
+			WP_Auth0_ErrorLog::insert_error( $method, __( 'No access_token returned.', 'wp-auth0' ) );
 			return self::RETURN_ON_FAILURE;
 		}
 

@@ -24,13 +24,6 @@ class TestErrorLog extends WP_Auth0_Test_Case {
 	const BASIC_LOG_ENTRY_MESSAGE = '__test_error_message__';
 
 	/**
-	 * WP_Auth0_ErrorManager instance.
-	 *
-	 * @var WP_Auth0_ErrorManager
-	 */
-	public static $error_manager;
-
-	/**
 	 * Default log entry array.
 	 *
 	 * @var array
@@ -42,7 +35,6 @@ class TestErrorLog extends WP_Auth0_Test_Case {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$error_manager     = new WP_Auth0_ErrorManager();
 		self::$default_log_entry = [
 			'section' => self::BASIC_LOG_ENTRY_SECTION,
 			'code'    => 'unknown_code',
@@ -130,7 +122,7 @@ class TestErrorLog extends WP_Auth0_Test_Case {
 		$error_code = 999;
 		$error_msg  = uniqid();
 		$wp_error   = new WP_Error( $error_code, $error_msg );
-		WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $wp_error );
+		WP_Auth0_ErrorLog::insert_error( __METHOD__, $wp_error );
 		$log = self::$error_log->get();
 
 		$this->assertCount( 1, $log );
@@ -146,7 +138,7 @@ class TestErrorLog extends WP_Auth0_Test_Case {
 		$error_code = 999;
 		$error_msg  = uniqid();
 		$exception  = new Exception( $error_msg, $error_code );
-		WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $exception );
+		WP_Auth0_ErrorLog::insert_error( __METHOD__, $exception );
 		$log = self::$error_log->get();
 
 		$this->assertCount( 1, $log );
@@ -165,7 +157,7 @@ class TestErrorLog extends WP_Auth0_Test_Case {
 				'message' => uniqid(),
 			],
 		];
-		WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $error );
+		WP_Auth0_ErrorLog::insert_error( __METHOD__, $error );
 		$log = self::$error_log->get();
 
 		$this->assertCount( 1, $log );
@@ -182,7 +174,7 @@ class TestErrorLog extends WP_Auth0_Test_Case {
 			'code'    => mt_rand( 111, 999 ),
 			'message' => uniqid(),
 		];
-		WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $error );
+		WP_Auth0_ErrorLog::insert_error( __METHOD__, $error );
 		$log = self::$error_log->get();
 
 		$this->assertCount( 1, $log );

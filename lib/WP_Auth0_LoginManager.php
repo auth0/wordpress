@@ -132,7 +132,7 @@ class WP_Auth0_LoginManager {
 		} catch ( WP_Auth0_InvalidIdTokenException $e ) {
 			$code            = 'invalid_id_token';
 			$display_message = __( 'Invalid ID token', 'wp-auth0' );
-			WP_Auth0_ErrorManager::insert_auth0_error(
+			WP_Auth0_ErrorLog::insert_error(
 				__METHOD__ . ' L:' . __LINE__,
 				new WP_Error( $code, $display_message . ': ' . $e->getMessage() )
 			);
