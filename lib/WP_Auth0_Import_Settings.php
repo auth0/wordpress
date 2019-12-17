@@ -40,23 +40,6 @@ class WP_Auth0_Import_Settings {
 		exit;
 	}
 
-	public function export_settings() {
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( 'Unauthorized.', 'wp-auth0' ) );
-			exit;
-		}
-
-		header( 'Content-Type: application/json' );
-		$name = urlencode( get_auth0_curatedBlogName() );
-		header( "Content-Disposition: attachment; filename=auth0_for_wordpress_settings-$name.json" );
-		header( 'Pragma: no-cache' );
-
-		$settings = get_option( $this->a0_options->get_options_name() );
-		echo wp_json_encode( $settings );
-		exit;
-	}
-
 	/**
 	 * @codeCoverageIgnore
 	 */
