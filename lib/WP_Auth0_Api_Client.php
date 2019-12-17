@@ -126,13 +126,13 @@ class WP_Auth0_Api_Client {
 		);
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] !== 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -215,13 +215,13 @@ class WP_Auth0_Api_Client {
 		);
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response->get_error_message() );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response->get_error_message() );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 201 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -255,7 +255,7 @@ class WP_Auth0_Api_Client {
 		);
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
@@ -263,7 +263,7 @@ class WP_Auth0_Api_Client {
 		if ( 409 === $response['response']['code'] ) {
 
 			// Client grant from WP-created client to Management API already exists
-			WP_Auth0_ErrorManager::insert_auth0_error(
+			WP_Auth0_ErrorLog::insert_error(
 				__METHOD__,
 				sprintf(
 					// translators: placeholders are machine names stored for this WP instance and must be included.
@@ -278,7 +278,7 @@ class WP_Auth0_Api_Client {
 
 		} elseif ( $response['response']['code'] != 201 ) {
 
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -313,13 +313,13 @@ class WP_Auth0_Api_Client {
 		);
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 201 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -355,13 +355,13 @@ class WP_Auth0_Api_Client {
 		);
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}
@@ -410,13 +410,13 @@ class WP_Auth0_Api_Client {
 		);
 
 		if ( $response instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response );
 			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $response['body'] );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response['body'] );
 			error_log( $response['body'] );
 			return false;
 		}

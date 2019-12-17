@@ -185,7 +185,7 @@ class WP_Auth0_Routes {
 			return apply_filters( 'auth0_migration_ws_authenticated', $user );
 
 		} catch ( Exception $e ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $e );
 			return [
 				'status' => $e->getCode() ?: 400,
 				'error'  => $e->getMessage(),
@@ -231,7 +231,7 @@ class WP_Auth0_Routes {
 			return apply_filters( 'auth0_migration_ws_authenticated', $user );
 
 		} catch ( Exception $e ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, $e );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, $e );
 			return [
 				'status' => $e->getCode() ?: 400,
 				'error'  => $e->getMessage(),

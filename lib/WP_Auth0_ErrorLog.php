@@ -23,17 +23,6 @@ class WP_Auth0_ErrorLog {
 	const ERROR_LOG_ENTRY_LIMIT = 30;
 
 	/**
-	 * Add actions and filters for the error log settings section.
-	 *
-	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function init() {
-		add_action( 'admin_action_wpauth0_clear_error_log', 'wp_auth0_errorlog_clear_error_log' );
-	}
-
-	/**
 	 * Render the settings page.
 	 *
 	 * @see WP_Auth0_Settings_Section::init_menu()
@@ -110,6 +99,42 @@ class WP_Auth0_ErrorLog {
 	}
 
 	/**
+	 * Create a row in the error log.
+	 *
+	 * @param string $section - Portion of the codebase that generated the error.
+	 * @param mixed  $error - Error message string or discoverable error type.
+	 *
+	 * @return bool
+	 */
+	public static function insert_error( $section, $error ) {
+
+		$new_entry = [
+			'section' => $section,
+			'code'    => 'unknown_code',
+			'message' => __( 'Unknown error message', 'wp-auth0' ),
+		];
+
+		if ( $error instanceof WP_Error ) {
+			$new_entry['code']    = $error->get_error_code();
+			$new_entry['message'] = $error->get_error_message();
+		} elseif ( $error instanceof Exception ) {
+			$new_entry['code']    = $error->getCode();
+			$new_entry['message'] = $error->getMessage();
+		} elseif ( is_array( $error ) && ! empty( $error['response'] ) ) {
+			if ( ! empty( $error['response']['code'] ) ) {
+				$new_entry['code'] = sanitize_text_field( $error['response']['code'] );
+			}
+			if ( ! empty( $error['response']['message'] ) ) {
+				$new_entry['message'] = sanitize_text_field( $error['response']['message'] );
+			}
+		} else {
+			$new_entry['message'] = is_object( $error ) || is_array( $error ) ? serialize( $error ) : $error;
+		}
+
+		return ( new self )->add( $new_entry );
+	}
+
+	/**
 	 * Update the error log with an array and enforcing the length limit.
 	 *
 	 * @param array $log - Log array to update.
@@ -122,38 +147,4 @@ class WP_Auth0_ErrorLog {
 		}
 		return update_option( self::OPTION_NAME, $log );
 	}
-
-	/**
-	 * Enqueue scripts and styles.
-	 *
-	 * @deprecated - 3.6.0, not used, handled in WP_Auth0_Admin::admin_enqueue()
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public function admin_enqueue() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-	}
-}
-
-/**
- * Function to call the method that clears out the error log.
- *
- * @hook admin_action_wpauth0_clear_error_log
- */
-function wp_auth0_errorlog_clear_error_log() {
-
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'clear_error_log' ) ) {
-		wp_die( __( 'Not allowed.', 'wp-auth0' ) );
-	}
-
-	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'Not authorized.', 'wp-auth0' ) );
-	}
-
-	$error_log = new WP_Auth0_ErrorLog();
-	$error_log->clear();
-
-	wp_safe_redirect( admin_url( 'admin.php?page=wpa0-errors&cleared=1' ) );
-	exit;
 }

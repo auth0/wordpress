@@ -115,7 +115,7 @@ class WP_Auth0_UsersRepo {
 		global $wpdb;
 
 		if ( empty( $id ) ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__, __( 'Empty user id', 'wp-auth0' ) );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__, __( 'Empty user id', 'wp-auth0' ) );
 
 			return null;
 		}
@@ -129,7 +129,7 @@ class WP_Auth0_UsersRepo {
 		$users = get_users( $query );
 
 		if ( $users instanceof WP_Error ) {
-			WP_Auth0_ErrorManager::insert_auth0_error( __METHOD__ . ' => get_users() ', $users->get_error_message() );
+			WP_Auth0_ErrorLog::insert_error( __METHOD__ . ' => get_users() ', $users->get_error_message() );
 
 			return null;
 		}

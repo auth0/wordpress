@@ -127,9 +127,6 @@ class WP_Auth0 {
 		$initial_setup->init();
 
 		$this->router = new WP_Auth0_Routes( $this->a0_options );
-
-		$error_log = new WP_Auth0_ErrorLog();
-		$error_log->init();
 	}
 
 	/**
@@ -479,6 +476,29 @@ $a0_plugin->init();
 /*
  * Core WP hooks
  */
+
+/**
+ * Function to call the method that clears out the error log.
+ *
+ * @hook admin_action_wpauth0_clear_error_log
+ */
+function wp_auth0_errorlog_clear_error_log() {
+
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'clear_error_log' ) ) {
+		wp_die( __( 'Not allowed.', 'wp-auth0' ) );
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'Not authorized.', 'wp-auth0' ) );
+	}
+
+	$error_log = new WP_Auth0_ErrorLog();
+	$error_log->clear();
+
+	wp_safe_redirect( admin_url( 'admin.php?page=wpa0-errors&cleared=1' ) );
+	exit;
+}
+add_action( 'admin_action_wpauth0_clear_error_log', 'wp_auth0_errorlog_clear_error_log' );
 
 function wp_auth0_export_settings_admin_action() {
 

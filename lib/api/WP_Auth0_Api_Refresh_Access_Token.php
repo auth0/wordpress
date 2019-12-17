@@ -66,7 +66,7 @@ class WP_Auth0_Api_Refresh_Access_Token extends WP_Auth0_Api_Abstract {
 	protected function handle_response( $method ) {
 
 		if ( 401 == $this->response_code ) {
-			WP_Auth0_ErrorManager::insert_auth0_error(
+			WP_Auth0_ErrorLog::insert_error(
 				__METHOD__ . ' L:' . __LINE__,
 				__( 'An /oauth/token call triggered a 401 response from Auth0. ', 'wp-auth0' ) .
 				__( 'Please check the Client ID and Client Secret saved in the Auth0 plugin settings. ', 'wp-auth0' )
