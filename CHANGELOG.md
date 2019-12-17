@@ -1,5 +1,11 @@
 # Change Log
 
+## [3.7.3](https://github.com/auth0/wp-auth0/tree/3.7.3) (2019-12-17)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.7.1...3.7.3)
+
+**Fixed**
+- Cast user ID to integer to fix reflected XSS
+
 ## [3.7.1](https://github.com/auth0/wp-auth0/tree/3.7.1) (2018-10-08)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.7.0...3.7.1)
 

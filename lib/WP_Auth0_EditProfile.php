@@ -148,7 +148,7 @@ class WP_Auth0_EditProfile {
 
 	  var data = {
 		'action': 'auth0_delete_data',
-		'user_id': '<?php echo $_GET['user_id']; ?>'
+		'user_id': '<?php echo (int) $_GET['user_id']; ?>'
 	  };
 
 	  var successMsg = "<?php _e( 'Done!', 'wp-auth0' ); ?>";
@@ -191,7 +191,7 @@ class WP_Auth0_EditProfile {
 
 	  var data = {
 		'action': 'auth0_delete_mfa',
-		'user_id': '<?php echo $_GET['user_id']; ?>'
+		'user_id': '<?php echo (int) $_GET['user_id']; ?>'
 	  };
 
 	var successMsg = "<?php _e( 'Done!', 'wp-auth0' ); ?>";
