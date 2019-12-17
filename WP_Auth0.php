@@ -481,9 +481,22 @@ $a0_plugin->init();
  */
 
 function wp_auth0_export_settings_admin_action() {
-	$options         = WP_Auth0_Options::Instance();
-	$import_settings = new WP_Auth0_Import_Settings( $options );
-	$import_settings->export_settings();
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'Unauthorized.', 'wp-auth0' ) );
+		exit;
+	}
+
+	$options  = WP_Auth0_Options::Instance();
+	$name     = urlencode( get_auth0_curatedBlogName() );
+	$settings = get_option( $options->get_options_name() );
+
+	header( 'Content-Type: application/json' );
+	header( "Content-Disposition: attachment; filename=auth0_for_wordpress_settings-$name.json" );
+	header( 'Pragma: no-cache' );
+
+	echo wp_json_encode( $settings );
+	exit;
 }
 add_action( 'admin_action_wpauth0_export_settings', 'wp_auth0_export_settings_admin_action' );
 

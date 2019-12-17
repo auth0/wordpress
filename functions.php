@@ -145,7 +145,9 @@ function wp_auth0_url_base64_decode( $input ) {
 }
 
 /**
- * @param $user_id
+ * Delete all Auth0 data for a specific user.
+ *
+ * @param int $user_id - WordPress user ID.
  */
 function wp_auth0_delete_auth0_object( $user_id ) {
 	WP_Auth0_UsersRepo::delete_meta( $user_id, 'auth0_id' );
@@ -155,7 +157,9 @@ function wp_auth0_delete_auth0_object( $user_id ) {
 }
 
 /**
- * @param $page
+ * Determine whether a specific admin page is being loaded or not.
+ *
+ * @param string $page - Admin page slug to check.
  *
  * @return bool
  */
