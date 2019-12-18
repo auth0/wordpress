@@ -99,6 +99,20 @@ class WP_Auth0_ErrorLog {
 	}
 
 	/**
+	 * Update the error log with an array and enforcing the length limit.
+	 *
+	 * @param array $log - Log array to update.
+	 *
+	 * @return bool
+	 */
+	private function update( array $log ) {
+		if ( count( $log ) > self::ERROR_LOG_ENTRY_LIMIT ) {
+			array_pop( $log );
+		}
+		return update_option( self::OPTION_NAME, $log );
+	}
+
+	/**
 	 * Create a row in the error log.
 	 *
 	 * @param string $section - Portion of the codebase that generated the error.
@@ -132,19 +146,5 @@ class WP_Auth0_ErrorLog {
 		}
 
 		return ( new self )->add( $new_entry );
-	}
-
-	/**
-	 * Update the error log with an array and enforcing the length limit.
-	 *
-	 * @param array $log - Log array to update.
-	 *
-	 * @return bool
-	 */
-	private function update( array $log ) {
-		if ( count( $log ) > self::ERROR_LOG_ENTRY_LIMIT ) {
-			array_pop( $log );
-		}
-		return update_option( self::OPTION_NAME, $log );
 	}
 }

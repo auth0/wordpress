@@ -13,6 +13,12 @@
  */
 class TestErrorLog extends WP_Auth0_Test_Case {
 
+	use HookHelpers;
+
+	use RedirectHelpers;
+
+	use WpDieHelper;
+
 	/**
 	 * Test log entry section.
 	 */
@@ -40,6 +46,19 @@ class TestErrorLog extends WP_Auth0_Test_Case {
 			'code'    => 'unknown_code',
 			'message' => self::BASIC_LOG_ENTRY_MESSAGE,
 		];
+	}
+
+	/**
+	 * Test that the error log option name did not change.
+	 */
+	public function testThatClearAdminActionFunctionIsHooked() {
+		$expect_hooked = [
+			'wp_auth0_errorlog_clear_error_log' => [
+				'priority'      => 10,
+				'accepted_args' => 1,
+			],
+		];
+		$this->assertHookedFunction( 'admin_action_wpauth0_clear_error_log', $expect_hooked );
 	}
 
 	/**
@@ -208,5 +227,62 @@ class TestErrorLog extends WP_Auth0_Test_Case {
 		wp_cache_delete( WP_Auth0_ErrorLog::OPTION_NAME, 'options' );
 
 		$this->assertFalse( get_option( WP_Auth0_ErrorLog::OPTION_NAME ) );
+	}
+
+	public function testThatBadNonceStopsProcess() {
+		$this->startWpDieHalting();
+		$error_log = new WP_Auth0_ErrorLog();
+		$error_log::insert_error( uniqid(), uniqid() );
+
+		$this->assertCount( 1, $error_log->get() );
+
+		try {
+			wp_auth0_errorlog_clear_error_log();
+			$caught = 'Nothing caught';
+		} catch ( \Exception $e ) {
+			$caught = $e->getMessage();
+		}
+
+		$this->assertEquals( 'Not allowed.', $caught );
+		$this->assertCount( 1, $error_log->get() );
+	}
+
+	public function testThatNonAdminStopsProcess() {
+		$this->startWpDieHalting();
+		$_POST['nonce'] = wp_create_nonce( 'clear_error_log' );
+		$error_log      = new WP_Auth0_ErrorLog();
+		$error_log::insert_error( uniqid(), uniqid() );
+
+		$this->assertCount( 1, $error_log->get() );
+
+		try {
+			wp_auth0_errorlog_clear_error_log();
+			$caught = 'Nothing caught';
+		} catch ( \Exception $e ) {
+			$caught = $e->getMessage();
+		}
+
+		$this->assertEquals( 'Not authorized.', $caught );
+		$this->assertCount( 1, $error_log->get() );
+	}
+
+	public function testThatErrorLogCanBeCleared() {
+		$this->startRedirectHalting();
+		$_POST['nonce'] = wp_create_nonce( 'clear_error_log' );
+		$error_log      = new WP_Auth0_ErrorLog();
+		$error_log::insert_error( uniqid(), uniqid() );
+
+		$this->assertCount( 1, $error_log->get() );
+
+		try {
+			wp_auth0_errorlog_clear_error_log();
+			$caught = [ 'Nothing caught' ];
+		} catch ( \Exception $e ) {
+			$caught = unserialize( $e->getMessage() );
+		}
+
+		$this->assertEquals( 'http://example.org/wp-admin/admin.php?page=wpa0-errors&cleared=1', $caught['location'] );
+		$this->assertEquals( 302, $caught['status'] );
+		$this->assertEmpty( $error_log->get() );
 	}
 }
