@@ -187,7 +187,7 @@ class WP_Auth0_InitialSetup {
 
 	public function init_setup() {
 		if ( ( ! isset( $_REQUEST['page'] ) ) || ( 'wpa0-setup' !== $_REQUEST['page'] ) || ( ! isset( $_REQUEST['callback'] ) ) ) {
-			return;
+			return false;
 		}
 
 		if ( isset( $_REQUEST['error'] ) && 'rejected' == $_REQUEST['error'] ) {
