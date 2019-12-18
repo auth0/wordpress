@@ -540,6 +540,25 @@ function wp_auth0_settings_admin_action_error() {
 }
 add_action( 'admin_notices', 'wp_auth0_settings_admin_action_error' );
 
+function wp_auth0_initial_setup_init() {
+	if ( ( ! isset( $_REQUEST['page'] ) ) || ( 'wpa0-setup' !== $_REQUEST['page'] ) || ( ! isset( $_REQUEST['callback'] ) ) ) {
+		return false;
+	}
+
+	if ( isset( $_REQUEST['error'] ) && 'rejected' == $_REQUEST['error'] ) {
+		wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=rejected' ) );
+		exit;
+	}
+
+	if ( isset( $_REQUEST['error'] ) && 'access_denied' == $_REQUEST['error'] ) {
+		wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=access_denied' ) );
+		exit;
+	}
+
+	(new WP_Auth0_InitialSetup_Consent( WP_Auth0_Options::Instance() ))->callback();
+}
+add_action( 'init', 'wp_auth0_initial_setup_init', 1 );
+
 function wp_auth0_profile_change_email( $wp_user_id, $old_user_data ) {
 	$options              = WP_Auth0_Options::Instance();
 	$api_client_creds     = new WP_Auth0_Api_Client_Credentials( $options );
