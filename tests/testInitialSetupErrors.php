@@ -16,39 +16,36 @@ class TestInitialSetupErrors extends WP_Auth0_Test_Case {
 
 	use RedirectHelpers;
 
-	//public function testInitHooks() {
-	//	$expect_hooked = [
-	//		'wp_auth0_init_initial_setup' => [
-	//			'priority'      => 1,
-	//			'accepted_args' => 1,
-	//		],
-	//	];
-	//	$this->assertHookedFunction( 'init', $expect_hooked );
-	//}
+	public function testInitHooks() {
+		$expect_hooked = [
+			'wp_auth0_initial_setup_init' => [
+				'priority'      => 1,
+				'accepted_args' => 1,
+			],
+		];
+		$this->assertHookedFunction( 'init', $expect_hooked );
+	}
 
 	public function testThatInitialSetupIsSkippedIfNotSetupErrorPage() {
-		$setup = new WP_Auth0_InitialSetup( WP_Auth0_Options::Instance() );
-		$this->assertFalse($setup->init_setup());
+		$this->assertFalse( wp_auth0_initial_setup_init() );
 
-		$_REQUEST['page'] = uniqid();
+		$_REQUEST['page']     = uniqid();
 		$_REQUEST['callback'] = uniqid();
-		$this->assertFalse($setup->init_setup());
+		$this->assertFalse( wp_auth0_initial_setup_init() );
 
 		$_REQUEST['wpa0-setup'] = 'wpa0-setup';
-		unset($_REQUEST['callback']);
-		$this->assertFalse($setup->init_setup());
+		unset( $_REQUEST['callback'] );
+		$this->assertFalse( wp_auth0_initial_setup_init() );
 	}
 
 	public function testThatRejectedRedirectOccurs() {
 		$this->startRedirectHalting();
-		$_REQUEST['page'] = 'wpa0-setup';
+		$_REQUEST['page']     = 'wpa0-setup';
 		$_REQUEST['callback'] = uniqid();
-		$_REQUEST['error'] = 'rejected';
-
-		$setup = new WP_Auth0_InitialSetup( WP_Auth0_Options::Instance() );
+		$_REQUEST['error']    = 'rejected';
 
 		try {
-			$setup->init_setup();
+			wp_auth0_initial_setup_init();
 			$caught = [ 'Nothing caught.' ];
 		} catch ( Exception $e ) {
 			$caught = unserialize( $e->getMessage() );
@@ -62,14 +59,12 @@ class TestInitialSetupErrors extends WP_Auth0_Test_Case {
 
 	public function testThatAccessDeniedRedirectOccurs() {
 		$this->startRedirectHalting();
-		$_REQUEST['page'] = 'wpa0-setup';
+		$_REQUEST['page']     = 'wpa0-setup';
 		$_REQUEST['callback'] = uniqid();
-		$_REQUEST['error'] = 'access_denied';
-
-		$setup = new WP_Auth0_InitialSetup( WP_Auth0_Options::Instance() );
+		$_REQUEST['error']    = 'access_denied';
 
 		try {
-			$setup->init_setup();
+			wp_auth0_initial_setup_init();
 			$caught = [ 'Nothing caught.' ];
 		} catch ( Exception $e ) {
 			$caught = unserialize( $e->getMessage() );
@@ -83,13 +78,11 @@ class TestInitialSetupErrors extends WP_Auth0_Test_Case {
 
 	public function testThatInitialSetupCallsConsentCallback() {
 		$this->startRedirectHalting();
-		$_REQUEST['page'] = 'wpa0-setup';
+		$_REQUEST['page']     = 'wpa0-setup';
 		$_REQUEST['callback'] = uniqid();
 
-		$setup = new WP_Auth0_InitialSetup( WP_Auth0_Options::Instance() );
-
 		try {
-			$setup->init_setup();
+			wp_auth0_initial_setup_init();
 			$caught = [ 'Nothing caught.' ];
 		} catch ( Exception $e ) {
 			$caught = unserialize( $e->getMessage() );

@@ -5,7 +5,6 @@ class WP_Auth0_InitialSetup {
 	protected $a0_options;
 	protected $connection_profile;
 	protected $enterprise_connection_step;
-	protected $consent_step;
 	protected $adminuser_step;
 	protected $connections_step;
 	protected $end_step;
@@ -15,7 +14,6 @@ class WP_Auth0_InitialSetup {
 
 		$this->connection_profile         = new WP_Auth0_InitialSetup_ConnectionProfile( $this->a0_options );
 		$this->enterprise_connection_step = new WP_Auth0_InitialSetup_EnterpriseConnection( $this->a0_options );
-		$this->consent_step               = new WP_Auth0_InitialSetup_Consent( $this->a0_options );
 		$this->adminuser_step             = new WP_Auth0_InitialSetup_AdminUser( $this->a0_options );
 		$this->connections_step           = new WP_Auth0_InitialSetup_Connections( $this->a0_options );
 		$this->end_step                   = new WP_Auth0_InitialSetup_End( $this->a0_options );
@@ -27,8 +25,6 @@ class WP_Auth0_InitialSetup {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
-
-		add_action( 'init', [ $this, 'init_setup' ], 1 );
 
 		add_action( 'admin_action_wpauth0_callback_step1', [ $this->connection_profile, 'callback' ] );
 		add_action( 'admin_action_wpauth0_callback_step3_social', [ $this->adminuser_step, 'callback' ] );
@@ -184,23 +180,4 @@ class WP_Auth0_InitialSetup {
 		  </div>
 		<?php
 	}
-
-	public function init_setup() {
-		if ( ( ! isset( $_REQUEST['page'] ) ) || ( 'wpa0-setup' !== $_REQUEST['page'] ) || ( ! isset( $_REQUEST['callback'] ) ) ) {
-			return false;
-		}
-
-		if ( isset( $_REQUEST['error'] ) && 'rejected' == $_REQUEST['error'] ) {
-			wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=rejected' ) );
-			exit;
-		}
-
-		if ( isset( $_REQUEST['error'] ) && 'access_denied' == $_REQUEST['error'] ) {
-			wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=access_denied' ) );
-			exit;
-		}
-
-		$this->consent_step->callback();
-	}
-
 }
