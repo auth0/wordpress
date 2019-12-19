@@ -17,6 +17,8 @@ class TestErrorLog extends WP_Auth0_Test_Case {
 
 	use RedirectHelpers;
 
+	use UsersHelper;
+
 	use WpDieHelper;
 
 	/**
@@ -268,6 +270,7 @@ class TestErrorLog extends WP_Auth0_Test_Case {
 
 	public function testThatErrorLogCanBeCleared() {
 		$this->startRedirectHalting();
+		$this->setGlobalUser();
 		$_POST['nonce'] = wp_create_nonce( 'clear_error_log' );
 		$error_log      = new WP_Auth0_ErrorLog();
 		$error_log::insert_error( uniqid(), uniqid() );

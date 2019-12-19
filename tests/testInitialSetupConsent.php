@@ -100,7 +100,7 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$redirect_url = parse_url( $caught_redirect['location'] );
 
 		$this->assertEquals( '/wp-admin/admin.php', $redirect_url['path'] );
-		$this->assertContains( 'page=wpa0', $redirect_url['query'] );
+		$this->assertContains( 'page=wpa0-setup', $redirect_url['query'] );
 		$this->assertContains( 'error=cant_create_client', $redirect_url['query'] );
 
 		$this->assertCount( 1, self::$error_log->get() );
@@ -192,7 +192,7 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$redirect_url = parse_url( $caught_redirect['location'] );
 
 		$this->assertEquals( '/wp-admin/admin.php', $redirect_url['path'] );
-		$this->assertContains( 'page=wpa0', $redirect_url['query'] );
+		$this->assertContains( 'page=wpa0-setup', $redirect_url['query'] );
 		$this->assertContains( 'error=cant_create_client_grant', $redirect_url['query'] );
 
 		$this->assertEquals( 'TEST_CLIENT_ID', self::$opts->get( 'client_id' ) );
