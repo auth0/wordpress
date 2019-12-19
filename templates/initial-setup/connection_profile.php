@@ -142,7 +142,7 @@
 				  <h4><?php _e( 'Manual Setup', 'wp-auth0' ); ?></h4>
 				  <p><?php _e( 'If you already have an Application or want to use an existing database connection, please follow the steps below.', 'wp-auth0' ); ?></p>
 				  <p><a class="a0-button primary" href="https://auth0.com/docs/cms/wordpress/installation#manual-setup"
-						target="_blank"><?php _e( 'Manual Setup Instructions', 'wp-auth0' ); ?></a></p>
+						target="_blank"><?php _e( 'manual Setup Instructions', 'wp-auth0' ); ?></a></p>
 				  <br>
 			  </div>
 			</div>

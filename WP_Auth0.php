@@ -30,8 +30,8 @@ define( 'WPA0_JWKS_CACHE_TRANSIENT_NAME', 'WP_Auth0_JWKS_cache' );
 
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 
-require_once WPA0_PLUGIN_DIR.'vendor/autoload.php';
-require_once WPA0_PLUGIN_DIR.'functions.php';
+require_once WPA0_PLUGIN_DIR . 'vendor/autoload.php';
+require_once WPA0_PLUGIN_DIR . 'functions.php';
 
 /*
  * Localization
@@ -122,9 +122,6 @@ class WP_Auth0 {
 		add_filter( 'query_vars', [ $this, 'a0_register_query_vars' ] );
 
 		add_filter( 'plugin_action_links_' . $this->basename, [ $this, 'wp_add_plugin_settings_link' ] );
-
-		$initial_setup = new WP_Auth0_InitialSetup( $this->a0_options );
-		$initial_setup->init();
 
 		$this->router = new WP_Auth0_Routes( $this->a0_options );
 	}
@@ -476,6 +473,55 @@ $a0_plugin->init();
 /*
  * Core WP hooks
  */
+
+function wp_auth0_setup_error_admin_notices() {
+	if ( empty( $_REQUEST['error'] ) ) {
+		return false;
+	}
+
+	$initial_setup = new WP_Auth0_InitialSetup( WP_Auth0_Options::Instance() );
+
+	switch ( $_REQUEST['error'] ) {
+
+		case 'cant_create_client':
+			$initial_setup->cant_create_client_message();
+			break;
+
+		case 'cant_create_client_grant':
+			$initial_setup->cant_create_client_grant_message();
+			break;
+
+		case 'cant_exchange_token':
+			$initial_setup->cant_exchange_token_message();
+			break;
+
+		case 'rejected':
+			$initial_setup->rejected_message();
+			break;
+
+		case 'access_denied':
+			$initial_setup->access_denied_message();
+			break;
+
+		default:
+			$initial_setup->notify_error();
+	}
+
+	return true;
+}
+add_action( 'admin_notices', 'wp_auth0_setup_error_admin_notices' );
+
+function wp_auth0_setup_callback_step1() {
+	$setup_conn = new WP_Auth0_InitialSetup_ConnectionProfile( WP_Auth0_Options::Instance() );
+	$setup_conn->callback();
+}
+add_action( 'admin_action_wpauth0_callback_step1', 'wp_auth0_setup_callback_step1' );
+
+function wp_auth0_setup_callback_step3_social() {
+	$setup_admin = new WP_Auth0_InitialSetup_AdminUser( WP_Auth0_Options::Instance() );
+	$setup_admin->callback();
+}
+add_action( 'admin_action_wpauth0_callback_step3_social', 'wp_auth0_setup_callback_step3_social' );
 
 /**
  * Function to call the method that clears out the error log.

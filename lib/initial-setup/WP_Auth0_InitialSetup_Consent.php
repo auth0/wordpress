@@ -112,7 +112,7 @@ class WP_Auth0_InitialSetup_Consent {
 			$client_response = WP_Auth0_Api_Client::create_client( $domain, $this->access_token, $name );
 
 			if ( $client_response === false ) {
-				wp_redirect( admin_url( 'admin.php?page=wpa0&error=cant_create_client' ) );
+				wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=cant_create_client' ) );
 				exit;
 			}
 
@@ -192,7 +192,7 @@ class WP_Auth0_InitialSetup_Consent {
 		$grant_response = WP_Auth0_Api_Client::create_client_grant( $this->access_token, $client_id );
 
 		if ( false === $grant_response ) {
-			wp_redirect( admin_url( 'admin.php?page=wpa0&error=cant_create_client_grant' ) );
+			wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=cant_create_client_grant' ) );
 			exit;
 		}
 
