@@ -123,7 +123,7 @@ class WP_Auth0_InitialSetup {
 	  <div class="notice notice-error">
 		<p>
 		  <strong>
-			<?php _e( 'The required scopes were rejected.', 'wp-auth0' ); ?>
+				<?php _e( 'The required scopes were rejected.', 'wp-auth0' ); ?>
 		  </strong>
 		</p>
 	  </div>
