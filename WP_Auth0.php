@@ -58,13 +58,6 @@ class WP_Auth0 {
 	protected $a0_options;
 
 	/**
-	 * @deprecated - 3.9.0, functionality removed
-	 *
-	 * @var WP_Auth0_Amplificator
-	 */
-	protected $social_amplificator;
-
-	/**
 	 * @var WP_Auth0_Routes
 	 */
 	protected $router;
@@ -79,10 +72,12 @@ class WP_Auth0 {
 	 *
 	 * @param null|WP_Auth0_Options $options - WP_Auth0_Options instance.
 	 */
-	public function __construct( $options = null ) {
+	public function __construct( $options ) {
 		spl_autoload_register( [ $this, 'autoloader' ] );
-		$this->a0_options = $options instanceof WP_Auth0_Options ? $options : WP_Auth0_Options::Instance();
+		$this->a0_options = $options;
 		$this->basename   = plugin_basename( __FILE__ );
+		$this->db_manager = new WP_Auth0_DBManager( $this->a0_options );
+		$this->router     = new WP_Auth0_Routes( $this->a0_options );
 	}
 
 	/**
@@ -93,8 +88,6 @@ class WP_Auth0 {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
-
-		$this->db_manager = new WP_Auth0_DBManager( $this->a0_options );
 
 		add_action( 'init', [ $this, 'wp_init' ] );
 
@@ -122,8 +115,6 @@ class WP_Auth0 {
 		add_filter( 'query_vars', [ $this, 'a0_register_query_vars' ] );
 
 		add_filter( 'plugin_action_links_' . $this->basename, [ $this, 'wp_add_plugin_settings_link' ] );
-
-		$this->router = new WP_Auth0_Routes( $this->a0_options );
 	}
 
 	/**
@@ -416,44 +407,6 @@ class WP_Auth0 {
 		}
 
 		return false;
-	}
-
-	/*
-	 *
-	 * DEPRECATED
-	 *
-	 */
-
-	/**
-	 * @deprecated - 3.8.0, not used and no replacement provided.
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	public function a0_render_message() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-
-		$message = null;
-
-		if ( $message ) {
-			echo "<div class=\"a0-message\">$message <small onclick=\"jQuery('.a0-message').hide();\">(Close)</small></div>";
-			echo '<script type="text/javascript">
-				setTimeout(function(){jQuery(".a0-message").hide();}, 10 * 1000);
-			</script>';
-		}
-	}
-
-	/**
-	 * @deprecated - 3.6.0, use WPA0_PLUGIN_URL constant
-	 *
-	 * @return string
-	 *
-	 * @codeCoverageIgnore - Deprecated
-	 */
-	public static function get_plugin_dir_url() {
-		// phpcs:ignore
-		@trigger_error( sprintf( __( 'Method %s is deprecated.', 'wp-auth0' ), __METHOD__ ), E_USER_DEPRECATED );
-		return WPA0_PLUGIN_URL;
 	}
 }
 
