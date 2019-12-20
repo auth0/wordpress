@@ -38,8 +38,7 @@ class TestWPAuth0Helpers extends WP_Auth0_Test_Case {
 	 * Test that the correct plugin links are shown when the plugin has NOT been configured.
 	 */
 	public function testThatPluginSettingsLinksAreCorrectWhenNotReady() {
-		$wp_auth0     = new WP_Auth0( self::$opts );
-		$plugin_links = $wp_auth0->wp_add_plugin_settings_link( [] );
+		$plugin_links = wp_auth0_plugin_action_links( [] );
 
 		$this->assertCount( 2, $plugin_links );
 
@@ -58,9 +57,8 @@ class TestWPAuth0Helpers extends WP_Auth0_Test_Case {
 	 * Test that the correct plugin links are shown when the plugin has been configured.
 	 */
 	public function testThatPluginSettingsLinksAreCorrectWhenReady() {
-		$wp_auth0 = new WP_Auth0( self::$opts );
 		self::auth0Ready( true );
-		$plugin_links = $wp_auth0->wp_add_plugin_settings_link( [] );
+		$plugin_links = wp_auth0_plugin_action_links( [] );
 
 		$this->assertCount( 1, $plugin_links );
 
