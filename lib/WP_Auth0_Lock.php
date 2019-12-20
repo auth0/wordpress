@@ -188,7 +188,7 @@ class WP_Auth0_Lock {
 			WP_Auth0_Lock::LOCK_GLOBAL_JS_VAR_NAME,
 			[
 				'settings'        => $lock_options->get_lock_options(),
-				'ready'           => WP_Auth0::ready(),
+				'ready'           => wp_auth0_is_ready(),
 				'domain'          => $options->get_auth_domain(),
 				'clientId'        => $options->get( 'client_id' ),
 				'stateCookieName' => WP_Auth0_State_Handler::get_storage_cookie_name(),

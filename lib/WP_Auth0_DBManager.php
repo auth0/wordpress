@@ -31,7 +31,7 @@ class WP_Auth0_DBManager {
 			$options->set( 'cache_expiration', 1440, false );
 
 			// Update Client
-			if ( WP_Auth0::ready() ) {
+			if ( wp_auth0_is_ready() ) {
 				$options->set( 'client_signing_algorithm', 'HS256', false );
 			}
 		}

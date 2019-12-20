@@ -107,7 +107,7 @@ class TestLoginManager extends WP_Auth0_Test_Case {
 
 		// Configure Auth0.
 		self::auth0Ready();
-		$this->assertTrue( WP_Auth0::ready() );
+		$this->assertTrue( wp_auth0_is_ready() );
 
 		// Set the current user to admin.
 		$this->setGlobalUser();
@@ -159,7 +159,7 @@ class TestLoginManager extends WP_Auth0_Test_Case {
 		self::$opts->set( 'auto_login', 1 );
 		self::auth0Ready( true );
 		self::$opts->set( 'domain', 'test-wp.auth0.com' );
-		$this->assertTrue( WP_Auth0::ready() );
+		$this->assertTrue( wp_auth0_is_ready() );
 
 		$caught_redirect = [
 			'location' => null,

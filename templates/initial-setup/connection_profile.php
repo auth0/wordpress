@@ -19,7 +19,7 @@
 		  .</p>
 		</div>
 	</div>
-		<?php if ( WP_Auth0::ready() ) : ?>
+		<?php if ( wp_auth0_is_ready() ) : ?>
 	  <div class="row">
 		  <div class="a0-step-text a0-message a0-warning">
 			  <p>

@@ -96,7 +96,7 @@ class WP_Auth0_LoginManager {
 
 		// Not an Auth0 login process or settings are not configured to allow logins.
 		$cb_type = $this->query_vars( 'auth0' );
-		if ( ! $cb_type || ! WP_Auth0::ready() ) {
+		if ( ! $cb_type || ! wp_auth0_is_ready() ) {
 			return false;
 		}
 
@@ -364,7 +364,7 @@ class WP_Auth0_LoginManager {
 	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/wp_logout
 	 */
 	public function logout() {
-		if ( ! WP_Auth0::ready() ) {
+		if ( ! wp_auth0_is_ready() ) {
 			return;
 		}
 

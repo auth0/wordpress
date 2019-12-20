@@ -15,6 +15,7 @@ define( 'AUTH0_DB_VERSION', 23 );
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
 define( 'WPA0_PLUGIN_DIR', plugin_dir_path( __FILE__ ) ); // Includes trailing slash
 define( 'WPA0_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'WPA0_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 define( 'WPA0_PLUGIN_JS_URL', WPA0_PLUGIN_URL . 'assets/js/' );
 define( 'WPA0_PLUGIN_CSS_URL', WPA0_PLUGIN_URL . 'assets/css/' );
 define( 'WPA0_PLUGIN_IMG_URL', WPA0_PLUGIN_URL . 'assets/img/' );
@@ -96,19 +97,6 @@ class WP_Auth0 {
 		add_filter( 'query_vars', [ $this, 'a0_register_query_vars' ] );
 
 		add_filter( 'plugin_action_links_' . $this->basename, [ $this, 'wp_add_plugin_settings_link' ] );
-	}
-
-	/**
-	 * Is the Auth0 plugin ready to process logins?
-	 *
-	 * @return bool
-	 */
-	public static function ready() {
-		$options = WP_Auth0_Options::Instance();
-		if ( ! $options->get( 'domain' ) || ! $options->get( 'client_id' ) || ! $options->get( 'client_secret' ) ) {
-			return false;
-		}
-		return true;
 	}
 
 	/**
@@ -220,7 +208,7 @@ class WP_Auth0 {
 			)
 		);
 
-		if ( ! self::ready() ) {
+		if ( ! wp_auth0_is_ready() ) {
 			array_unshift(
 				$links,
 				sprintf(
@@ -278,7 +266,7 @@ class WP_Auth0 {
 	 * Enqueue styles and scripts on the wp-login.php page if the plugin has been configured
 	 */
 	public function render_auth0_login_css() {
-		if ( ! WP_Auth0::ready() ) {
+		if ( ! wp_auth0_is_ready() ) {
 			return;
 		}
 
@@ -358,9 +346,9 @@ add_action( 'init', 'wp_auth0_init' );
  */
 
 function wp_auth0_activation_hook() {
-	$options = WP_Auth0_Options::Instance();
+	$options    = WP_Auth0_Options::Instance();
 	$db_manager = new WP_Auth0_DBManager( $options );
-	$router = new WP_Auth0_Routes( $options );
+	$router     = new WP_Auth0_Routes( $options );
 
 	$db_manager->install_db();
 	$router->setup_rewrites();
@@ -394,11 +382,11 @@ register_uninstall_hook( WPA0_PLUGIN_FILE, 'wp_auth0_deactivation_hook' );
 
 function wp_auth0_activated_plugin_redirect( $plugin ) {
 
-	if ( defined( 'WP_CLI' ) || $plugin !== $this->basename ) {
+	if ( defined( 'WP_CLI' ) || $plugin !== WPA0_PLUGIN_BASENAME ) {
 		return;
 	}
 
-	$redirect_query = WP_Auth0::ready() ? 'page=wpa0' : 'page=wpa0-setup&activation=1';
+	$redirect_query = wp_auth0_is_ready() ? 'page=wpa0' : 'page=wpa0-setup&activation=1';
 	wp_safe_redirect( admin_url( 'admin.php?' . $redirect_query ) );
 	exit;
 }
@@ -598,7 +586,7 @@ function wp_auth0_init_admin_menu() {
 	$settings_title = __( 'Settings', 'wp-auth0' );
 	$settings_func  = [ $admin, 'render_settings_page' ];
 
-	$menu_parent = ! WP_Auth0::ready() ? $setup_slug : $settings_slug;
+	$menu_parent = ! wp_auth0_is_ready() ? $setup_slug : $settings_slug;
 	$cap         = 'manage_options';
 
 	add_menu_page(
@@ -606,12 +594,12 @@ function wp_auth0_init_admin_menu() {
 		'Auth0',
 		$cap,
 		$menu_parent,
-		! WP_Auth0::ready() ? $setup_func : $settings_func,
+		! wp_auth0_is_ready() ? $setup_func : $settings_func,
 		WPA0_PLUGIN_IMG_URL . 'a0icon.png',
 		86
 	);
 
-	if ( ! WP_Auth0::ready() ) {
+	if ( ! wp_auth0_is_ready() ) {
 		add_submenu_page( $menu_parent, $setup_title, $setup_title, $cap, $setup_slug, $setup_func );
 		add_submenu_page( $menu_parent, $settings_title, $settings_title, $cap, $settings_slug, $settings_func );
 	} else {
@@ -649,7 +637,7 @@ add_action( 'admin_menu', 'wp_auth0_init_admin_menu', 96, 0 );
 
 function wp_auth0_create_account_message() {
 	$current_page = $_GET['page'] ?? null;
-	if ( WP_Auth0::ready() || ! $current_page || 0 !== strpos( $current_page, 'wpa' ) ) {
+	if ( wp_auth0_is_ready() || ! $current_page || 0 !== strpos( $current_page, 'wpa' ) ) {
 		return false;
 	}
 
