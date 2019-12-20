@@ -29,11 +29,9 @@ class WP_Auth0_WooCommerceOverrides {
 	/**
 	 * WP_Auth0_WooCommerceOverrides constructor.
 	 *
-	 * @param WP_Auth0         $plugin - WP_Auth0 instance.
 	 * @param WP_Auth0_Options $options - WP_Auth0_Options instance.
 	 */
-	public function __construct( WP_Auth0 $plugin, WP_Auth0_Options $options ) {
-		$this->plugin  = $plugin;
+	public function __construct( WP_Auth0_Options $options ) {
 		$this->options = $options;
 	}
 
@@ -43,7 +41,7 @@ class WP_Auth0_WooCommerceOverrides {
 	 * @param string $redirect_page - Page slug to redirect to after logging in.
 	 */
 	private function render_login_form( $redirect_page ) {
-		$this->plugin->render_auth0_login_css();
+		wp_auth0_login_enqueue_scripts();
 		if ( $this->options->get( 'auto_login', false ) ) {
 			// Redirecting to WordPress login page.
 			$redirect_url = get_permalink( wc_get_page_id( $redirect_page ) );
