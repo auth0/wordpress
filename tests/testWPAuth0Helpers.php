@@ -26,12 +26,12 @@ class TestWPAuth0Helpers extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'xx', wp_auth0_get_tenant_region( 'mango.xx.auth0.com' ) );
 
 		// Test full tenant name getting.
-		$this->assertEquals( 'banana@us', WP_Auth0::get_tenant( 'banana' ) );
-		$this->assertEquals( 'banana@us', WP_Auth0::get_tenant( 'banana.auth0.com' ) );
-		$this->assertEquals( 'banana@us', WP_Auth0::get_tenant( 'banana.us.auth0.com' ) );
-		$this->assertEquals( 'apple@eu', WP_Auth0::get_tenant( 'apple.eu.auth0.com' ) );
-		$this->assertEquals( 'orange@au', WP_Auth0::get_tenant( 'orange.au.auth0.com' ) );
-		$this->assertEquals( 'mango@xx', WP_Auth0::get_tenant( 'mango.xx.auth0.com' ) );
+		$this->assertEquals( 'banana@us', wp_auth0_get_tenant( 'banana' ) );
+		$this->assertEquals( 'banana@us', wp_auth0_get_tenant( 'banana.auth0.com' ) );
+		$this->assertEquals( 'banana@us', wp_auth0_get_tenant( 'banana.us.auth0.com' ) );
+		$this->assertEquals( 'apple@eu', wp_auth0_get_tenant( 'apple.eu.auth0.com' ) );
+		$this->assertEquals( 'orange@au', wp_auth0_get_tenant( 'orange.au.auth0.com' ) );
+		$this->assertEquals( 'mango@xx', wp_auth0_get_tenant( 'mango.xx.auth0.com' ) );
 	}
 
 	/**

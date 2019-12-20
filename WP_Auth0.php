@@ -100,24 +100,6 @@ class WP_Auth0 {
 	}
 
 	/**
-	 * Get the full tenant name with region.
-	 *
-	 * @param null|string $domain Tenant domain.
-	 *
-	 * @return string
-	 */
-	public static function get_tenant( $domain = null ) {
-
-		if ( empty( $domain ) ) {
-			$options = WP_Auth0_Options::Instance();
-			$domain  = $options->get( 'domain' );
-		}
-
-		$parts = explode( '.', $domain );
-		return $parts[0] . '@' . wp_auth0_get_tenant_region( $domain );
-	}
-
-	/**
 	 * Filter the avatar to use the Auth0 profile image
 	 *
 	 * @param string                                $avatar - avatar HTML

@@ -196,6 +196,24 @@ function wp_auth0_get_tenant_region( $domain ) {
 	return ! empty( $matches[1] ) ? $matches[1] : 'us';
 }
 
+/**
+ * Get the full tenant name with region.
+ *
+ * @param null|string $domain Tenant domain.
+ *
+ * @return string
+ */
+function wp_auth0_get_tenant( $domain = null ) {
+
+	if ( empty( $domain ) ) {
+		$options = WP_Auth0_Options::Instance();
+		$domain  = $options->get( 'domain' );
+	}
+
+	$parts = explode( '.', $domain );
+	return $parts[0] . '@' . wp_auth0_get_tenant_region( $domain );
+}
+
 if ( ! function_exists( 'get_auth0userinfo' ) ) {
 	/**
 	 * Get the Auth0 profile from the database, if one exists.
