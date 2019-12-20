@@ -184,6 +184,18 @@ function wp_auth0_is_ready() {
 	return true;
 }
 
+/**
+ * Get the tenant region based on a domain.
+ *
+ * @param string $domain Tenant domain.
+ *
+ * @return string
+ */
+function wp_auth0_get_tenant_region( $domain ) {
+	preg_match( '/^[\w\d\-_0-9]+\.([\w\d\-_0-9]*)[\.]*auth0\.com$/', $domain, $matches );
+	return ! empty( $matches[1] ) ? $matches[1] : 'us';
+}
+
 if ( ! function_exists( 'get_auth0userinfo' ) ) {
 	/**
 	 * Get the Auth0 profile from the database, if one exists.

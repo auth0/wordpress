@@ -111,7 +111,7 @@ class WP_Auth0_Ip_Check {
 		if ( empty( $domain ) ) {
 			$domain = $this->a0_options->get( 'domain' );
 		}
-		$region = WP_Auth0::get_tenant_region( $domain );
+		$region = wp_auth0_get_tenant_region( $domain );
 		return $this->get_ip_by_region( $region, $glue );
 	}
 
