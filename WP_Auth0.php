@@ -51,9 +51,6 @@ class WP_Auth0 {
 		// Add an action to append a stylesheet for the login page.
 		add_action( 'login_enqueue_scripts', [ $this, 'render_auth0_login_css' ] );
 
-		// Add a hook to add Auth0 code on the login page.
-		add_filter( 'login_message', [ $this, 'render_form' ], 5 );
-
 		add_shortcode( 'auth0', [ $this, 'shortcode' ] );
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue' ] );
@@ -119,22 +116,6 @@ class WP_Auth0 {
 
 		wp_enqueue_style( 'auth0', WPA0_PLUGIN_CSS_URL . 'login.css', false, WPA0_VERSION );
 	}
-
-	/**
-	 * Output the Auth0 form on wp-login.php
-	 *
-	 * @hook filter:login_message
-	 *
-	 * @param $html
-	 *
-	 * @return string
-	 */
-	public function render_form( $html ) {
-		ob_start();
-		\WP_Auth0_Lock::render();
-		$auth0_form = ob_get_clean();
-		return $auth0_form ? $auth0_form : $html;
-	}
 }
 
 /*
@@ -171,7 +152,7 @@ function wp_auth0_autoloader( $class ) {
 }
 spl_autoload_register( 'wp_auth0_autoloader' );
 
-$a0_plugin = new WP_Auth0( WP_Auth0_Options::Instance() );
+$a0_plugin = new WP_Auth0();
 $a0_plugin->init();
 
 function wp_auth0_plugins_loaded() {
@@ -242,6 +223,23 @@ add_action( 'activated_plugin', 'wp_auth0_activated_plugin_redirect' );
 /*
  * Core WP hooks
  */
+
+/**
+ * Output the Auth0 form on wp-login.php
+ *
+ * @hook filter:login_message
+ *
+ * @param $html
+ *
+ * @return string
+ */
+function wp_auth0_render_lock_form( $html ) {
+	ob_start();
+	\WP_Auth0_Lock::render();
+	$auth0_form = ob_get_clean();
+	return $auth0_form ? $auth0_form : $html;
+}
+add_filter( 'login_message', 'wp_auth0_render_lock_form', 5 );
 
 /**
  * Add settings link on plugin page.

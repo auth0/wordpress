@@ -51,7 +51,7 @@ class WP_Auth0_WooCommerceOverrides {
 
 			printf( "<a class='button' href='%s'>%s</a>", $login_url, __( 'Login', 'wp-auth0' ) );
 		} else {
-			echo $this->plugin->render_form( '' );
+			echo wp_auth0_render_lock_form( '' );
 		}
 	}
 
