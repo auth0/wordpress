@@ -40,38 +40,6 @@ require_once WPA0_PLUGIN_DIR . 'functions.php';
 class WP_Auth0 {
 
 	/**
-	 * @var WP_Auth0_DBManager
-	 */
-	protected $db_manager;
-
-	/**
-	 * @var null|WP_Auth0_Options
-	 */
-	protected $a0_options;
-
-	/**
-	 * @var WP_Auth0_Routes
-	 */
-	protected $router;
-
-	/**
-	 * @var string
-	 */
-	protected $basename;
-
-	/**
-	 * WP_Auth0 constructor.
-	 *
-	 * @param null|WP_Auth0_Options $options - WP_Auth0_Options instance.
-	 */
-	public function __construct( $options ) {
-		$this->a0_options = $options;
-		$this->basename   = plugin_basename( __FILE__ );
-		$this->db_manager = new WP_Auth0_DBManager( $this->a0_options );
-		$this->router     = new WP_Auth0_Routes( $this->a0_options );
-	}
-
-	/**
 	 * Initialize the plugin and its modules setting all the hooks.
 	 *
 	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
@@ -79,8 +47,6 @@ class WP_Auth0 {
 	 * @codeCoverageIgnore - Deprecated.
 	 */
 	public function init() {
-
-		add_filter( 'get_avatar', [ $this, 'filter_get_avatar' ], 1, 5 );
 
 		// Add an action to append a stylesheet for the login page.
 		add_action( 'login_enqueue_scripts', [ $this, 'render_auth0_login_css' ] );
@@ -95,62 +61,6 @@ class WP_Auth0 {
 		add_action( 'widgets_init', [ $this, 'wp_register_widget' ] );
 
 		add_filter( 'query_vars', [ $this, 'a0_register_query_vars' ] );
-
-		add_filter( 'plugin_action_links_' . $this->basename, [ $this, 'wp_add_plugin_settings_link' ] );
-	}
-
-	/**
-	 * Filter the avatar to use the Auth0 profile image
-	 *
-	 * @param string                                $avatar - avatar HTML
-	 * @param int|string|WP_User|WP_Comment|WP_Post $id_or_email - user identifier
-	 * @param int                                   $size - width and height of avatar
-	 * @param string                                $default - what to do if nothing
-	 * @param string                                $alt - alt text for the <img> tag
-	 *
-	 * @return string
-	 */
-	function filter_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
-		if ( ! $this->a0_options->get( 'override_wp_avatars' ) ) {
-			return $avatar;
-		}
-
-		$user_id = null;
-
-		if ( $id_or_email instanceof WP_User ) {
-			$user_id = $id_or_email->ID;
-		} elseif ( $id_or_email instanceof WP_Comment ) {
-			$user_id = $id_or_email->user_id;
-		} elseif ( $id_or_email instanceof WP_Post ) {
-			$user_id = $id_or_email->post_author;
-		} elseif ( is_email( $id_or_email ) ) {
-			$maybe_user = get_user_by( 'email', $id_or_email );
-
-			if ( $maybe_user instanceof WP_User ) {
-				$user_id = $maybe_user->ID;
-			}
-		} elseif ( is_numeric( $id_or_email ) ) {
-			$user_id = absint( $id_or_email );
-		}
-
-		if ( ! $user_id ) {
-			return $avatar;
-		}
-
-		$auth0Profile = get_auth0userinfo( $user_id );
-
-		if ( ! $auth0Profile || empty( $auth0Profile->picture ) ) {
-			return $avatar;
-		}
-
-		return sprintf(
-			'<img alt="%s" src="%s" class="avatar avatar-%d photo avatar-auth0" width="%d" height="%d"/>',
-			esc_attr( $alt ),
-			esc_url( $auth0Profile->picture ),
-			absint( $size ),
-			absint( $size ),
-			absint( $size )
-		);
 	}
 
 	public function a0_register_query_vars( $qvars ) {
@@ -164,33 +74,6 @@ class WP_Auth0 {
 		return $qvars;
 	}
 
-	/**
-	 * Add settings link on plugin page.
-	 */
-	public function wp_add_plugin_settings_link( $links ) {
-
-		array_unshift(
-			$links,
-			sprintf(
-				'<a href="%s">%s</a>',
-				admin_url( 'admin.php?page=wpa0' ),
-				__( 'Settings', 'wp-auth0' )
-			)
-		);
-
-		if ( ! wp_auth0_is_ready() ) {
-			array_unshift(
-				$links,
-				sprintf(
-					'<a href="%s">%s</a>',
-					admin_url( 'admin.php?page=wpa0-setup' ),
-					__( 'Setup Wizard', 'wp-auth0' )
-				)
-			);
-		}
-
-		return $links;
-	}
 
 	public function wp_register_widget() {
 		register_widget( 'WP_Auth0_Embed_Widget' );
@@ -365,6 +248,90 @@ add_action( 'activated_plugin', 'wp_auth0_activated_plugin_redirect' );
 /*
  * Core WP hooks
  */
+
+/**
+ * Add settings link on plugin page.
+ */
+function wp_auth0_plugin_action_links( $links ) {
+
+	array_unshift(
+		$links,
+		sprintf(
+			'<a href="%s">%s</a>',
+			admin_url( 'admin.php?page=wpa0' ),
+			__( 'Settings', 'wp-auth0' )
+		)
+	);
+
+	if ( ! wp_auth0_is_ready() ) {
+		array_unshift(
+			$links,
+			sprintf(
+				'<a href="%s">%s</a>',
+				admin_url( 'admin.php?page=wpa0-setup' ),
+				__( 'Setup Wizard', 'wp-auth0' )
+			)
+		);
+	}
+
+	return $links;
+}
+add_filter( 'plugin_action_links_' . WPA0_PLUGIN_BASENAME, 'wp_auth0_plugin_action_links' );
+
+/**
+ * Filter the avatar to use the Auth0 profile image
+ *
+ * @param string                                $avatar - avatar HTML
+ * @param int|string|WP_User|WP_Comment|WP_Post $id_or_email - user identifier
+ * @param int                                   $size - width and height of avatar
+ * @param string                                $default - what to do if nothing
+ * @param string                                $alt - alt text for the <img> tag
+ *
+ * @return string
+ */
+function wp_auth0_filter_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
+	if ( ! wp_auth0_get_option( 'override_wp_avatars' ) ) {
+		return $avatar;
+	}
+
+	$user_id = null;
+
+	if ( $id_or_email instanceof WP_User ) {
+		$user_id = $id_or_email->ID;
+	} elseif ( $id_or_email instanceof WP_Comment ) {
+		$user_id = $id_or_email->user_id;
+	} elseif ( $id_or_email instanceof WP_Post ) {
+		$user_id = $id_or_email->post_author;
+	} elseif ( is_email( $id_or_email ) ) {
+		$maybe_user = get_user_by( 'email', $id_or_email );
+
+		if ( $maybe_user instanceof WP_User ) {
+			$user_id = $maybe_user->ID;
+		}
+	} elseif ( is_numeric( $id_or_email ) ) {
+		$user_id = absint( $id_or_email );
+	}
+
+	if ( ! $user_id ) {
+		return $avatar;
+	}
+
+	$auth0Profile = get_auth0userinfo( $user_id );
+
+	if ( ! $auth0Profile || empty( $auth0Profile->picture ) ) {
+		return $avatar;
+	}
+
+	return sprintf(
+		'<img alt="%s" src="%s" class="avatar avatar-%d photo avatar-auth0" width="%d" height="%d"/>',
+		esc_attr( $alt ),
+		esc_url( $auth0Profile->picture ?? $default ),
+		absint( $size ),
+		absint( $size ),
+		absint( $size )
+	);
+}
+add_filter( 'get_avatar', 'wp_auth0_filter_get_avatar', 1, 5 );
 
 function wp_auth0_setup_error_admin_notices() {
 	if ( empty( $_REQUEST['error'] ) ) {
