@@ -33,15 +33,6 @@ define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 require_once WPA0_PLUGIN_DIR . 'vendor/autoload.php';
 require_once WPA0_PLUGIN_DIR . 'functions.php';
 
-/*
- * Localization
- */
-
-function wp_auth0_load_plugin_textdomain() {
-	load_plugin_textdomain( 'wp-auth0', false, basename( dirname( __FILE__ ) ) . '/languages/' );
-}
-add_action( 'plugins_loaded', 'wp_auth0_load_plugin_textdomain' );
-
 /**
  * Main plugin class
  */
@@ -348,11 +339,13 @@ spl_autoload_register( 'wp_auth0_autoloader' );
 $a0_plugin = new WP_Auth0( WP_Auth0_Options::Instance() );
 $a0_plugin->init();
 
-function wp_auth0_db_check_update() {
+function wp_auth0_plugins_loaded() {
+	load_plugin_textdomain( 'wp-auth0', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+
 	$db_manager = new WP_Auth0_DBManager( WP_Auth0_Options::Instance() );
 	$db_manager->install_db();
 }
-add_action( 'plugins_loaded', 'wp_auth0_db_check_update' );
+add_action( 'plugins_loaded', 'wp_auth0_plugins_loaded' );
 
 function wp_auth0_init() {
 	$router = new WP_Auth0_Routes( WP_Auth0_Options::Instance() );
