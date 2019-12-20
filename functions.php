@@ -84,7 +84,7 @@ function wp_auth0_login_override_url( $login_url = null ) {
  * @return bool
  */
 function wp_auth0_can_show_wp_login_form() {
-	if ( ! WP_Auth0::ready() ) {
+	if ( ! wp_auth0_is_ready() ) {
 		return true;
 	}
 
@@ -169,6 +169,19 @@ function wp_auth0_is_admin_page( $page ) {
 	}
 
 	return $page === $_REQUEST['page'];
+}
+
+/**
+ * Is the Auth0 plugin ready to process logins?
+ *
+ * @return bool
+ */
+function wp_auth0_is_ready() {
+	$options = WP_Auth0_Options::Instance();
+	if ( ! $options->get( 'domain' ) || ! $options->get( 'client_id' ) || ! $options->get( 'client_secret' ) ) {
+		return false;
+	}
+	return true;
 }
 
 if ( ! function_exists( 'get_auth0userinfo' ) ) {

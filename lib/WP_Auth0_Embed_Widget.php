@@ -35,7 +35,7 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 
-		if ( WP_Auth0::ready() ) {
+		if ( wp_auth0_is_ready() ) {
 
 			$instance['show_as_modal']      = $this->showAsModal();
 			$instance['modal_trigger_name'] = isset( $instance['modal_trigger_name'] )

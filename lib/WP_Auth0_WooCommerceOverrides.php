@@ -64,7 +64,7 @@ class WP_Auth0_WooCommerceOverrides {
 	 */
 	public function override_woocommerce_checkout_login_form( $html ) {
 
-		if ( ! WP_Auth0::ready() ) {
+		if ( ! wp_auth0_is_ready() ) {
 			return $html;
 		}
 
@@ -84,7 +84,7 @@ class WP_Auth0_WooCommerceOverrides {
 	 */
 	public function override_woocommerce_login_form( $html ) {
 
-		if ( ! WP_Auth0::ready() ) {
+		if ( ! wp_auth0_is_ready() ) {
 			return $html;
 		}
 
