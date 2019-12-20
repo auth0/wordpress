@@ -88,15 +88,6 @@ class WP_Auth0 {
 	 */
 	public function init() {
 
-		add_action( 'init', [ $this, 'wp_init' ] );
-
-		// Add hooks for install uninstall and update.
-		register_activation_hook( WPA0_PLUGIN_FILE, [ $this, 'install' ] );
-		register_deactivation_hook( WPA0_PLUGIN_FILE, [ $this, 'deactivate' ] );
-		register_uninstall_hook( WPA0_PLUGIN_FILE, [ 'WP_Auth0', 'uninstall' ] );
-
-		add_action( 'activated_plugin', [ $this, 'on_activate_redirect' ] );
-
 		add_filter( 'get_avatar', [ $this, 'filter_get_avatar' ], 1, 5 );
 
 		// Add an action to append a stylesheet for the login page.
@@ -213,27 +204,6 @@ class WP_Auth0 {
 		);
 	}
 
-	function on_activate_redirect( $plugin ) {
-
-		if ( ! defined( 'WP_CLI' ) && $plugin == $this->basename ) {
-
-			$this->router->setup_rewrites();
-			flush_rewrite_rules();
-
-			$client_id     = $this->a0_options->get( 'client_id' );
-			$client_secret = $this->a0_options->get( 'client_secret' );
-			$domain        = $this->a0_options->get( 'domain' );
-
-			$show_initial_setup = ( ( ! $client_id ) || ( ! $client_secret ) || ( ! $domain ) );
-
-			if ( $show_initial_setup ) {
-				exit( wp_redirect( admin_url( 'admin.php?page=wpa0-setup&activation=1' ) ) );
-			} else {
-				exit( wp_redirect( admin_url( 'admin.php?page=wpa0' ) ) );
-			}
-		}
-	}
-
 	public function a0_register_query_vars( $qvars ) {
 		$qvars[] = 'error';
 		$qvars[] = 'error_description';
@@ -339,38 +309,6 @@ class WP_Auth0 {
 		$auth0_form = ob_get_clean();
 		return $auth0_form ? $auth0_form : $html;
 	}
-
-	public function wp_init() {
-		$this->router->setup_rewrites();
-	}
-
-	public function install() {
-		$this->db_manager->install_db();
-		$this->router->setup_rewrites();
-		$this->a0_options->save();
-
-		flush_rewrite_rules();
-	}
-
-	public function deactivate() {
-		flush_rewrite_rules();
-	}
-
-	public static function uninstall() {
-		$a0_options = WP_Auth0_Options::Instance();
-		$a0_options->delete();
-
-		$error_log = new WP_Auth0_ErrorLog();
-		$error_log->delete();
-
-		delete_option( 'auth0_db_version' );
-
-		delete_option( 'widget_wp_auth0_popup_widget' );
-		delete_option( 'widget_wp_auth0_widget' );
-		delete_option( 'widget_wp_auth0_social_amplification_widget' );
-
-		delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
-	}
 }
 
 /*
@@ -407,14 +345,71 @@ function wp_auth0_autoloader( $class ) {
 }
 spl_autoload_register( 'wp_auth0_autoloader' );
 
+$a0_plugin = new WP_Auth0( WP_Auth0_Options::Instance() );
+$a0_plugin->init();
+
 function wp_auth0_db_check_update() {
 	$db_manager = new WP_Auth0_DBManager( WP_Auth0_Options::Instance() );
 	$db_manager->install_db();
 }
 add_action( 'plugins_loaded', 'wp_auth0_db_check_update' );
 
-$a0_plugin = new WP_Auth0( WP_Auth0_Options::Instance() );
-$a0_plugin->init();
+function wp_auth0_init() {
+	$router = new WP_Auth0_Routes( WP_Auth0_Options::Instance() );
+	$router->setup_rewrites();
+}
+add_action( 'init', 'wp_auth0_init' );
+
+/*
+ * Plugin install/uninstall/update actions
+ */
+
+function wp_auth0_activation_hook() {
+	$options = WP_Auth0_Options::Instance();
+	$db_manager = new WP_Auth0_DBManager( $options );
+	$router = new WP_Auth0_Routes( $options );
+
+	$db_manager->install_db();
+	$router->setup_rewrites();
+	$options->save();
+
+	flush_rewrite_rules();
+}
+register_activation_hook( WPA0_PLUGIN_FILE, 'wp_auth0_activation_hook' );
+
+function wp_auth0_deactivation_hook() {
+	flush_rewrite_rules();
+}
+register_deactivation_hook( WPA0_PLUGIN_FILE, 'wp_auth0_deactivation_hook' );
+
+function wp_auth0_uninstall_hook() {
+	$a0_options = WP_Auth0_Options::Instance();
+	$a0_options->delete();
+
+	$error_log = new WP_Auth0_ErrorLog();
+	$error_log->delete();
+
+	delete_option( 'auth0_db_version' );
+
+	delete_option( 'widget_wp_auth0_popup_widget' );
+	delete_option( 'widget_wp_auth0_widget' );
+	delete_option( 'widget_wp_auth0_social_amplification_widget' );
+
+	delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
+}
+register_uninstall_hook( WPA0_PLUGIN_FILE, 'wp_auth0_deactivation_hook' );
+
+function wp_auth0_activated_plugin_redirect( $plugin ) {
+
+	if ( defined( 'WP_CLI' ) || $plugin !== $this->basename ) {
+		return;
+	}
+
+	$redirect_query = WP_Auth0::ready() ? 'page=wpa0' : 'page=wpa0-setup&activation=1';
+	wp_safe_redirect( admin_url( 'admin.php?' . $redirect_query ) );
+	exit;
+}
+add_action( 'activated_plugin', 'wp_auth0_activated_plugin_redirect' );
 
 /*
  * Core WP hooks
