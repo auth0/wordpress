@@ -34,53 +34,6 @@ define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 require_once WPA0_PLUGIN_DIR . 'vendor/autoload.php';
 require_once WPA0_PLUGIN_DIR . 'functions.php';
 
-/**
- * Main plugin class
- */
-class WP_Auth0 {
-
-	/**
-	 * Initialize the plugin and its modules setting all the hooks.
-	 *
-	 * @deprecated - 3.10.0, will move add_action calls out of this class in the next major.
-	 *
-	 * @codeCoverageIgnore - Deprecated.
-	 */
-	public function init() {
-
-		// Add an action to append a stylesheet for the login page.
-		add_action( 'login_enqueue_scripts', [ $this, 'render_auth0_login_css' ] );
-
-		add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue' ] );
-	}
-
-	public function wp_enqueue() {
-		$options   = WP_Auth0_Options::Instance();
-		$client_id = $options->get( 'client_id' );
-
-		if ( trim( $client_id ) === '' ) {
-			return;
-		}
-
-		if ( isset( $_GET['message'] ) ) {
-			wp_enqueue_script( 'jquery' );
-		}
-
-		wp_enqueue_style( 'auth0-widget', WPA0_PLUGIN_CSS_URL . 'main.css' );
-	}
-
-	/**
-	 * Enqueue styles and scripts on the wp-login.php page if the plugin has been configured
-	 */
-	public function render_auth0_login_css() {
-		if ( ! wp_auth0_is_ready() ) {
-			return;
-		}
-
-		wp_enqueue_style( 'auth0', WPA0_PLUGIN_CSS_URL . 'login.css', false, WPA0_VERSION );
-	}
-}
-
 /*
  * Startup
  */
@@ -114,9 +67,6 @@ function wp_auth0_autoloader( $class ) {
 	return false;
 }
 spl_autoload_register( 'wp_auth0_autoloader' );
-
-$a0_plugin = new WP_Auth0();
-$a0_plugin->init();
 
 function wp_auth0_plugins_loaded() {
 	load_plugin_textdomain( 'wp-auth0', false, basename( dirname( __FILE__ ) ) . '/languages/' );
@@ -202,6 +152,26 @@ add_action( 'activated_plugin', 'wp_auth0_activated_plugin_redirect' );
  * Core WP hooks
  */
 
+/**
+ * Enqueue login page CSS if plugin is configured.
+ */
+function wp_auth0_login_enqueue_scripts() {
+	if ( wp_auth0_is_ready() ) {
+		wp_enqueue_style( 'auth0', WPA0_PLUGIN_CSS_URL . 'login.css', false, WPA0_VERSION );
+	}
+}
+add_action( 'login_enqueue_scripts', 'wp_auth0_login_enqueue_scripts' );
+
+/**
+ * Enqueue login widget CSS if plugin is configured.
+ */
+function wp_auth0_enqueue_scripts() {
+	if ( wp_auth0_is_ready() ) {
+		wp_enqueue_style( 'auth0-widget', WPA0_PLUGIN_CSS_URL . 'main.css' );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'wp_auth0_enqueue_scripts' );
+
 function wp_auth0_register_widget() {
 	register_widget( 'WP_Auth0_Embed_Widget' );
 	register_widget( 'WP_Auth0_Popup_Widget' );
@@ -209,7 +179,7 @@ function wp_auth0_register_widget() {
 add_action( 'widgets_init', 'wp_auth0_register_widget' );
 
 function wp_auth0_register_query_vars( $qvars ) {
-	return array_merge( $qvars, ['error', 'error_description', 'a0_action', 'auth0', 'state', 'code'] );
+	return array_merge( $qvars, [ 'error', 'error_description', 'a0_action', 'auth0', 'state', 'code' ] );
 }
 add_filter( 'query_vars', 'wp_auth0_register_query_vars' );
 
@@ -800,8 +770,7 @@ add_filter( 'login_body_class', 'wp_auth0_filter_body_class' );
  * @return mixed
  */
 function wp_auth0_filter_woocommerce_checkout_login_message( $html ) {
-	$wp_auth0_opts        = WP_Auth0_Options::Instance();
-	$wp_auth0_woocommerce = new WP_Auth0_WooCommerceOverrides( new WP_Auth0( $wp_auth0_opts ), $wp_auth0_opts );
+	$wp_auth0_woocommerce = new WP_Auth0_WooCommerceOverrides( WP_Auth0_Options::Instance() );
 	return $wp_auth0_woocommerce->override_woocommerce_checkout_login_form( $html );
 }
 add_filter( 'woocommerce_checkout_login_message', 'wp_auth0_filter_woocommerce_checkout_login_message' );
@@ -814,8 +783,7 @@ add_filter( 'woocommerce_checkout_login_message', 'wp_auth0_filter_woocommerce_c
  * @return mixed
  */
 function wp_auth0_filter_woocommerce_before_customer_login_form( $html ) {
-	$wp_auth0_opts        = WP_Auth0_Options::Instance();
-	$wp_auth0_woocommerce = new WP_Auth0_WooCommerceOverrides( new WP_Auth0( $wp_auth0_opts ), $wp_auth0_opts );
+	$wp_auth0_woocommerce = new WP_Auth0_WooCommerceOverrides( WP_Auth0_Options::Instance() );
 	return $wp_auth0_woocommerce->override_woocommerce_login_form( $html );
 }
 add_filter( 'woocommerce_before_customer_login_form', 'wp_auth0_filter_woocommerce_before_customer_login_form' );
