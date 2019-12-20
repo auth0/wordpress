@@ -109,12 +109,6 @@ class WP_Auth0 {
 		return ob_get_clean();
 	}
 
-	public static function render_back_to_auth0() {
-
-		include WPA0_PLUGIN_DIR . 'templates/back-to-auth0.php';
-
-	}
-
 	/**
 	 * Enqueue styles and scripts on the wp-login.php page if the plugin has been configured
 	 */
