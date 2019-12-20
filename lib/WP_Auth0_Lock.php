@@ -151,6 +151,22 @@ class WP_Auth0_Lock {
 	}
 
 	/**
+	 * Render a link at the bottom of a WordPress core login form back to Lock.
+	 */
+	public function render_back_to_lock() {
+		$title = wp_auth0_get_option( 'form_title' );
+		if ( empty( $title ) ) {
+			$title = 'Auth0';
+		}
+
+		printf(
+			'<div id="extra-options"><a href="?">%s</a></div>',
+			// translators: The $title variable is the admin-controlled form title.
+			printf( __( '← Back to %s login', 'wp-auth0' ), $title )
+		);
+	}
+
+	/**
 	 * Get the protocol to use for callback URLs.
 	 *
 	 * @return null|string - Returns 'https' if forced, null (use site default) if not.
@@ -171,8 +187,8 @@ class WP_Auth0_Lock {
 		}
 
 		if ( $canShowLegacyLogin && wp_auth0_can_show_wp_login_form() ) {
-			add_action( 'login_footer', [ 'WP_Auth0', 'render_back_to_auth0' ] );
-			add_action( 'woocommerce_after_customer_login_form', [ 'WP_Auth0', 'render_back_to_auth0' ] );
+			add_action( 'login_footer', [ 'WP_Auth0_Lock', 'render_back_to_lock' ] );
+			add_action( 'woocommerce_after_customer_login_form', [ 'WP_Auth0_Lock', 'render_back_to_lock' ] );
 			return;
 		}
 
