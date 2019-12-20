@@ -73,7 +73,6 @@ class WP_Auth0 {
 	 * @param null|WP_Auth0_Options $options - WP_Auth0_Options instance.
 	 */
 	public function __construct( $options ) {
-		spl_autoload_register( [ $this, 'autoloader' ] );
 		$this->a0_options = $options;
 		$this->basename   = plugin_basename( __FILE__ );
 		$this->db_manager = new WP_Auth0_DBManager( $this->a0_options );
@@ -372,47 +371,41 @@ class WP_Auth0 {
 
 		delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
 	}
-
-	/**
-	 * Look for a class within a specific set of paths.
-	 *
-	 * @param string $class - Class name to look for.
-	 *
-	 * @return bool
-	 */
-	private function autoloader( $class ) {
-		$source_dir = WPA0_PLUGIN_DIR . 'lib/';
-
-		// Anything that's not part of the above and not name-spaced can be skipped.
-		if ( 0 !== strpos( $class, 'WP_Auth0' ) ) {
-			return false;
-		}
-
-		$paths = [
-			$source_dir,
-			$source_dir . 'admin/',
-			$source_dir . 'api/',
-			$source_dir . 'exceptions/',
-			$source_dir . 'profile/',
-			$source_dir . 'wizard/',
-			$source_dir . 'initial-setup/',
-			$source_dir . 'token-verifier/',
-		];
-
-		foreach ( $paths as $path ) {
-			if ( file_exists( $path . $class . '.php' ) ) {
-				require_once $path . $class . '.php';
-				return true;
-			}
-		}
-
-		return false;
-	}
 }
 
 /*
  * Startup
  */
+
+function wp_auth0_autoloader( $class ) {
+	$source_dir = WPA0_PLUGIN_DIR . 'lib/';
+
+	// Anything that's not part of the above and not name-spaced can be skipped.
+	if ( 0 !== strpos( $class, 'WP_Auth0' ) ) {
+		return false;
+	}
+
+	$paths = [
+		$source_dir,
+		$source_dir . 'admin/',
+		$source_dir . 'api/',
+		$source_dir . 'exceptions/',
+		$source_dir . 'profile/',
+		$source_dir . 'wizard/',
+		$source_dir . 'initial-setup/',
+		$source_dir . 'token-verifier/',
+	];
+
+	foreach ( $paths as $path ) {
+		if ( file_exists( $path . $class . '.php' ) ) {
+			require_once $path . $class . '.php';
+			return true;
+		}
+	}
+
+	return false;
+}
+spl_autoload_register( 'wp_auth0_autoloader' );
 
 function wp_auth0_db_check_update() {
 	$db_manager = new WP_Auth0_DBManager( WP_Auth0_Options::Instance() );
@@ -420,7 +413,7 @@ function wp_auth0_db_check_update() {
 }
 add_action( 'plugins_loaded', 'wp_auth0_db_check_update' );
 
-$a0_plugin = new WP_Auth0();
+$a0_plugin = new WP_Auth0( WP_Auth0_Options::Instance() );
 $a0_plugin->init();
 
 /*
