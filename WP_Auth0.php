@@ -50,17 +50,8 @@ class WP_Auth0 {
 
 		// Add an action to append a stylesheet for the login page.
 		add_action( 'login_enqueue_scripts', [ $this, 'render_auth0_login_css' ] );
-		
+
 		add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue' ] );
-
-		add_action( 'widgets_init', [ $this, 'wp_register_widget' ] );
-
-
-	}
-
-	public function wp_register_widget() {
-		register_widget( 'WP_Auth0_Embed_Widget' );
-		register_widget( 'WP_Auth0_Popup_Widget' );
 	}
 
 	public function wp_enqueue() {
@@ -210,6 +201,12 @@ add_action( 'activated_plugin', 'wp_auth0_activated_plugin_redirect' );
 /*
  * Core WP hooks
  */
+
+function wp_auth0_register_widget() {
+	register_widget( 'WP_Auth0_Embed_Widget' );
+	register_widget( 'WP_Auth0_Popup_Widget' );
+}
+add_action( 'widgets_init', 'wp_auth0_register_widget' );
 
 function wp_auth0_register_query_vars( $qvars ) {
 	return array_merge( $qvars, ['error', 'error_description', 'a0_action', 'auth0', 'state', 'code'] );
