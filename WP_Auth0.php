@@ -50,27 +50,13 @@ class WP_Auth0 {
 
 		// Add an action to append a stylesheet for the login page.
 		add_action( 'login_enqueue_scripts', [ $this, 'render_auth0_login_css' ] );
-
-		add_shortcode( 'auth0', [ $this, 'shortcode' ] );
-
+		
 		add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue' ] );
 
 		add_action( 'widgets_init', [ $this, 'wp_register_widget' ] );
 
-		add_filter( 'query_vars', [ $this, 'a0_register_query_vars' ] );
-	}
 
-	public function a0_register_query_vars( $qvars ) {
-		$qvars[] = 'error';
-		$qvars[] = 'error_description';
-		$qvars[] = 'a0_action';
-		$qvars[] = 'auth0';
-		$qvars[] = 'state';
-		$qvars[] = 'code';
-		$qvars[] = 'state';
-		return $qvars;
 	}
-
 
 	public function wp_register_widget() {
 		register_widget( 'WP_Auth0_Embed_Widget' );
@@ -90,20 +76,6 @@ class WP_Auth0 {
 		}
 
 		wp_enqueue_style( 'auth0-widget', WPA0_PLUGIN_CSS_URL . 'main.css' );
-	}
-
-	public function shortcode( $atts ) {
-		if ( empty( $atts ) ) {
-			$atts = [];
-		}
-
-		if ( empty( $atts['redirect_to'] ) ) {
-			$atts['redirect_to'] = home_url( $_SERVER['REQUEST_URI'] );
-		}
-
-		ob_start();
-		\WP_Auth0_Lock::render( false, $atts );
-		return ob_get_clean();
 	}
 
 	/**
@@ -169,6 +141,21 @@ function wp_auth0_init() {
 }
 add_action( 'init', 'wp_auth0_init' );
 
+function wp_auth0_shortcode() {
+	if ( empty( $atts ) ) {
+		$atts = [];
+	}
+
+	if ( empty( $atts['redirect_to'] ) ) {
+		$atts['redirect_to'] = home_url( $_SERVER['REQUEST_URI'] );
+	}
+
+	ob_start();
+	\WP_Auth0_Lock::render( false, $atts );
+	return ob_get_clean();
+}
+add_shortcode( 'auth0', 'wp_auth0_shortcode' );
+
 /*
  * Plugin install/uninstall/update actions
  */
@@ -223,6 +210,11 @@ add_action( 'activated_plugin', 'wp_auth0_activated_plugin_redirect' );
 /*
  * Core WP hooks
  */
+
+function wp_auth0_register_query_vars( $qvars ) {
+	return array_merge( $qvars, ['error', 'error_description', 'a0_action', 'auth0', 'state', 'code'] );
+}
+add_filter( 'query_vars', 'wp_auth0_register_query_vars' );
 
 /**
  * Output the Auth0 form on wp-login.php
