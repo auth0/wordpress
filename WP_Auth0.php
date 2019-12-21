@@ -276,7 +276,7 @@ function wp_auth0_filter_get_avatar( $avatar, $id_or_email, $size, $default, $al
 	return sprintf(
 		'<img alt="%s" src="%s" class="avatar avatar-%d photo avatar-auth0" width="%d" height="%d"/>',
 		esc_attr( $alt ),
-		esc_url( $auth0Profile->picture ?? $default ),
+		esc_url( $auth0Profile->picture ),
 		absint( $size ),
 		absint( $size ),
 		absint( $size )
