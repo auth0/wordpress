@@ -151,9 +151,18 @@ class WP_Auth0_Lock {
 	}
 
 	/**
+	 * Get the protocol to use for callback URLs.
+	 *
+	 * @return null|string - Returns 'https' if forced, null (use site default) if not.
+	 */
+	private function get_callback_protocol() {
+		return $this->wp_options->get( 'force_https_callback' ) ? 'https' : null;
+	}
+
+	/**
 	 * Render a link at the bottom of a WordPress core login form back to Lock.
 	 */
-	public function render_back_to_lock() {
+	public static function render_back_to_lock() {
 		$title = wp_auth0_get_option( 'form_title' );
 		if ( empty( $title ) ) {
 			$title = 'Auth0';
@@ -164,15 +173,6 @@ class WP_Auth0_Lock {
 			// translators: The $title variable is the admin-controlled form title.
 			printf( __( '← Back to %s login', 'wp-auth0' ), $title )
 		);
-	}
-
-	/**
-	 * Get the protocol to use for callback URLs.
-	 *
-	 * @return null|string - Returns 'https' if forced, null (use site default) if not.
-	 */
-	private function get_callback_protocol() {
-		return $this->wp_options->get( 'force_https_callback' ) ? 'https' : null;
 	}
 
 	/**
