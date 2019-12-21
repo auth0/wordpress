@@ -12,6 +12,8 @@
  */
 class TestWPAuth0Helpers extends WP_Auth0_Test_Case {
 
+	use HookHelpers;
+
 	/**
 	 * Test the basic options functionality.
 	 */
@@ -66,5 +68,34 @@ class TestWPAuth0Helpers extends WP_Auth0_Test_Case {
 			'<a href="http://example.org/wp-admin/admin.php?page=wpa0">Settings</a>',
 			$plugin_links
 		);
+	}
+
+	public function testThatQueryVarHookIsAdded() {
+		$expect_hooked = [
+			'wp_auth0_register_query_vars' => [
+				'priority'      => 10,
+				'accepted_args' => 1,
+			],
+		];
+		$this->assertHookedFunction( 'query_vars', $expect_hooked );
+	}
+
+	public function testThatAuth0QueryVarsArePresent() {
+		$vars = wp_auth0_register_query_vars( [] );
+		$this->assertCount( 6, $vars );
+		$this->assertContains( 'error', $vars );
+		$this->assertContains( 'error_description', $vars );
+		$this->assertContains( 'a0_action', $vars );
+		$this->assertContains( 'auth0', $vars );
+		$this->assertContains( 'state', $vars );
+		$this->assertContains( 'code', $vars );
+
+		$vars = wp_auth0_register_query_vars( [ '__test_var__' ] );
+		$this->assertCount( 7, $vars );
+	}
+
+	public function testThatQueryVarsAreAddedProperly() {
+		$vars = wp_auth0_register_query_vars( [ '__test_var__' ] );
+		$this->assertCount( 7, $vars );
 	}
 }
