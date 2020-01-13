@@ -94,6 +94,9 @@ class WP_Auth0_Options extends WP_Auth0_Options_Generic {
 	 * @return string
 	 */
 	public function get_wp_auth0_url( $protocol = null, $implicit = false ) {
+		if ( is_null( $protocol ) && $this->get( 'force_https_callback' ) ) {
+			$protocol = 'https';
+		}
 		$site_url = site_url( 'index.php', $protocol );
 		return add_query_arg( 'auth0', ( $implicit ? 'implicit' : '1' ), $site_url );
 	}
