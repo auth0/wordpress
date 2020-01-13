@@ -569,11 +569,10 @@ class WP_Auth0_LoginManager {
 	 * @return array
 	 */
 	public static function get_authorize_params( $connection = null, $redirect_to = null ) {
-		$params       = array();
-		$options      = WP_Auth0_Options::Instance();
-		$lock_options = new WP_Auth0_Lock10_Options();
-		$is_implicit  = (bool) $options->get( 'auth0_implicit_workflow', false );
-		$nonce        = WP_Auth0_Nonce_Handler::get_instance()->get_unique();
+		$params      = array();
+		$options     = WP_Auth0_Options::Instance();
+		$is_implicit = (bool) $options->get( 'auth0_implicit_workflow', false );
+		$nonce       = WP_Auth0_Nonce_Handler::get_instance()->get_unique();
 
 		$params['client_id']     = $options->get( 'client_id' );
 		$params['scope']         = self::get_userinfo_scope( 'authorize_url' );
