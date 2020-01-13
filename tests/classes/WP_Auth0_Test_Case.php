@@ -38,13 +38,20 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 	public static $home_url;
 
 	/**
+	 * Existing site_url value before tests.
+	 *
+	 * @var string
+	 */
+	public static $site_url;
+
+	/**
 	 * Runs before test suite starts.
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
 		self::$opts      = WP_Auth0_Options::Instance();
 		self::$error_log = new WP_Auth0_ErrorLog();
-		self::$home_url  = home_url();
+		self::$site_url  = site_url();
 	}
 
 	/**
@@ -70,7 +77,8 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 		parent::tearDown();
 
 		update_option( 'users_can_register', false );
-		update_option( 'home_url', self::$home_url );
+		update_option( 'home', self::$home_url );
+		update_option( 'siteurl', self::$site_url );
 
 		delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
 

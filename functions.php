@@ -103,6 +103,15 @@ function wp_auth0_can_show_wp_login_form() {
 	return false;
 }
 
+/**
+ *
+ * @return bool
+ */
+function wp_auth0_uses_secure_callback() {
+	$callback_url = WP_Auth0_Options::Instance()->get_wp_auth0_url();
+	return 'https' === parse_url( $callback_url, PHP_URL_SCHEME );
+}
+
 if ( ! function_exists( 'get_auth0userinfo' ) ) {
 	function get_auth0userinfo( $user_id ) {
 		$profile = WP_Auth0_UsersRepo::get_meta( $user_id, 'auth0_obj' );

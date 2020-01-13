@@ -578,9 +578,7 @@ class WP_Auth0_LoginManager {
 		$params['client_id']     = $options->get( 'client_id' );
 		$params['scope']         = self::get_userinfo_scope( 'authorize_url' );
 		$params['response_type'] = $is_implicit ? 'id_token' : 'code';
-		$params['redirect_uri']  = $is_implicit
-			? $lock_options->get_implicit_callback_url()
-			: $options->get_wp_auth0_url();
+		$params['redirect_uri']  = $options->get_wp_auth0_url( null, $is_implicit );
 
 		if ( $is_implicit ) {
 			$params['nonce']         = $nonce;
