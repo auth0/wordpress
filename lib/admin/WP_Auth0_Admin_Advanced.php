@@ -115,13 +115,20 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'id'       => 'wpa0_auto_login',
 				'function' => 'render_auto_login',
 			),
-			array(
+			);
+
+		// TODO: Remove this once feature has been removed
+		if ( $this->options->get( 'auth0_implicit_workflow' ) ) {
+			$options[] = array(
 				'name'     => __( 'Implicit Login Flow', 'wp-auth0' ),
 				'opt'      => 'auth0_implicit_workflow',
 				'id'       => 'wpa0_auth0_implicit_workflow',
 				'function' => 'render_auth0_implicit_workflow',
-			),
-			array(
+			);
+		}
+
+		$options = $options + array(
+			( count( $options ) ) => array(
 				'name'     => __( 'Valid Proxy IP', 'wp-auth0' ),
 				'opt'      => 'valid_proxy_ip',
 				'id'       => 'wpa0_valid_proxy_ip',
@@ -455,6 +462,18 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 */
 	public function render_auth0_implicit_workflow( $args = array() ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
+
+		if ( ! wp_auth0_uses_secure_callback() ) {
+			$this->render_field_description(
+				'<span style="color: red">' .
+				__( 'This setting requires the site to be served over HTTPS', 'wp-auth0' ) . '</span>'
+			);
+		}
+
+		$this->render_field_description(
+			'<strong>' . __( 'This setting is deprecated and will be removed in the next major', 'wp-auth0' ) . '</strong>'
+		);
+
 		$this->render_field_description(
 			__( 'Turns on implicit login flow, which most sites will not need. ', 'wp-auth0' ) .
 			__( 'Only enable this if outbound connections to auth0.com are disabled on your server. ', 'wp-auth0' ) .
