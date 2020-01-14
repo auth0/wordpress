@@ -54,7 +54,7 @@ class TestNonceHandler extends WP_Auth0_Test_Case {
 		$this->assertFalse( $mockNonceHandler->validate( uniqid() ) );
 		$this->assertCount( 1, (array) self::$mockSpyCookie->getInvocations() );
 
-		$setCookieParams = self::$mockSpyCookie->getInvocations()[0]->getParameters();
+		$setCookieParams = $this->getSpyParameters( self::$mockSpyCookie->getInvocations()[0] );
 
 		$this->assertEquals( 'auth0_nonce', $setCookieParams[0] );
 		$this->assertEquals( '', $setCookieParams[1] );
@@ -76,13 +76,13 @@ class TestNonceHandler extends WP_Auth0_Test_Case {
 		$this->assertTrue( $mockNonceHandler->validate( '__valid_nonce__' ) );
 		$this->assertCount( 2, (array) self::$mockSpyCookie->getInvocations() );
 
-		$setCookieParamsMain = self::$mockSpyCookie->getInvocations()[1]->getParameters();
+		$setCookieParamsMain = $this->getSpyParameters( self::$mockSpyCookie->getInvocations()[1] );
 
 		$this->assertEquals( 'auth0_nonce', $setCookieParamsMain[0] );
 		$this->assertEquals( '', $setCookieParamsMain[1] );
 		$this->assertEquals( 0, $setCookieParamsMain[2] );
 
-		$setCookieParamsBackup = self::$mockSpyCookie->getInvocations()[0]->getParameters();
+		$setCookieParamsBackup = $this->getSpyParameters( self::$mockSpyCookie->getInvocations()[0] );
 
 		$this->assertEquals( '_auth0_nonce', $setCookieParamsBackup[0] );
 		$this->assertEquals( '', $setCookieParamsBackup[1] );
@@ -100,7 +100,7 @@ class TestNonceHandler extends WP_Auth0_Test_Case {
 		$this->assertArrayNotHasKey( '_auth0_nonce', $_COOKIE );
 		$this->assertCount( 1, (array) self::$mockSpyCookie->getInvocations() );
 
-		$setCookieParams = self::$mockSpyCookie->getInvocations()[0]->getParameters();
+		$setCookieParams = $this->getSpyParameters( self::$mockSpyCookie->getInvocations()[0] );
 
 		$this->assertEquals( 'auth0_nonce', $setCookieParams[0] );
 		$this->assertEquals( '__test_cookie_value__', $setCookieParams[1] );
@@ -117,13 +117,13 @@ class TestNonceHandler extends WP_Auth0_Test_Case {
 		$this->assertCount( 1, (array) self::$mockSpyCookie->getInvocations() );
 		$this->assertCount( 1, (array) self::$mockSpyHeader->getInvocations() );
 
-		$setCookieParams = self::$mockSpyCookie->getInvocations()[0]->getParameters();
+		$setCookieParams = $this->getSpyParameters( self::$mockSpyCookie->getInvocations()[0] );
 
 		$this->assertEquals( '_auth0_nonce', $setCookieParams[0] );
 		$this->assertEquals( '__test_cookie_value__', $setCookieParams[1] );
 		$this->assertGreaterThanOrEqual( time() + 3600, $setCookieParams[2] );
 
-		$setHeaderParams = self::$mockSpyHeader->getInvocations()[0]->getParameters();
+		$setHeaderParams = $this->getSpyParameters( self::$mockSpyHeader->getInvocations()[0] );
 
 		$this->assertEquals( 'auth0_nonce', $setHeaderParams[0] );
 		$this->assertEquals( '__test_cookie_value__', $setHeaderParams[1] );
@@ -133,6 +133,14 @@ class TestNonceHandler extends WP_Auth0_Test_Case {
 	/*
 	 * Helper methods
 	 */
+
+	public function getSpyParameters( $spyInvocation ) {
+		if ( method_exists( $spyInvocation, 'getParameters' ) ) {
+			return $spyInvocation->getParameters();
+		} else {
+			return $spyInvocation->parameters;
+		}
+	}
 
 	/**
 	 * @param array $args
