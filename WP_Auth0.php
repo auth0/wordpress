@@ -30,7 +30,7 @@ define( 'WPA0_JWKS_CACHE_TRANSIENT_NAME', 'WP_Auth0_JWKS_cache' );
 
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 
-require_once 'functions.php';
+require_once WPA0_PLUGIN_DIR . 'functions.php';
 
 /*
  * Localization

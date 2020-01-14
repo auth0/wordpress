@@ -39,7 +39,6 @@ commands:
           command: |
             composer phpcbf
             composer phpcbf-tests
-            composer phpcs-tests
             composer phpcs-i18n
   run-tests:
     steps:
