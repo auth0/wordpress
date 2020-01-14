@@ -61,7 +61,7 @@ class WP_Auth0_Nonce_Handler {
 	 * WP_Auth0_Nonce_Handler constructor.
 	 * Private to prevent new instances of this class.
 	 */
-	private function __construct() {
+	public function __construct() {
 		$this->init();
 	}
 
@@ -72,7 +72,7 @@ class WP_Auth0_Nonce_Handler {
 		// If a NONCE_COOKIE_NAME is not defined then we don't need to persist the nonce value.
 		if ( defined( static::NONCE_COOKIE_NAME ) && isset( $_COOKIE[ static::get_storage_cookie_name() ] ) ) {
 			// Have a cookie, don't want to generate a new one.
-			$this->unique = $_COOKIE[ static::get_storage_cookie_name()  ];
+			$this->unique = $_COOKIE[ static::get_storage_cookie_name() ];
 		} else {
 			// No cookie, need to create one.
 			$this->unique = $this->generate_unique();
@@ -184,7 +184,7 @@ class WP_Auth0_Nonce_Handler {
 			WP_Auth0_ErrorManager::insert_auth0_error(
 				__METHOD__,
 				new WP_Error(
-					'invalid_nonce',
+					'invalid_cookie',
 					'Cookie names and values cannot contain any of the following: ' . wp_slash( $illegal_chars )
 				)
 			);
@@ -197,11 +197,11 @@ class WP_Auth0_Nonce_Handler {
 			// Delete SameSite=None fallback cookie.
 			if ( $this->same_site_none ) {
 				unset( $_COOKIE[ '_' . $cookie_name ] );
-				$this->setCookie( '_' . $cookie_name, '', 0 );
+				$this->write_cookie( '_' . $cookie_name, '', 0 );
 			}
 
 			unset( $_COOKIE[ $cookie_name ] );
-			return $this->setCookie( $cookie_name, '', 0 );
+			return $this->write_cookie( $cookie_name, '', 0 );
 		}
 
 		$_COOKIE[ $cookie_name ] = $cookie_value;
@@ -209,11 +209,11 @@ class WP_Auth0_Nonce_Handler {
 		// Set SameSite=None fallback cookie and use headers for main cookie.
 		if ( $this->same_site_none ) {
 			$_COOKIE[ '_' . $cookie_name ] = $cookie_value;
-			$this->setCookieHeader( $cookie_name, $cookie_value, $cookie_exp );
-			return $this->setCookie( '_' . $cookie_name, $cookie_value, $cookie_exp );
+			$this->write_cookie_header( $cookie_name, $cookie_value, $cookie_exp );
+			return $this->write_cookie( '_' . $cookie_name, $cookie_value, $cookie_exp );
 		}
 
-		return $this->setCookie( $cookie_name, $cookie_value, $cookie_exp );
+		return $this->write_cookie( $cookie_name, $cookie_value, $cookie_exp );
 	}
 
 	/**
@@ -226,8 +226,10 @@ class WP_Auth0_Nonce_Handler {
 	 * @return string
 	 *
 	 * @see https://github.com/php/php-src/blob/master/ext/standard/head.c#L77
+	 *
+	 * @codeCoverageIgnore
 	 */
-	protected function getSameSiteCookieHeader( $name, $value, $expire ) {
+	protected function get_same_site_cookie_header( $name, $value, $expire ) {
 		$date = new \Datetime();
 		$date->setTimestamp( $expire )->setTimezone( new \DateTimeZone( 'GMT' ) );
 
@@ -250,7 +252,7 @@ class WP_Auth0_Nonce_Handler {
 	 *
 	 * @codeCoverageIgnore
 	 */
-	protected function setCookie( $name, $value, $expire ) {
+	protected function write_cookie( $name, $value, $expire ) {
 		return setcookie( $name, $value, $expire, '/', '', false, true );
 	}
 
@@ -265,8 +267,8 @@ class WP_Auth0_Nonce_Handler {
 	 *
 	 * @codeCoverageIgnore
 	 */
-	protected function setCookieHeader( $name, $value, $expire ) {
-		header( $this->getSameSiteCookieHeader( $name, $value, $expire ), false );
+	protected function write_cookie_header( $name, $value, $expire ) {
+		header( $this->get_same_site_cookie_header( $name, $value, $expire ), false );
 	}
 
 	/**

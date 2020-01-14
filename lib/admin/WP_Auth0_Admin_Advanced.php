@@ -115,7 +115,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'id'       => 'wpa0_auto_login',
 				'function' => 'render_auto_login',
 			),
-			);
+		);
 
 		// TODO: Remove this once feature has been removed
 		if ( $this->options->get( 'auth0_implicit_workflow' ) ) {

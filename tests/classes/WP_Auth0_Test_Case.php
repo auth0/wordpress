@@ -76,6 +76,8 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 	public function tearDown() {
 		parent::tearDown();
 
+		$_COOKIE = [];
+
 		update_option( 'users_can_register', false );
 		update_option( 'home', self::$home_url );
 		update_option( 'siteurl', self::$site_url );
