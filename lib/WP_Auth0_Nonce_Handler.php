@@ -59,7 +59,6 @@ class WP_Auth0_Nonce_Handler {
 
 	/**
 	 * WP_Auth0_Nonce_Handler constructor.
-	 * Private to prevent new instances of this class.
 	 */
 	public function __construct() {
 		$this->init();
@@ -180,7 +179,7 @@ class WP_Auth0_Nonce_Handler {
 	 */
 	protected function handle_cookie( $cookie_name, $cookie_value, $cookie_exp ) {
 		$illegal_chars = ",; \t\r\n\013\014";
-		if ( strpbrk( $cookie_name, $illegal_chars ) != null ) {
+		if ( strpbrk( $cookie_name, $illegal_chars ) || strpbrk( $cookie_value, $illegal_chars ) ) {
 			WP_Auth0_ErrorManager::insert_auth0_error(
 				__METHOD__,
 				new WP_Error(
@@ -218,6 +217,7 @@ class WP_Auth0_Nonce_Handler {
 
 	/**
 	 * Build the header to use when setting SameSite cookies.
+	 * NOTE: Validity of $name and $value is not checked here; see handle_cookie().
 	 *
 	 * @param string  $name   Cookie name.
 	 * @param string  $value  Cookie value.
@@ -243,6 +243,7 @@ class WP_Auth0_Nonce_Handler {
 
 	/**
 	 * Wrapper around PHP core setcookie() function to assist with testing.
+	 * NOTE: Validity of $name and $value is not checked here; see handle_cookie().
 	 *
 	 * @param string  $name   Complete cookie name to set.
 	 * @param string  $value  Value of the cookie to set.
@@ -258,6 +259,7 @@ class WP_Auth0_Nonce_Handler {
 
 	/**
 	 * Wrapper around PHP core header() function to assist with testing.
+	 * NOTE: Validity of $name and $value is not checked here; see handle_cookie().
 	 *
 	 * @param string  $name   Complete cookie name to set.
 	 * @param string  $value  Value of the cookie to set.

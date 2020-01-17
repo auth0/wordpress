@@ -130,9 +130,61 @@ class TestNonceHandler extends WP_Auth0_Test_Case {
 		$this->assertGreaterThanOrEqual( time() + 3600, $setHeaderParams[2] );
 	}
 
+	public function testThatInvalidCookieNameIsRejected() {
+		$nonceHandler = new WP_Auth0_Nonce_Handler();
+
+		$errors = self::$error_log->get();
+		$this->assertCount( 0, $errors );
+
+		$this->assertFalse( $nonceHandler->set_cookie( ';' ) );
+
+		$errors = self::$error_log->get();
+		$this->assertCount( 1, $errors );
+		$this->assertEquals( 'invalid_cookie', $errors[0]['code'] );
+		$this->assertStringStartsWith(
+			'Cookie names and values cannot contain any of the following:',
+			$errors[0]['message']
+		);
+		$this->assertEquals( 1, $errors[0]['count'] );
+
+		$this->assertFalse( $nonceHandler->set_cookie( ' ' ) );
+		$errors = self::$error_log->get();
+		$this->assertCount( 1, $errors );
+		$this->assertEquals( 'invalid_cookie', $errors[0]['code'] );
+		$this->assertEquals( 2, $errors[0]['count'] );
+
+		$this->assertFalse( $nonceHandler->set_cookie( ',' ) );
+		$errors = self::$error_log->get();
+		$this->assertCount( 1, $errors );
+		$this->assertEquals( 'invalid_cookie', $errors[0]['code'] );
+		$this->assertEquals( 3, $errors[0]['count'] );
+	}
+
+	public function testThatInvalidCookieValueIsRejected() {
+		$nonceHandler = new WP_Auth0_Nonce_Handler();
+		add_filter( 'auth0_nonce_cookie_name', [ $this, 'badCookieNameFilter' ] );
+
+		$this->assertFalse( $nonceHandler->set_cookie( '__test_valid_cookie_value__' ) );
+
+		$errors = self::$error_log->get();
+		$this->assertCount( 1, $errors );
+		$this->assertEquals( 'invalid_cookie', $errors[0]['code'] );
+		$this->assertStringStartsWith(
+			'Cookie names and values cannot contain any of the following:',
+			$errors[0]['message']
+		);
+		$this->assertEquals( 1, $errors[0]['count'] );
+
+		remove_filter( 'auth0_nonce_cookie_name', [ $this, 'badCookieNameFilter' ] );
+	}
+
 	/*
 	 * Helper methods
 	 */
+
+	public function badCookieNameFilter() {
+		return '__test_invalid_cookie_name_;__';
+	}
 
 	public function getSpyParameters( $spyInvocation ) {
 		if ( method_exists( $spyInvocation, 'getParameters' ) ) {
