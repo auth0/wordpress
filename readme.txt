@@ -1,6 +1,6 @@
 === Login by Auth0 ===
 Tags: login, oauth, authentication, single sign on, ldap, active directory, saml, windows azure ad, google apps, two factor, two-factor, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer, passwordless, sms, magiclink, totp, social
-Tested up to: 5.2.2
+Tested up to: 5.3.2
 Requires at least: 3.8
 Requires PHP: 5.3
 License: GPLv2
@@ -120,13 +120,11 @@ All is not lost!
 
 == Changelog ==
 
-**v3.11.1**
+**v3.11.2**
 
-- Check state in specific global based on callback type [\#708](https://github.com/auth0/wp-auth0/pull/708) ([joshcanhelp](https://github.com/joshcanhelp))
-- Fix sensitive field handling; add Basic settings tab validations [\#703](https://github.com/auth0/wp-auth0/pull/703) ([joshcanhelp](https://github.com/joshcanhelp))
-- Add new Auth0 IPs; do not save duplicate or whitelisted IPs [\#700](https://github.com/auth0/wp-auth0/pull/700) ([joshcanhelp](https://github.com/joshcanhelp))
-- Fix post passwords getting redirected [\#698](https://github.com/auth0/wp-auth0/pull/698) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add path to functions.php include [\#759](https://github.com/auth0/wp-auth0/pull/759) ([joshcanhelp](https://github.com/joshcanhelp))
+- Patch samesite for implicit [\#758](https://github.com/auth0/wp-auth0/pull/758) ([joshcanhelp](https://github.com/joshcanhelp))
 
-... and more!
+**Important note for sites using the Implicit Login Flow setting**: The upcoming changes to SameSite handling in multiple browsers will require sites using the Implicit Login Flow setting to also be served on a secure channel (callback URL using "https"). This setting will be removed in the upcoming major version but is patched for sites that need time to migrate.
 
 [Complete list of changes for this and other releases](https://github.com/auth0/wp-auth0/releases)
