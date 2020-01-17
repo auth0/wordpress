@@ -1,5 +1,12 @@
 # Change Log
 
+## [3.11.2](https://github.com/auth0/wp-auth0/tree/3.11.2) (2020-01-17)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.11.1...3.11.2)
+
+**Fixed**
+- Add path to functions.php include [\#759](https://github.com/auth0/wp-auth0/pull/759) ([joshcanhelp](https://github.com/joshcanhelp))
+- Patch samesite for implicit [\#758](https://github.com/auth0/wp-auth0/pull/758) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [3.11.1](https://github.com/auth0/wp-auth0/tree/3.11.1) (2019-08-05)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.11.0...3.11.1)
 

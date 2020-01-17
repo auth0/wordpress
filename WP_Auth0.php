@@ -3,13 +3,13 @@
  * Plugin Name: Login by Auth0
  * Plugin URL: https://auth0.com/docs/cms/wordpress
  * Description: Login by Auth0 provides improved username/password login, Passwordless login, Social login, MFA, and Single Sign On for all your sites.
- * Version: 3.11.1
+ * Version: 3.11.2
  * Author: Auth0
  * Author URI: https://auth0.com
  * Text Domain: wp-auth0
  */
 
-define( 'WPA0_VERSION', '3.11.1' );
+define( 'WPA0_VERSION', '3.11.2' );
 define( 'AUTH0_DB_VERSION', 22 );
 
 define( 'WPA0_PLUGIN_FILE', __FILE__ );
