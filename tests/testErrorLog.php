@@ -204,6 +204,25 @@ class TestErrorLog extends WP_Auth0_Test_Case {
 		$this->assertEquals( serialize( $error ), $log[0]['message'] );
 	}
 
+	public function testLogEntryAction() {
+		$error = new WP_Error( '__test_error_code__', '__test_error_msg__' );
+
+		add_action( 'auth0_insert_error', [ $this, 'insertErrorException' ], 1, 3 );
+		try {
+			WP_Auth0_ErrorLog::insert_error( '__test_method__', $error );
+			$result = 'Nothing';
+		} catch ( Exception $e ) {
+			$result = json_decode( $e->getMessage(), true );
+		}
+		remove_action( 'auth0_insert_error', [ $this, 'insertErrorException' ] );
+
+		$this->assertEquals( '__test_method__', $result['method'] );
+		$this->assertEquals( '__test_method__', $result['section'] );
+		$this->assertArrayHasKey( 'errors', $result['error'] );
+		$this->assertArrayHasKey( '__test_error_code__', $result['error']['errors'] );
+		$this->assertEquals( '__test_error_msg__', $result['error']['errors']['__test_error_code__'][0] );
+	}
+
 	/**
 	 * Test that log clearing works.
 	 */
@@ -287,5 +306,11 @@ class TestErrorLog extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'http://example.org/wp-admin/admin.php?page=wpa0-errors&cleared=1', $caught['location'] );
 		$this->assertEquals( 302, $caught['status'] );
 		$this->assertEmpty( $error_log->get() );
+	}
+
+	public function insertErrorException( $entry, $error, $method ) {
+		$entry['method'] = $method;
+		$entry['error']  = $error;
+		throw new Exception( json_encode( $entry ) );
 	}
 }
