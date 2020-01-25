@@ -127,13 +127,11 @@ class WP_Auth0_Api_Client {
 
 		if ( $response instanceof WP_Error ) {
 			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response );
-			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] !== 200 ) {
 			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response['body'] );
-			error_log( $response['body'] );
 			return false;
 		}
 
@@ -216,13 +214,11 @@ class WP_Auth0_Api_Client {
 
 		if ( $response instanceof WP_Error ) {
 			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response->get_error_message() );
-			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 201 ) {
 			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response['body'] );
-			error_log( $response['body'] );
 			return false;
 		}
 
@@ -256,7 +252,6 @@ class WP_Auth0_Api_Client {
 
 		if ( $response instanceof WP_Error ) {
 			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response );
-			error_log( $response->get_error_message() );
 			return false;
 		}
 
@@ -279,7 +274,6 @@ class WP_Auth0_Api_Client {
 		} elseif ( $response['response']['code'] != 201 ) {
 
 			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response['body'] );
-			error_log( $response['body'] );
 			return false;
 		}
 
@@ -314,13 +308,11 @@ class WP_Auth0_Api_Client {
 
 		if ( $response instanceof WP_Error ) {
 			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response );
-			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 201 ) {
 			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response['body'] );
-			error_log( $response['body'] );
 			return false;
 		}
 
@@ -356,13 +348,11 @@ class WP_Auth0_Api_Client {
 
 		if ( $response instanceof WP_Error ) {
 			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response );
-			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
 			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response['body'] );
-			error_log( $response['body'] );
 			return false;
 		}
 
@@ -411,13 +401,11 @@ class WP_Auth0_Api_Client {
 
 		if ( $response instanceof WP_Error ) {
 			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response );
-			error_log( $response->get_error_message() );
 			return false;
 		}
 
 		if ( $response['response']['code'] != 200 ) {
 			WP_Auth0_ErrorLog::insert_error( __METHOD__, $response['body'] );
-			error_log( $response['body'] );
 			return false;
 		}
 
