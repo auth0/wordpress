@@ -2,13 +2,12 @@
 $opts          = WP_Auth0_Options::Instance();
 $constant_keys = $opts->get_all_constant_keys();
 ?>
-<div class="a0-wrap settings">
+<div class="a0-wrap settings wrap">
 
 	<?php require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'; ?>
 
   <div class="container-fluid">
 
-	<div class="row">
 	  <h1><?php _e( 'Import and Export Settings', 'wp-auth0' ); ?></h1>
 	  <p class="a0-step-text top-margin">
 			<?php _e( 'You can import and export your Auth0 WordPress plugin settings here. ', 'wp-auth0' ); ?>
@@ -20,16 +19,13 @@ $constant_keys = $opts->get_all_constant_keys();
 				<?php _e( 'Settings stored in constants cannot be exported or imported.', 'wp-auth0' ); ?>
 			</p>
 		<?php endif; ?>
-	</div>
-	<div class="row">
 
-	  <ul class="nav nav-tabs" role="tablist">
-		<li role="presentation" class="active"><a href="#import" aria-controls="import" role="tab" data-toggle="tab" class="js-a0-import-export-tabs"><?php _e( 'Import Settings', 'wp-auth0' ); ?></a></li>
-		<li role="presentation"><a href="#export" aria-controls="export" role="tab" data-toggle="tab" class="js-a0-import-export-tabs"><?php _e( 'Export Settings', 'wp-auth0' ); ?></a></li>
-	  </ul>
+	  <p class="nav-tabs">
+		<a id="tab-import" href="#import" class="js-a0-import-export-tabs"><?php _e( 'Import Settings', 'wp-auth0' ); ?></a>
+		<a id="tab-export" href="#export" class="js-a0-import-export-tabs"><?php _e( 'Export Settings', 'wp-auth0' ); ?></a>
+	  </p>
 
-	  <div class="tab-content">
-		<div role="tabpanel" class="tab-pane active" id="import">
+		<div class="tab-pane" id="panel-import" style="display: block">
 
 		  <form action="options.php" method="post" enctype="multipart/form-data">
 			<input type="hidden" name="action" value="wpauth0_import_settings" />
@@ -44,7 +40,7 @@ $constant_keys = $opts->get_all_constant_keys();
 		  </form>
 
 		</div>
-		<div role="tabpanel" class="tab-pane" id="export">
+		<div class="tab-pane" id="panel-export" style="display: none">
 
 		  <form action="options.php" method="post">
 			<input type="hidden" name="action" value="wpauth0_export_settings" />
@@ -58,9 +54,6 @@ $constant_keys = $opts->get_all_constant_keys();
 		  </form>
 
 		</div>
-	  </div>
-
-	  </div>
 
   </div>
 

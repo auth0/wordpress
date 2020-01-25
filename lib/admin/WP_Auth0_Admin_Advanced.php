@@ -36,7 +36,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	public function __construct( WP_Auth0_Options $options, WP_Auth0_Routes $router ) {
 		parent::__construct( $options );
 		$this->router                = $router;
-		$this->_description          = __( 'Settings related to specific scenarios.', 'wp-auth0' );
 		$this->actions_middlewares[] = 'migration_ws_validation';
 		$this->actions_middlewares[] = 'migration_ips_validation';
 		$this->actions_middlewares[] = 'loginredirection_validation';

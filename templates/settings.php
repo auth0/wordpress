@@ -1,58 +1,40 @@
-<div class="a0-wrap settings">
-
-	<?php require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'; ?>
+<div class="a0-wrap settings wrap">
 
 	<div class="container-fluid">
 
-		<div class="row">
-			<h1><?php _e( 'Auth0 WordPress Plugin Settings', 'wp-auth0' ); ?></h1>
-
-			<div class="row a0-message a0-warning manage">
-				<?php _e( 'For your Auth0 dashboard with more settings and connection options click', 'wp-auth0' ); ?>
-				<a target="_blank" href="https://manage.auth0.com/#/clients/<?php echo wp_auth0_get_option( 'client_id' ); ?>/connections"><?php _e( 'here', 'wp-auth0' ); ?></a>.
-			</div>
+			<h1><?php _e( 'Login by Auth0 Settings', 'wp-auth0' ); ?></h1>
 
 			<?php settings_errors(); ?>
 
-			<ul class="nav nav-tabs" role="tablist">
-				<li role="presentation">
-					<a id="tab-basic" href="#basic" aria-controls="basic" role="tab" data-toggle="tab" class="js-a0-settings-tabs">
+			<p class="nav nav-tabs" role="tablist">
+					<a id="tab-basic" href="#basic" class="js-a0-settings-tabs">
 						<?php _e( 'Basic', 'wp-auth0' ); ?>
 					</a>
-				</li>
-				<li role="presentation">
-					<a id="tab-features" href="#features" aria-controls="features" role="tab" data-toggle="tab" class="js-a0-settings-tabs">
+					<a id="tab-features" href="#features" class="js-a0-settings-tabs">
 						<?php _e( 'Features', 'wp-auth0' ); ?>
 					</a>
-				</li>
-				<li role="presentation">
-					<a id="tab-appearance" href="#appearance" aria-controls="appearance" role="tab" data-toggle="tab" class="js-a0-settings-tabs">
+					<a id="tab-appearance" href="#appearance" class="js-a0-settings-tabs">
 						<?php _e( 'Embedded', 'wp-auth0' ); ?>
 					</a>
-				</li>
-				<li role="presentation">
-					<a id="tab-advanced" href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab" class="js-a0-settings-tabs">
+					<a id="tab-advanced" href="#advanced" class="js-a0-settings-tabs">
 						<?php _e( 'Advanced', 'wp-auth0' ); ?>
 					</a>
-				</li>
-				<li role="presentation">
-					<a id="tab-help" href="#help" aria-controls="help" role="tab" data-toggle="tab" class="js-a0-settings-tabs">
+					<a id="tab-help" href="#help" class="js-a0-settings-tabs">
 						<?php _e( 'Help', 'wp-auth0' ); ?>
 					</a>
-				</li>
-			</ul>
-		</div>
+			</p>
+
 		<form action="options.php" method="post" id="js-a0-settings-form" class="a0-settings-form">
 			<?php settings_fields( WP_Auth0_Options::Instance()->get_options_name() . '_basic' ); ?>
 
 			<div class="tab-content">
 				<?php foreach ( [ 'basic', 'features', 'appearance', 'advanced' ] as $tab ) : ?>
-					<div role="tabpanel" class="tab-pane row" id="<?php echo $tab; ?>">
+					<div class="tab-pane" id="panel-<?php echo $tab; ?>">
 						<?php do_settings_sections( WP_Auth0_Options::Instance()->get_options_name() . '_' . $tab ); ?>
 					</div>
 				<?php endforeach; ?>
 
-				<div role="tabpanel" class="tab-pane row" id="help">
+				<div class="tab-pane" id="panel-help">
 
 					<p>
 						<?php
@@ -116,11 +98,9 @@
 				</div>
 			</div>
 
-			<div class="row">
 				<div class="a0-buttons">
 					<input type="submit" name="submit" id="submit" class="a0-button primary" value="<?php _e( 'Save Changes', 'wp-auth0' ); ?>" />
 				</div>
-			</div>
 		</form>
 	</div>
 </div>

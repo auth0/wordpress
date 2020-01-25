@@ -20,7 +20,6 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	 */
 	public function __construct( WP_Auth0_Options $options ) {
 		parent::__construct( $options );
-		$this->_description          = __( 'Basic settings related to the Auth0 integration.', 'wp-auth0' );
 		$this->actions_middlewares[] = 'wle_validation';
 	}
 

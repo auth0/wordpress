@@ -26,7 +26,7 @@ class TestAdminEnqueueScripts extends WP_Auth0_Test_Case {
 		$scripts = wp_scripts();
 		$script  = $scripts->registered['wpa0_admin'];
 		$this->assertEquals( WPA0_VERSION, $script->ver );
-		$this->assertContains( 'wpa0_bootstrap', $script->deps );
+		$this->assertContains( 'jquery', $script->deps );
 		$this->assertEquals( WPA0_PLUGIN_JS_URL . 'admin.js', $script->src );
 
 		$localization_json = trim( str_replace( 'var wpa0 = ', '', $script->extra['data'] ), ';' );
@@ -43,17 +43,6 @@ class TestAdminEnqueueScripts extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'http://example.org/wp-admin/admin-ajax.php', $localization['ajax_url'] );
 	}
 
-	public function testThatBootstrapScriptIsRegisteredProperly() {
-		$_REQUEST['page'] = 'wpa0';
-		$this->assertTrue( wp_auth0_admin_enqueue_scripts() );
-
-		$scripts = wp_scripts();
-		$script  = $scripts->registered['wpa0_bootstrap'];
-		$this->assertEquals( '3.3.6', $script->ver );
-		$this->assertContains( 'jquery', $script->deps );
-		$this->assertEquals( WPA0_PLUGIN_BS_URL . 'js/bootstrap.min.js', $script->src );
-	}
-
 	public function testThatAsyncScriptIsRegisteredProperly() {
 		$_REQUEST['page'] = 'wpa0';
 		$this->assertTrue( wp_auth0_admin_enqueue_scripts() );
@@ -63,17 +52,6 @@ class TestAdminEnqueueScripts extends WP_Auth0_Test_Case {
 		$this->assertEquals( WPA0_VERSION, $script->ver );
 		$this->assertEmpty( $script->deps );
 		$this->assertEquals( WPA0_PLUGIN_LIB_URL . 'async.min.js', $script->src );
-	}
-
-	public function testThatBootstrapStyleIsRegisteredProperly() {
-		$_REQUEST['page'] = 'wpa0';
-		$this->assertTrue( wp_auth0_admin_enqueue_scripts() );
-
-		$styles = wp_styles();
-		$style  = $styles->registered['wpa0_bootstrap'];
-		$this->assertEquals( '3.3.5', $style->ver );
-		$this->assertEmpty( $style->deps );
-		$this->assertEquals( WPA0_PLUGIN_BS_URL . 'css/bootstrap.min.css', $style->src );
 	}
 
 	public function testThatSetupStyleIsRegisteredProperly() {
@@ -97,7 +75,6 @@ class TestAdminEnqueueScripts extends WP_Auth0_Test_Case {
 		$this->assertContains( 'media-editor', $scripts->queue );
 
 		$styles = wp_styles();
-		$this->assertContains( 'wpa0_bootstrap', $styles->queue );
 		$this->assertContains( 'wpa0_admin_initial_setup', $styles->queue );
 		$this->assertContains( 'media', $styles->queue );
 	}
@@ -112,7 +89,6 @@ class TestAdminEnqueueScripts extends WP_Auth0_Test_Case {
 		$this->assertNotContains( 'media-editor', $scripts->queue );
 
 		$styles = wp_styles();
-		$this->assertContains( 'wpa0_bootstrap', $styles->queue );
 		$this->assertContains( 'wpa0_admin_initial_setup', $styles->queue );
 	}
 
@@ -126,7 +102,6 @@ class TestAdminEnqueueScripts extends WP_Auth0_Test_Case {
 		$this->assertNotContains( 'media-editor', $scripts->queue );
 
 		$styles = wp_styles();
-		$this->assertContains( 'wpa0_bootstrap', $styles->queue );
 		$this->assertContains( 'wpa0_admin_initial_setup', $styles->queue );
 	}
 
@@ -140,7 +115,6 @@ class TestAdminEnqueueScripts extends WP_Auth0_Test_Case {
 		$this->assertNotContains( 'media-editor', $scripts->queue );
 
 		$styles = wp_styles();
-		$this->assertContains( 'wpa0_bootstrap', $styles->queue );
 		$this->assertContains( 'wpa0_admin_initial_setup', $styles->queue );
 	}
 }

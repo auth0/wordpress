@@ -14,16 +14,6 @@
 class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 
 	/**
-	 * WP_Auth0_Admin_Features constructor.
-	 *
-	 * @param WP_Auth0_Options $options - Instance of the WP_Auth0_Options class.
-	 */
-	public function __construct( WP_Auth0_Options $options ) {
-		parent::__construct( $options );
-		$this->_description = __( 'Settings related to specific features provided by the plugin.', 'wp-auth0' );
-	}
-
-	/**
 	 * All settings in the Features tab
 	 *
 	 * @see \WP_Auth0_Admin::init_admin
