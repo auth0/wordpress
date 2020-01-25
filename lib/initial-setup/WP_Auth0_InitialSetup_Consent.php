@@ -97,10 +97,10 @@ class WP_Auth0_InitialSetup_Consent {
 		 * Create Client
 		 */
 
-		$should_create_and_update_connection = false;
+		$should_create_connection = false;
 
 		if ( empty( $client_id ) ) {
-			$should_create_and_update_connection = true;
+			$should_create_connection = true;
 
 			$client_response = WP_Auth0_Api_Client::create_client( $domain, $this->access_token, $name );
 
@@ -119,63 +119,32 @@ class WP_Auth0_InitialSetup_Consent {
 		 * Create Connection
 		 */
 
-		$db_connection_name    = 'DB-' . get_auth0_curatedBlogName();
-		$connection_exists     = false;
-		$connection_pwd_policy = null;
-
-		$connections = WP_Auth0_Api_Client::search_connection( $domain, $this->access_token, 'auth0' );
-
-		if ( $should_create_and_update_connection && ! empty( $connections ) && is_array( $connections ) ) {
-			foreach ( $connections as $connection ) {
-
-				// We only want to check/update connections that are active for this Application.
-				if ( ! in_array( $client_id, $connection->enabled_clients ) ) {
-					continue;
-				}
-
-				// Connection with the same name, use it below.
-				if ( $db_connection_name === $connection->name ) {
-					$connection_exists = $connection->id;
-					if ( isset( $connection->options ) && isset( $connection->options->passwordPolicy ) ) {
-						$connection_pwd_policy = $connection->options->passwordPolicy;
-					}
-					continue;
-				}
-
-				// Different Connection, update to remove the Application created above.
-				$u_connection                  = clone $connection;
-				$u_connection->enabled_clients = array_diff( $u_connection->enabled_clients, [ $client_id ] );
-				WP_Auth0_Api_Client::update_connection( $domain, $this->access_token, $u_connection->id, $u_connection );
+		$db_connection_name = 'DB-' . get_auth0_curatedBlogName();
+		if ( $should_create_connection ) {
+			$connections = WP_Auth0_Api_Client::search_connection( $domain, $this->access_token, null, $db_connection_name );
+			if ( $connections && is_array( $connections ) && in_array( $client_id, $connections[0]->enabled_clients ) ) {
+				$this->a0_options->set( 'db_connection_name', $db_connection_name );
+				$should_create_connection = false;
 			}
 		}
 
-		if ( $should_create_and_update_connection ) {
-
-			if ( $connection_exists === false ) {
-				$migration_token = $this->a0_options->get( 'migration_token' );
-				if ( empty( $migration_token ) ) {
-					$migration_token = wp_auth0_url_base64_encode( openssl_random_pseudo_bytes( 64 ) );
-				}
-				$operations = new WP_Auth0_Api_Operations( $this->a0_options );
-				$response   = $operations->create_wordpress_connection(
-					$this->access_token,
-					$this->hasInternetConnection,
-					'fair',
-					$migration_token
-				);
-
-				$this->a0_options->set( 'migration_ws', $this->hasInternetConnection );
-				$this->a0_options->set( 'migration_token', $migration_token );
-				$this->a0_options->set( 'migration_token_id', null );
-				$this->a0_options->set( 'db_connection_enabled', $response ? 1 : 0 );
-				$this->a0_options->set( 'db_connection_id', $response );
-
-			} else {
-
-				$this->a0_options->set( 'db_connection_enabled', 1 );
-				$this->a0_options->set( 'db_connection_id', $connection_exists );
-
+		if ( $should_create_connection ) {
+			$migration_token = $this->a0_options->get( 'migration_token' );
+			if ( empty( $migration_token ) ) {
+				$migration_token = wp_auth0_url_base64_encode( openssl_random_pseudo_bytes( 64 ) );
 			}
+			$operations = new WP_Auth0_Api_Operations( $this->a0_options );
+			$operations->create_wordpress_connection(
+				$this->access_token,
+				$this->hasInternetConnection,
+				'fair',
+				$migration_token
+			);
+
+			$this->a0_options->set( 'migration_ws', $this->hasInternetConnection );
+			$this->a0_options->set( 'migration_token', $migration_token );
+			$this->a0_options->set( 'migration_token_id', null );
+			$this->a0_options->set( 'db_connection_name', $db_connection_name );
 		}
 
 		/*

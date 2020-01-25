@@ -63,7 +63,6 @@ class WP_Auth0_Api_Client {
 				'domain'        => $a0_options->get( 'domain' ),
 				'client_id'     => $a0_options->get( 'client_id' ),
 				'client_secret' => $a0_options->get( 'client_secret' ),
-				'connection'    => $a0_options->get( 'db_connection_name' ),
 				'app_token'     => null,
 				'audience'      => self::get_endpoint( 'api/v2/' ),
 			];
@@ -325,14 +324,19 @@ class WP_Auth0_Api_Client {
 	 * @param string      $domain - Tenant domain for the Management API.
 	 * @param string      $app_token - Valid Management API token with read:connections scope.
 	 * @param string|null $strategy - Connection strategy to find.
+	 * @param string|null $name - Connection name to find.
 	 *
 	 * @return array|bool|mixed|object
 	 */
-	public static function search_connection( $domain, $app_token, $strategy = null ) {
-		$endpoint = "https://$domain/api/v2/connections";
+	public static function search_connection( $domain, $app_token, $strategy = null, $name = null ) {
 
+		$add_queries = [];
 		if ( $strategy ) {
-			$endpoint .= "?strategy=$strategy";
+			$add_queries['strategy'] = $strategy;
+		}
+
+		if ( $name ) {
+			$add_queries['name'] = $name;
 		}
 
 		$headers = WP_Auth0_Api_Abstract::get_info_headers();
@@ -340,7 +344,7 @@ class WP_Auth0_Api_Client {
 		$headers['Authorization'] = "Bearer $app_token";
 
 		$response = wp_remote_get(
-			$endpoint,
+			add_query_arg( $add_queries, 'https://' . $domain . '/api/v2/connections' ),
 			[
 				'headers' => $headers,
 			]

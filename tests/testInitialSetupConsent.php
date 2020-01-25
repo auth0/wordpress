@@ -114,8 +114,6 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 
 		$this->assertEquals( 'TEST_CLIENT_ID', self::$opts->get( 'client_id' ) );
 		$this->assertEquals( 'TEST_CLIENT_SECRET', self::$opts->get( 'client_secret' ) );
-		$this->assertEquals( 1, self::$opts->get( 'db_connection_enabled' ) );
-		$this->assertEquals( 'TEST_CONN_ID', self::$opts->get( 'db_connection_id' ) );
 
 		$this->assertEmpty( self::$error_log->get() );
 	}
@@ -136,12 +134,8 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$this->http_request_type = [
 			// Successful client creation.
 			'success_create_client',
-			// Get en existing connection enabled for this client.
+			// Get an existing connection enabled for this client.
 			'success_get_connections',
-			// Connection updated successfully.
-			'success_update_connection',
-			// Connection created successfully.
-			'success_create_connection',
 			// Client grant failed.
 			'wp_error',
 		];
@@ -164,9 +158,6 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 
 		$this->assertEquals( 'TEST_CLIENT_ID', self::$opts->get( 'client_id' ) );
 		$this->assertEquals( 'TEST_CLIENT_SECRET', self::$opts->get( 'client_secret' ) );
-		$this->assertEquals( 1, self::$opts->get( 'db_connection_enabled' ) );
-		$this->assertEquals( 'TEST_CREATED_CONN_ID', self::$opts->get( 'db_connection_id' ) );
-		$this->assertGreaterThan( 64, strlen( self::$opts->get( 'migration_token' ) ) );
 		$this->assertEquals( 'DB-' . get_auth0_curatedBlogName(), self::$opts->get( 'db_connection_name' ) );
 
 		$this->assertCount( 1, self::$error_log->get() );
@@ -191,8 +182,6 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 			'success_create_client',
 			// Get en existing connection enabled for this client.
 			'success_get_connections',
-			// Connection updated successfully.
-			'success_update_connection',
 			// Connection created successfully.
 			'success_create_connection',
 			// Client grant created successfully.
@@ -217,8 +206,6 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 
 		$this->assertEquals( 'TEST_CLIENT_ID', self::$opts->get( 'client_id' ) );
 		$this->assertEquals( 'TEST_CLIENT_SECRET', self::$opts->get( 'client_secret' ) );
-		$this->assertEquals( 1, self::$opts->get( 'db_connection_enabled' ) );
-		$this->assertEquals( 'TEST_CREATED_CONN_ID', self::$opts->get( 'db_connection_id' ) );
 		$this->assertEquals( 'TEST_MIGRATION_TOKEN', self::$opts->get( 'migration_token' ) );
 		$this->assertEquals( 'DB-' . get_auth0_curatedBlogName(), self::$opts->get( 'db_connection_name' ) );
 
