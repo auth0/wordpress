@@ -145,6 +145,7 @@ class WP_Auth0_ErrorLog {
 			$new_entry['message'] = is_object( $error ) || is_array( $error ) ? serialize( $error ) : $error;
 		}
 
+		do_action( 'auth0_insert_error', $new_entry, $error, $section );
 		return ( new self )->add( $new_entry );
 	}
 }
