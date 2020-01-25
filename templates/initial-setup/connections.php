@@ -2,20 +2,11 @@
 $options   = WP_Auth0_Options::Instance();
 $next_step = $options->get( 'migration_ws' ) ? 4 : 3;
 ?>
-<div class="a0-wrap">
-
-	<?php
-	require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php';
-
-	if ( ! $options->get( 'migration_ws' ) ) {
-		require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/steps.php';
-	}
-	?>
+<div class="a0-wrap settings wrap">
 
 	<div class="container-fluid">
-		<div class="row">
 
-			<h1><?php _e( 'Configure your Connections', 'wp-auth0' ); ?></h1>
+			<h1><?php _e( 'Step 2:', 'wp-auth0' ); ?> <?php _e( 'Configure your Connections', 'wp-auth0' ); ?></h1>
 
 			<p class="a0-step-text"><?php _e( "If your site visitors already have social network accounts, they can authenticate using their existing credentials, or they can set up a username and password combination safeguarded by Auth0's password policies and brute force protection. To configure these connections, use the Configure Connections button below.", 'wp-auth0' ); ?></p>
 
@@ -42,7 +33,5 @@ $next_step = $options->get( 'migration_ws' ) ? 4 : 3;
 			?>
 			  </a>
 		</div>
-	</div>
-
 	</div>
 </div>

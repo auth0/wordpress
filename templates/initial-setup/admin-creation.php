@@ -2,15 +2,11 @@
 $error        = isset( $_REQUEST['result'] ) && $_REQUEST['result'] === 'error';
 $current_user = wp_get_current_user();
 ?>
-<div class="a0-wrap">
-
-	<?php require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'; ?>
-	<?php require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/steps.php'; ?>
+<div class="a0-wrap settings wrap">
 
   <div class="container-fluid">
-	<div class="row">
 
-	  <h1><?php _e( 'Choose your password', 'wp-auth0' ); ?></h1>
+	  <h1><?php _e( 'Step 3:', 'wp-auth0' ); ?> <?php _e( 'Choose your password', 'wp-auth0' ); ?></h1>
 
 	  <p class="a0-step-text"><?php _e( 'Last step: Auth0 will migrate your own account from the WordPress user database to Auth0. You can choose to use the same password as you currently use, or pick a new one. Either way, Auth0 will link your existing account and its administrative role with the new account in Auth0. Type the password you wish to use for this account below.', 'wp-auth0' ); ?></p>
 
@@ -42,6 +38,5 @@ $current_user = wp_get_current_user();
 
 	  </form>
 
-	</div>
   </div>
 </div>

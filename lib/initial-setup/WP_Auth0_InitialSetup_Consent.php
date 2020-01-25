@@ -33,11 +33,6 @@ class WP_Auth0_InitialSetup_Consent {
 		$this->state                 = $type;
 		$this->hasInternetConnection = $hasInternetConnection;
 
-		if ( ! in_array( $this->state, [ 'social', 'enterprise' ] ) ) {
-			wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=invalid_state' ) );
-			exit;
-		}
-
 		$this->a0_options->set( 'account_profile', $this->state );
 
 		$name = get_auth0_curatedBlogName();

@@ -1,10 +1,6 @@
-<div class="a0-wrap">
+<div class="a0-wrap settings wrap">
 
-  <?php require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'; ?>
-
-  <div class="container-fluid a0-final-step">
-
-	<svg width="90" height="90" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg" class="checkmark"><circle cx="26" cy="26" r="25" fill="none" class="checkmark__circle"/><path fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" class="checkmark__check"/></svg>
+  <div class="container-fluid">
 
 	<h1><?php _e( 'Done! You finished this Setup Wizard', 'wp-auth0' ); ?></h1>
 
