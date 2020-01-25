@@ -19,38 +19,6 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 	use RedirectHelpers;
 
 	/**
-	 * Test that an invalid state is redirected to the right place.
-	 */
-	public function testThatInvalidStateRedirectsProperly() {
-		$this->startRedirectHalting();
-
-		$setup_consent = new WP_Auth0_InitialSetup_Consent( self::$opts );
-		$test_domain   = 'test-wp.auth0.com';
-		$test_token    = implode( '.', [ uniqid(), uniqid(), uniqid() ] );
-
-		$caught_redirect = [];
-		try {
-			$setup_consent->callback_with_token( $test_domain, $test_token, 'invalid_state' );
-		} catch ( Exception $e ) {
-			$caught_redirect = unserialize( $e->getMessage() );
-		}
-
-		$this->assertNotEmpty( $caught_redirect );
-		$this->assertEquals( 302, $caught_redirect['status'] );
-
-		$redirect_url = parse_url( $caught_redirect['location'] );
-
-		$this->assertEquals( '/wp-admin/admin.php', $redirect_url['path'] );
-		$this->assertContains( 'page=wpa0-setup', $redirect_url['query'] );
-		$this->assertContains( 'error=invalid_state', $redirect_url['query'] );
-
-		$this->assertEquals( $test_domain, self::$opts->get( 'domain' ) );
-		$this->assertNull( self::$opts->get( 'auth0_app_token' ) );
-
-		$this->assertEmpty( self::$error_log->get() );
-	}
-
-	/**
 	 * Test that the create client call is made.
 	 */
 	public function testThatClientCreationIsAttempted() {

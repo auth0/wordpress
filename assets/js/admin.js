@@ -163,34 +163,6 @@ jQuery(document).ready(function($) {
         }, 'json');
     } );
 
-    /*
-    Initial setup
-     */
-    $('.js-a0-setup-input').keydown(function(e){
-        // Do not submit the form if the enter key is pressed.
-        if(13 === e.keyCode) {
-            e.preventDefault();
-            return false;
-        }
-    });
-
-    $('.js-a0-select-setup').click(function (e) {
-        e.preventDefault();
-        $('#profile-type').val($(this).attr('data-profile-type'));
-        $('#connectionSelectedModal').modal();
-    });
-
-    $('#manuallySetToken').click(function (e) {
-        e.preventDefault();
-        $('#enterTokenModal').modal();
-        $('#connectionSelectedModal').modal('hide');
-    });
-
-    $('#automaticSetup').click(function (e) {
-        e.preventDefault();
-        $('#profile-form').submit();
-    });
-
   /**
    * Show a JS confirm box to give a chance to cancel an on-page action.
    *

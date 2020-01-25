@@ -4,7 +4,6 @@ class WP_Auth0_InitialSetup {
 
 	protected $a0_options;
 	protected $connection_profile;
-	protected $enterprise_connection_step;
 	protected $adminuser_step;
 	protected $connections_step;
 	protected $end_step;
@@ -12,11 +11,10 @@ class WP_Auth0_InitialSetup {
 	public function __construct( WP_Auth0_Options $a0_options ) {
 		$this->a0_options = $a0_options;
 
-		$this->connection_profile         = new WP_Auth0_InitialSetup_ConnectionProfile( $this->a0_options );
-		$this->enterprise_connection_step = new WP_Auth0_InitialSetup_EnterpriseConnection( $this->a0_options );
-		$this->adminuser_step             = new WP_Auth0_InitialSetup_AdminUser( $this->a0_options );
-		$this->connections_step           = new WP_Auth0_InitialSetup_Connections( $this->a0_options );
-		$this->end_step                   = new WP_Auth0_InitialSetup_End( $this->a0_options );
+		$this->connection_profile = new WP_Auth0_InitialSetup_ConnectionProfile( $this->a0_options );
+		$this->adminuser_step     = new WP_Auth0_InitialSetup_AdminUser( $this->a0_options );
+		$this->connections_step   = new WP_Auth0_InitialSetup_Connections( $this->a0_options );
+		$this->end_step           = new WP_Auth0_InitialSetup_End( $this->a0_options );
 	}
 
 	public function notify_error() {
@@ -25,8 +23,7 @@ class WP_Auth0_InitialSetup {
 
 	public function render_setup_page() {
 
-		$step    = ( isset( $_REQUEST['step'] ) ? $_REQUEST['step'] : 1 );
-		$profile = ( isset( $_REQUEST['profile'] ) ? $_REQUEST['profile'] : null );
+		$step = ( isset( $_REQUEST['step'] ) ? $_REQUEST['step'] : 1 );
 
 		if ( is_numeric( $step ) && $step >= 1 && $step <= 6 ) {
 
@@ -42,19 +39,11 @@ class WP_Auth0_InitialSetup {
 					break;
 
 				case 2:
-					if ( $profile == 'social' ) {
-						$this->connections_step->render( $step );
-					} elseif ( $profile == 'enterprise' ) {
-						$this->enterprise_connection_step->render( $step );
-					}
+					$this->connections_step->render( $step );
 					break;
 
 				case 3:
-					if ( $profile == 'social' ) {
-						$this->adminuser_step->render( $step );
-					} elseif ( $profile == 'enterprise' ) {
-						// $this->connections_step->render($step);
-					}
+					$this->adminuser_step->render( $step );
 					break;
 
 				case 4:

@@ -4,8 +4,6 @@ $constant_keys = $opts->get_all_constant_keys();
 ?>
 <div class="a0-wrap settings wrap">
 
-	<?php require WPA0_PLUGIN_DIR . 'templates/initial-setup/partials/header.php'; ?>
-
   <div class="container-fluid">
 
 	  <h1><?php _e( 'Import and Export Settings', 'wp-auth0' ); ?></h1>
