@@ -57,12 +57,6 @@
 		</a>
 
 	  </div>
-		<div class="a0-step-text a0-message a0-tip">
-			<b><?php _e( 'Pro Tip', 'wp-auth0' ); ?>:</b>
-			<?php _e( 'Already set up another WordPress instance with Auth0? ', 'wp-auth0' ); ?>
-			<a href="<?php echo admin_url( 'admin.php?page=wpa0-import-settings' ); ?>"><?php _e( 'Click here', 'wp-auth0' ); ?></a>
-			<?php _e( ' to save time and import existing Auth0 settings.', 'wp-auth0' ); ?>
-		</div>
 
 		<form action="options.php" method="POST">
 			<input type="hidden" name="action" value="wpauth0_callback_step1" />
@@ -104,18 +98,22 @@
 			<?php _e( 'More information here.', 'wp-auth0' ); ?>
 				</a>
 			</p>
-
-			<p>
-				<a class="a0-button primary submit" href="#" id="automaticSetup">
-			<?php _e( 'Start User Migration Setup', 'wp-auth0' ); ?>
-				</a>
-			</p>
+			<p><input type="submit" class="a0-button primary" value="<?php _e( 'Start User Migration Setup', 'wp-auth0' ); ?>"/></p>
 		</form>
 
 		<h3><?php _e( 'Manual Setup', 'wp-auth0' ); ?></h3>
 		<p><?php _e( 'If you already have an Application or want to use an existing database connection, please follow the steps below.', 'wp-auth0' ); ?></p>
 		<p><a class="a0-button primary" href="https://auth0.com/docs/cms/wordpress/installation#manual-setup"
 			  target="_blank"><?php _e( 'Manual Setup Instructions', 'wp-auth0' ); ?></a></p>
+
+		<h3><?php _e( 'Import Setup', 'wp-auth0' ); ?></h3>
+		<p>
+			<?php _e( 'Already set up another WordPress instance with Auth0?.', 'wp-auth0' ); ?>
+			<?php _e( 'Save time and import existing Auth0 settings.', 'wp-auth0' ); ?>
+		</p>
+
+		<p><a class="a0-button primary" href="<?php echo admin_url( 'admin.php?page=wpa0-import-settings' ); ?>">
+						<?php _e( 'Import Settings', 'wp-auth0' ); ?></a></p>
 
 		<?php endif; ?>
   </div>
