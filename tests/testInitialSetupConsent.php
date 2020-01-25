@@ -111,7 +111,6 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$this->assertEquals( '/wp-admin/admin.php', $redirect_url['path'] );
 		$this->assertContains( 'page=wpa0-setup', $redirect_url['query'] );
 		$this->assertContains( 'step=2', $redirect_url['query'] );
-		$this->assertContains( 'profile=social', $redirect_url['query'] );
 
 		$this->assertEquals( 'TEST_CLIENT_ID', self::$opts->get( 'client_id' ) );
 		$this->assertEquals( 'TEST_CLIENT_SECRET', self::$opts->get( 'client_secret' ) );
@@ -215,7 +214,6 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$this->assertEquals( '/wp-admin/admin.php', $redirect_url['path'] );
 		$this->assertContains( 'page=wpa0-setup', $redirect_url['query'] );
 		$this->assertContains( 'step=2', $redirect_url['query'] );
-		$this->assertContains( 'profile=social', $redirect_url['query'] );
 
 		$this->assertEquals( 'TEST_CLIENT_ID', self::$opts->get( 'client_id' ) );
 		$this->assertEquals( 'TEST_CLIENT_SECRET', self::$opts->get( 'client_secret' ) );
