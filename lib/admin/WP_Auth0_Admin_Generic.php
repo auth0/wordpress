@@ -8,14 +8,6 @@ class WP_Auth0_Admin_Generic {
 
 	protected $_option_name;
 
-	/**
-	 * Description to show on the settings tab.
-	 * Set in the constructor to be able to use translations.
-	 *
-	 * @var string
-	 */
-	protected $_description = '';
-
 	protected $_textarea_rows = 4;
 
 	/**
@@ -49,7 +41,7 @@ class WP_Auth0_Admin_Generic {
 		add_settings_section(
 			$section_id,
 			$section_name,
-			[ $this, 'render_description' ],
+			null,
 			$options_name
 		);
 
@@ -71,15 +63,6 @@ class WP_Auth0_Admin_Generic {
 					'opt_name'  => isset( $setting['opt'] ) ? $setting['opt'] : null,
 				]
 			);
-		}
-	}
-
-	/**
-	 * Render description at the top of the settings block
-	 */
-	public function render_description() {
-		if ( ! empty( $this->_description ) ) {
-			printf( '<p class="a0-step-text">%s</p>', $this->_description );
 		}
 	}
 

@@ -69,15 +69,6 @@ jQuery(document).ready(function($) {
     });
 
     /*
-    Import and Export settings tabs
-     */
-
-    $('.js-a0-import-export-tabs').click(function (e) {
-        e.preventDefault();
-        $(this).tab('show');
-    });
-
-    /*
     Admin settings tab switching
      */
     var currentTab;
@@ -91,22 +82,45 @@ jQuery(document).ready(function($) {
         currentTab = 'features';
     }
 
-    // Uses the Bootstrap tab plugin
-    $('#tab-' + currentTab).tab('show');
+    togglePanelVisibility(currentTab);
+    togglePanelVisibility('import');
 
     // Controls whether the submit button is showing or not
     var $settingsForm = $( '#js-a0-settings-form' );
     $settingsForm.attr( 'data-tab-showing', currentTab );
 
     // Set the tab showing on the form and persist the tab
-    $( '.js-a0-settings-tabs' ).click( function () {
+    $( '.js-a0-settings-tabs' ).click( function (e) {
+        e.preventDefault();
         window.location.hash = '';
-        var tabHref = $( this ).attr( 'aria-controls' ).trim();
-        $settingsForm.attr( 'data-tab-showing', tabHref );
+        var tabName = $( this ).attr( 'id' ).trim().replace( 'tab-', '' );
+        $settingsForm.attr( 'data-tab-showing', tabName );
+
         if ( localStorageAvailable() ) {
-            window.localStorage.setItem( 'Auth0WPSettingsTab', tabHref );
+            window.localStorage.setItem( 'Auth0WPSettingsTab', tabName );
         }
+
+        togglePanelVisibility(tabName);
     } );
+
+    // Set the tab showing on the form and persist the tab
+    $( '.js-a0-import-export-tabs' ).click( function (e) {
+        e.preventDefault();
+        window.location.hash = '';
+        var tabName = $( this ).attr( 'id' ).trim().replace( 'tab-', '' );
+        togglePanelVisibility(tabName);
+    } );
+
+    function togglePanelVisibility(activeId) {
+      var $showPanel = $('#panel-' + activeId);
+      if (!$showPanel.length) {
+        return;
+      }
+      $('.tab-pane').hide();
+      $('.nav-tabs a').removeClass( 'a0-active-tab' );
+      $showPanel.show();
+      $('#tab-' + activeId).addClass( 'a0-active-tab' );
+    }
 
     /*
     Clear cache button on Basic settings page
