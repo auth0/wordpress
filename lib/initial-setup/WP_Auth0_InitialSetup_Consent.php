@@ -33,8 +33,6 @@ class WP_Auth0_InitialSetup_Consent {
 		$this->state                 = $type;
 		$this->hasInternetConnection = $hasInternetConnection;
 
-		$this->a0_options->set( 'account_profile', $this->state );
-
 		$name = get_auth0_curatedBlogName();
 		$this->consent_callback( $name );
 
@@ -191,7 +189,7 @@ class WP_Auth0_InitialSetup_Consent {
 			exit;
 		}
 
-		wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=2&profile=' . $this->state ) );
+		wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=2' ) );
 		exit;
 	}
 }

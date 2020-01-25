@@ -5,16 +5,6 @@
   margin: 30px auto;
 }
 
-.modal-open {
-
-  .modal{
-    background: rgba(0,0,0,0.5)
-  }
-
-  .modal-backdrop{
-    display: none
-  }
-}
 
 #wpwrap {
 
@@ -25,12 +15,6 @@
 
     a, .link {
       color:aText;
-    }
-
-    .row > .a0-separator ,
-    .a0-feedback > .a0-separator {
-      border-bottom:1px solid separatorBorder;
-      margin:30px 0;
     }
 
     .a0-header {
@@ -45,10 +29,6 @@
         height:55px;
         margin: 30px auto;
       }
-    }
-
-    .modal-body.no-padding-bottom {
-      padding-bottom:0;
     }
 
     #connections .loading {
@@ -115,7 +95,7 @@
     }
 
     code {
-      background: #f1f1f1;
+      background: #e1e1e1;
       color: #777;
       line-height: 2em;
 
@@ -134,21 +114,6 @@
       font-size: 12px;
       line-height: 19px;
       padding: 10px;
-    }
-
-    .modal-dialog {
-      input[type=text],
-      input[type=password],
-      input[type=url],
-      textarea {
-        border:1px solid settingsInputBorder;
-        line-height: 1em;
-        height: 40px;
-        padding: 0 10px;
-        border-radius: 3px 3px 3px 3px;
-        width: 100%;
-        color:text;
-      }
     }
 
     .a0-buttons {
@@ -171,29 +136,6 @@
 
     .container-fluid {
       max-width:750px;
-    }
-
-    .modal-dialog {
-      margin: 100px auto;
-    }
-
-    .modal-body {
-      padding:30px;
-      font-size:16px;
-    }
-
-    .modal-header {
-      h4 {
-        text-align:center;
-        font-weight:bold;
-      }
-      .close {
-        margin-top: 2px;
-      }
-    }
-
-    .modal-footer {
-      padding:25px;
     }
 
     .bg-danger {
@@ -409,63 +351,6 @@
       line-height: 12px;
       padding: 10px 15px;
     }
-  }
-
-  .modal-content {
-    .a0-message {
-      margin:20px 0;
-    }
-
-    .link {
-      line-height: 25px;
-      margin-bottom: 20px;
-      cursor:pointer;
-    }
-  }
-
-  .a0-profiles {
-    margin-top: 30px;
-    margin-bottom: 30px;
-
-    @media (min-width: 768px) {
-      .col:nth-of-type(1) {
-        padding-left: 0;
-        padding-right: 10px;
-      }
-      .col:nth-of-type(2) {
-        padding-left: 10px;
-        padding-right: 0;
-      }
-    }
-
-    .profile {
-      background-color: profileBG;
-      border-radius: 3px;
-      padding:25px;
-      text-align: center;
-      margin-bottom:20px;
-
-      h2 {
-        font-size: 22px;
-      }
-
-      p {
-        font-size: 14px;
-        margin: 20px 10px;
-        min-height: 6em;
-      }
-
-      img {
-        width: 100px;
-        height: 100px;
-        border-radius:50px;
-        margin-bottom: 20px;
-      }
-    }
-  }
-
-  .modal-footer {
-    text-align:center;
   }
 
   .enterprise-connections {

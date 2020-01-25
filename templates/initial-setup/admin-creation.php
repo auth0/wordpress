@@ -33,7 +33,7 @@ $current_user = wp_get_current_user();
 		<div class="a0-buttons">
 		  <input type="hidden" name="action" value="wpauth0_callback_step3_social" />
 		  <input type="submit" class="a0-button primary" value="<?php _e( 'Submit', 'wp-auth0' ); ?>" />
-		  <a href="<?php echo admin_url( 'admin.php?page=wpa0-setup&step=4&profile=social' ); ?>"class="a0-button link"><?php _e( 'Skip this step', 'wp-auth0' ); ?></a>
+		  <a href="<?php echo admin_url( 'admin.php?page=wpa0-setup&step=4' ); ?>"class="a0-button link"><?php _e( 'Skip this step', 'wp-auth0' ); ?></a>
 		</div>
 
 	  </form>

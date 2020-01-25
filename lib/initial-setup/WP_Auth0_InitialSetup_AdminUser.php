@@ -26,7 +26,7 @@ class WP_Auth0_InitialSetup_AdminUser {
 		$admin_user = WP_Auth0_Api_Client::signup_user( $this->a0_options->get_auth_domain(), $data );
 
 		if ( $admin_user === false ) {
-			wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=3&profile=social&result=error' ) );
+			wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=3&result=error' ) );
 		} else {
 
 			$admin_user->sub = 'auth0|' . $admin_user->_id;
@@ -35,7 +35,7 @@ class WP_Auth0_InitialSetup_AdminUser {
 			$user_repo = new WP_Auth0_UsersRepo( WP_Auth0_Options::Instance() );
 			$user_repo->update_auth0_object( $current_user->ID, $admin_user );
 
-			wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=4&profile=social' ) );
+			wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=4' ) );
 		}
 		exit;
 	}

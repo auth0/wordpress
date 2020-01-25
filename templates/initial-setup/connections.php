@@ -25,7 +25,7 @@ $next_step = $options->get( 'migration_ws' ) ? 4 : 3;
 			  </a>
 			<a class="a0-button primary" href="
 			<?php
-			echo admin_url( "admin.php?page=wpa0-setup&step={$next_step}&profile=social" );
+			echo admin_url( "admin.php?page=wpa0-setup&step={$next_step}" );
 			?>
 			" >
 			<?php

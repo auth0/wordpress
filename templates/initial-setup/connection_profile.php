@@ -64,9 +64,7 @@
 			<?php _e( ' to save time and import existing Auth0 settings.', 'wp-auth0' ); ?>
 		</div>
 
-	<div class="a0-profiles">
-
-		<form action="options.php" method="POST" id="profile-form">
+		<form action="options.php" method="POST">
 			<input type="hidden" name="action" value="wpauth0_callback_step1" />
 			<h3><?php _e( 'Standard Setup', 'wp-auth0' ); ?></h3>
 			<p>
@@ -96,7 +94,7 @@
 			<p><input type="submit" class="a0-button primary" value="<?php _e( 'Start Standard Setup', 'wp-auth0' ); ?>"/></p>
 		</form>
 
-		<form action="options.php" method="POST" id="profile-form">
+		<form action="options.php" method="POST">
 			<input type="hidden" name="action" value="wpauth0_callback_step1"/>
 			<h3><?php _e( 'User Migration Setup', 'wp-auth0' ); ?></h3>
 			<p>
@@ -118,7 +116,7 @@
 		<p><?php _e( 'If you already have an Application or want to use an existing database connection, please follow the steps below.', 'wp-auth0' ); ?></p>
 		<p><a class="a0-button primary" href="https://auth0.com/docs/cms/wordpress/installation#manual-setup"
 			  target="_blank"><?php _e( 'Manual Setup Instructions', 'wp-auth0' ); ?></a></p>
-	</div>
+
 		<?php endif; ?>
   </div>
 </div>

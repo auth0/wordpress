@@ -16,35 +16,29 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
 
 	public function callback() {
 
-		$type = null;
-
-		if ( isset( $_POST['profile-type'] ) ) {
-			$type = strtolower( $_POST['profile-type'] );
-		}
-
 		if ( isset( $_REQUEST['apitoken'] ) && ! empty( $_REQUEST['apitoken'] ) ) {
 
 			$token  = $_REQUEST['apitoken'];
 			$domain = $_REQUEST['domain'];
 
 			$consent_callback = new WP_Auth0_InitialSetup_Consent( $this->a0_options );
-			$consent_callback->callback_with_token( $domain, $token, $type, false );
+			$consent_callback->callback_with_token( $domain, $token, null, false );
 
 		} else {
-			$consent_url = $this->build_consent_url( $type );
+			$consent_url = $this->build_consent_url();
 			wp_redirect( $consent_url );
 		}
 		exit();
 	}
 
-	public function build_consent_url( $type ) {
+	public function build_consent_url() {
 		$callback_url = urlencode( admin_url( 'admin.php?page=wpa0-setup&callback=1' ) );
 
 		$client_id = urlencode( get_bloginfo( 'url' ) );
 
 		$scope = urlencode( implode( ' ', WP_Auth0_Api_Client::ConsentRequiredScopes() ) );
 
-		$url = "https://{$this->domain}/authorize?client_id={$client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}&expiration=9999999999&state={$type}";
+		$url = "https://{$this->domain}/authorize?client_id={$client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}&expiration=9999999999";
 
 		return $url;
 	}
