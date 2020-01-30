@@ -34,13 +34,13 @@ class TestEmbedWidget extends WP_Auth0_Test_Case {
 	public function testThatInvalidDictJsonIsRevertedToPreviousValue() {
 		$widget    = new WP_Auth0_Embed_Widget();
 		$new_opts  = [
-			'dict'       => uniqid(),
+			'dict'       => '__test_new_value__',
 			'extra_conf' => '',
 		];
-		$old_opts  = [ 'dict' => uniqid() ];
+		$old_opts  = [ 'dict' => '__test_old_value__' ];
 		$validated = $widget->update( $new_opts, $old_opts );
 
-		$this->assertEquals( $old_opts['dict'], $validated['dict'] );
+		$this->assertEquals( '__test_old_value__', $validated['dict'] );
 	}
 
 	public function testThatEmptyDictJsonIsAccepted() {
