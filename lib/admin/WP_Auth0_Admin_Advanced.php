@@ -386,9 +386,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$input['lock_connections'] = isset( $input['lock_connections'] ) ?
 			trim( $input['lock_connections'] ) : '';
 
-		$input['custom_signup_fields'] = isset( $input['custom_signup_fields'] ) ?
-			trim( $input['custom_signup_fields'] ) : '';
-
 		$input['extra_conf'] = isset( $input['extra_conf'] ) ? trim( $input['extra_conf'] ) : '';
 		if ( ! empty( $input['extra_conf'] ) ) {
 			if ( json_decode( $input['extra_conf'] ) === null ) {

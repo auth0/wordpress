@@ -174,6 +174,7 @@ class WP_Auth0_DBManager {
 			$options->remove( 'custom_js' );
 			$options->remove( 'auth0_implicit_workflow' );
 			$options->remove( 'client_secret_b64_encoded' );
+			$options->remove( 'custom_signup_fields' );
 		}
 
 		$options->update_all();
