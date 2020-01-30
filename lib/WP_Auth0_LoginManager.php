@@ -523,8 +523,7 @@ class WP_Auth0_LoginManager {
 		$expectedIss = 'https://' . $this->a0_options->get( 'domain' ) . '/';
 		$expectedAlg = $this->a0_options->get( 'client_signing_algorithm' );
 		if ( 'RS256' === $expectedAlg ) {
-			$jwks        = ( new WP_Auth0_JwksFetcher() )->getKeys();
-			$sigVerifier = new WP_Auth0_AsymmetricVerifier( $jwks );
+			$sigVerifier = new WP_Auth0_AsymmetricVerifier( new WP_Auth0_JwksFetcher() );
 		} elseif ( 'HS256' === $expectedAlg ) {
 			$sigVerifier = new WP_Auth0_SymmetricVerifier( $this->a0_options->get( 'client_secret' ) );
 		} else {

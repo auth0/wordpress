@@ -34,12 +34,31 @@ class WP_Auth0_JwksFetcher {
 	}
 
 	/**
+	 * Get a key using a kid.
+	 *
+	 * @param string $kid Key ID to get.
+	 *
+	 * @return string
+	 */
+	public function getKey( string $kid ) {
+		$keys = $this->getKeys();
+
+		if ( ! empty( $keys ) && empty( $keys[ $kid ] ) ) {
+			$keys = $this->getKeys( false );
+		}
+
+		return $keys[ $kid ] ?? null;
+	}
+
+	/**
 	 * Gets an array of keys from the JWKS as kid => x5c.
+	 *
+	 * @param bool $use_cache Defaults to true to use a cached value.
 	 *
 	 * @return array
 	 */
-	public function getKeys() : array {
-		$keys = get_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
+	public function getKeys( $use_cache = true ) : array {
+		$keys = $use_cache ? get_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME ) : [];
 		if ( is_array( $keys ) && ! empty( $keys ) ) {
 			return $keys;
 		}
