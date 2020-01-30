@@ -635,7 +635,7 @@ add_filter( 'login_url', 'wp_auth0_filter_login_override_url', 100 );
  */
 function wp_auth0_filter_login_override_form() {
 	if ( wp_auth0_can_show_wp_login_form() && isset( $_REQUEST['wle'] ) ) {
-		$wle_encoded = esc_attr($_REQUEST['wle']);
+		$wle_encoded = esc_attr( $_REQUEST['wle'] );
 		printf( '<input type="hidden" name="wle" value="%s" />', $wle_encoded );
 	}
 }

@@ -101,7 +101,7 @@ class TestAdminAppearanceValidation extends WP_Auth0_Test_Case {
 	public function testThatLanguageDictIsPreviousValIfInvalidJson() {
 		$validated = self::$admin->basic_validation(
 			[ 'language_dictionary' => '{"previous":"value"}' ],
-			[ 'language_dictionary' => uniqid() ]
+			[ 'language_dictionary' => '{"new":value"}' ]
 		);
 		$this->assertEquals( '{"previous":"value"}', $validated['language_dictionary'] );
 
