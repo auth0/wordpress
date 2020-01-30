@@ -392,7 +392,6 @@ class WP_Auth0_Options {
 			'gravatar'                  => true,
 			'username_style'            => '',
 			'primary_color'             => '',
-			'custom_signup_fields'      => '',
 			'extra_conf'                => '',
 			'custom_cdn_url'            => null,
 			'cdn_url'                   => WPA0_LOCK_CDN_URL,

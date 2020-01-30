@@ -58,12 +58,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 				'function' => 'render_primary_color',
 			],
 			[
-				'name'     => __( 'Custom Signup Fields', 'wp-auth0' ),
-				'opt'      => 'custom_signup_fields',
-				'id'       => 'wpa0_custom_signup_fields',
-				'function' => 'render_custom_signup_fields',
-			],
-			[
 				'name'     => __( 'Extra Settings', 'wp-auth0' ),
 				'opt'      => 'extra_conf',
 				'id'       => 'wpa0_extra_conf',
@@ -284,26 +278,6 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$this->render_field_description(
 			__( 'Valid JSON for Lock options configuration; will override all options set elsewhere. ', 'wp-auth0' ) .
 			$this->get_docs_link( 'libraries/lock/customization', 'See options and examples' )
-		);
-	}
-
-	/**
-	 * Render form field and description for the `custom_signup_fields` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_custom_signup_fields( $args = [] ) {
-		$this->render_textarea_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'Valid array of JSON objects for additional signup fields in the Auth0 signup form. ', 'wp-auth0' ) .
-			$this->get_docs_link(
-				'libraries/lock/v11/configuration#additionalsignupfields-array-',
-				__( 'More information and examples', 'wp-auth0' )
-			)
 		);
 	}
 
