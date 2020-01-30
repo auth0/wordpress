@@ -43,14 +43,14 @@ class WP_Auth0_InitialSetup_Consent {
 		$access_token = $this->exchange_code();
 
 		if ( $access_token === null ) {
-			wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=cant_exchange_token' ) );
+			wp_safe_redirect( admin_url( 'admin.php?page=wpa0-setup&error=cant_exchange_token' ) );
 			exit;
 		}
 
 		$app_domain = $this->parse_token_domain( $access_token );
 
 		if ( ! isset( $_REQUEST['state'] ) ) {
-			wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=missing_state' ) );
+			wp_safe_redirect( admin_url( 'admin.php?page=wpa0-setup&error=missing_state' ) );
 			exit;
 		}
 
@@ -105,7 +105,7 @@ class WP_Auth0_InitialSetup_Consent {
 			$client_response = WP_Auth0_Api_Client::create_client( $domain, $this->access_token, $name );
 
 			if ( $client_response === false ) {
-				wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=cant_create_client' ) );
+				wp_safe_redirect( admin_url( 'admin.php?page=wpa0-setup&error=cant_create_client' ) );
 				exit;
 			}
 
@@ -154,11 +154,11 @@ class WP_Auth0_InitialSetup_Consent {
 		$grant_response = WP_Auth0_Api_Client::create_client_grant( $this->access_token, $client_id );
 
 		if ( false === $grant_response ) {
-			wp_redirect( admin_url( 'admin.php?page=wpa0-setup&error=cant_create_client_grant' ) );
+			wp_safe_redirect( admin_url( 'admin.php?page=wpa0-setup&error=cant_create_client_grant' ) );
 			exit;
 		}
 
-		wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=2' ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=wpa0-setup&step=2' ) );
 		exit;
 	}
 }

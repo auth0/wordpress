@@ -110,7 +110,7 @@ class WP_Auth0_LoginManager {
 
 		// No need to process a login if the user is already logged in and there is no error.
 		if ( is_user_logged_in() ) {
-			wp_redirect( $this->a0_options->get( 'default_login_redirection' ) );
+			wp_safe_redirect( $this->a0_options->get( 'default_login_redirection' ) );
 			exit;
 		}
 
@@ -373,13 +373,13 @@ class WP_Auth0_LoginManager {
 			$return_to    = apply_filters( 'auth0_slo_return_to', home_url() );
 			$redirect_url = $this->auth0_logout_url( $return_to );
 			$redirect_url = apply_filters( 'auth0_logout_url', $redirect_url );
-			wp_redirect( $redirect_url );
+			wp_safe_redirect( $redirect_url );
 			exit;
 		}
 
 		// If auto-login is in use, cannot redirect back to login page.
 		if ( $this->a0_options->get( 'auto_login' ) ) {
-			wp_redirect( home_url() );
+			wp_safe_redirect( home_url() );
 			exit;
 		}
 	}

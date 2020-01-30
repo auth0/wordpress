@@ -152,6 +152,16 @@ add_action( 'activated_plugin', 'wp_auth0_activated_plugin_redirect' );
  * Core WP hooks
  */
 
+function wp_auth0_add_allowed_redirect_hosts( $hosts ) {
+	$hosts[] = 'auth0.auth0.com';
+	$hosts[] = wp_auth0_get_option( 'domain' );
+	$hosts[] = wp_auth0_get_option( 'custom_domain' );
+	$hosts[] = wp_auth0_get_option( 'auth0_server_domain' );
+	return $hosts;
+}
+
+add_filter( 'allowed_redirect_hosts', 'wp_auth0_add_allowed_redirect_hosts' );
+
 /**
  * Enqueue login page CSS if plugin is configured.
  */
@@ -457,7 +467,7 @@ add_action( 'wp_ajax_auth0_delete_data', 'wp_auth0_delete_user_data' );
 function wp_auth0_init_admin_menu() {
 
 	if ( wp_auth0_is_admin_page( 'wpa0-help' ) ) {
-		wp_redirect( admin_url( 'admin.php?page=wpa0#help' ), 301 );
+		wp_safe_redirect( admin_url( 'admin.php?page=wpa0#help' ), 301 );
 		exit;
 	}
 

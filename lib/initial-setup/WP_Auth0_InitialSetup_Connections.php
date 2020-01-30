@@ -13,11 +13,11 @@ class WP_Auth0_InitialSetup_Connections {
 	}
 
 	public function callback() {
-		wp_redirect( admin_url( 'admin.php?page=wpa0-setup&step=5' ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=wpa0-setup&step=5' ) );
 	}
 
 	public function add_validation_error( $error ) {
-		wp_redirect(
+		wp_safe_redirect(
 			admin_url(
 				'admin.php?page=wpa0-setup&step=5&error=' .
 				urlencode( 'There was an error setting up your connections.' )
