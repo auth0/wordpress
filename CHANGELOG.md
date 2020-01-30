@@ -1,5 +1,11 @@
 # Change Log
 
+## [3.11.3](https://github.com/auth0/wp-auth0/tree/3.11.3) (2020-01-30)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.11.2...3.11.3)
+
+**Security**
+- Fix potential XSS on wp-login.php override page [\#768](https://github.com/auth0/wp-auth0/pull/768) ([kinabalu](https://github.com/kinabalu))
+
 ## [3.11.2](https://github.com/auth0/wp-auth0/tree/3.11.2) (2020-01-17)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.11.1...3.11.2)
 

@@ -120,11 +120,8 @@ All is not lost!
 
 == Changelog ==
 
-**v3.11.2**
+**v3.11.3**
 
-- Add path to functions.php include [\#759](https://github.com/auth0/wp-auth0/pull/759) ([joshcanhelp](https://github.com/joshcanhelp))
-- Patch samesite for implicit [\#758](https://github.com/auth0/wp-auth0/pull/758) ([joshcanhelp](https://github.com/joshcanhelp))
-
-**Important note for sites using the Implicit Login Flow setting**: The upcoming changes to SameSite handling in multiple browsers will require sites using the Implicit Login Flow setting to also be served on a secure channel (callback URL using "https"). This setting will be removed in the upcoming major version but is patched for sites that need time to migrate.
+- Fix potential XSS on wp-login.php override page [\#768](https://github.com/auth0/wp-auth0/pull/768)
 
 [Complete list of changes for this and other releases](https://github.com/auth0/wp-auth0/releases)
