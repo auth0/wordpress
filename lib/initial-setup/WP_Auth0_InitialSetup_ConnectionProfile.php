@@ -3,11 +3,11 @@
 class WP_Auth0_InitialSetup_ConnectionProfile {
 
 	protected $a0_options;
-	protected $domain = 'auth0.auth0.com';
+	protected $domain;
 
 	public function __construct( WP_Auth0_Options $a0_options ) {
 		$this->a0_options = $a0_options;
-		$this->domain     = $this->a0_options->get( 'auth0_server_domain' );
+		$this->domain     = $this->a0_options->get( 'auth0_server_domain', 'auth0.auth0.com' );
 	}
 
 	public function render( $step ) {
@@ -26,7 +26,7 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
 
 		} else {
 			$consent_url = $this->build_consent_url();
-			wp_redirect( $consent_url );
+			wp_safe_redirect( $consent_url );
 		}
 		exit();
 	}
