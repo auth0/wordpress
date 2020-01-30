@@ -57,7 +57,7 @@ class TestApiGetJwks extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that a network error (caught by WP and returned as a WP_Error) is handled properly.
+	 * Test that an Auth0 API error (caught by WP and returned as a WP_Error) is handled properly.
 	 */
 	public function testThatApiErrorIsHandled() {
 		$this->startHttpMocking();
@@ -74,7 +74,7 @@ class TestApiGetJwks extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that a network error (caught by WP and returned as a WP_Error) is handled properly.
+	 * Test that a successful call is handled correctly.
 	 */
 	public function testThatSuccessfulCallIsReturned() {
 		$this->startHttpMocking();

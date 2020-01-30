@@ -18,7 +18,6 @@ use Lcobucci\JWT\Token;
  */
 final class WP_Auth0_AsymmetricVerifier extends WP_Auth0_SignatureVerifier {
 
-
 	/**
 	 * JWKS array with kid as keys, PEM cert as values.
 	 *
@@ -29,9 +28,9 @@ final class WP_Auth0_AsymmetricVerifier extends WP_Auth0_SignatureVerifier {
 	/**
 	 * JwksVerifier constructor.
 	 *
-	 * @param array $jwks JWKS to use.
+	 * @param WP_Auth0_JwksFetcher $jwks WP_Auth0_JwksFetcher to use.
 	 */
-	public function __construct( array $jwks ) {
+	public function __construct( WP_Auth0_JwksFetcher $jwks ) {
 		$this->jwks = $jwks;
 		parent::__construct( 'RS256' );
 	}
@@ -46,11 +45,14 @@ final class WP_Auth0_AsymmetricVerifier extends WP_Auth0_SignatureVerifier {
 	 * @throws WP_Auth0_InvalidIdTokenException If ID token kid was not found in the JWKS.
 	 */
 	protected function checkSignature( Token $token ) : bool {
-		$tokenKid = $token->getHeader( 'kid', false );
-		if ( ! array_key_exists( $tokenKid, $this->jwks ) ) {
-			throw new WP_Auth0_InvalidIdTokenException( 'Could not find a public key for Key ID (kid) "' . $tokenKid . '"' );
+		$token_kid   = $token->getHeader( 'kid', false );
+		$signing_key = $this->jwks->getKey( $token_kid );
+		if ( ! $signing_key ) {
+			throw new WP_Auth0_InvalidIdTokenException(
+				'Could not find a public key for Key ID (kid) "' . $token_kid . '"'
+			);
 		}
 
-		return $token->verify( new RsSigner(), new Key( $this->jwks[ $tokenKid ] ) );
+		return $token->verify( new RsSigner(), new Key( $signing_key ) );
 	}
 }

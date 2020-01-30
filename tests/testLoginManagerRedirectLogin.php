@@ -89,18 +89,28 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 	 * @throws Exception - If set to halt on response.
 	 */
 	public function httpMock( $response_type = null, array $args = null, $url = null ) {
-		$response_type = $response_type ?: $this->getResponseType();
+		$response_type    = $response_type ?: $this->getResponseType();
+		$id_token_payload = [
+			'sub'   => '__test_id_token_sub__',
+			'iss'   => 'https://test.auth0.com/',
+			'aud'   => '__test_client_id__',
+			'nonce' => '__test_nonce__',
+			'exp'   => time() + 1000,
+			'iat'   => time() - 1000,
+		];
+
 		switch ( $response_type ) {
-			case 'success_exchange_code_valid_id_token':
-				$id_token_payload = [
-					'sub'   => '__test_id_token_sub__',
-					'iss'   => 'https://test.auth0.com/',
-					'aud'   => '__test_client_id__',
-					'nonce' => '__test_nonce__',
-					'exp'   => time() + 1000,
-					'iat'   => time() - 1000,
+			case 'success_exchange_code_valid_HS_id_token':
+				$id_token = self::makeHsToken( $id_token_payload, '__test_client_secret__' );
+				return [
+					'body'     => sprintf(
+						'{"access_token":"__test_access_token__","id_token":"%s"}',
+						$id_token
+					),
+					'response' => [ 'code' => 200 ],
 				];
-				$id_token         = self::makeToken( $id_token_payload, '__test_client_secret__' );
+			case 'success_exchange_code_valid_RS_id_token':
+				$id_token = self::makeRsToken( $id_token_payload );
 				return [
 					'body'     => sprintf(
 						'{"access_token":"__test_access_token__","id_token":"%s"}',
@@ -293,7 +303,7 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		$this->startHttpMocking();
 		$this->http_request_type = [
 			// Mocked successful code exchange with a valid ID token.
-			'success_exchange_code_valid_id_token',
+			'success_exchange_code_valid_HS_id_token',
 			// Stop the get user call.
 			'halt',
 		];
@@ -326,7 +336,7 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		$this->startHttpMocking();
 		$this->http_request_type = [
 			// Mocked successful code exchange with a valid ID token.
-			'success_exchange_code_valid_id_token',
+			'success_exchange_code_valid_HS_id_token',
 			// Mocked successful get user call.
 			'success_get_user',
 		];
@@ -362,7 +372,7 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		$this->startHttpMocking();
 		$this->http_request_type = [
 			// Mocked successful code exchange with a valid ID token.
-			'success_exchange_code_valid_id_token',
+			'success_exchange_code_valid_HS_id_token',
 			// Mocked failed get user call.
 			'auth0_api_error',
 		];
@@ -395,7 +405,7 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		$this->startHttpMocking();
 		$this->http_request_type = [
 			// Mocked successful code exchange with a valid ID token.
-			'success_exchange_code_valid_id_token',
+			'success_exchange_code_valid_HS_id_token',
 			// Mocked successful get user call.
 			'success_get_user',
 		];
@@ -418,5 +428,38 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		}
 
 		$this->assertEquals( '__test_id_token_sub__', $user_data['userinfo']->user_id );
+	}
+
+	/**
+	 * @throws WP_Auth0_BeforeLoginException Should not be thrown in this test.
+	 * @throws WP_Auth0_InvalidIdTokenException Should not be thrown in this test.
+	 * @throws WP_Auth0_LoginFlowValidationException Should not be thrown in this test.
+	 */
+	public function testThatGetJwksIsCalledForRs256IdToken() {
+		$this->startHttpMocking();
+		$this->http_request_type = [
+			// Mocked successful code exchange with a valid ID token.
+			'success_exchange_code_valid_RS_id_token',
+			// Stop the get user call.
+			'success_jwks',
+		];
+
+		self::$opts->set( 'domain', 'test.auth0.com' );
+		self::$opts->set( 'client_id', '__test_client_id__' );
+		self::$opts->set( 'client_signing_algorithm', 'RS256' );
+		self::$opts->set( 'cache_expiration', 999999 );
+		$_REQUEST['code']       = uniqid();
+		$_COOKIE['auth0_nonce'] = '__test_nonce__';
+		try {
+			// Need to hide error messages here because a cookie is set.
+			// phpcs:ignore
+			@$this->login->redirect_login();
+		} catch ( InvalidArgumentException $e ) {
+			// Stop process at next exception.
+		}
+
+		$cached_jwks = get_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
+
+		$this->assertArrayHasKey( '__test_kid_1__', $cached_jwks );
 	}
 }

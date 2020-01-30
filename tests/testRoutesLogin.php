@@ -103,7 +103,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		self::$opts->set( 'migration_token_id', '__test_token_id__' );
 
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
-		$_POST['access_token']             = self::makeToken( [ 'jti' => uniqid() ], $client_secret );
+		$_POST['access_token']             = self::makeHsToken( [ 'jti' => uniqid() ], $client_secret );
 
 		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
@@ -125,7 +125,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		self::$opts->set( 'migration_token_id', '__test_token_id__' );
 
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
-		$_POST['access_token']             = self::makeToken( [ 'iss' => uniqid() ], $client_secret );
+		$_POST['access_token']             = self::makeHsToken( [ 'iss' => uniqid() ], $client_secret );
 
 		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
@@ -143,7 +143,8 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 	public function testThatLoginRouteIsBadRequestIfNoUsername() {
 		$client_secret   = '__test_client_secret__';
 		$token_id        = '__test_token_id__';
-		$migration_token = self::makeToken( [ 'jti' => $token_id ], $client_secret );
+		$migration_token = self::makeHsToken( [ 'jti' => $token_id ], $client_secret );
+
 		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
@@ -167,7 +168,8 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 	public function testThatLoginRouteIsBadRequestIfNoPassword() {
 		$client_secret   = '__test_client_secret__';
 		$token_id        = '__test_token_id__';
-		$migration_token = self::makeToken( [ 'jti' => $token_id ], $client_secret );
+		$migration_token = self::makeHsToken( [ 'jti' => $token_id ], $client_secret );
+
 		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
@@ -192,7 +194,8 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 	public function testThatLoginRouteIsUnauthorizedIfNotAuthenticated() {
 		$client_secret   = '__test_client_secret__';
 		$token_id        = '__test_token_id__';
-		$migration_token = self::makeToken( [ 'jti' => $token_id ], $client_secret );
+		$migration_token = self::makeHsToken( [ 'jti' => $token_id ], $client_secret );
+
 		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
@@ -227,7 +230,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 				'user_pass'  => $_POST['password'],
 			]
 		);
-		$migration_token   = self::makeToken( [ 'jti' => $token_id ], $client_secret );
+		$migration_token   = self::makeHsToken( [ 'jti' => $token_id ], $client_secret );
 		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
