@@ -126,12 +126,12 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 	public function testThatChangingMigrationToOffKeepsTokenData() {
 		self::$opts->set( 'migration_token', 'existing_token' );
 		$input     = [
-			'migration_ws'       => 0,
 			'migration_token_id' => 'existing_token_id',
 		];
 		$validated = self::$admin->migration_ws_validation( [], $input );
 
-		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
+		$this->assertArrayHasKey( 'migration_ws', $validated );
+		$this->assertEmpty( $validated['migration_ws'] );
 		$this->assertEquals( $input['migration_token_id'], $validated['migration_token_id'] );
 		$this->assertEquals( 'existing_token', $validated['migration_token'] );
 	}
@@ -142,7 +142,7 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 	public function testThatChangingMigrationToOnKeepsToken() {
 		self::$opts->set( 'migration_token', 'new_token' );
 		$input = [
-			'migration_ws'  => 1,
+			'migration_ws'  => '1',
 			'client_secret' => '__test_client_secret__',
 		];
 
@@ -161,7 +161,7 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 		$migration_token = self::makeToken( [ 'jti' => '__test_token_id__' ], $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
 		$input = [
-			'migration_ws'  => 1,
+			'migration_ws'  => '1',
 			'client_secret' => $client_secret,
 		];
 
@@ -176,7 +176,7 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 	 * Test that turning on migration endpoints without a stored token will generate one.
 	 */
 	public function testThatChangingMigrationToOnGeneratesNewToken() {
-		$input = [ 'migration_ws' => 1 ];
+		$input = [ 'migration_ws' => '1' ];
 
 		$validated = self::$admin->migration_ws_validation( [], $input );
 
@@ -194,7 +194,7 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 		define( 'AUTH0_ENV_MIGRATION_TOKEN', '__test_constant_setting__' );
 		self::$opts->set( 'migration_token', '__test_saved_setting__' );
 		$input = [
-			'migration_ws'  => 1,
+			'migration_ws'  => '1',
 			'client_secret' => '__test_client_secret__',
 		];
 

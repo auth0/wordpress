@@ -49,7 +49,7 @@ class TestUserRepoCreate extends WP_Auth0_Test_Case {
 		$this->createUser( [ 'user_email' => $userinfo->email ] );
 
 		// Require a verified email.
-		self::$opts->set( 'requires_verified_email', 1 );
+		self::$opts->set( 'requires_verified_email', true );
 
 		$this->expectException( WP_Auth0_EmailNotVerifiedException::class );
 		self::$repo->create( $userinfo, self::TOKEN );
@@ -68,7 +68,7 @@ class TestUserRepoCreate extends WP_Auth0_Test_Case {
 		self::$repo->update_auth0_object( $user->ID, $userinfo );
 
 		// Require a verified email.
-		self::$opts->set( 'requires_verified_email', 1 );
+		self::$opts->set( 'requires_verified_email', true );
 
 		// Modify the Auth0 sub so we get a mis-match.
 		$userinfo->sub .= uniqid();
@@ -109,7 +109,7 @@ class TestUserRepoCreate extends WP_Auth0_Test_Case {
 		update_option( 'users_can_register', 1 );
 
 		// Do not equire a verified email.
-		self::$opts->set( 'requires_verified_email', 1 );
+		self::$opts->set( 'requires_verified_email', true );
 
 		$this->expectException( WP_Auth0_CouldNotCreateUserException::class );
 		self::$repo->create( $userinfo, self::TOKEN );
@@ -152,7 +152,7 @@ class TestUserRepoCreate extends WP_Auth0_Test_Case {
 		$user     = $this->createUser( [ 'user_email' => $userinfo->email ] );
 
 		// Require a verified email.
-		self::$opts->set( 'requires_verified_email', 0 );
+		self::$opts->set( 'requires_verified_email', false );
 
 		$expected_uid = self::$repo->create( $userinfo, self::TOKEN );
 		$this->assertEquals( $expected_uid, $user->ID );
@@ -170,7 +170,7 @@ class TestUserRepoCreate extends WP_Auth0_Test_Case {
 		$user     = $this->createUser( [ 'user_email' => $userinfo->email ] );
 
 		// Require a verified email.
-		self::$opts->set( 'requires_verified_email', 1 );
+		self::$opts->set( 'requires_verified_email', true );
 
 		// Make the email verified to pass the check.
 		$userinfo->email_verified = 1;
@@ -191,7 +191,7 @@ class TestUserRepoCreate extends WP_Auth0_Test_Case {
 		$user     = $this->createUser( [ 'user_email' => $userinfo->email ] );
 
 		// Require a verified email.
-		self::$opts->set( 'requires_verified_email', 1 );
+		self::$opts->set( 'requires_verified_email', true );
 
 		// Skip the auth0 strategy.
 		self::$opts->set( 'skip_strategies', 'auth0' );

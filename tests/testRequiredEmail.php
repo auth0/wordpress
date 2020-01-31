@@ -73,22 +73,23 @@ class TestRequiredEmail extends WP_Auth0_Test_Case {
 	 * Test that the required email field is properly validated.
 	 */
 	public function testRequiredEmailValidation() {
-		$opt_name = 'requires_verified_email';
+		$validated_opts = self::$admin->basic_validation( [], [ 'requires_verified_email' => '1' ] );
+		$this->assertEquals( true, $validated_opts['requires_verified_email'] );
 
-		$validated_opts = self::$admin->basic_validation( [], [ $opt_name => 1 ] );
-		$this->assertEquals( 1, $validated_opts[ $opt_name ] );
+		$validated_opts = self::$admin->basic_validation( [], [ 'requires_verified_email' => 1 ] );
+		$this->assertEquals( true, $validated_opts['requires_verified_email'] );
 
-		$validated_opts = self::$admin->basic_validation( [], [ $opt_name => true ] );
-		$this->assertEquals( 1, $validated_opts[ $opt_name ] );
+		$validated_opts = self::$admin->basic_validation( [], [ 'requires_verified_email' => true ] );
+		$this->assertEquals( true, $validated_opts['requires_verified_email'] );
 
 		$validated_opts = self::$admin->basic_validation( [], [] );
-		$this->assertEquals( 0, $validated_opts[ $opt_name ] );
+		$this->assertEquals( false, $validated_opts['requires_verified_email'] );
 
-		$validated_opts = self::$admin->basic_validation( [], [ $opt_name => 0 ] );
-		$this->assertEquals( 0, $validated_opts[ $opt_name ] );
+		$validated_opts = self::$admin->basic_validation( [], [ 'requires_verified_email' => 0 ] );
+		$this->assertEquals( false, $validated_opts['requires_verified_email'] );
 
-		$validated_opts = self::$admin->basic_validation( [], [ $opt_name => '' ] );
-		$this->assertEquals( 0, $validated_opts[ $opt_name ] );
+		$validated_opts = self::$admin->basic_validation( [], [ 'requires_verified_email' => '' ] );
+		$this->assertEquals( false, $validated_opts['requires_verified_email'] );
 	}
 
 	/**

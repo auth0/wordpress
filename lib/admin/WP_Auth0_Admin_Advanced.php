@@ -104,12 +104,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_migration_ws_ips',
 			],
 			[
-				'name'     => __( 'Auto Login', 'wp-auth0' ),
-				'opt'      => 'auto_login',
-				'id'       => 'wpa0_auto_login',
-				'function' => 'render_auto_login',
-			],
-			[
 				'name'     => __( 'Valid Proxy IP', 'wp-auth0' ),
 				'opt'      => 'valid_proxy_ip',
 				'id'       => 'wpa0_valid_proxy_ip',
@@ -319,16 +313,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Refer to the Features tab for the `auto_login` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 */
-	public function render_auto_login() {
-		$this->render_field_description(
-			__( 'Please see the "Universal Login Page" setting on the Features tab', 'wp-auth0' )
-		);
-	}
-
-	/**
 	 * Render form field and description for the `valid_proxy_ip` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
@@ -369,31 +353,18 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @return array
 	 */
 	public function basic_validation( array $old_options, array $input ) {
-		$input['requires_verified_email'] = intval( ! empty( $input['requires_verified_email'] ) );
-
-		$input['skip_strategies'] = isset( $input['skip_strategies'] ) ?
-			sanitize_text_field( trim( $input['skip_strategies'] ) ) : '';
-
-		$input['auto_provisioning']      = ( isset( $input['auto_provisioning'] ) ? $input['auto_provisioning'] : 0 );
-		$input['remember_users_session'] = ( isset( $input['remember_users_session'] ) ? $input['remember_users_session'] : 0 ) == 1;
-		$input['passwordless_enabled']   = ( isset( $input['passwordless_enabled'] ) ? $input['passwordless_enabled'] : 0 ) == 1;
-		$input['force_https_callback']   = ( isset( $input['force_https_callback'] ) ? $input['force_https_callback'] : 0 );
-
-		$input['migration_ips_filter'] = ( ! empty( $input['migration_ips_filter'] ) ? 1 : 0 );
-
-		$input['valid_proxy_ip'] = ( isset( $input['valid_proxy_ip'] ) ? $input['valid_proxy_ip'] : null );
-
-		$input['lock_connections'] = isset( $input['lock_connections'] ) ?
-			trim( $input['lock_connections'] ) : '';
-
-		$input['extra_conf'] = isset( $input['extra_conf'] ) ? trim( $input['extra_conf'] ) : '';
-		if ( ! empty( $input['extra_conf'] ) ) {
-			if ( json_decode( $input['extra_conf'] ) === null ) {
-				$error = __( 'The Extra settings parameter should be a valid json object', 'wp-auth0' );
-				self::add_validation_error( $error );
-			}
-		}
-
+		$input['requires_verified_email'] = $this->sanitize_switch_val( $input['requires_verified_email'] ?? null );
+		$input['skip_strategies']         = $this->sanitize_text_val( $input['skip_strategies'] ?? null );
+		$input['remember_users_session']  = $this->sanitize_switch_val( $input['remember_users_session'] ?? null );
+		// `default_login_redirection` is sanitized in $this->loginredirection_validation() below.
+		$input['force_https_callback'] = $this->sanitize_switch_val( $input['force_https_callback'] ?? null );
+		$input['auto_provisioning']    = $this->sanitize_switch_val( $input['auto_provisioning'] ?? null );
+		// `migration_ws` is sanitized in $this->migration_ws_validation() below.
+		// `migration_token` is sanitized in $this->migration_ws_validation() below.
+		$input['migration_ips_filter'] = $this->sanitize_switch_val( $input['migration_ips_filter'] ?? null );
+		// `migration_ips` is sanitized in $this->migration_ips_validation() below.
+		$input['valid_proxy_ip']      = ( isset( $input['valid_proxy_ip'] ) ? $input['valid_proxy_ip'] : null );
+		$input['auth0_server_domain'] = $this->sanitize_text_val( $input['auth0_server_domain'] ?? null );
 		return $input;
 	}
 
@@ -407,11 +378,11 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @return array
 	 */
 	public function migration_ws_validation( array $old_options, array $input ) {
-		$input['migration_ws']    = (int) ! empty( $input['migration_ws'] );
+		$input['migration_ws']    = $this->sanitize_switch_val( $input['migration_ws'] ?? null );
 		$input['migration_token'] = $this->options->get( 'migration_token' );
 
 		// Migration endpoints or turned off, nothing to do.
-		if ( empty( $input['migration_ws'] ) ) {
+		if ( ! $input['migration_ws'] ) {
 			return $input;
 		}
 
@@ -457,9 +428,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 			return $input;
 		}
 
-		$ip_addresses = explode( ',', $input['migration_ips'] );
+		$ip_addresses = explode( ',', $this->sanitize_text_val( $input['migration_ips'] ) );
 		$ip_addresses = array_map( 'trim', $ip_addresses );
-		$ip_addresses = array_map( 'sanitize_text_field', $ip_addresses );
 		$ip_addresses = array_filter( $ip_addresses );
 		$ip_addresses = array_unique( $ip_addresses );
 
