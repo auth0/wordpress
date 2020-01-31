@@ -12,8 +12,6 @@
  */
 class TestAdminAppearanceValidation extends WP_Auth0_Test_Case {
 
-	use DomDocumentHelpers;
-
 	/**
 	 * WP_Auth0_Admin_Appearance instance.
 	 *
@@ -60,13 +58,5 @@ class TestAdminAppearanceValidation extends WP_Auth0_Test_Case {
 
 		$validated = self::$admin->basic_validation( [], [ 'primary_color' => '<script>alert("hi")</script>' ] );
 		$this->assertNotContains( '<script>', $validated['primary_color'] );
-	}
-
-	/**
-	 * Test that the social_big_buttons option is gone.
-	 */
-	public function testThatSocialBigButtonsIsNotAdded() {
-		$validated = self::$admin->basic_validation( [], [] );
-		$this->assertArrayNotHasKey( 'social_big_buttons', $validated );
 	}
 }
