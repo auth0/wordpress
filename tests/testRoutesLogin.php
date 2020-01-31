@@ -64,8 +64,8 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 	 * If the incoming IP address is invalid, the route should fail with an error.
 	 */
 	public function testThatLoginRouteIsUnauthorizedIfWrongIp() {
-		self::$opts->set( 'migration_ws', 1 );
-		self::$opts->set( 'migration_ips_filter', 1 );
+		self::$opts->set( 'migration_ws', true );
+		self::$opts->set( 'migration_ips_filter', true );
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 
 		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
@@ -80,7 +80,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 	 * If there is no token, the route should fail with an error.
 	 */
 	public function testThatLoginRouteIsUnauthorizedIfNoToken() {
-		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_ws', true );
 		self::$wp->query_vars['a0_action'] = 'migration-ws-login';
 
 		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
@@ -98,7 +98,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 	 */
 	public function testThatLoginRouteIsUnauthorizedIfWrongJti() {
 		$client_secret = '__test_client_secret__';
-		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token_id', '__test_token_id__' );
 
@@ -120,7 +120,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 	 */
 	public function testThatLoginRouteIsUnauthorizedIfMissingJti() {
 		$client_secret = '__test_client_secret__';
-		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token_id', '__test_token_id__' );
 
@@ -144,7 +144,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		$client_secret   = '__test_client_secret__';
 		$token_id        = '__test_token_id__';
 		$migration_token = self::makeToken( [ 'jti' => $token_id ], $client_secret );
-		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
 
@@ -168,7 +168,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		$client_secret   = '__test_client_secret__';
 		$token_id        = '__test_token_id__';
 		$migration_token = self::makeToken( [ 'jti' => $token_id ], $client_secret );
-		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
 
@@ -193,7 +193,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 		$client_secret   = '__test_client_secret__';
 		$token_id        = '__test_token_id__';
 		$migration_token = self::makeToken( [ 'jti' => $token_id ], $client_secret );
-		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
 
@@ -228,7 +228,7 @@ class TestRoutesLogin extends WP_Auth0_Test_Case {
 			]
 		);
 		$migration_token   = self::makeToken( [ 'jti' => $token_id ], $client_secret );
-		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token', $migration_token );
 

@@ -42,8 +42,8 @@
         "test-cov": "\"vendor/bin/phpunit\" --coverage-text",
         "test-group": "\"vendor/bin/phpunit\" --coverage-text --group",
         "test-ci": "\"vendor/bin/phpunit\" --coverage-clover=coverage.xml",
-        "pre-commit-no-tests": [ "@phpcbf", "@phpcbf-tests", "@phpcs-tests", "@compat", "@phpcs-i18n" ],
-        "pre-commit": [ "@phpcbf", "@phpcbf-tests", "@phpcs-tests", "@compat", "@phpcs-i18n", "@test" ]
+        "pre-commit-no-tests": [ "@phpcbf", "@phpcbf-tests", "@compat", "@phpcs-i18n" ],
+        "pre-commit": [ "@phpcbf", "@phpcbf-tests", "@compat", "@phpcs-i18n", "@test" ]
     },
     "autoload-dev": {
         "classmap": ["tests/classes/", "tests/traits/"]

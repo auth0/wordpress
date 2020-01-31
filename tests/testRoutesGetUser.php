@@ -63,8 +63,8 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	 * If the incoming IP address is invalid, the route should fail with an error.
 	 */
 	public function testThatGetUserRouteIsUnauthorizedIfWrongIp() {
-		self::$opts->set( 'migration_ws', 1 );
-		self::$opts->set( 'migration_ips_filter', 1 );
+		self::$opts->set( 'migration_ws', true );
+		self::$opts->set( 'migration_ips_filter', true );
 
 		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
@@ -77,7 +77,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	 * If there is no token, the route should fail with an error.
 	 */
 	public function testThatGetUserRouteIsUnauthorizedIfNoToken() {
-		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_ws', true );
 
 		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
 
@@ -94,7 +94,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	 */
 	public function testThatGetUserRouteIsUnauthorizedIfWrongJti() {
 		$client_secret = '__test_client_secret__';
-		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'client_secret', $client_secret );
 		self::$opts->set( 'migration_token_id', '__test_token_id__' );
 
@@ -115,7 +115,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	 */
 	public function testThatGetUserRouteIsBadRequestIfNoUsername() {
 		$migration_token = uniqid();
-		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'migration_token', $migration_token );
 
 		$_POST['access_token'] = $migration_token;
@@ -135,7 +135,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	 */
 	public function testThatGetUserRouteIsUnauthorizedIfUserNotFound() {
 		$migration_token = uniqid();
-		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'migration_token', $migration_token );
 
 		$_POST['access_token'] = $migration_token;
@@ -156,7 +156,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	 */
 	public function testThatGetUserRouteReturnsEmptyIfEmailUpdate() {
 		$migration_token = uniqid();
-		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'migration_token', $migration_token );
 
 		$_POST['access_token'] = $migration_token;
@@ -181,7 +181,7 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 		$user              = $this->createUser( [ 'user_email' => $_POST['username'] ] );
 
 		$migration_token = uniqid();
-		self::$opts->set( 'migration_ws', 1 );
+		self::$opts->set( 'migration_ws', true );
 		self::$opts->set( 'migration_token', $migration_token );
 
 		$_POST['access_token'] = $migration_token;

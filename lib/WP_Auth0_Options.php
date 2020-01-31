@@ -385,7 +385,7 @@ class WP_Auth0_Options {
 			'singlelogout'              => 1,
 			'override_wp_avatars'       => 1,
 
-			// Appearance
+			// Embedded
 			'passwordless_enabled'      => false,
 			'icon_url'                  => '',
 			'form_title'                => '',
@@ -405,10 +405,10 @@ class WP_Auth0_Options {
 			'force_https_callback'      => false,
 			'auto_provisioning'         => false,
 			'migration_ws'              => false,
-			'migration_token'           => null,
+			'migration_token'           => '',
 			'migration_ips_filter'      => false,
-			'migration_ips'             => null,
-			'valid_proxy_ip'            => null,
+			'migration_ips'             => '',
+			'valid_proxy_ip'            => '',
 			'auth0_server_domain'       => 'auth0.auth0.com',
 		];
 	}

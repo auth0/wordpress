@@ -38,7 +38,7 @@ class TestLoginManagerRedirectLogin extends WP_Auth0_Test_Case {
 		parent::setUp();
 		$this->login = new WP_Auth0_LoginManager( new WP_Auth0_UsersRepo( self::$opts ), self::$opts );
 
-		self::$opts->set( 'requires_verified_email', 0 );
+		self::$opts->set( 'requires_verified_email', false );
 
 		self::$users_repo = new WP_Auth0_UsersRepo( self::$opts );
 		$users_repo       = self::$users_repo; // PHP 5.6.

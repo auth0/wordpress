@@ -131,7 +131,7 @@ class WP_Auth0_InitialSetup_Consent {
 		if ( $should_create_connection ) {
 			$migration_token = $this->a0_options->get( 'migration_token' );
 			if ( empty( $migration_token ) ) {
-				$migration_token = wp_auth0_url_base64_encode( openssl_random_pseudo_bytes( 64 ) );
+				$migration_token = wp_auth0_generate_token();
 			}
 			$operations = new WP_Auth0_Api_Operations( $this->a0_options );
 			$operations->create_wordpress_connection(

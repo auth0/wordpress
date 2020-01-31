@@ -258,4 +258,12 @@ class WP_Auth0_Admin_Generic {
 		$text = empty( $text ) ? __( 'here', 'wp-auth0' ) : sanitize_text_field( $text );
 		return sprintf( '<a href="https://auth0.com/docs/%s" target="_blank">%s</a>', $path, $text );
 	}
+
+	protected function sanitize_switch_val( $val ) {
+		return in_array( $val, [ 1, '1', true ] ) ? true : false;
+	}
+
+	protected function sanitize_text_val( $val ) {
+		return sanitize_text_field( trim( strval( $val ) ) );
+	}
 }
