@@ -46,8 +46,8 @@ class TestLoginManagerLogout extends WP_Auth0_Test_Case {
 	public function testThatNothingHappensIfNotSlo() {
 		$this->startRedirectHalting();
 		self::auth0Ready( true );
-		self::$opts->set( 'singlelogout', 0 );
-		self::$opts->set( 'auto_login', 0 );
+		self::$opts->set( 'singlelogout', false );
+		self::$opts->set( 'auto_login', false );
 
 		$this->assertNull( wp_auth0_process_logout() );
 	}
@@ -89,8 +89,8 @@ class TestLoginManagerLogout extends WP_Auth0_Test_Case {
 		self::$opts->set( 'domain', 'test.auth0.com' );
 		self::$opts->set( 'client_id', '__test_client_id__' );
 		self::$opts->set( 'client_secret', '__test_client_secret__' );
-		self::$opts->set( 'singlelogout', 0 );
-		self::$opts->set( 'auto_login', 1 );
+		self::$opts->set( 'singlelogout', false );
+		self::$opts->set( 'auto_login', true );
 
 		$redirect_data = [];
 		try {

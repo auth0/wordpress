@@ -7,11 +7,19 @@
 
 
 #wpwrap {
+  
+  #panel-help {
+     p, li {
+       font-size: 1.1em;
+     }
+    
+    ul {
+      list-style-type disc
+      padding-left 2em
+    }
+  }
 
   .a0-wrap {
-    margin-left:-10px;
-    padding-left: 2%;
-    padding-right: 2%;
 
     a, .link {
       color:aText;
@@ -53,17 +61,8 @@
       }
     }
 
-    @media (min-width: 768px) {
-      margin-left:-20px;
-    }
-
     small, .small {
       font-size: 70%;
-    }
-
-    color:text;
-    h1,h2,p {
-      color:text;
     }
 
     h1, .h1, h2, .h2, h3, .h3 {
@@ -76,21 +75,8 @@
     }
 
     p {
-      font-size: 17px;
-      color:softText;
-
       &.const-setting-notice {
         margin: 0 0 0.4em;
-      }
-    }
-
-    ul.list {
-      font-size: 17px;
-      color:softText;
-
-      li {
-        list-style-type: disc;
-        margin-left: 25px;
       }
     }
 
@@ -165,7 +151,6 @@
   }
 
   .a0-button, #wpa0_choose_icon {
-
     border-radius: 3px;
     border: none;
     line-height: 45px;
@@ -714,6 +699,7 @@
     .nav-tabs {
       margin: 30px 0;
       border-bottom: 1px solid rgb(217, 217, 217);
+      font-size: 1.2em;
 
       a {
         color:aText;
@@ -748,10 +734,6 @@
     .form-table label,
     .form-wrap label {
       color: formFieldsText;
-    }
-
-    .form-table th {
-      font-weight: 500;
     }
 
     input[type=text],

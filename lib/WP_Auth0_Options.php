@@ -380,10 +380,10 @@ class WP_Auth0_Options {
 			'wle_code'                  => '',
 
 			// Features
-			'auto_login'                => 1,
+			'auto_login'                => true,
 			'auto_login_method'         => '',
-			'singlelogout'              => 1,
-			'override_wp_avatars'       => 1,
+			'singlelogout'              => true,
+			'override_wp_avatars'       => true,
 
 			// Embedded
 			'passwordless_enabled'      => false,
