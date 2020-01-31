@@ -26,7 +26,7 @@ class WP_Auth0_Import_Settings {
 		}
 
 		$settings = json_decode( $settings_json, true );
-		if ( empty( $settings ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) ) {
 			wp_safe_redirect( $this->make_error_url( __( 'Settings JSON entered is not valid.', 'wp-auth0' ) ) );
 			exit;
 		}

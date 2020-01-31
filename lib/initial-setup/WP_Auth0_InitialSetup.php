@@ -100,7 +100,7 @@ class WP_Auth0_InitialSetup {
 					<a target="_blank" href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>"><?php _e( 'Error log', 'wp-auth0' ); ?></a>
 					<?php _e( ' for more information.', 'wp-auth0' ); ?>
 					<?php _e( 'Please check that your server has internet access and can reach ', 'wp-auth0' ); ?>
-					<code>https://<?php echo $this->a0_options->get( 'domain' ); ?></code>
+					<code><?php echo esc_url( 'https://' . $this->a0_options->get( 'domain' ) ); ?></code>
 				  </strong>
 			  </p>
 		  </div>
