@@ -12,10 +12,12 @@
  *
  * @since 4.0.0
  *
- * @return string
+ * @param int $size Size of the token, in bytes.
+ *
+ * @return mixed
  */
-function wp_auth0_generate_token() {
-	$token = WP_Auth0_Nonce_Handler::get_instance()->generate_unique( 64 );
+function wp_auth0_generate_token( $size = 64 ) {
+	$token = WP_Auth0_Nonce_Handler::get_instance()->generate_unique( $size );
 	return wp_auth0_url_base64_encode( $token );
 }
 
@@ -177,11 +179,10 @@ function wp_auth0_is_admin_page( $page ) {
  * @return bool
  */
 function wp_auth0_is_ready() {
-	$options = WP_Auth0_Options::Instance();
-	if ( ! $options->get( 'domain' ) || ! $options->get( 'client_id' ) || ! $options->get( 'client_secret' ) ) {
-		return false;
+	if ( wp_auth0_get_option( 'domain' ) && wp_auth0_get_option( 'client_id' ) && wp_auth0_get_option( 'client_secret' ) ) {
+		return true;
 	}
-	return true;
+	return false;
 }
 
 /**
@@ -206,8 +207,7 @@ function wp_auth0_get_tenant_region( $domain ) {
 function wp_auth0_get_tenant( $domain = null ) {
 
 	if ( empty( $domain ) ) {
-		$options = WP_Auth0_Options::Instance();
-		$domain  = $options->get( 'domain' );
+		$domain = wp_auth0_get_option( 'domain' );
 	}
 
 	$parts = explode( '.', $domain );

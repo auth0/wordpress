@@ -89,56 +89,53 @@ class TestWPAuth0Options extends WP_Auth0_Test_Case {
 	 * Test that options can be set in memory without a DB update
 	 */
 	public function testSetWithoutSave() {
-		$opt_name     = 'domain';
 		$expected_val = rand();
 		$opts         = new WP_Auth0_Options();
 
 		// Set the option and do not save.
-		$opts->set( $opt_name, $expected_val, false );
-		$this->assertEquals( $expected_val, $opts->get( $opt_name ) );
+		$opts->set( 'domain', $expected_val, false );
+		$this->assertEquals( $expected_val, $opts->get( 'domain' ) );
 
 		// Get the DB-saved options and make sure it was not saved.
 		$db_options = get_option( $opts->get_options_name() );
-		$this->assertNotEquals( $expected_val, $db_options[ $opt_name ] );
+		$this->assertNotEquals( $expected_val, $db_options['domain'] );
 	}
 
 	/**
 	 * Test that options can be set and saved to the DB.
 	 */
 	public function testSetWithSave() {
-		$opt_name     = 'domain';
 		$expected_val = rand();
 		$opts         = new WP_Auth0_Options();
 
 		// Set the option and flag to save (default).
-		$opts->set( $opt_name, $expected_val );
-		$this->assertEquals( $expected_val, $opts->get( $opt_name ) );
+		$opts->set( 'domain', $expected_val );
+		$this->assertEquals( $expected_val, $opts->get( 'domain' ) );
 
 		// Make sure the saved value is correct.
 		$db_options = get_option( $opts->get_options_name() );
-		$this->assertEquals( $expected_val, $db_options[ $opt_name ] );
+		$this->assertEquals( $expected_val, $db_options['domain'] );
 	}
 
 	/**
 	 * Test that update_all works.
 	 */
 	public function testUpdateAll() {
-		$opt_name     = 'domain';
 		$expected_val = rand();
 		$opts         = new WP_Auth0_Options();
 
 		// Set the option and flag to skip saving.
-		$opts->set( $opt_name, $expected_val, false );
-		$this->assertEquals( $expected_val, $opts->get( $opt_name ) );
+		$opts->set( 'domain', $expected_val, false );
+		$this->assertEquals( $expected_val, $opts->get( 'domain' ) );
 
 		// Get the database option to make sure it was not saved.
 		$db_options = get_option( $opts->get_options_name() );
-		$this->assertNotEquals( $expected_val, $db_options[ $opt_name ] );
+		$this->assertNotEquals( $expected_val, $db_options['domain'] );
 
 		// Explicitly save to the DB and make sure it's correct.
 		$opts->update_all();
 		$db_options = get_option( $opts->get_options_name() );
-		$this->assertEquals( $expected_val, $db_options[ $opt_name ] );
+		$this->assertEquals( $expected_val, $db_options['domain'] );
 	}
 
 	/**
@@ -165,24 +162,23 @@ class TestWPAuth0Options extends WP_Auth0_Test_Case {
 	 * Test that options can be set in memory and in the DB.
 	 */
 	public function testSet() {
-		$opt_name       = 'domain';
 		$expected_val_1 = rand();
 		$expected_val_2 = rand();
 		$opts           = new WP_Auth0_Options();
 
 		// Test that a basic set without DB update works.
-		$result = $opts->set( $opt_name, $expected_val_1, false );
+		$result = $opts->set( 'domain', $expected_val_1, false );
 		$this->assertTrue( $result );
-		$this->assertEquals( $expected_val_1, $opts->get( $opt_name ) );
+		$this->assertEquals( $expected_val_1, $opts->get( 'domain' ) );
 		$db_options = get_option( $opts->get_options_name() );
-		$this->assertNotEquals( $expected_val_1, $db_options[ $opt_name ] );
+		$this->assertNotEquals( $expected_val_1, $db_options['domain'] );
 
 		// Test that a basic set with DB update works.
-		$result = $opts->set( $opt_name, $expected_val_2, true );
+		$result = $opts->set( 'domain', $expected_val_2, true );
 		$this->assertTrue( $result );
-		$this->assertEquals( $expected_val_2, $opts->get( $opt_name ) );
+		$this->assertEquals( $expected_val_2, $opts->get( 'domain' ) );
 		$db_options = get_option( $opts->get_options_name() );
-		$this->assertEquals( $expected_val_2, $db_options[ $opt_name ] );
+		$this->assertEquals( $expected_val_2, $db_options['domain'] );
 	}
 
 	/**

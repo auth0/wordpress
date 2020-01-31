@@ -34,8 +34,7 @@ class WP_Auth0_Api_Client {
 	private static function get_endpoint( $path = '', $domain = '' ) {
 
 		if ( empty( $domain ) ) {
-			$a0_options = WP_Auth0_Options::Instance();
-			$domain     = $a0_options->get( 'domain' );
+			$domain = wp_auth0_get_option( 'domain' );
 		}
 
 		if ( ! empty( $path[0] ) && '/' === $path[0] ) {
@@ -57,12 +56,10 @@ class WP_Auth0_Api_Client {
 	public static function get_connect_info( $opt = '' ) {
 
 		if ( is_null( self::$connect_info ) ) {
-			$a0_options = WP_Auth0_Options::Instance();
-
 			self::$connect_info = [
-				'domain'        => $a0_options->get( 'domain' ),
-				'client_id'     => $a0_options->get( 'client_id' ),
-				'client_secret' => $a0_options->get( 'client_secret' ),
+				'domain'        => wp_auth0_get_option( 'domain' ),
+				'client_id'     => wp_auth0_get_option( 'client_id' ),
+				'client_secret' => wp_auth0_get_option( 'client_secret' ),
 				'app_token'     => null,
 				'audience'      => self::get_endpoint( 'api/v2/' ),
 			];
