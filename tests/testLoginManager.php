@@ -151,12 +151,10 @@ class TestLoginManager extends WP_Auth0_Test_Case {
 	 */
 	public function testUlpRedirect() {
 		$this->startRedirectHalting();
-
-		$login_manager = new WP_Auth0_LoginManager( self::$users_repo, self::$opts );
 		$this->assertFalse( wp_auth0_login_ulp_redirect() );
 
 		// Activate settings that result in a ULP redirect.
-		self::$opts->set( 'auto_login', 1 );
+		self::$opts->set( 'auto_login', true );
 		self::auth0Ready( true );
 		self::$opts->set( 'domain', 'test-wp.auth0.com' );
 		$this->assertTrue( wp_auth0_is_ready() );
@@ -183,10 +181,8 @@ class TestLoginManager extends WP_Auth0_Test_Case {
 	public function testThatUlpRedirectIsSkippedForNonGetMethod() {
 		$this->startRedirectHalting();
 
-		$login_manager = new WP_Auth0_LoginManager( self::$users_repo, self::$opts );
-
 		// First, check that a redirect is happening.
-		self::$opts->set( 'auto_login', 1 );
+		self::$opts->set( 'auto_login', true );
 		self::auth0Ready( true );
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$caught_redirect           = [];
@@ -206,11 +202,10 @@ class TestLoginManager extends WP_Auth0_Test_Case {
 	public function testThatUlpRedirectIsSkippedForWleOverride() {
 		$this->startRedirectHalting();
 
-		$login_manager = new WP_Auth0_LoginManager( self::$users_repo, self::$opts );
 		$this->assertFalse( wp_auth0_login_ulp_redirect() );
 
 		// First, check that a redirect is happening.
-		self::$opts->set( 'auto_login', 1 );
+		self::$opts->set( 'auto_login', true );
 		self::auth0Ready( true );
 		$caught_redirect = [];
 		try {
@@ -233,11 +228,10 @@ class TestLoginManager extends WP_Auth0_Test_Case {
 	public function testThatUlpRedirectIsSkippedForLogout() {
 		$this->startRedirectHalting();
 
-		$login_manager = new WP_Auth0_LoginManager( self::$users_repo, self::$opts );
 		$this->assertFalse( wp_auth0_login_ulp_redirect() );
 
 		// First, check that a redirect is happening.
-		self::$opts->set( 'auto_login', 1 );
+		self::$opts->set( 'auto_login', true );
 		self::auth0Ready( true );
 		$caught_redirect = [];
 		try {

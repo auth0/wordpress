@@ -75,15 +75,21 @@ class TestOptionSlo extends WP_Auth0_Test_Case {
 	 */
 	public function testThatSloIsValidatedOnSave() {
 		$validated = self::$admin->basic_validation( [], [ 'singlelogout' => false ] );
-		$this->assertEquals( 0, $validated['singlelogout'] );
+		$this->assertEquals( false, $validated['singlelogout'] );
 
 		$validated = self::$admin->basic_validation( [], [ 'singlelogout' => 0 ] );
-		$this->assertEquals( 0, $validated['singlelogout'] );
+		$this->assertEquals( false, $validated['singlelogout'] );
 
 		$validated = self::$admin->basic_validation( [], [ 'singlelogout' => 1 ] );
-		$this->assertEquals( 1, $validated['singlelogout'] );
+		$this->assertEquals( true, $validated['singlelogout'] );
+
+		$validated = self::$admin->basic_validation( [], [ 'singlelogout' => '1' ] );
+		$this->assertEquals( true, $validated['singlelogout'] );
+
+		$validated = self::$admin->basic_validation( [], [] );
+		$this->assertEquals( false, $validated['singlelogout'] );
 
 		$validated = self::$admin->basic_validation( [], [ 'singlelogout' => uniqid() ] );
-		$this->assertEquals( 1, $validated['singlelogout'] );
+		$this->assertEquals( false, $validated['singlelogout'] );
 	}
 }

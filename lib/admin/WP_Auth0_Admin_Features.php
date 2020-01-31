@@ -131,13 +131,11 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 *
 	 * @return array
 	 */
-	public function basic_validation( $old_options, $input ) {
-		$input['auto_login']          = empty( $input['auto_login'] ) ? 0 : 1;
-		$input['auto_login_method']   = isset( $input['auto_login_method'] )
-			? sanitize_text_field( $input['auto_login_method'] ) : '';
-		$input['singlelogout']        = empty( $input['singlelogout'] ) ? 0 : 1;
-		$input['override_wp_avatars'] = empty( $input['override_wp_avatars'] ) ? 0 : 1;
-
+	public function basic_validation( array $old_options, array $input ) {
+		$input['auto_login']          = $this->sanitize_switch_val( $input['auto_login'] ?? null );
+		$input['auto_login_method']   = $this->sanitize_text_val( $input['auto_login_method'] ?? null );
+		$input['singlelogout']        = $this->sanitize_switch_val( $input['singlelogout'] ?? null );
+		$input['override_wp_avatars'] = $this->sanitize_switch_val( $input['override_wp_avatars'] ?? null );
 		return $input;
 	}
 }

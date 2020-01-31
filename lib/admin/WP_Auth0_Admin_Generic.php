@@ -259,8 +259,15 @@ class WP_Auth0_Admin_Generic {
 		return sprintf( '<a href="https://auth0.com/docs/%s" target="_blank">%s</a>', $path, $text );
 	}
 
+	/**
+	 * Strict-check passed values against possible truth-y ones.
+	 *
+	 * @param mixed $val Value to check.
+	 *
+	 * @return bool
+	 */
 	protected function sanitize_switch_val( $val ) {
-		return in_array( $val, [ 1, '1', true ] ) ? true : false;
+		return in_array( $val, [ 1, '1', true ], true ) ? true : false;
 	}
 
 	protected function sanitize_text_val( $val ) {
