@@ -1,11 +1,11 @@
 === Login by Auth0 ===
-Tags: login, oauth, authentication, single sign on, ldap, active directory, saml, windows azure ad, google apps, two factor, two-factor, facebook, google, twitter, baidu, renren, linkedin, github, paypal, yahoo, amazon, vkontakte, salesforce, box, dwolla, yammer, passwordless, sms, magiclink, totp, social
-Tested up to: 5.2.2
+Tags: OIDC, OpenID Connect, Single Sign On, SSO, SAML, Passwordless, OAuth2, Auth0
+Tested up to: 5.3.2
 Requires at least: 4.9
 Requires PHP: 7.0
 License: GPLv2
 License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE
-Stable tag: trunk
+Stable tag: 3.11.3
 Contributors: auth0, auth0josh
 
 Login by Auth0 provides improved username/password login, Passwordless login, Social login and Single Sign On for all your sites.
@@ -117,14 +117,5 @@ All is not lost!
 * You can see additional documentation and answers on our [support site](https://support.auth0.com/). Customers on a paid Auth0 plan can [submit a trouble ticket](https://support.auth0.com/tickets) for a fast response.
 
 == Changelog ==
-
-**v3.11.1**
-
-- Check state in specific global based on callback type [\#708](https://github.com/auth0/wp-auth0/pull/708) ([joshcanhelp](https://github.com/joshcanhelp))
-- Fix sensitive field handling; add Basic settings tab validations [\#703](https://github.com/auth0/wp-auth0/pull/703) ([joshcanhelp](https://github.com/joshcanhelp))
-- Add new Auth0 IPs; do not save duplicate or whitelisted IPs [\#700](https://github.com/auth0/wp-auth0/pull/700) ([joshcanhelp](https://github.com/joshcanhelp))
-- Fix post passwords getting redirected [\#698](https://github.com/auth0/wp-auth0/pull/698) ([joshcanhelp](https://github.com/joshcanhelp))
-
-... and more!
 
 [Complete list of changes for this and other releases](https://github.com/auth0/wp-auth0/releases)
