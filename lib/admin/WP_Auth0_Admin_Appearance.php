@@ -290,32 +290,35 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 * @return array
 	 */
 	public function basic_validation( $old_options, $input ) {
-		$input['passwordless_enabled'] = ( isset( $input['passwordless_enabled'] ) ? $input['passwordless_enabled'] : 0 ) == 1;
-		$input['form_title']           = empty( $input['form_title'] ) ? '' : sanitize_text_field( $input['form_title'] );
-		$input['icon_url']             = empty( $input['icon_url'] ) ? '' : esc_url( $input['icon_url'], [ 'http', 'https' ] );
-		$input['gravatar']             = empty( $input['gravatar'] ) ? 0 : 1;
-		$input['primary_color']        = empty( $input['primary_color'] ) ? '' : sanitize_text_field( $input['primary_color'] );
+		$input['passwordless_enabled'] = $this->sanitize_switch_val( $input['passwordless_enabled'] ?? null );
 
-		$input['custom_cdn_url'] = empty( $input['custom_cdn_url'] ) ? 0 : 1;
-
-		$input['cdn_url'] = empty( $input['cdn_url'] ) ? WPA0_LOCK_CDN_URL : sanitize_text_field( $input['cdn_url'] );
-
-		// If an invalid URL is used, default to previously saved (if there is one) or default URL.
-		if ( ! filter_var( $input['cdn_url'], FILTER_VALIDATE_URL ) ) {
-			$input['cdn_url'] = isset( $old_options['cdn_url'] ) ? $old_options['cdn_url'] : WPA0_LOCK_CDN_URL;
-			self::add_validation_error( __( 'The Lock JS CDN URL used is not a valid URL.', 'wp-auth0' ) );
+		$input['icon_url'] = esc_url_raw( $this->sanitize_text_val( $input['icon_url'] ?? null ) );
+		if ( ! filter_var( $input['icon_url'], FILTER_VALIDATE_URL ) ) {
+			$input['icon_url'] = $this->options->get( 'icon_url' );
+			self::add_validation_error( __( 'The Icon URL used is not valid.', 'wp-auth0' ) );
 		}
 
-		$input['lock_connections'] = isset( $input['lock_connections'] ) ?
-			trim( $input['lock_connections'] ) : '';
+		$input['form_title']     = $this->sanitize_text_val( $input['form_title'] ?? null );
+		$input['gravatar']       = $this->sanitize_switch_val( $input['gravatar'] ?? null );
+		$input['username_style'] = $this->sanitize_text_val( $input['username_style'] ?? null );
+		$input['primary_color']  = $this->sanitize_text_val( $input['primary_color'] ?? null );
 
-		$input['extra_conf'] = isset( $input['extra_conf'] ) ? trim( $input['extra_conf'] ) : '';
-		if ( ! empty( $input['extra_conf'] ) ) {
-			if ( json_decode( $input['extra_conf'] ) === null ) {
-				$error = __( 'The Extra settings parameter should be a valid json object', 'wp-auth0' );
-				self::add_validation_error( $error );
-			}
+		$input['extra_conf'] = $this->sanitize_text_val( $input['extra_conf'] ?? null );
+		if ( ! empty( $input['extra_conf'] ) && ! json_decode( $input['extra_conf'] ) ) {
+			$input['extra_conf'] = $this->options->get( 'extra_conf', '' );
+			$error               = __( 'The Extra Settings parameter should be a valid JSON object.', 'wp-auth0' );
+			self::add_validation_error( $error );
 		}
+
+		$input['custom_cdn_url'] = $this->sanitize_switch_val( $input['custom_cdn_url'] ?? null );
+
+		$input['cdn_url'] = esc_url_raw( $this->sanitize_text_val( $input['cdn_url'] ?? null ) );
+		if ( $input['custom_cdn_url'] && ! filter_var( $input['cdn_url'], FILTER_VALIDATE_URL ) ) {
+			$input['cdn_url'] = $this->options->get( 'cdn_url', WPA0_LOCK_CDN_URL );
+			self::add_validation_error( __( 'The Custom Lock JS URL used is not valid.', 'wp-auth0' ) );
+		}
+
+		$input['lock_connections'] = $this->sanitize_text_val( $input['lock_connections'] ?? null );
 
 		return $input;
 	}

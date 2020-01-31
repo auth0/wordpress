@@ -171,7 +171,7 @@ class WP_Auth0_Lock {
 		printf(
 			'<div id="extra-options"><a href="?">%s</a></div>',
 			// translators: The $title variable is the admin-controlled form title.
-			printf( __( '← Back to %s login', 'wp-auth0' ), $title )
+			sanitize_text_field( sprintf( __( '← Back to %s login', 'wp-auth0' ), $title ) )
 		);
 	}
 
@@ -209,7 +209,7 @@ class WP_Auth0_Lock {
 				'clientId'        => $options->get( 'client_id' ),
 				'stateCookieName' => WP_Auth0_State_Handler::get_storage_cookie_name(),
 				'nonceCookieName' => WP_Auth0_Nonce_Handler::get_storage_cookie_name(),
-				'usePasswordless' => $options->get( 'passwordless_enabled', false ),
+				'usePasswordless' => $options->get( 'passwordless_enabled' ),
 				'loginFormId'     => WPA0_AUTH0_LOGIN_FORM_ID,
 				'showAsModal'     => ! empty( $specialSettings['show_as_modal'] ),
 				'i18n'            => [

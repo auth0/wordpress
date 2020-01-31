@@ -290,7 +290,7 @@ class WP_Auth0_Options {
 	 */
 	public function get_lock_url() {
 		$cdn_url = $this->get( 'cdn_url' );
-		return $cdn_url && $this->get( 'custom_cdn_url' ) ? $cdn_url : WPA0_LOCK_CDN_URL;
+		return ( $cdn_url && $this->get( 'custom_cdn_url' ) ) ? $cdn_url : WPA0_LOCK_CDN_URL;
 	}
 
 	/**
@@ -393,7 +393,7 @@ class WP_Auth0_Options {
 			'username_style'            => '',
 			'primary_color'             => '',
 			'extra_conf'                => '',
-			'custom_cdn_url'            => null,
+			'custom_cdn_url'            => false,
 			'cdn_url'                   => WPA0_LOCK_CDN_URL,
 			'lock_connections'          => '',
 

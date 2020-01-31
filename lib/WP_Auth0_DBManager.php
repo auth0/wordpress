@@ -105,9 +105,9 @@ class WP_Auth0_DBManager {
 
 			if ( 'https://cdn.auth0.com/js/lock/11.5/lock.min.js' === $options->get( 'cdn_url' ) ) {
 				$options->set( 'cdn_url', WPA0_LOCK_CDN_URL, false );
-				$options->set( 'custom_cdn_url', null, false );
+				$options->set( 'custom_cdn_url', false, false );
 			} else {
-				$options->set( 'custom_cdn_url', 1, false );
+				$options->set( 'custom_cdn_url', true, false );
 			}
 
 			// Nullify and delete all removed options.
