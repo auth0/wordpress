@@ -289,12 +289,11 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 	/**
 	 * Validation for Basic settings tab.
 	 *
-	 * @param array $old_options - Options before saving the settings form.
 	 * @param array $input - New options being saved.
 	 *
 	 * @return array
 	 */
-	public function basic_validation( $old_options, $input ) {
+	public function basic_validation( array $input ) {
 
 		if ( wp_cache_get( 'doing_db_update', WPA0_CACHE_GROUP ) ) {
 			return $input;
@@ -315,7 +314,7 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$input['client_secret'] = $this->sanitize_text_val( $input['client_secret'] ?? null );
 		if ( __( '[REDACTED]', 'wp-auth0' ) === $input['client_secret'] ) {
 			// The field is loaded with "[REDACTED]" so if that value is saved, we keep the existing secret.
-			$input['client_secret'] = $old_options['client_secret'];
+			$input['client_secret'] = $this->options->get( 'client_secret' );
 		}
 		if ( empty( $input['client_secret'] ) ) {
 			$this->add_validation_error( __( 'You need to specify a Client Secret', 'wp-auth0' ) );

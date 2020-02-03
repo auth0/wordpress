@@ -74,22 +74,22 @@ class TestOptionMigrationIps extends WP_Auth0_Test_Case {
 
 	public function testThatEmptyIpsAreValidatedToAnEmptyString() {
 		$input     = [ 'migration_ips' => 0 ];
-		$validated = self::$admin->migration_ips_validation( [], $input );
+		$validated = self::$admin->migration_ips_validation( $input );
 		$this->assertEquals( '', $validated['migration_ips'] );
 
 		$input     = [ 'migration_ips' => false ];
-		$validated = self::$admin->migration_ips_validation( [], $input );
+		$validated = self::$admin->migration_ips_validation( $input );
 		$this->assertEquals( '', $validated['migration_ips'] );
 
 		$input     = [ 'migration_ips' => null ];
-		$validated = self::$admin->migration_ips_validation( [], $input );
+		$validated = self::$admin->migration_ips_validation( $input );
 		$this->assertEquals( '', $validated['migration_ips'] );
 	}
 
 	public function testThatDuplicateIpsAreRemovedDuringValidation() {
 		$input = [ 'migration_ips' => '1.2.3.4, 2.3.4.5,1.2.3.4,3.4.5.6, 2.3.4.5' ];
 
-		$validated = self::$admin->migration_ips_validation( [], $input );
+		$validated = self::$admin->migration_ips_validation( $input );
 		$this->assertEquals( '1.2.3.4, 2.3.4.5, 3.4.5.6', $validated['migration_ips'] );
 	}
 
@@ -101,21 +101,21 @@ class TestOptionMigrationIps extends WP_Auth0_Test_Case {
 			'domain'        => 'test.eu.auth0.com',
 		];
 
-		$validated = self::$admin->migration_ips_validation( [], $input );
+		$validated = self::$admin->migration_ips_validation( $input );
 		$this->assertEquals( '4.5.6.7, 5.6.7.8', $validated['migration_ips'] );
 	}
 
 	public function testThatUnsafeValuesAreRemovedDuringValidation() {
 		$input = [ 'migration_ips' => '6.7.8.9,<script>alert("Hello")</script>,7.8.9.10' ];
 
-		$validated = self::$admin->migration_ips_validation( [], $input );
+		$validated = self::$admin->migration_ips_validation( $input );
 		$this->assertEquals( '6.7.8.9, 7.8.9.10', $validated['migration_ips'] );
 	}
 
 	public function testThatEmptyValuesAreRemovedDuringValidation() {
 		$input = [ 'migration_ips' => '8.9.10.11, , 9.10.11.12, 0' ];
 
-		$validated = self::$admin->migration_ips_validation( [], $input );
+		$validated = self::$admin->migration_ips_validation( $input );
 		$this->assertEquals( '8.9.10.11, 9.10.11.12', $validated['migration_ips'] );
 	}
 }
