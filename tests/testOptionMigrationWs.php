@@ -128,7 +128,7 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 		$input     = [
 			'migration_token_id' => 'existing_token_id',
 		];
-		$validated = self::$admin->migration_ws_validation( [], $input );
+		$validated = self::$admin->migration_ws_validation( $input );
 
 		$this->assertArrayHasKey( 'migration_ws', $validated );
 		$this->assertEmpty( $validated['migration_ws'] );
@@ -146,7 +146,7 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 			'client_secret' => '__test_client_secret__',
 		];
 
-		$validated = self::$admin->migration_ws_validation( [], $input );
+		$validated = self::$admin->migration_ws_validation( $input );
 
 		$this->assertEquals( 'new_token', $validated['migration_token'] );
 		$this->assertNull( $validated['migration_token_id'] );
@@ -165,7 +165,7 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 			'client_secret' => $client_secret,
 		];
 
-		$validated = self::$admin->migration_ws_validation( [], $input );
+		$validated = self::$admin->migration_ws_validation( $input );
 
 		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
 		$this->assertEquals( $migration_token, $validated['migration_token'] );
@@ -178,7 +178,7 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 	public function testThatChangingMigrationToOnGeneratesNewToken() {
 		$input = [ 'migration_ws' => '1' ];
 
-		$validated = self::$admin->migration_ws_validation( [], $input );
+		$validated = self::$admin->migration_ws_validation( $input );
 
 		$this->assertGreaterThan( 64, strlen( $validated['migration_token'] ) );
 		$this->assertNull( $validated['migration_token_id'] );
@@ -202,7 +202,7 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 		$router = new WP_Auth0_Routes( $opts );
 		$admin  = new WP_Auth0_Admin_Advanced( $opts, $router );
 
-		$validated = $admin->migration_ws_validation( [], $input );
+		$validated = $admin->migration_ws_validation( $input );
 
 		$this->assertNull( $validated['migration_token_id'] );
 		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );

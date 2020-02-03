@@ -38,7 +38,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$this->router                = $router;
 		$this->actions_middlewares[] = 'migration_ws_validation';
 		$this->actions_middlewares[] = 'migration_ips_validation';
-		$this->actions_middlewares[] = 'loginredirection_validation';
 	}
 
 	/**
@@ -347,18 +346,17 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	/**
 	 * Validate all settings without a specific validation method.
 	 *
-	 * @param array $old_options - Option values before savings.
 	 * @param array $input - New option values to validate.
 	 *
 	 * @return array
 	 */
-	public function basic_validation( array $old_options, array $input ) {
-		$input['requires_verified_email'] = $this->sanitize_switch_val( $input['requires_verified_email'] ?? null );
-		$input['skip_strategies']         = $this->sanitize_text_val( $input['skip_strategies'] ?? null );
-		$input['remember_users_session']  = $this->sanitize_switch_val( $input['remember_users_session'] ?? null );
-		// `default_login_redirection` is sanitized in $this->loginredirection_validation() below.
-		$input['force_https_callback'] = $this->sanitize_switch_val( $input['force_https_callback'] ?? null );
-		$input['auto_provisioning']    = $this->sanitize_switch_val( $input['auto_provisioning'] ?? null );
+	public function basic_validation( array $input ) {
+		$input['requires_verified_email']   = $this->sanitize_switch_val( $input['requires_verified_email'] ?? null );
+		$input['skip_strategies']           = $this->sanitize_text_val( $input['skip_strategies'] ?? null );
+		$input['remember_users_session']    = $this->sanitize_switch_val( $input['remember_users_session'] ?? null );
+		$input['default_login_redirection'] = $this->validate_login_redirect( $input['default_login_redirection'] ?? null );
+		$input['force_https_callback']      = $this->sanitize_switch_val( $input['force_https_callback'] ?? null );
+		$input['auto_provisioning']         = $this->sanitize_switch_val( $input['auto_provisioning'] ?? null );
 		// `migration_ws` is sanitized in $this->migration_ws_validation() below.
 		// `migration_token` is sanitized in $this->migration_ws_validation() below.
 		$input['migration_ips_filter'] = $this->sanitize_switch_val( $input['migration_ips_filter'] ?? null );
@@ -372,12 +370,11 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Validation for the migration_ws setting.
 	 * Generates new migration tokens if none is present.
 	 *
-	 * @param array $old_options - Option values before savings.
 	 * @param array $input - New option values to validate.
 	 *
 	 * @return array
 	 */
-	public function migration_ws_validation( array $old_options, array $input ) {
+	public function migration_ws_validation( array $input ) {
 		$input['migration_ws']    = $this->sanitize_switch_val( $input['migration_ws'] ?? null );
 		$input['migration_token'] = $this->options->get( 'migration_token' );
 
@@ -416,12 +413,11 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * Validation for the migration_ips setting.
 	 * Generates new migration tokens if none is present.
 	 *
-	 * @param array $old_options - Option values before savings.
 	 * @param array $input - New option values to validate.
 	 *
 	 * @return array
 	 */
-	public function migration_ips_validation( array $old_options, array $input ) {
+	public function migration_ips_validation( array $input ) {
 
 		if ( empty( $input['migration_ips'] ) ) {
 			$input['migration_ips'] = '';
@@ -446,33 +442,32 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	/**
 	 * Validate the URL used to redirect users after a successful login.
 	 *
-	 * @param array $old_options - Previously-saved options.
-	 * @param array $input - Options to save.
+	 * @param string      $new_url - Options to save.
+	 * @param string|null $existing_url - Value to fall back on if new value does not validate.
 	 *
-	 * @return array
+	 * @return string
 	 */
-	public function loginredirection_validation( $old_options, $input ) {
-		$new_redirect_url = esc_url_raw( strtolower( $input['default_login_redirection'] ) );
-		$old_redirect_url = strtolower( $old_options['default_login_redirection'] );
+	public function validate_login_redirect( $new_url, $existing_url = null ) {
+		$new_redirect_url = esc_url_raw( strtolower( $new_url ) );
+		$old_redirect_url = $existing_url ?? $this->options->get( 'default_login_redirection' );
 
 		// No change so no validation needed.
-		if ( $new_redirect_url === $old_redirect_url ) {
-			return $input;
+		if ( $new_redirect_url === strtolower( $old_redirect_url ) ) {
+			return $new_url;
 		}
 
 		$home_url = home_url();
 
 		// Set the default redirection URL to be the homepage.
 		if ( empty( $new_redirect_url ) ) {
-			$input['default_login_redirection'] = $home_url;
-			return $input;
+			return $home_url;
 		}
 
 		// Allow subdomains within the same domain.
 		$home_domain     = $this->get_domain( $home_url );
 		$redirect_domain = $this->get_domain( $new_redirect_url );
 		if ( $home_domain === $redirect_domain ) {
-			return $input;
+			return $new_url;
 		}
 
 		// If we get here, the redirect URL is a page outside of the WordPress install.
@@ -480,11 +475,7 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$this->add_validation_error( $error );
 
 		// Either revert to the previous (validated) value or set as the homepage.
-		$input['default_login_redirection'] = ! empty( $old_options['default_login_redirection'] ) ?
-			$old_options['default_login_redirection'] :
-			$home_url;
-
-		return $input;
+		return ! empty( $old_redirect_url ) ? $old_redirect_url : $home_url;
 	}
 
 	/**

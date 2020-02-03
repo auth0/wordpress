@@ -284,12 +284,11 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	/**
 	 * Validation for Basic settings tab.
 	 *
-	 * @param array $old_options - Options before saving the settings form.
 	 * @param array $input - New options being saved.
 	 *
 	 * @return array
 	 */
-	public function basic_validation( $old_options, $input ) {
+	public function basic_validation( array $input ) {
 		$input['passwordless_enabled'] = $this->sanitize_switch_val( $input['passwordless_enabled'] ?? null );
 
 		$input['icon_url'] = esc_url_raw( $this->sanitize_text_val( $input['icon_url'] ?? null ) );

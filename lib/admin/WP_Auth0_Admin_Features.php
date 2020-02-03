@@ -126,12 +126,11 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	/**
 	 * Validation for Basic settings tab.
 	 *
-	 * @param array $old_options - Options before saving the settings form.
 	 * @param array $input - New options being saved.
 	 *
 	 * @return array
 	 */
-	public function basic_validation( array $old_options, array $input ) {
+	public function basic_validation( array $input ) {
 		$input['auto_login']          = $this->sanitize_switch_val( $input['auto_login'] ?? null );
 		$input['auto_login_method']   = $this->sanitize_text_val( $input['auto_login_method'] ?? null );
 		$input['singlelogout']        = $this->sanitize_switch_val( $input['singlelogout'] ?? null );

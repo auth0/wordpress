@@ -74,7 +74,7 @@ class WP_Auth0_Admin {
 			$this->a0_options->get_options_name() . '_basic',
 			$this->a0_options->get_options_name(),
 			[
-				'sanitize_callback' => [ $this, 'input_validator' ]
+				'sanitize_callback' => [ $this, 'input_validator' ],
 			]
 		);
 	}

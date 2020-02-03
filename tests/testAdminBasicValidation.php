@@ -45,81 +45,66 @@ class TestAdminBasicValidation extends WP_Auth0_Test_Case {
 	}
 
 	public function testThatDomainIsValidatedProperly() {
-		$old_input = array_merge( self::$fields, [ 'domain' => uniqid() ] );
-		$validated = self::$admin->basic_validation( $old_input, self::$fields );
+		$validated = self::$admin->basic_validation( [ 'domain' => 'test.auth0.com' ] );
 
 		$this->assertEquals( 'test.auth0.com', $validated['domain'] );
 	}
 
 	public function testThatEmptyDomainIsAllowed() {
-		$old_input = array_merge( self::$fields, [ 'domain' => uniqid() ] );
-		$new_input = array_merge( self::$fields, [ 'domain' => '' ] );
-		$validated = self::$admin->basic_validation( $old_input, $new_input );
+		$validated = self::$admin->basic_validation( [ 'domain' => '' ] );
 
 		$this->assertEmpty( $validated['domain'] );
 	}
 
 	public function testThatHtmlIsRemovedFromDomain() {
-		$new_input = array_merge( self::$fields, [ 'domain' => '<script>alert("hi")</script>test1.auth0.com' ] );
-		$validated = self::$admin->basic_validation( self::$fields, $new_input );
+		$validated = self::$admin->basic_validation( [ 'domain' => '<script>alert("hi")</script>test1.auth0.com' ] );
 
 		$this->assertEquals( 'test1.auth0.com', $validated['domain'] );
 	}
 
 	public function testThatClientSecretIsValidatedProperly() {
-		$old_input = array_merge( self::$fields, [ 'client_secret' => uniqid() ] );
-		$validated = self::$admin->basic_validation( $old_input, self::$fields );
+		$validated = self::$admin->basic_validation( [ 'client_secret' => '__test_client_secret__' ] );
 
 		$this->assertEquals( '__test_client_secret__', $validated['client_secret'] );
 	}
 
 	public function testThatEmptyClientSecretIsAllowed() {
-		$old_input = array_merge( self::$fields, [ 'client_secret' => uniqid() ] );
-		$new_input = array_merge( self::$fields, [ 'client_secret' => '' ] );
-		$validated = self::$admin->basic_validation( $old_input, $new_input );
+		$validated = self::$admin->basic_validation( [ 'client_secret' => '' ] );
 
 		$this->assertEmpty( $validated['client_secret'] );
 	}
 
 	public function testThatHtmlIsRemovedFromClientSecret() {
-		$new_input = array_merge( self::$fields, [ 'client_secret' => '<script>alert("hi")</script>__secret__' ] );
-		$validated = self::$admin->basic_validation( self::$fields, $new_input );
+		$validated = self::$admin->basic_validation( [ 'client_secret' => '<script>alert("hi")</script>__secret__' ] );
 
 		$this->assertEquals( '__secret__', $validated['client_secret'] );
 	}
 
 	public function testThatUnchangedClientSecretIsKept() {
-		$new_input = array_merge( self::$fields, [ 'client_secret' => '[REDACTED]' ] );
-		$validated = self::$admin->basic_validation( self::$fields, $new_input );
+		self::$opts->set( 'client_secret', '__test_client_secret__' );
+		$validated = self::$admin->basic_validation( [ 'client_secret' => '[REDACTED]' ] );
 
 		$this->assertEquals( '__test_client_secret__', $validated['client_secret'] );
 	}
 
 	public function testThatValidAlgorithmIsValidatedProperly() {
-		$old_input = array_merge( self::$fields, [ 'client_signing_algorithm' => uniqid() ] );
-		$new_input = array_merge( self::$fields, [ 'client_signing_algorithm' => 'HS256' ] );
-		$validated = self::$admin->basic_validation( $old_input, $new_input );
+		$validated = self::$admin->basic_validation( [ 'client_signing_algorithm' => 'HS256' ] );
 
 		$this->assertEquals( 'HS256', $validated['client_signing_algorithm'] );
 
-		$new_input['client_signing_algorithm'] = 'RS256';
-		$validated                             = self::$admin->basic_validation( $old_input, $new_input );
+		$validated = self::$admin->basic_validation( [ 'client_signing_algorithm' => 'RS256' ] );
 
 		$this->assertEquals( 'RS256', $validated['client_signing_algorithm'] );
 	}
 
 	public function testThatEmptyAlgorithmIsResetToDefault() {
-		$old_input = array_merge( self::$fields, [ 'client_signing_algorithm' => 'HS256' ] );
-		$new_input = array_merge( self::$fields, [ 'client_signing_algorithm' => '' ] );
-		$validated = self::$admin->basic_validation( $old_input, $new_input );
+		$validated = self::$admin->basic_validation( [ 'client_signing_algorithm' => '' ] );
 
 		$this->assertEquals( 'RS256', $validated['client_signing_algorithm'] );
 	}
 
 	public function testThatInvalidAlgorithmIsResetToDefault() {
-		$old_input = array_merge( self::$fields, [ 'client_signing_algorithm' => 'HS256' ] );
-		$new_input = array_merge( self::$fields, [ 'client_signing_algorithm' => uniqid() ] );
-		$validated = self::$admin->basic_validation( $old_input, $new_input );
+		$validated = self::$admin->basic_validation( [ 'client_signing_algorithm' => '__invalid_alg__' ] );
 
 		$this->assertEquals( 'RS256', $validated['client_signing_algorithm'] );
 	}

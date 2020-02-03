@@ -72,11 +72,10 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 				new WP_Auth0_Routes( WP_Auth0_Options::Instance() )
 			);
 
-			$validated_opts              = $admin_advanced->loginredirection_validation(
-				[ 'default_login_redirection' => $old_instance['redirect_to'] ],
-				[ 'default_login_redirection' => $new_instance['redirect_to'] ]
+			$new_instance['redirect_to'] = $admin_advanced->validate_login_redirect(
+				$new_instance['redirect_to'],
+				$old_instance['redirect_to']
 			);
-			$new_instance['redirect_to'] = $validated_opts['default_login_redirection'];
 		}
 
 		return $new_instance;

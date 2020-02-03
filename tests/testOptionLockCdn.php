@@ -140,19 +140,19 @@ class TestOptionLockCdn extends WP_Auth0_Test_Case {
 	 */
 	public function testThatCustomLockCdnIsValidatedOnSave() {
 
-		$validated = self::$admin->basic_validation( [], [ 'custom_cdn_url' => false ] );
+		$validated = self::$admin->basic_validation( [ 'custom_cdn_url' => false ] );
 		$this->assertEquals( false, $validated['custom_cdn_url'] );
 
-		$validated = self::$admin->basic_validation( [], [ 'custom_cdn_url' => 0 ] );
+		$validated = self::$admin->basic_validation( [ 'custom_cdn_url' => 0 ] );
 		$this->assertEquals( false, $validated['custom_cdn_url'] );
 
-		$validated = self::$admin->basic_validation( [], [ 'custom_cdn_url' => 1 ] );
+		$validated = self::$admin->basic_validation( [ 'custom_cdn_url' => 1 ] );
 		$this->assertEquals( true, $validated['custom_cdn_url'] );
 
-		$validated = self::$admin->basic_validation( [], [ 'custom_cdn_url' => '1' ] );
+		$validated = self::$admin->basic_validation( [ 'custom_cdn_url' => '1' ] );
 		$this->assertEquals( true, $validated['custom_cdn_url'] );
 
-		$validated = self::$admin->basic_validation( [], [ 'custom_cdn_url' => uniqid() ] );
+		$validated = self::$admin->basic_validation( [ 'custom_cdn_url' => uniqid() ] );
 		$this->assertEquals( false, $validated['custom_cdn_url'] );
 	}
 
@@ -162,7 +162,6 @@ class TestOptionLockCdn extends WP_Auth0_Test_Case {
 	public function testThatCustomLockCdnDoesNotChangeSavedCdnUrl() {
 
 		$validated = self::$admin->basic_validation(
-			[],
 			[
 				'cdn_url' => WPA0_LOCK_CDN_URL,
 			]
@@ -170,7 +169,6 @@ class TestOptionLockCdn extends WP_Auth0_Test_Case {
 		$this->assertEquals( WPA0_LOCK_CDN_URL, $validated['cdn_url'] );
 
 		$validated = self::$admin->basic_validation(
-			[],
 			[
 				'custom_cdn_url' => '1',
 				'cdn_url'        => WPA0_LOCK_CDN_URL,
@@ -185,30 +183,27 @@ class TestOptionLockCdn extends WP_Auth0_Test_Case {
 	public function testThatLockCdnUrlIsValidatedOnSave() {
 
 		$validated = self::$admin->basic_validation(
-			[ 'cdn_url' => uniqid() ],
 			[ 'cdn_url' => WPA0_LOCK_CDN_URL ]
 		);
 		$this->assertEquals( WPA0_LOCK_CDN_URL, $validated['cdn_url'] );
 
-		$validated = self::$admin->basic_validation( [], [ 'cdn_url' => ' ' . WPA0_LOCK_CDN_URL . ' ' ] );
+		$validated = self::$admin->basic_validation( [ 'cdn_url' => ' ' . WPA0_LOCK_CDN_URL . ' ' ] );
 		$this->assertEquals( WPA0_LOCK_CDN_URL, $validated['cdn_url'] );
 
 		self::$opts->set( 'cdn_url', '__old_cdn_url__' );
 		$validated = self::$admin->basic_validation(
-			[],
 			[
 				'custom_cdn_url' => true,
-				'cdn_url' => '__invalid_cdn_url__'
+				'cdn_url'        => '__invalid_cdn_url__',
 			]
 		);
 		$this->assertEquals( '__old_cdn_url__', $validated['cdn_url'] );
 
 		self::$opts->set( 'cdn_url', null );
 		$validated = self::$admin->basic_validation(
-			[],
 			[
 				'custom_cdn_url' => true,
-				'cdn_url' => ''
+				'cdn_url'        => '',
 			]
 		);
 		$this->assertEquals( WPA0_LOCK_CDN_URL, $validated['cdn_url'] );
