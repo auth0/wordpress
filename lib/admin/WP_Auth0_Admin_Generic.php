@@ -66,13 +66,10 @@ class WP_Auth0_Admin_Generic {
 		}
 	}
 
-	public function input_validator( $input, $old_options = null ) {
-		if ( empty( $old_options ) ) {
-			$old_options = $this->options->get_options();
-		}
+	public function input_validator( $input ) {
 
 		foreach ( $this->actions_middlewares as $action ) {
-			$input = $this->$action( $old_options, $input );
+			$input = $this->$action( $input );
 		}
 
 		return $input;
