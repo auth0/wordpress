@@ -13,9 +13,9 @@
 class TestAdminAppearanceValidation extends WP_Auth0_Test_Case {
 
 	/**
-	 * WP_Auth0_Admin_Appearance instance.
+	 * WP_Auth0_Admin instance.
 	 *
-	 * @var WP_Auth0_Admin_Appearance
+	 * @var WP_Auth0_Admin
 	 */
 	public static $admin;
 
@@ -24,17 +24,26 @@ class TestAdminAppearanceValidation extends WP_Auth0_Test_Case {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$admin = new WP_Auth0_Admin_Appearance( self::$opts );
+		self::$admin = new WP_Auth0_Admin( self::$opts, new WP_Auth0_Routes( self::$opts ) );
+		self::$admin->init_admin();
+	}
+
+	public static function tearDownAfterClass() {
+		parent::tearDownAfterClass();
+		unregister_setting(
+			'wp_auth0_settings_basic',
+			'wp_auth0_settings'
+		);
 	}
 
 	/**
 	 * Test that the form_title setting is skipped if empty and removes HTML.
 	 */
 	public function testThatFormTitleIsValidatedProperly() {
-		$validated = self::$admin->basic_validation( [] );
+		$validated = self::$admin->input_validator( [] );
 		$this->assertEquals( '', $validated['form_title'] );
 
-		$validated = self::$admin->basic_validation( [ 'form_title' => '<script>alert("hi")</script>' ] );
+		$validated = self::$admin->input_validator( [ 'form_title' => '<script>alert("hi")</script>' ] );
 		$this->assertNotContains( '<script>', $validated['form_title'] );
 	}
 
@@ -42,10 +51,10 @@ class TestAdminAppearanceValidation extends WP_Auth0_Test_Case {
 	 * Test that the icon_url setting is skipped if empty and tries to create a valid URL for display.
 	 */
 	public function testThatIconUrlIsValidatedProperly() {
-		$validated = self::$admin->basic_validation( [] );
+		$validated = self::$admin->input_validator( [] );
 		$this->assertEquals( '', $validated['icon_url'] );
 
-		$validated = self::$admin->basic_validation( [ 'icon_url' => 'example.org' ] );
+		$validated = self::$admin->input_validator( [ 'icon_url' => 'example.org' ] );
 		$this->assertEquals( 'http://example.org', $validated['icon_url'] );
 	}
 
@@ -53,10 +62,10 @@ class TestAdminAppearanceValidation extends WP_Auth0_Test_Case {
 	 * Test that the primary_color setting is skipped if empty and removes HTML.
 	 */
 	public function testThatPrimaryColorIsValidatedProperly() {
-		$validated = self::$admin->basic_validation( [] );
+		$validated = self::$admin->input_validator( [] );
 		$this->assertEquals( '', $validated['primary_color'] );
 
-		$validated = self::$admin->basic_validation( [ 'primary_color' => '<script>alert("hi")</script>' ] );
+		$validated = self::$admin->input_validator( [ 'primary_color' => '<script>alert("hi")</script>' ] );
 		$this->assertNotContains( '<script>', $validated['primary_color'] );
 	}
 }

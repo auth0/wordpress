@@ -41,6 +41,7 @@ class TestWPAuth0Options extends WP_Auth0_Test_Case {
 	 */
 	public function testThatDefaultsWork() {
 		$opts = new WP_Auth0_Options();
+		$opts->reset();
 		foreach ( array_keys( $opts->get_options() ) as $opt_name ) {
 			$test_msg = 'Testing option: "' . $opt_name . '"';
 			$this->assertEquals( $opts->get_default( $opt_name ), $opts->get( $opt_name ), $test_msg );
