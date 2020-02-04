@@ -279,6 +279,9 @@ class WP_Auth0_Options {
 	 * @return string
 	 */
 	public function get_wp_auth0_url( $protocol = null ) {
+		if ( is_null( $protocol ) && $this->get( 'force_https_callback' ) ) {
+			$protocol = 'https';
+		}
 		$site_url = site_url( 'index.php', $protocol );
 		return add_query_arg( 'auth0', 1, $site_url );
 	}
