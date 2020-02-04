@@ -31,8 +31,19 @@ class WP_Auth0_Import_Settings {
 			exit;
 		}
 
-		foreach ( $settings as $key => $value ) {
-			$this->a0_options->set( $key, $value, false );
+		// Keep original settings keys so we only save imported values.
+		$settings_keys = array_keys( $settings );
+
+		$admin = new WP_Auth0_Admin( $this->a0_options, new WP_Auth0_Routes( $this->a0_options ) );
+
+		// Default setting values will be added to the array.
+		$settings_validated = $admin->input_validator( $settings );
+
+		foreach ( $settings_keys as $settings_key ) {
+			// Invalid settings keys are removed in WP_Auth0_Admin::input_validator().
+			if ( isset( $settings_validated[ $settings_key ] ) ) {
+				$this->a0_options->set( $settings_key, $settings_validated[ $settings_key ], false );
+			}
 		}
 
 		$this->a0_options->update_all();

@@ -165,4 +165,57 @@ class TestImportExportSettings extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'http://example.org/wp-admin/admin.php?page=wpa0', $redirect_data['location'] );
 		$this->assertEquals( 302, $redirect_data['status'] );
 	}
+
+	public function testThatImportedSettingsAreValidated() {
+		$this->startRedirectHalting();
+		$this->setGlobalUser();
+		$_POST['settings-json'] = '{"client_signing_algorithm":"__invalid_alg__"}';
+
+		try {
+			wp_auth0_import_settings_admin_action();
+			$redirect_data = [ 'location' => 'No redirect caught' ];
+		} catch ( Exception $e ) {
+			$redirect_data = unserialize( $e->getMessage() );
+		}
+
+		$this->assertEquals( 'http://example.org/wp-admin/admin.php?page=wpa0', $redirect_data['location'] );
+		$this->assertNotEquals( '__invalid_alg__', wp_auth0_get_option( 'client_signing_algorithm' ) );
+	}
+
+	public function testThatOnlyImportedSettingsAreSaved() {
+		$this->startRedirectHalting();
+		$this->setGlobalUser();
+		self::$opts->set( 'client_id', '__test_existing_client_id__' );
+		$_POST['settings-json'] = '{"domain":"__test_domain__"}';
+
+		try {
+			wp_auth0_import_settings_admin_action();
+			$redirect_data = [ 'location' => 'No redirect caught' ];
+		} catch ( Exception $e ) {
+			$redirect_data = unserialize( $e->getMessage() );
+		}
+
+		$this->assertEquals( 'http://example.org/wp-admin/admin.php?page=wpa0', $redirect_data['location'] );
+		$this->assertEquals( '__test_domain__', wp_auth0_get_option( 'domain' ) );
+		$this->assertEquals( '__test_existing_client_id__', wp_auth0_get_option( 'client_id' ) );
+	}
+
+	public function testThatUnknownImportedKeysAreRemoved() {
+		$this->startRedirectHalting();
+		$this->setGlobalUser();
+		$_POST['settings-json'] = '{"domain":"__test_domain__", "__invalid_key__": "__test_val__"}';
+
+		try {
+			wp_auth0_import_settings_admin_action();
+			$redirect_data = [ 'location' => 'No redirect caught' ];
+		} catch ( Exception $e ) {
+			$redirect_data = unserialize( $e->getMessage() );
+		}
+
+		$this->assertEquals( 'http://example.org/wp-admin/admin.php?page=wpa0', $redirect_data['location'] );
+
+		$db_options = get_option( 'wp_auth0_settings' );
+		$this->assertEquals( '__test_domain__', $db_options['domain'] );
+		$this->assertArrayNotHasKey( '__invalid_key__', $db_options );
+	}
 }

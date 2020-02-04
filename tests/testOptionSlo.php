@@ -16,9 +16,9 @@ class TestOptionSlo extends WP_Auth0_Test_Case {
 	use DomDocumentHelpers;
 
 	/**
-	 * WP_Auth0_Admin_Features instance.
+	 * WP_Auth0_Admin instance.
 	 *
-	 * @var WP_Auth0_Admin_Features
+	 * @var WP_Auth0_Admin
 	 */
 	public static $admin;
 
@@ -27,13 +27,14 @@ class TestOptionSlo extends WP_Auth0_Test_Case {
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$admin = new WP_Auth0_Admin_Features( self::$opts );
+		self::$admin = new WP_Auth0_Admin( self::$opts, new WP_Auth0_Routes( self::$opts ) );
 	}
 
 	/**
 	 * Test the input HTML for the custom domain setting.
 	 */
 	public function testSloFieldOutput() {
+		$admin      = new WP_Auth0_Admin_Features( self::$opts );
 		$field_args = [
 			'label_for' => 'wpa0_singlelogout',
 			'opt_name'  => 'singlelogout',
@@ -41,7 +42,7 @@ class TestOptionSlo extends WP_Auth0_Test_Case {
 
 		// Get the field HTML.
 		ob_start();
-		self::$admin->render_singlelogout( $field_args );
+		$admin->render_singlelogout( $field_args );
 		$field_html = ob_get_clean();
 
 		// Check field HTML for required attributes.
@@ -74,22 +75,22 @@ class TestOptionSlo extends WP_Auth0_Test_Case {
 	 * See testThatSloIsTurnedOffIfSsoIsOff for tests regarding that behavior.
 	 */
 	public function testThatSloIsValidatedOnSave() {
-		$validated = self::$admin->basic_validation( [ 'singlelogout' => false ] );
+		$validated = self::$admin->input_validator( [ 'singlelogout' => false ] );
 		$this->assertEquals( false, $validated['singlelogout'] );
 
-		$validated = self::$admin->basic_validation( [ 'singlelogout' => 0 ] );
+		$validated = self::$admin->input_validator( [ 'singlelogout' => 0 ] );
 		$this->assertEquals( false, $validated['singlelogout'] );
 
-		$validated = self::$admin->basic_validation( [ 'singlelogout' => 1 ] );
+		$validated = self::$admin->input_validator( [ 'singlelogout' => 1 ] );
 		$this->assertEquals( true, $validated['singlelogout'] );
 
-		$validated = self::$admin->basic_validation( [ 'singlelogout' => '1' ] );
+		$validated = self::$admin->input_validator( [ 'singlelogout' => '1' ] );
 		$this->assertEquals( true, $validated['singlelogout'] );
 
-		$validated = self::$admin->basic_validation( [] );
+		$validated = self::$admin->input_validator( [] );
 		$this->assertEquals( false, $validated['singlelogout'] );
 
-		$validated = self::$admin->basic_validation( [ 'singlelogout' => uniqid() ] );
+		$validated = self::$admin->input_validator( [ 'singlelogout' => uniqid() ] );
 		$this->assertEquals( false, $validated['singlelogout'] );
 	}
 }

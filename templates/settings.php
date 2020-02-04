@@ -6,6 +6,18 @@
 
 			<?php settings_errors(); ?>
 
+		<?php if ( wp_auth0_get_option( 'client_id' ) ) : ?>
+		<a href="https://manage.auth0.com/#/applications/
+			<?php
+			echo esc_attr( wp_auth0_get_option( 'client_id' ) );
+			?>
+			" target="_blank">
+			<?php
+			_e( 'Manage this application at Auth0', 'wp-auth0' );
+			?>
+			</a>
+		<?php endif; ?>
+
 			<p class="nav nav-tabs" role="tablist">
 					<a id="tab-basic" href="#basic" class="js-a0-settings-tabs">
 						<?php _e( 'Basic', 'wp-auth0' ); ?>
