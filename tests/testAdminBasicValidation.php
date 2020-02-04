@@ -34,15 +34,6 @@ class TestAdminBasicValidation extends WP_Auth0_Test_Case {
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
 		self::$admin = new WP_Auth0_Admin( self::$opts, new WP_Auth0_Routes( self::$opts ) );
-		self::$admin->init_admin();
-	}
-
-	public static function tearDownAfterClass() {
-		parent::tearDownAfterClass();
-		unregister_setting(
-			'wp_auth0_settings_basic',
-			'wp_auth0_settings'
-		);
 	}
 
 	public function testThatDomainIsValidatedProperly() {

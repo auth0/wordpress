@@ -11,6 +11,13 @@ class WP_Auth0_Admin {
 	public function __construct( WP_Auth0_Options $a0_options, WP_Auth0_Routes $router ) {
 		$this->a0_options = $a0_options;
 		$this->router     = $router;
+
+		$this->sections = [
+			'basic'      => new WP_Auth0_Admin_Basic( $this->a0_options ),
+			'features'   => new WP_Auth0_Admin_Features( $this->a0_options ),
+			'appearance' => new WP_Auth0_Admin_Appearance( $this->a0_options ),
+			'advanced'   => new WP_Auth0_Admin_Advanced( $this->a0_options, $this->router ),
+		];
 	}
 
 	/**
@@ -58,17 +65,10 @@ class WP_Auth0_Admin {
 	}
 
 	public function init_admin() {
-		$this->sections['basic'] = new WP_Auth0_Admin_Basic( $this->a0_options );
-		$this->sections['basic']->init();
 
-		$this->sections['features'] = new WP_Auth0_Admin_Features( $this->a0_options );
-		$this->sections['features']->init();
-
-		$this->sections['appearance'] = new WP_Auth0_Admin_Appearance( $this->a0_options );
-		$this->sections['appearance']->init();
-
-		$this->sections['advanced'] = new WP_Auth0_Admin_Advanced( $this->a0_options, $this->router );
-		$this->sections['advanced']->init();
+		foreach ( $this->sections as $section ) {
+			$section->init();
+		}
 
 		register_setting(
 			$this->a0_options->get_options_name() . '_basic',
@@ -93,6 +93,14 @@ class WP_Auth0_Admin {
 		// Look for and set constant overrides so validation is still possible.
 		foreach ( $constant_keys as $key ) {
 			$input[ $key ] = $this->a0_options->get_constant_val( $key );
+		}
+
+		// Remove unknown keys.
+		$option_keys = $this->a0_options->get_defaults( true );
+		foreach ( $input as $key => $val ) {
+			if ( ! in_array( $key, $option_keys ) ) {
+				unset( $input[ $key ] );
+			}
 		}
 
 		foreach ( $this->sections as $name => $section ) {
