@@ -143,7 +143,6 @@ class WP_Auth0_InitialSetup_Consent {
 
 			$this->a0_options->set( 'migration_ws', $this->hasInternetConnection );
 			$this->a0_options->set( 'migration_token', $migration_token );
-			$this->a0_options->set( 'migration_token_id', null );
 			$this->a0_options->set( 'db_connection_name', $db_connection_name );
 		}
 

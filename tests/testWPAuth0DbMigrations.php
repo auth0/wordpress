@@ -169,6 +169,7 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		self::$opts->set( 'auth0_implicit_workflow', 1 );
 		self::$opts->set( 'client_secret_b64_encoded', 1 );
 		self::$opts->set( 'custom_signup_fields', '__test_fields__' );
+		self::$opts->set( 'migration_token_id', '__test_jti__' );
 		$db_manager->install_db( $test_version );
 		$this->assertNull( self::$opts->get( 'jwt_auth_integration' ) );
 		$this->assertNull( self::$opts->get( 'link_auth0_users' ) );
@@ -177,6 +178,7 @@ class TestWPAuth0DbMigrations extends WP_Auth0_Test_Case {
 		$this->assertNull( self::$opts->get( 'auth0_implicit_workflow' ) );
 		$this->assertNull( self::$opts->get( 'client_secret_b64_encoded' ) );
 		$this->assertNull( self::$opts->get( 'custom_signup_fields' ) );
+		$this->assertNull( self::$opts->get( 'migration_token_id' ) );
 	}
 
 	/**
