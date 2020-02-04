@@ -195,4 +195,20 @@ class TestWPAuth0Options extends WP_Auth0_Test_Case {
 		$db_options = get_option( $opts->get_options_name() );
 		$this->assertEquals( '__test_domain__', $db_options['domain'] );
 	}
+
+	public function testThatDefaultCallbackUrlsAreCorrect() {
+		$opts = new WP_Auth0_Options();
+		$this->assertEquals( 'http://example.org/index.php?auth0=1', $opts->get_wp_auth0_url() );
+	}
+
+	public function testThatCustomProtocolCallbackUrlsAreCorrect() {
+		$opts = new WP_Auth0_Options();
+		$this->assertEquals( 'https://example.org/index.php?auth0=1', $opts->get_wp_auth0_url( 'https' ) );
+	}
+
+	public function testThatForcedHttpsCallbackUrlsAreCorrect() {
+		$opts = new WP_Auth0_Options();
+		$opts->set( 'force_https_callback', 1 );
+		$this->assertEquals( 'https://example.org/index.php?auth0=1', $opts->get_wp_auth0_url() );
+	}
 }
