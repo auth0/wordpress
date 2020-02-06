@@ -286,7 +286,7 @@ class WP_Auth0_Routes {
 			throw new Exception( __( 'Unauthorized: missing authorization header', 'wp-auth0' ), 401 );
 		}
 
-		if ( ! $this->valid_token( $authorization ) ) {
+		if ( $authorization !== $this->a0_options->get( 'migration_token' ) ) {
 			throw new Exception( __( 'Invalid token', 'wp-auth0' ), 401 );
 		}
 
@@ -321,33 +321,6 @@ class WP_Auth0_Routes {
 					'error'  => __( 'Forbidden', 'wp-auth0' ),
 				];
 				break;
-		}
-	}
-
-	/**
-	 * Check if a token or token JTI is the same as what is stored.
-	 *
-	 * @param string $authorization - Incoming migration token.
-	 *
-	 * @return bool
-	 */
-	private function valid_token( $authorization ) {
-		$token = $this->a0_options->get( 'migration_token' );
-		if ( $token === $authorization ) {
-			return true;
-		}
-
-		$client_secret = $this->a0_options->get( 'client_secret' );
-		if ( $this->a0_options->get( 'client_secret_base64_encoded' ) ) {
-			$client_secret = wp_auth0_url_base64_decode( $client_secret );
-		}
-
-		try {
-			$signature_verifier = new WP_Auth0_SymmetricVerifier( $client_secret );
-			$decoded            = $signature_verifier->verifyAndDecode( $authorization );
-			return $decoded->getClaim( 'jti' ) === $this->a0_options->get( 'migration_token_id' );
-		} catch ( Exception $e ) {
-			return false;
 		}
 	}
 }

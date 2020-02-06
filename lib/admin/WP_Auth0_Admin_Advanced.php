@@ -378,32 +378,13 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$input['migration_ws']    = $this->sanitize_switch_val( $input['migration_ws'] ?? null );
 		$input['migration_token'] = $this->options->get( 'migration_token' );
 
-		// Migration endpoints or turned off, nothing to do.
-		if ( ! $input['migration_ws'] ) {
-			return $input;
-		}
-
-		$input['migration_token_id'] = null;
-		$this->router->setup_rewrites();
-		flush_rewrite_rules();
-
-		// If we don't have a token yet, generate one.
 		if ( empty( $input['migration_token'] ) ) {
 			$input['migration_token'] = wp_auth0_generate_token();
-			return $input;
 		}
 
-		// If we do have a token, try to decode and store the JTI.
-		$secret = $input['client_secret'];
-
-		try {
-			$signature_verifier          = new WP_Auth0_SymmetricVerifier( $secret );
-			$token_decoded               = $signature_verifier->verifyAndDecode( $input['migration_token'] );
-			$input['migration_token_id'] = $token_decoded->getClaim( 'jti' );
-
-			// phpcs:ignore
-		} catch ( Exception $e ) {
-			// If the JWT cannot be decoded then we use the token as-is without storing the JTI.
+		if ( $input['migration_ws'] ) {
+			$this->router->setup_rewrites();
+			flush_rewrite_rules();
 		}
 
 		return $input;
