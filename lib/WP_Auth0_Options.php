@@ -367,7 +367,6 @@ class WP_Auth0_Options {
 			// System
 			'version'                   => 1,
 			'last_step'                 => 1,
-			'migration_token_id'        => null,
 
 			// Basic
 			'domain'                    => '',

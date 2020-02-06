@@ -90,27 +90,6 @@ class TestRoutesGetUser extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * If the token has the wrong JTI, the route should fail with an error.
-	 */
-	public function testThatGetUserRouteIsUnauthorizedIfWrongJti() {
-		$client_secret = '__test_client_secret__';
-		self::$opts->set( 'migration_ws', true );
-		self::$opts->set( 'client_secret', $client_secret );
-		self::$opts->set( 'migration_token_id', '__test_token_id__' );
-
-		$_POST['access_token'] = self::makeHsToken( [ 'jti' => uniqid() ], $client_secret );
-
-		$output = json_decode( wp_auth0_custom_requests( self::$wp, true ) );
-
-		$this->assertEquals( 401, $output->status );
-		$this->assertEquals( 'Invalid token', $output->error );
-
-		$log = self::$error_log->get();
-		$this->assertCount( 1, $log );
-		$this->assertEquals( $output->error, $log[0]['message'] );
-	}
-
-	/**
 	 * If there is no username POSTed, the route should fail with an error.
 	 */
 	public function testThatGetUserRouteIsBadRequestIfNoUsername() {

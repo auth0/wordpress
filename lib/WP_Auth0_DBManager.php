@@ -175,6 +175,7 @@ class WP_Auth0_DBManager {
 			$options->remove( 'auth0_implicit_workflow' );
 			$options->remove( 'client_secret_b64_encoded' );
 			$options->remove( 'custom_signup_fields' );
+			$options->remove( 'migration_token_id' );
 		}
 
 		$options->update_all();

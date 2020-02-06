@@ -132,14 +132,10 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 	 */
 	public function testThatChangingMigrationToOffKeepsTokenData() {
 		self::$opts->set( 'migration_token', 'existing_token' );
-		$input     = [
-			'migration_token_id' => 'existing_token_id',
-		];
-		$validated = self::$admin->input_validator( $input );
+		$validated = self::$admin->input_validator( [] );
 
 		$this->assertArrayHasKey( 'migration_ws', $validated );
 		$this->assertEmpty( $validated['migration_ws'] );
-		$this->assertEquals( $input['migration_token_id'], $validated['migration_token_id'] );
 		$this->assertEquals( 'existing_token', $validated['migration_token'] );
 	}
 
@@ -156,7 +152,6 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 		$validated = self::$admin->input_validator( $input );
 
 		$this->assertEquals( 'new_token', $validated['migration_token'] );
-		$this->assertNull( $validated['migration_token_id'] );
 		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
 	}
 
@@ -176,7 +171,6 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 
 		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
 		$this->assertEquals( $migration_token, $validated['migration_token'] );
-		$this->assertEquals( '__test_token_id__', $validated['migration_token_id'] );
 	}
 
 	/**
@@ -188,7 +182,6 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 		$validated = self::$admin->input_validator( $input );
 
 		$this->assertGreaterThan( 64, strlen( $validated['migration_token'] ) );
-		$this->assertNull( $validated['migration_token_id'] );
 		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
 	}
 
@@ -211,7 +204,6 @@ class TestOptionMigrationWs extends WP_Auth0_Test_Case {
 
 		$validated = $admin->migration_ws_validation( $input );
 
-		$this->assertNull( $validated['migration_token_id'] );
 		$this->assertEquals( $input['migration_ws'], $validated['migration_ws'] );
 		$this->assertEquals( AUTH0_ENV_MIGRATION_TOKEN, $validated['migration_token'] );
 	}
