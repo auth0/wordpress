@@ -3,21 +3,89 @@
 ## 4.0.0-beta (master branch)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.11.1...master)
 
-**Notes on this release**
+**This is a major release with breaking changes!**
 
-- The minimum PHP version has been updated from 5.3 to 7.0. All long arrays have been converted to short arrays with a PHPCS check. 
-- The site will no longer auto-redirect paths with `auth0` in them to the callback URL. Use `/index.php?auth0=1` to use the callback URL directly. Your site may require permalinks to be refreshed manually by going to **wp-admin > Settings > Permalinks** and clicking **Save Changes**.
-- The Client Secret Encoded option has been removed. If your WordPress site was using an encoded Client Secret, you'll need to regenerate one in the Auth0 dashboard and save it in wp-admin > Auth0 > Settings > Basic > Client Secret.
+In addition to the minimum PHP version being updated from 5.3 to 7.0, there are many breaking removals and changes that are covered in the [migration guide](MIGRATE-v3-TO-v4.md) included in this release.
 
 **Closed issues**
+- pt-BR language is not being installed [\#760](https://github.com/auth0/wp-auth0/issues/760)
+- Authorization Extension, groups, roles not showing up [\#701](https://github.com/auth0/wp-auth0/issues/701)
 - Using the auth0 word in the URL path triggers an authorization code exchange [\#351](https://github.com/auth0/wp-auth0/issues/351)
 
-**Breaking changes**
-- Fix auth0 in paths triggering callback [\#697](https://github.com/auth0/wp-auth0/pull/697) ([joshcanhelp](https://github.com/joshcanhelp))
+**Added**
+- Add settings validation to import [\#777](https://github.com/auth0/wp-auth0/pull/777) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add ability to break cache if RS256 ID token kid is not found [\#770](https://github.com/auth0/wp-auth0/pull/770) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove error_log calls and add auth0_insert_error action [\#763](https://github.com/auth0/wp-auth0/pull/763) ([joshcanhelp](https://github.com/joshcanhelp))
+- Get new access token via refresh token API [\#730](https://github.com/auth0/wp-auth0/pull/730) ([albeja](https://github.com/albeja))
+- feature/Adding Brazilian Portuguese translations [\#729](https://github.com/auth0/wp-auth0/pull/729) ([niugait](https://github.com/niugait))
+- Add wpa0_user_data filter before creating WP_User [\#717](https://github.com/auth0/wp-auth0/pull/717) ([horike37](https://github.com/horike37))
+- Add check for GET and POST globals for state validation [\#707](https://github.com/auth0/wp-auth0/pull/707) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Changed**
+- Merge in 3.11.2 and 3.11.3 [\#779](https://github.com/auth0/wp-auth0/pull/779) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update Embedded settings validation and defaults [\#776](https://github.com/auth0/wp-auth0/pull/776) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update Basic settings validation and defaults [\#775](https://github.com/auth0/wp-auth0/pull/775) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update Feature settings validation and defaults [\#774](https://github.com/auth0/wp-auth0/pull/774) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update Advanced settings validation and defaults [\#773](https://github.com/auth0/wp-auth0/pull/773) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change all redirects to wp_safe_redirect [\#771](https://github.com/auth0/wp-auth0/pull/771) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated from WP_Auth0_InitialSetup [\#754](https://github.com/auth0/wp-auth0/pull/754) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated from errorlog [\#753](https://github.com/auth0/wp-auth0/pull/753) ([joshcanhelp](https://github.com/joshcanhelp))
+- Move actions from methods to functions for profile delete and change email [\#751](https://github.com/auth0/wp-auth0/pull/751) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated from User and Change Password [\#750](https://github.com/auth0/wp-auth0/pull/750) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated from email verification [\#749](https://github.com/auth0/wp-auth0/pull/749) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated from admin [\#748](https://github.com/auth0/wp-auth0/pull/748) ([joshcanhelp](https://github.com/joshcanhelp))
+- Move WP_Auth0_Routes initialize method to function [\#745](https://github.com/auth0/wp-auth0/pull/745) ([joshcanhelp](https://github.com/joshcanhelp))
+- Merge WP_Auth0_Options_Generic into WP_Auth0_Options [\#741](https://github.com/auth0/wp-auth0/pull/741) ([joshcanhelp](https://github.com/joshcanhelp))
+- Rename Lock option class and remove deprecated [\#739](https://github.com/auth0/wp-auth0/pull/739) ([joshcanhelp](https://github.com/joshcanhelp))
+- Improve OIDC Compliance [\#734](https://github.com/auth0/wp-auth0/pull/734) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update minimum PHP to 7.0 and WP to 4.9 [\#732](https://github.com/auth0/wp-auth0/pull/732) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update auth params method to add filters [\#716](https://github.com/auth0/wp-auth0/pull/716) ([joshcanhelp](https://github.com/joshcanhelp))
+- Move WooCommerce hooks to global functions and remove init method [\#705](https://github.com/auth0/wp-auth0/pull/705) ([joshcanhelp](https://github.com/joshcanhelp))
 - Bump PHP version to 5.6; auto-adjust array syntax [\#696](https://github.com/auth0/wp-auth0/pull/696) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Removed**
+- Remove migration JWT JTI check [\#778](https://github.com/auth0/wp-auth0/pull/778) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove custom signup fields setting [\#765](https://github.com/auth0/wp-auth0/pull/765) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove Bootstrap, fonts, and descriptions from admin pages [\#764](https://github.com/auth0/wp-auth0/pull/764) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove connection deactivation on setup [\#762](https://github.com/auth0/wp-auth0/pull/762) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove future iat check [\#757](https://github.com/auth0/wp-auth0/pull/757) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove class WP-Auth0 and move methods to functions [\#756](https://github.com/auth0/wp-auth0/pull/756) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated from import settings [\#752](https://github.com/auth0/wp-auth0/pull/752) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove user export functionality [\#747](https://github.com/auth0/wp-auth0/pull/747) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated from WP_Auth0_DBManager and move init to function [\#746](https://github.com/auth0/wp-auth0/pull/746) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated from WP_Auth0_UsersRepo [\#744](https://github.com/auth0/wp-auth0/pull/744) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove WP_Auth0_EditProfile [\#743](https://github.com/auth0/wp-auth0/pull/743) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove client_secret_b64_encoded setting [\#742](https://github.com/auth0/wp-auth0/pull/742) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated WP_Auth0_Api_Operations methods [\#740](https://github.com/auth0/wp-auth0/pull/740) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated IP and referrer checks [\#738](https://github.com/auth0/wp-auth0/pull/738) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated Management API functionality [\#737](https://github.com/auth0/wp-auth0/pull/737) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove class WP_Auth0_RulesLib [\#736](https://github.com/auth0/wp-auth0/pull/736) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove implicit login flow [\#735](https://github.com/auth0/wp-auth0/pull/735) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated WP_Auth0_Metrics class [\#728](https://github.com/auth0/wp-auth0/pull/728) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated WP_Auth0_Lock_Options class [\#727](https://github.com/auth0/wp-auth0/pull/727) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated WP_Auth0_CustomDBLib class [\#726](https://github.com/auth0/wp-auth0/pull/726) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated WP_Auth0_Api_Client methods [\#725](https://github.com/auth0/wp-auth0/pull/725) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove login manager deprecated [\#724](https://github.com/auth0/wp-auth0/pull/724) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove features including SSO on wp-login/php [\#723](https://github.com/auth0/wp-auth0/pull/723) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated basic settings; centralize validation declaration [\#722](https://github.com/auth0/wp-auth0/pull/722) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove appearance settings [\#721](https://github.com/auth0/wp-auth0/pull/721) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove all unused and deprecated advanced setting functionality [\#720](https://github.com/auth0/wp-auth0/pull/720) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove unused setup wizard classes, methods, and templates [\#719](https://github.com/auth0/wp-auth0/pull/719) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove JWT auth plugin integration [\#715](https://github.com/auth0/wp-auth0/pull/715) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove Social Amplificator and related assets [\#714](https://github.com/auth0/wp-auth0/pull/714) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove dashboard widgets [\#713](https://github.com/auth0/wp-auth0/pull/713) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove feedback form from help tab [\#712](https://github.com/auth0/wp-auth0/pull/712) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix include path for functions file [\#755](https://github.com/auth0/wp-auth0/pull/755) ([joshcanhelp](https://github.com/joshcanhelp))
+- Merge in released 3.11.1 version [\#709](https://github.com/auth0/wp-auth0/pull/709) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix auth0 in paths triggering callback [\#697](https://github.com/auth0/wp-auth0/pull/697) ([joshcanhelp](https://github.com/joshcanhelp))
 
 ## [3.11.3](https://github.com/auth0/wp-auth0/tree/3.11.3) (2020-01-30)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.11.2...3.11.3)
+
+**Closed issues**
+- wle parameter allows for possible XSS attack [\#767](https://github.com/auth0/wp-auth0/issues/767)
 
 **Security**
 - Fix potential XSS on wp-login.php override page [\#768](https://github.com/auth0/wp-auth0/pull/768) ([kinabalu](https://github.com/kinabalu))
