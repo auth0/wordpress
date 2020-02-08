@@ -108,7 +108,7 @@
 
 		<h3><?php _e( 'Import Setup', 'wp-auth0' ); ?></h3>
 		<p>
-			<?php _e( 'Already set up another WordPress instance with Auth0?.', 'wp-auth0' ); ?>
+			<?php _e( 'Already set up another WordPress instance with Auth0?', 'wp-auth0' ); ?>
 			<?php _e( 'Save time and import existing Auth0 settings.', 'wp-auth0' ); ?>
 		</p>
 
