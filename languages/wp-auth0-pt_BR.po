@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Login by Auth0\n"
 "POT-Creation-Date: 2020-02-08 10:46-0800\n"
-"PO-Revision-Date: 2020-02-08 10:47-0800\n"
+"PO-Revision-Date: 2020-02-10 12:33-0800\n"
 "Last-Translator: Josh Cunningham <josh.cunningham@auth0.com>\n"
 "Language-Team: Tiago Nascimento https://navesd.com.br/\n"
 "Language: pt_BR\n"
@@ -151,11 +151,11 @@ msgstr "Mensagem de erro desconhecida"
 
 #: lib/WP_Auth0_Import_Settings.php:24
 msgid "No settings JSON entered."
-msgstr ""
+msgstr "JSON não informado."
 
 #: lib/WP_Auth0_Import_Settings.php:30
 msgid "Settings JSON entered is not valid."
-msgstr ""
+msgstr "JSON informado inválido."
 
 #. translators: The $title variable is the admin-controlled form title.
 #: lib/WP_Auth0_Lock.php:174
@@ -691,7 +691,7 @@ msgstr ""
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:297
 msgid "The Icon URL used is not valid."
-msgstr ""
+msgstr "A URL informada do ícone não é válida."
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:308
 msgid "The Extra Settings parameter should be a valid JSON object."
@@ -699,7 +699,7 @@ msgstr "O parâmetro de configurações Extra deve ser um objeto JSON válido."
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:317
 msgid "The Custom Lock JS URL used is not valid."
-msgstr ""
+msgstr "A URL personalizada do Lock JS não é válida."
 
 #: lib/admin/WP_Auth0_Admin_Basic.php:28
 msgid "Domain"
@@ -988,7 +988,7 @@ msgstr "log de erro"
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:63
 msgid " for more information. If the problem persists, please follow the "
-msgstr ""
+msgstr " para mais informações. Se o erro persistir, por favor, consulte a "
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:64
 msgid "manual setup instructions"
@@ -1209,17 +1209,20 @@ msgstr "Configurações de Exportação"
 
 #: templates/import_settings.php:34
 msgid "Paste the settings JSON in the field below. "
-msgstr ""
+msgstr "Cole o JSON com as configurações no campo abaixo. "
 
 #: templates/import_settings.php:35
 msgid "Settings that are not in the imported JSON will use existing values. "
 msgstr ""
+"Configurações não informadas no JSON irão utilizar os valores existentes. "
 
 #: templates/import_settings.php:36
 msgid ""
 "Setting values will be validated so check the final values once import is "
 "complete. "
 msgstr ""
+"A configurações serão validadas. Por favor, verifique os valores finais "
+"quando o processo de importação terminar. "
 
 #: templates/import_settings.php:41
 msgid "Import"
@@ -1235,7 +1238,7 @@ msgstr "Exportar"
 
 #: templates/initial-setup/admin-creation.php:9
 msgid "Step 3:"
-msgstr ""
+msgstr "Passo 3:"
 
 #: templates/initial-setup/admin-creation.php:9
 msgid "Choose your password"
@@ -1281,7 +1284,7 @@ msgstr "Ignorar esta etapa"
 
 #: templates/initial-setup/connection_profile.php:5
 msgid "Login by Auth0 Setup Wizard"
-msgstr ""
+msgstr "Login by Auth0 Assistente de Configuração"
 
 #: templates/initial-setup/connection_profile.php:6
 msgid ""
@@ -1453,11 +1456,11 @@ msgstr "Já configurou outra instância do WordPress com Auth0?"
 
 #: templates/initial-setup/connection_profile.php:112
 msgid "Save time and import existing Auth0 settings."
-msgstr ""
+msgstr "Economize tempo importando configurações de uma conta da Auth0."
 
 #: templates/initial-setup/connections.php:9
 msgid "Step 2:"
-msgstr ""
+msgstr "Passo 2:"
 
 #: templates/initial-setup/connections.php:9
 msgid "Configure your Connections"
@@ -1509,11 +1512,11 @@ msgstr "Você está conectado"
 
 #: templates/settings.php:5
 msgid "Login by Auth0 Settings"
-msgstr ""
+msgstr "Login by Auth0 Configurações"
 
 #: templates/settings.php:16
 msgid "Manage this application at Auth0"
-msgstr ""
+msgstr "Gerencie essa aplicação Auth0 no painel."
 
 #: templates/settings.php:23
 msgid "Basic"

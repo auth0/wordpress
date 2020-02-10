@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Login by Auth0\n"
 "POT-Creation-Date: 2020-02-08 10:46-0800\n"
-"PO-Revision-Date: 2020-02-08 10:46-0800\n"
+"PO-Revision-Date: 2020-02-10 13:12-0800\n"
 "Last-Translator: Josh Cunningham <josh.cunningham@auth0.com>\n"
 "Language-Team: Carlos Longarela https://tabernawp.com/\n"
 "Language: es_ES\n"
@@ -152,7 +152,7 @@ msgstr "Mensaje de error desconocido"
 
 #: lib/WP_Auth0_Import_Settings.php:24
 msgid "No settings JSON entered."
-msgstr ""
+msgstr "No se ingresaron las configuraciones JSON."
 
 #: lib/WP_Auth0_Import_Settings.php:30
 msgid "Settings JSON entered is not valid."
@@ -706,7 +706,7 @@ msgstr ""
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:297
 msgid "The Icon URL used is not valid."
-msgstr ""
+msgstr "La URL del ícono usada no es válida."
 
 #: lib/admin/WP_Auth0_Admin_Appearance.php:308
 msgid "The Extra Settings parameter should be a valid JSON object."
@@ -1004,7 +1004,7 @@ msgstr "registro de errores"
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:63
 msgid " for more information. If the problem persists, please follow the "
-msgstr ""
+msgstr " para más información. Si el problema persiste, por favor siga las "
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:64
 msgid "manual setup instructions"
@@ -1053,7 +1053,7 @@ msgstr ""
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:115
 msgid "The required scopes were rejected."
-msgstr ""
+msgstr "Los scopes requeridos fueron denegados."
 
 #: lib/initial-setup/WP_Auth0_InitialSetup.php:127
 msgid "Please create your Auth0 account first at "
@@ -1230,17 +1230,21 @@ msgstr "Ajustes de exportación"
 
 #: templates/import_settings.php:34
 msgid "Paste the settings JSON in the field below. "
-msgstr ""
+msgstr "Pega las configuraciones JSON en el campo de abajo. "
 
 #: templates/import_settings.php:35
 msgid "Settings that are not in the imported JSON will use existing values. "
 msgstr ""
+"Las configuraciones que no estén en el JSON importado usarán los valores "
+"existentes. "
 
 #: templates/import_settings.php:36
 msgid ""
 "Setting values will be validated so check the final values once import is "
 "complete. "
 msgstr ""
+"Los valores de configuración van a ser validados. Comprueba los valores "
+"finales una vez terminada la importación. "
 
 #: templates/import_settings.php:41
 msgid "Import"
@@ -1256,7 +1260,7 @@ msgstr "Exportar"
 
 #: templates/initial-setup/admin-creation.php:9
 msgid "Step 3:"
-msgstr ""
+msgstr "Paso 3:"
 
 #: templates/initial-setup/admin-creation.php:9
 msgid "Choose your password"
@@ -1469,19 +1473,19 @@ msgstr "Instrucciones de configuración manual"
 
 #: templates/initial-setup/connection_profile.php:109
 msgid "Import Setup"
-msgstr ""
+msgstr "Importar Configuración"
 
 #: templates/initial-setup/connection_profile.php:111
 msgid "Already set up another WordPress instance with Auth0?"
-msgstr "¿Ya has configurado otra instancia de WordPress con Auth0? "
+msgstr "¿Ya has configurado otra instancia de WordPress con Auth0?"
 
 #: templates/initial-setup/connection_profile.php:112
 msgid "Save time and import existing Auth0 settings."
-msgstr ""
+msgstr "Ahorra tiempo e importa las configuraciones existentes de Auth0."
 
 #: templates/initial-setup/connections.php:9
 msgid "Step 2:"
-msgstr ""
+msgstr "Paso 2:"
 
 #: templates/initial-setup/connections.php:9
 msgid "Configure your Connections"
@@ -1538,7 +1542,7 @@ msgstr "Ajustes de Login by Auth0"
 
 #: templates/settings.php:16
 msgid "Manage this application at Auth0"
-msgstr ""
+msgstr "Configura esta aplicación en Auth0"
 
 #: templates/settings.php:23
 msgid "Basic"
