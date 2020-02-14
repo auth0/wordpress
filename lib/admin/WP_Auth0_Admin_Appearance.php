@@ -292,7 +292,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 		$input['passwordless_enabled'] = $this->sanitize_switch_val( $input['passwordless_enabled'] ?? null );
 
 		$input['icon_url'] = esc_url_raw( $this->sanitize_text_val( $input['icon_url'] ?? null ) );
-		if ( ! filter_var( $input['icon_url'], FILTER_VALIDATE_URL ) ) {
+		if ( ! empty( $input['icon_url'] ) && ! filter_var( $input['icon_url'], FILTER_VALIDATE_URL ) ) {
 			$input['icon_url'] = $this->options->get( 'icon_url' );
 			self::add_validation_error( __( 'The Icon URL used is not valid.', 'wp-auth0' ) );
 		}
