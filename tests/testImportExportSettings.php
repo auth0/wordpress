@@ -266,6 +266,7 @@ class TestImportExportSettings extends WP_Auth0_Test_Case {
 	public function testThatImportedSettingsAreValidated() {
 		$this->startRedirectHalting();
 		$this->setGlobalUser();
+		$_POST['_wpnonce']      = wp_create_nonce( WP_Auth0_Import_Settings::IMPORT_NONCE_ACTION );
 		$_POST['settings-json'] = '{"client_signing_algorithm":"__invalid_alg__"}';
 
 		try {
@@ -283,6 +284,7 @@ class TestImportExportSettings extends WP_Auth0_Test_Case {
 		$this->startRedirectHalting();
 		$this->setGlobalUser();
 		self::$opts->set( 'client_id', '__test_existing_client_id__' );
+		$_POST['_wpnonce']      = wp_create_nonce( WP_Auth0_Import_Settings::IMPORT_NONCE_ACTION );
 		$_POST['settings-json'] = '{"domain":"__test_domain__"}';
 
 		try {
@@ -300,6 +302,7 @@ class TestImportExportSettings extends WP_Auth0_Test_Case {
 	public function testThatUnknownImportedKeysAreRemoved() {
 		$this->startRedirectHalting();
 		$this->setGlobalUser();
+		$_POST['_wpnonce']      = wp_create_nonce( WP_Auth0_Import_Settings::IMPORT_NONCE_ACTION );
 		$_POST['settings-json'] = '{"domain":"__test_domain__", "__invalid_key__": "__test_val__"}';
 
 		try {

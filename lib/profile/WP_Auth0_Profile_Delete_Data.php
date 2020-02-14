@@ -60,7 +60,7 @@ class WP_Auth0_Profile_Delete_Data {
 			wp_send_json_error( [ 'error' => __( 'Empty user_id', 'wp-auth0' ) ] );
 		}
 
-		$user_id = $_POST['user_id'];
+		$user_id = absint( $_POST['user_id'] );
 
 		if ( ! current_user_can( 'edit_users' ) ) {
 			wp_send_json_error( [ 'error' => __( 'Forbidden', 'wp-auth0' ) ] );

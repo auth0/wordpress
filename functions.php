@@ -45,6 +45,8 @@ function wp_auth0_get_option( $key, $default = null ) {
  * @return bool
  */
 function wp_auth0_is_current_login_action( array $actions ) {
+	// Not processing form data, just using a redirect parameter if present.
+	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 
 	// Not on wp-login.php.
 	if (
@@ -54,8 +56,11 @@ function wp_auth0_is_current_login_action( array $actions ) {
 		return false;
 	}
 
-	$current_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : null;
-	return in_array( $current_action, $actions );
+	// Null coalescing validates input variable.
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+	return in_array( wp_unslash( $_REQUEST['action'] ?? '' ), $actions );
+
+	// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 }
 
 /**
@@ -86,6 +91,9 @@ function wp_auth0_login_override_url( $login_url = null ) {
  * @return bool
  */
 function wp_auth0_can_show_wp_login_form() {
+	// Not processing form data, just using a redirect parameter if present.
+	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+
 	if ( ! wp_auth0_is_ready() ) {
 		return true;
 	}
@@ -117,6 +125,8 @@ function wp_auth0_can_show_wp_login_form() {
 	}
 
 	return false;
+
+	// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 }
 
 /**
@@ -166,11 +176,16 @@ function wp_auth0_delete_auth0_object( $user_id ) {
  * @return bool
  */
 function wp_auth0_is_admin_page( $page ) {
+	// Not processing form data, just using a redirect parameter if present.
+	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+
 	if ( empty( $_REQUEST['page'] ) || ! is_admin() ) {
 		return false;
 	}
 
 	return $page === $_REQUEST['page'];
+
+	// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 }
 
 /**

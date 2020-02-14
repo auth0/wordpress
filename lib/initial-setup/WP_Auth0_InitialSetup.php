@@ -17,13 +17,15 @@ class WP_Auth0_InitialSetup {
 		$this->end_step           = new WP_Auth0_InitialSetup_End( $this->a0_options );
 	}
 
-	public function notify_error() {
-		printf( '<div class="notice notice-error"><p><strong>%s</strong></p></div>', strip_tags( $_REQUEST['error'] ) );
+	public function notify_error( $error ) {
+		printf( '<div class="notice notice-error"><p><strong>%s</strong></p></div>', sanitize_text_field( $error ) );
 	}
 
 	public function render_setup_page() {
+		// Not processing form data, only pulling from the URL.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 
-		$step = ( isset( $_REQUEST['step'] ) ? $_REQUEST['step'] : 1 );
+		$step = ( isset( $_REQUEST['step'] ) ? absint( $_GET['step'] ) : 1 );
 
 		if ( is_numeric( $step ) && $step >= 1 && $step <= 6 ) {
 
@@ -51,6 +53,8 @@ class WP_Auth0_InitialSetup {
 					break;
 			}
 		}
+
+	  // phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 	}
 
 	public function cant_create_client_message() {

@@ -36,10 +36,9 @@ commands:
   run-formatting:
     steps:
       - run:
-          name: Run i18n check and PHP compatibility
+          name: Run code quality scan
           command: |
-            composer phpcs-i18n
-            composer compat
+            composer phpcs
   run-tests:
     steps:
       - run:

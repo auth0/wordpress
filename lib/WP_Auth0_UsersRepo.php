@@ -121,8 +121,12 @@ class WP_Auth0_UsersRepo {
 		}
 
 		$query = [
+			// Limiting the returned number and this happens on login so some delay is acceptable.
+			// phpcs:ignore WordPress.DB.SlowDBQuery
 			'meta_key'   => $wpdb->prefix . 'auth0_id',
+			// phpcs:ignore WordPress.DB.SlowDBQuery
 			'meta_value' => $id,
+			'number'     => 1,
 			'blog_id'    => 0,
 		];
 

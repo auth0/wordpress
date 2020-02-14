@@ -47,7 +47,7 @@ class WP_Auth0_Options {
 	 */
 	public static function Instance() {
 		if ( null === self::$_instance ) {
-			self::$_instance = new self;
+			self::$_instance = new self();
 		}
 		return self::$_instance;
 	}
@@ -370,6 +370,7 @@ class WP_Auth0_Options {
 			// System
 			'version'                   => 1,
 			'last_step'                 => 1,
+			'db_connection_name'        => '',
 
 			// Basic
 			'domain'                    => '',

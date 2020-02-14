@@ -46,6 +46,8 @@ class WP_Auth0_LoginManager {
 	 * @return bool
 	 */
 	public function login_auto() {
+		// Not processing form data, just using a redirect parameter if present.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 
 		// Do not redirect anywhere if this is a logout action.
 		if ( wp_auth0_is_current_login_action( [ 'logout' ] ) ) {
@@ -61,7 +63,7 @@ class WP_Auth0_LoginManager {
 		if ( is_user_logged_in() ) {
 			$login_redirect = empty( $_REQUEST['redirect_to'] ) ?
 				$this->a0_options->get( 'default_login_redirection' ) :
-				filter_var( $_REQUEST['redirect_to'], FILTER_SANITIZE_URL );
+				filter_var( wp_unslash( $_REQUEST['redirect_to'] ), FILTER_SANITIZE_URL );
 
 			// Add a cache buster to avoid an infinite redirect loop on pages that check for auth.
 			$login_redirect = add_query_arg( time(), '', $login_redirect );
@@ -83,6 +85,8 @@ class WP_Auth0_LoginManager {
 		$auth_url = self::build_authorize_url( $auth_params );
 		wp_redirect( $auth_url );
 		exit;
+
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 	}
 
 	/**
@@ -91,6 +95,8 @@ class WP_Auth0_LoginManager {
 	 * Handles errors and state validation
 	 */
 	public function init_auth0() {
+		// WP nonce is not needed here, nonce and state parameters provide replay and CSRF protection.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 
 		set_query_var( 'auth0_login_successful', false );
 
@@ -103,8 +109,11 @@ class WP_Auth0_LoginManager {
 		// Catch any incoming errors and stop the login process.
 		// See https://auth0.com/docs/libraries/error-messages for more info.
 		if ( ! empty( $_REQUEST['error'] ) || ! empty( $_REQUEST['error_description'] ) ) {
-			$error_msg  = sanitize_text_field( rawurldecode( $_REQUEST['error_description'] ) );
-			$error_code = sanitize_text_field( rawurldecode( $_REQUEST['error'] ) );
+			// Input variable is sanitized.
+			// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$error_msg  = sanitize_text_field( rawurldecode( wp_unslash( $_REQUEST['error_description'] ) ) );
+			$error_code = sanitize_text_field( rawurldecode( wp_unslash( $_REQUEST['error'] ) ) );
+			// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$this->die_on_login( $error_msg, $error_code );
 		}
 
@@ -115,7 +124,14 @@ class WP_Auth0_LoginManager {
 		}
 
 		// Check for valid state value returned from Auth0.
-		if ( empty( $_GET['state'] ) || ! WP_Auth0_State_Handler::get_instance()->validate( $_GET['state'] ) ) {
+		// Null coalescing validates; value is checked in validate, not stored or output.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$state = wp_unslash( $_GET['state'] ?? '' );
+		if ( ! $state ) {
+			$this->die_on_login( __( 'Missing state', 'wp-auth0' ) );
+		}
+
+		if ( ! WP_Auth0_State_Handler::get_instance()->validate( $state ) ) {
 			$this->die_on_login( __( 'Invalid state', 'wp-auth0' ) );
 		}
 
@@ -138,6 +154,8 @@ class WP_Auth0_LoginManager {
 			);
 			$this->die_on_login( $display_message, $code );
 		}
+
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 	}
 
 	/**
@@ -406,6 +424,9 @@ class WP_Auth0_LoginManager {
 	 * @return array
 	 */
 	public static function get_authorize_params( $connection = null, $redirect_to = null ) {
+		// Nonce is not needed here as this is not processing form data.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+
 		$opts = WP_Auth0_Options::Instance();
 
 		$params = [
@@ -423,7 +444,7 @@ class WP_Auth0_LoginManager {
 		if ( empty( $redirect_to ) ) {
 			$redirect_to = empty( $_GET['redirect_to'] )
 				? $opts->get( 'default_login_redirection' )
-				: $_GET['redirect_to'];
+				: filter_var( wp_unslash( $_GET['redirect_to'] ), FILTER_SANITIZE_URL );
 		}
 
 		$filtered_params = apply_filters( 'auth0_authorize_url_params', $params, $connection, $redirect_to );
@@ -433,13 +454,15 @@ class WP_Auth0_LoginManager {
 			$state                    = [
 				'interim'     => false,
 				'nonce'       => WP_Auth0_State_Handler::get_instance()->get_unique(),
-				'redirect_to' => filter_var( $redirect_to, FILTER_SANITIZE_URL ),
+				'redirect_to' => $redirect_to,
 			];
 			$filtered_state           = apply_filters( 'auth0_authorize_state', $state, $filtered_params );
 			$filtered_params['state'] = base64_encode( json_encode( $filtered_state ) );
 		}
 
 		return array_filter( $filtered_params );
+
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 	}
 
 	/**
@@ -463,14 +486,19 @@ class WP_Auth0_LoginManager {
 	 * @return string|null
 	 */
 	protected function query_vars( $key ) {
+		// TODO: Either use query_vars or switch to global entirely.
+		// phpcs:disable
+
 		global $wp_query;
 		if ( isset( $wp_query->query_vars[ $key ] ) ) {
 			return $wp_query->query_vars[ $key ];
 		}
 		if ( isset( $_REQUEST[ $key ] ) ) {
-			return $_REQUEST[ $key ];
+			return wp_unslash( $_REQUEST[ $key ] );
 		}
 		return null;
+
+		// phpcs:enable
 	}
 
 	/**
@@ -479,10 +507,16 @@ class WP_Auth0_LoginManager {
 	 * @return string|object|null
 	 */
 	protected function get_state() {
-		$state_val = rawurldecode( $_REQUEST['state'] );
+		// TODO: Query var or global? Validate value.
+		// phpcs:disable
+
+		$state_val = wp_unslash( $_REQUEST['state'] );
+		$state_val = rawurldecode( $state_val );
 		$state_val = base64_decode( $state_val );
 		$state_val = json_decode( $state_val );
 		return $state_val;
+
+		// phpcs:enable
 	}
 
 	/**

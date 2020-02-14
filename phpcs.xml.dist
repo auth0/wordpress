@@ -31,22 +31,55 @@
     -->
     <config name="testVersion" value="7.0-"/>
     <config name="minimum_supported_wp_version" value="4.9"/>
-    <rule ref="PHPCompatibilityWP"/>
 
+    <rule ref="PHPCompatibilityWP"/>
     <rule ref="Generic.CodeAnalysis">
-        <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed"/>
+        <exclude name="Generic.CodeAnalysis.AssignmentInCondition"/>
+        <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter"/>
     </rule>
-    <rule ref="Generic.Commenting.Todo"/>
     <rule ref="Generic.Arrays.DisallowLongArraySyntax.Found"/>
-    <rule ref="PHPCompatibility"/>
-    <rule ref="WordPress-Docs"/>
-    <rule ref="WordPress-Core">
-        <exclude name="WordPress.Files.FileName"/>
-        <exclude name="WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar"/>
+    <rule ref="WordPress">
+        <!-- HIGH PRIORITY: security -->
+        <exclude name="WordPress.Security.EscapeOutput.OutputNotEscaped"/>
+        <exclude name="WordPress.Security.EscapeOutput.UnsafePrintingFunction"/>
+        <exclude name="WordPress.Security.SafeRedirect.wp_redirect_wp_redirect"/>
+
+        <!-- MEDIUM PRIORITY: PHP and WP usage -->
+        <exclude name="WordPress.PHP.NoSilencedErrors.Discouraged"/>
+        <exclude name="WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize"/>
+        <exclude name="WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize"/>
+        <exclude name="Squiz.PHP.NonExecutableCode.Unreachable"/>
+        <exclude name="WordPress.WP.AlternativeFunctions.rand_rand"/>
+        <exclude name="WordPress.WP.EnqueuedResources.NonEnqueuedScript"/>
+        <exclude name="WordPress.WP.EnqueuedResourceParameters.NotInFooter"/>
+        <exclude name="WordPress.PHP.DiscouragedPHPFunctions.urlencode_urlencode"/>
+        <exclude name="WordPress.PHP.StrictInArray.MissingTrueStrict"/>
+        <exclude name="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents"/>
+        <exclude name="WordPress.WP.AlternativeFunctions.json_encode_json_encode"/>
+        <exclude name="WordPress.WP.EnqueuedResourceParameters.NoExplicitVersion"/>
+        <exclude name="WordPress.WP.EnqueuedResourceParameters.MissingVersion"/>
+        <exclude name="WordPress.PHP.StrictComparisons.LooseComparison"/>
+        <exclude name="WordPress.WP.GlobalVariablesOverride.OverrideProhibited"/>
+
+        <!-- LOW PRIORITY: code style, formatting, comments -->
+        <exclude name="Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure"/>
+        <exclude name="WordPress.CodeAnalysis.AssignmentInCondition"/>
         <exclude name="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid"/>
+        <exclude name="WordPress.NamingConventions.ValidVariableName.MemberNotSnakeCase"/>
+        <exclude name="WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar"/>
+        <exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound"/>
+        <exclude name="Squiz.Scope.MethodScope.Missing"/>
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+        <exclude name="WordPress.NamingConventions.ValidVariableName.NotSnakeCase"/>
+        <exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound"/>
+        <exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
+        <exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound"/>
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+        <exclude name="WordPress.WhiteSpace.PrecisionAlignment"/>
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+        <exclude name="Squiz.Commenting"/>
+        <exclude name="Generic.Commenting"/>
     </rule>
-    <rule ref="WordPress.DB.DirectDatabaseQuery"/>
-    <rule ref="WordPress.DB.SlowDBQuery"/>
     <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
         <properties>
             <property name="prefixes" type="array" value="wp_auth0" />

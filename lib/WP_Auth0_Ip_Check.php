@@ -136,13 +136,18 @@ class WP_Auth0_Ip_Check {
 	protected function get_request_ip() {
 		$valid_proxy_ip = $this->a0_options->get( 'valid_proxy_ip' );
 
-		if ( $valid_proxy_ip ) {
-			if ( $_SERVER['REMOTE_ADDR'] == $valid_proxy_ip ) {
-				return $_SERVER['HTTP_X_FORWARDED_FOR'];
-			}
+		// Null coalescing validates the input variable.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		$remote_addr = $_SERVER['REMOTE_ADDR'] ?? null;
+
+		if ( $valid_proxy_ip && $remote_addr === $valid_proxy_ip ) {
+
+			// Null coalescing validates the input variable.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+			return $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $remote_addr;
 		}
 
-		return $_SERVER['REMOTE_ADDR'];
+		return $remote_addr;
 	}
 
 	/**

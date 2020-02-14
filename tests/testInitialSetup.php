@@ -47,7 +47,7 @@ class TestInitialSetup extends WP_Auth0_Test_Case {
 	}
 
 	public function testThatCantCreateClientHasCorrectNotice() {
-		$_REQUEST['error'] = 'cant_create_client';
+		$_GET['error'] = 'cant_create_client';
 		ob_start();
 		$this->assertTrue( wp_auth0_setup_error_admin_notices() );
 		$notice_html = ob_get_clean();
@@ -57,7 +57,7 @@ class TestInitialSetup extends WP_Auth0_Test_Case {
 	}
 
 	public function testThatCantCreateGrantHasCorrectNotice() {
-		$_REQUEST['error'] = 'cant_create_client_grant';
+		$_GET['error'] = 'cant_create_client_grant';
 		ob_start();
 		$this->assertTrue( wp_auth0_setup_error_admin_notices() );
 		$notice_html = ob_get_clean();
@@ -67,7 +67,7 @@ class TestInitialSetup extends WP_Auth0_Test_Case {
 	}
 
 	public function testThatCantExchangeTokenHasCorrectNotice() {
-		$_REQUEST['error'] = 'cant_exchange_token';
+		$_GET['error'] = 'cant_exchange_token';
 		ob_start();
 		$this->assertTrue( wp_auth0_setup_error_admin_notices() );
 		$notice_html = ob_get_clean();
@@ -77,7 +77,7 @@ class TestInitialSetup extends WP_Auth0_Test_Case {
 	}
 
 	public function testThatRejectedHasCorrectNotice() {
-		$_REQUEST['error'] = 'rejected';
+		$_GET['error'] = 'rejected';
 		ob_start();
 		$this->assertTrue( wp_auth0_setup_error_admin_notices() );
 		$notice_html = ob_get_clean();
@@ -87,7 +87,7 @@ class TestInitialSetup extends WP_Auth0_Test_Case {
 	}
 
 	public function testThatAccessDeniedHasCorrectNotice() {
-		$_REQUEST['error'] = 'access_denied';
+		$_GET['error'] = 'access_denied';
 		ob_start();
 		$this->assertTrue( wp_auth0_setup_error_admin_notices() );
 		$notice_html = ob_get_clean();
@@ -97,7 +97,7 @@ class TestInitialSetup extends WP_Auth0_Test_Case {
 	}
 
 	public function testThatUnknownErrorHasCorrectNotice() {
-		$_REQUEST['error'] = '__test_unknown_error__';
+		$_GET['error'] = '__test_unknown_error__';
 		ob_start();
 		$this->assertTrue( wp_auth0_setup_error_admin_notices() );
 		$notice_html = ob_get_clean();

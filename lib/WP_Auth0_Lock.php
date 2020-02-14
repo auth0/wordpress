@@ -20,19 +20,23 @@ class WP_Auth0_Lock {
 	}
 
 	public function get_state_obj( $redirect_to = null ) {
+		// Nonce is not needed here as this is not processing form data.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 
 		$stateObj = [
-			'interim' => ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] == 1 ),
+			'interim' => ( isset( $_GET['interim-login'] ) && $_GET['interim-login'] === 1 ),
 			'nonce'   => WP_Auth0_State_Handler::get_instance()->get_unique(),
 		];
 
 		if ( ! empty( $redirect_to ) ) {
 			$stateObj['redirect_to'] = addslashes( $redirect_to );
 		} elseif ( isset( $_GET['redirect_to'] ) ) {
-			$stateObj['redirect_to'] = addslashes( $_GET['redirect_to'] );
+			$stateObj['redirect_to'] = addslashes( sanitize_text_field( wp_unslash( $_GET['redirect_to'] ) ) );
 		}
 
 		return base64_encode( json_encode( $stateObj ) );
+
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 	}
 
 	protected function _is_valid( $array, $key ) {
@@ -201,7 +205,7 @@ class WP_Auth0_Lock {
 
 		wp_localize_script(
 			'wpa0_lock_init',
-			WP_Auth0_Lock::LOCK_GLOBAL_JS_VAR_NAME,
+			self::LOCK_GLOBAL_JS_VAR_NAME,
 			[
 				'settings'        => $lock_options->get_lock_options(),
 				'ready'           => wp_auth0_is_ready(),

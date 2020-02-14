@@ -43,7 +43,9 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 				: __( 'Login', 'wp-auth0' );
 
 			if ( ! isset( $instance['redirect_to'] ) || empty( $instance['redirect_to'] ) ) {
-				$instance['redirect_to'] = home_url( $_SERVER['REQUEST_URI'] );
+				// Null coalescing validates the input variable.
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+				$instance['redirect_to'] = home_url( $_SERVER['REQUEST_URI'] ?? '' );
 			}
 
 			echo $args['before_widget'];

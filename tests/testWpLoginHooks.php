@@ -71,9 +71,9 @@ class TestWpLoginHooks extends WP_Auth0_Test_Case {
 	}
 
 	public function testThatWpLoginOverrideUrlIsModifiedIfWle() {
-		$_REQUEST['wle'] = '__test_wle_code__';
+		$_REQUEST['wle'] = 'link';
 		$this->assertEquals(
-			'http://login.org?wle=__test_wle_code__',
+			'http://login.org?wle=link',
 			wp_auth0_filter_login_override_url( 'http://login.org' )
 		);
 	}

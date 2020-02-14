@@ -31,9 +31,7 @@
     },
     "minimum-stability": "stable",
     "scripts": {
-        "compat": "\"vendor/bin/phpcs\" --standard=phpcs-compat-ruleset.xml .",
         "phpcs": "\"vendor/bin/phpcs\"",
-        "phpcs-i18n": "\"vendor/bin/phpcs\" --sniffs=WordPress.WP.I18n",
         "phpcs-tests": "\"vendor/bin/phpcs\" --standard=phpcs-test-ruleset.xml -s ./tests/",
         "phpcbf": "\"vendor/bin/phpcbf\"",
         "phpcbf-tests": "\"vendor/bin/phpcbf\" --standard=phpcs-test-ruleset.xml -s ./tests/",
@@ -42,8 +40,7 @@
         "test-cov": "\"vendor/bin/phpunit\" --coverage-text",
         "test-group": "\"vendor/bin/phpunit\" --coverage-text --group",
         "test-ci": "\"vendor/bin/phpunit\" --coverage-clover=coverage.xml",
-        "pre-commit-no-tests": [ "@phpcbf", "@phpcbf-tests", "@compat", "@phpcs-i18n" ],
-        "pre-commit": [ "@phpcbf", "@phpcbf-tests", "@compat", "@phpcs-i18n", "@test" ]
+        "pre-commit": [ "@phpcs", "@test" ]
     },
     "autoload-dev": {
         "classmap": ["tests/classes/", "tests/traits/"]

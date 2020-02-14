@@ -61,6 +61,7 @@
 		<form action="options.php" method="POST">
 		<?php wp_nonce_field( WP_Auth0_InitialSetup_ConnectionProfile::SETUP_NONCE_ACTION ); ?>
 			<input type="hidden" name="action" value="wpauth0_callback_step1" />
+			<?php wp_nonce_field( WP_Auth0_InitialSetup_ConnectionProfile::SETUP_NONCE_ACTION ); ?>
 			<h3><?php _e( 'Standard Setup', 'wp-auth0' ); ?></h3>
 			<p>
 				<?php _e( 'This will create and configure an Application and a database connection for this site.', 'wp-auth0' ); ?>

@@ -24,6 +24,9 @@ class WP_Auth0_Admin {
 	 * Enqueue scripts for all Auth0 wp-admin pages
 	 */
 	public function admin_enqueue() {
+		// Nonce is not needed here as this is not processing form data.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+
 		// Register admin styles
 		wp_register_style( 'wpa0_admin_initial_setup', WPA0_PLUGIN_CSS_URL . 'initial-setup.css', false, WPA0_VERSION );
 
@@ -46,8 +49,10 @@ class WP_Auth0_Admin {
 			]
 		);
 
+		// Only checking the value, not processing.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$wpa0_curr_page = ! empty( $_REQUEST['page'] ) ? wp_unslash( $_REQUEST['page'] ) : '';
 		$wpa0_pages     = [ 'wpa0', 'wpa0-errors', 'wpa0-import-settings', 'wpa0-setup' ];
-		$wpa0_curr_page = ! empty( $_REQUEST['page'] ) ? $_REQUEST['page'] : '';
 		if ( ! in_array( $wpa0_curr_page, $wpa0_pages ) ) {
 			return false;
 		}
@@ -62,6 +67,8 @@ class WP_Auth0_Admin {
 
 		wp_enqueue_style( 'wpa0_admin_initial_setup' );
 		return true;
+
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 	}
 
 	public function init_admin() {

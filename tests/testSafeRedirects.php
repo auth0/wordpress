@@ -14,6 +14,8 @@ class TestSafeRedirects extends WP_Auth0_Test_Case {
 
 	use RedirectHelpers;
 
+	use UsersHelper;
+
 	public function testThatDomainIsAllowedToSafeRedirect() {
 		$this->startRedirectHalting();
 		self::auth0Ready();
@@ -55,7 +57,9 @@ class TestSafeRedirects extends WP_Auth0_Test_Case {
 	public function testThatAuth0ServerDomainIsAllowedToSafeRedirect() {
 		$this->startRedirectHalting();
 		self::auth0Ready();
+		self::setGlobalUser();
 		self::$opts->set( 'auth0_server_domain', 'auth0-server-test.auth0.com' );
+		$_POST['_wpnonce'] = wp_create_nonce( WP_Auth0_InitialSetup_ConnectionProfile::SETUP_NONCE_ACTION );
 
 		$conn_profile = new WP_Auth0_InitialSetup_ConnectionProfile( self::$opts );
 
@@ -73,6 +77,8 @@ class TestSafeRedirects extends WP_Auth0_Test_Case {
 	public function testThatDefaultAuth0ServerDomainIsAllowedToSafeRedirect() {
 		$this->startRedirectHalting();
 		self::auth0Ready();
+		self::setGlobalUser();
+		$_POST['_wpnonce'] = wp_create_nonce( WP_Auth0_InitialSetup_ConnectionProfile::SETUP_NONCE_ACTION );
 
 		$conn_profile = new WP_Auth0_InitialSetup_ConnectionProfile( self::$opts );
 

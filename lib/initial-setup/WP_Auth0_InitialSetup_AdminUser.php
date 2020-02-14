@@ -16,7 +16,9 @@ class WP_Auth0_InitialSetup_AdminUser {
 
 	public function callback() {
 
-		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], self::SETUP_NONCE_ACTION ) ) {
+		// Null coalescing validates input variable.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		if ( ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ?? '' ), self::SETUP_NONCE_ACTION ) ) {
 			wp_nonce_ays( self::SETUP_NONCE_ACTION );
 			exit;
 		}
@@ -26,12 +28,19 @@ class WP_Auth0_InitialSetup_AdminUser {
 			exit;
 		}
 
+		if ( empty( $_POST['admin-password'] ) ) {
+			wp_safe_redirect( admin_url( 'admin.php?page=wpa0-setup&step=3&result=error' ) );
+			exit;
+		}
+
 		$current_user = wp_get_current_user();
 
 		$data = [
 			'client_id'  => $this->a0_options->get( 'client_id' ),
 			'email'      => $current_user->user_email,
-			'password'   => $_POST['admin-password'],
+			// Validated above and only sent to the change signup API endpoint.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+			'password'   => wp_unslash( $_POST['admin-password'] ),
 			'connection' => $this->a0_options->get( 'db_connection_name' ),
 		];
 

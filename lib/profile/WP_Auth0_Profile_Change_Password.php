@@ -39,6 +39,8 @@ class WP_Auth0_Profile_Change_Password {
 	 * @return boolean
 	 */
 	public function validate_new_password( $errors, $user ) {
+		// Nonce was verified during core process this is hooked to.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 
 		// Exit if we're not changing the password.
 		// The pass1 key is for core WP, password_1 is WooCommerce.
@@ -46,7 +48,10 @@ class WP_Auth0_Profile_Change_Password {
 			return false;
 		}
 
-		$field_name   = ! empty( $_POST['pass1'] ) ? 'pass1' : 'password_1';
+		$field_name = ! empty( $_POST['pass1'] ) ? 'pass1' : 'password_1';
+
+		// Validated above and only sent to the change password API endpoint.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 		$new_password = wp_unslash( $_POST[ $field_name ] );
 		$wp_user_id   = null;
 
@@ -96,5 +101,7 @@ class WP_Auth0_Profile_Change_Password {
 		$error_msg = is_string( $result ) ? $result : __( 'Password could not be updated.', 'wp-auth0' );
 		$errors->add( 'auth0_password', $error_msg, [ 'form-field' => $field_name ] );
 		return false;
+
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 	}
 }

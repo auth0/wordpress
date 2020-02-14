@@ -87,8 +87,8 @@ function wp_auth0_shortcode() {
 		$atts = [];
 	}
 
-	if ( empty( $atts['redirect_to'] ) ) {
-		$atts['redirect_to'] = home_url( $_SERVER['REQUEST_URI'] );
+	if ( empty( $atts['redirect_to'] ) && ! empty( $_SERVER['REQUEST_URI'] ) ) {
+		$atts['redirect_to'] = home_url( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
 	}
 
 	ob_start();
@@ -295,13 +295,16 @@ function wp_auth0_filter_get_avatar( $avatar, $id_or_email, $size, $default, $al
 add_filter( 'get_avatar', 'wp_auth0_filter_get_avatar', 1, 5 );
 
 function wp_auth0_setup_error_admin_notices() {
-	if ( empty( $_REQUEST['error'] ) ) {
+	// Not processing form data, just using a redirect parameter if present.
+	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+
+	if ( empty( $_GET['error'] ) ) {
 		return false;
 	}
 
 	$initial_setup = new WP_Auth0_InitialSetup( WP_Auth0_Options::Instance() );
 
-	switch ( $_REQUEST['error'] ) {
+	switch ( $_GET['error'] ) {
 
 		case 'cant_create_client':
 			$initial_setup->cant_create_client_message();
@@ -324,10 +327,14 @@ function wp_auth0_setup_error_admin_notices() {
 			break;
 
 		default:
-			$initial_setup->notify_error();
+			// Output is sanitized in the notify_error method.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$initial_setup->notify_error( wp_unslash( $_GET['error'] ) );
 	}
 
 	return true;
+
+	// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 }
 add_action( 'admin_notices', 'wp_auth0_setup_error_admin_notices' );
 
@@ -350,7 +357,9 @@ add_action( 'admin_action_wpauth0_callback_step3_social', 'wp_auth0_setup_callba
  */
 function wp_auth0_errorlog_clear_error_log() {
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'clear_error_log' ) ) {
+	// Null coalescing validates input variable.
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+	if ( ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ?? '' ), WP_Auth0_ErrorLog::CLEAR_LOG_NONCE ) ) {
 		wp_die( __( 'Not allowed.', 'wp-auth0' ) );
 	}
 
@@ -368,8 +377,9 @@ add_action( 'admin_action_wpauth0_clear_error_log', 'wp_auth0_errorlog_clear_err
 
 function wp_auth0_export_settings_admin_action() {
 
-	$nonce = $_POST['_wpnonce'] ?? null;
-	if ( ! wp_verify_nonce( $nonce, WP_Auth0_Import_Settings::EXPORT_NONCE_ACTION ) ) {
+	// Null coalescing validates input variable.
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+	if ( ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ?? '' ), WP_Auth0_Import_Settings::EXPORT_NONCE_ACTION ) ) {
 		wp_nonce_ays( WP_Auth0_Import_Settings::IMPORT_NONCE_ACTION );
 		exit;
 	}
@@ -400,34 +410,50 @@ function wp_auth0_import_settings_admin_action() {
 add_action( 'admin_action_wpauth0_import_settings', 'wp_auth0_import_settings_admin_action' );
 
 function wp_auth0_settings_admin_action_error() {
+	// Not processing form data, just using a redirect parameter if present.
+	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+
 	if ( ! wp_auth0_is_admin_page( 'wpa0-import-settings' ) || empty( $_REQUEST['error'] ) ) {
 		return false;
 	}
 
 	printf(
 		'<div class="notice notice-error is-dismissible"><p><strong>%s</strong></p></div>',
-		sanitize_text_field( $_REQUEST['error'] )
+		sanitize_text_field( wp_unslash( $_REQUEST['error'] ) )
 	);
 	return true;
+
+	// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 }
 add_action( 'admin_notices', 'wp_auth0_settings_admin_action_error' );
 
 function wp_auth0_initial_setup_init() {
+	// Not processing form data, just using a redirect parameter if present.
+	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+
+	// Null coalescing validates input variable.
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 	if ( 'wpa0-setup' !== ( $_REQUEST['page'] ?? null ) || ! isset( $_REQUEST['callback'] ) ) {
 		return false;
 	}
 
+	// Null coalescing validates input variable.
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 	if ( 'rejected' === ( $_REQUEST['error'] ?? null ) ) {
 		wp_safe_redirect( admin_url( 'admin.php?page=wpa0-setup&error=rejected' ) );
 		exit;
 	}
 
+	// Null coalescing validates input variable.
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 	if ( 'access_denied' === ( $_REQUEST['error'] ?? null ) ) {
 		wp_safe_redirect( admin_url( 'admin.php?page=wpa0-setup&error=access_denied' ) );
 		exit;
 	}
 
 	(new WP_Auth0_InitialSetup_Consent( WP_Auth0_Options::Instance() ))->callback();
+
+	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 }
 add_action( 'init', 'wp_auth0_initial_setup_init', 1 );
 
@@ -540,6 +566,11 @@ function wp_auth0_init_admin_menu() {
 add_action( 'admin_menu', 'wp_auth0_init_admin_menu', 96, 0 );
 
 function wp_auth0_create_account_message() {
+	// Not processing form data, just using a redirect parameter if present.
+	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+
+	// Null coalescing validates input variable.
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 	$current_page = $_GET['page'] ?? null;
 	if ( wp_auth0_is_ready() || ! $current_page || 0 !== strpos( $current_page, 'wpa' ) ) {
 		return false;
@@ -556,6 +587,8 @@ function wp_auth0_create_account_message() {
 		__( 'Manual setup instructions', 'wp-auth0' )
 	);
 	return true;
+
+	// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 }
 add_action( 'admin_notices', 'wp_auth0_create_account_message' );
 
@@ -680,7 +713,9 @@ function wp_auth0_ajax_resend_verification_email() {
 		wp_send_json_error( [ 'error' => __( 'No Auth0 user ID provided.', 'wp-auth0' ) ] );
 	}
 
-	if ( ! $api_jobs_verification->call( $_POST['sub'] ) ) {
+	// Validated above and only sent to the change signup API endpoint.
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+	if ( ! $api_jobs_verification->call( wp_unslash( $_POST['sub'] ) ) ) {
 		wp_send_json_error( [ 'error' => __( 'API call failed.', 'wp-auth0' ) ] );
 	}
 
@@ -732,15 +767,23 @@ add_filter( 'wp_redirect', 'wp_auth0_filter_wp_redirect_lostpassword', 100 );
  * @return string
  */
 function wp_auth0_filter_login_override_url( $wp_login_url ) {
-	if ( wp_auth0_can_show_wp_login_form() && isset( $_REQUEST['wle'] ) ) {
+	// Not processing form data, just using a redirect parameter if present.
+	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+
+	// Null coalescing validates input variable.
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+	$wle = $_REQUEST['wle'] ?? null;
+	if ( wp_auth0_can_show_wp_login_form() && $wle ) {
 		// We are on an override page.
-		$wp_login_url = add_query_arg( 'wle', $_REQUEST['wle'], $wp_login_url );
+		$wp_login_url = add_query_arg( 'wle', $wle, $wp_login_url );
 	} elseif ( wp_auth0_is_current_login_action( [ 'resetpass' ] ) ) {
 		// We are on the reset password page with a link to login.
 		// This page will not be shown unless we get here via a valid reset password request.
 		$wp_login_url = wp_auth0_login_override_url( $wp_login_url );
 	}
 	return $wp_login_url;
+
+	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 }
 
 add_filter( 'lostpassword_url', 'wp_auth0_filter_login_override_url', 100 );
@@ -750,9 +793,16 @@ add_filter( 'login_url', 'wp_auth0_filter_login_override_url', 100 );
  * Add the core WP form override to the lost password and login forms.
  */
 function wp_auth0_filter_login_override_form() {
+	// Not processing form data, just using a redirect parameter if present.
+	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+
 	if ( wp_auth0_can_show_wp_login_form() && isset( $_REQUEST['wle'] ) ) {
-		printf( '<input type="hidden" name="wle" value="%s" />', esc_attr( $_REQUEST['wle'] ) );
+		// Input is being output, not stored.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		printf( '<input type="hidden" name="wle" value="%s" />', esc_attr( wp_unslash( $_REQUEST['wle'] ) ) );
 	}
+
+	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 }
 
 add_action( 'login_form', 'wp_auth0_filter_login_override_form', 100 );

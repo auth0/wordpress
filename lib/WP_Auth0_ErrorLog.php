@@ -18,6 +18,11 @@ class WP_Auth0_ErrorLog {
 	const OPTION_NAME = 'auth0_error_log';
 
 	/**
+	 * Option name used to store the error log.
+	 */
+	const CLEAR_LOG_NONCE = 'wp_auth0_clear_error_log';
+
+	/**
 	 * Limit of the error logs that can be stored
 	 */
 	const ERROR_LOG_ENTRY_LIMIT = 30;
@@ -146,6 +151,6 @@ class WP_Auth0_ErrorLog {
 		}
 
 		do_action( 'auth0_insert_error', $new_entry, $error, $section );
-		return ( new self )->add( $new_entry );
+		return ( new self() )->add( $new_entry );
 	}
 }

@@ -138,10 +138,15 @@ class WP_Auth0_Routes {
 	}
 
 	protected function getAuthorizationHeader() {
+		// Nonce is not needed here as this is an API endpoint.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+
 		$authorization = false;
 
 		if ( isset( $_POST['access_token'] ) ) {
-			$authorization = $_POST['access_token'];
+			// No need to sanitize, value is returned and checked.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$authorization = wp_unslash( $_POST['access_token'] );
 		} elseif ( function_exists( 'getallheaders' ) ) {
 			$headers = getallheaders();
 			if ( isset( $headers['Authorization'] ) ) {
@@ -150,12 +155,16 @@ class WP_Auth0_Routes {
 				$authorization = $headers['authorization'];
 			}
 		} elseif ( isset( $_SERVER['Authorization'] ) ) {
-			$authorization = $_SERVER['Authorization'];
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$authorization = wp_unslash( $_SERVER['Authorization'] );
 		} elseif ( isset( $_SERVER['HTTP_AUTHORIZATION'] ) ) {
-			$authorization = $_SERVER['HTTP_AUTHORIZATION'];
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$authorization = wp_unslash( $_SERVER['HTTP_AUTHORIZATION'] );
 		}
 
 		return $authorization;
+
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 	}
 
 	/**
@@ -166,6 +175,8 @@ class WP_Auth0_Routes {
 	 * @see lib/scripts-js/db-login.js
 	 */
 	protected function migration_ws_login() {
+		// Nonce is not needed here as this is an API endpoint.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 
 		$code = $this->check_endpoint_access_error();
 		if ( $code ) {
@@ -175,6 +186,8 @@ class WP_Auth0_Routes {
 		try {
 			$this->check_endpoint_request( true );
 
+			// Input is sanitized by core wp_authenticate function.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 			$user = wp_authenticate( $_POST['username'], $_POST['password'] );
 
 			if ( is_wp_error( $user ) ) {
@@ -191,6 +204,8 @@ class WP_Auth0_Routes {
 				'error'  => $e->getMessage(),
 			];
 		}
+
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 	}
 
 	/**
@@ -202,6 +217,8 @@ class WP_Auth0_Routes {
 	 * @see lib/scripts-js/db-get-user.js
 	 */
 	protected function migration_ws_get_user() {
+		// Nonce is not needed here as this is an API endpoint.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 
 		$code = $this->check_endpoint_access_error();
 		if ( $code ) {
@@ -211,9 +228,9 @@ class WP_Auth0_Routes {
 		try {
 			$this->check_endpoint_request();
 
-			$username = $_POST['username'];
-
-			$user = get_user_by( 'email', $username );
+			// Input is sanitized by core get_user_by function.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+			$user = get_user_by( 'email', $_POST['username'] );
 
 			if ( ! $user ) {
 				throw new Exception( __( 'User not found', 'wp-auth0' ), 401 );
@@ -237,6 +254,8 @@ class WP_Auth0_Routes {
 				'error'  => $e->getMessage(),
 			];
 		}
+
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 	}
 
 	protected function oauth2_config() {
@@ -245,7 +264,6 @@ class WP_Auth0_Routes {
 			'client_name'   => get_bloginfo( 'name' ),
 			'redirect_uris' => [ admin_url( 'admin.php?page=wpa0-setup&callback=1' ) ],
 		];
-
 	}
 
 	/**
@@ -279,6 +297,9 @@ class WP_Auth0_Routes {
 	 * @throws Exception
 	 */
 	private function check_endpoint_request( $require_password = false ) {
+		// Nonce is not needed here as this is an API endpoint.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+
 		$authorization = $this->getAuthorizationHeader();
 		$authorization = trim( str_replace( 'Bearer ', '', $authorization ) );
 
@@ -297,6 +318,8 @@ class WP_Auth0_Routes {
 		if ( $require_password && empty( $_POST['password'] ) ) {
 			throw new Exception( __( 'Password is required', 'wp-auth0' ) );
 		}
+
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 	}
 
 	/**

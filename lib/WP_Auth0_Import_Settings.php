@@ -18,7 +18,9 @@ class WP_Auth0_Import_Settings {
 
 	public function import_settings() {
 
-		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], self::IMPORT_NONCE_ACTION ) ) {
+		// Null coalescing validates input variable.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		if ( ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ?? '' ), self::IMPORT_NONCE_ACTION ) ) {
 			wp_nonce_ays( self::IMPORT_NONCE_ACTION );
 			exit;
 		}
@@ -28,6 +30,8 @@ class WP_Auth0_Import_Settings {
 			exit;
 		}
 
+		// Null coalescing validates input variable.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 		$settings_json = trim( stripslashes( $_POST['settings-json'] ?? '' ) );
 		if ( empty( $settings_json ) ) {
 			wp_safe_redirect( $this->make_error_url( __( 'No settings JSON entered.', 'wp-auth0' ) ) );
@@ -35,7 +39,7 @@ class WP_Auth0_Import_Settings {
 		}
 
 		$settings = json_decode( $settings_json, true );
-		if ( empty( $settings ) || ! is_array( $settings ) ) {
+		if ( ! $settings || ! is_array( $settings ) ) {
 			wp_safe_redirect( $this->make_error_url( __( 'Settings JSON entered is not valid.', 'wp-auth0' ) ) );
 			exit;
 		}

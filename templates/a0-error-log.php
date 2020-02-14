@@ -17,7 +17,7 @@ $errors    = $error_log->get();
 		<div class="a0-buttons">
 			<form action="<?php echo admin_url( 'options.php' ); ?>" method="post" class="js-a0-confirm-submit"
 						data-confirm-msg="<?php _e( 'This will delete all error log entries. Proceed?', 'wp-auth0' ); ?>">
-				<input type="hidden" name="nonce" value="<?php echo wp_create_nonce( 'clear_error_log' ); ?>">
+			<?php wp_nonce_field( WP_Auth0_ErrorLog::CLEAR_LOG_NONCE ); ?>
 				<input type="hidden" name="action" value="wpauth0_clear_error_log">
 				<input type="submit" name="submit" class="a0-button primary" value="Clear Log">
 			</form>

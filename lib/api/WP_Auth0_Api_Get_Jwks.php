@@ -18,15 +18,6 @@ class WP_Auth0_Api_Get_Jwks extends WP_Auth0_Api_Abstract {
 	const RETURN_ON_FAILURE = [];
 
 	/**
-	 * WP_Auth0_Api_Get_Jwks constructor.
-	 *
-	 * @param WP_Auth0_Options $options - WP_Auth0_Options instance.
-	 */
-	public function __construct( WP_Auth0_Options $options ) {
-		parent::__construct( $options );
-	}
-
-	/**
 	 * Make the JWKS call, and handle the response.
 	 *
 	 * @return array

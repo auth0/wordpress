@@ -18,7 +18,9 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
 
 	public function callback() {
 
-		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], self::SETUP_NONCE_ACTION ) ) {
+		// Null coalescing validates input variable.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		if ( ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ?? '' ), self::SETUP_NONCE_ACTION ) ) {
 			wp_nonce_ays( self::SETUP_NONCE_ACTION );
 			exit;
 		}
@@ -28,10 +30,10 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
 			exit;
 		}
 
-		if ( isset( $_REQUEST['apitoken'] ) && ! empty( $_REQUEST['apitoken'] ) ) {
+		if ( ! empty( $_REQUEST['domain'] ) && ! empty( $_REQUEST['apitoken'] ) ) {
 
-			$token  = $_REQUEST['apitoken'];
-			$domain = $_REQUEST['domain'];
+			$token  = sanitize_text_field( wp_unslash( $_REQUEST['apitoken'] ) );
+			$domain = sanitize_text_field( wp_unslash( $_REQUEST['domain'] ) );
 
 			$consent_callback = new WP_Auth0_InitialSetup_Consent( $this->a0_options );
 			$consent_callback->callback_with_token( $domain, $token, null, false );
@@ -41,6 +43,7 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
 			wp_safe_redirect( $consent_url );
 		}
 		exit();
+
 	}
 
 	public function build_consent_url() {

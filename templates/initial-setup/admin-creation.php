@@ -1,4 +1,6 @@
 <?php
+// No processing, only checking existence and value.
+// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
 $error        = isset( $_REQUEST['result'] ) && $_REQUEST['result'] === 'error';
 $current_user = wp_get_current_user();
 ?>

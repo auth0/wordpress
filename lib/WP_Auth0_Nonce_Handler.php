@@ -64,7 +64,9 @@ class WP_Auth0_Nonce_Handler {
 		// If a NONCE_COOKIE_NAME is not defined then we don't need to persist the nonce value.
 		if ( defined( static::NONCE_COOKIE_NAME ) && isset( $_COOKIE[ static::get_storage_cookie_name() ] ) ) {
 			// Have a cookie, don't want to generate a new one.
-			$this->unique = $_COOKIE[ static::get_storage_cookie_name()  ];
+			// TODO: validate whether we need to persist this value and sanitize if so.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+			$this->unique = $_COOKIE[ static::get_storage_cookie_name() ];
 		} else {
 			// No cookie, need to create one.
 			$this->unique = $this->generate_unique();
@@ -136,7 +138,9 @@ class WP_Auth0_Nonce_Handler {
 	 */
 	public function get_once() {
 		$cookie_name = static::get_storage_cookie_name();
-		$value       = $_COOKIE[ $cookie_name ] ?? null;
+		// Null coalescing validates the input variable.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		$value = $_COOKIE[ $cookie_name ] ?? null;
 		$this->reset();
 		return $value;
 	}

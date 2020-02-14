@@ -39,6 +39,8 @@ class WP_Auth0_InitialSetup_Consent {
 	}
 
 	public function callback() {
+		// Not processing form data, just using a redirect parameter if present.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 
 		$access_token = $this->exchange_code();
 
@@ -54,7 +56,10 @@ class WP_Auth0_InitialSetup_Consent {
 			exit;
 		}
 
-		$this->callback_with_token( $app_domain, $access_token, $_REQUEST['state'] );
+		$profile_type = sanitize_text_field( wp_unslash( $_REQUEST['state'] ) );
+		$this->callback_with_token( $app_domain, $access_token, $profile_type );
+
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 	}
 
 	protected function parse_token_domain( $token ) {
@@ -64,6 +69,9 @@ class WP_Auth0_InitialSetup_Consent {
 	}
 
 	public function exchange_code() {
+		// Not processing form data, using a redirect from Auth0.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+
 		if ( ! isset( $_REQUEST['code'] ) ) {
 			return null;
 		}
@@ -71,8 +79,11 @@ class WP_Auth0_InitialSetup_Consent {
 		$client_id    = site_url();
 		$redirect_uri = home_url();
 
-		$exchange_api       = new WP_Auth0_Api_Exchange_Code( $this->a0_options, $this->domain );
-		$exchange_resp_body = $exchange_api->call( $_REQUEST['code'], $client_id, $redirect_uri );
+		$exchange_api = new WP_Auth0_Api_Exchange_Code( $this->a0_options, $this->domain );
+
+		// Validated above and only sent to the change signup API endpoint.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$exchange_resp_body = $exchange_api->call( wp_unslash( $_REQUEST['code'] ), $client_id, $redirect_uri );
 
 		if ( ! $exchange_resp_body ) {
 			return null;
@@ -80,6 +91,8 @@ class WP_Auth0_InitialSetup_Consent {
 
 		$tokens = json_decode( $exchange_resp_body );
 		return isset( $tokens->access_token ) ? $tokens->access_token : null;
+
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
 	}
 
 	/**

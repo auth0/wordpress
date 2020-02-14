@@ -168,6 +168,34 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 		}
 
 		$this->assertContains( 'There was a problem with your log in', $output );
+		$this->assertContains( 'Missing state', $output );
+		$this->assertContains( 'error code', $output );
+		$this->assertContains( 'unknown', $output );
+		$this->assertContains( '<a href="https://test.auth0.com/v2/logout?client_id=__test_client_id__', $output );
+	}
+
+	/**
+	 * Test that missing state stops the callback with an error.
+	 */
+	public function testThatInvalidStateStopsCallback() {
+		$this->startWpDieHalting();
+
+		self::$opts->set( 'domain', 'test.auth0.com' );
+		self::$opts->set( 'client_id', '__test_client_id__' );
+		self::$opts->set( 'client_secret', uniqid() );
+		$_REQUEST['auth0'] = 1;
+		$_GET['state']     = '__invalid_state__';
+
+		$output = '';
+		try {
+			// Need to suppress header warning for cookie setting.
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			@wp_auth0_process_auth_callback();
+		} catch ( Exception $e ) {
+			$output = $e->getMessage();
+		}
+
+		$this->assertContains( 'There was a problem with your log in', $output );
 		$this->assertContains( 'Invalid state', $output );
 		$this->assertContains( 'error code', $output );
 		$this->assertContains( 'unknown', $output );

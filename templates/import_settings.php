@@ -27,6 +27,8 @@ $constant_keys = $opts->get_all_constant_keys();
 		<div class="tab-pane" id="panel-import" style="display: block">
 
 		  <form action="options.php" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="action" value="wpauth0_import_settings" />
+		  <?php wp_nonce_field( WP_Auth0_Import_Settings::IMPORT_NONCE_ACTION ); ?>
 			  <p class="a0-step-text top-margin">
 			  <?php
 					  _e( 'Paste the settings JSON in the field below. ', 'wp-auth0' );
