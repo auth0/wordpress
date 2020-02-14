@@ -31,7 +31,7 @@
 				<li><?php _e( 'Delete the Domain, Client ID, and Client Secret and save changes.', 'wp-auth0' ); ?></li>
 				<li><?php _e( 'Delete the created Application ', 'wp-auth0' ); ?>
 					<a target="_blank"
-					   href="https://manage.auth0.com/#/applications/<?php echo wp_auth0_get_option( 'client_id' ); ?>/settings" >
+					   href="https://manage.auth0.com/#/applications/<?php echo esc_attr( wp_auth0_get_option( 'client_id' ) ); ?>/settings" >
 						<?php _e( 'here', 'wp-auth0' ); ?>
 					</a>
 				</li>
@@ -59,6 +59,7 @@
 	  </div>
 
 		<form action="options.php" method="POST">
+		<?php wp_nonce_field( WP_Auth0_InitialSetup_ConnectionProfile::SETUP_NONCE_ACTION ); ?>
 			<input type="hidden" name="action" value="wpauth0_callback_step1" />
 			<h3><?php _e( 'Standard Setup', 'wp-auth0' ); ?></h3>
 			<p>
@@ -89,6 +90,7 @@
 		</form>
 
 		<form action="options.php" method="POST">
+			<?php wp_nonce_field( WP_Auth0_InitialSetup_ConnectionProfile::SETUP_NONCE_ACTION ); ?>
 			<input type="hidden" name="action" value="wpauth0_callback_step1"/>
 			<h3><?php _e( 'User Migration Setup', 'wp-auth0' ); ?></h3>
 			<p>

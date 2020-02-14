@@ -48,14 +48,23 @@ class WP_Auth0_Profile_Change_Password {
 
 		$field_name   = ! empty( $_POST['pass1'] ) ? 'pass1' : 'password_1';
 		$new_password = wp_unslash( $_POST[ $field_name ] );
+		$wp_user_id   = null;
 
-		if ( isset( $_POST['user_id'] ) ) {
-			// Input field from user edit or profile update.
-			$wp_user_id = absint( $_POST['user_id'] );
-		} elseif ( is_object( $user ) && ! empty( $user->ID ) ) {
-			// User object passed in from an action.
+		// User object passed in from an action.
+		if ( is_object( $user ) && ! empty( $user->ID ) ) {
 			$wp_user_id = absint( $user->ID );
-		} else {
+		}
+
+		// Input field from user edit or profile update.
+		if ( ! $wp_user_id && isset( $_POST['user_id'] ) ) {
+			$user_editing_allowed = ( current_user_can( 'edit_users' ) || $_POST['user_id'] == get_current_user_id() );
+
+			if ( $user_editing_allowed ) {
+				$wp_user_id = absint( $_POST['user_id'] );
+			}
+		}
+
+		if ( ! $wp_user_id ) {
 			return false;
 		}
 

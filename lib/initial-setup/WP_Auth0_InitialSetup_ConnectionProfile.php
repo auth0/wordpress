@@ -2,6 +2,8 @@
 
 class WP_Auth0_InitialSetup_ConnectionProfile {
 
+	const SETUP_NONCE_ACTION = 'wp_auth0_callback_step1';
+
 	protected $a0_options;
 	protected $domain;
 
@@ -15,6 +17,16 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
 	}
 
 	public function callback() {
+
+		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], self::SETUP_NONCE_ACTION ) ) {
+			wp_nonce_ays( self::SETUP_NONCE_ACTION );
+			exit;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( __( 'Unauthorized.', 'wp-auth0' ) );
+			exit;
+		}
 
 		if ( isset( $_REQUEST['apitoken'] ) && ! empty( $_REQUEST['apitoken'] ) ) {
 

@@ -2,6 +2,10 @@
 
 class WP_Auth0_Import_Settings {
 
+	const IMPORT_NONCE_ACTION = 'wp_auth0_import_settings';
+
+	const EXPORT_NONCE_ACTION = 'wp_auth0_export_settings';
+
 	protected $a0_options;
 
 	public function __construct( WP_Auth0_Options $a0_options ) {
@@ -13,6 +17,11 @@ class WP_Auth0_Import_Settings {
 	}
 
 	public function import_settings() {
+
+		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], self::IMPORT_NONCE_ACTION ) ) {
+			wp_nonce_ays( self::IMPORT_NONCE_ACTION );
+			exit;
+		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( __( 'Unauthorized.', 'wp-auth0' ) );

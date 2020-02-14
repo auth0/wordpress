@@ -27,14 +27,14 @@ $constant_keys = $opts->get_all_constant_keys();
 		<div class="tab-pane" id="panel-import" style="display: block">
 
 		  <form action="options.php" method="post" enctype="multipart/form-data">
-			<input type="hidden" name="action" value="wpauth0_import_settings" />
-
 			  <p class="a0-step-text top-margin">
 			  <?php
 					  _e( 'Paste the settings JSON in the field below. ', 'wp-auth0' );
 					  _e( 'Settings that are not in the imported JSON will use existing values. ', 'wp-auth0' );
 					  _e( 'Setting values will be validated so check the final values once import is complete. ', 'wp-auth0' );
 				?>
+				<input type="hidden" name="action" value="wpauth0_import_settings" />
+				<?php wp_nonce_field( WP_Auth0_Import_Settings::IMPORT_NONCE_ACTION ); ?>
 			  <div class="a0-step-text top-margin"><textarea name="settings-json" class="large-text code" rows="6"></textarea></div>
 
 			<div class="a0-buttons">
@@ -47,7 +47,8 @@ $constant_keys = $opts->get_all_constant_keys();
 		<div class="tab-pane" id="panel-export" style="display: none">
 
 		  <form action="options.php" method="post">
-			<input type="hidden" name="action" value="wpauth0_export_settings" />
+				<?php wp_nonce_field( WP_Auth0_Import_Settings::EXPORT_NONCE_ACTION ); ?>
+				<input type="hidden" name="action" value="wpauth0_export_settings" />
 
 			<p class="a0-step-text top-margin"><?php _e( 'Download the entire plugin configuration.', 'wp-auth0' ); ?></p>
 

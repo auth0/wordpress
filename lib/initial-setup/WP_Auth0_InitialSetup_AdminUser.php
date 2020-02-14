@@ -2,6 +2,8 @@
 
 class WP_Auth0_InitialSetup_AdminUser {
 
+	const SETUP_NONCE_ACTION = 'wp_auth0_callback_step3';
+
 	protected $a0_options;
 
 	public function __construct( WP_Auth0_Options $a0_options ) {
@@ -13,6 +15,16 @@ class WP_Auth0_InitialSetup_AdminUser {
 	}
 
 	public function callback() {
+
+		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], self::SETUP_NONCE_ACTION ) ) {
+			wp_nonce_ays( self::SETUP_NONCE_ACTION );
+			exit;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( __( 'Unauthorized.', 'wp-auth0' ) );
+			exit;
+		}
 
 		$current_user = wp_get_current_user();
 

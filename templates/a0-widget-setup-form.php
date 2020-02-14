@@ -41,17 +41,17 @@ if ( $this->showAsModal() ) :
 	<div class="radio-wrapper">
 		<input id="<?php echo $this->get_field_id( 'gravatar' ); ?>_yes"
 			   name="<?php echo $this->get_field_name( 'gravatar' ); ?>"
-			   type="radio" value="1" <?php echo esc_attr( $gravatar ) == 1 ? 'checked="true"' : ''; ?> />
+			   type="radio" value="1" <?php echo $gravatar == 1 ? 'checked="true"' : ''; ?> />
 		<label for="<?php echo $this->get_field_id( 'gravatar' ); ?>_yes"><?php _e( 'Yes', 'wp-auth0' ); ?></label>
 		&nbsp;
 		<input id="<?php echo $this->get_field_id( 'gravatar' ); ?>_no"
 			   name="<?php echo $this->get_field_name( 'gravatar' ); ?>"
-			   type="radio" value="0" <?php echo esc_attr( $gravatar ) == 0 ? 'checked="true"' : ''; ?> />
+			   type="radio" value="0" <?php echo $gravatar == 0 ? 'checked="true"' : ''; ?> />
 		<label for="<?php echo $this->get_field_id( 'gravatar' ); ?>_no"><?php _e( 'No', 'wp-auth0' ); ?></label>
 		&nbsp;
 		<input id="<?php echo $this->get_field_id( 'gravatar' ); ?>_inherit"
 			   name="<?php echo $this->get_field_name( 'gravatar' ); ?>"
-			   type="radio" value="" <?php echo esc_attr( $gravatar ) === '' ? 'checked="true"' : ''; ?> />
+			   type="radio" value="" <?php echo $gravatar === '' ? 'checked="true"' : ''; ?> />
 		<label for="<?php echo $this->get_field_id( 'gravatar' ); ?>_inherit"><?php _e( 'Default Setting', 'wp-auth0' ); ?></label>
 	</div>
 
@@ -60,7 +60,7 @@ if ( $this->showAsModal() ) :
 	<label for="<?php echo $this->get_field_id( 'icon_url' ); ?>"><?php _e( 'Icon URL:', 'wp-auth0' ); ?></label>
 	<input type="text" id="<?php echo $this->get_field_id( 'icon_url' ); ?>"
 		   name="<?php echo $this->get_field_name( 'icon_url' ); ?>"
-		   value="<?php echo $icon_url; ?>"/>
+		   value="<?php echo esc_attr( $icon_url ); ?>"/>
 	<a href="javascript:void(0);" id="wpa0_choose_icon"
 	   related="<?php echo $this->get_field_id( 'icon_url' ); ?>"
 	   class="button-secondary"><?php _e( 'Choose Icon', 'wp-auth0' ); ?></a>
@@ -69,7 +69,7 @@ if ( $this->showAsModal() ) :
 <p>
 	<label for="<?php echo $this->get_field_id( 'dict' ); ?>"><?php _e( 'Translation:', 'wp-auth0' ); ?></label>
 	<textarea class="widefat" id="<?php echo $this->get_field_id( 'dict' ); ?>"
-			  name="<?php echo $this->get_field_name( 'dict' ); ?>"><?php echo $dict; ?></textarea>
+			  name="<?php echo $this->get_field_name( 'dict' ); ?>"><?php echo sanitize_text_field( $dict ); ?></textarea>
 	<br><span class="description">
 			<?php _e( 'The languageDictionary parameter for the Auth0 login form. ', 'wp-auth0' ); ?>
 	</span>
@@ -91,7 +91,7 @@ if ( $this->showAsModal() ) :
 <p>
 	<label for="<?php echo $this->get_field_id( 'extra_conf' ); ?>"><?php _e( 'Extra Settings', 'wp-auth0' ); ?></label>
 	<textarea class="widefat" id="<?php echo $this->get_field_id( 'extra_conf' ); ?>"
-			  name="<?php echo $this->get_field_name( 'extra_conf' ); ?>"><?php echo $extra_conf; ?></textarea>
+			  name="<?php echo $this->get_field_name( 'extra_conf' ); ?>"><?php echo sanitize_text_field( $extra_conf ); ?></textarea>
 	<br><span class="description">
 			<?php _e( 'Valid JSON for Lock options configuration; will override all options set elsewhere.', 'wp-auth0' ); ?>
 		<a target="_blank" href="https://auth0.com/docs/libraries/lock/v11/configuration"><?php _e( 'See options and examples', 'wp-auth0' ); ?></a>

@@ -368,6 +368,12 @@ add_action( 'admin_action_wpauth0_clear_error_log', 'wp_auth0_errorlog_clear_err
 
 function wp_auth0_export_settings_admin_action() {
 
+	$nonce = $_POST['_wpnonce'] ?? null;
+	if ( ! wp_verify_nonce( $nonce, WP_Auth0_Import_Settings::EXPORT_NONCE_ACTION ) ) {
+		wp_nonce_ays( WP_Auth0_Import_Settings::IMPORT_NONCE_ACTION );
+		exit;
+	}
+
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_die( __( 'Unauthorized.', 'wp-auth0' ) );
 		exit;

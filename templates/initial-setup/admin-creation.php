@@ -22,6 +22,7 @@ $current_user = wp_get_current_user();
 		<?php } ?>
 
 	  <form action="options.php" method="POST">
+			<?php wp_nonce_field( WP_Auth0_InitialSetup_AdminUser::SETUP_NONCE_ACTION ); ?>
 
 		<div class="row">
 		  <div class="a0-admin-creation col-sm-6 col-xs-10">

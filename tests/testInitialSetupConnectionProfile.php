@@ -14,6 +14,8 @@ class TestInitialSetupConnectionProfile extends WP_Auth0_Test_Case {
 
 	use RedirectHelpers;
 
+	use UsersHelper;
+
 	/**
 	 * Test that the create client call is made.
 	 */
@@ -43,10 +45,11 @@ class TestInitialSetupConnectionProfile extends WP_Auth0_Test_Case {
 
 	public function testThatNewConnectionIsCreatedWithExistingMigrationToken() {
 		$this->startRedirectHalting();
-		$conn_profile = new WP_Auth0_InitialSetup_ConnectionProfile( self::$opts );
+		$this->setGlobalUser();
+		$_POST['_wpnonce'] = wp_create_nonce( WP_Auth0_InitialSetup_ConnectionProfile::SETUP_NONCE_ACTION );
 
 		try {
-			$conn_profile->callback();
+			wp_auth0_setup_callback_step1();
 			$redirect_found = [ 'No redirect' ];
 		} catch ( Exception $e ) {
 			$redirect_found = unserialize( $e->getMessage() );

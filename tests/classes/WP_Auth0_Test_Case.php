@@ -98,6 +98,10 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 			$this->stopWpDieHalting();
 		}
 
+		if ( method_exists( $this, 'setGlobalUser' ) ) {
+			$this->setGlobalUser( 1 );
+		}
+
 		global $wpdb;
 		delete_user_meta( 1, $wpdb->prefix . 'auth0_id' );
 		delete_user_meta( 1, $wpdb->prefix . 'auth0_obj' );

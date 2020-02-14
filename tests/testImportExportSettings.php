@@ -84,8 +84,37 @@ class TestImportExportSettings extends WP_Auth0_Test_Case {
 		$this->assertContains( '<p><strong>__test_error_message__</strong></p>', $notice_html );
 	}
 
-	public function testThatProcessDiesIfNotAdminForExport() {
+	public function testThatExportFailsIfNoNonce() {
 		$this->startWpDieHalting();
+
+		try {
+			wp_auth0_export_settings_admin_action();
+			$output = 'Not caught';
+		} catch ( \Exception $e ) {
+			$output = $e->getMessage();
+		}
+
+		$this->assertEquals( 'The link you followed has expired.', $output );
+	}
+
+	public function testThatExportFailsIfBadNonce() {
+		$this->startWpDieHalting();
+		$_POST['_wpnonce'] = '__invalid_export_nonce__';
+
+		try {
+			wp_auth0_export_settings_admin_action();
+			$output = 'Not caught';
+		} catch ( \Exception $e ) {
+			$output = $e->getMessage();
+		}
+
+		$this->assertEquals( 'The link you followed has expired.', $output );
+	}
+
+	public function testThatExportFailsIfNotLoggedIn() {
+		$this->startWpDieHalting();
+
+		$_POST['_wpnonce'] = wp_create_nonce( WP_Auth0_Import_Settings::EXPORT_NONCE_ACTION );
 
 		try {
 			wp_auth0_export_settings_admin_action();
@@ -97,8 +126,73 @@ class TestImportExportSettings extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'Unauthorized.', $output );
 	}
 
-	public function testThatProcessDiesIfNotAdminForImport() {
+	public function testThatExportFailsIfNotAdmin() {
 		$this->startWpDieHalting();
+
+		// Create a new user that is not an admin.
+		$user = $this->createUser();
+		$this->setGlobalUser( $user->ID );
+
+		$_POST['_wpnonce'] = wp_create_nonce( WP_Auth0_Import_Settings::EXPORT_NONCE_ACTION );
+
+		try {
+			wp_auth0_export_settings_admin_action();
+			$output = 'Not caught';
+		} catch ( \Exception $e ) {
+			$output = $e->getMessage();
+		}
+
+		$this->assertEquals( 'Unauthorized.', $output );
+	}
+
+	public function testThatImportFailsIfNoNonce() {
+		$this->startWpDieHalting();
+
+		try {
+			wp_auth0_import_settings_admin_action();
+			$output = 'Not caught';
+		} catch ( \Exception $e ) {
+			$output = $e->getMessage();
+		}
+
+		$this->assertEquals( 'The link you followed has expired.', $output );
+	}
+
+	public function testThatImportFailsIfBadNonce() {
+		$this->startWpDieHalting();
+		$_POST['_wpnonce'] = '__invalid_import_nonce__';
+
+		try {
+			wp_auth0_import_settings_admin_action();
+			$output = 'Not caught';
+		} catch ( \Exception $e ) {
+			$output = $e->getMessage();
+		}
+
+		$this->assertEquals( 'The link you followed has expired.', $output );
+	}
+
+	public function testThatImportFailsIfNotLoggedIn() {
+		$this->startWpDieHalting();
+		$_POST['_wpnonce'] = wp_create_nonce( WP_Auth0_Import_Settings::IMPORT_NONCE_ACTION );
+
+		try {
+			wp_auth0_import_settings_admin_action();
+			$output = 'Not caught';
+		} catch ( \Exception $e ) {
+			$output = $e->getMessage();
+		}
+
+		$this->assertEquals( 'Unauthorized.', $output );
+	}
+
+	public function testThatImportFailsIfNotAdmin() {
+		$this->startWpDieHalting();
+
+		// Create a new user that is not an admin.
+		$user = $this->createUser();
+		$this->setGlobalUser( $user->ID );
+		$_POST['_wpnonce'] = wp_create_nonce( WP_Auth0_Import_Settings::IMPORT_NONCE_ACTION );
 
 		try {
 			wp_auth0_import_settings_admin_action();
@@ -113,6 +207,7 @@ class TestImportExportSettings extends WP_Auth0_Test_Case {
 	public function testThatErrorRedirectHappensIfJsonEmpty() {
 		$this->startRedirectHalting();
 		$this->setGlobalUser();
+		$_POST['_wpnonce'] = wp_create_nonce( WP_Auth0_Import_Settings::IMPORT_NONCE_ACTION );
 
 		try {
 			wp_auth0_import_settings_admin_action();
@@ -132,6 +227,7 @@ class TestImportExportSettings extends WP_Auth0_Test_Case {
 	public function testThatErrorRedirectHappensIfJsonInvalid() {
 		$this->startRedirectHalting();
 		$this->setGlobalUser();
+		$_POST['_wpnonce']      = wp_create_nonce( WP_Auth0_Import_Settings::IMPORT_NONCE_ACTION );
 		$_POST['settings-json'] = uniqid();
 
 		try {
@@ -152,6 +248,7 @@ class TestImportExportSettings extends WP_Auth0_Test_Case {
 	public function testThatSettingsAreUpdatedWithValidJson() {
 		$this->startRedirectHalting();
 		$this->setGlobalUser();
+		$_POST['_wpnonce']      = wp_create_nonce( WP_Auth0_Import_Settings::IMPORT_NONCE_ACTION );
 		$_POST['settings-json'] = '{"domain":"__test_imported_domain__"}';
 
 		try {

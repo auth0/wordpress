@@ -23,42 +23,11 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 	use HttpHelpers;
 
 	/**
-	 * WP_Auth0_Options instance.
-	 *
-	 * @var WP_Auth0_Options
-	 */
-	public static $options;
-
-	/**
-	 * WP_Auth0_Api_Client_Credentials instance.
-	 *
-	 * @var WP_Auth0_Api_Client_Credentials
-	 */
-	public static $api_client_creds;
-
-	/**
-	 * WP_Auth0_Api_Change_Password instance.
-	 *
-	 * @var WP_Auth0_Api_Change_Password
-	 */
-	public static $api_change_password;
-
-	/**
-	 * WP_Auth0_Profile_Change_Password instance.
-	 *
-	 * @var WP_Auth0_Profile_Change_Password
-	 */
-	public static $change_password;
-
-	/**
 	 * Setup before the class starts.
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		self::$api_client_creds    = new WP_Auth0_Api_Client_Credentials( self::$opts );
-		self::$api_change_password = new WP_Auth0_Api_Change_Password( self::$opts, self::$api_client_creds );
-		self::$change_password     = new WP_Auth0_Profile_Change_Password( self::$api_change_password );
-		self::$users_repo          = new WP_Auth0_UsersRepo( self::$opts );
+		self::$users_repo = new WP_Auth0_UsersRepo( self::$opts );
 	}
 
 	/**
@@ -75,6 +44,28 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 		$this->assertHookedFunction( 'user_profile_update_errors', $expect_hooked );
 		$this->assertHookedFunction( 'validate_password_reset', $expect_hooked );
 		$this->assertHookedFunction( 'woocommerce_save_account_details_errors', $expect_hooked );
+	}
+
+	public function testThatIncorrectUserIdStopsProcess() {
+		$this->startHttpMocking();
+		$this->http_request_type = 'success_empty_body';
+
+		$user_id  = $this->createUser()->ID;
+		$errors   = new WP_Error();
+		$password = uniqid();
+
+		// Core WP profile update fields.
+		$_POST['pass1']   = $password;
+		$_POST['pass2']   = $password;
+		$_POST['user_id'] = 3;
+
+		// Store userinfo for a DB strategy user.
+		$this->storeAuth0Data( $user_id, 'auth0' );
+		$this->setGlobalUser( $user_id );
+
+		self::setApiToken( 'update:users' );
+
+		$this->assertFalse( wp_auth0_validate_new_password( $errors, true ) );
 	}
 
 	/**
@@ -95,6 +86,7 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 
 		// Store userinfo for a DB strategy user.
 		$this->storeAuth0Data( $user_id, 'auth0' );
+		$this->setGlobalUser( $user_id );
 
 		self::setApiToken( 'update:users' );
 
@@ -188,7 +180,6 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 		$errors  = new WP_Error();
 
 		// Provide everything except a password field.
-		$change_password  = $this->getStub( true );
 		$_POST['user_id'] = $user_id;
 		$this->storeAuth0Data( $user_id );
 
@@ -204,8 +195,7 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 		$errors  = new WP_Error();
 
 		// Provide everything except a user record.
-		$change_password = $this->getStub( true );
-		$_POST['pass1']  = uniqid();
+		$_POST['pass1'] = uniqid();
 		$this->storeAuth0Data( $user_id );
 
 		$this->assertFalse( wp_auth0_validate_new_password( $errors, false ) );
@@ -219,7 +209,6 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 		$errors  = new WP_Error();
 
 		// Provide everything except Auth0 userinfo.
-		$change_password  = $this->getStub( true );
 		$_POST['pass1']   = uniqid();
 		$_POST['user_id'] = $user_id;
 
@@ -234,7 +223,6 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 		$errors  = new WP_Error();
 
 		// Provide everything except Auth0 userinfo for a DB user.
-		$change_password  = $this->getStub( true );
 		$_POST['pass1']   = uniqid();
 		$_POST['user_id'] = $user_id;
 		$this->storeAuth0Data( $user_id, 'not-a-db-strategy' );
@@ -249,36 +237,17 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 		$user_id = $this->createUser()->ID;
 		$errors  = new WP_Error();
 
-		// API call mocked to fail.
-		$change_password = $this->getStub( false );
-
 		// Setup correct user data.
 		$_POST['pass1']   = uniqid();
 		$_POST['pass2']   = $_POST['pass1'];
 		$_POST['user_id'] = $user_id;
 		$this->storeAuth0Data( $user_id );
+		$this->setGlobalUser();
 
 		$this->assertFalse( wp_auth0_validate_new_password( $errors, false ) );
 		$this->assertEquals( 'Password could not be updated.', $errors->errors['auth0_password'][0] );
 		$this->assertEquals( 'pass1', $errors->error_data['auth0_password']['form-field'] );
 		$this->assertFalse( isset( $_POST['pass1'] ) );
 		$this->assertFalse( isset( $_POST['pass2'] ) );
-	}
-
-	/**
-	 * Get an API stub set to pass or fail.
-	 *
-	 * @param boolean $success - True for the API call to succeed, false for it to fail.
-	 *
-	 * @return WP_Auth0_Profile_Change_Password
-	 */
-	public function getStub( $success ) {
-		$mock_api_test_password = $this
-			->getMockBuilder( WP_Auth0_Api_Change_Password::class )
-			->setMethods( [ 'call' ] )
-			->setConstructorArgs( [ self::$opts, self::$api_client_creds ] )
-			->getMock();
-		$mock_api_test_password->method( 'call' )->willReturn( $success );
-		return new WP_Auth0_Profile_Change_Password( $mock_api_test_password );
 	}
 }

@@ -1,7 +1,3 @@
-<?php
-$options   = WP_Auth0_Options::Instance();
-$next_step = $options->get( 'migration_ws' ) ? 4 : 3;
-?>
 <div class="a0-wrap settings wrap">
 
 	<div class="container-fluid">
@@ -17,7 +13,7 @@ $next_step = $options->get( 'migration_ws' ) ? 4 : 3;
 		<div class="row">
 			<div class="a0-buttons">
 			<a href="https://manage.auth0.com/#/applications/
-			<?php echo $options->get( 'client_id' ); ?>
+			<?php echo esc_attr( wp_auth0_get_option( 'client_id' ) ); ?>
 			/connections" class="a0-button primary" target="_blank">
 			<?php
 			  _e( 'Configure Connections', 'wp-auth0' );
@@ -25,7 +21,7 @@ $next_step = $options->get( 'migration_ws' ) ? 4 : 3;
 			  </a>
 			<a class="a0-button primary" href="
 			<?php
-			echo admin_url( "admin.php?page=wpa0-setup&step={$next_step}" );
+			echo admin_url( 'admin.php?page=wpa0-setup&step=' . ( wp_auth0_get_option( 'migration_ws' ) ? 4 : 3 ) );
 			?>
 			" >
 			<?php
