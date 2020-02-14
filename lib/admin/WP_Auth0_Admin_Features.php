@@ -34,7 +34,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 				'function' => 'render_auto_login_method',
 			],
 			[
-				'name'     => __( 'Single Logout', 'wp-auth0' ),
+				'name'     => __( 'Auth0 Logout', 'wp-auth0' ),
 				'opt'      => 'singlelogout',
 				'id'       => 'wpa0_singlelogout',
 				'function' => 'render_singlelogout',
