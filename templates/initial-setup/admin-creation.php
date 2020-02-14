@@ -14,12 +14,12 @@ $current_user = wp_get_current_user();
 
 		<?php if ( $error ) { ?>
 
-	  <p class="bg-danger">
+	  <div class="notice notice-error settings-error"><p>
 
 			<?php _e( 'An error occurred creating the user. Check that the migration webservices are accessible or check the ', 'wp-auth0' ); ?>
 		<a href="<?php echo admin_url( 'admin.php?page=wpa0-errors' ); ?>" target="_blank"><?php _e( 'Error Log', 'wp-auth0' ); ?></a>
 			<?php _e( 'for more info.', 'wp-auth0' ); ?>
-	  </p>
+	  </p></div>
 
 		<?php } ?>
 
