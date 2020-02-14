@@ -40,7 +40,7 @@ $constant_keys = $opts->get_all_constant_keys();
 			  <div class="a0-step-text top-margin"><textarea name="settings-json" class="large-text code" rows="6"></textarea></div>
 
 			<div class="a0-buttons">
-			  <input type="submit" name="setup" class="a0-button primary" value="<?php _e( 'Import', 'wp-auth0' ); ?>" />
+			  <input type="submit" name="setup" class="abutton button-primary" value="<?php _e( 'Import', 'wp-auth0' ); ?>" />
 			</div>
 
 		  </form>
@@ -55,7 +55,7 @@ $constant_keys = $opts->get_all_constant_keys();
 			<p class="a0-step-text top-margin"><?php _e( 'Download the entire plugin configuration.', 'wp-auth0' ); ?></p>
 
 			<div class="a0-buttons">
-			  <input type="submit" name="setup" class="a0-button primary" value="<?php _e( 'Export', 'wp-auth0' ); ?>" />
+			  <input type="submit" name="setup" class="button button-primary" value="<?php _e( 'Export', 'wp-auth0' ); ?>" />
 			</div>
 
 		  </form>

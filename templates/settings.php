@@ -99,7 +99,7 @@
 			</div>
 
 				<div class="a0-buttons">
-					<input type="submit" name="submit" id="submit" class="a0-button primary" value="<?php _e( 'Save Changes', 'wp-auth0' ); ?>" />
+					<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Save Changes', 'wp-auth0' ); ?>" />
 				</div>
 		</form>
 	</div>

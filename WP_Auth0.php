@@ -571,8 +571,9 @@ function wp_auth0_create_account_message() {
 
 	// Null coalescing validates input variable.
 	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-	$current_page = $_GET['page'] ?? null;
-	if ( wp_auth0_is_ready() || ! $current_page || 0 !== strpos( $current_page, 'wpa' ) ) {
+	$current_page     = $_GET['page'] ?? null;
+	$is_correct_admin = in_array( $current_page, [ 'wpa0', 'wpa0-errors', 'wpa0-import-settings' ] );
+	if ( wp_auth0_is_ready() || ! $is_correct_admin ) {
 		return false;
 	}
 

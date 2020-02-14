@@ -21,7 +21,7 @@
 
   .a0-wrap {
 
-    a, .link {
+    .link {
       color:aText;
     }
 
@@ -150,72 +150,6 @@
     display: none;
   }
 
-  .a0-button, #wpa0_choose_icon {
-    border-radius: 3px;
-    border: none;
-    line-height: 45px;
-    min-width: 150px;
-    text-transform: uppercase;
-    text-decoration: none;
-    font-size: 13px;
-    display: inline-block;
-    text-align: center;
-    padding: 0 30px;
-    transition: background-color 0.2s ease;
-
-    &:focus {
-      box-shadow: none;
-      outline:none;
-    }
-
-    &.link {
-      text-transform: none;
-      text-decoration: underline;
-      cursor:pointer;
-      min-width:0;
-      padding: 0 10px;
-    }
-
-    &.primary {
-      color: buttonPrimaryText;
-      background-color: buttonPrimaryBG;
-
-      &:hover {
-        color: buttonPrimaryText;
-      }
-    }
-
-    &.secondary {
-      font-weight:bold;
-      color: buttonSecondaryText;
-      background-color: buttonSecondaryBG;
-      text-decoration: underline;
-
-      &:hover {
-        color: buttonSecondaryText;
-      }
-    }
-
-    &.default {
-
-      background: #fff;
-      color: rgba(0,0,0,0.86);
-      border-color: #d0d2d3;
-      text-decoration:none;
-
-      &:hover {
-        background: #d0d2d3;
-      }
-
-    }
-  }
-
-  #wpa0_choose_icon {
-    height:42px;
-    color: buttonPrimaryText;
-    background-color: buttonPrimaryBG;
-  }
-
   .a0-steps {
     background-color:#F2F5F8;
     padding-top:120px;
@@ -337,66 +271,7 @@
       padding: 10px 15px;
     }
   }
-
-  .enterprise-connections {
-    margin-top:30px;
-    padding:0;
-
-    .connection {
-      background-color:enterpriseBG;
-      text-align: center;
-      border-radius:3px;
-      padding:20px;
-      margin-bottom:30px;
-
-      .title-wrapper {
-        min-height:50px;
-      }
-      h4 {
-        line-height: 24px;
-        font-size: 17px;
-      }
-
-      .logo {
-        width:100px;
-        height:100px;
-        border-radius:50px;
-        background-size: 55% !important;
-        margin: 0 auto 20px;
-      }
-
-      a {
-        color:text;
-        cursor:pointer;
-      }
-    }
-  }
-
-  .connections-wrapper {
-    margin-top:30px;
-    padding: 0 15px;
-
-    @media (min-width: 768px) {
-      height:600px;
-      overflow-y:scroll;
-
-      &::-webkit-scrollbar {
-        width: 14px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background: #F3F3F3;
-        border-radius: 8px;
-        border: 3px solid white;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        border: 3px solid white;
-        border-radius: 8px;
-        background: #D9D9DE;
-      }
-    }
-  }
+  
   .connections {
     border-top: 1px #d0d2d3 solid;
     border-left: 1px #d0d2d3 solid;
@@ -688,7 +563,11 @@
 
   .settings {
     h3 {
-      margin: 30px 0 10px;
+      margin: 1.25em 0 0.75em;
+    }
+    
+    hr {
+      margin: 2em 0
     }
 
     .a0-message.manage {

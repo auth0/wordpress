@@ -14,12 +14,12 @@
 			<div class="a0-buttons">
 			<a href="https://manage.auth0.com/#/applications/
 			<?php echo esc_attr( wp_auth0_get_option( 'client_id' ) ); ?>
-			/connections" class="a0-button primary" target="_blank">
+			/connections" class="button button-secondary" target="_blank">
 			<?php
 			  _e( 'Configure Connections', 'wp-auth0' );
 			?>
 			  </a>
-			<a class="a0-button primary" href="
+			<a class="button button-primary" href="
 			<?php
 			echo admin_url( 'admin.php?page=wpa0-setup&step=' . ( wp_auth0_get_option( 'migration_ws' ) ? 4 : 3 ) );
 			?>

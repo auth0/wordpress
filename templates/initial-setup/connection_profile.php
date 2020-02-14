@@ -47,16 +47,16 @@
 
 		<?php else : ?>
 
-	  <div class="a0-step-text a0-message a0-warning">
+		<div class="notice notice-error settings-error"><p>
 
 		<b>Important:</b>
 			<?php _e( 'To continue you need an Auth0 account.', 'wp-auth0' ); ?>
 
-		<a class="a0-button default pull-right" target="_blank" href="https://auth0.com/signup" >
+		<a class="button button-secondary" target="_blank" href="https://auth0.com/signup" >
 			<?php _e( 'Sign up for free', 'wp-auth0' ); ?>
 		</a>
 
-	  </div>
+		</p></div>
 
 		<form action="options.php" method="POST">
 			<?php wp_nonce_field( WP_Auth0_InitialSetup_ConnectionProfile::SETUP_NONCE_ACTION ); ?>
@@ -86,8 +86,10 @@
 				<?php _e( 'Scopes required', 'wp-auth0' ); ?>:
 				<code><?php echo implode( '</code> <code>', WP_Auth0_Api_Client::ConsentRequiredScopes() ); ?></code>
 			</p>
-			<p><input type="submit" class="a0-button primary" value="<?php _e( 'Start Standard Setup', 'wp-auth0' ); ?>"/></p>
+			<p><input type="submit" class="button button-primary" value="<?php _e( 'Start Standard Setup', 'wp-auth0' ); ?>"/></p>
 		</form>
+
+		<hr>
 
 		<form action="options.php" method="POST">
 			<?php wp_nonce_field( WP_Auth0_InitialSetup_ConnectionProfile::SETUP_NONCE_ACTION ); ?>
@@ -100,13 +102,17 @@
 			<?php _e( 'More information here.', 'wp-auth0' ); ?>
 				</a>
 			</p>
-			<p><input type="submit" class="a0-button primary" value="<?php _e( 'Start User Migration Setup', 'wp-auth0' ); ?>"/></p>
+			<p><input type="submit" class="button button-primary" value="<?php _e( 'Start User Migration Setup', 'wp-auth0' ); ?>"/></p>
 		</form>
+
+		<hr>
 
 		<h3><?php _e( 'Manual Setup', 'wp-auth0' ); ?></h3>
 		<p><?php _e( 'If you already have an Application or want to use an existing database connection, please follow the steps below.', 'wp-auth0' ); ?></p>
-		<p><a class="a0-button primary" href="https://auth0.com/docs/cms/wordpress/installation#manual-setup"
+		<p><a class="bbutton button-primary" href="https://auth0.com/docs/cms/wordpress/installation#manual-setup"
 			  target="_blank"><?php _e( 'Manual Setup Instructions', 'wp-auth0' ); ?></a></p>
+
+		<hr>
 
 		<h3><?php _e( 'Import Setup', 'wp-auth0' ); ?></h3>
 		<p>
@@ -114,7 +120,7 @@
 			<?php _e( 'Save time and import existing Auth0 settings.', 'wp-auth0' ); ?>
 		</p>
 
-		<p><a class="a0-button primary" href="<?php echo admin_url( 'admin.php?page=wpa0-import-settings' ); ?>">
+		<p><a class="button button-primary" href="<?php echo admin_url( 'admin.php?page=wpa0-import-settings' ); ?>">
 						<?php _e( 'Import Settings', 'wp-auth0' ); ?></a></p>
 
 		<?php endif; ?>

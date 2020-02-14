@@ -178,7 +178,7 @@ class WP_Auth0_Admin_Appearance extends WP_Auth0_Admin_Generic {
 	 */
 	public function render_icon_url( $args = [] ) {
 		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		printf( ' <a id="wpa0_choose_icon" class="button-secondary">%s</a>', __( 'Choose Icon', 'wp-auth0' ) );
+		printf( ' <a id="wpa0_choose_icon" class="button button-secondary">%s</a>', __( 'Choose Icon', 'wp-auth0' ) );
 		$this->render_field_description(
 			__( 'Icon above the title on the Auth0 login form. ', 'wp-auth0' ) .
 			__( 'This image works best as a PNG with a transparent background less than 120px tall', 'wp-auth0' )

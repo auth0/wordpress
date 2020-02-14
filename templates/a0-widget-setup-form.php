@@ -63,7 +63,7 @@ if ( $this->showAsModal() ) :
 		   value="<?php echo esc_attr( $icon_url ); ?>"/>
 	<a href="javascript:void(0);" id="wpa0_choose_icon"
 	   related="<?php echo $this->get_field_id( 'icon_url' ); ?>"
-	   class="button-secondary"><?php _e( 'Choose Icon', 'wp-auth0' ); ?></a>
+	   class="button button-secondary"><?php _e( 'Choose Icon', 'wp-auth0' ); ?></a>
 	<br><span class="description"><?php _e( 'This image works best as a PNG with a transparent background less than 120px tall', 'wp-auth0' ); ?>.</span>
 </p>
 <p>
