@@ -36,7 +36,7 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
 			$domain = sanitize_text_field( wp_unslash( $_REQUEST['domain'] ) );
 
 			$consent_callback = new WP_Auth0_InitialSetup_Consent( $this->a0_options );
-			$consent_callback->callback_with_token( $domain, $token, null, false );
+			$consent_callback->callback_with_token( $domain, $token, false );
 
 		} else {
 			$consent_url = $this->build_consent_url();

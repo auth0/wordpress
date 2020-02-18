@@ -23,14 +23,12 @@ class WP_Auth0_InitialSetup_Consent {
 	 *
 	 * @param string $domain - Auth0 domain for the Application.
 	 * @param string $access_token - Management API access token.
-	 * @param string $type - Installation type, "social" (AKA standard) or "enterprise".
 	 * @param bool   $hasInternetConnection - True if the installing site be reached by Auth0, false if not.
 	 */
-	public function callback_with_token( $domain, $access_token, $type, $hasInternetConnection = true ) {
+	public function callback_with_token( $domain, $access_token, $hasInternetConnection = true ) {
 
 		$this->a0_options->set( 'domain', $domain );
 		$this->access_token          = $access_token;
-		$this->state                 = $type;
 		$this->hasInternetConnection = $hasInternetConnection;
 
 		$name = get_auth0_curatedBlogName();
@@ -39,9 +37,6 @@ class WP_Auth0_InitialSetup_Consent {
 	}
 
 	public function callback() {
-		// Not processing form data, just using a redirect parameter if present.
-		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
-
 		$access_token = $this->exchange_code();
 
 		if ( $access_token === null ) {
@@ -51,15 +46,7 @@ class WP_Auth0_InitialSetup_Consent {
 
 		$app_domain = $this->parse_token_domain( $access_token );
 
-		if ( ! isset( $_REQUEST['state'] ) ) {
-			wp_safe_redirect( admin_url( 'admin.php?page=wpa0-setup&error=missing_state' ) );
-			exit;
-		}
-
-		$profile_type = sanitize_text_field( wp_unslash( $_REQUEST['state'] ) );
-		$this->callback_with_token( $app_domain, $access_token, $profile_type );
-
-		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
+		$this->callback_with_token( $app_domain, $access_token );
 	}
 
 	protected function parse_token_domain( $token ) {

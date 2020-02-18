@@ -29,7 +29,7 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 
 		$caught_http = [];
 		try {
-			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token, 'social' );
+			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token );
 		} catch ( Exception $e ) {
 			$caught_http = unserialize( $e->getMessage() );
 		}
@@ -57,7 +57,7 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$this->http_request_type = 'wp_error';
 		$caught_redirect         = [];
 		try {
-			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token, 'social' );
+			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token );
 		} catch ( Exception $e ) {
 			$caught_redirect = unserialize( $e->getMessage() );
 		}
@@ -98,7 +98,7 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 
 		$caught_redirect = [];
 		try {
-			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token, 'social' );
+			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token );
 		} catch ( Exception $e ) {
 			$caught_redirect = unserialize( $e->getMessage() );
 		}
@@ -142,7 +142,7 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 
 		$caught_redirect = [];
 		try {
-			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token, 'social' );
+			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token );
 		} catch ( Exception $e ) {
 			$caught_redirect = unserialize( $e->getMessage() );
 		}
@@ -190,7 +190,7 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 
 		$caught_redirect = [];
 		try {
-			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token, 'social' );
+			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token );
 		} catch ( Exception $e ) {
 			$caught_redirect = unserialize( $e->getMessage() );
 		}
