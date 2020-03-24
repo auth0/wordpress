@@ -554,7 +554,7 @@ class WP_Auth0_LoginManager {
 	 * @throws WP_Auth0_InvalidIdTokenException
 	 */
 	private function decode_id_token( $id_token ) {
-		$expectedIss = 'https://' . $this->a0_options->get( 'domain' ) . '/';
+		$expectedIss = apply_filters( 'auth0_id_token_issuer', 'https://' . $this->a0_options->get_auth_domain() . '/' );
 		$expectedAlg = $this->a0_options->get( 'client_signing_algorithm' );
 		if ( 'RS256' === $expectedAlg ) {
 			$sigVerifier = new WP_Auth0_AsymmetricVerifier( new WP_Auth0_JwksFetcher() );

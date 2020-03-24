@@ -14,7 +14,6 @@
  */
 final class WP_Auth0_IdTokenVerifier {
 
-
 	/**
 	 * Token issuer base URL expected.
 	 *
