@@ -35,8 +35,6 @@ $constant_keys = $opts->get_all_constant_keys();
 					  _e( 'Settings that are not in the imported JSON will use existing values. ', 'wp-auth0' );
 					  _e( 'Setting values will be validated so check the final values once import is complete. ', 'wp-auth0' );
 				?>
-				<input type="hidden" name="action" value="wpauth0_import_settings" />
-				<?php wp_nonce_field( WP_Auth0_Import_Settings::IMPORT_NONCE_ACTION ); ?>
 			  <div class="a0-step-text top-margin"><textarea name="settings-json" class="large-text code" rows="6"></textarea></div>
 
 			<div class="a0-buttons">
