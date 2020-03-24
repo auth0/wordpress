@@ -771,11 +771,9 @@ function wp_auth0_filter_login_override_url( $wp_login_url ) {
 	// Not processing form data, just using a redirect parameter if present.
 	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 
-	// Null coalescing validates input variable.
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 	if ( wp_auth0_can_show_wp_login_form() && isset( $_REQUEST['wle'] ) ) {
 		// We are on an override page.
-		$wp_login_url = add_query_arg( 'wle', $_REQUEST['wle'], $wp_login_url );
+		$wp_login_url = add_query_arg( 'wle', sanitize_text_field( wp_unslash( $_REQUEST['wle'] ) ), $wp_login_url );
 	} elseif ( wp_auth0_is_current_login_action( [ 'resetpass' ] ) ) {
 		// We are on the reset password page with a link to login.
 		// This page will not be shown unless we get here via a valid reset password request.
