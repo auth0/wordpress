@@ -481,42 +481,62 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Get a value from query_vars or request global.
 	 *
+	 * TODO: This is checking a registered, global query variable and falling back to the PHP global.
+	 * TODO: We should be using one or the other, not both.
+	 * TODO: Need to determine the safest route for all WP instances.
+	 * TODO: Include get_state() in the analysis.
+	 *
+	 * @see https://developer.wordpress.org/reference/hooks/query_vars/
+	 *
 	 * @param string $key - query var key to return.
 	 *
 	 * @return string|null
 	 */
 	protected function query_vars( $key ) {
-		// TODO: Either use query_vars or switch to global entirely.
-		// phpcs:disable
+		// Neither nonce nor sanitization is needed here as this is not processing form data, just returning it.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		global $wp_query;
+
 		if ( isset( $wp_query->query_vars[ $key ] ) ) {
 			return $wp_query->query_vars[ $key ];
 		}
+
 		if ( isset( $_REQUEST[ $key ] ) ) {
 			return wp_unslash( $_REQUEST[ $key ] );
 		}
+
 		return null;
 
-		// phpcs:enable
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
 	/**
 	 * Get the state value returned from Auth0 during login processing.
+	 * This should be used _after_ state has been validated for the login session.
 	 *
 	 * @return string|object|null
 	 */
 	protected function get_state() {
-		// TODO: Query var or global? Validate value.
-		// phpcs:disable
+		// Neither nonce nor sanitization is needed here as this is not processing form data, just returning it.
+		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+		if ( ! isset( $_REQUEST['state'] ) ) {
+			return null;
+		}
 
 		$state_val = wp_unslash( $_REQUEST['state'] );
 		$state_val = rawurldecode( $state_val );
 		$state_val = base64_decode( $state_val );
 		$state_val = json_decode( $state_val );
+
 		return $state_val;
 
-		// phpcs:enable
+		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
 	/**
