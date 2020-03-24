@@ -115,6 +115,8 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 
 		self::setApiToken( 'update:users' );
 
+		self::setGlobalUser( $user->ID );
+
 		$this->assertTrue( wp_auth0_validate_new_password( $errors, $user ) );
 		$this->assertEquals( $password, $_POST['pass1'] );
 		$this->assertEquals( $password, $_POST['pass2'] );
@@ -138,6 +140,8 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 
 		self::setApiToken( 'update:users' );
 
+		self::setGlobalUser( $user->ID );
+
 		$this->assertTrue( wp_auth0_validate_new_password( $errors, $user ) );
 		$this->assertEmpty( $errors->get_error_messages() );
 	}
@@ -160,6 +164,8 @@ class TestProfileChangePassword extends WP_Auth0_Test_Case {
 		$_POST['password_1'] = wp_slash( $new_password );
 
 		self::setApiToken( 'update:users' );
+
+		self::setGlobalUser( $user->ID );
 
 		$decoded_res = [];
 		try {

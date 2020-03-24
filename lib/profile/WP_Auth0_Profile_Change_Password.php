@@ -48,42 +48,36 @@ class WP_Auth0_Profile_Change_Password {
 			return false;
 		}
 
+		// Do we have a user to edit?
+		$is_user_from_hook = is_object( $user ) && ! empty( $user->ID );
+		if ( ! $is_user_from_hook && ! isset( $_POST['user_id'] ) ) {
+			return false;
+		}
+
+		$wp_user_id = absint( $is_user_from_hook ? $user->ID : $_POST['user_id'] );
+
+		// Does the current user have permission to edit this user?
+		if ( ! current_user_can( 'edit_users' ) && $wp_user_id !== get_current_user_id() ) {
+			return false;
+		}
+
+		// Is the user being edited an Auth0 user?
+		$auth0_id = WP_Auth0_UsersRepo::get_meta( $wp_user_id, 'auth0_id' );
+		if ( empty( $auth0_id ) ) {
+			return false;
+		}
+
+		// Is the user being edited a DB strategy user?
+		$strategy = WP_Auth0_Users::get_strategy( $auth0_id );
+		if ( 'auth0' !== $strategy ) {
+			return false;
+		}
+
 		$field_name = ! empty( $_POST['pass1'] ) ? 'pass1' : 'password_1';
 
 		// Validated above and only sent to the change password API endpoint.
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 		$new_password = wp_unslash( $_POST[ $field_name ] );
-		$wp_user_id   = null;
-
-		// User object passed in from an action.
-		if ( is_object( $user ) && ! empty( $user->ID ) ) {
-			$wp_user_id = absint( $user->ID );
-		}
-
-		// Input field from user edit or profile update.
-		if ( ! $wp_user_id && isset( $_POST['user_id'] ) ) {
-			$user_editing_allowed = ( current_user_can( 'edit_users' ) || $_POST['user_id'] == get_current_user_id() );
-
-			if ( $user_editing_allowed ) {
-				$wp_user_id = absint( $_POST['user_id'] );
-			}
-		}
-
-		if ( ! $wp_user_id ) {
-			return false;
-		}
-
-		// Exit if this is not an Auth0 user.
-		$auth0_id = WP_Auth0_UsersRepo::get_meta( $wp_user_id, 'auth0_id' );
-		if ( empty( $auth0_id ) ) {
-			return false;
-		}
-		$strategy = WP_Auth0_Users::get_strategy( $auth0_id );
-
-		// Exit if this is not a database strategy user.
-		if ( 'auth0' !== $strategy ) {
-			return false;
-		}
 
 		$result = $this->api_change_password->call( $auth0_id, $new_password );
 
