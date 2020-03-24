@@ -410,7 +410,7 @@ function wp_auth0_import_settings_admin_action() {
 add_action( 'admin_action_wpauth0_import_settings', 'wp_auth0_import_settings_admin_action' );
 
 function wp_auth0_settings_admin_action_error() {
-	// Not processing form data, just using a redirect parameter if present.
+	// Not processing form data, using an error URL parameter to indicate a problem with the import.
 	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 
 	if ( ! wp_auth0_is_admin_page( 'wpa0-import-settings' ) || empty( $_REQUEST['error'] ) ) {
@@ -773,10 +773,9 @@ function wp_auth0_filter_login_override_url( $wp_login_url ) {
 
 	// Null coalescing validates input variable.
 	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-	$wle = $_REQUEST['wle'] ?? null;
-	if ( wp_auth0_can_show_wp_login_form() && $wle ) {
+	if ( wp_auth0_can_show_wp_login_form() && isset( $_REQUEST['wle'] ) ) {
 		// We are on an override page.
-		$wp_login_url = add_query_arg( 'wle', $wle, $wp_login_url );
+		$wp_login_url = add_query_arg( 'wle', $_REQUEST['wle'], $wp_login_url );
 	} elseif ( wp_auth0_is_current_login_action( [ 'resetpass' ] ) ) {
 		// We are on the reset password page with a link to login.
 		// This page will not be shown unless we get here via a valid reset password request.
