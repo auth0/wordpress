@@ -2,6 +2,8 @@
 
 class WP_Auth0_Admin {
 
+	const OPT_SECTIONS = [ 'basic', 'features', 'appearance', 'advanced' ];
+
 	protected $a0_options;
 
 	protected $router;
@@ -102,8 +104,22 @@ class WP_Auth0_Admin {
 			$input[ $key ] = $this->a0_options->get_constant_val( $key );
 		}
 
-		// Remove unknown keys.
 		$option_keys = $this->a0_options->get_defaults( true );
+
+		// Look for custom settings fields.
+		$custom_opts = [];
+		foreach ( self::OPT_SECTIONS as $section ) {
+			$custom_opts = array_merge( $custom_opts, apply_filters( 'auth0_settings_fields', [], $section ) );
+		}
+
+		// Merge in any custom setting option keys.
+		foreach ( $custom_opts as $custom_opt ) {
+			if ( $custom_opt && $custom_opt['opt'] ) {
+				$option_keys[] = $custom_opt['opt'];
+			}
+		}
+
+		// Remove unknown keys.
 		foreach ( $input as $key => $val ) {
 			if ( ! in_array( $key, $option_keys ) ) {
 				unset( $input[ $key ] );

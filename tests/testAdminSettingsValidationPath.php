@@ -40,4 +40,32 @@ class TestAdminSettingsValidationPath extends WP_Auth0_Test_Case {
 			$wp_registered_settings['wp_auth0_settings']['sanitize_callback'][1]
 		);
 	}
+
+	public function testThatCustomSettingsFieldsAreKeptDuringValidation() {
+		$admin = new WP_Auth0_Admin(self::$opts, new WP_Auth0_Routes(self::$opts));
+
+		add_filter( 'auth0_settings_fields', [$this, 'addCustomSettings'], 10, 2 );
+		$result = $admin->input_validator( ['test_opt_name' => '__test_value__'] );
+		remove_filter( 'auth0_settings_fields', [$this, 'addCustomSettings'], 10 );
+
+		$this->assertArrayHasKey('test_opt_name', $result);
+		$this->assertEquals( '__test_value__', $result['test_opt_name'] );
+	}
+
+	public function testThatUnknownSettingsFieldsAreRemovedDuringValidation() {
+		$admin = new WP_Auth0_Admin(self::$opts, new WP_Auth0_Routes(self::$opts));
+
+		$result = $admin->input_validator( ['unknown_opt_name' => '__test_value__'] );
+
+		$this->assertArrayNotHasKey('unknown_opt_name', $result);
+	}
+
+	public function addCustomSettings( $options, $id ) {
+		// From https://auth0.com/docs/cms/wordpress/extending#auth0_settings_fields
+		if ( 'basic' === $id ) {
+			$options[] = ['opt' => 'test_opt_name'];
+		}
+
+		return $options;
+	}
 }
