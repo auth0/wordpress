@@ -13,6 +13,7 @@ In addition to the minimum PHP version being updated from 5.3 to 7.0, there are 
 - Using the auth0 word in the URL path triggers an authorization code exchange [\#351](https://github.com/auth0/wp-auth0/issues/351)
 
 **Added**
+- PHPCS security scan, sanitization and escaping improvements, and removed custom admin styling (see commits for details)
 - Add settings validation to import [\#777](https://github.com/auth0/wp-auth0/pull/777) ([joshcanhelp](https://github.com/joshcanhelp))
 - Add ability to break cache if RS256 ID token kid is not found [\#770](https://github.com/auth0/wp-auth0/pull/770) ([joshcanhelp](https://github.com/joshcanhelp))
 - Remove error_log calls and add auth0_insert_error action [\#763](https://github.com/auth0/wp-auth0/pull/763) ([joshcanhelp](https://github.com/joshcanhelp))
