@@ -32,14 +32,6 @@ This plugin requires a [free or paid](https://auth0.com/pricing) Auth0 account.
 1. [Sign up here](https://auth0.com/signup).
 2. Follow the [installation instructions here](https://auth0.com/docs/cms/wordpress/installation).
 
-== Screenshots ==
-
-1. The new login page on WordPress
-2. Twenty Seventeen theme with login widget
-3. The admin to configure the plugin
-4. Set up Enterprise connections
-5. Set up the Auth0 widget
-
 == Technical Notes ==
 
 **IMPORTANT**: By using this plugin you are delegating the site authentication and profile handling to Auth0. That means that you won't be using the WordPress database to authenticate users and the default WordPress login forms will be replaced.
