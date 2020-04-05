@@ -161,8 +161,8 @@ class WP_Auth0_UsersRepo {
 	/**
 	 * Get a user's Auth0 meta data.
 	 *
-	 * @param integer  $user_id - WordPress user ID.
-	 * @param string - $key - Usermeta key to get.
+	 * @param integer $user_id - WordPress user ID.
+	 * @param string  $key - Usermeta key to get.
 	 *
 	 * @return mixed
 	 *

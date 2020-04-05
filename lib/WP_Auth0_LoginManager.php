@@ -34,7 +34,7 @@ class WP_Auth0_LoginManager {
 	 * @param WP_Auth0_UsersRepo    $users_repo - see member variable doc comment.
 	 * @param WP_Auth0_Options|null $a0_options - see member variable doc comment.
 	 */
-	public function __construct( WP_Auth0_UsersRepo $users_repo, WP_Auth0_Options $a0_options ) {
+	public function __construct( WP_Auth0_UsersRepo $users_repo, ?WP_Auth0_Options $a0_options ) {
 		$this->users_repo = $users_repo;
 		$this->a0_options = $a0_options;
 	}
@@ -310,7 +310,7 @@ class WP_Auth0_LoginManager {
 			try {
 
 				$creator = new WP_Auth0_UsersRepo( $this->a0_options );
-				$user_id = $creator->create( $userinfo, $id_token, $access_token );
+				$user_id = $creator->create( $userinfo, $id_token );
 				$user    = get_user_by( 'id', $user_id );
 				$this->do_login( $user, $userinfo, true, $id_token, $access_token, $refresh_token );
 			} catch ( WP_Auth0_CouldNotCreateUserException $e ) {
@@ -569,7 +569,7 @@ class WP_Auth0_LoginManager {
 	}
 
 	/**
-	 * @param $id_token
+	 * @param string $id_token
 	 * @return object
 	 * @throws WP_Auth0_InvalidIdTokenException
 	 */
