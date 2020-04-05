@@ -21,7 +21,7 @@ final class WP_Auth0_AsymmetricVerifier extends WP_Auth0_SignatureVerifier {
 	/**
 	 * JWKS array with kid as keys, PEM cert as values.
 	 *
-	 * @var array
+	 * @var WP_Auth0_JwksFetcher
 	 */
 	private $jwks;
 

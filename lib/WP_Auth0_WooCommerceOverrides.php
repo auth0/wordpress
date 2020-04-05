@@ -13,13 +13,6 @@
 class WP_Auth0_WooCommerceOverrides {
 
 	/**
-	 * Injected WP_Auth0 instance.
-	 *
-	 * @var WP_Auth0
-	 */
-	protected $plugin;
-
-	/**
 	 * Injected WP_Auth0_Options instance.
 	 *
 	 * @var WP_Auth0_Options
@@ -76,7 +69,7 @@ class WP_Auth0_WooCommerceOverrides {
 	/**
 	 * Handle Auth0 login on the account form if the plugin is ready.
 	 *
-	 * @param $html string $html - Original HTML passed to filter.
+	 * @param string $html - Original HTML passed to filter.
 	 *
 	 * @return mixed
 	 */

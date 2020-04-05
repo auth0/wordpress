@@ -130,9 +130,9 @@ function wp_auth0_can_show_wp_login_form() {
 }
 
 /**
- * @param $input
+ * @param string $input
  *
- * @return mixed
+ * @return string
  *
  * @see https://github.com/firebase/php-jwt/blob/v5.0.0/src/JWT.php#L337
  */
@@ -141,7 +141,7 @@ function wp_auth0_url_base64_encode( $input ) {
 }
 
 /**
- * @param $input
+ * @param string $input
  *
  * @return bool|string
  *

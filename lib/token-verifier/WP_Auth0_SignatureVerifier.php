@@ -28,7 +28,7 @@ abstract class WP_Auth0_SignatureVerifier {
 	/**
 	 * Token parser.
 	 *
-	 * @var Token
+	 * @var Parser
 	 */
 	private $parser;
 

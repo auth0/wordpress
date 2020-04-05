@@ -31,6 +31,7 @@ class WP_Auth0_Embed_Widget extends WP_Widget {
 		wp_enqueue_script( 'wpa0_admin' );
 		wp_enqueue_style( 'media' );
 		require WPA0_PLUGIN_DIR . 'templates/a0-widget-setup-form.php';
+		return 'form';
 	}
 
 	public function widget( $args, $instance ) {
