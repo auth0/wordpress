@@ -31,42 +31,11 @@ define( 'WPA0_JWKS_CACHE_TRANSIENT_NAME', 'WP_Auth0_JWKS_cache' );
 
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 
-require_once WPA0_PLUGIN_DIR . 'vendor/autoload.php';
-require_once WPA0_PLUGIN_DIR . 'functions.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 /*
  * Startup
  */
-
-function wp_auth0_autoloader( $class ) {
-	$source_dir = WPA0_PLUGIN_DIR . 'lib/';
-
-	// Anything that's not part of the above and not name-spaced can be skipped.
-	if ( 0 !== strpos( $class, 'WP_Auth0' ) ) {
-		return false;
-	}
-
-	$paths = [
-		$source_dir,
-		$source_dir . 'admin/',
-		$source_dir . 'api/',
-		$source_dir . 'exceptions/',
-		$source_dir . 'profile/',
-		$source_dir . 'wizard/',
-		$source_dir . 'initial-setup/',
-		$source_dir . 'token-verifier/',
-	];
-
-	foreach ( $paths as $path ) {
-		if ( file_exists( $path . $class . '.php' ) ) {
-			require_once $path . $class . '.php';
-			return true;
-		}
-	}
-
-	return false;
-}
-spl_autoload_register( 'wp_auth0_autoloader' );
 
 function wp_auth0_plugins_loaded() {
 	load_plugin_textdomain( 'wp-auth0', false, basename( dirname( __FILE__ ) ) . '/languages/' );

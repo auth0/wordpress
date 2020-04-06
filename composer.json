@@ -42,7 +42,21 @@
         "test-ci": "\"vendor/bin/phpunit\" --coverage-clover=coverage.xml",
         "pre-commit": [ "@phpcs", "@test" ]
     },
+    "config": {
+        "classmap-authoritative": true
+    },
+    "autoload": {
+        "classmap": [
+            "lib/"
+        ],
+        "file": [
+            "functions.php"
+        ]
+    },
     "autoload-dev": {
-        "classmap": ["tests/classes/", "tests/traits/"]
+        "classmap": [
+            "tests/classes/",
+            "tests/traits/"
+        ]
     }
 }
