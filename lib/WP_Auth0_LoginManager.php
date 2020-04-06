@@ -31,10 +31,10 @@ class WP_Auth0_LoginManager {
 	/**
 	 * WP_Auth0_LoginManager constructor.
 	 *
-	 * @param WP_Auth0_UsersRepo    $users_repo - see member variable doc comment.
-	 * @param WP_Auth0_Options|null $a0_options - see member variable doc comment.
+	 * @param WP_Auth0_UsersRepo $users_repo - see member variable doc comment.
+	 * @param WP_Auth0_Options   $a0_options - see member variable doc comment.
 	 */
-	public function __construct( WP_Auth0_UsersRepo $users_repo, ?WP_Auth0_Options $a0_options ) {
+	public function __construct( WP_Auth0_UsersRepo $users_repo, WP_Auth0_Options $a0_options ) {
 		$this->users_repo = $users_repo;
 		$this->a0_options = $a0_options;
 	}
