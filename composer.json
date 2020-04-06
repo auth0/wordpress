@@ -2,7 +2,7 @@
     "name": "auth0/wp-auth0",
     "description": "WordPress Plugin for Auth0",
     "homepage": "https://auth0.com/wordpress",
-    "license": "GPLv2",
+    "license": "GPL-2.0-or-later",
     "require": {
         "php": "^7.0",
         "lcobucci/jwt": "^3.3.0"
@@ -49,7 +49,7 @@
         "classmap": [
             "lib/"
         ],
-        "file": [
+        "files": [
             "functions.php"
         ]
     },
