@@ -37,6 +37,13 @@ require_once __DIR__ . '/vendor/autoload.php';
  * Startup
  */
 
+/**
+ * @deprecated 4.0.1
+ */
+function wp_auth0_autoloader( $class ) {
+	return false;
+}
+
 function wp_auth0_plugins_loaded() {
 	load_plugin_textdomain( 'wp-auth0', false, basename( dirname( __FILE__ ) ) . '/languages/' );
 
