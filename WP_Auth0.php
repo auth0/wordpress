@@ -38,7 +38,7 @@ require_once __DIR__ . '/vendor/autoload.php';
  */
 
 /**
- * @deprecated 4.0.1
+ * @deprecated 4.1.0
  */
 function wp_auth0_autoloader( $class ) {
 	return false;
