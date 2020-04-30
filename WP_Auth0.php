@@ -58,7 +58,7 @@ function wp_auth0_init() {
 }
 add_action( 'init', 'wp_auth0_init' );
 
-function wp_auth0_shortcode() {
+function wp_auth0_shortcode( $atts ) {
 	if ( empty( $atts ) ) {
 		$atts = [];
 	}
