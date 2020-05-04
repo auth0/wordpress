@@ -92,6 +92,6 @@ class WP_Auth0_JwksFetcher {
 	 * @return array
 	 */
 	protected function requestJwks() : array {
-		return ( new WP_Auth0_Api_Get_Jwks( $this->options ) )->call();
+		return ( new WP_Auth0_Api_Get_Jwks( $this->options, $this->options->get_auth_domain() ) )->call();
 	}
 }

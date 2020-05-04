@@ -107,4 +107,37 @@ class TestJwksFetcher extends WP_Auth0_Test_Case {
 		$jwks = new WP_Auth0_JwksFetcher();
 		$this->assertNull( $jwks->getKey( '__not_found_kid__' ) );
 	}
+
+	public function testThatJwksFetcherUsesDefaultDomain() {
+		$this->startHttpHalting();
+
+		self::$opts->set('domain', 'test.auth0.com');
+		$jwks = new WP_Auth0_JwksFetcher();
+
+		try {
+			$jwks->getKeys( false );
+			$http_data = ['No exception caught'];
+		} catch (Exception $e) {
+			$http_data = unserialize( $e->getMessage() );
+		}
+
+		$this->assertEquals('https://test.auth0.com/.well-known/jwks.json', $http_data['url']);
+	}
+
+	public function testThatJwksFetcherUsesCustomDomain() {
+		$this->startHttpHalting();
+
+		self::$opts->set('domain', 'test.auth0.com');
+		self::$opts->set('custom_domain', 'custom.auth0.com');
+		$jwks = new WP_Auth0_JwksFetcher();
+
+		try {
+			$jwks->getKeys( false );
+			$http_data = ['No exception caught'];
+		} catch (Exception $e) {
+			$http_data = unserialize( $e->getMessage() );
+		}
+
+		$this->assertEquals('https://custom.auth0.com/.well-known/jwks.json', $http_data['url']);
+	}
 }
