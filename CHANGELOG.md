@@ -1,7 +1,22 @@
 # Change Log
 
-## 4.0.0 (master branch)
-[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.11.3...master)
+## [4.1.0](https://github.com/auth0/wp-auth0/tree/4.1.0) (2020-05-20)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/4.0.0...4.1.0)
+
+**Closed issues**
+- With a custom domain, JWKs aren't being fetched from the correct domain [\#790](https://github.com/auth0/wp-auth0/issues/790)
+
+**Changed**
+- Load ourselves with Composer autoloader [\#787](https://github.com/auth0/wp-auth0/pull/787) ([szepeviktor](https://github.com/szepeviktor))
+
+**Fixed**
+- Align the client ID and redirect URI used in the setup wizard [\#794](https://github.com/auth0/wp-auth0/pull/794) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix custom domain not being used in JWKS [\#792](https://github.com/auth0/wp-auth0/pull/792) ([joshcanhelp](https://github.com/joshcanhelp))
+- Pass shortcode atts to the handler [\#789](https://github.com/auth0/wp-auth0/pull/789) ([drobin03](https://github.com/drobin03))
+- PHPStan Level 2 fixes [\#785](https://github.com/auth0/wp-auth0/pull/785) ([szepeviktor](https://github.com/szepeviktor))
+
+## [4.0.0](https://github.com/auth0/wp-auth0/tree/4.0.0) (2020-03-31)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/3.11.3...4.0.0)
 
 **This is a major release with breaking changes!**
 
