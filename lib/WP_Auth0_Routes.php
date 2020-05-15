@@ -262,7 +262,7 @@ class WP_Auth0_Routes {
 
 		return [
 			'client_name'   => get_bloginfo( 'name' ),
-			'redirect_uris' => [ admin_url( 'admin.php?page=wpa0-setup&callback=1' ) ],
+			'redirect_uris' => [ WP_Auth0_InitialSetup::get_setup_redirect_uri() ],
 		];
 	}
 

@@ -47,14 +47,12 @@ class WP_Auth0_InitialSetup_ConnectionProfile {
 	}
 
 	public function build_consent_url() {
-		$callback_url = urlencode( admin_url( 'admin.php?page=wpa0-setup&callback=1' ) );
-
-		$client_id = urlencode( get_bloginfo( 'url' ) );
-
-		$scope = urlencode( implode( ' ', WP_Auth0_Api_Client::ConsentRequiredScopes() ) );
-
-		$url = "https://{$this->domain}/authorize?client_id={$client_id}&response_type=code&redirect_uri={$callback_url}&scope={$scope}&expiration=9999999999";
-
-		return $url;
+		return sprintf(
+			'https://%s/authorize?client_id=%s&response_type=code&redirect_uri=%s&scope=%s&expiration=9999999999',
+			$this->domain,
+			urlencode( WP_Auth0_InitialSetup::get_setup_client_id() ),
+			urlencode( WP_Auth0_InitialSetup::get_setup_redirect_uri() ),
+			urlencode( implode( ' ', WP_Auth0_Api_Client::ConsentRequiredScopes() ) )
+		);
 	}
 }

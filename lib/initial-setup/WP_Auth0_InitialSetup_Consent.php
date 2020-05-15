@@ -63,14 +63,15 @@ class WP_Auth0_InitialSetup_Consent {
 			return null;
 		}
 
-		$client_id    = site_url();
-		$redirect_uri = home_url();
-
 		$exchange_api = new WP_Auth0_Api_Exchange_Code( $this->a0_options, $this->domain );
 
-		// Validated above and only sent to the change signup API endpoint.
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$exchange_resp_body = $exchange_api->call( wp_unslash( $_REQUEST['code'] ), $client_id, $redirect_uri );
+		$exchange_resp_body = $exchange_api->call(
+			// Validated above and only sent to the change signup API endpoint.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+			wp_unslash( $_REQUEST['code'] ),
+			WP_Auth0_InitialSetup::get_setup_client_id(),
+			WP_Auth0_InitialSetup::get_setup_redirect_uri()
+		);
 
 		if ( ! $exchange_resp_body ) {
 			return null;

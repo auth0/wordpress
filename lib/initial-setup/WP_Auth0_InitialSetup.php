@@ -135,4 +135,12 @@ class WP_Auth0_InitialSetup {
 		  </div>
 		<?php
 	}
+
+	public static function get_setup_client_id() {
+		return site_url();
+	}
+
+	public static function get_setup_redirect_uri() {
+		return admin_url( 'admin.php?page=wpa0-setup&callback=1' );
+	}
 }
