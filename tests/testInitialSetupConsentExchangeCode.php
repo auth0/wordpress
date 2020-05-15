@@ -41,9 +41,12 @@ class TestInitialSetupConsentExchangeCode extends WP_Auth0_Test_Case {
 
 		$this->assertNotEmpty( $http_data );
 		$this->assertEquals( 'https://auth0.auth0.com/oauth/token', $http_data['url'] );
-		$this->assertEquals( home_url(), $http_data['body']['redirect_uri'] );
+		$this->assertEquals(
+			'http://example.org/wp-admin/admin.php?page=wpa0-setup&callback=1',
+			$http_data['body']['redirect_uri']
+		);
 		$this->assertEquals( $_REQUEST['code'], $http_data['body']['code'] );
-		$this->assertEquals( site_url(), $http_data['body']['client_id'] );
+		$this->assertEquals( 'http://example.org', $http_data['body']['client_id'] );
 		$this->assertEmpty( $http_data['body']['client_secret'] );
 		$this->assertEquals( 'authorization_code', $http_data['body']['grant_type'] );
 	}

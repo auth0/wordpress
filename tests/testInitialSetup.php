@@ -105,4 +105,15 @@ class TestInitialSetup extends WP_Auth0_Test_Case {
 		$this->assertContains( '<div class="notice notice-error">', $notice_html );
 		$this->assertContains( '__test_unknown_error__', $notice_html );
 	}
+
+	public function testThatSetupClientIdIsCorrect() {
+		$this->assertEquals( 'http://example.org', WP_Auth0_InitialSetup::get_setup_client_id() );
+	}
+
+	public function testThatSetupRedirectUriIsCorrect() {
+		$this->assertEquals(
+			'http://example.org/wp-admin/admin.php?page=wpa0-setup&callback=1',
+			WP_Auth0_InitialSetup::get_setup_redirect_uri()
+		);
+	}
 }
