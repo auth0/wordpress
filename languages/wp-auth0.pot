@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Login by Auth0\n"
-"POT-Creation-Date: 2020-02-13 16:38-0800\n"
+"POT-Creation-Date: 2020-05-18 21:05-0700\n"
 "PO-Revision-Date: 2018-07-25 08:37-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -21,78 +21,78 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: WP_Auth0.php:223 WP_Auth0.php:516
+#: WP_Auth0.php:199 WP_Auth0.php:492
 msgid "Settings"
 msgstr ""
 
-#: WP_Auth0.php:233 WP_Auth0.php:512 WP_Auth0.php:585
+#: WP_Auth0.php:209 WP_Auth0.php:488 WP_Auth0.php:562
 msgid "Setup Wizard"
 msgstr ""
 
-#: WP_Auth0.php:363
+#: WP_Auth0.php:339
 msgid "Not allowed."
 msgstr ""
 
-#: WP_Auth0.php:367 WP_Auth0.php:690
+#: WP_Auth0.php:343 WP_Auth0.php:667
 msgid "Not authorized."
 msgstr ""
 
-#: WP_Auth0.php:388 lib/WP_Auth0_Import_Settings.php:29
+#: WP_Auth0.php:364 lib/WP_Auth0_Import_Settings.php:29
 #: lib/initial-setup/WP_Auth0_InitialSetup_AdminUser.php:27
 #: lib/initial-setup/WP_Auth0_InitialSetup_ConnectionProfile.php:29
 msgid "Unauthorized."
 msgstr ""
 
-#: WP_Auth0.php:539 WP_Auth0.php:540 templates/settings.php:35
+#: WP_Auth0.php:515 WP_Auth0.php:516 templates/settings.php:23
 msgid "Help"
 msgstr ""
 
-#: WP_Auth0.php:550 WP_Auth0.php:551 templates/a0-error-log.php:15
+#: WP_Auth0.php:526 WP_Auth0.php:527 templates/a0-error-log.php:15
 #: templates/initial-setup/admin-creation.php:20
 msgid "Error Log"
 msgstr ""
 
-#: WP_Auth0.php:559
+#: WP_Auth0.php:535
 msgid "Import-Export Settings"
 msgstr ""
 
-#: WP_Auth0.php:560
+#: WP_Auth0.php:536
 msgid "Import-Export settings"
 msgstr ""
 
-#: WP_Auth0.php:583
+#: WP_Auth0.php:560
 msgid "Login by Auth0 is not yet configured. Please use the "
 msgstr ""
 
-#: WP_Auth0.php:586
+#: WP_Auth0.php:563
 msgid " or follow the "
 msgstr ""
 
-#: WP_Auth0.php:587
+#: WP_Auth0.php:564
 msgid "Manual setup instructions"
 msgstr ""
 
-#: WP_Auth0.php:643
+#: WP_Auth0.php:620
 msgid "Are you sure you want to delete the Auth0 user data for this user?"
 msgstr ""
 
-#: WP_Auth0.php:644
+#: WP_Auth0.php:621
 msgid "Deleted"
 msgstr ""
 
-#: WP_Auth0.php:645
+#: WP_Auth0.php:622
 msgid "Action failed, please see the Auth0 error log for details."
 msgstr ""
 
-#: WP_Auth0.php:646
+#: WP_Auth0.php:623
 msgid "Email cannot be changed for non-database connections."
 msgstr ""
 
-#: WP_Auth0.php:713
+#: WP_Auth0.php:690
 msgid "No Auth0 user ID provided."
 msgstr ""
 
-#: WP_Auth0.php:719
+#: WP_Auth0.php:696
 msgid "API call failed."
 msgstr ""
 
@@ -112,7 +112,7 @@ msgstr ""
 msgid "Resend verification email."
 msgstr ""
 
-#: lib/WP_Auth0_Email_Verification.php:38 lib/WP_Auth0_LoginManager.php:544
+#: lib/WP_Auth0_Email_Verification.php:38 lib/WP_Auth0_LoginManager.php:564
 msgid "← Login"
 msgstr ""
 
@@ -132,12 +132,12 @@ msgstr ""
 msgid "Shows Auth0 login form in your sidebar"
 msgstr ""
 
-#: lib/WP_Auth0_Embed_Widget.php:43 lib/WP_Auth0_Lock.php:224
-#: lib/WP_Auth0_WooCommerceOverrides.php:50
+#: lib/WP_Auth0_Embed_Widget.php:44 lib/WP_Auth0_Lock.php:224
+#: lib/WP_Auth0_WooCommerceOverrides.php:43
 msgid "Login"
 msgstr ""
 
-#: lib/WP_Auth0_Embed_Widget.php:56
+#: lib/WP_Auth0_Embed_Widget.php:57
 msgid "Please check your Auth0 configuration"
 msgstr ""
 
@@ -195,19 +195,19 @@ msgid ""
 "your site’s administrator."
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:537
+#: lib/WP_Auth0_LoginManager.php:557
 msgid "There was a problem with your log in"
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:540
+#: lib/WP_Auth0_LoginManager.php:560
 msgid "Please see the site administrator"
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:541
+#: lib/WP_Auth0_LoginManager.php:561
 msgid "error code"
 msgstr ""
 
-#: lib/WP_Auth0_LoginManager.php:542
+#: lib/WP_Auth0_LoginManager.php:562
 msgid "unknown"
 msgstr ""
 
@@ -263,27 +263,27 @@ msgstr ""
 msgid "Empty user id"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:40
+#: lib/admin/WP_Auth0_Admin.php:42
 msgid "Choose your icon"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:41
+#: lib/admin/WP_Auth0_Admin.php:43
 msgid "Choose icon"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:42
+#: lib/admin/WP_Auth0_Admin.php:44
 msgid "Working ..."
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:43
+#: lib/admin/WP_Auth0_Admin.php:45
 msgid "Done!"
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:44
+#: lib/admin/WP_Auth0_Admin.php:46
 msgid "Save or refresh this page to see changes."
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin.php:47
+#: lib/admin/WP_Auth0_Admin.php:49
 msgid "Are you sure?"
 msgstr ""
 
@@ -820,7 +820,7 @@ msgstr ""
 msgid "Value is set in the constant "
 msgstr ""
 
-#: lib/admin/WP_Auth0_Admin_Generic.php:241 templates/settings.php:55
+#: lib/admin/WP_Auth0_Admin_Generic.php:241 templates/settings.php:43
 msgid "Auth0 dashboard"
 msgstr ""
 
@@ -926,7 +926,7 @@ msgstr ""
 msgid "Email suppressed - Auth0 email change failed."
 msgstr ""
 
-#: lib/profile/WP_Auth0_Profile_Change_Password.php:101
+#: lib/profile/WP_Auth0_Profile_Change_Password.php:95
 msgid "Password could not be updated."
 msgstr ""
 
@@ -1063,7 +1063,7 @@ msgstr ""
 msgid "Settings stored in constants cannot be exported or imported."
 msgstr ""
 
-#: templates/import_settings.php:23 templates/initial-setup/connection_profile.php:119
+#: templates/import_settings.php:23 templates/initial-setup/connection_profile.php:124
 msgid "Import Settings"
 msgstr ""
 
@@ -1084,15 +1084,15 @@ msgid ""
 "Setting values will be validated so check the final values once import is complete. "
 msgstr ""
 
-#: templates/import_settings.php:43
+#: templates/import_settings.php:41
 msgid "Import"
 msgstr ""
 
-#: templates/import_settings.php:55
+#: templates/import_settings.php:53
 msgid "Download the entire plugin configuration."
 msgstr ""
 
-#: templates/import_settings.php:58
+#: templates/import_settings.php:56
 msgid "Export"
 msgstr ""
 
@@ -1201,90 +1201,90 @@ msgstr ""
 msgid "Sign up for free"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:65
+#: templates/initial-setup/connection_profile.php:64
 msgid "Standard Setup"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:67
+#: templates/initial-setup/connection_profile.php:66
 msgid ""
 "This will create and configure an Application and a database connection for this "
 "site."
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:69
+#: templates/initial-setup/connection_profile.php:68
 msgid "Detailed instructions for this option are here."
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:73
+#: templates/initial-setup/connection_profile.php:72
 msgid "Enter your tenant Domain"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:74
+#: templates/initial-setup/connection_profile.php:73
 msgid "more information"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:80
+#: templates/initial-setup/connection_profile.php:79
 msgid "Create a Management API token using these steps"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:82
+#: templates/initial-setup/connection_profile.php:81
 msgid " and paste it below:"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:87
+#: templates/initial-setup/connection_profile.php:86
 msgid "Scopes required"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:90
+#: templates/initial-setup/connection_profile.php:89
 msgid "Start Standard Setup"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:96
+#: templates/initial-setup/connection_profile.php:97
 msgid "User Migration Setup"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:98
+#: templates/initial-setup/connection_profile.php:99
 msgid ""
 "This includes everything above plus data migration from your WordPress database."
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:99
+#: templates/initial-setup/connection_profile.php:100
 msgid ""
 "This requires an inbound connection from Auth0 servers and cannot be changed later "
 "without losing data."
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:101
+#: templates/initial-setup/connection_profile.php:102
 msgid "More information here."
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:104
+#: templates/initial-setup/connection_profile.php:105
 msgid "Start User Migration Setup"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:107
+#: templates/initial-setup/connection_profile.php:110
 msgid "Manual Setup"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:108
+#: templates/initial-setup/connection_profile.php:111
 msgid ""
 "If you already have an Application or want to use an existing database connection, "
 "please follow the steps below."
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:110
+#: templates/initial-setup/connection_profile.php:113
 msgid "Manual Setup Instructions"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:112
+#: templates/initial-setup/connection_profile.php:117
 msgid "Import Setup"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:114
+#: templates/initial-setup/connection_profile.php:119
 msgid "Already set up another WordPress instance with Auth0?"
 msgstr ""
 
-#: templates/initial-setup/connection_profile.php:115
+#: templates/initial-setup/connection_profile.php:120
 msgid "Save time and import existing Auth0 settings."
 msgstr ""
 
@@ -1324,7 +1324,7 @@ msgid ""
 msgstr ""
 
 #: templates/initial-setup/end.php:10
-msgid "GO TO PLUGIN SETTINGS"
+msgid "Go To Plugin Settings"
 msgstr ""
 
 #: templates/login-interim.php:9
@@ -1335,96 +1335,92 @@ msgstr ""
 msgid "Login by Auth0 Settings"
 msgstr ""
 
-#: templates/settings.php:16
-msgid "Manage this application at Auth0"
-msgstr ""
-
-#: templates/settings.php:23
+#: templates/settings.php:11
 msgid "Basic"
 msgstr ""
 
-#: templates/settings.php:26
+#: templates/settings.php:14
 msgid "Features"
 msgstr ""
 
-#: templates/settings.php:29
+#: templates/settings.php:17
 msgid "Embedded"
 msgstr ""
 
-#: templates/settings.php:32
+#: templates/settings.php:20
 msgid "Advanced"
 msgstr ""
 
-#: templates/settings.php:53
+#: templates/settings.php:41
 msgid ""
 "Thank you for installing Login by Auth0! Auth0 is a powerful identity solution that "
 "secures billions of logins every month. In addition to the options here, there are "
 "many more features available in the"
 msgstr ""
 
-#: templates/settings.php:56
+#: templates/settings.php:44
 msgid "including:"
 msgstr ""
 
-#: templates/settings.php:62
+#: templates/settings.php:50
 msgid "Many social and enterprise login connections"
 msgstr ""
 
-#: templates/settings.php:67
+#: templates/settings.php:55
 msgid "Passwordless login connections"
 msgstr ""
 
-#: templates/settings.php:72
+#: templates/settings.php:60
 msgid "Anomaly detection"
 msgstr ""
 
-#: templates/settings.php:77
+#: templates/settings.php:65
 msgid "Profile enrichment, integrations, and other custom management tasks using Rules"
 msgstr ""
 
-#: templates/settings.php:82
+#: templates/settings.php:70
 msgid "If you have issues or questions, we provide a variety of channels to assist:"
 msgstr ""
 
-#: templates/settings.php:87
+#: templates/settings.php:75
 msgid "Configuration documentation"
 msgstr ""
 
-#: templates/settings.php:91
+#: templates/settings.php:79
 msgid ""
 "If you are setting up the plugin for the first time or having issues after an "
 "upgrade, please review the settings to make sure your Application is setup correctly."
 msgstr ""
 
-#: templates/settings.php:96
+#: templates/settings.php:84
 msgid "Auth0 Community"
 msgstr ""
 
-#: templates/settings.php:100
+#: templates/settings.php:88
 msgid ""
 "If you have questions about how to use Auth0 or the plugin, please create a post "
 "(tagged \"WordPress\") if you do not find what you are looking for."
 msgstr ""
 
-#: templates/settings.php:103
+#: templates/settings.php:91
 msgid "GitHub Issues"
 msgstr ""
 
-#: templates/settings.php:104
+#: templates/settings.php:92
 msgid ""
 "If you find a bug in the plugin code, the best place to report that is on GitHub "
 "under the Issues tab."
 msgstr ""
 
-#: templates/settings.php:106
+#: templates/settings.php:94
 msgid "Support"
 msgstr ""
 
-#: templates/settings.php:107
+#: templates/settings.php:95
 msgid "Customers on a paid Auth0 plan can submit trouble tickets for a quick response."
 msgstr ""
 
-#: templates/settings.php:114
+#: templates/settings.php:102
 msgid "Save Changes"
 msgstr ""
 
