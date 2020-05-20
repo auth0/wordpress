@@ -110,7 +110,7 @@ function wp_auth0_uninstall_hook() {
 
 	delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
 }
-register_uninstall_hook( WPA0_PLUGIN_FILE, 'wp_auth0_deactivation_hook' );
+register_uninstall_hook( WPA0_PLUGIN_FILE, 'wp_auth0_uninstall_hook' );
 
 function wp_auth0_activated_plugin_redirect( $plugin ) {
 
