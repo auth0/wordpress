@@ -1,6 +1,6 @@
 # Change Log
 
-## [4.1.0](https://github.com/auth0/wp-auth0/tree/4.1.0) (2020-05-20)
+## [4.1.0](https://github.com/auth0/wp-auth0/tree/4.1.0) (2020-05-21)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/4.0.0...4.1.0)
 
 **Closed issues**
@@ -10,6 +10,7 @@
 - Load ourselves with Composer autoloader [\#787](https://github.com/auth0/wp-auth0/pull/787) ([szepeviktor](https://github.com/szepeviktor))
 
 **Fixed**
+- Fix incorrect function in uninstall hook [\#795](https://github.com/auth0/wp-auth0/pull/795) ([joshcanhelp](https://github.com/joshcanhelp))
 - Align the client ID and redirect URI used in the setup wizard [\#794](https://github.com/auth0/wp-auth0/pull/794) ([joshcanhelp](https://github.com/joshcanhelp))
 - Fix custom domain not being used in JWKS [\#792](https://github.com/auth0/wp-auth0/pull/792) ([joshcanhelp](https://github.com/joshcanhelp))
 - Pass shortcode atts to the handler [\#789](https://github.com/auth0/wp-auth0/pull/789) ([drobin03](https://github.com/drobin03))
