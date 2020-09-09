@@ -1,6 +1,7 @@
 # Login by Auth0
 
 ![Login by Auth0](https://ps.w.org/auth0/assets/banner-772x250.png)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fwp-auth0.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fwp-auth0?ref=badge_shield)
 
 This plugin replaces standard WordPress login forms with one powered by Auth0 that enables social, passwordless, and enterprise connection login as well as additional security, multifactor auth, and user statistics. Please see the [WP.org plugin page](https://wordpress.org/plugins/auth0/) for more details on functionality. 
 
@@ -80,3 +81,6 @@ Auth0 helps you to easily:
 ## License
 
 Login by Auth0 is licensed under GPLv2 - [LICENSE](LICENSE)
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fwp-auth0.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fwp-auth0?ref=badge_large)
