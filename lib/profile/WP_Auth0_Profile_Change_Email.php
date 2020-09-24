@@ -87,14 +87,14 @@ class WP_Auth0_Profile_Change_Email {
 		add_filter( 'email_change_email', [ $this, 'suppress_email_change_notification' ], 100 );
 
 		// Remove this method from profile_update, which is called by wp_update_user, to avoid an infinite loop.
-		remove_action( 'profile_update', [ $this, __FUNCTION__ ], 100 );
+		remove_action( 'profile_update', 'wp_auth0_profile_change_email', 100 );
 
 		// Revert the email address to previous.
 		$wp_user->data->user_email = $old_email;
 		wp_update_user( $wp_user );
 
 		// Revert hooks from above.
-		add_action( 'profile_update', [ $this, __FUNCTION__ ], 100, 2 );
+		add_action( 'profile_update', 'wp_auth0_profile_change_email', 100, 2 );
 		remove_filter( 'email_change_email', [ $this, 'suppress_email_change_notification' ], 100 );
 
 		// Can't set a custom message here so redirect with an error for WP to pick up.
