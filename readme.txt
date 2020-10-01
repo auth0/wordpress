@@ -1,6 +1,6 @@
 === Login by Auth0 ===
 Tags: OIDC, OpenID Connect, Single Sign On, SSO, SAML, Passwordless, OAuth2, Auth0
-Tested up to: 5.3.2
+Tested up to: 5.4.2
 Requires at least: 4.9
 Requires PHP: 7.0
 License: GPLv2

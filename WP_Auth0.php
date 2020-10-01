@@ -634,7 +634,7 @@ function wp_auth0_process_auth_callback() {
 	$login_manager = new WP_Auth0_LoginManager( $users_repo, WP_Auth0_Options::Instance() );
 	return $login_manager->init_auth0();
 }
-add_action( 'template_redirect', 'wp_auth0_process_auth_callback' );
+add_action( 'template_redirect', 'wp_auth0_process_auth_callback', 1 );
 
 function wp_auth0_login_ulp_redirect() {
 	$users_repo    = new WP_Auth0_UsersRepo( WP_Auth0_Options::Instance() );
