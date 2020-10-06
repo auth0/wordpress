@@ -8,7 +8,7 @@
  *
  * @return array
  */
-function example_auth0_create_user_data( $user_data, $userinfo ) {
+function example_auth0_create_user_data( array $user_data, $userinfo ) {
 	$userinfo = (array) $userinfo;
 
 	// Look for a custom username claim and set user_login if present.
