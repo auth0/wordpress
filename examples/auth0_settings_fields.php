@@ -13,7 +13,7 @@ function example_auth0_settings_fields( $options, $id ) {
 	switch ( $id ) {
 		case 'basic':
 			$options[] = [
-				'name'     => __( 'A Custom Basic Setting' ),
+				'name'     => __( 'A Custom Basic Setting', 'wp-auth0' ),
 				'opt'      => 'custom_basic_opt_name',
 				'id'       => 'wpa0_custom_basic_opt_name',
 				'function' => 'example_render_custom_basic_opt_name',

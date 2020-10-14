@@ -11,6 +11,7 @@ function example_restricted_site_access_is_restricted( $is_restricted, $wp ) {
 	if (
 		! empty( $wp->query_vars['auth0'] )
 		&& empty( $wp->query_vars['page'] )
+		&& isset( $_COOKIE['auth0_state'] )
 		&& $_COOKIE['auth0_state'] === $wp->query_vars['state']
 	) {
 		return false;

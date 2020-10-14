@@ -17,8 +17,6 @@ function example_redirect_to_authenticate() {
 		// User is trying to access a post type that requires authentication.
 		auth_redirect();
 	}
-
-	return;
 }
  add_action( 'template_redirect', 'example_redirect_to_authenticate', 1 );
 

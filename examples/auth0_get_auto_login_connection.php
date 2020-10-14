@@ -6,8 +6,14 @@
  *
  * @return string mixed
  */
-function example_auth0_get_auto_login_connection( ?string $connection ) {
-	return ! empty( $_GET['connection'] ) ? rawurlencode( $_GET['connection'] ) : $connection;
+function example_auth0_get_auto_login_connection( $connection ) {
+	// phpcs:ignore
+	if (! empty( $_GET['connection'] ) ) {
+		// TODO: Always handle incoming data safely!
+		// phpcs:ignore
+		$connection = rawurldecode( $_GET['connection'] );
+	}
+	return $connection;
 }
 
 add_filter( 'auth0_get_auto_login_connection', 'example_auth0_get_auto_login_connection' );

@@ -7,8 +7,9 @@
  * @return array
  */
 function example_auth0_lock_options( $options ) {
+	// phpcs:disable WordPress.Security.NonceVerification
 	if ( ! empty( $_GET['lock_language'] ) ) {
-		$options['language'] = sanitize_title( $_GET['lock_language'] );
+		$options['language'] = sanitize_title( wp_unslash( $_GET['lock_language'] ) );
 	}
 	return $options;
 }

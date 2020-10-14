@@ -8,7 +8,7 @@
  * @return array
  */
 function example_auth0_authorize_state( $state, $auth_params ) {
-	$redirect_to = parse_url( $state['redirect_to'] ?? '' );
+	$redirect_to = wp_parse_url( $state['redirect_to'] ?? '' );
 	if ( '/checkout' === ( $redirect_to['path'] ?? '' ) ) {
 		$state['cart_id'] = example_get_cart_id();
 	}
@@ -18,5 +18,5 @@ add_filter( 'auth0_authorize_state', 'example_auth0_authorize_state', 10, 2 );
 
 function example_get_cart_id() {
 	// TODO: Implement
-	return mt_rand( 1, 1000 );
+	return wp_rand( 1, 1000 );
 }

@@ -6,7 +6,7 @@
  *
  * @return integer
  */
-function example_auth0_jwt_leeway( ?int $leeway ) {
+function example_auth0_jwt_leeway( $leeway ) {
 	return 90;
 }
 add_filter( 'auth0_jwt_leeway', 'example_auth0_jwt_leeway' );

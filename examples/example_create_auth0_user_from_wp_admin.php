@@ -1,4 +1,6 @@
 <?php
+// TODO: Determine your risk tolerance here with respect to accepting POST data below.
+// phpcs:disable WordPress.Security
 /**
  * Adds an Auth0 user when a new user is created in the WP-Admin.
  * This will NOT add a new user when one is registered via the WP form (Auth0 should handle that).
@@ -21,7 +23,7 @@ function example_create_auth0_user_from_wp_admin( $wp_user_id ) {
 		// This is run during a POST request to create the user so pull the data from global.
 		'email'      => $_POST['email'],
 		'password'   => $_POST['pass1'],
-		// Make sure this Database Connection is correct for your Auth0 configuration.
+		// TODO: Make sure this Database Connection is correct for your Auth0 configuration.
 		'connection' => 'Username-Password-Authentication',
 	];
 
@@ -39,4 +41,4 @@ function example_create_auth0_user_from_wp_admin( $wp_user_id ) {
 	$user_repo = new WP_Auth0_UsersRepo( $a0_options );
 	$user_repo->update_auth0_object( $wp_user_id, $new_auth0_user );
 }
- add_action( 'edit_user_created_user', 'example_create_auth0_user_from_wp_admin', 10 );
+add_action( 'edit_user_created_user', 'example_create_auth0_user_from_wp_admin', 10 );

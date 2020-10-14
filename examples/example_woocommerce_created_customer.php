@@ -24,4 +24,4 @@ function example_woocommerce_created_customer( $customer_id, $new_customer_data 
 		$user_repo->update_auth0_object( $customer_id, $new_auth0_user );
 	}
 }
-// add_action( 'woocommerce_created_customer', 'example_woocommerce_created_customer', 10, 2 );
+add_action( 'woocommerce_created_customer', 'example_woocommerce_created_customer', 10, 2 );

@@ -15,4 +15,4 @@ function example_woocommerce_redirect_my_account() {
 		exit;
 	}
 }
-// add_action( 'template_redirect', 'example_woocommerce_redirect_my_account', 1 );
+add_action( 'template_redirect', 'example_woocommerce_redirect_my_account', 1 );
