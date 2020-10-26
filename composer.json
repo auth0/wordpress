@@ -1,62 +1,66 @@
 {
-    "name": "auth0/wp-auth0",
-    "description": "WordPress Plugin for Auth0",
-    "homepage": "https://auth0.com/wordpress",
-    "license": "MIT",
-    "require": {
-        "php": "^7.0",
-        "lcobucci/jwt": "^3.3.0"
+  "name": "auth0/wp-auth0",
+  "description": "WordPress Plugin for Auth0",
+  "homepage": "https://auth0.com/wordpress",
+  "license": "MIT",
+  "require": {
+    "php": "^7.0",
+    "lcobucci/jwt": "^3.3.0"
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+    "wp-coding-standards/wpcs": "^2",
+    "phpcompatibility/phpcompatibility-wp": "*",
+    "phpunit/phpunit": "^6.0"
+  },
+  "authors": [
+    {
+      "name": "Auth0",
+      "email": "support@auth0.com"
     },
-    "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.5",
-        "wp-coding-standards/wpcs": "^1",
-        "phpcompatibility/phpcompatibility-wp": "*",
-        "phpunit/phpunit": "^6.0"
-    },
-    "authors": [
-        {
-            "name": "Auth0",
-            "email": "support@auth0.com"
-        },
-        {
-            "name": "Josh Cunningham",
-            "email": "josh@joshcanhelp.com"
-        }
-    ],
-    "support": {
-        "forum": "https://community.auth0.com/tags/wordpress",
-        "source": "https://github.com/auth0/wp-auth0",
-        "issues": "https://github.com/auth0/wp-auth0/issues",
-        "docs": "https://auth0.com/docs/cms/wordpress"
-    },
-    "minimum-stability": "stable",
-    "scripts": {
-        "phpcs": "\"vendor/bin/phpcs\"",
-        "phpcs-tests": "\"vendor/bin/phpcs\" --standard=phpcs-test-ruleset.xml -s ./tests/",
-        "phpcbf": "\"vendor/bin/phpcbf\"",
-        "phpcbf-tests": "\"vendor/bin/phpcbf\" --standard=phpcs-test-ruleset.xml -s ./tests/",
-        "sniffs": "\"vendor/bin/phpcs\" -e",
-        "test": "\"vendor/bin/phpunit\"",
-        "test-cov": "\"vendor/bin/phpunit\" --coverage-text",
-        "test-group": "\"vendor/bin/phpunit\" --coverage-text --group",
-        "test-ci": "\"vendor/bin/phpunit\" --coverage-clover=coverage.xml",
-        "pre-commit": [ "@composer validate --strict", "@phpcs", "@test" ]
-    },
-    "config": {
-        "classmap-authoritative": true
-    },
-    "autoload": {
-        "classmap": [
-            "lib/"
-        ],
-        "files": [
-            "functions.php"
-        ]
-    },
-    "autoload-dev": {
-        "classmap": [
-            "tests/classes/",
-            "tests/traits/"
-        ]
+    {
+      "name": "Josh Cunningham",
+      "email": "josh@joshcanhelp.com"
     }
+  ],
+  "support": {
+    "forum": "https://community.auth0.com/tags/wordpress",
+    "source": "https://github.com/auth0/wp-auth0",
+    "issues": "https://github.com/auth0/wp-auth0/issues",
+    "docs": "https://auth0.com/docs/cms/wordpress"
+  },
+  "minimum-stability": "stable",
+  "scripts": {
+    "phpcs": "\"vendor/bin/phpcs\"",
+    "phpcs-tests": "\"vendor/bin/phpcs\" --standard=phpcs-test-ruleset.xml -s ./tests/",
+    "phpcbf": "\"vendor/bin/phpcbf\"",
+    "phpcbf-tests": "\"vendor/bin/phpcbf\" --standard=phpcs-test-ruleset.xml -s ./tests/",
+    "sniffs": "\"vendor/bin/phpcs\" -e",
+    "test": "\"vendor/bin/phpunit\"",
+    "test-cov": "\"vendor/bin/phpunit\" --coverage-text",
+    "test-group": "\"vendor/bin/phpunit\" --coverage-text --group",
+    "test-ci": "\"vendor/bin/phpunit\" --coverage-clover=coverage.xml",
+    "pre-commit": [
+      "@composer validate --strict",
+      "@phpcs",
+      "@test"
+    ]
+  },
+  "config": {
+    "classmap-authoritative": true
+  },
+  "autoload": {
+    "classmap": [
+      "lib/"
+    ],
+    "files": [
+      "functions.php"
+    ]
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/classes/",
+      "tests/traits/"
+    ]
+  }
 }
