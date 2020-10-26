@@ -1,5 +1,12 @@
 # Change Log
 
+## [4.1.1](https://github.com/auth0/wp-auth0/tree/4.1.1) (2020-10-21)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/4.1.0...4.1.1)
+
+**Fixed**
+- Raise priority of authentication processing [\#803](https://github.com/auth0/wp-auth0/pull/803) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix potential infinite loop on email update [\#802](https://github.com/auth0/wp-auth0/pull/802) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [4.1.0](https://github.com/auth0/wp-auth0/tree/4.1.0) (2020-05-21)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/4.0.0...4.1.0)
 
