@@ -191,7 +191,7 @@ class WP_Auth0_UsersRepo {
 		 * @param $key     The meta key.
 		 */
 		$check = apply_filters( 'auth0_get_meta', null, $user_id, $key );
-		if( $check !== null ){
+		if ( $check !== null ) {
 			return $check;
 		}
 
@@ -222,7 +222,7 @@ class WP_Auth0_UsersRepo {
 		 * @param $key     The meta key.
 		 */
 		$check = apply_filters( 'auth0_update_meta', null, $user_id, $key );
-		if( $check !== null ){
+		if ( $check !== null ) {
 			return (bool) $check;
 		}
 
@@ -252,7 +252,7 @@ class WP_Auth0_UsersRepo {
 		 * @param $key     The meta key.
 		 */
 		$check = apply_filters( 'auth0_delete_meta', null, $user_id, $key );
-		if( $check !== null ){
+		if ( $check !== null ) {
 			return (bool) $check;
 		}
 		global $wpdb;
