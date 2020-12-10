@@ -127,7 +127,7 @@ class WP_Auth0_UsersRepo {
 		 *
 		 * @param $id string The Auth0 ID.
 		 */
-		$check = apply_filters( 'auth0_find_user', null, $id );
+		$check = apply_filters( 'find_auth0_user', null, $id );
 		if ( $check instanceof WP_User ) {
 			return $check;
 		}
