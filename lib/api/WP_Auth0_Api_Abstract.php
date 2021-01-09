@@ -84,14 +84,14 @@ abstract class WP_Auth0_Api_Abstract {
 	/**
 	 * API response code.
 	 *
-	 * @var integer
+	 * @var integer|null
 	 */
 	protected $response_code = null;
 
 	/**
 	 * API response body.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	protected $response_body = null;
 

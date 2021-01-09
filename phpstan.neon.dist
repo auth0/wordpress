@@ -3,6 +3,8 @@ includes:
 parameters:
     level: 4
     inferPrivatePropertyTypeFromConstructor: true
+    bootstrapFiles:
+        - tests/phpstan/constants.php
     scanFiles:
         - functions.php
         - WP_Auth0.php

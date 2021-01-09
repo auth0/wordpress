@@ -22,12 +22,10 @@ class WP_Auth0_Import_Settings {
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 		if ( ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ?? '' ), self::IMPORT_NONCE_ACTION ) ) {
 			wp_nonce_ays( self::IMPORT_NONCE_ACTION );
-			exit;
 		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( __( 'Unauthorized.', 'wp-auth0' ) );
-			exit;
 		}
 
 		// Null coalescing validates input variable.
