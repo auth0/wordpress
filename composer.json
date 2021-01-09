@@ -11,7 +11,8 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
     "wp-coding-standards/wpcs": "^2",
     "phpcompatibility/phpcompatibility-wp": "*",
-    "phpunit/phpunit": "^6.0"
+    "phpunit/phpunit": "^6.0",
+    "szepeviktor/phpstan-wordpress": "^0.7"
   },
   "authors": [
     {
