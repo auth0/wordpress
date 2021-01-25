@@ -36,7 +36,7 @@ commands:
             - vendor
   run-health-check:
     steps:
-      - run: composer validate-strict
+      - run: composer validate --strict
       - run: composer lint
       - run: composer analyze
   run-tests:
