@@ -34,35 +34,41 @@ commands:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
             - vendor
-  run-formatting:
+  run-validate:
     steps:
-      - run:
-          name: Run code quality scan
-          command: |
-            composer phpcs
+      - run: composer checkup
   run-tests:
     steps:
       - run:
           name: Wait for DB
           command: |
             dockerize -wait tcp://127.0.0.1:3306 -timeout 120s
-            bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 5.4
+            bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 5.6
       - run: composer test-ci
 
 jobs:
-  php_7:
     docker:
-      - image: circleci/php:7.0
+      - image: circleci/php:7.3
       - image: circleci/mysql:5.6
         environment:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
     steps:
       - prepare
+      - run-static-analysis
       - run-tests
-      - run-formatting
       - run:
           command: bash <(curl -s https://codecov.io/bash)
           when: on_success
+  php_7_4:
+    docker:
+      - image: circleci/php:7.4
+      - image: circleci/mysql:5.6
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+    steps:
+      - prepare
+      - run-static-analysis
+      - run-tests
   snyk:
     docker:
       - image: snyk/snyk-cli:composer
@@ -80,14 +86,12 @@ jobs:
 
 # Each workflow represents a Github check
 workflows:
-  build_php_7:
+  build-and-test:
     jobs:
-      - php_7
-  snyk:
-    jobs:
-      - php_7
+      - php_7_3
+      - php_7_4
       - snyk:
           # Must define SNYK_TOKEN env
           context: snyk-env
           requires:
-            - php_7
+            - php_7_3
