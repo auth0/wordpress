@@ -28,7 +28,7 @@ class WP_Auth0_Api_Refresh_Access_Token extends WP_Auth0_Api_Abstract {
 	 * @param string|null $client_secret - Client Secret to use.
 	 * @param string|null $refresh_token - Client's refresh token to use.
 	 *
-	 * @return null|string
+	 * @return string|null
 	 */
 	public function call( $client_id = null, $client_secret = null, $refresh_token = null ) {
 
@@ -61,7 +61,7 @@ class WP_Auth0_Api_Refresh_Access_Token extends WP_Auth0_Api_Abstract {
 	 *
 	 * @param string $method - Method that called the API.
 	 *
-	 * @return integer
+	 * @return string|null
 	 */
 	protected function handle_response( $method ) {
 

@@ -65,7 +65,7 @@ class WP_Auth0_Api_Get_User extends WP_Auth0_Api_Abstract {
 	 *
 	 * @param string $method - Method that called the API.
 	 *
-	 * @return integer
+	 * @return string|null
 	 */
 	protected function handle_response( $method ) {
 

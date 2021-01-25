@@ -27,7 +27,7 @@ class WP_Auth0_Api_Exchange_Code extends WP_Auth0_Api_Abstract {
 	 * @param string|null $client_id - Client ID to use.
 	 * @param string|null $redirect_uri - Redirect URI to use.
 	 *
-	 * @return null|string
+	 * @return string|null
 	 */
 	public function call( $code = null, $client_id = null, $redirect_uri = null ) {
 
@@ -59,7 +59,7 @@ class WP_Auth0_Api_Exchange_Code extends WP_Auth0_Api_Abstract {
 	 *
 	 * @param string $method - Method that called the API.
 	 *
-	 * @return integer
+	 * @return string|null
 	 */
 	protected function handle_response( $method ) {
 

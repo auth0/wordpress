@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Contains WP_Auth0_Nonce_Handler.
  *

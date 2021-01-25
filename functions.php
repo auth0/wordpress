@@ -66,7 +66,7 @@ function wp_auth0_is_current_login_action( array $actions ) {
 /**
  * Generate a valid WordPress login override URL, if plugin settings allow.
  *
- * @param null $login_url - An existing URL to modify; default is wp-login.php.
+ * @param string|null $login_url - An existing URL to modify; default is wp-login.php.
  *
  * @return string
  */
@@ -153,7 +153,7 @@ function wp_auth0_url_base64_decode( $input ) {
 		$padlen = 4 - $remainder;
 		$input .= str_repeat( '=', $padlen );
 	}
-	return base64_decode( strtr( $input, '-_', '+/' ) );
+	return base64_decode( strtr( $input, '-_', '+/' ) ) ?: false;
 }
 
 /**
