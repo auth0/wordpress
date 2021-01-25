@@ -34,9 +34,11 @@ commands:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
             - vendor
-  run-validate:
+  run-health-check:
     steps:
-      - run: composer checkup
+      - run: composer validate-strict
+      - run: composer lint
+      - run: composer analyze
   run-tests:
     steps:
       - run:
@@ -55,7 +57,7 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
     steps:
       - prepare
-      - run-static-analysis
+      - run-health-check
       - run-tests
       - run:
           command: bash <(curl -s https://codecov.io/bash)
@@ -68,7 +70,7 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
     steps:
       - prepare
-      - run-static-analysis
+      - run-health-check
       - run-tests
   snyk:
     docker:
