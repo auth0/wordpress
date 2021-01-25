@@ -47,6 +47,7 @@ commands:
       - run: composer test-ci
 
 jobs:
+  php_7_3:
     docker:
       - image: circleci/php:7.3
       - image: circleci/mysql:5.6
