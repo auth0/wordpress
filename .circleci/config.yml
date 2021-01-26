@@ -47,6 +47,8 @@ commands:
             dockerize -wait tcp://127.0.0.1:3306 -timeout 120s
             bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 5.4.2
       - run: composer test-ci
+      - store_artifacts:
+          path: build/coverage.xml
 
 jobs:
   php_7_3:
