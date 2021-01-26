@@ -37,8 +37,8 @@ commands:
   run-health-check:
     steps:
       - run: composer validate --strict
-      - run: composer lint
       - run: composer analyze
+      - run: composer lint
   run-tests:
     steps:
       - run:
