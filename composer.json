@@ -32,12 +32,12 @@
     "docs": "https://auth0.com/docs/cms/wordpress"
   },
   "scripts": {
-    "test": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --coverage-text",
-    "test-ci": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=coverage.xml",
+    "test": "@php ./vendor/bin/phpunit --coverage-text",
+    "test-ci": "@php ./vendor/bin/phpunit --coverage-clover=coverage.xml",
     "analyze": "@php ./vendor/bin/phpstan analyze",
-    "format": "@php vendor/bin/phpcbf",
+    "format": "@php ./vendor/bin/phpcbf",
     "lint": "@php ./vendor/bin/phpcs",
-    "sniffs": "@php vendor/bin/phpcs -e",
+    "sniffs": "@php ./vendor/bin/phpcs -e",
     "checkup": [
       "@composer validate --strict",
       "@lint",
