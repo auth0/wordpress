@@ -33,7 +33,7 @@
   },
   "scripts": {
     "test": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --coverage-text",
-    "test-ci": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=build/coverage.xml",
+    "test-ci": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=coverage.xml",
     "analyze": "@php ./vendor/bin/phpstan analyze",
     "format": "@php vendor/bin/phpcbf",
     "lint": "@php ./vendor/bin/phpcs",
