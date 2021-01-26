@@ -37,8 +37,10 @@ commands:
             - vendor
   run-formatting:
     steps:
-      - run: |
-        composer phpcs
+      - run:
+          name: Run code quality scan
+          command: |
+            composer phpcs
   run-tests:
     steps:
       - run:
