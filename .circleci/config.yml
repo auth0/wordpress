@@ -37,7 +37,6 @@ commands:
             - vendor
   run-checks:
     steps:
-      - run: composer analyze
       - run: composer lint
   run-tests:
     steps:
