@@ -36,7 +36,7 @@
     "test-ci": "@php ./vendor/bin/phpunit --coverage-clover=coverage.xml",
     "analyze": "@php ./vendor/bin/phpstan analyze",
     "format": "@php ./vendor/bin/phpcbf",
-    "lint": "\"/vendor/bin/phpcs\"",
+    "lint": "@php ./vendor/bin/phpcs",
     "sniffs": "@php ./vendor/bin/phpcs -e",
     "checkup": [
       "@composer validate --strict",
