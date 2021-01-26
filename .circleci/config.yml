@@ -10,7 +10,6 @@ commands:
             sudo touch /usr/local/etc/php/php.ini
             echo "memory_limit = -1" | sudo tee -a /usr/local/etc/php/php.ini
             echo "display_startup_errors = On" | sudo tee -a /usr/local/etc/php/php.ini
-            echo "xdebug.mode = coverage" | sudo tee -a /usr/local/etc/php/php.ini
             echo "xdebug.force_display_errors = On" | sudo tee -a /usr/local/etc/php/php.ini
             echo "error_reporting = E_ALL ^ E_DEPRECATED" | sudo tee -a /usr/local/etc/php/php.ini
             echo "xdebug.force_error_reporting = E_ALL ^ E_DEPRECATED" | sudo tee -a /usr/local/etc/php/php.ini
@@ -23,7 +22,6 @@ commands:
           keys:
             - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
             - composer-v1-{{ .Environment.CIRCLE_JOB }}
-      - run: composer validate --strict
       - run: composer install -n --prefer-dist
       - run: composer update --prefer-dist --no-interaction
       - persist_to_workspace:
@@ -35,12 +33,11 @@ commands:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
             - vendor
-  run-formatting:
+  run-health-check:
     steps:
-      - run:
-          name: Run code quality scan
-          command: |
-            composer phpcs
+      - run: composer validate --strict
+      - run: composer lint
+      - run: composer analyze
   run-tests:
     steps:
       - run:
@@ -59,8 +56,8 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
     steps:
       - prepare
+      - run-health-check
       - run-tests
-      - run-formatting
       - run:
           command: bash <(curl -s https://codecov.io/bash)
           when: on_success
@@ -72,8 +69,8 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
     steps:
       - prepare
+      - run-health-check
       - run-tests
-      - run-formatting
   snyk:
     docker:
       - image: snyk/snyk-cli:composer
