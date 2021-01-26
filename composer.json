@@ -4,7 +4,7 @@
   "homepage": "https://auth0.com/wordpress",
   "license": "MIT",
   "require": {
-    "php": "^7.0",
+    "php": "^7.0 | ^8.0",
     "lcobucci/jwt": "^3.3.0"
   },
   "require-dev": {
