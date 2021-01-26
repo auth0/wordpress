@@ -23,6 +23,7 @@ commands:
           keys:
             - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
             - composer-v1-{{ .Environment.CIRCLE_JOB }}
+      - run: composer validate --strict
       - run: composer install -n --prefer-dist
       - run: composer update --prefer-dist --no-interaction
       - persist_to_workspace:
@@ -34,11 +35,10 @@ commands:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
             - vendor
-  run-health-check:
+  run-formatting:
     steps:
-      - run: composer validate --strict
-      - run: composer lint
-      - run: composer analyze
+      - run: |
+        composer phpcs
   run-tests:
     steps:
       - run:
@@ -57,8 +57,8 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
     steps:
       - prepare
-      - run-health-check
       - run-tests
+      - run-formatting
       - run:
           command: bash <(curl -s https://codecov.io/bash)
           when: on_success
@@ -70,8 +70,8 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
     steps:
       - prepare
-      - run-health-check
       - run-tests
+      - run-formatting
   snyk:
     docker:
       - image: snyk/snyk-cli:composer
