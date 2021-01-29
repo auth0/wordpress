@@ -76,7 +76,7 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 		}
 
 		// Set the transient to expire 1 minute before the token does.
-		$expires_in  = ! isset( $response_body['expires_in'] ) ? absint( $response_body['expires_in'] ) : HOUR_IN_SECONDS;
+		$expires_in  = ! isset( $response_body['expires_in'] ) ? HOUR_IN_SECONDS : absint( $response_body['expires_in'] );
 		$expires_in -= MINUTE_IN_SECONDS;
 
 		// Store the token and scope to check when used.
