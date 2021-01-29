@@ -153,7 +153,7 @@ function wp_auth0_url_base64_decode( $input ) {
 		$padlen = 4 - $remainder;
 		$input .= str_repeat( '=', $padlen );
 	}
-	return base64_decode( strtr( $input, '-_', '+/' ) ) ?: false;
+	return base64_decode( strtr( $input, '-_', '+/' ), true );
 }
 
 /**
