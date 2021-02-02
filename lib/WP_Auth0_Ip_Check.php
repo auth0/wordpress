@@ -119,7 +119,7 @@ class WP_Auth0_Ip_Check {
 	 * Get regional inbound IP addresses based on a region.
 	 *
 	 * @param string $region - Tenant region.
-	 * @param string $glue   - String used to implode arrays.
+	 * @param string|null $glue   - String used to implode arrays.
 	 *
 	 * @return string|array
 	 */

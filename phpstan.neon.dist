@@ -1,0 +1,19 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+parameters:
+    level: 4
+    inferPrivatePropertyTypeFromConstructor: true
+    bootstrapFiles:
+        - tests/phpstan/constants.php
+        - tests/phpstan/stubs.php
+    scanFiles:
+        - functions.php
+        - WP_Auth0.php
+    paths:
+        - functions.php
+        - lib/
+    ignoreErrors:
+        - '#^Unsafe usage of new static\(\)\.$#'
+        - '#^Cannot access property \S+ on array\|object\|true\.$#'
+        # Uses func_get_args()
+        - '#^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$#'

@@ -20,12 +20,10 @@ class WP_Auth0_InitialSetup_AdminUser {
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 		if ( ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ?? '' ), self::SETUP_NONCE_ACTION ) ) {
 			wp_nonce_ays( self::SETUP_NONCE_ACTION );
-			exit;
 		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( __( 'Unauthorized.', 'wp-auth0' ) );
-			exit;
 		}
 
 		if ( empty( $_POST['admin-password'] ) ) {

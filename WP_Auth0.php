@@ -174,7 +174,7 @@ add_filter( 'query_vars', 'wp_auth0_register_query_vars' );
  *
  * @hook filter:login_message
  *
- * @param $html
+ * @param string $html
  *
  * @return string
  */

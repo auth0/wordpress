@@ -132,9 +132,8 @@ class WP_Auth0_UsersRepo {
 
 		$users = get_users( $query );
 
-		if ( $users instanceof WP_Error ) {
-			WP_Auth0_ErrorLog::insert_error( __METHOD__ . ' => get_users() ', $users->get_error_message() );
-
+		if ( $users === [] ) {
+			WP_Auth0_ErrorLog::insert_error( __METHOD__ . ' => get_users() ', __( 'User not found', 'wp-auth0' ) );
 			return null;
 		}
 
