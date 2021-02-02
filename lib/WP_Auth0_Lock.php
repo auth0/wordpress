@@ -199,8 +199,8 @@ class WP_Auth0_Lock {
 		$options      = WP_Auth0_Options::Instance();
 		$lock_options = new self( $specialSettings );
 
-		wp_enqueue_script( 'wpa0_lock', $options->get_lock_url(), [ 'jquery' ], false, true );
-		wp_enqueue_script( 'js-cookie', WPA0_PLUGIN_LIB_URL . 'js.cookie.min.js', false, '2.2.0', true );
+		wp_enqueue_script( 'wpa0_lock', $options->get_lock_url(), [ 'jquery' ], null, true );
+		wp_enqueue_script( 'js-cookie', WPA0_PLUGIN_LIB_URL . 'js.cookie.min.js', [], '2.2.0', true );
 		wp_enqueue_script( 'wpa0_lock_init', WPA0_PLUGIN_JS_URL . 'lock-init.js', [ 'jquery' ], WPA0_VERSION, true );
 
 		wp_localize_script(
