@@ -49,7 +49,7 @@ class WP_Auth0_Api_Change_Email extends WP_Auth0_Api_Abstract {
 	 * @param string|null $user_id - Auth0 user ID to change the email for.
 	 * @param string|null $email - New email.
 	 *
-	 * @return bool|string
+	 * @return bool
 	 */
 	public function call( $user_id = null, $email = null ) {
 
@@ -76,7 +76,7 @@ class WP_Auth0_Api_Change_Email extends WP_Auth0_Api_Abstract {
 	 *
 	 * @param string $method - Method that called the API.
 	 *
-	 * @return integer
+	 * @return bool
 	 */
 	protected function handle_response( $method ) {
 

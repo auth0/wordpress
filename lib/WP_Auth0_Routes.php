@@ -343,7 +343,6 @@ class WP_Auth0_Routes {
 					'status' => 403,
 					'error'  => __( 'Forbidden', 'wp-auth0' ),
 				];
-				break;
 		}
 	}
 }

@@ -4,14 +4,16 @@
   "homepage": "https://auth0.com/wordpress",
   "license": "MIT",
   "require": {
-    "php": "^7.0",
-    "lcobucci/jwt": "^3.3.0"
+    "php": "^7.0 | ^8.0",
+    "auth0/php-jwt": "^3.3.4"
   },
   "require-dev": {
+    "phpunit/phpunit": "^6.0",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-    "wp-coding-standards/wpcs": "^2",
     "phpcompatibility/phpcompatibility-wp": "*",
-    "phpunit/phpunit": "^6.0"
+    "wp-coding-standards/wpcs": "*",
+    "phpstan/phpstan": "^0.12.64",
+    "szepeviktor/phpstan-wordpress": "^0.7.2"
   },
   "authors": [
     {
@@ -29,25 +31,29 @@
     "issues": "https://github.com/auth0/wp-auth0/issues",
     "docs": "https://auth0.com/docs/cms/wordpress"
   },
-  "minimum-stability": "stable",
   "scripts": {
-    "phpcs": "\"vendor/bin/phpcs\"",
-    "phpcs-tests": "\"vendor/bin/phpcs\" --standard=phpcs-test-ruleset.xml -s ./tests/",
-    "phpcbf": "\"vendor/bin/phpcbf\"",
-    "phpcbf-tests": "\"vendor/bin/phpcbf\" --standard=phpcs-test-ruleset.xml -s ./tests/",
-    "sniffs": "\"vendor/bin/phpcs\" -e",
-    "test": "\"vendor/bin/phpunit\"",
-    "test-cov": "\"vendor/bin/phpunit\" --coverage-text",
-    "test-group": "\"vendor/bin/phpunit\" --coverage-text --group",
-    "test-ci": "\"vendor/bin/phpunit\" --coverage-clover=coverage.xml",
-    "pre-commit": [
+    "test": "@php ./vendor/bin/phpunit --coverage-text",
+    "test-ci": "@php ./vendor/bin/phpunit --coverage-clover=coverage.xml",
+    "analyze": "@php ./vendor/bin/phpstan analyze",
+    "format": "@php ./vendor/bin/phpcbf",
+    "lint": "@php ./vendor/bin/phpcs",
+    "sniffs": "@php ./vendor/bin/phpcs -e",
+    "checkup": [
       "@composer validate --strict",
-      "@phpcs",
-      "@test"
+      "@lint",
+      "@test",
+      "@analyze"
+    ],
+    "pre-commit": [
+      "@format",
+      "@checkup"
     ]
   },
   "config": {
-    "classmap-authoritative": true
+    "classmap-authoritative": true,
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
   },
   "autoload": {
     "classmap": [
@@ -62,5 +68,7 @@
       "tests/classes/",
       "tests/traits/"
     ]
-  }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }
