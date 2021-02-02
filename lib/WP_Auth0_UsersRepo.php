@@ -125,7 +125,7 @@ class WP_Auth0_UsersRepo {
 		 *
 		 * Returning a WP_User object will stop the method here and use the returned user.
 		 *
-		 * @param $id string The Auth0 ID.
+		 * @param string $id The Auth0 ID.
 		 */
 		$check = apply_filters( 'find_auth0_user', null, $id );
 		if ( $check instanceof WP_User ) {
@@ -186,8 +186,8 @@ class WP_Auth0_UsersRepo {
 		 *
 		 * Returning a non null value will stop the method here and use the returned value.
 		 *
-		 * @param $user_id The user ID.
-		 * @param $key     The meta key.
+		 * @param integer $user_id The user ID.
+		 * @param string  $key     The meta key.
 		 */
 		$check = apply_filters( 'auth0_get_meta', null, $user_id, $key );
 		if ( $check !== null ) {
@@ -217,8 +217,8 @@ class WP_Auth0_UsersRepo {
 		 * Returning a non null value will stop the method here.
 		 * The returned value is a boolean indicating whether or not the update was successful.
 		 *
-		 * @param $user_id The user ID.
-		 * @param $key     The meta key.
+		 * @param integer $user_id The user ID.
+		 * @param string  $key     The meta key.
 		 */
 		$check = apply_filters( 'auth0_update_meta', null, $user_id, $key );
 		if ( $check !== null ) {
@@ -247,8 +247,8 @@ class WP_Auth0_UsersRepo {
 		 * Returning a non null value will stop the method here.
 		 * The returned value is a boolean indicating whether or not the deletion was successful.
 		 *
-		 * @param $user_id The user ID.
-		 * @param $key     The meta key.
+		 * @param integer $user_id The user ID.
+		 * @param string  $key     The meta key.
 		 */
 		$check = apply_filters( 'auth0_delete_meta', null, $user_id, $key );
 		if ( $check !== null ) {
