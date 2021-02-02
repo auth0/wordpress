@@ -237,6 +237,7 @@ class WP_Auth0_LoginManager {
 	public function login_user( $userinfo, $id_token = null, $access_token = null, $refresh_token = null ) {
 		$auth0_sub        = $userinfo->sub;
 		list( $strategy ) = explode( '|', $auth0_sub );
+		$user             = null;
 
 		// Check that the user has a verified email, if required.
 		if (
@@ -618,21 +619,18 @@ class WP_Auth0_LoginManager {
 	/**
 	 * Generate the Auth0 logout URL.
 	 *
-	 * @param null $return_to - Site URL to return to after logging out.
+	 * @param string|null $return_to - Site URL to return to after logging out.
 	 *
 	 * @return string
 	 *
 	 * @codeCoverageIgnore - Private method
 	 */
 	private function auth0_logout_url( $return_to = null ) {
-		if ( ! $return_to ) {
-			$return_to = home_url();
-		}
 		return sprintf(
 			'https://%s/v2/logout?client_id=%s&returnTo=%s',
 			$this->a0_options->get_auth_domain(),
 			$this->a0_options->get( 'client_id' ),
-			rawurlencode( $return_to )
+			rawurlencode( $return_to ?: home_url() )
 		);
 	}
 }

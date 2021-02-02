@@ -134,7 +134,6 @@ class WP_Auth0_UsersRepo {
 
 		if ( $users === [] ) {
 			WP_Auth0_ErrorLog::insert_error( __METHOD__ . ' => get_users() ', __( 'User not found', 'wp-auth0' ) );
-
 			return null;
 		}
 

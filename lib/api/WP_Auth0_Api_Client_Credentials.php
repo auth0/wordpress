@@ -67,23 +67,23 @@ class WP_Auth0_Api_Client_Credentials extends WP_Auth0_Api_Abstract {
 			return self::RETURN_ON_FAILURE;
 		}
 
-		$response_body = json_decode( $this->response_body );
+		$response_body = json_decode( $this->response_body, true );
 
 		// If we have no access token, something went wrong upstream.
-		if ( empty( $response_body->access_token ) ) {
+		if ( ! isset( $response_body['access_token'] ) ) {
 			WP_Auth0_ErrorLog::insert_error( $method, __( 'No access_token returned.', 'wp-auth0' ) );
 			return self::RETURN_ON_FAILURE;
 		}
 
 		// Set the transient to expire 1 minute before the token does.
-		$expires_in  = ! empty( $response_body->expires_in ) ? absint( $response_body->expires_in ) : HOUR_IN_SECONDS;
+		$expires_in  = ! isset( $response_body['expires_in'] ) ? HOUR_IN_SECONDS : absint( $response_body['expires_in'] );
 		$expires_in -= MINUTE_IN_SECONDS;
 
 		// Store the token and scope to check when used.
-		set_transient( self::TOKEN_TRANSIENT_KEY, $response_body->access_token, $expires_in );
-		set_transient( self::SCOPE_TRANSIENT_KEY, $response_body->scope, $expires_in );
+		set_transient( self::TOKEN_TRANSIENT_KEY, $response_body['access_token'], $expires_in );
+		set_transient( self::SCOPE_TRANSIENT_KEY, $response_body['scope'], $expires_in );
 
-		return $response_body->access_token;
+		return $response_body['access_token'];
 	}
 
 	/**
