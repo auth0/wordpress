@@ -28,7 +28,7 @@
     "php": "^7.0 | ^8.0",
     "ext-json": "*",
     "ext-openssl": "*",
-    "auth0/php-jwt": "3.3.4",
+    "auth0/php-jwt": "^3.3.4",
     "composer/installers": "~1.0"
   },
   "require-dev": {
