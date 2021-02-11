@@ -467,9 +467,6 @@ In addition to the minimum PHP version being updated from 5.3 to 7.0, there are 
 - Change and improve user profile [\#532](https://github.com/auth0/wp-auth0/pull/532) ([joshcanhelp](https://github.com/joshcanhelp))
 
 =======
-
-> > > > > > > d5c5c0d... Add CHANGELOG entry for 3.7.1
-
 ## [3.7.1](https://github.com/auth0/wp-auth0/tree/3.7.1) (2018-10-08)
 
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.7.0...3.7.1)
