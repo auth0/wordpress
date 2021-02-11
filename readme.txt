@@ -1,12 +1,12 @@
 === Login by Auth0 ===
 Tags: OIDC, OpenID Connect, Single Sign On, SSO, SAML, Passwordless, OAuth2, Auth0
-Tested up to: 5.4.2
-Requires at least: 4.9
+Tested up to: 5.6.1
+Requires at least: 5.4.2
 Requires PHP: 7.0
 License: MIT
 License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE
-Stable tag: 4.1.1
-Contributors: auth0, auth0josh
+Stable tag: 4.2.0
+Contributors: auth0
 
 Login by Auth0 provides improved username/password login, Passwordless login, Social login and Single Sign On for all your sites.
 
