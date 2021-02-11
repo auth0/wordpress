@@ -348,7 +348,7 @@ class WP_Auth0_LoginManager {
 		$remember_users_session = $this->a0_options->get( 'remember_users_session' );
 
 		try {
-			do_action( 'auth0_before_login', $user );
+			do_action( 'auth0_before_login', $user, $userinfo );
 		} catch ( Exception $e ) {
 			throw new WP_Auth0_BeforeLoginException( $e->getMessage() );
 		}
