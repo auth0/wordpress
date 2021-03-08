@@ -31,7 +31,9 @@ define( 'WPA0_JWKS_CACHE_TRANSIENT_NAME', 'WP_Auth0_JWKS_cache' );
 
 define( 'WPA0_LANG', 'wp-auth0' ); // deprecated; do not use for translations
 
-require_once __DIR__ . '/vendor/autoload.php';
+if ( is_readable( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
 
 /*
  * Startup
