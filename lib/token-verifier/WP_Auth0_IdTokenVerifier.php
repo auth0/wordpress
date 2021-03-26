@@ -226,7 +226,7 @@ final class WP_Auth0_IdTokenVerifier {
 
 		$expectedOrganization = $options['org_id'] ?? null;
 
-		if (null !== $expectedOrganization) {
+		if (null !== $expectedOrganization && '' !== $expectedOrganization) {
 				if (! $verifiedToken->hasClaim('org_id')) {
 						throw new WP_Auth0_InvalidIdTokenException('Organization Id (org_id) claim must be a string present in the ID token');
 				}
