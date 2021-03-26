@@ -83,6 +83,7 @@ class WP_Auth0_LoginManager {
 		WP_Auth0_Nonce_Handler::get_instance()->set_cookie( $auth_params['nonce'] );
 
 		$auth_url = self::build_authorize_url( $auth_params );
+
 		wp_safe_redirect( $auth_url );
 		exit;
 
@@ -100,8 +101,27 @@ class WP_Auth0_LoginManager {
 
 		set_query_var( 'auth0_login_successful', false );
 
-		// Not an Auth0 login process or settings are not configured to allow logins.
+		$invitation   = $this->query_vars( 'invitation' );
+		$organization = $this->query_vars( 'organization' );
+
+		if ( $invitation && $organization ) {
+			$connection  = apply_filters( 'auth0_get_auto_login_connection', $this->a0_options->get( 'auto_login_method' ) );
+			$auth_params = self::get_authorize_params( $connection );
+
+			WP_Auth0_State_Handler::get_instance()->set_cookie( $auth_params['state'] );
+			WP_Auth0_Nonce_Handler::get_instance()->set_cookie( $auth_params['nonce'] );
+
+			$auth_params['invitation'] = $invitation;
+
+			$auth_url = self::build_authorize_url( $auth_params );
+
+			wp_safe_redirect( $auth_url );
+			exit;
+		}
+
 		$cb_type = $this->query_vars( 'auth0' );
+
+		// Not an Auth0 login process or settings are not configured to allow logins.
 		if ( ! $cb_type || ! wp_auth0_is_ready() ) {
 			return false;
 		}
@@ -433,6 +453,7 @@ class WP_Auth0_LoginManager {
 		$params = [
 			'connection'    => $connection,
 			'client_id'     => $opts->get( 'client_id' ),
+			'organization'  => $opts->get( 'organization' ),
 			'scope'         => self::get_userinfo_scope( 'authorize_url' ),
 			'nonce'         => WP_Auth0_Nonce_Handler::get_instance()->get_unique(),
 			'max_age'       => absint( apply_filters( 'auth0_jwt_max_age', null ) ),
@@ -589,6 +610,7 @@ class WP_Auth0_LoginManager {
 			'nonce'   => WP_Auth0_Nonce_Handler::get_instance()->get_once(),
 			'leeway'  => absint( apply_filters( 'auth0_jwt_leeway', null ) ),
 			'max_age' => absint( apply_filters( 'auth0_jwt_max_age', null ) ),
+			'org_id'  => apply_filters( 'auth0_jwt_org_id', $this->a0_options->get_auth_organization() ),
 		];
 
 		$idTokenVerifier = new WP_Auth0_IdTokenVerifier( $expectedIss, $this->a0_options->get( 'client_id' ), $sigVerifier );

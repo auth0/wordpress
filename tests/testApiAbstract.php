@@ -120,6 +120,7 @@ class TestApiAbstract extends WP_Auth0_Test_Case {
 		self::$opts->set( 'domain', self::TEST_DOMAIN );
 		self::$opts->set( 'client_id', '__test_client_id__' );
 		self::$opts->set( 'client_secret', '__test_client_secret__' );
+		self::$opts->set( 'organization', '__test_organization__' );
 
 		$api_abstract = new Test_WP_Auth0_Api_Abstract( self::$opts );
 
@@ -147,13 +148,19 @@ class TestApiAbstract extends WP_Auth0_Test_Case {
 		$api_abstract = $send_client_secret->invoke( $api_abstract );
 		$this->assertEquals( '__test_client_secret__', $api_abstract->get_request( 'body' )['client_secret'] );
 
-		// 4. Test an arbitrary body value.
+		// 4. Test that the organization is set.
+		$send_organization = $mock_abstract->getMethod( 'send_organization' );
+		$send_organization->setAccessible( true );
+		$api_abstract = $send_organization->invoke( $api_abstract );
+		$this->assertEquals( '__test_organization__', $api_abstract->get_request( 'body' )['organization'] );
+
+		// 5. Test an arbitrary body value.
 		$add_body = $mock_abstract->getMethod( 'add_body' );
 		$add_body->setAccessible( true );
 		$api_abstract = $add_body->invoke( $api_abstract, '__test_key__', '__test_val__' );
 		$this->assertEquals( '__test_val__', $api_abstract->get_request( 'body' )['__test_key__'] );
 
-		// 5. Make sure all keys set previously are sent with the request.
+		// 6. Make sure all keys set previously are sent with the request.
 		$decoded_res = [];
 		try {
 			$api_abstract->set_http_method( 'get' )->call();
@@ -163,6 +170,7 @@ class TestApiAbstract extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'https://' . self::TEST_DOMAIN . '/api/v2/', $decoded_res['body']['audience'] );
 		$this->assertEquals( '__test_client_id__', $decoded_res['body']['client_id'] );
 		$this->assertEquals( '__test_client_secret__', $decoded_res['body']['client_secret'] );
+		$this->assertEquals( '__test_organization__', $decoded_res['body']['organization'] );
 		$this->assertEquals( '__test_val__', $decoded_res['body']['__test_key__'] );
 	}
 

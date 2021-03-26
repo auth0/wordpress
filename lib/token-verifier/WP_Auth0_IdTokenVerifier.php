@@ -91,11 +91,16 @@ final class WP_Auth0_IdTokenVerifier {
 
 		$verifiedToken = $this->verifier->verifyAndDecode( $token );
 
+		$claims = [];
+		foreach ( $verifiedToken->getClaims() as $claim => $value ) {
+			$claims[ $claim ] = $value->getValue();
+		}
+
 		/*
 		 * Issuer checks
 		 */
 
-		$tokenIss = $verifiedToken->getClaim( 'iss', false );
+		$tokenIss = $claims['iss'] ?? false;
 		if ( ! $tokenIss || ! is_string( $tokenIss ) ) {
 			throw new WP_Auth0_InvalidIdTokenException( 'Issuer (iss) claim must be a string present in the ID token' );
 		}
@@ -114,7 +119,7 @@ final class WP_Auth0_IdTokenVerifier {
 		 * Subject check
 		 */
 
-		$tokenSub = $verifiedToken->getClaim( 'sub', false );
+		$tokenSub = $claims['sub'] ?? false;
 		if ( ! $tokenSub || ! is_string( $tokenSub ) ) {
 			throw new WP_Auth0_InvalidIdTokenException( 'Subject (sub) claim must be a string present in the ID token' );
 		}
@@ -123,7 +128,7 @@ final class WP_Auth0_IdTokenVerifier {
 		 * Audience checks
 		 */
 
-		$tokenAud = $verifiedToken->getClaim( 'aud', false );
+		$tokenAud = $claims['aud'] ?? false;
 		if ( ! $tokenAud || ( ! is_string( $tokenAud ) && ! is_array( $tokenAud ) ) ) {
 			throw new WP_Auth0_InvalidIdTokenException(
 				'Audience (aud) claim must be a string or array of strings present in the ID token'
@@ -155,7 +160,7 @@ final class WP_Auth0_IdTokenVerifier {
 		$now    = $options['time'] ?? time();
 		$leeway = $options['leeway'] ?? $this->leeway;
 
-		$tokenExp = $verifiedToken->getClaim( 'exp', false );
+		$tokenExp = $claims['exp'] ?? false;
 		if ( ! $tokenExp || ! is_int( $tokenExp ) ) {
 			throw new WP_Auth0_InvalidIdTokenException( 'Expiration Time (exp) claim must be a number present in the ID token' );
 		}
@@ -171,7 +176,7 @@ final class WP_Auth0_IdTokenVerifier {
 			);
 		}
 
-		$tokenIat = $verifiedToken->getClaim( 'iat', false );
+		$tokenIat = $claims['iat'] ?? false;
 		if ( ! $tokenIat || ! is_int( $tokenIat ) ) {
 			throw new WP_Auth0_InvalidIdTokenException( 'Issued At (iat) claim must be a number present in the ID token' );
 		}
@@ -181,7 +186,7 @@ final class WP_Auth0_IdTokenVerifier {
 		 */
 
 		if ( ! empty( $options['nonce'] ) ) {
-			$tokenNonce = $verifiedToken->getClaim( 'nonce', false );
+			$tokenNonce = $claims['nonce'] ?? false;
 			if ( ! $tokenNonce || ! is_string( $tokenNonce ) ) {
 				throw new WP_Auth0_InvalidIdTokenException( 'Nonce (nonce) claim must be a string present in the ID token' );
 			}
@@ -202,7 +207,7 @@ final class WP_Auth0_IdTokenVerifier {
 		 */
 
 		if ( is_array( $tokenAud ) && count( $tokenAud ) > 1 ) {
-			$tokenAzp = $verifiedToken->getClaim( 'azp', false );
+			$tokenAzp = $claims['azp'] ?? false;
 			if ( ! $tokenAzp || ! is_string( $tokenAzp ) ) {
 				throw new WP_Auth0_InvalidIdTokenException(
 					'Authorized Party (azp) claim must be a string present in the ID token when Audience (aud) claim has multiple values'
@@ -221,11 +226,33 @@ final class WP_Auth0_IdTokenVerifier {
 		}
 
 		/*
+		 * Organization check
+		 */
+
+		$expectedOrganization = $options['org_id'] ?? null;
+
+		if ( null !== $expectedOrganization && '' !== $expectedOrganization ) {
+			if ( ! isset( $claims['org_id'] ) || ! is_string( $claims['org_id'] ) ) {
+				throw new WP_Auth0_InvalidIdTokenException( 'Organization Id (org_id) claim must be a string present in the ID token' );
+			}
+
+			if ( $claims['org_id'] !== $expectedOrganization ) {
+				throw new WP_Auth0_InvalidIdTokenException(
+					sprintf(
+						'Organization Id (org_id) claim value mismatch in the ID token; expected "%s", found "%s"',
+						$expectedOrganization,
+						$claims['org_id']
+					)
+				);
+			}
+		}
+
+		/*
 		 * Authentication time check
 		 */
 
 		if ( ! empty( $options['max_age'] ) ) {
-			$tokenAuthTime = $verifiedToken->getClaim( 'auth_time', false );
+			$tokenAuthTime = $claims['auth_time'] ?? false;
 			if ( ! $tokenAuthTime || ! is_int( $tokenAuthTime ) ) {
 				throw new WP_Auth0_InvalidIdTokenException(
 					'Authentication Time (auth_time) claim must be a number present in the ID token when Max Age (max_age) is specified'
@@ -245,11 +272,6 @@ final class WP_Auth0_IdTokenVerifier {
 			}
 		}
 
-		$profile = [];
-		foreach ( $verifiedToken->getClaims() as $claim => $value ) {
-			$profile[ $claim ] = $value->getValue();
-		}
-
-		return $profile;
+		return $claims;
 	}
 }

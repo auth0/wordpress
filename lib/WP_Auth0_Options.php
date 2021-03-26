@@ -310,6 +310,15 @@ class WP_Auth0_Options {
 	}
 
 	/**
+	 * Get the authentication organization.
+	 *
+	 * @return string
+	 */
+	public function get_auth_organization() {
+		return $this->get( 'organization', '' );
+	}
+
+	/**
 	 * Get lock_connections as an array of strings
 	 *
 	 * @return array
@@ -377,6 +386,7 @@ class WP_Auth0_Options {
 			'custom_domain'             => '',
 			'client_id'                 => '',
 			'client_secret'             => '',
+			'organization'              => '',
 			'client_signing_algorithm'  => WP_Auth0_Api_Client::DEFAULT_CLIENT_ALG,
 			'cache_expiration'          => 1440,
 			'wordpress_login_enabled'   => 'link',

@@ -82,18 +82,21 @@ class TestWPAuth0Helpers extends WP_Auth0_Test_Case {
 
 	public function testThatAuth0QueryVarsArePresent() {
 		$vars = wp_auth0_register_query_vars( [] );
-		$this->assertCount( 6, $vars );
+		$this->assertCount( 9, $vars );
 		$this->assertContains( 'error', $vars );
 		$this->assertContains( 'error_description', $vars );
 		$this->assertContains( 'a0_action', $vars );
 		$this->assertContains( 'auth0', $vars );
 		$this->assertContains( 'state', $vars );
 		$this->assertContains( 'code', $vars );
+		$this->assertContains( 'invitation', $vars );
+		$this->assertContains( 'organization', $vars );
+		$this->assertContains( 'organization_name', $vars );
 	}
 
 	public function testThatQueryVarsAreAddedProperly() {
 		$vars = wp_auth0_register_query_vars( [ '__test_var__' ] );
-		$this->assertCount( 7, $vars );
+		$this->assertCount( 10, $vars );
 		$this->assertContains( '__test_var__', $vars );
 	}
 }
