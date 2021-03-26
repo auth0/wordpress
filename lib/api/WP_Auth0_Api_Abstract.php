@@ -46,6 +46,14 @@ abstract class WP_Auth0_Api_Abstract {
 	 */
 	protected $client_secret;
 
+
+	/**
+	 * Organization Id from plugin settings.
+	 *
+	 * @var string
+	 */
+	protected $organization;
+
 	/**
 	 * WP_Auth0_Api_Client_Credentials instance.
 	 *
@@ -232,6 +240,16 @@ abstract class WP_Auth0_Api_Abstract {
 	 */
 	protected function send_client_secret() {
 		$this->body['client_secret'] = $this->client_secret;
+		return $this;
+	}
+
+	/**
+	 * Include the Organization in the body array.
+	 *
+	 * @return $this
+	 */
+	protected function send_organization() {
+		$this->body['organization'] = $this->organization;
 		return $this;
 	}
 
