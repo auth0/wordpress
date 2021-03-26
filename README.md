@@ -75,7 +75,7 @@ If you have existing users of your WordPress blog and Auth0, you should add thos
 
 With an organization configured, users logging into your WordPress installation will see your Universal Login Page customized for the Organization. You can further customize it's appearance from the Auth0 dashboard.
 
-Organizations also support invitations. To use this feature, navigate to the Organization on your Auth0 dashboard, click the Invitations tab, and 'invite member.' When the user clicks their invitation link, they'll be redirected to your WordPress installation, and then prompted to create their account or sign in.
+Organizations also support invitations. To use this feature, navigate to the Invitations tab for the corresponding Organization on your Auth0 dashboard and click 'invite member.' When the user clicks their invitation link, they'll be redirected to your WordPress installation, and then prompted to create their account or sign in.
 
 ## Contribution
 
