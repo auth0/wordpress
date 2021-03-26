@@ -226,20 +226,22 @@ final class WP_Auth0_IdTokenVerifier {
 
 		$expectedOrganization = $options['org_id'] ?? null;
 
-		if (null !== $expectedOrganization && '' !== $expectedOrganization) {
-				if (! $verifiedToken->hasClaim('org_id')) {
-						throw new WP_Auth0_InvalidIdTokenException('Organization Id (org_id) claim must be a string present in the ID token');
-				}
+		if ( null !== $expectedOrganization && '' !== $expectedOrganization ) {
+			if ( ! $verifiedToken->hasClaim( 'org_id' ) ) {
+				throw new WP_Auth0_InvalidIdTokenException( 'Organization Id (org_id) claim must be a string present in the ID token' );
+			}
 
-				$tokenOrganization = $verifiedToken->getClaim('org_id');
+			$tokenOrganization = $verifiedToken->getClaim( 'org_id' );
 
-				if ($tokenOrganization !== $expectedOrganization) {
-						throw new WP_Auth0_InvalidIdTokenException( sprintf(
-								'Organization Id (org_id) claim value mismatch in the ID token; expected "%s", found "%s"',
-								$expectedOrganization,
-								$tokenOrganization
-						) );
-				}
+			if ( $tokenOrganization !== $expectedOrganization ) {
+				throw new WP_Auth0_InvalidIdTokenException(
+					sprintf(
+						'Organization Id (org_id) claim value mismatch in the ID token; expected "%s", found "%s"',
+						$expectedOrganization,
+						$tokenOrganization
+					)
+				);
+			}
 		}
 
 		/*
