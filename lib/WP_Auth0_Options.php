@@ -310,6 +310,15 @@ class WP_Auth0_Options {
 	}
 
 	/**
+	 * Get the authentication organization.
+	 *
+	 * @return string
+	 */
+	public function get_auth_organization() {
+		return $this->get( 'organization', '' );
+	}
+
+	/**
 	 * Get lock_connections as an array of strings
 	 *
 	 * @return array

@@ -610,6 +610,7 @@ class WP_Auth0_LoginManager {
 			'nonce'   => WP_Auth0_Nonce_Handler::get_instance()->get_once(),
 			'leeway'  => absint( apply_filters( 'auth0_jwt_leeway', null ) ),
 			'max_age' => absint( apply_filters( 'auth0_jwt_max_age', null ) ),
+			'org_id'  => apply_filters( 'auth0_jwt_org_id', $this->a0_options->get_auth_organization() ),
 		];
 
 		$idTokenVerifier = new WP_Auth0_IdTokenVerifier( $expectedIss, $this->a0_options->get( 'client_id' ), $sigVerifier );
