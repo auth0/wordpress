@@ -49,6 +49,12 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 				'function' => 'render_client_secret',
 			],
 			[
+				'name'     => __( 'Organization', 'wp-auth0' ),
+				'opt'      => 'organization',
+				'id'       => 'wpa0_organization',
+				'function' => 'render_organization',
+			],
+			[
 				'name'     => __( 'JWT Signature Algorithm', 'wp-auth0' ),
 				'opt'      => 'client_signing_algorithm',
 				'id'       => 'wpa0_client_signing_algorithm',
@@ -148,6 +154,24 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		$this->render_text_field( $args['label_for'], $args['opt_name'], 'password', '', $style );
 		$this->render_field_description(
 			__( 'Client Secret, found in your Application settings in the ', 'wp-auth0' ) .
+			$this->get_dashboard_link( 'applications' )
+		);
+	}
+
+	/**
+	 * Render form field and description for the `organization` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_organization( $args = [] ) {
+
+		$this->render_text_field( $args['label_for'], $args['opt_name'], 'text', '' );
+		$this->render_field_description(
+			__( 'Optional. Organization Id, found in your Organizations settings in the ', 'wp-auth0' ) .
 			$this->get_dashboard_link( 'applications' )
 		);
 	}
@@ -319,6 +343,8 @@ class WP_Auth0_Admin_Basic extends WP_Auth0_Admin_Generic {
 		if ( empty( $input['client_secret'] ) ) {
 			$this->add_validation_error( __( 'You need to specify a Client Secret', 'wp-auth0' ) );
 		}
+
+		$input['organization'] = $this->sanitize_text_val( $input['organization'] ?? null );
 
 		$id_token_alg = $input['client_signing_algorithm'] ?? null;
 		if ( ! in_array( $id_token_alg, self::ALLOWED_ID_TOKEN_ALGS ) ) {

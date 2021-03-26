@@ -167,7 +167,7 @@ function wp_auth0_register_widget() {
 add_action( 'widgets_init', 'wp_auth0_register_widget' );
 
 function wp_auth0_register_query_vars( $qvars ) {
-	return array_merge( $qvars, [ 'error', 'error_description', 'a0_action', 'auth0', 'state', 'code' ] );
+	return array_merge( $qvars, [ 'error', 'error_description', 'a0_action', 'auth0', 'state', 'code', 'invitation', 'organization', 'organization_name' ] );
 }
 add_filter( 'query_vars', 'wp_auth0_register_query_vars' );
 
