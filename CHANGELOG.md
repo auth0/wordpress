@@ -1,5 +1,13 @@
 # Change Log
 
+## [4.3.0](https://github.com/auth0/wp-auth0/tree/4.3.0) (2021-03-26)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/4.2.0...4.3.0)
+
+**Added**
+
+- Add support for Auth0 Organizations [\#827](https://github.com/auth0/wp-auth0/pull/827) ([evansims](https://github.com/evansims))
+
 ## [4.2.0](https://github.com/auth0/wp-auth0/tree/4.2.0) (2021-02-11)
 
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/4.1.1...4.2.0)
@@ -467,6 +475,7 @@ In addition to the minimum PHP version being updated from 5.3 to 7.0, there are 
 - Change and improve user profile [\#532](https://github.com/auth0/wp-auth0/pull/532) ([joshcanhelp](https://github.com/joshcanhelp))
 
 =======
+
 ## [3.7.1](https://github.com/auth0/wp-auth0/tree/3.7.1) (2018-10-08)
 
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/3.7.0...3.7.1)
