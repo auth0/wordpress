@@ -64,10 +64,10 @@ Note that Organizations is currently only available to customers on our Enterpri
 Adding Organization support to your WordPress installation is simple. Configure WordPress and the Auth0 plugin as normally instructed, and then follow these additional steps:
 
 1. Open your [Auth0 dashboard](https://manage.auth0.com/dashboard).
-2. In your Application settings, ensure your 'Application Login URI' points to your WordPress blog's URL.
+2. In your Application settings, ensure your 'Application Login URI' points to your WordPress installation's URL.
 3. Create a new Organization.
 4. Copy the ID of your new organization, beginning with 'org\_'.
-5. Open the Auth0 WordPress plugin settings page within your WordPress .installation, and navigate to the Basic tab.
+5. Open the Auth0 WordPress plugin settings page within your WordPress installation, and navigate to the Basic tab.
 6. Paste the Organization ID into the 'Organization' field.
 7. Save your changes.
 
