@@ -116,6 +116,7 @@ abstract class WP_Auth0_Api_Abstract {
 		$this->domain        = $domain ?: $this->options->get( 'domain' );
 		$this->client_id     = $this->options->get( 'client_id' );
 		$this->client_secret = $this->options->get( 'client_secret' );
+		$this->organization  = $this->options->get( 'organization' );
 
 		// Headers sent with every request.
 		$this->headers = static::get_info_headers();
