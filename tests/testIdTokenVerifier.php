@@ -6,10 +6,10 @@ use WP_Auth0_InvalidIdTokenException as InvalidTokenException;
 use Lcobucci\JWT\Builder;
 
 /**
-* Class IdTokenVerifierTest.
+* Class TestIdTokenVerifierTest.
 * Test the WP_Auth0_Api_Get_User class.
 */
-class IdTokenVerifierTest extends WP_Auth0_Test_Case
+class TestIdTokenVerifierTest extends WP_Auth0_Test_Case
 {
   public function testThatEmptyTokenFails()
   {
