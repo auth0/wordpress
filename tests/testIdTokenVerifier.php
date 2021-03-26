@@ -498,4 +498,57 @@ class IdTokenVerifierTest extends WP_Auth0_Test_Case
 
     $this->assertEquals('__test_sub__', $decoded_token['sub']);
   }
+
+  public function testThatIdTokenOrganizationIsCheckedWhenSet()
+  {
+    $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+    $builder = SymmetricVerifierTest::getTokenBuilder()
+      ->issuedBy('__test_iss__')
+      ->permittedFor('__test_aud__')
+      ->withClaim('exp', time() + 1000)
+      ->withClaim('iat', time() - 1000)
+      ->withClaim('auth_time', 9000);
+    $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+
+    $this->expectException(InvalidTokenException::class);
+    $this->expectExceptionMessage('Organization Id (org_id) claim must be a string present in the ID token');
+
+    $verifier->verify($token, ['org_id' => '__test_organization__']);
+  }
+
+  public function testThatIdTokenOrganizationSucceesWhenMatched()
+  {
+    $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+    $builder = SymmetricVerifierTest::getTokenBuilder()
+      ->issuedBy('__test_iss__')
+      ->permittedFor('__test_aud__')
+      ->withClaim('org_id', '__test_organization__')
+      ->withClaim('exp', time() + 1000)
+      ->withClaim('iat', time() - 1000)
+      ->withClaim('auth_time', 9000);
+    $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+
+    $token = $verifier->verify($token, ['org_id' => '__test_organization__']);
+
+    $this->assertArrayHasKey( 'org_id', $token );
+    $this->assertEquals( '__test_organization__', $token['org_id'] );
+  }
+
+  public function testThatIdTokenOrganizationFailsWhenMismatched()
+  {
+    $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+    $builder = SymmetricVerifierTest::getTokenBuilder()
+      ->issuedBy('__test_iss__')
+      ->permittedFor('__test_aud__')
+      ->withClaim('org_id', '__bad_test_organization__')
+      ->withClaim('exp', time() + 1000)
+      ->withClaim('iat', time() - 1000)
+      ->withClaim('auth_time', 9000);
+    $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+
+    $this->expectException(InvalidTokenException::class);
+    $this->expectExceptionMessage('Organization Id (org_id) claim value mismatch in the ID token; expected "__test_organization__", found "__bad_test_organization__"');
+
+    $token = $verifier->verify($token, ['org_id' => '__test_organization__']);
+  }
 }
