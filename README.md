@@ -16,7 +16,7 @@ This plugin replaces standard WordPress login forms with one powered by Auth0 th
 - [Documentation](#documentation)
 - [Installation](#installation)
 - [Getting Started](#getting-started)
-  - [Organizations (Closed Beta)](#organizations-closed-beta)
+  - [Organizations](#organizations)
 - [Contribution](#contribution)
 - [Support + Feedback](#support--feedback)
 - [Vulnerability Reporting](#vulnerability-reporting)
@@ -45,9 +45,9 @@ Please see the [configuration docs](https://auth0.com/docs/cms/wordpress/configu
 
 We recommend testing on a staging/development site first using a separate Auth0 Application before putting the plugin live on your production site. See the **[Support](#support--feedback)** section below if you have any questions or issues during setup.
 
-### Organizations (Closed Beta)
+### Organizations
 
-Organizations is a set of features that provide better support for developers who build and maintain SaaS and Business-to-Business (B2B) applications.
+[Organizations](https://auth0.com/docs/organizations) is a set of features that provide better support for developers who build and maintain SaaS and Business-to-Business (B2B) applications.
 
 Using Organizations, you can:
 
