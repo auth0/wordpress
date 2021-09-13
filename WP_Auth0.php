@@ -22,8 +22,8 @@ define( 'WPA0_PLUGIN_IMG_URL', WPA0_PLUGIN_URL . 'assets/img/' );
 define( 'WPA0_PLUGIN_LIB_URL', WPA0_PLUGIN_URL . 'assets/lib/' );
 define( 'WPA0_PLUGIN_BS_URL', WPA0_PLUGIN_URL . 'assets/bootstrap/' );
 
-define( 'WPA0_LOCK_CDN_URL', 'https://cdn.auth0.com/js/lock/11.21/lock.min.js' );
-define( 'WPA0_AUTH0_JS_CDN_URL', 'https://cdn.auth0.com/js/auth0/9.12/auth0.min.js' );
+define( 'WPA0_LOCK_CDN_URL', 'https://cdn.auth0.com/js/lock/11.30/lock.min.js' );
+define( 'WPA0_AUTH0_JS_CDN_URL', 'https://cdn.auth0.com/js/auth0/9.16/auth0.min.js' );
 
 define( 'WPA0_AUTH0_LOGIN_FORM_ID', 'auth0-login-form' );
 define( 'WPA0_CACHE_GROUP', 'wp_auth0' );
