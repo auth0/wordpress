@@ -27,13 +27,7 @@ class TestLockOptions extends WP_Auth0_Test_Case {
 		$lock_options_arr = $lock_options->get_lock_options();
 
 		self::$opts->set( 'custom_domain', 'login.example.com' );
-		$this->assertEquals( 'https://cdn.auth0.com', $lock_options->get_lock_options()['configurationBaseUrl'] );
-
-		self::$opts->set( 'domain', 'test.eu.auth0.com' );
-		$this->assertEquals( 'https://cdn.eu.auth0.com', $lock_options->get_lock_options()['configurationBaseUrl'] );
-
-		self::$opts->set( 'domain', 'test.au.auth0.com' );
-		$this->assertEquals( 'https://cdn.au.auth0.com', $lock_options->get_lock_options()['configurationBaseUrl'] );
+		$this->assertEquals( 'https://login.example.com', $lock_options->get_lock_options()['configurationBaseUrl'] );
 	}
 
 	/**
