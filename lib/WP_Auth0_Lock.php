@@ -122,7 +122,10 @@ class WP_Auth0_Lock {
 		$extraOptions['auth']['redirectUrl']     = $this->wp_options->get_wp_auth0_url( $this->get_callback_protocol() );
 
 		if ( $this->wp_options->get( 'custom_domain' ) ) {
-			$extraOptions['configurationBaseUrl'] = $this->wp_options->get( 'custom_domain' );
+			$extraOptions['configurationBaseUrl'] = sprintf(
+				'https://%s',
+				$this->wp_options->get( 'custom_domain' )
+			);
 		}
 
 		$options_obj       = $this->build_settings( $this->wp_options->get_options() );
