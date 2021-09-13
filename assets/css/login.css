@@ -27,6 +27,9 @@ body.a0-widget-open > * {
   padding: 0;
   overflow: visible;
 }
+.auth0-lock-center {
+  padding: 0;
+}
 
 .login form.auth0-lock-widget input[type="text"],
 .login form.auth0-lock-widget input[type="search"],
