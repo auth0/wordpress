@@ -25,7 +25,6 @@ class TestLockOptions extends WP_Auth0_Test_Case {
 		self::$opts->set( 'domain', 'test.auth0.com' );
 		$lock_options     = new WP_Auth0_Lock( [], self::$opts );
 		$lock_options_arr = $lock_options->get_lock_options();
-		$this->assertArrayNotHasKey( 'configurationBaseUrl', $lock_options_arr );
 
 		self::$opts->set( 'custom_domain', 'login.example.com' );
 		$this->assertEquals( 'https://cdn.auth0.com', $lock_options->get_lock_options()['configurationBaseUrl'] );
