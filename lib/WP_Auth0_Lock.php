@@ -120,10 +120,10 @@ class WP_Auth0_Lock {
 		$extraOptions['auth']['params']['nonce'] = WP_Auth0_Nonce_Handler::get_instance()->get_unique();
 		$extraOptions['auth']['responseType']    = 'code';
 		$extraOptions['auth']['redirectUrl']     = $this->wp_options->get_wp_auth0_url( $this->get_callback_protocol() );
-		$extraOptions['configurationBaseUrl']    = sprintf(
-			'https://%s',
-			$this->wp_options->get( 'domain' )
-		);
+		// $extraOptions['configurationBaseUrl']    = sprintf(
+		// 	'https://%s',
+		// 	$this->wp_options->get( 'domain' )
+		// );
 
 		if ( $this->wp_options->get( 'custom_domain' ) ) {
 			$extraOptions['configurationBaseUrl'] = sprintf(
