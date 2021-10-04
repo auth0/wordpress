@@ -101,7 +101,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_auto_login_params( $args = [] ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_auto_login_params' );
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
 			__( 'Optional. Here you can specify additional parameters to pass to the the Universal Login Page (ULP) during authentication. ', 'wp-auth0' ) .
 			__( 'For example, you can specify <code>screen_hint=signup</code> or <code>prompt=login</code> parameters here. ', 'wp-auth0' ) .
