@@ -28,7 +28,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 				'function' => 'render_auto_login',
 			],
 			[
-				'name'     => __( 'ULP Login Parameters', 'wp-auth0' ),
+				'name'     => __( 'Auto Login Parameters', 'wp-auth0' ),
 				'opt'      => 'auto_login_params',
 				'id'       => 'wpa0_auto_login_params',
 				'function' => 'render_auto_login_params',
