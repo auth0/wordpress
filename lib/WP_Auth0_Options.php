@@ -394,6 +394,7 @@ class WP_Auth0_Options {
 
 			// Features
 			'auto_login'                => true,
+			'auto_login_params'         => '',
 			'auto_login_method'         => '',
 			'singlelogout'              => true,
 			'override_wp_avatars'       => true,

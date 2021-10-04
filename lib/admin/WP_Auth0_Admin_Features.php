@@ -156,6 +156,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 */
 	public function basic_validation( array $input ) {
 		$input['auto_login']          = $this->sanitize_switch_val( $input['auto_login'] ?? null );
+		$input['auto_login_params']   = $this->sanitize_text_val( $input['auto_login_params'] ?? null );
 		$input['auto_login_method']   = $this->sanitize_text_val( $input['auto_login_method'] ?? null );
 		$input['singlelogout']        = $this->sanitize_switch_val( $input['singlelogout'] ?? null );
 		$input['override_wp_avatars'] = $this->sanitize_switch_val( $input['override_wp_avatars'] ?? null );
