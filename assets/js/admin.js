@@ -64,7 +64,9 @@ jQuery(document).ready(function ($) {
         );
 
         matches.forEach(function (match) {
-          match.style.display = element.checked ? "block" : "none";
+          match.closest("tr").style.display = element.checked
+            ? "block"
+            : "none";
         });
       });
 
