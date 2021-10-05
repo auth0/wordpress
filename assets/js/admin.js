@@ -58,6 +58,11 @@ jQuery(document).ready(function ($) {
     .forEach(function (element) {
       element.addEventListener("change", function () {
         var group = (this.getAttribute("data-expand") ?? "").trim();
+
+        if (!group.length) {
+          return;
+        }
+
         var matches = document.querySelectorAll(
           ["#" + group, '[data-group*="' + group + '"]'].join(",")
         );
