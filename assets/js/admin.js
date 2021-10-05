@@ -54,7 +54,7 @@ jQuery(document).ready(function ($) {
     Show/hide field for specific switches
      */
   document
-    .querySelectorAll('[data-expand][data-expand!=""]')
+    .querySelectorAll('[data-expand]:not([data-expand=""])')
     .forEach(function (element) {
       element.addEventListener("change", function () {
         console.log(this);
