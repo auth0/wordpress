@@ -449,8 +449,14 @@ class WP_Auth0_LoginManager {
 		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
 
 		$opts = WP_Auth0_Options::Instance();
+		$customParams = trim($opts->get('auto_login_params') ?? '');
+		$params = [];
 
-		$params = [
+		if ($customParams) {
+			parse_str($customParams, $params);
+		}
+
+		$params = array_merge($params, [
 			'connection'    => $connection,
 			'client_id'     => $opts->get( 'client_id' ),
 			'organization'  => $opts->get( 'organization' ),
@@ -460,7 +466,7 @@ class WP_Auth0_LoginManager {
 			'response_type' => 'code',
 			'response_mode' => 'query',
 			'redirect_uri'  => $opts->get_wp_auth0_url(),
-		];
+		]);
 
 		// Where should the user be redirected after logging in?
 		if ( empty( $redirect_to ) ) {
