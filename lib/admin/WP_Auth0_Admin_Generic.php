@@ -272,4 +272,8 @@ class WP_Auth0_Admin_Generic {
 	protected function sanitize_text_val( $val ) {
 		return sanitize_text_field( trim( strval( $val ) ) );
 	}
+
+	protected function sanitize_query_parameters( $val ) {
+		return http_build_query(explode('&', sanitize_text_field(trim(strval($val)))));
+	}
 }
