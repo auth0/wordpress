@@ -287,6 +287,6 @@ class WP_Auth0_Admin_Generic {
 			$sanitized[$this->sanitize_text_val($key)] = $this->sanitize_text_val($value);
 		}
 
-		return http_build_query($sanitized);
+		return http_build_query(array_filter($sanitized));
 	}
 }
