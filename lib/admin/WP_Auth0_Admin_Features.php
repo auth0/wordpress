@@ -82,7 +82,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_auto_login( $args = [] ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_auto_login_method' );
+		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_auto_login_options' );
 		$this->render_field_description(
 			__( 'Use the Universal Login Page (ULP) for authentication and SSO. ', 'wp-auth0' ) .
 			__( 'When turned on, <code>wp-login.php</code> will redirect to the hosted login page. ', 'wp-auth0' ) .
@@ -101,7 +101,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_auto_login_params( $args = [] ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_text_field( $args['label_for'], $args['opt_name'], '', '', '', 'wpa0_auto_login_options' );
 		$this->render_field_description(
 			__( 'Optional. Here you can specify additional parameters to pass to the the Universal Login Page (ULP) during authentication. ', 'wp-auth0' ) .
 			__( 'For example, you can specify <code>screen_hint=signup</code> or <code>prompt=login</code> parameters here. ', 'wp-auth0' ) .
@@ -119,7 +119,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_auto_login_method( $args = [] ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_text_field( $args['label_for'], $args['opt_name'], '', '', '', 'wpa0_auto_login_options' );
 		$this->render_field_description(
 			__( 'Enter a name here to automatically use a single, specific connection to login . ', 'wp-auth0' ) .
 			sprintf(
