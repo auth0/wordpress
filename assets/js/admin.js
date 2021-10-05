@@ -59,7 +59,7 @@ jQuery(document).ready(function ($) {
       element.addEventListener("change", function () {
         var group = (this.getAttribute("data-expand") ?? "").trim();
         var matches = document.querySelectorAll(
-          join(",", ["#" + group, '[data-group*="' + group + '"]'])
+          ["#" + group, '[data-group*="' + group + '"]'].join(",")
         );
 
         if (this.checked) {
