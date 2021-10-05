@@ -57,7 +57,6 @@ jQuery(document).ready(function ($) {
     .querySelectorAll('[data-expand]:not([data-expand=""])')
     .forEach(function (element) {
       element.addEventListener("change", function () {
-        console.log("event fired");
         var group = (this.getAttribute("data-expand") ?? "").trim();
         var matches = document.querySelectorAll(
           ["#" + group, '[data-group*="' + group + '"]'].join(",")
