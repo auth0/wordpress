@@ -57,23 +57,18 @@ jQuery(document).ready(function ($) {
     .querySelectorAll('[data-expand]:not([data-expand=""])')
     .forEach(function (element) {
       element.addEventListener("change", function () {
+        console.log("event fired");
         var group = (this.getAttribute("data-expand") ?? "").trim();
         var matches = document.querySelectorAll(
           ["#" + group, '[data-group*="' + group + '"]'].join(",")
         );
 
-        if (this.checked) {
-          matches.forEach(function (match) {
-            match.style.display = "none";
-          });
-        } else {
-          matches.forEach(function (match) {
-            match.style.display = "block";
-          });
-        }
+        matches.forEach(function (match) {
+          match.style.display = this.checked ? "block" : "none";
+        });
       });
 
-      document.dispatchEvent(new CustomEvent("change"));
+      element.dispatchEvent(new CustomEvent("change"));
     });
 
   /*
