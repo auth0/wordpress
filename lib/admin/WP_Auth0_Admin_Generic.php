@@ -274,21 +274,26 @@ class WP_Auth0_Admin_Generic {
 	}
 
 	protected function sanitize_query_parameters( $val ) {
-		$val = trim(strval($val));
+		$val = trim( strval( $val ) );
 
-		if (strlen($val) === 0) {
+		if ( strlen( $val ) === 0 ) {
 			return '';
 		}
 
-		parse_str($val, $parsed);
+		parse_str( $val, $parsed );
 		$sanitized = [];
 
-		foreach ($parsed as $key => $value) {
-			$sanitized[$this->sanitize_text_val($key)] = $this->sanitize_text_val($value);
+		foreach ( $parsed as $key => $value ) {
+			$sanitized[ $this->sanitize_text_val( $key ) ] = $this->sanitize_text_val( $value );
 		}
 
-		return http_build_query(array_filter($sanitized, function($var) {
-			return ($var !== null && $var !== false && trim($var) !== '');
-		}));
+		return http_build_query(
+			array_filter(
+				$sanitized,
+				function( $var ) {
+						return ( $var !== null && $var !== false && trim( $var ) !== '' );
+				}
+			)
+		);
 	}
 }
