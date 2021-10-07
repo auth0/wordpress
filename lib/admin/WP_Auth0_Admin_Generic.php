@@ -123,8 +123,9 @@ class WP_Auth0_Admin_Generic {
 	 * @param string $type - input type attribute
 	 * @param string $placeholder - input placeholder
 	 * @param string $style - inline CSS
+	 * @param string $grouping - A string representing a one or more items in a grouping of related settings that will have their visibility toggled by a switch state.
 	 */
-	protected function render_text_field( $id, $input_name, $type = 'text', $placeholder = '', $style = '' ) {
+	protected function render_text_field( $id, $input_name, $type = 'text', $placeholder = '', $style = '', $grouping = '' ) {
 		$value = $this->options->get( $input_name );
 
 		// Secure fields are not output by default; validation keeps last value if a new one is not entered
@@ -136,7 +137,8 @@ class WP_Auth0_Admin_Generic {
 			$this->render_const_notice( $input_name );
 		}
 		printf(
-			'<input type="%s" name="%s[%s]" id="%s" value="%s" placeholder="%s" style="%s" %s>',
+			'<input data-group="%s" type="%s" name="%s[%s]" id="%s" value="%s" placeholder="%s" style="%s" %s>',
+			esc_attr( $grouping ),
 			esc_attr( $type ),
 			esc_attr( $this->_option_name ),
 			esc_attr( $input_name ),
@@ -269,5 +271,29 @@ class WP_Auth0_Admin_Generic {
 
 	protected function sanitize_text_val( $val ) {
 		return sanitize_text_field( trim( strval( $val ) ) );
+	}
+
+	protected function sanitize_query_parameters( $val ) {
+		$val = trim( strval( $val ) );
+
+		if ( strlen( $val ) === 0 ) {
+			return '';
+		}
+
+		parse_str( $val, $parsed );
+		$sanitized = [];
+
+		foreach ( $parsed as $key => $value ) {
+			$sanitized[ $this->sanitize_text_val( $key ) ] = $this->sanitize_text_val( $value );
+		}
+
+		return http_build_query(
+			array_filter(
+				$sanitized,
+				function( $var ) {
+						return ( $var !== null && $var !== false && trim( $var ) !== '' );
+				}
+			)
+		);
 	}
 }
