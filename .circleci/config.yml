@@ -37,8 +37,8 @@ commands:
             - vendor
   run-checks:
     steps:
-      - run: composer analyze
-      - run: composer lint
+      - run: php /vendor/bin/phpstan analyze
+      - run: php ./vendor/bin/phpcs
   run-tests:
     steps:
       - run:
