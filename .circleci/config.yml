@@ -37,7 +37,7 @@ commands:
             - vendor
   run-checks:
     steps:
-      - run: php /vendor/bin/phpstan analyze
+      - run: php ./vendor/bin/phpstan analyze
       - run: php ./vendor/bin/phpcs
   run-tests:
     steps:
