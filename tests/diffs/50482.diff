@@ -1,0 +1,41 @@
+diff --git a/src/wp-includes/theme.php b/src/wp-includes/theme.php
+index 304f27fdb6..9c20b6a06f 100644
+--- a/src/wp-includes/theme.php
++++ b/src/wp-includes/theme.php
+@@ -3679,6 +3679,22 @@ function _wp_keep_alive_customize_changeset_dependent_auto_drafts( $new_status,
+ 	}
+ }
+ 
++/**
++ * Prepares the post formats when registering theme support.
++ *
++ * @since
++ *
++ * @access private
++ *
++ * @return array
++ */
++function _prepare_theme_post_formats( $formats ) {
++		$formats = is_array( $formats ) ? array_values( $formats[0] ) : array();
++		$formats = array_merge( array( 'standard' ), $formats );
++
++		return $formats;
++}
++
+ /**
+  * Creates the initial theme features when the 'setup_theme' action is fired.
+  *
+@@ -4003,12 +4019,7 @@ function create_initial_theme_features() {
+ 					),
+ 					'default' => array( 'standard' ),
+ 				),
+-				'prepare_callback' => static function ( $formats ) {
+-					$formats = is_array( $formats ) ? array_values( $formats[0] ) : array();
+-					$formats = array_merge( array( 'standard' ), $formats );
+-
+-					return $formats;
+-				},
++				'prepare_callback' => '_prepare_theme_post_formats',
+ 			),
+ 		)
+ 	);

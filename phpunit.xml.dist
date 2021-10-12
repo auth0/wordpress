@@ -1,4 +1,5 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <phpunit
 	bootstrap="tests/bootstrap.php"
 	backupGlobals="true"
@@ -7,23 +8,25 @@
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	verbose="true"
-	>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+>
 	<filter>
 		<whitelist>
-			<directory suffix=".php">./lib</directory>
-			<file>./WP_Auth0.php</file>
-			<exclude>
-				<directory>./lib/php-jwt</directory>
-			</exclude>
+			<directory suffix=".php">lib</directory>
+			<file>WP_Auth0.php</file>
 		</whitelist>
 	</filter>
-	<testsuites>
-		<testsuite>
-			<directory prefix="test" suffix=".php">./tests/</directory>
-		</testsuite>
-	</testsuites>
-	<php>
+
+  <testsuites>
+    <testsuite name="unit">
+      <directory>tests/Unit</directory>
+    </testsuite>
+  </testsuites>
+
+  <php>
 		<ini name="display_errors" value="On" />
 		<ini name="display_startup_errors" value="On" />
-	</php>
+    <ini name="error_reporting" value="E_ALL ^ E_DEPRECATED"/>
+  </php>
 </phpunit>
