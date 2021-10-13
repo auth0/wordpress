@@ -40,7 +40,7 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 	/**
 	 * Runs before test suite starts.
 	 */
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 		self::$opts      = WP_Auth0_Options::Instance();
 		self::$error_log = new WP_Auth0_ErrorLog();
@@ -50,7 +50,7 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 	/**
 	 * Runs before each test method.
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		global $wpdb;
@@ -66,7 +66,7 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 	/**
 	 * Runs after each test method.
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
 		update_option( 'users_can_register', false );

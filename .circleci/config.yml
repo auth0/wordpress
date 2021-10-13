@@ -37,8 +37,8 @@ commands:
             - vendor
   run-checks:
     steps:
-      - run: composer analyze
-      - run: composer lint
+      - run: php ./vendor/bin/phpstan analyze
+      - run: php ./vendor/bin/phpcs
   run-tests:
     steps:
       - run:
@@ -46,24 +46,11 @@ commands:
           command: |
             dockerize -wait tcp://127.0.0.1:3306 -timeout 120s
             bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 5.4.2
-      - run: composer test-ci
+      - run: php ./vendor/bin/phpunit --coverage-clover=coverage.xml
       - store_artifacts:
           path: coverage.xml
 
 jobs:
-  php_7_3:
-    docker:
-      - image: circleci/php:7.3
-      - image: circleci/mysql:5.6
-        environment:
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
-    steps:
-      - prepare
-      - run-checks
-      - run-tests
-      - run:
-          command: bash <(curl -s https://codecov.io/bash)
-          when: on_success
   php_7_4:
     docker:
       - image: circleci/php:7.4
@@ -74,6 +61,9 @@ jobs:
       - prepare
       - run-checks
       - run-tests
+      - run:
+          command: bash <(curl -s https://codecov.io/bash)
+          when: on_success
   snyk:
     docker:
       - image: snyk/snyk-cli:composer
@@ -81,22 +71,13 @@ jobs:
       - attach_workspace:
           at: .
       - run: snyk test
-      - run:
-          command: |
-            if [[ "${CIRCLE_BRANCH}" == "master" ]]
-            then
-            snyk monitor --org=auth0-sdks
-            fi
-          when: always
 
 # Each workflow represents a Github check
 workflows:
   build-and-test:
     jobs:
-      - php_7_3
       - php_7_4
       - snyk:
-          # Must define SNYK_TOKEN env
           context: snyk-env
           requires:
-            - php_7_3
+            - php_7_4
