@@ -1,0 +1,8 @@
+.circleci/
+.github/
+build/
+vendor/
+tests-wordpress/
+tests-wordpress-config/
+composer.lock
+composer.phar

@@ -122,10 +122,9 @@ class WP_Auth0_Lock {
 		$extraOptions['auth']['redirectUrl']     = $this->wp_options->get_wp_auth0_url( $this->get_callback_protocol() );
 
 		if ( $this->wp_options->get( 'custom_domain' ) ) {
-			$tenant_region                        = wp_auth0_get_tenant_region( $this->wp_options->get( 'domain' ) );
 			$extraOptions['configurationBaseUrl'] = sprintf(
-				'https://cdn%s.auth0.com',
-				( 'us' === $tenant_region ? '' : '.' . $tenant_region )
+				'https://%s',
+				$this->wp_options->get( 'custom_domain' )
 			);
 		}
 

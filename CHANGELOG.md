@@ -1,5 +1,13 @@
 # Change Log
 
+## [4.3.1](https://github.com/auth0/wp-auth0/tree/4.3.1) (2021-09-14)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/4.3.0...4.3.1)
+
+**Fixed**
+
+- Update client configuration url for embedded logins [\#832](https://github.com/auth0/wp-auth0/pull/832) ([evansims](https://github.com/evansims))
+
 ## [4.3.0](https://github.com/auth0/wp-auth0/tree/4.3.0) (2021-03-26)
 
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/4.2.0...4.3.0)

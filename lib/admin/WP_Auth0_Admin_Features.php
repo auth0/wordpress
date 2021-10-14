@@ -28,6 +28,12 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 				'function' => 'render_auto_login',
 			],
 			[
+				'name'     => __( 'Auto Login Parameters', 'wp-auth0' ),
+				'opt'      => 'auto_login_params',
+				'id'       => 'wpa0_auto_login_params',
+				'function' => 'render_auto_login_params',
+			],
+			[
 				'name'     => __( 'Auto Login Method', 'wp-auth0' ),
 				'opt'      => 'auto_login_method',
 				'id'       => 'wpa0_auto_login_method',
@@ -76,12 +82,30 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_auto_login( $args = [] ) {
-		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_auto_login_method' );
+		$this->render_switch( $args['label_for'], $args['opt_name'], 'wpa0_auto_login_options' );
 		$this->render_field_description(
 			__( 'Use the Universal Login Page (ULP) for authentication and SSO. ', 'wp-auth0' ) .
 			__( 'When turned on, <code>wp-login.php</code> will redirect to the hosted login page. ', 'wp-auth0' ) .
 			__( 'When turned off, <code>wp-login.php</code> will show an embedded login form. ', 'wp-auth0' ) .
 			$this->get_docs_link( 'guides/login/universal-vs-embedded', __( 'More on ULP vs embedded here', 'wp-auth0' ) )
+		);
+	}
+
+	/**
+	 * Render form field and description for the `auto_login_params` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_auto_login_params( $args = [] ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'], '', '', '', 'wpa0_auto_login_options' );
+		$this->render_field_description(
+			__( 'Optional. Here you can specify additional parameters to pass to the the Universal Login Page (ULP) during authentication. ', 'wp-auth0' ) .
+			__( 'For example, you can specify <code>screen_hint=signup</code> or <code>prompt=login</code> parameters here. ', 'wp-auth0' ) .
+			$this->get_docs_link( 'docs/login/universal-login/new-experience', __( 'Learn more about available ULP parameters here', 'wp-auth0' ) )
 		);
 	}
 
@@ -95,7 +119,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 * @see add_settings_field()
 	 */
 	public function render_auto_login_method( $args = [] ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_text_field( $args['label_for'], $args['opt_name'], '', '', '', 'wpa0_auto_login_options' );
 		$this->render_field_description(
 			__( 'Enter a name here to automatically use a single, specific connection to login . ', 'wp-auth0' ) .
 			sprintf(
@@ -132,6 +156,7 @@ class WP_Auth0_Admin_Features extends WP_Auth0_Admin_Generic {
 	 */
 	public function basic_validation( array $input ) {
 		$input['auto_login']          = $this->sanitize_switch_val( $input['auto_login'] ?? null );
+		$input['auto_login_params']   = $this->sanitize_query_parameters( $input['auto_login_params'] ?? null );
 		$input['auto_login_method']   = $this->sanitize_text_val( $input['auto_login_method'] ?? null );
 		$input['singlelogout']        = $this->sanitize_switch_val( $input['singlelogout'] ?? null );
 		$input['override_wp_avatars'] = $this->sanitize_switch_val( $input['override_wp_avatars'] ?? null );

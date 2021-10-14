@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  phpunit:
+    volumes:
+      - ../:/app
+    tmpfs:
+      - /app/vendor
+    working_dir: /app
+    build:
+      context: ../
+      dockerfile: ./docker/php-7.4.dockerfile
+    depends_on:
+      - mysql
+    links:
+      - mysql
