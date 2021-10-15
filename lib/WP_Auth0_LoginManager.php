@@ -313,6 +313,9 @@ class WP_Auth0_LoginManager {
 					}
 				}
 
+				// Temporarily disable the email sync, since the changes are coming from Auth0, no need to update them there.
+				remove_action( 'profile_update', 'wp_auth0_profile_change_email', 100 );
+
 				wp_update_user(
 					(object) [
 						'ID'          => $user->data->ID,
@@ -320,6 +323,9 @@ class WP_Auth0_LoginManager {
 						'description' => $description,
 					]
 				);
+
+				// Turn the email sync back on
+				add_action( 'profile_update', 'wp_auth0_profile_change_email', 100, 2 );
 			}
 
 			$this->users_repo->update_auth0_object( $user->data->ID, $userinfo );
