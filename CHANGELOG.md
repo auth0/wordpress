@@ -1,5 +1,18 @@
 # Change Log
 
+## [4.4.0](https://github.com/auth0/wp-auth0/tree/4.4.0) (2021-10-15)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/4.3.1...4.4.0)
+
+**Added**
+
+- Enable passing extra custom parameters to the New Universal Login [\#834](https://github.com/auth0/wp-auth0/pull/834) ([evansims](https://github.com/evansims))
+- Update tests to use PHPUnit 7 and Docker [\#835](https://github.com/auth0/wp-auth0/pull/835) ([evansims](https://github.com/evansims))
+
+**Fixed**
+
+- Skip email sync with Auth0 when we know the update is coming from Auth0 [\#831](https://github.com/auth0/wp-auth0/pull/831) ([drobin03](https://github.com/drobin03))
+
 ## [4.3.1](https://github.com/auth0/wp-auth0/tree/4.3.1) (2021-09-14)
 
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/4.3.0...4.3.1)
