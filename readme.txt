@@ -2,7 +2,7 @@
 Tags: authentication, security, multi-factor, single sign-on, social, passwordless, mfa, 2fa, sso, oauth2, openid, saml
 Tested up to: 5.8.1
 Requires at least: 5.4.2
-Requires PHP: 7.3
+Requires PHP: 7.4
 License: MIT
 License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE
 Stable tag: 4.4.0
