@@ -219,8 +219,9 @@ class WP_Auth0_UsersRepo {
 		 *
 		 * @param integer $user_id The user ID.
 		 * @param string  $key     The meta key.
+		 * @param mixed   $value   The meta value.
 		 */
-		$check = apply_filters( 'auth0_update_meta', null, $user_id, $key );
+		$check = apply_filters( 'auth0_update_meta', null, $user_id, $key, $value );
 		if ( $check !== null ) {
 			return (bool) $check;
 		}
