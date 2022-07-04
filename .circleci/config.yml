@@ -61,9 +61,6 @@ jobs:
       - prepare
       - run-checks
       - run-tests
-      - run:
-          command: bash <(curl -s https://codecov.io/bash)
-          when: on_success
   snyk:
     docker:
       - image: snyk/snyk-cli:composer
