@@ -75,6 +75,38 @@ class ErrorLogTEst extends WP_Auth0_Test_Case {
 	}
 
 	/**
+	 * Test that the error does not log when logging is disabled.
+	 */
+	public function testErrorDoesNotLogWhenDisabled() {
+		self::$opts->set( 'auth0_disable_logging', true );
+
+		$error_code = 999;
+		$error_msg  = uniqid();
+		$wp_error   = new WP_Error( $error_code, $error_msg );
+		WP_Auth0_ErrorLog::insert_error( __METHOD__, $wp_error );
+
+		$this->assertEmpty( self::$error_log->get() );
+	}
+
+	/**
+	 * Test that the error does log when logging is enabled.
+	 */
+	public function testErrorDoesLogWhenLoggingEnabled() {
+		self::$opts->set( 'auth0_disable_logging', false );
+
+		$error_code = 999;
+		$error_msg  = 'testmsg';
+		$wp_error   = new WP_Error( $error_code, $error_msg );
+		WP_Auth0_ErrorLog::insert_error( __METHOD__, $wp_error );
+		$log = self::$error_log->get();
+
+		$this->assertEmpty( self::$error_log->get() );
+		$this->assertEquals( 1, $log[0]['count'] );
+		$this->assertEquals( $error_code, $log[0]['code'] );
+		$this->assertEquals( $error_msg, $log[0]['message'] );
+	}
+
+	/**
 	 * Test that a basic added log entries are properly stored.
 	 */
 	public function testAddLogEntries() {

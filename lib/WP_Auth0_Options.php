@@ -424,6 +424,7 @@ class WP_Auth0_Options {
 			'migration_ips'             => '',
 			'valid_proxy_ip'            => '',
 			'auth0_server_domain'       => 'auth0.auth0.com',
+			'auth0_disable_logging'     => false,
 		];
 	}
 }
