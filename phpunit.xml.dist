@@ -1,32 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit
-	bootstrap="tests/bootstrap.php"
-	backupGlobals="true"
-	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
-	verbose="true"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
->
-	<filter>
-		<whitelist>
-			<directory suffix=".php">lib</directory>
-			<file>WP_Auth0.php</file>
-		</whitelist>
-	</filter>
-
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" stderr="true" colors="true" verbose="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">./src/</directory>
+    </include>
+  </coverage>
   <testsuites>
     <testsuite name="unit">
       <directory>tests/Unit</directory>
     </testsuite>
   </testsuites>
-
   <php>
-		<ini name="display_errors" value="On" />
-		<ini name="display_startup_errors" value="On" />
     <ini name="error_reporting" value="E_ALL ^ E_DEPRECATED"/>
+    <ini name="session.use_cookies" value="false"/>
+    <ini name="session.cache_limiter" value="false"/>
   </php>
 </phpunit>
