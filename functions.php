@@ -9,11 +9,9 @@ use Auth0\SDK\Configuration\SdkConfiguration as Configuration;
 /**
  * Return a configured singleton of the Auth0 WP plugin.
  *
- * @param null|Auth0\WordPress\Plugin $plugin Optional. An existing instance of Auth0\WordPress\Plugin to use.
+ * @param null|Plugin $plugin Optional. An existing instance of Auth0\WordPress\Plugin to use.
  * @param null|Auth0\SDK\Auth0 $sdk Optional. An existing instance of Auth0\SDK\Auth0 to use.
  * @param null|Auth0\SDK\Configuration\SdkConfiguration $configuration Optional. An existing instance of Auth0\SDK\Configuration\SdkConfiguration to use.
- *
- * @return Auth0\WordPress\Plugin
  */
 function wpAuth0(
     ?Plugin $plugin = null,

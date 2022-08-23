@@ -8,14 +8,10 @@ use Auth0\WordPress\Plugin;
 
 final class Actions
 {
-    private ?Plugin $plugin = null;
-
     private array $listeners = [];
 
-    public function __construct(
-        ?Plugin $plugin,
-    ) {
-        $this->plugin = $plugin;
+    public function __construct(private ?Plugin $plugin)
+    {
     }
 
     public function add(
@@ -40,7 +36,7 @@ final class Actions
 
     public function do(
         string $hook,
-        ... $arguments
+        array $arguments = []
     ): self {
         do_action($hook, $arguments);
         return $this;

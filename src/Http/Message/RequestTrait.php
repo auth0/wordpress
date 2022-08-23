@@ -11,9 +11,9 @@ trait RequestTrait
 {
     private string $method;
 
-    private ?string $requestTarget;
+    private ?string $requestTarget = null;
 
-    private ?UriInterface $uri;
+    private ?UriInterface $uri = null;
 
     public function getRequestTarget(): string
     {
@@ -103,7 +103,8 @@ trait RequestTrait
         if (isset($this->headerNames['host'])) {
             $header = $this->headerNames['host'];
         } else {
-            $this->headerNames['host'] = $header = 'Host';
+            $this->headerNames['host'] = 'Host';
+            $header = 'Host';
         }
 
         $this->headers = [$header => [$host]] + $this->headers;

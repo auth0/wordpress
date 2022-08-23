@@ -9,7 +9,7 @@ use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
 
-class UploadedFile implements UploadedFileInterface
+final class UploadedFile implements UploadedFileInterface
 {
     /** @var array */
     private const ERRORS = [
@@ -23,42 +23,29 @@ class UploadedFile implements UploadedFileInterface
         UPLOAD_ERR_EXTENSION => 1,
     ];
 
-    private string $clientFilename;
-
-    private string $clientMediaType;
-
     private int $error;
 
-    private ?string $file;
+    private ?string $file = null;
 
     private bool $moved = false;
 
-    private int $size;
-
-    private ?StreamInterface $stream;
+    private ?StreamInterface $stream = null;
 
     /**
      * @param StreamInterface|string|resource $stream
-     * @param int $size
-     * @param int $errorStatus
-     * @param string|null $clientFilename
-     * @param string|null $clientMediaType
      */
     public function __construct(
         string|StreamInterface $stream,
-        int $size,
+        private int $size,
         int $errorStatus,
-        ?string $clientFilename = null,
-        ?string $clientMediaType = null)
+        private ?string $clientFilename = null,
+        private ?string $clientMediaType = null)
     {
-        if (is_int($errorStatus) === false || !isset(self::ERRORS[$errorStatus])) {
+        if (!is_int($errorStatus) || !isset(self::ERRORS[$errorStatus])) {
             throw new InvalidArgumentException('Upload file error status must be an integer value and one of the "UPLOAD_ERR_*" constants.');
         }
 
         $this->error = $errorStatus;
-        $this->size = $size;
-        $this->clientFilename = $clientFilename;
-        $this->clientMediaType = $clientMediaType;
 
         if ($this->error === UPLOAD_ERR_OK) {
             if (is_string($stream) && $stream !== '') {
@@ -112,7 +99,7 @@ class UploadedFile implements UploadedFileInterface
         if ($this->file !== null) {
             $this->moved = PHP_SAPI === 'cli' ? rename($this->file, $targetPath) : move_uploaded_file($this->file, $targetPath);
 
-            if ($this->moved === false) {
+            if (!$this->moved) {
                 throw new RuntimeException(sprintf('Uploaded file could not be moved to "%s"', $targetPath));
             }
         } else {
@@ -131,7 +118,7 @@ class UploadedFile implements UploadedFileInterface
             $dest = Stream::create($resource);
 
             while (!$stream->eof()) {
-                if (!$dest->write($stream->read(1048576))) {
+                if ($dest->write($stream->read(1_048_576)) === 0) {
                     break;
                 }
             }

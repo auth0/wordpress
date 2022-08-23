@@ -26,7 +26,7 @@ final class StreamFactory implements StreamFactoryInterface
         $resource = fopen($filename, $mode);
 
         if ($resource === false) {
-            if ($mode === '' || in_array($mode[0], ['r', 'w', 'a', 'x', 'c'], true) === false) {
+            if ($mode === '' || !in_array($mode[0], ['r', 'w', 'a', 'x', 'c'], true)) {
                 throw new InvalidArgumentException(\sprintf('The mode "%s" is invalid.', $mode));
             }
 

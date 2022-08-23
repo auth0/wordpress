@@ -9,16 +9,8 @@ use Auth0\SDK\Configuration\SdkConfiguration as Configuration;
 
 final class Plugin
 {
-    private ?Sdk $sdk = null;
-
-    private ?Configuration $configuration = null;
-
-    public function __construct(
-        ?Sdk $sdk,
-        ?Configuration $configuration,
-    ) {
-        $this->sdk = $sdk;
-        $this->configuration = $configuration;
+    public function __construct(private ?Sdk $sdk, private ?Configuration $configuration)
+    {
     }
 
     /**
@@ -87,7 +79,7 @@ final class Plugin
         return new Configuration();
     }
 
-    public function test() {
+    public function test(): void {
         var_dump("LOADED");
         exit;
     }

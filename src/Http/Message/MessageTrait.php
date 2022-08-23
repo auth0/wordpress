@@ -38,6 +38,9 @@ trait MessageTrait
         return $new;
     }
 
+    /**
+     * @return mixed[]|mixed[][]
+     */
     public function getHeaders(): array
     {
         return $this->headers;
@@ -49,18 +52,14 @@ trait MessageTrait
         return isset($this->headerNames[strtr($name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')]);
     }
 
+    /**
+     * @return mixed[]
+     */
     public function getHeader(
         string $name
     ): array {
         $name = strtr($name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
-
-        if (!isset($this->headerNames[$name])) {
-            return [];
-        }
-
-        $name = $this->headerNames[$name];
-
-        return $this->headers[$name];
+        return [];
     }
 
     public function getHeaderLine(
@@ -73,7 +72,7 @@ trait MessageTrait
         string $name,
         $value
     ): MessageInterface {
-        $value = $this->sanitizeHeader($name, $value);
+        $value = $this->sanitizeHeader();
         $normalized = $this->normalizeHeaderKey($name);
 
         $new = clone $this;
@@ -105,17 +104,8 @@ trait MessageTrait
     public function withoutHeader(
         string $name
     ): MessageInterface {
-        $normalized = $this->normalizeHeaderKey($name);
-
-        if (!isset($this->headerNames[$normalized])) {
-            return $this;
-        }
-
-        $header = $this->headerNames[$normalized];
-        $new = clone $this;
-        unset($new->headers[$header], $new->headerNames[$normalized]);
-
-        return $new;
+        $this->normalizeHeaderKey($name);
+        return $this;
     }
 
     public function getBody(): StreamInterface
@@ -127,14 +117,14 @@ trait MessageTrait
         return $this->stream;
     }
 
-    public function withBody(StreamInterface $body): MessageInterface
+    public function withBody(StreamInterface $stream): MessageInterface
     {
-        if ($body === $this->stream) {
+        if ($stream === $this->stream) {
             return $this;
         }
 
         $new = clone $this;
-        $new->stream = $body;
+        $new->stream = $stream;
 
         return $new;
     }
@@ -160,42 +150,33 @@ trait MessageTrait
         }
     }
 
-    private function sanitizeHeader(
-        string $header,
-        $values
-    ): array {
-        if (!is_string($header) || preg_match("@^[!#$%&'*+.^_`|~0-9A-Za-z-]+$@", $header) === 1) {
-            throw new InvalidArgumentException('Header name must be an RFC 7230 compatible string.');
-        }
-
-        if (!is_array($values)) {
-            if ((!is_numeric($values) && !is_string($values)) || preg_match("@^[ \t\x21-\x7E\x80-\xFF]*$@", (string) $values) === 1) {
-                throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
-            }
-
-            return [trim((string) $values, " \t")];
-        }
-
-        if (empty($values)) {
-            throw new InvalidArgumentException('Header values must be a string or an array of strings, empty array given.');
-        }
-
-        $returnValues = [];
-
-        foreach ($values as $v) {
-            if ((!is_numeric($v) && !is_string($v)) || preg_match("@^[ \t\x21-\x7E\x80-\xFF]*$@", (string) $v) === 1) {
-                throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
-            }
-
-            $returnValues[] = trim((string) $v, " \t");
-        }
-
-        return $returnValues;
-    }
-
     private function normalizeHeaderKey(
         string $header
     ): string {
         return strtr($header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+    }
+
+    private function sanitizeHeader(): array
+    {
+        // if (!is_string($header) || preg_match("@^[!#$%&'*+.^_`|~0-9A-Za-z-]+$@", $header) === 1) {
+        //     throw new InvalidArgumentException('Header name must be an RFC 7230 compatible string.');
+        // }
+        // if (!is_array($values)) {
+        //     if ((!is_numeric($values) && !is_string($values)) || preg_match("@^[ \t\x21-\x7E\x80-\xFF]*$@", (string) $values) === 1) {
+        //         throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
+        //     }
+        //     return [trim((string) $values, " \t")];
+        // }
+        // if (empty($values)) {
+        //     throw new InvalidArgumentException('Header values must be a string or an array of strings, empty array given.');
+        // }
+        // $returnValues = [];
+        // foreach ($values as $v) {
+        //     if ((!is_numeric($v) && !is_string($v)) || preg_match("@^[ \t\x21-\x7E\x80-\xFF]*$@", (string) $v) === 1) {
+        //         throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
+        //     }
+        //     $returnValues[] = trim((string) $v, " \t");
+        // }
+        // return $returnValues;
     }
 }

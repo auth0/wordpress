@@ -4,35 +4,27 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Actions;
 
+use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\WordPress\Http\Factory;
-use Auth0\WordPress\Plugin;
 
-final class Authentication
+final class Authentication extends Base
 {
-    private ?Plugin $plugin = null;
-
-    public function __construct(
-        ?Plugin $plugin,
-    ) {
-        $this->plugin = $plugin;
-    }
-
-    public function handle() {
+    public function handle(): void {
         if (is_user_logged_in()) {
             wp_redirect(admin_url());
         }
 
-        $configuration = new \Auth0\SDK\Configuration\SdkConfiguration(
+        $sdkConfiguration = new SdkConfiguration(
             httpRequestFactory: Factory::getRequestFactory(),
             httpResponseFactory: Factory::getResponseFactory(),
             httpStreamFactory: Factory::getStreamFactory(),
             httpClient: Factory::getClient()
         );
 
-        $config = wpAuth0()->setConfiguration($configuration);
-        $sdk = wpAuth0()->getSdk();
+        wpAuth0()->setConfiguration($sdkConfiguration);
+        $auth0 = wpAuth0()->getSdk();
 
-        $location = $sdk->login();
+        $location = $auth0->login();
 
         wp_redirect($location);
         exit;

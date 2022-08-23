@@ -33,8 +33,14 @@ final class Request implements RequestInterface
             $this->updateHostFromUri();
         }
 
-        if ($body !== '' && $body !== null) {
-            $this->stream = Stream::create($body);
+        if ($body === '') {
+            return;
         }
+
+        if ($body === null) {
+            return;
+        }
+
+        $this->stream = Stream::create($body);
     }
 }

@@ -4,15 +4,25 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Http\Message;
 
+use Stringable;
 use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
 
-class Uri implements UriInterface
+final class Uri implements UriInterface, Stringable
 {
+    /**
+     * @var array<string, int>
+     */
     private const SCHEMES = ['http' => 80, 'https' => 443];
 
+    /**
+     * @var string
+     */
     private const CHAR_UNRESERVED = 'a-zA-Z0-9_\-\.~';
 
+    /**
+     * @var string
+     */
     private const CHAR_SUB_DELIMS = '!\$&\'\(\)\*\+,;=';
 
     private string $scheme = '';
@@ -21,7 +31,7 @@ class Uri implements UriInterface
 
     private string $host = '';
 
-    private ?int $port;
+    private ?int $port = null;
 
     private string $path = '';
 
@@ -287,22 +297,22 @@ class Uri implements UriInterface
         return self::isNonStandardPort($this->scheme, $port) ? $port : null;
     }
 
-    private function filterPath($path): string
+    private function filterPath($path): ?string
     {
         if (!is_string($path)) {
             throw new InvalidArgumentException('Path must be a string');
         }
 
-        return preg_replace_callback('/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/]++|%(?![A-Fa-f0-9]{2}))/', [__CLASS__, 'rawurlencodeMatchZero'], $path);
+        return preg_replace_callback('/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/]++|%(?![A-Fa-f0-9]{2}))/', static fn(array $match): string => self::rawurlencodeMatchZero($match), $path);
     }
 
-    private function filterQueryAndFragment($str): string
+    private function filterQueryAndFragment($str): ?string
     {
         if (!is_string($str)) {
             throw new InvalidArgumentException('Query and fragment must be a string');
         }
 
-        return preg_replace_callback('/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/\?]++|%(?![A-Fa-f0-9]{2}))/', [__CLASS__, 'rawurlencodeMatchZero'], $str);
+        return preg_replace_callback('/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/\?]++|%(?![A-Fa-f0-9]{2}))/', static fn(array $match): string => self::rawurlencodeMatchZero($match), $str);
     }
 
     private static function rawurlencodeMatchZero(array $match): string

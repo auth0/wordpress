@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Http\Message;
 
+use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -21,11 +22,9 @@ final class ServerRequest implements ServerRequestInterface
 
     private array $cookieParams = [];
 
-    private array|object|null $parsedBody;
+    private array|object|null $parsedBody = null;
 
     private array $queryParams = [];
-
-    private array $serverParams = [];
 
     /** @var UploadedFileInterface[] */
     private array $uploadedFiles = [];
@@ -44,10 +43,8 @@ final class ServerRequest implements ServerRequestInterface
         array $headers = [],
         string|StreamInterface|null $body = null,
         string $version = '1.1',
-        array $serverParams = []
+        private array $serverParams = []
     ) {
-        $this->serverParams = $serverParams;
-
         if (! $uri instanceof UriInterface) {
             $uri = new Uri($uri);
         }
@@ -61,16 +58,28 @@ final class ServerRequest implements ServerRequestInterface
             $this->updateHostFromUri();
         }
 
-        if ($body !== null && $body !== '') {
-            $this->stream = Stream::create($body);
+        if ($body === null) {
+            return;
         }
+
+        if ($body === '') {
+            return;
+        }
+
+        $this->stream = Stream::create($body);
     }
 
+    /**
+     * @return mixed[]
+     */
     public function getServerParams(): array
     {
         return $this->serverParams;
     }
 
+    /**
+     * @return UploadedFileInterface[]
+     */
     public function getUploadedFiles(): array
     {
         return $this->uploadedFiles;
@@ -84,6 +93,9 @@ final class ServerRequest implements ServerRequestInterface
         return $new;
     }
 
+    /**
+     * @return mixed[]
+     */
     public function getCookieParams(): array
     {
         return $this->cookieParams;
@@ -97,6 +109,9 @@ final class ServerRequest implements ServerRequestInterface
         return $new;
     }
 
+    /**
+     * @return mixed[]
+     */
     public function getQueryParams(): array
     {
         return $this->queryParams;
@@ -118,7 +133,7 @@ final class ServerRequest implements ServerRequestInterface
     public function withParsedBody($data): static
     {
         if (!\is_array($data) && !\is_object($data) && null !== $data) {
-            throw new \InvalidArgumentException('First parameter to withParsedBody MUST be object, array or null');
+            throw new InvalidArgumentException('First parameter to withParsedBody MUST be object, array or null');
         }
 
         $new = clone $this;
@@ -127,6 +142,9 @@ final class ServerRequest implements ServerRequestInterface
         return $new;
     }
 
+    /**
+     * @return mixed[]
+     */
     public function getAttributes(): array
     {
         return $this->attributes;
@@ -134,7 +152,7 @@ final class ServerRequest implements ServerRequestInterface
 
     public function getAttribute($attribute, $default = null): mixed
     {
-        if (false === array_key_exists($attribute, $this->attributes)) {
+        if (!array_key_exists($attribute, $this->attributes)) {
             return $default;
         }
 
@@ -151,7 +169,7 @@ final class ServerRequest implements ServerRequestInterface
 
     public function withoutAttribute($attribute): self
     {
-        if (false === array_key_exists($attribute, $this->attributes)) {
+        if (!array_key_exists($attribute, $this->attributes)) {
             return $this;
         }
 

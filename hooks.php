@@ -12,5 +12,5 @@ namespace Auth0\WordPress\Actions;
 wpAuth0()->actions()->add(
   hook: 'login_init',
   class: Authentication::class,
-  priority: defined('AUTH0_ACTION_PRIORITY_LOGIN_INIT') ? intval(constant('AUTH0_ACTION_PRIORITY_LOGIN_INIT')) : 10
+  priority: defined('AUTH0_ACTION_PRIORITY_LOGIN_INIT') ? (int) constant('AUTH0_ACTION_PRIORITY_LOGIN_INIT') : 10
 );
