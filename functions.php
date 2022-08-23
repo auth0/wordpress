@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Auth0\WordPress\Plugin;
 use Auth0\SDK\Auth0 as Sdk;
 use Auth0\SDK\Configuration\SdkConfiguration as Configuration;

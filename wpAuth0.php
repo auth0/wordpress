@@ -13,14 +13,28 @@
  * Domain Path:       /languages
  */
 
+declare(strict_types=1);
+
 define('WP_AUTH0_VERSION', '5.0.0');
 
-if (! defined('WPINC')) {
+// Require loading through WordPress
+if (! defined('ABSPATH')) {
     die;
 }
 
+// Load dependencies
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
-require_once plugin_dir_path(__FILE__) . 'src/Auth0.php';
+
+// Load plugin class
+require_once plugin_dir_path(__FILE__) . 'src/Plugin.php';
+require_once plugin_dir_path(__FILE__) . 'src/Actions.php';
+require_once plugin_dir_path(__FILE__) . 'src/Actions/Authentication.php';
+
+// Load plugin helper functions
 require_once plugin_dir_path(__FILE__) . 'functions.php';
 
+// Register plugin hooks
+require_once plugin_dir_path(__FILE__) . 'hooks.php';
+
+// Run plugin functions
 wpAuth0()->run();

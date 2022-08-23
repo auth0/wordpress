@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\WordPress;
 
 use Auth0\SDK\Auth0 as Sdk;
@@ -57,6 +59,14 @@ final class Plugin
         return $this;
     }
 
+    public function actions(): Actions {
+        static $instance = null;
+
+        $instance ??= $instance ?? new Actions($this);
+
+        return $instance;
+    }
+
     /**
      * Main plugin functionality.
      */
@@ -75,5 +85,10 @@ final class Plugin
         // TODO: Import settings from WP database.
 
         return new Configuration();
+    }
+
+    public function test() {
+        var_dump("LOADED");
+        exit;
     }
 }

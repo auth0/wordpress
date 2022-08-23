@@ -37,11 +37,10 @@ return static function (RectorConfig $rectorConfig): void {
         SetList::PSR_4,
         SetList::TYPE_DECLARATION,
         SetList::TYPE_DECLARATION_STRICT,
-        SetList::UNWRAP_COMPAT,
-        LevelSetList::UP_TO_PHP_74
+        LevelSetList::UP_TO_PHP_80
     ]);
 
     $rectorConfig->rule(TypedPropertyRector::class);
-    $rectorConfig->phpVersion(PhpVersion::PHP_74);
+    $rectorConfig->phpVersion(PhpVersion::PHP_80);
     $rectorConfig->phpstanConfig(DOCUMENT_ROOT . 'phpstan.neon.dist');
 };
