@@ -36,9 +36,7 @@ trait RequestTrait
         return $target;
     }
 
-    public function withRequestTarget(
-        ?string $requestTarget
-    ): self {
+    public function withRequestTarget($requestTarget): self {
         if (preg_match('#\s#', $requestTarget)) {
             throw new InvalidArgumentException('Invalid request target provided; cannot contain whitespace');
         }
@@ -54,9 +52,7 @@ trait RequestTrait
         return $this->method;
     }
 
-    public function withMethod(
-        string $method
-    ): self {
+    public function withMethod($method): self {
         $new = clone $this;
         $new->method = $method;
 

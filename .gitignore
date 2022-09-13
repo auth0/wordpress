@@ -13,3 +13,4 @@ wp-phptidy.php
 .phpcs.xml
 phpcs.xml
 composer.lock
+composer.local.json

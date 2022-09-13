@@ -4,57 +4,86 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress;
 
-use Auth0\SDK\Auth0 as Sdk;
-use Auth0\SDK\Configuration\SdkConfiguration as Configuration;
+use Auth0\SDK\Auth0;
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\WordPress\Actions\Authentication as AuthenticationActions;
+use Auth0\WordPress\Actions\Configuration as ConfigurationActions;
+use Auth0\WordPress\Filters\Authentication as AuthenticationFilters;
+use Auth0\WordPress\Http\Factory;
 
 final class Plugin
 {
-    public function __construct(private ?Sdk $sdk, private ?Configuration $configuration)
+    private array $actions = [
+        AuthenticationActions::class,
+        ConfigurationActions::class,
+    ];
+
+    private array $filters = [
+        AuthenticationFilters::class
+    ];
+
+    private array $registry = [];
+
+    public function __construct(private ?Auth0 $auth0, private ?SdkConfiguration $sdkConfiguration)
     {
     }
 
     /**
      * Returns a singleton instance of the Auth0 SDK.
      */
-    public function getSdk(): Sdk
+    public function getSdk(): Auth0
     {
-        $this->sdk = new Sdk($this->getConfiguration());
-        return $this->sdk;
+        $this->auth0 ??= new Auth0($this->getConfiguration());
+        return $this->auth0;
     }
 
     /**
      * Assign a Auth0\SDK\Auth0 instance for the plugin to use.
      */
     public function setSdk(
-        Sdk $sdk
+        Auth0 $auth0
     ): self {
-        $this->sdk = $sdk;
+        $this->auth0 = $auth0;
         return $this;
     }
 
     /**
      * Returns a singleton instance of SdkConfiguration.
      */
-    public function getConfiguration(): Configuration
+    public function getConfiguration(): SdkConfiguration
     {
-        $this->configuration ??= $this->importConfiguration();
-        return $this->configuration;
+        $this->sdkConfiguration ??= $this->importConfiguration();
+        return $this->sdkConfiguration;
     }
 
     /**
      * Assign a Auth0\SDK\Configuration\SdkConfiguration instance for the plugin to use.
      */
     public function setConfiguration(
-        Configuration $configuration
+        SdkConfiguration $sdkConfiguration
     ): self {
-        $this->configuration = $configuration;
+        $this->sdkConfiguration = $sdkConfiguration;
         return $this;
     }
 
-    public function actions(): Actions {
+    /**
+     * Returns a singleton instance of Hooks configured for working with actions.
+     */
+    public function actions(): Hooks {
         static $instance = null;
 
-        $instance ??= $instance ?? new Actions($this);
+        $instance ??= $instance ?? new Hooks(Hooks::CONST_ACTION_HOOK, $this);
+
+        return $instance;
+    }
+
+    /**
+     * Returns a singleton instance of Hooks configured for working with filters.
+     */
+    public function filters(): Hooks {
+        static $instance = null;
+
+        $instance ??= $instance ?? new Hooks(Hooks::CONST_ACTION_FILTER, $this);
 
         return $instance;
     }
@@ -64,23 +93,99 @@ final class Plugin
      */
     public function run(): self
     {
-        // TODO: Begin plugin functionality.
+        if (is_array($this->filters) && count($this->filters) !== 0) {
+            foreach ($this->filters as $filter) {
+                call_user_func([ $this->getClassInstance($filter), 'register']);
+            }
+        }
+
+        if (is_array($this->actions) && count($this->actions) !== 0) {
+            foreach ($this->actions as $action) {
+                call_user_func([ $this->getClassInstance($action), 'register']);
+            }
+        }
 
         return $this;
     }
 
     /**
-     * Import configuration settings from database.
+     * Returns true if the plugin has a minimum viable configuration.
      */
-    private function importConfiguration(): Configuration
+    public function isReady(): bool
     {
-        // TODO: Import settings from WP database.
+        $config = $this->getConfiguration();
 
-        return new Configuration();
+        if (! $config->hasClientId() || ! strlen($config->getClientId())) {
+            return false;
+        }
+
+        if (! $config->hasClientSecret() || ! strlen($config->getClientSecret())) {
+            return false;
+        }
+
+        if (! $config->hasDomain() || ! strlen($config->getDomain())) {
+            return false;
+        }
+
+        if (! $config->hasCookieSecret() || ! strlen($config->getCookieSecret())) {
+            return false;
+        }
+
+        return true;
     }
 
-    public function test(): void {
-        var_dump("LOADED");
-        exit;
+    /**
+     * Returns true if the plugin has been enabled.
+     */
+    public function isEnabled(): bool
+    {
+        $clientOptions = get_option('auth0_client_options', []);
+        return ($clientOptions['enable'] ?? 'false' === 'true');
+    }
+
+    /**
+     * Import configuration settings from database.
+     */
+    private function importConfiguration(): SdkConfiguration
+    {
+        $clientOptions = get_option('auth0_client_options', []);
+        $clientAdvancedOptions = get_option('auth0_advanced_client_options', []);
+        $cookieOptions = get_option('auth0_cookie_options', []);
+
+        $audience = $clientAdvancedOptions['api_identifier'] ?? null;
+
+        if ($audience !== null && is_string($audience)) {
+            $audience = [$audience];
+        }
+
+        return new SdkConfiguration(
+            strategy: SdkConfiguration::STRATEGY_NONE,
+            httpRequestFactory: Factory::getRequestFactory(),
+            httpResponseFactory: Factory::getResponseFactory(),
+            httpStreamFactory: Factory::getStreamFactory(),
+            httpClient: Factory::getClient(),
+            domain: $clientOptions['client_domain'] ?? null,
+            clientId: $clientOptions['client_id'] ?? null,
+            clientSecret: $clientOptions['client_secret'] ?? null,
+            customDomain: $clientAdvancedOptions['custom_domain'] ?? null,
+            audience: $audience,
+            cookieSecret: $cookieOptions['cookie_secret'] ?? null,
+            cookieDomain:  $cookieOptions['cookie_domain'] ?? null,
+            cookiePath: $cookieOptions['cookie_path'] ?? '/',
+            cookieExpires: $cookieOptions['cookie_ttl'] ?? 0,
+            cookieSecure: (bool) ($cookieOptions['cookie_secure'] ?? is_ssl()),
+            cookieSameSite: $cookieOptions['cookie_samesite'] ?? null,
+            redirectUri: get_site_url(null, 'wp-login.php')
+        );
+    }
+
+    private function getClassInstance(
+        string $class
+    ) {
+        if (! array_key_exists($class, $this->registry)) {
+            $this->registry[$class] = new $class($this);
+        }
+
+        return $this->registry[$class];
     }
 }

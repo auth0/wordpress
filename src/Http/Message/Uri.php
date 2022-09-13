@@ -42,7 +42,7 @@ final class Uri implements UriInterface, Stringable
     public function __construct(
         string $uri = ''
     ) {
-        if ($uri === '') {
+        if ($uri !== '') {
             $parts = parse_url($uri);
 
             if ($parts === false) {

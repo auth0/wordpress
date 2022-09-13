@@ -25,10 +25,8 @@ trait MessageTrait
         return $this->protocol;
     }
 
-    public function withProtocolVersion(
-        string $version
-    ): MessageInterface {
-        if ($this->protocol === $version) {
+    public function withProtocolVersion($version): MessageInterface {
+        if ($this->protocol === (string) $version) {
             return $this;
         }
 
@@ -46,33 +44,29 @@ trait MessageTrait
         return $this->headers;
     }
 
-    public function hasHeader(
-        string $name
-    ): bool {
-        return isset($this->headerNames[strtr($name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')]);
+    public function hasHeader($name): bool {
+        return isset($this->headerNames[strtr((string) $name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')]);
     }
 
     /**
      * @return mixed[]
      */
-    public function getHeader(
-        string $name
-    ): array {
-        $name = strtr($name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
-        return [];
+    public function getHeader($name): array {
+        $normalized = $this->normalizeHeaderKey($name);
+
+        if (! isset($this->headerNames[$normalized])) {
+            return [];
+        }
+
+        return $this->headers[$this->headerNames[$normalized]];
     }
 
-    public function getHeaderLine(
-        string $name
-    ): string {
-        return implode(', ', $this->getHeader($name));
+    public function getHeaderLine($name): string {
+        return implode(', ', $this->getHeader((string) $name));
     }
 
-    public function withHeader(
-        string $name,
-        $value
-    ): MessageInterface {
-        $value = $this->sanitizeHeader();
+    public function withHeader($name, $value): MessageInterface {
+        $value = $this->sanitizeHeader($name, $value);
         $normalized = $this->normalizeHeaderKey($name);
 
         $new = clone $this;
@@ -87,10 +81,7 @@ trait MessageTrait
         return $new;
     }
 
-    public function withAddedHeader(
-        string $name,
-        $value
-    ): MessageInterface {
+    public function withAddedHeader($name, $value): MessageInterface {
         if (!is_string($name) || trim($name) === '') {
             throw new InvalidArgumentException('Header name must be an RFC 7230 compatible string.');
         }
@@ -101,9 +92,7 @@ trait MessageTrait
         return $new;
     }
 
-    public function withoutHeader(
-        string $name
-    ): MessageInterface {
+    public function withoutHeader($name): MessageInterface {
         $this->normalizeHeaderKey($name);
         return $this;
     }
@@ -156,27 +145,35 @@ trait MessageTrait
         return strtr($header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
     }
 
-    private function sanitizeHeader(): array
+    /**
+     * @return string[]
+     */
+    private function sanitizeHeader($header, $values): array
     {
-        // if (!is_string($header) || preg_match("@^[!#$%&'*+.^_`|~0-9A-Za-z-]+$@", $header) === 1) {
-        //     throw new InvalidArgumentException('Header name must be an RFC 7230 compatible string.');
-        // }
-        // if (!is_array($values)) {
-        //     if ((!is_numeric($values) && !is_string($values)) || preg_match("@^[ \t\x21-\x7E\x80-\xFF]*$@", (string) $values) === 1) {
-        //         throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
-        //     }
-        //     return [trim((string) $values, " \t")];
-        // }
-        // if (empty($values)) {
-        //     throw new InvalidArgumentException('Header values must be a string or an array of strings, empty array given.');
-        // }
-        // $returnValues = [];
-        // foreach ($values as $v) {
-        //     if ((!is_numeric($v) && !is_string($v)) || preg_match("@^[ \t\x21-\x7E\x80-\xFF]*$@", (string) $v) === 1) {
-        //         throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
-        //     }
-        //     $returnValues[] = trim((string) $v, " \t");
-        // }
-        // return $returnValues;
+        if (!is_string($header) || preg_match("#^[!\#$%&'*+.^_`|~0-9A-Za-z-]+$#", $header) !== 1) {
+            throw new InvalidArgumentException('Header name must be an RFC 7230 compatible string.');
+        }
+
+        if (!is_array($values)) {
+            if ((!is_numeric($values) && !is_string($values)) || preg_match("@^[ \t\x21-\x7E\x80-\xFF]*$@", (string) $values) !== 1) {
+                throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
+            }
+
+            return [trim((string) $values, " \t")];
+        }
+
+        if (empty($values)) {
+            throw new InvalidArgumentException('Header values must be a string or an array of strings, empty array given.');
+        }
+
+        $returnValues = [];
+        foreach ($values as $v) {
+            if ((!is_numeric($v) && !is_string($v)) || preg_match("@^[ \t\x21-\x7E\x80-\xFF]*$@", (string) $v) !== 1) {
+                throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
+            }
+            $returnValues[] = trim((string) $v, " \t");
+        }
+
+        return $returnValues;
     }
 }

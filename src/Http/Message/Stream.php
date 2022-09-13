@@ -23,8 +23,8 @@ final class Stream implements StreamInterface, Stringable
 
     private ?int $size = null;
 
-    /** @var mixed[]|mixed|void|bool */
-    private array $uri;
+    /** @var null|mixed|bool */
+    private $uri;
 
     /** @var array Hash of readable and writable stream types */
     private const READ_WRITE_HASH = [
@@ -109,7 +109,7 @@ final class Stream implements StreamInterface, Stringable
         }
     }
 
-    public function detach(): ?\resource
+    public function detach()
     {
         if ($this->stream === null) {
             return null;
@@ -117,6 +117,7 @@ final class Stream implements StreamInterface, Stringable
 
         $result = $this->stream;
         unset($this->stream);
+
         $this->size = null;
         $this->uri = null;
         $this->readable = false;

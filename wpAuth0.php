@@ -25,16 +25,8 @@ if (! defined('ABSPATH')) {
 // Load dependencies
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
-// Load plugin class
-require_once plugin_dir_path(__FILE__) . 'src/Plugin.php';
-require_once plugin_dir_path(__FILE__) . 'src/Actions.php';
-require_once plugin_dir_path(__FILE__) . 'src/Actions/Authentication.php';
-
 // Load plugin helper functions
 require_once plugin_dir_path(__FILE__) . 'functions.php';
-
-// Register plugin hooks
-require_once plugin_dir_path(__FILE__) . 'hooks.php';
 
 // Run plugin functions
 wpAuth0()->run();

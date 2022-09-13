@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 
 final class Client implements ClientInterface
 {
-    public $options;
+    public array $options = [];
 
     public function __construct(private ResponseFactoryInterface $responseFactory)
     {
