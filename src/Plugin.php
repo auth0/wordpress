@@ -8,6 +8,7 @@ use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\WordPress\Actions\Authentication as AuthenticationActions;
 use Auth0\WordPress\Actions\Configuration as ConfigurationActions;
+use Auth0\WordPress\Cache\WpObjectCachePool;
 use Auth0\WordPress\Filters\Authentication as AuthenticationFilters;
 use Auth0\WordPress\Http\Factory;
 
@@ -139,8 +140,24 @@ final class Plugin
      */
     public function isEnabled(): bool
     {
-        $clientOptions = get_option('auth0_client_options', []);
-        return ($clientOptions['enable'] ?? 'false' === 'true');
+        $clientOptions = get_option('auth0_state', []);
+        $enabled = $clientOptions['enable'] ?? 'false';
+        return ($enabled === 'true');
+    }
+
+    public function getOption(
+        string $group,
+        string $key,
+        mixed $default = null,
+        string $prefix = 'auth0_'
+    ): mixed {
+        $options = get_option($prefix . $group, []);
+
+        if (isset($options[$key])) {
+            return $options[$key];
+        }
+
+        return $default;
     }
 
     /**
@@ -148,35 +165,61 @@ final class Plugin
      */
     private function importConfiguration(): SdkConfiguration
     {
-        $clientOptions = get_option('auth0_client_options', []);
-        $clientAdvancedOptions = get_option('auth0_advanced_client_options', []);
-        $cookieOptions = get_option('auth0_cookie_options', []);
+        $options = [
+            'client' => get_option('auth0_client', []),
+            'advanced' => get_option('auth0_advanced', []),
+            'tokens' => get_option('auth0_tokens', []),
+            'sessions' => get_option('auth0_sessions', []),
+            'cookies' => get_option('auth0_cookies', []),
+        ];
 
-        $audience = $clientAdvancedOptions['api_identifier'] ?? null;
+        $audiences = null;
+        $organizations = null;
+        $caching = isset($options['tokens']['caching']) ?? null;
 
-        if ($audience !== null && is_string($audience)) {
-            $audience = [$audience];
+        if (isset($options['advanced']['apis']) && is_string($options['advanced']['apis'])) {
+            $audiences = array_values(array_unique(explode("\n", trim(($options['advanced']['apis'])))));
+
+            if (count($audiences) === 0) {
+                $audiences = null;
+            }
         }
 
-        return new SdkConfiguration(
+        if (isset($options['advanced']['organizations']) && is_string($options['advanced']['organizations'])) {
+            $organizations = array_values(array_unique(explode("\n", trim(($options['advanced']['organizations'])))));
+
+            if (count($organizations) === 0) {
+                $organizations = null;
+            }
+        }
+
+        $configuration = new SdkConfiguration(
             strategy: SdkConfiguration::STRATEGY_NONE,
             httpRequestFactory: Factory::getRequestFactory(),
             httpResponseFactory: Factory::getResponseFactory(),
             httpStreamFactory: Factory::getStreamFactory(),
             httpClient: Factory::getClient(),
-            domain: $clientOptions['client_domain'] ?? null,
-            clientId: $clientOptions['client_id'] ?? null,
-            clientSecret: $clientOptions['client_secret'] ?? null,
-            customDomain: $clientAdvancedOptions['custom_domain'] ?? null,
-            audience: $audience,
-            cookieSecret: $cookieOptions['cookie_secret'] ?? null,
-            cookieDomain:  $cookieOptions['cookie_domain'] ?? null,
-            cookiePath: $cookieOptions['cookie_path'] ?? '/',
-            cookieExpires: $cookieOptions['cookie_ttl'] ?? 0,
-            cookieSecure: (bool) ($cookieOptions['cookie_secure'] ?? is_ssl()),
-            cookieSameSite: $cookieOptions['cookie_samesite'] ?? null,
+            domain: $options['client']['domain'] ?? null,
+            clientId: $options['client']['id'] ?? null,
+            clientSecret: $options['client']['secret'] ?? null,
+            customDomain: $options['advanced']['custom_domain'] ?? null,
+            audience: $audiences,
+            organization: $organizations,
+            cookieSecret: $options['cookies']['secret'] ?? null,
+            cookieDomain:  $options['cookies']['domain'] ?? null,
+            cookiePath: $options['cookies']['path'] ?? '/',
+            cookieExpires: $options['cookies']['ttl'] ?? 0,
+            cookieSecure: (bool) ($options['cookies']['secure'] ?? is_ssl()),
+            cookieSameSite: $options['cookies']['samesite'] ?? null,
             redirectUri: get_site_url(null, 'wp-login.php')
         );
+
+        if ($caching !== 'disable') {
+            $cache = new WpObjectCachePool($configuration);
+            $configuration->setTokenCache($cache);
+        }
+
+        return $configuration;
     }
 
     private function getClassInstance(

@@ -44,37 +44,85 @@ final class Authentication extends Base
             return;
         }
 
-        if (! $this->getPlugin()->isEnabled()) {
-            return;
-        }
-
-        if (is_admin()) {
-            return;
-        }
-
         $session = $this->getSdk()->getCredentials();
+        $wordpress = wp_get_current_user();
 
-        // Check if an Auth0 token cookie is available
-        if ($session === null) {
-            // We have no Auth0 session; reset WP session cookie
-            wp_logout();
+        if (! $this->getPlugin()->isEnabled()) {
+            if ($session !== null) {
+                $this->getSdk()->clear();
+            }
+
             return;
         }
 
-        // Verify that the Auth0 token cookie has not expired
-        if ($session->accessTokenExpired) {
-            try {
-                // Token has expired, attempt to renew it.
-                $this->getSdk()->renew();
-            } catch (StateException $e) {
-                // Renewal failed; reset authentication state
-                $this->getSdk()->clear();
-                wp_logout();
+        // Paired sessions enforced
+        if ($this->getPlugin()->getOption('authentication', 'pair_sessions', 0) !== 2) {
+            // ... for all but admins?
+            if ($this->getPlugin()->getOption('authentication', 'pair_sessions', 0) === 0 && is_admin()) {
                 return;
+            }
+
+            // Is an Auth0 session available?
+            if ($session === null) {
+                // No; is there a WordPress session?
+                if ($wordpress->ID !== 0) {
+                    // There is. Invalidate the WP session.
+                    wp_logout();
+                }
+
+                return;
+            }
+
+            // Is an WP session available?
+            if ($wordpress->ID === 0) {
+                // No; is there an Auth0 session?
+                if ($session !== null) {
+                    // There is. Invalidate the WP session.
+                    $this->getSdk()->clear();
+                }
+
+                return;
+            }
+
+            // Verify the WordPress user signed in is linked to the Auth0 Connection 'sub'.
+            if ($wordpress->ID !== 0) {
+                $sub = $session->user['sub'] ?? null;
+
+                if ($sub !== null) {
+                    $match = $this->getAccountByConnection($sub);
+
+                    if (! $match instanceof \WP_User || $match->ID !== $wordpress->ID) {
+                        $this->getSdk()->clear();
+                        wp_logout();
+                        return;
+                    }
+                }
+            }
+
+            // Verify that the Auth0 token cookie has not expired
+            if ($session->accessTokenExpired === true) {
+                if ($this->getPlugin()->getOption('sessions', 'refresh_tokens') === 'true') {
+                    try {
+                        // Token has expired, attempt to refresh it.
+                        $this->getSdk()->renew();
+                        return;
+                    } catch (StateException $e) {
+                        // Refresh failed.
+                    }
+
+                    // Invalidation authentication state.
+                    $this->getSdk()->clear();
+                    wp_logout();
+                    return;
+                }
             }
         }
 
-        // TODO: Verify that user is bound to the sub of the Auth0 token
+        if ($this->getPlugin()->getOption('authentication', 'rolling_sessions') !== 'false') {
+            // TODO: Update PHP SDK rolling session state.
+            // $this->getSdk()->renewSession();
+            wp_set_auth_cookie($wordpress->ID, true);
+        }
     }
 
     public function onAuthCookieValid(
@@ -137,57 +185,70 @@ final class Authentication extends Base
         $error = $this->getSdk()->getRequestParameter('error');
 
         // Are token exchange parameters present?
-        if ($exchange) {
-            // Make sure we don't already have a session
-            if ($this->getSdk()->getCredentials() === null) {
-                try {
-                    // Attempt completion of the authentication flow using
-                    $this->getSdk()->exchange(
-                        code: sanitize_text_field($exchange->code),
-                        state: sanitize_text_field($exchange->state)
-                    );
-                } catch (\Throwable $th) {
-                    // Exchange failed; throw an error
-                    var_dump('ERROR', $th->getMessage());
-                    echo("<p><a href='/wp-login.php'>Again</a></p>");
-                    exit;
-                }
+        if ($exchange !== null) {
+            try {
+                // Attempt completion of the authentication flow using
+                $success = $this->getSdk()->exchange(
+                    code: sanitize_text_field($exchange->code),
+                    state: sanitize_text_field($exchange->state)
+                );
+            } catch (\Throwable $th) {
+                // Exchange failed; throw an error
+                var_dump('ERROR', $th->getMessage());
+                echo("<p><a href='/wp-login.php'>Again</a></p>");
+                exit;
             }
 
+            $session = $this->getSdk()->getCredentials();
+
             // Do we indeed have a session now?
-            if ($this->getSdk()->getCredentials() !== null) {
-                // Redirect with 308 to remove exchange parameters from browser history
-                wp_redirect(get_site_url(null, 'wp-login.php'), 308);
-                exit;
+            if ($session !== null) {
+                $sub = sanitize_text_field($session->user['sub'] ?? null);
+                $email = sanitize_email($session->user['email'] ?? '');
+                $verified = $session->user['email_verified'] ?? null;
+
+                if (strlen($email) === 0) {
+                    $email = null;
+                    $verified = null;
+                }
+
+                $user = $this->resolveIdentity(
+                    sub: $sub,
+                    email: $email,
+                    verified: $verified,
+                );
+
+                if ($user) {
+                    if ($sub !== null) {
+                        $this->addAccountConnection($user, $sub);
+                    }
+
+                    if ($email !== null && $verified === true && $email !== $user->user_email) {
+                        $this->setAccountEmail($user, $email);
+                    }
+
+                    wp_set_current_user($user->ID);
+                    wp_set_auth_cookie($user->ID, true);
+                    do_action('wp_login', $user->user_login, $user);
+                    wp_redirect("/");
+                    exit;
+                }
+
+                // TODO: Display an error here. No matches and could not create account, or account creating was disabled.
             }
         }
 
-        if (! $exchange && $error) {
+        if ($exchange === null && $error !== null) {
             var_dump('ERROR', $error);
             echo("<p<a href='/wp-login.php'>Again</a></p>");
             exit;
         }
 
-        if (! $exchange && ! $error && $this->getSdk()->getCredentials() !== null) {
-            $user = $this->resolveIdentity(
-                sub: $this->getSdk()->getCredentials()?->user['sub'] ?? null,
-                email: $this->getSdk()->getCredentials()?->user['email'] ?? null,
-                emailVerified: $this->getSdk()->getCredentials()?->user['email_verified'] ?? null,
-            );
-
-            if ($user) {
-                wp_set_current_user($user->ID);
-                wp_set_auth_cookie($user->ID);
-                do_action('wp_login', $user->user_login, $user);
+        if ($exchange === null && $error === null) {
+            if (wp_get_current_user()->ID !== 0 || $this->getSdk()->getCredentials() !== null) {
                 wp_redirect("/");
                 exit;
             }
-
-            return;
-        }
-
-        if (! $exchange && ! $error && wp_get_current_user()->ID !== 0) {
-            wp_logout();
         }
 
         wp_redirect($this->getSdk()->login());
@@ -219,61 +280,108 @@ final class Authentication extends Base
     private function resolveIdentity(
         ?string $sub = null,
         ?string $email = null,
-        ?bool $emailVerified = null,
+        ?bool $verified = null,
     ): ?\WP_User {
+        $email = sanitize_email(filter_var($email, FILTER_SANITIZE_EMAIL, FILTER_NULL_ON_FAILURE));
+
         if ($sub !== null) {
             $sub = sanitize_text_field($sub);
+            $found = $this->getAccountByConnection($sub);
 
-            // Search by Auth0 ID in metadata.
+            if ($found instanceof \WP_User) {
+                return $found;
+            }
         }
 
-        if ($email !== null && $emailVerified === true) {
-            $email = sanitize_email($email);
+        // If an email is not marked as verified by the connection, dismiss it.
+        if ($verified !== true || ! is_string($email) || strlen($email) === 0) {
+            $email = null;
+        }
 
-            // Check if an account matches the email address.
+        if ($email !== null) {
             $found = get_user_by('email', $email);
+
+            if ($found instanceof \WP_User) {
+                // Are we allowed to match loosely by email?
+                if ($this->getPlugin()->getOption('accounts', 'matching') !== 'strict') {
+                    return $found;
+                }
+
+                // Are administrators allowed to bypass the check as a failsafe for configuration issues?
+                if ($this->getPlugin()->getOption('authentication', 'pair_sessions', 0) === 0) {
+                    $roles = $found->roles;
+
+                    if (in_array('administrator', $roles, true)) {
+                        return $found;
+                    }
+                }
+            }
         }
 
-        if ($found) {
-            return $found;
+        if ($this->getPlugin()->getOption('accounts', 'missing') === 'create') {
+            $username = ($email !== null) ? explode('@', $email, 2)[0] : explode('|', $sub ?? '', 2)[1];
+            $user = wp_create_user($username, wp_generate_password(rand(12, 64), true, true), $email ?? '');
+
+            if (! $user instanceof \WP_Error) {
+                $user = get_user_by('ID', $user);
+                $role = $this->getPlugin()->getOption('accounts', 'default_role', get_option('default_role'));
+
+                if ($user->role !== $role) {
+                    $user->set_role($role);
+                    wp_update_user($user);
+                }
+
+                return $user;
+            }
         }
 
-        // wp_create_user()
+        return null;
+    }
 
-        exit;
-        // get_user_by('email', )
-        // // $users = new WP_User_Query(array(
-        // //     's' => $yoursearchquery,
-        // //     'meta_query' => array(
-        // //         'relation' => 'OR',
-        // //         array(
-        // //             'key' => 'billing_last_name',
-        // //             'value' => $yoursearchquery,
-        // //             'compare' => 'LIKE'
-        // //         ),
-        // //         array(
-        // //             'key' => 'billing_first_name',
-        // //             'value' => $yoursearchquery,
-        // //             'compare' => 'LIKE'
-        // //         )
-        // //     )
-        // // ));
+    private function addAccountConnection(
+        \WP_User $user,
+        string $sub
+    ): void {
+        $connections = get_user_meta($user->ID, 'auth0_connections', true);
 
-        // $matches = new WP_User_Query();
+        if (! is_array($connections)) {
+            $connections = [];
+        }
 
-        // if ( ! empty( $user_query->get_results() ) ) {
-        //     foreach ( $user_query->get_results() as $user ) {
-        //         echo '<p>' . $user->display_name . '</p>';
-        //     }
-        // } else {
-        //     echo 'No users found.';
-        // }
+        if ( ! in_array($sub, $connections, true)) {
+            $connections[] = $sub;
+            update_user_meta($user->ID, 'auth0_connections', array_values(array_unique($connections)));
+        }
+    }
 
-        // add_user_meta();
-        // update_user_meta();
-        // delete_user_meta();
-        // WP_User_Query
+    private function setAccountEmail(
+        \WP_User $user,
+        string $email
+    ): ?\WP_User {
+        if ($user->user_email !== $email) {
+            $user->user_email = $email;
+            $status = wp_update_user($user);
 
-        // wp_set_current_user();
+            if ($status instanceof \WP_Error) {
+                return null;
+            }
+        }
+
+        return $user;
+    }
+
+    private function getAccountByConnection(
+        string $connection
+    ): ?\WP_User {
+        $query = [
+            ['key' => 'auth0_connections', 'value' => '"' . $connection . '"', 'compare' => 'LIKE'],
+        ];
+        $found = get_users(['number' => 1, 'meta_query' => $query]);
+
+        if (is_array($found) && count($found) >= 1) {
+            return $found[0];
+        }
+
+        return null;
     }
 }
