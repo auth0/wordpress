@@ -690,10 +690,10 @@ final class Configuration extends Base
     private function renderOption(
         string $element,
         string $name,
+        mixed $value,
         string $type = 'text',
         string $description = '',
         string $placeholder = '',
-        mixed $value,
         ?array $select = null,
         ?bool $disabled = null
     ): void {
