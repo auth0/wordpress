@@ -188,7 +188,10 @@ trait MessageTrait
 
         $returnValues = [];
         foreach ($values as $v) {
-            if ((! is_numeric($v) && ! is_string($v)) || preg_match("@^[ \t\x21-\x7E\x80-\xFF]*$@", (string) $v) !== 1) {
+            if ((! is_numeric($v) && ! is_string($v)) || preg_match(
+                "@^[ \t\x21-\x7E\x80-\xFF]*$@",
+                (string) $v
+            ) !== 1) {
                 throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
             }
             $returnValues[] = trim((string) $v, " \t");

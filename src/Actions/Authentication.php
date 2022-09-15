@@ -194,7 +194,10 @@ final class Authentication extends Base
             try {
                 // Attempt completion of the authentication flow using
                 $success = $this->getSdk()
-                    ->exchange(code: sanitize_text_field($exchange->code), state: sanitize_text_field($exchange->state));
+                    ->exchange(
+                        code: sanitize_text_field($exchange->code),
+                        state: sanitize_text_field($exchange->state)
+                    );
             } catch (\Throwable $th) {
                 // Exchange failed; throw an error
                 var_dump('ERROR', $th->getMessage());

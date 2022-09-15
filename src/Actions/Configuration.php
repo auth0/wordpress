@@ -403,13 +403,15 @@ final class Configuration extends Base
                     $optionEnabled = $option['enabled'] ?? null;
 
                     if (is_array($optionDescription)) {
-                        $optionDescription = call_user_func_array([$this, $optionDescription[0]],
+                        $optionDescription = call_user_func_array(
+                            [$this, $optionDescription[0]],
                             array_slice($optionDescription, 1)
                         );
                     }
 
                     if (is_array($optionPlaceholder)) {
-                        $optionPlaceholder = call_user_func_array([$this, $optionPlaceholder[0]],
+                        $optionPlaceholder = call_user_func_array(
+                            [$this, $optionPlaceholder[0]],
                             array_slice($optionPlaceholder, 1)
                         );
                     }
