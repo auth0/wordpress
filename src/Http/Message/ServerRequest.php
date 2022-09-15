@@ -26,7 +26,9 @@ final class ServerRequest implements ServerRequestInterface
 
     private array $queryParams = [];
 
-    /** @var UploadedFileInterface[] */
+    /**
+     * @var UploadedFileInterface[]
+     */
     private array $uploadedFiles = [];
 
     /**
@@ -54,7 +56,7 @@ final class ServerRequest implements ServerRequestInterface
         $this->setHeaders($headers);
         $this->protocol = $version;
 
-        if (!$this->hasHeader('Host')) {
+        if (! $this->hasHeader('Host')) {
             $this->updateHostFromUri();
         }
 
@@ -132,7 +134,7 @@ final class ServerRequest implements ServerRequestInterface
 
     public function withParsedBody($data): static
     {
-        if (!\is_array($data) && !\is_object($data) && null !== $data) {
+        if (! \is_array($data) && ! \is_object($data) && $data !== null) {
             throw new InvalidArgumentException('First parameter to withParsedBody MUST be object, array or null');
         }
 
@@ -152,7 +154,7 @@ final class ServerRequest implements ServerRequestInterface
 
     public function getAttribute($attribute, $default = null): mixed
     {
-        if (!array_key_exists($attribute, $this->attributes)) {
+        if (! array_key_exists($attribute, $this->attributes)) {
             return $default;
         }
 
@@ -169,7 +171,7 @@ final class ServerRequest implements ServerRequestInterface
 
     public function withoutAttribute($attribute): self
     {
-        if (!array_key_exists($attribute, $this->attributes)) {
+        if (! array_key_exists($attribute, $this->attributes)) {
             return $this;
         }
 

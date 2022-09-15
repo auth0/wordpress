@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Http\Message;
 
-use Stringable;
 use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
+use Stringable;
 
 final class Uri implements UriInterface, Stringable
 {
     /**
      * @var array<string, int>
      */
-    private const SCHEMES = ['http' => 80, 'https' => 443];
+    private const SCHEMES = [
+        'http' => 80,
+        'https' => 443,
+    ];
 
     /**
      * @var string
@@ -39,9 +42,8 @@ final class Uri implements UriInterface, Stringable
 
     private string $fragment = '';
 
-    public function __construct(
-        string $uri = ''
-    ) {
+    public function __construct(string $uri = '')
+    {
         if ($uri !== '') {
             $parts = parse_url($uri);
 
@@ -49,9 +51,17 @@ final class Uri implements UriInterface, Stringable
                 throw new InvalidArgumentException(sprintf('Unable to parse URI: "%s"', $uri));
             }
 
-            $this->scheme = isset($parts['scheme']) ? strtr($parts['scheme'], 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') : '';
+            $this->scheme = isset($parts['scheme']) ? strtr(
+                $parts['scheme'],
+                'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                'abcdefghijklmnopqrstuvwxyz'
+            ) : '';
             $this->userInfo = $parts['user'] ?? '';
-            $this->host = isset($parts['host']) ? strtr($parts['host'], 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') : '';
+            $this->host = isset($parts['host']) ? strtr(
+                $parts['host'],
+                'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                'abcdefghijklmnopqrstuvwxyz'
+            ) : '';
             $this->port = isset($parts['port']) ? $this->filterPort($parts['port']) : null;
             $this->path = isset($parts['path']) ? $this->filterPath($parts['path']) : '';
             $this->query = isset($parts['query']) ? $this->filterQueryAndFragment($parts['query']) : '';
@@ -124,7 +134,7 @@ final class Uri implements UriInterface, Stringable
 
     public function withScheme($scheme): self
     {
-        if (!is_string($scheme)) {
+        if (! is_string($scheme)) {
             throw new InvalidArgumentException('Scheme must be a string');
         }
 
@@ -141,10 +151,8 @@ final class Uri implements UriInterface, Stringable
         return $new;
     }
 
-    public function withUserInfo(
-        $user,
-        $password = null
-    ): self {
+    public function withUserInfo($user, $password = null): self
+    {
         $info = $user;
 
         if ($password !== null && $password !== '') {
@@ -163,7 +171,7 @@ final class Uri implements UriInterface, Stringable
 
     public function withHost($host): self
     {
-        if (!is_string($host)) {
+        if (! is_string($host)) {
             throw new InvalidArgumentException('Host must be a string');
         }
 
@@ -279,18 +287,18 @@ final class Uri implements UriInterface, Stringable
 
     private static function isNonStandardPort(string $scheme, int $port): bool
     {
-        return !isset(self::SCHEMES[$scheme]) || $port !== self::SCHEMES[$scheme];
+        return ! isset(self::SCHEMES[$scheme]) || $port !== self::SCHEMES[$scheme];
     }
 
     private function filterPort($port): ?int
     {
-        if (null === $port) {
+        if ($port === null) {
             return null;
         }
 
         $port = (int) $port;
 
-        if (0 > $port || 0xffff < $port) {
+        if ($port < 0 || $port > 0xffff) {
             throw new InvalidArgumentException(\sprintf('Invalid port: %d. Must be between 0 and 65535', $port));
         }
 
@@ -299,20 +307,28 @@ final class Uri implements UriInterface, Stringable
 
     private function filterPath($path): ?string
     {
-        if (!is_string($path)) {
+        if (! is_string($path)) {
             throw new InvalidArgumentException('Path must be a string');
         }
 
-        return preg_replace_callback('/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/]++|%(?![A-Fa-f0-9]{2}))/', static fn (array $match): string => self::rawurlencodeMatchZero($match), $path);
+        return preg_replace_callback(
+            '/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/]++|%(?![A-Fa-f0-9]{2}))/',
+            static fn (array $match): string => self::rawurlencodeMatchZero($match),
+            $path
+        );
     }
 
     private function filterQueryAndFragment($str): ?string
     {
-        if (!is_string($str)) {
+        if (! is_string($str)) {
             throw new InvalidArgumentException('Query and fragment must be a string');
         }
 
-        return preg_replace_callback('/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/\?]++|%(?![A-Fa-f0-9]{2}))/', static fn (array $match): string => self::rawurlencodeMatchZero($match), $str);
+        return preg_replace_callback(
+            '/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/\?]++|%(?![A-Fa-f0-9]{2}))/',
+            static fn (array $match): string => self::rawurlencodeMatchZero($match),
+            $str
+        );
     }
 
     private static function rawurlencodeMatchZero(array $match): string

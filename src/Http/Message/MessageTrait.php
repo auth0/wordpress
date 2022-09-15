@@ -10,11 +10,15 @@ use Psr\Http\Message\StreamInterface;
 
 trait MessageTrait
 {
-    /** @var array<string, string[]> Map of all registered headers, as original name => array of values */
+    /**
+     * @var array<string, string[]> Map of all registered headers, as original name => array of values
+     */
     private array $headers = [];
 
-    /** @var array<string, string> Map of lowercase header name => original name at registration */
-    private array $headerNames  = [];
+    /**
+     * @var array<string, string> Map of lowercase header name => original name at registration
+     */
+    private array $headerNames = [];
 
     private string $protocol = '1.1';
 
@@ -47,7 +51,11 @@ trait MessageTrait
 
     public function hasHeader($name): bool
     {
-        return isset($this->headerNames[strtr((string) $name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')]);
+        return isset($this->headerNames[strtr(
+            (string) $name,
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            'abcdefghijklmnopqrstuvwxyz'
+        )]);
     }
 
     /**
@@ -88,12 +96,14 @@ trait MessageTrait
 
     public function withAddedHeader($name, $value): MessageInterface
     {
-        if (!is_string($name) || trim($name) === '') {
+        if (! is_string($name) || trim($name) === '') {
             throw new InvalidArgumentException('Header name must be an RFC 7230 compatible string.');
         }
 
         $new = clone $this;
-        $new->setHeaders([$name => $value]);
+        $new->setHeaders([
+            $name => $value,
+        ]);
 
         return $new;
     }
@@ -125,9 +135,8 @@ trait MessageTrait
         return $new;
     }
 
-    private function setHeaders(
-        array $headers
-    ): void {
+    private function setHeaders(array $headers): void
+    {
         foreach ($headers as $header => $value) {
             if (is_int($header)) {
                 $header = (string) $header;
@@ -146,9 +155,8 @@ trait MessageTrait
         }
     }
 
-    private function normalizeHeaderKey(
-        string $header
-    ): string {
+    private function normalizeHeaderKey(string $header): string
+    {
         return strtr($header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
     }
 
@@ -157,12 +165,15 @@ trait MessageTrait
      */
     private function sanitizeHeader($header, $values): array
     {
-        if (!is_string($header) || preg_match("#^[!\#$%&'*+.^_`|~0-9A-Za-z-]+$#", $header) !== 1) {
+        if (! is_string($header) || preg_match("#^[!\#$%&'*+.^_`|~0-9A-Za-z-]+$#", $header) !== 1) {
             throw new InvalidArgumentException('Header name must be an RFC 7230 compatible string.');
         }
 
-        if (!is_array($values)) {
-            if ((!is_numeric($values) && !is_string($values)) || preg_match("@^[ \t\x21-\x7E\x80-\xFF]*$@", (string) $values) !== 1) {
+        if (! is_array($values)) {
+            if ((! is_numeric($values) && ! is_string($values)) || preg_match(
+                "@^[ \t\x21-\x7E\x80-\xFF]*$@",
+                (string) $values
+            ) !== 1) {
                 throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
             }
 
@@ -170,12 +181,14 @@ trait MessageTrait
         }
 
         if (empty($values)) {
-            throw new InvalidArgumentException('Header values must be a string or an array of strings, empty array given.');
+            throw new InvalidArgumentException(
+                'Header values must be a string or an array of strings, empty array given.'
+            );
         }
 
         $returnValues = [];
         foreach ($values as $v) {
-            if ((!is_numeric($v) && !is_string($v)) || preg_match("@^[ \t\x21-\x7E\x80-\xFF]*$@", (string) $v) !== 1) {
+            if ((! is_numeric($v) && ! is_string($v)) || preg_match("@^[ \t\x21-\x7E\x80-\xFF]*$@", (string) $v) !== 1) {
                 throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
             }
             $returnValues[] = trim((string) $v, " \t");

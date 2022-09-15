@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress;
 
-use Auth0\WordPress\Actions\Base as Actions;
-use Auth0\WordPress\Filters\Base as Filters;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\WordPress\Actions\Authentication as AuthenticationActions;
+use Auth0\WordPress\Actions\Base as Actions;
 use Auth0\WordPress\Actions\Configuration as ConfigurationActions;
 use Auth0\WordPress\Cache\WpObjectCachePool;
+use Auth0\WordPress\Filters\Base as Filters;
 use Auth0\WordPress\Http\Factory;
 
 final class Plugin
@@ -18,10 +18,7 @@ final class Plugin
     /**
      * @var array<class-string<Actions>>
      */
-    private const ACTIONS = [
-        AuthenticationActions::class,
-        ConfigurationActions::class,
-    ];
+    private const ACTIONS = [AuthenticationActions::class, ConfigurationActions::class];
 
     /**
      * @var array<class-string<Filters>>
@@ -30,8 +27,10 @@ final class Plugin
 
     private array $registry = [];
 
-    public function __construct(private ?Auth0 $auth0, private ?SdkConfiguration $sdkConfiguration)
-    {
+    public function __construct(
+        private ?Auth0 $auth0,
+        private ?SdkConfiguration $sdkConfiguration
+    ) {
     }
 
     /**
@@ -46,9 +45,8 @@ final class Plugin
     /**
      * Assign a Auth0\SDK\Auth0 instance for the plugin to use.
      */
-    public function setSdk(
-        Auth0 $auth0
-    ): self {
+    public function setSdk(Auth0 $auth0): self
+    {
         $this->auth0 = $auth0;
         return $this;
     }
@@ -65,9 +63,8 @@ final class Plugin
     /**
      * Assign a Auth0\SDK\Configuration\SdkConfiguration instance for the plugin to use.
      */
-    public function setConfiguration(
-        SdkConfiguration $sdkConfiguration
-    ): self {
+    public function setConfiguration(SdkConfiguration $sdkConfiguration): self
+    {
         $this->sdkConfiguration = $sdkConfiguration;
         return $this;
     }
@@ -102,11 +99,11 @@ final class Plugin
     public function run(): self
     {
         foreach (self::FILTERS as $filter) {
-            call_user_func([ $this->getClassInstance((string) $filter), 'register']);
+            call_user_func([$this->getClassInstance((string) $filter), 'register']);
         }
 
         foreach (self::ACTIONS as $action) {
-            call_user_func([ $this->getClassInstance((string) $action), 'register']);
+            call_user_func([$this->getClassInstance((string) $action), 'register']);
         }
 
         return $this;
@@ -145,7 +142,7 @@ final class Plugin
     {
         $clientOptions = get_option('auth0_state', []);
         $enabled = $clientOptions['enable'] ?? 'false';
-        return ($enabled === 'true');
+        return $enabled === 'true';
     }
 
     public function getOption(
@@ -209,7 +206,7 @@ final class Plugin
             audience: $audiences,
             organization: $organizations,
             cookieSecret: $options['cookies']['secret'] ?? null,
-            cookieDomain:  $options['cookies']['domain'] ?? null,
+            cookieDomain: $options['cookies']['domain'] ?? null,
             cookiePath: $options['cookies']['path'] ?? '/',
             cookieExpires: $options['cookies']['ttl'] ?? 0,
             cookieSecure: (bool) ($options['cookies']['secure'] ?? is_ssl()),
@@ -225,9 +222,8 @@ final class Plugin
         return $sdkConfiguration;
     }
 
-    private function getClassInstance(
-        string $class
-    ) {
+    private function getClassInstance(string $class)
+    {
         if (! array_key_exists($class, $this->registry)) {
             $this->registry[$class] = new $class($this);
         }

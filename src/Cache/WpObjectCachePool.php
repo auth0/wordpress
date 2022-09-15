@@ -22,8 +22,10 @@ final class WpObjectCachePool implements CacheItemPoolInterface
 
     private array $deferred = [];
 
-    public function __construct(SdkConfiguration $sdkConfiguration, private string $group = 'auth0')
-    {
+    public function __construct(
+        SdkConfiguration $sdkConfiguration,
+        private string $group = 'auth0'
+    ) {
     }
 
     public function __destruct()
@@ -55,7 +57,8 @@ final class WpObjectCachePool implements CacheItemPoolInterface
 
     public function hasItem(string $key): bool
     {
-        return $this->getItem($key)->isHit();
+        return $this->getItem($key)
+            ->isHit();
     }
 
     public function clear(): bool
@@ -142,7 +145,7 @@ final class WpObjectCachePool implements CacheItemPoolInterface
 
         $value = unserialize($value);
 
-        if (false === $value && 'b:0;' !== $value) {
+        if ($value === false && $value !== 'b:0;') {
             return WpObjectCacheItem::miss($key);
         }
 

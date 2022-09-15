@@ -18,10 +18,10 @@ final class Client implements ClientInterface
     {
     }
 
-    public function sendRequest(
-        RequestInterface $request
-    ): ResponseInterface {
-        $request->getBody()->rewind();
+    public function sendRequest(RequestInterface $request): ResponseInterface
+    {
+        $request->getBody()
+            ->rewind();
 
         $destinationUri = (string) $request->getUri();
         $arguments = $this->getArguments($request);
@@ -44,7 +44,8 @@ final class Client implements ClientInterface
             $response = $response->withHeader($header, $value);
         }
 
-        $response->getBody()->rewind();
+        $response->getBody()
+            ->rewind();
 
         return $response;
     }

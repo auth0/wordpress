@@ -7,8 +7,11 @@ namespace Auth0\WordPress\Actions;
 final class Configuration extends Base
 {
     public const CONST_SECTION_PREFIX = 'auth0';
+
     public const CONST_PAGE_GENERAL = 'auth0_configuration';
+
     public const CONST_PAGE_SYNC = 'auth0_sync';
+
     public const CONST_PAGE_ADVANCED = 'auth0_advanced';
 
     protected array $registry = [
@@ -36,9 +39,9 @@ final class Configuration extends Base
                             'select' => [
                                 'false' => 'Disabled',
                                 'true' => 'Enabled',
-                            ]
-                        ]
-                    ]
+                            ],
+                        ],
+                    ],
                 ],
                 'accounts' => [
                     'title' => 'WordPress Account Management',
@@ -52,7 +55,7 @@ final class Configuration extends Base
                             'select' => [
                                 'flexible' => 'Flexible: Match Verified Email Addresses to Accounts',
                                 'strict' => 'Strict: Match Unique Connections to Accounts',
-                            ]
+                            ],
                         ],
                         'missing' => [
                             'title' => 'Absentee Accounts',
@@ -62,14 +65,14 @@ final class Configuration extends Base
                             'select' => [
                                 'reject' => 'Deny access',
                                 'create' => 'Create account',
-                            ]
+                            ],
                         ],
                         'default_role' => [
                             'title' => 'Default Role',
                             'type' => 'text',
                             'enabled' => 'isPluginReady',
                             'description' => 'The role to assign new WordPress accounts created by the plugin.',
-                            'select' => 'getRoleOptions'
+                            'select' => 'getRoleOptions',
                         ],
                         'passwordless' => [
                             'title' => 'Allow Passwordless',
@@ -79,7 +82,7 @@ final class Configuration extends Base
                             'select' => [
                                 'true' => 'Enabled',
                                 'false' => 'Disabled',
-                            ]
+                            ],
                         ],
                     ],
                 ],
@@ -91,23 +94,23 @@ final class Configuration extends Base
                             'title' => 'Client ID',
                             'type' => 'text',
                             'sanitizer' => 'string',
-                            'description' => 'Required. Must be configured as a <a href="https://auth0.com/docs/get-started/applications" target="_blank">Regular Web Application</a>.'
+                            'description' => 'Required. Must be configured as a <a href="https://auth0.com/docs/get-started/applications" target="_blank">Regular Web Application</a>.',
                         ],
                         'secret' => [
                             'title' => 'Client Secret',
                             'type' => 'password',
                             'sanitizer' => 'string',
-                            'description' => 'Required.'
+                            'description' => 'Required.',
                         ],
                         'domain' => [
                             'title' => 'Domain',
                             'type' => 'text',
                             'sanitizer' => 'domain',
-                            'description' => 'Required.'
-                        ]
-                    ]
-                ]
-            ]
+                            'description' => 'Required.',
+                        ],
+                    ],
+                ],
+            ],
         ],
         self::CONST_PAGE_SYNC => [
             'title' => 'Auth0 — Sync Options',
@@ -122,7 +125,7 @@ final class Configuration extends Base
                             'type' => 'text',
                             'enabled' => 'isPluginReady',
                             'sanitizer' => 'string',
-                            'description' => 'The ID of a Database Connection to synchronise WordPresss with. Should begin with <code>con_</code>.'
+                            'description' => 'The ID of a Database Connection to synchronise WordPresss with. Should begin with <code>con_</code>.',
                         ],
                         'schedule' => [
                             'title' => 'Background Frequency',
@@ -134,7 +137,7 @@ final class Configuration extends Base
                                 'hourly' => 'Hourly',
                                 'daily' => 'Daily',
                                 'weekly' => 'Weekly',
-                            ]
+                            ],
                         ],
                         'push' => [
                             'title' => 'On-Demand Changes',
@@ -145,11 +148,11 @@ final class Configuration extends Base
                                 'disable' => 'Disabled',
                                 'enable_email' => 'Enabled for email addresses',
                                 'enable' => 'Enabled for all changes',
-                            ]
-                        ]
-                    ]
+                            ],
+                        ],
+                    ],
                 ],
-            ]
+            ],
         ],
         self::CONST_PAGE_ADVANCED => [
             'title' => 'Auth0 — Advanced Options',
@@ -168,7 +171,7 @@ final class Configuration extends Base
                                 0 => 'Enabled for Non-Administrators',
                                 1 => 'Enabled for All (Recommended)',
                                 2 => 'Disabled',
-                            ]
+                            ],
                         ],
                         'allow_fallback' => [
                             'title' => 'WordPress Login Fallback',
@@ -178,9 +181,9 @@ final class Configuration extends Base
                             'select' => [
                                 'true' => 'Enabled',
                                 'false' => 'Disabled',
-                            ]
+                            ],
                         ],
-                    ]
+                    ],
                 ],
                 'client_advanced' => [
                     'title' => 'Additional Application Configuration',
@@ -191,23 +194,23 @@ final class Configuration extends Base
                             'type' => 'text',
                             'enabled' => 'isPluginReady',
                             'sanitizer' => 'domain',
-                            'description' => 'Configure to authenticate using a <a href="https://auth0.com/docs/customize/custom-domains" target="_blank">custom domain</a>.'
+                            'description' => 'Configure to authenticate using a <a href="https://auth0.com/docs/customize/custom-domains" target="_blank">custom domain</a>.',
                         ],
                         'apis' => [
                             'title' => 'API Audiences',
                             'type' => 'textarea',
                             'enabled' => 'isPluginReady',
                             'sanitizer' => 'string',
-                            'description' => 'A list of <a href="https://auth0.com/docs/get-started/apis" target="_blank">Auth0 API Audiences</a> to allow, each on its own line. The top entry will be used by default.'
+                            'description' => 'A list of <a href="https://auth0.com/docs/get-started/apis" target="_blank">Auth0 API Audiences</a> to allow, each on its own line. The top entry will be used by default.',
                         ],
                         'organizations' => [
                             'title' => 'Organizations',
                             'type' => 'textarea',
                             'enabled' => 'isPluginReady',
                             'sanitizer' => 'orgs',
-                            'description' => 'A list of <a href="https://auth0.com/docs/manage-users/organizations" target="_blank">Organization IDs</a> to allow, each on its own line beginning with <code>org_</code>. The top entry will be used by default.'
+                            'description' => 'A list of <a href="https://auth0.com/docs/manage-users/organizations" target="_blank">Organization IDs</a> to allow, each on its own line beginning with <code>org_</code>. The top entry will be used by default.',
                         ],
-                    ]
+                    ],
                 ],
                 'tokens' => [
                     'title' => 'Token Handling',
@@ -220,10 +223,10 @@ final class Configuration extends Base
                             'description' => 'Disabling caching will negatively affect performance.',
                             'select' => [
                                 'wp_object_cache' => 'WP_Object_Cache (Recommended)',
-                                'disable' => 'Disabled'
-                            ]
+                                'disable' => 'Disabled',
+                            ],
                         ],
-                    ]
+                    ],
                 ],
                 'sessions' => [
                     'title' => 'Sessions',
@@ -236,8 +239,8 @@ final class Configuration extends Base
                             'description' => 'PHP Sessions require external configuration to work <a href="https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html#php-session-handling" target="_blank">securely</a> and <a href="https://www.php.net/manual/en/features.session.security.management.php" target="_blank">reliably</a>.',
                             'select' => [
                                 'cookies' => 'Encrypted Cookies',
-                                'sessions' => 'PHP Native Sessions (Recommended)'
-                            ]
+                                'sessions' => 'PHP Native Sessions (Recommended)',
+                            ],
                         ],
                         'session_ttl' => [
                             'title' => 'Session Expires',
@@ -256,7 +259,7 @@ final class Configuration extends Base
                                 86400 * 7 => '1 week',
                                 86400 * 14 => '2 weeks',
                                 86400 * 30 => '1 month',
-                            ]
+                            ],
                         ],
                         'rolling_sessions' => [
                             'title' => 'Use Rolling Sessions',
@@ -266,7 +269,7 @@ final class Configuration extends Base
                             'select' => [
                                 'true' => 'Enabled',
                                 'false' => 'Disabled',
-                            ]
+                            ],
                         ],
                         'refresh_tokens' => [
                             'title' => 'Use Refresh Tokens',
@@ -276,9 +279,9 @@ final class Configuration extends Base
                             'select' => [
                                 'false' => 'Disabled',
                                 'true' => 'Enabled',
-                            ]
+                            ],
                         ],
-                    ]
+                    ],
                 ],
                 'cookies' => [
                     'title' => 'Session Cookies',
@@ -287,21 +290,21 @@ final class Configuration extends Base
                         'secret' => [
                             'title' => 'Secret',
                             'type' => 'password',
-                            'description' => 'Required. Changes will log all users out.'
+                            'description' => 'Required. Changes will log all users out.',
                         ],
                         'domain' => [
                             'title' => 'Domain',
                             'type' => 'text',
                             'enabled' => 'isPluginReady',
                             'description' => ['getOptionDescription', 'cookie_domain'],
-                            'placeholder' => ['getOptionPlaceholder', 'cookie_domain']
+                            'placeholder' => ['getOptionPlaceholder', 'cookie_domain'],
                         ],
                         'path' => [
                             'title' => 'Path',
                             'type' => 'text',
                             'enabled' => 'isPluginReady',
                             'description' => 'Defaults to <code>/</code>.',
-                            'placeholder' => '/'
+                            'placeholder' => '/',
                         ],
                         'secure' => [
                             'title' => 'Require SSL',
@@ -311,7 +314,7 @@ final class Configuration extends Base
                             'select' => [
                                 'false' => 'Disabled',
                                 'true' => 'Enabled',
-                            ]
+                            ],
                         ],
                         'samesite' => [
                             'title' => 'Same-Site',
@@ -321,7 +324,7 @@ final class Configuration extends Base
                                 'lax' => 'Lax (Suggested)',
                                 'strict' => 'Strict',
                                 'none' => 'None',
-                            ]
+                            ],
                         ],
                         'ttl' => [
                             'title' => 'Expires',
@@ -339,11 +342,11 @@ final class Configuration extends Base
                                 86400 * 7 => '1 week',
                                 86400 * 14 => '2 weeks',
                                 86400 * 30 => '1 month',
-                            ]
+                            ],
                         ],
-                    ]
+                    ],
                 ],
-            ]
+            ],
         ],
     ];
 
@@ -359,15 +362,20 @@ final class Configuration extends Base
                     option_name: $sectionId,
                     args: [
                         'type' => $sectionType,
-                        'sanitize_callback' => [$this, $page['callback'] . str_replace(' ', '', ucwords(str_replace(['auth0_', '_'], ' ', $sectionId)))] ?? '',
-                        'show_in_rest' => false
+                        'sanitize_callback' => [
+                            $this,
+                            $page['callback'] . str_replace(' ', '', ucwords(
+                                str_replace(['auth0_', '_'], ' ', $sectionId)
+                            )),
+                        ] ?? '',
+                        'show_in_rest' => false,
                     ]
                 );
 
                 add_settings_section(
                     id: $sectionId,
                     title: $section['title'],
-                    callback: function () use ($section) {
+                    callback: static function () use ($section) {
                         echo $section['description'] ?? '';
                     },
                     page: $pageId
@@ -395,11 +403,15 @@ final class Configuration extends Base
                     $optionEnabled = $option['enabled'] ?? null;
 
                     if (is_array($optionDescription)) {
-                        $optionDescription = call_user_func_array([$this, $optionDescription[0]], array_slice($optionDescription, 1));
+                        $optionDescription = call_user_func_array([$this, $optionDescription[0]],
+                            array_slice($optionDescription, 1)
+                        );
                     }
 
                     if (is_array($optionPlaceholder)) {
-                        $optionPlaceholder = call_user_func_array([$this, $optionPlaceholder[0]], array_slice($optionPlaceholder, 1));
+                        $optionPlaceholder = call_user_func_array([$this, $optionPlaceholder[0]],
+                            array_slice($optionPlaceholder, 1)
+                        );
                     }
 
                     if (is_string($optionDisabled)) {
@@ -416,8 +428,17 @@ final class Configuration extends Base
 
                     add_settings_field(
                         id: $elementId,
-                        title:  $option['title'],
-                        callback: function () use ($elementId, $optionName, $optionType, $optionDescription, $optionPlaceholder, $optionValue, $optionSelections, $optionDisabled) {
+                        title: $option['title'],
+                        callback: function () use (
+                            $elementId,
+                            $optionName,
+                            $optionType,
+                            $optionDescription,
+                            $optionPlaceholder,
+                            $optionValue,
+                            $optionSelections,
+                            $optionDisabled
+                        ) {
                             $this->renderOption(
                                 element: $elementId,
                                 name: $optionName,
@@ -433,7 +454,7 @@ final class Configuration extends Base
                         section: $sectionId,
                         args: [
                             'label_for' => $elementId,
-                            'description' => $option['description'] ?? ''
+                            'description' => $option['description'] ?? '',
                         ]
                     );
                 }
@@ -451,7 +472,7 @@ final class Configuration extends Base
             'enable' => $this->sanitizeBoolean((string) $input['enable'] ?? '') ?? '',
         ];
 
-        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
     public function onUpdateAccounts(?array $input): ?array
@@ -467,7 +488,7 @@ final class Configuration extends Base
             'passwordless' => $this->sanitizeBoolean((string) $input['passwordless'] ?? '') ?? '',
         ];
 
-        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
     public function onUpdateClient(?array $input): ?array
@@ -479,10 +500,10 @@ final class Configuration extends Base
         $sanitized = [
             'id' => $this->sanitizeString($input['id'] ?? '') ?? '',
             'secret' => $this->sanitizeString($input['secret'] ?? '') ?? '',
-            'domain' => $this->sanitizeDomain($input['domain'] ?? '') ?? ''
+            'domain' => $this->sanitizeDomain($input['domain'] ?? '') ?? '',
         ];
 
-        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
     public function onUpdateSync(?array $input): ?array
@@ -494,10 +515,10 @@ final class Configuration extends Base
         $sanitized = [
             'database' => $this->sanitizeString($input['database'] ?? '') ?? '',
             'schedule' => $this->sanitizeString($input['schedule'] ?? '') ?? '',
-            'push' => $this->sanitizeString($input['push'] ?? '') ?? ''
+            'push' => $this->sanitizeString($input['push'] ?? '') ?? '',
         ];
 
-        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
     public function onUpdateAuthentication(?array $input): ?array
@@ -511,7 +532,7 @@ final class Configuration extends Base
             'allow_fallback' => $this->sanitizeBoolean((string) $input['allow_fallback'] ?? '') ?? '',
         ];
 
-        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
     public function onUpdateClientAdvanced(?array $input): ?array
@@ -523,10 +544,10 @@ final class Configuration extends Base
         $sanitized = [
             'custom_domain' => $this->sanitizeDomain($input['custom_domain'] ?? '') ?? '',
             'apis' => $this->sanitizeString($input['apis'] ?? '') ?? '',
-            'organizations' => $this->sanitizeString($input['organizations'] ?? '') ?? ''
+            'organizations' => $this->sanitizeString($input['organizations'] ?? '') ?? '',
         ];
 
-        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
     public function onUpdateTokens(?array $input): ?array
@@ -536,10 +557,10 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'caching' => $this->sanitizeString($input['caching'] ?? '') ?? ''
+            'caching' => $this->sanitizeString($input['caching'] ?? '') ?? '',
         ];
 
-        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
     public function onUpdateSessions(?array $input): ?array
@@ -555,7 +576,7 @@ final class Configuration extends Base
             'refresh_tokens' => $this->sanitizeBoolean((string) $input['refresh_tokens'] ?? '') ?? '',
         ];
 
-        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
     public function onUpdateCookies(?array $input): ?array
@@ -592,7 +613,7 @@ final class Configuration extends Base
             }
         }
 
-        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
     public function onMenu(): void
@@ -602,7 +623,7 @@ final class Configuration extends Base
             'Auth0', // Menu title
             'manage_options', // User capability necessary to see
             'auth0', // Unique menu slug
-            function () {
+            static function () {
                 do_action('auth0_ui_configuration');
             },
             'dashicons-shield-alt', // Dashicon class name for font icon, or a base64-encoded SVG beginning with "data:image/svg+xml;base64,".
@@ -625,7 +646,7 @@ final class Configuration extends Base
             'Sync',
             'manage_options',
             'auth0_sync',
-            function () {
+            static function () {
                 do_action('auth0_ui_sync');
             },
             $this->getPriority('MENU_POSITION_SYNC', 1, 'AUTH0_ADMIN')
@@ -637,7 +658,7 @@ final class Configuration extends Base
             'Advanced',
             'manage_options',
             'auth0_advanced',
-            function () {
+            static function () {
                 do_action('auth0_ui_advanced');
             },
             $this->getPriority('MENU_POSITION_ADVANCED', 2, 'AUTH0_ADMIN')
@@ -646,12 +667,14 @@ final class Configuration extends Base
 
     public function isPluginReady(): bool
     {
-        return $this->getPlugin()->isReady();
+        return $this->getPlugin()
+            ->isReady();
     }
 
     public function isPluginEnabled(): bool
     {
-        return $this->getPlugin()->isEnabled();
+        return $this->getPlugin()
+            ->isEnabled();
     }
 
     public function renderConfiguration(): void
@@ -701,7 +724,21 @@ final class Configuration extends Base
             $placeholder = ' placeholder="' . $placeholder . '"';
         }
 
-        $treatAsText = ['color', 'date', 'datetime-local', 'email', 'password', 'month', 'number', 'search', 'tel', 'text', 'time', 'url', 'week'];
+        $treatAsText = [
+            'color',
+            'date',
+            'datetime-local',
+            'email',
+            'password',
+            'month',
+            'number',
+            'search',
+            'tel',
+            'text',
+            'time',
+            'url',
+            'week',
+        ];
         $disabledString = '';
 
         if ($disabled !== null) {
@@ -758,16 +795,17 @@ final class Configuration extends Base
         }
 
         if ($type === 'boolean') {
-            echo '<input name="' . $name . '" type="checkbox" id="' . $element . '" value="true" ' . checked((bool) $value, 'true') . $disabledString . '/> ' . $description;
+            echo '<input name="' . $name . '" type="checkbox" id="' . $element . '" value="true" ' . checked(
+                (bool) $value,
+                'true'
+            ) . $disabledString . '/> ' . $description;
 
             return;
         }
     }
 
-    private function renderPageBegin(
-        string $pageId,
-        string $formAction = 'options.php'
-    ): void {
+    private function renderPageBegin(string $pageId, string $formAction = 'options.php'): void
+    {
         echo '<div class="wrap">';
         echo '<h1>' . $this->pages[$pageId]['title'] . '</h1>';
 
@@ -791,18 +829,18 @@ final class Configuration extends Base
 
             if ($args[0] === 'enable') {
                 if ($this->isPluginReady()) {
-                    return  'Manage WordPress authentication with Auth0.';
+                    return 'Manage WordPress authentication with Auth0.';
                 }
 
-                return  'Plugin requires configuration.';
+                return 'Plugin requires configuration.';
             }
 
             if ($args[0] === 'sync_enable') {
                 if ($this->isPluginReady()) {
-                    return  'If enabled, configuration of <a href="https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/" target="_blank">WP-Cron</a> is recommended for best performance.';
+                    return 'If enabled, configuration of <a href="https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/" target="_blank">WP-Cron</a> is recommended for best performance.';
                 }
 
-                return  'Plugin requires configuration.';
+                return 'Plugin requires configuration.';
             }
         }
 
@@ -832,11 +870,8 @@ final class Configuration extends Base
         return array_reverse($response, true);
     }
 
-    private function sanitizeInteger(
-        string $string,
-        int $max = 10,
-        int $min = 0
-    ): ?int {
+    private function sanitizeInteger(string $string, int $max = 10, int $min = 0): ?int
+    {
         $string = trim(sanitize_text_field($string));
 
         if (strlen($string) === 0) {
@@ -860,9 +895,8 @@ final class Configuration extends Base
         return $int;
     }
 
-    private function sanitizeBoolean(
-        string $string
-    ): ?string {
+    private function sanitizeBoolean(string $string): ?string
+    {
         $string = trim(sanitize_text_field($string));
 
         if (strlen($string) === 0) {
@@ -876,9 +910,8 @@ final class Configuration extends Base
         return 'false';
     }
 
-    private function sanitizeString(
-        string $string
-    ): ?string {
+    private function sanitizeString(string $string): ?string
+    {
         $string = trim(sanitize_text_field($string));
 
         if (strlen($string) === 0) {
@@ -888,9 +921,8 @@ final class Configuration extends Base
         return $string;
     }
 
-    private function sanitizeCookiePath(
-        string $path
-    ): ?string {
+    private function sanitizeCookiePath(string $path): ?string
+    {
         $path = trim(sanitize_text_field($path));
         $path = trim(str_replace(['../', './'], '', $path));
         $path = trim($path, "/ \t\n\r\0\x0B");
@@ -902,9 +934,8 @@ final class Configuration extends Base
         return $path;
     }
 
-    private function sanitizeDomain(
-        string $path
-    ): ?string {
+    private function sanitizeDomain(string $path): ?string
+    {
         $path = $this->sanitizeString($path);
 
         if (is_string($path) && strlen($path) === 0 || $path === null) {

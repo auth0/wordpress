@@ -11,7 +11,9 @@ use RuntimeException;
 
 final class UploadedFile implements UploadedFileInterface
 {
-    /** @var array */
+    /**
+     * @var array
+     */
     private const ERRORS = [
         UPLOAD_ERR_OK => 1,
         UPLOAD_ERR_INI_SIZE => 1,
@@ -41,8 +43,10 @@ final class UploadedFile implements UploadedFileInterface
         private ?string $clientFilename = null,
         private ?string $clientMediaType = null
     ) {
-        if (!is_int($errorStatus) || !isset(self::ERRORS[$errorStatus])) {
-            throw new InvalidArgumentException('Upload file error status must be an integer value and one of the "UPLOAD_ERR_*" constants.');
+        if (! is_int($errorStatus) || ! isset(self::ERRORS[$errorStatus])) {
+            throw new InvalidArgumentException(
+                'Upload file error status must be an integer value and one of the "UPLOAD_ERR_*" constants.'
+            );
         }
 
         $this->error = $errorStatus;
@@ -57,17 +61,6 @@ final class UploadedFile implements UploadedFileInterface
             } else {
                 throw new InvalidArgumentException('Invalid stream or file provided for UploadedFile');
             }
-        }
-    }
-
-    private function validateActive(): void
-    {
-        if ($this->error !== UPLOAD_ERR_OK) {
-            throw new RuntimeException('Cannot retrieve stream due to upload error');
-        }
-
-        if ($this->moved) {
-            throw new RuntimeException('Cannot retrieve stream after it has already been moved');
         }
     }
 
@@ -92,14 +85,17 @@ final class UploadedFile implements UploadedFileInterface
     {
         $this->validateActive();
 
-        if (!is_string($targetPath) || $targetPath === '') {
+        if (! is_string($targetPath) || $targetPath === '') {
             throw new InvalidArgumentException('Invalid path provided for move operation; must be a non-empty string');
         }
 
         if ($this->file !== null) {
-            $this->moved = PHP_SAPI === 'cli' ? rename($this->file, $targetPath) : move_uploaded_file($this->file, $targetPath);
+            $this->moved = PHP_SAPI === 'cli' ? rename($this->file, $targetPath) : move_uploaded_file(
+                $this->file,
+                $targetPath
+            );
 
-            if (!$this->moved) {
+            if (! $this->moved) {
                 throw new RuntimeException(sprintf('Uploaded file could not be moved to "%s"', $targetPath));
             }
         } else {
@@ -117,7 +113,7 @@ final class UploadedFile implements UploadedFileInterface
 
             $dest = Stream::create($resource);
 
-            while (!$stream->eof()) {
+            while (! $stream->eof()) {
                 if ($dest->write($stream->read(1_048_576)) === 0) {
                     break;
                 }
@@ -145,5 +141,16 @@ final class UploadedFile implements UploadedFileInterface
     public function getClientMediaType(): ?string
     {
         return $this->clientMediaType;
+    }
+
+    private function validateActive(): void
+    {
+        if ($this->error !== UPLOAD_ERR_OK) {
+            throw new RuntimeException('Cannot retrieve stream due to upload error');
+        }
+
+        if ($this->moved) {
+            throw new RuntimeException('Cannot retrieve stream after it has already been moved');
+        }
     }
 }

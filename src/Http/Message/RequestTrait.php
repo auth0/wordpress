@@ -66,10 +66,8 @@ trait RequestTrait
         return $this->uri;
     }
 
-    public function withUri(
-        UriInterface $uri,
-        $preserveHost = false
-    ): self {
+    public function withUri(UriInterface $uri, $preserveHost = false): self
+    {
         if ($this->uri === $uri) {
             return $this;
         }
@@ -77,7 +75,7 @@ trait RequestTrait
         $new = clone $this;
         $new->uri = $uri;
 
-        if (!$preserveHost || !$this->hasHeader('Host')) {
+        if (! $preserveHost || ! $this->hasHeader('Host')) {
             $new->updateHostFromUri();
         }
 
@@ -105,6 +103,8 @@ trait RequestTrait
             $header = 'Host';
         }
 
-        $this->headers = [$header => [$host]] + $this->headers;
+        $this->headers = [
+            $header => [$host],
+        ] + $this->headers;
     }
 }

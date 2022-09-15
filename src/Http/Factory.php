@@ -14,9 +14,8 @@ use Psr\Http\Message\StreamFactoryInterface;
 
 final class Factory
 {
-    public static function getClient(
-        ?ResponseFactoryInterface $responseFactory = null
-    ): ClientInterface {
+    public static function getClient(?ResponseFactoryInterface $responseFactory = null): ClientInterface
+    {
         static $instance = [];
 
         if ($responseFactory === null) {

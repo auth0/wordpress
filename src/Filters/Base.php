@@ -30,14 +30,16 @@ abstract class Base
         if (isset($this->registry) && is_array($this->registry) && $this->registry !== []) {
             foreach ($this->registry as $event => $method) {
                 if (is_string($method)) {
-                    $this->plugin->filters()->add($event, $this, $method, $this->getPriority($event));
+                    $this->plugin->filters()
+                        ->add($event, $this, $method, $this->getPriority($event));
                     continue;
                 }
 
                 if (is_array($method) && $method !== []) {
                     if (isset($method['method'])) {
                         $arguments = $method['arguments'] ?? 1;
-                        $this->plugin->filters()->add($event, $this, $method['method'], $this->getPriority($event), $arguments);
+                        $this->plugin->filters()
+                            ->add($event, $this, $method['method'], $this->getPriority($event), $arguments);
                         continue;
                     }
 
@@ -49,10 +51,8 @@ abstract class Base
         return $this;
     }
 
-    public function getPriority(
-        string $event,
-        int $default = 10
-    ): int {
+    public function getPriority(string $event, int $default = 10): int
+    {
         $noramlized = 'AUTH0_FILTER_PRIORITY_' . strtoupper($event);
 
         if (defined($noramlized)) {

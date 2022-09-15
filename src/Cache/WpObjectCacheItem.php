@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Cache;
 
-use DateTimeInterface;
 use DateInterval;
 use DateTime;
+use DateTimeInterface;
 use Psr\Cache\CacheItemInterface;
 
 final class WpObjectCacheItem implements CacheItemInterface
 {
     private ?int $expiration_timestamp = null;
 
-    public function __construct(private string $key, private $value, private bool $is_hit)
-    {
+    public function __construct(
+        private string $key,
+        private $value,
+        private bool $is_hit
+    ) {
     }
 
     public function getKey(): string
@@ -46,7 +49,7 @@ final class WpObjectCacheItem implements CacheItemInterface
     {
         if ($dateTime instanceof DateTimeInterface) {
             $this->expiration_timestamp = $dateTime->getTimestamp();
-        } elseif (null === $dateTime) {
+        } elseif ($dateTime === null) {
             $this->expiration_timestamp = $dateTime;
         }
 
@@ -55,7 +58,7 @@ final class WpObjectCacheItem implements CacheItemInterface
 
     public function expiresAfter(int|DateInterval|null $time): static
     {
-        if (null === $time) {
+        if ($time === null) {
             $this->expiration_timestamp = null;
         } elseif ($time instanceof DateInterval) {
             $dateTime = new DateTime();

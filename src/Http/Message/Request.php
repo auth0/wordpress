@@ -20,7 +20,7 @@ final class Request implements RequestInterface
         string|StreamInterface|null $body = null,
         string $version = '1.1'
     ) {
-        if (!($uri instanceof UriInterface)) {
+        if (! ($uri instanceof UriInterface)) {
             $uri = new Uri($uri);
         }
 
@@ -29,7 +29,7 @@ final class Request implements RequestInterface
         $this->setHeaders($headers);
         $this->protocol = $version;
 
-        if (!$this->hasHeader('Host')) {
+        if (! $this->hasHeader('Host')) {
             $this->updateHostFromUri();
         }
 

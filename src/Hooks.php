@@ -38,12 +38,8 @@ final class Hooks
         return $this;
     }
 
-    public function remove(
-        string $hook,
-        object $class,
-        string $method,
-        int $priority = 10
-    ): self {
+    public function remove(string $hook, object $class, string $method, int $priority = 10): self
+    {
         if ($this->hookType === self::CONST_ACTION_HOOK) {
             remove_action($hook, [$class, $method], $priority);
         }
