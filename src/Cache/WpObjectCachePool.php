@@ -15,18 +15,15 @@ use WP_Object_Cache;
  */
 final class WpObjectCachePool implements CacheItemPoolInterface
 {
+    /**
+     * @var string
+     */
     public const CONST_CACHE_GROUP = 'auth0';
 
-    private SdkConfiguration $configuration;
-    private string $group;
     private array $deferred = [];
 
-    public function __construct(
-        SdkConfiguration $configuration,
-        string $group = 'auth0'
-    ) {
-        $this->configuration = $configuration;
-        $this->group = $group;
+    public function __construct(SdkConfiguration $sdkConfiguration, private string $group = 'auth0')
+    {
     }
 
     public function __destruct()
@@ -41,7 +38,7 @@ final class WpObjectCachePool implements CacheItemPoolInterface
 
     public function getItems(array $keys = []): iterable
     {
-        if (count($keys) === 0) {
+        if ($keys === []) {
             return [];
         }
 
@@ -85,15 +82,15 @@ final class WpObjectCachePool implements CacheItemPoolInterface
         return $deleted;
     }
 
-    public function save(CacheItemInterface $item): bool
+    public function save(CacheItemInterface $cacheItem): bool
     {
-        if (! $item instanceof WpObjectCacheItem) {
+        if (! $cacheItem instanceof WpObjectCacheItem) {
             return false;
         }
 
-        $value = serialize($item->get());
-        $key = $item->getKey();
-        $expires = $item->expirationTimestamp();
+        $value = serialize($cacheItem->get());
+        $key = $cacheItem->getKey();
+        $expires = $cacheItem->expirationTimestamp();
         $ttl = 0;
 
         if ($expires !== null) {
@@ -107,15 +104,15 @@ final class WpObjectCachePool implements CacheItemPoolInterface
         return wp_cache_set($key, $value, $this->group, $ttl);
     }
 
-    public function saveDeferred(CacheItemInterface $item): bool
+    public function saveDeferred(CacheItemInterface $cacheItem): bool
     {
-        if (! $item instanceof WpObjectCacheItem) {
+        if (! $cacheItem instanceof WpObjectCacheItem) {
             return false;
         }
 
-        $this->deferred[$item->getKey()] = [
-            'item' => $item,
-            'expiration' => $item->expirationTimestamp(),
+        $this->deferred[$cacheItem->getKey()] = [
+            'item' => $cacheItem,
+            'expiration' => $cacheItem->expirationTimestamp(),
         ];
 
         return true;
@@ -125,8 +122,8 @@ final class WpObjectCachePool implements CacheItemPoolInterface
     {
         $success = true;
 
-        foreach ($this->deferred as $key) {
-            $item = $this->wpGetItemDeferred((string) $key);
+        foreach ($this->deferred as $singleDeferred) {
+            $item = $this->wpGetItemDeferred((string) $singleDeferred);
 
             if ($item && ! $this->save($item)) {
                 $success = false;
@@ -154,9 +151,9 @@ final class WpObjectCachePool implements CacheItemPoolInterface
 
     private function wpGetItem(string $key): WpObjectCacheItem
     {
-        $value = wp_cache_get($key, $this->group, true, $found);
+        $value = wp_cache_get($key, $this->group, true);
 
-        if (! $found) {
+        if ($value === false) {
             return WpObjectCacheItem::miss($key);
         }
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress;
 
+use Auth0\WordPress\Actions\Base as Actions;
+use Auth0\WordPress\Filters\Base as Filters;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\WordPress\Actions\Authentication as AuthenticationActions;
@@ -13,12 +15,18 @@ use Auth0\WordPress\Http\Factory;
 
 final class Plugin
 {
-    private array $actions = [
+    /**
+     * @var array<class-string<Actions>>
+     */
+    private const ACTIONS = [
         AuthenticationActions::class,
         ConfigurationActions::class,
     ];
 
-    private array $filters = [];
+    /**
+     * @var array<class-string<Filters>>
+     */
+    private const FILTERS = [];
 
     private array $registry = [];
 
@@ -93,15 +101,15 @@ final class Plugin
      */
     public function run(): self
     {
-        if (is_array($this->filters) && count($this->filters) !== 0) {
-            foreach ($this->filters as $filter) {
-                call_user_func([ $this->getClassInstance($filter), 'register']);
+        if (is_array(self::FILTERS) && count(self::FILTERS) !== 0) {
+            foreach (self::FILTERS as $filter) {
+                call_user_func([ $this->getClassInstance((string) $filter), 'register']);
             }
         }
 
-        if (is_array($this->actions) && count($this->actions) !== 0) {
-            foreach ($this->actions as $action) {
-                call_user_func([ $this->getClassInstance($action), 'register']);
+        if (is_array(self::ACTIONS) && count(self::ACTIONS) !== 0) {
+            foreach (self::ACTIONS as $action) {
+                call_user_func([ $this->getClassInstance((string) $action), 'register']);
             }
         }
 
@@ -115,19 +123,19 @@ final class Plugin
     {
         $config = $this->getConfiguration();
 
-        if (! $config->hasClientId() || ! strlen($config->getClientId())) {
+        if (! $config->hasClientId() || (string) $config->getClientId() === '') {
             return false;
         }
 
-        if (! $config->hasClientSecret() || ! strlen($config->getClientSecret())) {
+        if (! $config->hasClientSecret() || (string) $config->getClientSecret() === '') {
             return false;
         }
 
-        if (! $config->hasDomain() || ! strlen($config->getDomain())) {
+        if (! $config->hasDomain() || $config->getDomain() === '') {
             return false;
         }
 
-        if (! $config->hasCookieSecret() || ! strlen($config->getCookieSecret())) {
+        if (! $config->hasCookieSecret() || (string) $config->getCookieSecret() === '') {
             return false;
         }
 
@@ -174,12 +182,12 @@ final class Plugin
 
         $audiences = null;
         $organizations = null;
-        $caching = isset($options['tokens']['caching']) ?? null;
+        $caching = $options['tokens']['caching'] ?? null;
 
         if (isset($options['advanced']['apis']) && is_string($options['advanced']['apis'])) {
             $audiences = array_values(array_unique(explode("\n", trim(($options['advanced']['apis'])))));
 
-            if (count($audiences) === 0) {
+            if ($audiences === []) {
                 $audiences = null;
             }
         }
@@ -187,12 +195,12 @@ final class Plugin
         if (isset($options['advanced']['organizations']) && is_string($options['advanced']['organizations'])) {
             $organizations = array_values(array_unique(explode("\n", trim(($options['advanced']['organizations'])))));
 
-            if (count($organizations) === 0) {
+            if ($organizations === []) {
                 $organizations = null;
             }
         }
 
-        $configuration = new SdkConfiguration(
+        $sdkConfiguration = new SdkConfiguration(
             strategy: SdkConfiguration::STRATEGY_NONE,
             httpRequestFactory: Factory::getRequestFactory(),
             httpResponseFactory: Factory::getResponseFactory(),
@@ -214,11 +222,11 @@ final class Plugin
         );
 
         if ($caching !== 'disable') {
-            $cache = new WpObjectCachePool($configuration);
-            $configuration->setTokenCache($cache);
+            $wpObjectCachePool = new WpObjectCachePool($sdkConfiguration);
+            $sdkConfiguration->setTokenCache($wpObjectCachePool);
         }
 
-        return $configuration;
+        return $sdkConfiguration;
     }
 
     private function getClassInstance(

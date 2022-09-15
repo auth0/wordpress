@@ -22,19 +22,19 @@ abstract class Base
 
     public function getSdk(): Auth0
     {
-        return $this->getPlugin()->getSdk();
+        return $this->plugin->getSdk();
     }
 
     public function register(): self
     {
-        if (isset($this->registry) && is_array($this->registry) && count($this->registry) !== 0) {
+        if (isset($this->registry) && is_array($this->registry) && $this->registry !== []) {
             foreach ($this->registry as $event => $methods) {
                 if (is_string($methods)) {
-                    $this->getPlugin()->actions()->add($event, $this, $methods, $this->getPriority($event));
+                    $this->plugin->actions()->add($event, $this, $methods, $this->getPriority($event));
                     continue;
                 }
 
-                if (is_array($methods) && count($methods) !== 0) {
+                if (is_array($methods) && $methods !== []) {
                     foreach ($methods as $method) {
                         $callback = null;
                         $arguments = 1;
@@ -49,9 +49,10 @@ abstract class Base
                         }
 
                         if ($callback !== null) {
-                            $this->getPlugin()->actions()->add($event, $this, $callback, $this->getPriority($event), $arguments);
+                            $this->plugin->actions()->add($event, $this, $callback, $this->getPriority($event), $arguments);
                         }
                     }
+
                     continue;
                 }
             }

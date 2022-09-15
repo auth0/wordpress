@@ -109,7 +109,7 @@ final class Stream implements StreamInterface, Stringable
         }
     }
 
-    public function detach()
+    public function detach(): ?\resource
     {
         if ($this->stream === null) {
             return null;

@@ -6,10 +6,17 @@ namespace Auth0\WordPress;
 
 final class Hooks
 {
+    /**
+     * @var int
+     */
     public const CONST_ACTION_HOOK = 0;
+
+    /**
+     * @var int
+     */
     public const CONST_ACTION_FILTER = 2;
 
-    public function __construct(public int $hookType = self::CONST_ACTION_HOOK, private Plugin $plugin)
+    public function __construct(public int $hookType = self::CONST_ACTION_HOOK)
     {
     }
 

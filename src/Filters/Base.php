@@ -22,22 +22,22 @@ abstract class Base
 
     public function getSdk(): Auth0
     {
-        return $this->getPlugin()->getSdk();
+        return $this->plugin->getSdk();
     }
 
     public function register(): self
     {
-        if (isset($this->registry) && is_array($this->registry) && count($this->registry) !== 0) {
+        if (isset($this->registry) && is_array($this->registry) && $this->registry !== []) {
             foreach ($this->registry as $event => $method) {
                 if (is_string($method)) {
-                    $this->getPlugin()->filters()->add($event, $this, $method, $this->getPriority($event));
+                    $this->plugin->filters()->add($event, $this, $method, $this->getPriority($event));
                     continue;
                 }
 
-                if (is_array($method) && count($method) !== 0) {
+                if (is_array($method) && $method !== []) {
                     if (isset($method['method'])) {
                         $arguments = $method['arguments'] ?? 1;
-                        $this->getPlugin()->filters()->add($event, $this, $method['method'], $this->getPriority($event), $arguments);
+                        $this->plugin->filters()->add($event, $this, $method['method'], $this->getPriority($event), $arguments);
                         continue;
                     }
 

@@ -4,23 +4,17 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Cache;
 
+use DateTimeInterface;
+use DateInterval;
+use DateTime;
 use Psr\Cache\CacheItemInterface;
 
 final class WpObjectCacheItem implements CacheItemInterface
 {
-    private mixed $value;
-
-    private string $key;
-
-    private bool $is_hit;
-
     private ?int $expiration_timestamp = null;
 
-    public function __construct(string $key, $value, bool $is_hit)
+    public function __construct(private string $key, private $value, private bool $is_hit)
     {
-        $this->key = $key;
-        $this->is_hit = $is_hit;
-        $this->value = $value;
     }
 
     public function getKey(): string
@@ -28,7 +22,7 @@ final class WpObjectCacheItem implements CacheItemInterface
         return $this->key;
     }
 
-    public function get()
+    public function get(): mixed
     {
         return $this->value;
     }
@@ -45,25 +39,28 @@ final class WpObjectCacheItem implements CacheItemInterface
         return $this;
     }
 
-    public function expiresAt(?\DateTimeInterface $expiration): static
+    /**
+     * @param int|null $dateTime
+     */
+    public function expiresAt(?DateTimeInterface $dateTime): static
     {
-        if ($expiration instanceof \DateTimeInterface) {
-            $this->expiration_timestamp = $expiration->getTimestamp();
-        } elseif (null === $expiration) {
-            $this->expiration_timestamp = $expiration;
+        if ($dateTime instanceof DateTimeInterface) {
+            $this->expiration_timestamp = $dateTime->getTimestamp();
+        } elseif (null === $dateTime) {
+            $this->expiration_timestamp = $dateTime;
         }
 
         return $this;
     }
 
-    public function expiresAfter(int|\DateInterval|null $time): static
+    public function expiresAfter(int|DateInterval|null $time): static
     {
         if (null === $time) {
             $this->expiration_timestamp = null;
-        } elseif ($time instanceof \DateInterval) {
-            $date = new \DateTime();
-            $date->add($time);
-            $this->expiration_timestamp = $date->getTimestamp();
+        } elseif ($time instanceof DateInterval) {
+            $dateTime = new DateTime();
+            $dateTime->add($time);
+            $this->expiration_timestamp = $dateTime->getTimestamp();
         } elseif (is_int($time)) {
             $this->expiration_timestamp = time() + $time;
         }
