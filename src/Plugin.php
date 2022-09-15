@@ -101,16 +101,12 @@ final class Plugin
      */
     public function run(): self
     {
-        if (is_array(self::FILTERS) && count(self::FILTERS) !== 0) {
-            foreach (self::FILTERS as $filter) {
-                call_user_func([ $this->getClassInstance((string) $filter), 'register']);
-            }
+        foreach (self::FILTERS as $filter) {
+            call_user_func([ $this->getClassInstance((string) $filter), 'register']);
         }
 
-        if (is_array(self::ACTIONS) && count(self::ACTIONS) !== 0) {
-            foreach (self::ACTIONS as $action) {
-                call_user_func([ $this->getClassInstance((string) $action), 'register']);
-            }
+        foreach (self::ACTIONS as $action) {
+            call_user_func([ $this->getClassInstance((string) $action), 'register']);
         }
 
         return $this;
