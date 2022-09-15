@@ -9,6 +9,8 @@ use Auth0\WordPress\Plugin;
 
 abstract class Base
 {
+    protected array $registry = [];
+
     public function __construct(private Plugin $plugin)
     {
     }

@@ -9,7 +9,6 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\WordPress\Actions\Authentication as AuthenticationActions;
 use Auth0\WordPress\Actions\Configuration as ConfigurationActions;
 use Auth0\WordPress\Cache\WpObjectCachePool;
-use Auth0\WordPress\Filters\Authentication as AuthenticationFilters;
 use Auth0\WordPress\Http\Factory;
 
 final class Plugin
@@ -19,9 +18,7 @@ final class Plugin
         ConfigurationActions::class,
     ];
 
-    private array $filters = [
-        AuthenticationFilters::class
-    ];
+    private array $filters = [];
 
     private array $registry = [];
 
