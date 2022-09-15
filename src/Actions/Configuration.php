@@ -6,10 +6,10 @@ namespace Auth0\WordPress\Actions;
 
 final class Configuration extends Base
 {
-    const CONST_SECTION_PREFIX = 'auth0';
-    const CONST_PAGE_GENERAL = 'auth0_configuration';
-    const CONST_PAGE_SYNC = 'auth0_sync';
-    const CONST_PAGE_ADVANCED = 'auth0_advanced';
+    public const CONST_SECTION_PREFIX = 'auth0';
+    public const CONST_PAGE_GENERAL = 'auth0_configuration';
+    public const CONST_PAGE_SYNC = 'auth0_sync';
+    public const CONST_PAGE_ADVANCED = 'auth0_advanced';
 
     protected array $registry = [
         'admin_init' => 'onSetup',
@@ -367,7 +367,9 @@ final class Configuration extends Base
                 add_settings_section(
                     id: $sectionId,
                     title: $section['title'],
-                    callback: function() use ($section) { echo $section['description'] ?? ''; },
+                    callback: function () use ($section) {
+                        echo $section['description'] ?? '';
+                    },
                     page: $pageId
                 );
 
@@ -415,7 +417,7 @@ final class Configuration extends Base
                     add_settings_field(
                         id: $elementId,
                         title:  $option['title'],
-                        callback: function() use ($elementId, $optionName, $optionType, $optionDescription, $optionPlaceholder, $optionValue, $optionSelections, $optionDisabled) {
+                        callback: function () use ($elementId, $optionName, $optionType, $optionDescription, $optionPlaceholder, $optionValue, $optionSelections, $optionDisabled) {
                             $this->renderOption(
                                 element: $elementId,
                                 name: $optionName,
@@ -441,18 +443,22 @@ final class Configuration extends Base
 
     public function onUpdateState(?array $input): ?array
     {
-        if ($input === null) return null;
+        if ($input === null) {
+            return null;
+        }
 
         $sanitized = [
             'enable' => $this->sanitizeBoolean((string) $input['enable'] ?? '') ?? '',
         ];
 
-        return array_filter($sanitized, fn($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
     }
 
     public function onUpdateAccounts(?array $input): ?array
     {
-        if ($input === null) return null;
+        if ($input === null) {
+            return null;
+        }
 
         $sanitized = [
             'matching' => $this->sanitizeString($input['matching'] ?? '') ?? '',
@@ -461,12 +467,14 @@ final class Configuration extends Base
             'passwordless' => $this->sanitizeBoolean((string) $input['passwordless'] ?? '') ?? '',
         ];
 
-        return array_filter($sanitized, fn($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
     }
 
     public function onUpdateClient(?array $input): ?array
     {
-        if ($input === null) return null;
+        if ($input === null) {
+            return null;
+        }
 
         $sanitized = [
             'id' => $this->sanitizeString($input['id'] ?? '') ?? '',
@@ -474,12 +482,14 @@ final class Configuration extends Base
             'domain' => $this->sanitizeDomain($input['domain'] ?? '') ?? ''
         ];
 
-        return array_filter($sanitized, fn($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
     }
 
     public function onUpdateSync(?array $input): ?array
     {
-        if ($input === null) return null;
+        if ($input === null) {
+            return null;
+        }
 
         $sanitized = [
             'database' => $this->sanitizeString($input['database'] ?? '') ?? '',
@@ -487,24 +497,28 @@ final class Configuration extends Base
             'push' => $this->sanitizeString($input['push'] ?? '') ?? ''
         ];
 
-        return array_filter($sanitized, fn($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
     }
 
     public function onUpdateAuthentication(?array $input): ?array
     {
-        if ($input === null) return null;
+        if ($input === null) {
+            return null;
+        }
 
         $sanitized = [
             'pair_sessions' => $this->sanitizeInteger((string) ($input['pair_sessions'] ?? 0), 2, 0) ?? 0,
             'allow_fallback' => $this->sanitizeBoolean((string) $input['allow_fallback'] ?? '') ?? '',
         ];
 
-        return array_filter($sanitized, fn($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
     }
 
     public function onUpdateClientAdvanced(?array $input): ?array
     {
-        if ($input === null) return null;
+        if ($input === null) {
+            return null;
+        }
 
         $sanitized = [
             'custom_domain' => $this->sanitizeDomain($input['custom_domain'] ?? '') ?? '',
@@ -512,23 +526,27 @@ final class Configuration extends Base
             'organizations' => $this->sanitizeString($input['organizations'] ?? '') ?? ''
         ];
 
-        return array_filter($sanitized, fn($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
     }
 
     public function onUpdateTokens(?array $input): ?array
     {
-        if ($input === null) return null;
+        if ($input === null) {
+            return null;
+        }
 
         $sanitized = [
             'caching' => $this->sanitizeString($input['caching'] ?? '') ?? ''
         ];
 
-        return array_filter($sanitized, fn($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
     }
 
     public function onUpdateSessions(?array $input): ?array
     {
-        if ($input === null) return null;
+        if ($input === null) {
+            return null;
+        }
 
         $sanitized = [
             'method' => $this->sanitizeString($input['method'] ?? '') ?? '',
@@ -537,12 +555,14 @@ final class Configuration extends Base
             'refresh_tokens' => $this->sanitizeBoolean((string) $input['refresh_tokens'] ?? '') ?? '',
         ];
 
-        return array_filter($sanitized, fn($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
     }
 
     public function onUpdateCookies(?array $input): ?array
     {
-        if ($input === null) return null;
+        if ($input === null) {
+            return null;
+        }
 
         $sanitized = [
             'secret' => $this->sanitizeString($input['secret'] ?? '') ?? '',
@@ -572,7 +592,7 @@ final class Configuration extends Base
             }
         }
 
-        return array_filter($sanitized, fn($value) => !is_null($value) && $value !== '');
+        return array_filter($sanitized, fn ($value) => !is_null($value) && $value !== '');
     }
 
     public function onMenu(): void
@@ -756,12 +776,14 @@ final class Configuration extends Base
         }
     }
 
-    private function renderPageEnd(): void {
+    private function renderPageEnd(): void
+    {
         echo '</form>';
         echo '</div>';
     }
 
-    private function getOptionDescription(...$args): string {
+    private function getOptionDescription(...$args): string
+    {
         if (count($args) !== 0) {
             if ($args[0] === 'cookie_domain') {
                 return sprintf('Must include origin domain of <code>`%s`</code>', $this->sanitizeDomain(site_url()));
@@ -787,7 +809,8 @@ final class Configuration extends Base
         return '';
     }
 
-    private function getOptionPlaceholder(...$args): string {
+    private function getOptionPlaceholder(...$args): string
+    {
         if (count($args) !== 0) {
             if ($args[0] === 'cookie_domain') {
                 return $this->sanitizeDomain(site_url());
@@ -797,7 +820,8 @@ final class Configuration extends Base
         return '';
     }
 
-    private function getRoleOptions(): ?array {
+    private function getRoleOptions(): ?array
+    {
         $roles = get_editable_roles();
         $response = [];
 

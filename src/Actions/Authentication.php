@@ -348,7 +348,7 @@ final class Authentication extends Base
             $connections = [];
         }
 
-        if ( ! in_array($sub, $connections, true)) {
+        if (! in_array($sub, $connections, true)) {
             $connections[] = $sub;
             update_user_meta($user->ID, 'auth0_connections', array_values(array_unique($connections)));
         }

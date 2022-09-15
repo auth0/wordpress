@@ -25,7 +25,8 @@ trait MessageTrait
         return $this->protocol;
     }
 
-    public function withProtocolVersion($version): MessageInterface {
+    public function withProtocolVersion($version): MessageInterface
+    {
         if ($this->protocol === (string) $version) {
             return $this;
         }
@@ -44,14 +45,16 @@ trait MessageTrait
         return $this->headers;
     }
 
-    public function hasHeader($name): bool {
+    public function hasHeader($name): bool
+    {
         return isset($this->headerNames[strtr((string) $name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')]);
     }
 
     /**
      * @return mixed[]
      */
-    public function getHeader($name): array {
+    public function getHeader($name): array
+    {
         $normalized = $this->normalizeHeaderKey($name);
 
         if (! isset($this->headerNames[$normalized])) {
@@ -61,11 +64,13 @@ trait MessageTrait
         return $this->headers[$this->headerNames[$normalized]];
     }
 
-    public function getHeaderLine($name): string {
+    public function getHeaderLine($name): string
+    {
         return implode(', ', $this->getHeader((string) $name));
     }
 
-    public function withHeader($name, $value): MessageInterface {
+    public function withHeader($name, $value): MessageInterface
+    {
         $value = $this->sanitizeHeader($name, $value);
         $normalized = $this->normalizeHeaderKey($name);
 
@@ -81,7 +86,8 @@ trait MessageTrait
         return $new;
     }
 
-    public function withAddedHeader($name, $value): MessageInterface {
+    public function withAddedHeader($name, $value): MessageInterface
+    {
         if (!is_string($name) || trim($name) === '') {
             throw new InvalidArgumentException('Header name must be an RFC 7230 compatible string.');
         }
@@ -92,7 +98,8 @@ trait MessageTrait
         return $new;
     }
 
-    public function withoutHeader($name): MessageInterface {
+    public function withoutHeader($name): MessageInterface
+    {
         $this->normalizeHeaderKey($name);
         return $this;
     }

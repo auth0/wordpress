@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Auth0\WordPress\Cache;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Utility\Toolkit;
-use Auth0\WordPress\Store\WpObjectCache;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use WP_Object_Cache;
@@ -17,7 +15,7 @@ use WP_Object_Cache;
  */
 final class WpObjectCachePool implements CacheItemPoolInterface
 {
-    const CONST_CACHE_GROUP = 'auth0';
+    public const CONST_CACHE_GROUP = 'auth0';
 
     private SdkConfiguration $configuration;
     private string $group;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Http;
 
-use Auth0\WordPress\Http\Client;
 use Auth0\WordPress\Http\MessageFactory\RequestFactory;
 use Auth0\WordPress\Http\MessageFactory\ResponseFactory;
 use Auth0\WordPress\Http\MessageFactory\StreamFactory;
@@ -33,7 +32,8 @@ final class Factory
         return $instance[$responseFactoryId];
     }
 
-    public static function getRequestFactory(): RequestFactoryInterface {
+    public static function getRequestFactory(): RequestFactoryInterface
+    {
         static $instance = null;
 
         if ($instance === null) {
@@ -43,7 +43,8 @@ final class Factory
         return $instance;
     }
 
-    public static function getResponseFactory(): ResponseFactoryInterface {
+    public static function getResponseFactory(): ResponseFactoryInterface
+    {
         static $instance = null;
 
         if ($instance === null) {
@@ -53,7 +54,8 @@ final class Factory
         return $instance;
     }
 
-    public static function getStreamFactory(): StreamFactoryInterface {
+    public static function getStreamFactory(): StreamFactoryInterface
+    {
         static $instance = null;
 
         if ($instance === null) {

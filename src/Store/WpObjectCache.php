@@ -14,7 +14,7 @@ use Auth0\SDK\Utility\Toolkit;
  */
 final class WpObjectCache implements StoreInterface
 {
-    const CONST_CACHE_GROUP = 'auth0';
+    public const CONST_CACHE_GROUP = 'auth0';
 
     /**
      * Instance of SdkConfiguration, for shared configuration across classes.
@@ -215,7 +215,8 @@ final class WpObjectCache implements StoreInterface
         wp_cache_set($this->getSessionName('index'), base64_encode(json_encode(serialize($data), JSON_THROW_ON_ERROR)), session_id(), 0);
     }
 
-    private function deleteSessionIndex(): void {
+    private function deleteSessionIndex(): void
+    {
         wp_cache_delete($this->getSessionName('index'), session_id());
         return;
     }

@@ -70,7 +70,8 @@ final class Plugin
     /**
      * Returns a singleton instance of Hooks configured for working with actions.
      */
-    public function actions(): Hooks {
+    public function actions(): Hooks
+    {
         static $instance = null;
 
         $instance ??= $instance ?? new Hooks(Hooks::CONST_ACTION_HOOK, $this);
@@ -81,7 +82,8 @@ final class Plugin
     /**
      * Returns a singleton instance of Hooks configured for working with filters.
      */
-    public function filters(): Hooks {
+    public function filters(): Hooks
+    {
         static $instance = null;
 
         $instance ??= $instance ?? new Hooks(Hooks::CONST_ACTION_FILTER, $this);

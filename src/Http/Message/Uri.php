@@ -303,7 +303,7 @@ final class Uri implements UriInterface, Stringable
             throw new InvalidArgumentException('Path must be a string');
         }
 
-        return preg_replace_callback('/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/]++|%(?![A-Fa-f0-9]{2}))/', static fn(array $match): string => self::rawurlencodeMatchZero($match), $path);
+        return preg_replace_callback('/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/]++|%(?![A-Fa-f0-9]{2}))/', static fn (array $match): string => self::rawurlencodeMatchZero($match), $path);
     }
 
     private function filterQueryAndFragment($str): ?string
@@ -312,7 +312,7 @@ final class Uri implements UriInterface, Stringable
             throw new InvalidArgumentException('Query and fragment must be a string');
         }
 
-        return preg_replace_callback('/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/\?]++|%(?![A-Fa-f0-9]{2}))/', static fn(array $match): string => self::rawurlencodeMatchZero($match), $str);
+        return preg_replace_callback('/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/\?]++|%(?![A-Fa-f0-9]{2}))/', static fn (array $match): string => self::rawurlencodeMatchZero($match), $str);
     }
 
     private static function rawurlencodeMatchZero(array $match): string

@@ -39,7 +39,8 @@ final class UploadedFile implements UploadedFileInterface
         private int $size,
         int $errorStatus,
         private ?string $clientFilename = null,
-        private ?string $clientMediaType = null)
+        private ?string $clientMediaType = null
+    )
     {
         if (!is_int($errorStatus) || !isset(self::ERRORS[$errorStatus])) {
             throw new InvalidArgumentException('Upload file error status must be an integer value and one of the "UPLOAD_ERR_*" constants.');

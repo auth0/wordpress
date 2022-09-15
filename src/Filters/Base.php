@@ -23,7 +23,8 @@ abstract class Base
         return $this->getPlugin()->getSdk();
     }
 
-    public function register(): self {
+    public function register(): self
+    {
         if (isset($this->registry) && is_array($this->registry) && count($this->registry) !== 0) {
             foreach ($this->registry as $event => $method) {
                 if (is_string($method)) {

@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress;
 
-use Auth0\WordPress\Plugin;
-
 final class Hooks
 {
-    const CONST_ACTION_HOOK = 0;
-    const CONST_ACTION_FILTER = 2;
+    public const CONST_ACTION_HOOK = 0;
+    public const CONST_ACTION_FILTER = 2;
 
     public function __construct(public int $hookType = self::CONST_ACTION_HOOK, private Plugin $plugin)
     {
     }
 
     public function add(
-      string $hook,
-      object $class,
-      string $method,
-      int $priority = 10,
-      int $arguments = 1
+        string $hook,
+        object $class,
+        string $method,
+        int $priority = 10,
+        int $arguments = 1
     ): self {
         if ($this->hookType === self::CONST_ACTION_HOOK) {
             add_action($hook, [$class, $method], $priority);
