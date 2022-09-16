@@ -1,6 +1,8 @@
-# Auth0 for WordPress Plugin
+# Auth0 WordPress Plugin
 
-![LoginWordPress Plugin for Auth0](https://ps.w.org/auth0/assets/banner-772x250.png)
+> ⚠️ Version 5 of our plugin is currently in [**First Availability**](https://auth0.com/docs/troubleshoot/product-lifecycle/product-release-stages). We do not recommend using this version in production yet. As we move toward General Availability, please be aware that releases may contain breaking changes.
+
+![Auth0 WordPress Plugin](https://ps.w.org/auth0/assets/banner-772x250.png)
 
 This plugin replaces the standard WordPress login process with one powered by Auth0 that enables social, passwordless, and enterprise connection login as well as additional security, multifactor auth, and user statistics.
 
