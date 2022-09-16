@@ -22,10 +22,12 @@ final class Configuration extends Base
         'auth0_ui_advanced' => 'renderAdvancedConfiguration',
     ];
 
+    /**
+     * @var array<mixed>
+     */
     protected array $pages = [
         self::CONST_PAGE_GENERAL => [
             'title' => 'Auth0 — Options',
-            'callback' => 'onUpdate',
             'sections' => [
                 'state' => [
                     'title' => '',
@@ -114,7 +116,6 @@ final class Configuration extends Base
         ],
         self::CONST_PAGE_SYNC => [
             'title' => 'Auth0 — Sync Options',
-            'callback' => 'onUpdate',
             'sections' => [
                 'sync' => [
                     'title' => '',
@@ -156,7 +157,6 @@ final class Configuration extends Base
         ],
         self::CONST_PAGE_ADVANCED => [
             'title' => 'Auth0 — Advanced Options',
-            'callback' => 'onUpdate',
             'sections' => [
                 'authentication' => [
                     'title' => 'Authentication',
@@ -352,22 +352,34 @@ final class Configuration extends Base
 
     public function onSetup(): void
     {
+        /**
+         * @var array<mixed> $page
+         */
         foreach ($this->pages as $pageId => $page) {
-            foreach ($page['sections'] as $sectionId => $section) {
-                $sectionId = self::CONST_SECTION_PREFIX . '_' . $sectionId;
-                $sectionType = $section['type'] ?? 'array';
+            $sections = (isset($page['sections']) && is_array($page['sections'])) ? $page['sections'] : [];
 
+            /**
+             * @var array<mixed> $section
+             */
+            foreach ($sections as $sectionId => $section) {
+                $sectionId = self::CONST_SECTION_PREFIX . '_' . $sectionId;
+                $sectionType = (isset($section['type']) && is_string($section['type'])) ? $section['type'] : 'array';
+                $sectionCallback = [
+                    $this,
+                    'onUpdate' . str_replace(' ', '', ucwords(
+                        str_replace(['auth0_', '_'], ' ', $sectionId)
+                    )),
+                ];
+
+                /**
+                 * @var callable $sectionCallback
+                 */
                 register_setting(
                     option_group: $pageId,
                     option_name: $sectionId,
                     args: [
                         'type' => $sectionType,
-                        'sanitize_callback' => [
-                            $this,
-                            $page['callback'] . str_replace(' ', '', ucwords(
-                                str_replace(['auth0_', '_'], ' ', $sectionId)
-                            )),
-                        ] ?? '',
+                        'sanitize_callback' => $sectionCallback,
                         'show_in_rest' => false,
                     ]
                 );
@@ -391,8 +403,17 @@ final class Configuration extends Base
                     $optionValues = get_option($sectionId, false);
                 }
 
-                foreach ($section['options'] as $optionId => $option) {
-                    $elementId = md5($pageId . '_' . $optionId);
+                /**
+                 * @var array<mixed>|null $optionValues
+                 */
+
+                $options = (isset($section['options']) && is_array($section['options'])) ? $section['options'] : [];
+
+                /**
+                 * @var array<array{title: string, type: string, description?: string|array<string>, placeholder?: string|array<string>, select?: string|array<mixed>, disabled?: string|bool, enabled?: string|bool}> $options
+                 */
+                foreach ($options as $optionId => $option) {
+                    $elementId = uniqid();
                     $optionType = $option['type'];
                     $optionValue = $optionValues[$optionId] ?? null;
                     $optionName = $sectionId . '[' . $optionId . ']';
@@ -403,30 +424,61 @@ final class Configuration extends Base
                     $optionEnabled = $option['enabled'] ?? null;
 
                     if (is_array($optionDescription)) {
+                        $callback = [$this, $optionDescription[0]];
+
+                        /**
+                         * @var callable $callback
+                         */
+
                         $optionDescription = call_user_func_array(
-                            [$this, $optionDescription[0]],
+                            $callback,
                             array_slice($optionDescription, 1)
                         );
                     }
 
                     if (is_array($optionPlaceholder)) {
+                        $callback = [$this, $optionPlaceholder[0]];
+
+                        /**
+                         * @var callable $callback
+                         */
+
                         $optionPlaceholder = call_user_func_array(
-                            [$this, $optionPlaceholder[0]],
+                            $callback,
                             array_slice($optionPlaceholder, 1)
                         );
                     }
 
                     if (is_string($optionDisabled)) {
-                        $optionDisabled = (call_user_func([$this, $optionDisabled]) === true);
+                        $callback = [$this, $optionDisabled];
+                        /**
+                         * @var callable $callback
+                         */
+                        $optionDisabled = (call_user_func($callback) === true);
                     }
 
                     if (is_string($optionEnabled)) {
-                        $optionDisabled = (call_user_func([$this, $optionEnabled]) === false);
+                        $callback = [$this, $optionEnabled];
+                        /**
+                         * @var callable $callback
+                         */
+                        $optionDisabled = (call_user_func($callback) === false);
                     }
 
                     if (is_string($optionSelections)) {
-                        $optionSelections = call_user_func([$this, $optionSelections]) ?? [];
+                        $callback = [$this, $optionSelections];
+                        /**
+                         * @var callable $callback
+                         */
+                        $optionSelections = call_user_func($callback) ?? [];
                     }
+
+                    /**
+                     * @var string $optionDescription
+                     * @var string $optionPlaceholder
+                     * @var array<string|int|bool>|null $optionSelections
+                     * @var string|int|bool $optionValue
+                     */
 
                     add_settings_field(
                         id: $elementId,
@@ -464,6 +516,11 @@ final class Configuration extends Base
         }
     }
 
+    /**
+     * @param null|array<null|string|int|bool> $input
+     *
+     * @return null|array<mixed>
+     */
     public function onUpdateState(?array $input): ?array
     {
         if ($input === null) {
@@ -471,12 +528,17 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'enable' => $this->sanitizeBoolean((string) $input['enable'] ?? '') ?? '',
+            'enable' => $this->sanitizeBoolean((string) ($input['enable'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
+    /**
+     * @param null|array<string|int|bool|null> $input
+     *
+     * @return null|array<mixed>
+     */
     public function onUpdateAccounts(?array $input): ?array
     {
         if ($input === null) {
@@ -484,15 +546,20 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'matching' => $this->sanitizeString($input['matching'] ?? '') ?? '',
-            'missing' => $this->sanitizeString($input['missing'] ?? '') ?? '',
-            'default_role' => $this->sanitizeString($input['default_role'] ?? '') ?? '',
-            'passwordless' => $this->sanitizeBoolean((string) $input['passwordless'] ?? '') ?? '',
+            'matching' => $this->sanitizeString((string) ($input['matching'] ?? '')) ?? '',
+            'missing' => $this->sanitizeString((string) ($input['missing'] ?? '')) ?? '',
+            'default_role' => $this->sanitizeString((string) ($input['default_role'] ?? '')) ?? '',
+            'passwordless' => $this->sanitizeBoolean((string) ($input['passwordless'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
+    /**
+     * @param null|array<string|int|bool|null> $input
+     *
+     * @return null|array<mixed>
+     */
     public function onUpdateClient(?array $input): ?array
     {
         if ($input === null) {
@@ -500,14 +567,19 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'id' => $this->sanitizeString($input['id'] ?? '') ?? '',
-            'secret' => $this->sanitizeString($input['secret'] ?? '') ?? '',
-            'domain' => $this->sanitizeDomain($input['domain'] ?? '') ?? '',
+            'id' => $this->sanitizeString((string) ($input['id'] ?? '')) ?? '',
+            'secret' => $this->sanitizeString((string) ($input['secret'] ?? '')) ?? '',
+            'domain' => $this->sanitizeDomain((string) ($input['domain'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
+    /**
+     * @param null|array<string|int|bool|null> $input
+     *
+     * @return null|array<mixed>
+     */
     public function onUpdateSync(?array $input): ?array
     {
         if ($input === null) {
@@ -515,14 +587,19 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'database' => $this->sanitizeString($input['database'] ?? '') ?? '',
-            'schedule' => $this->sanitizeString($input['schedule'] ?? '') ?? '',
-            'push' => $this->sanitizeString($input['push'] ?? '') ?? '',
+            'database' => $this->sanitizeString((string) ($input['database'] ?? '')) ?? '',
+            'schedule' => $this->sanitizeString((string) ($input['schedule'] ?? '')) ?? '',
+            'push' => $this->sanitizeString((string) ($input['push'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
+    /**
+     * @param null|array<string|int|bool|null> $input
+     *
+     * @return null|array<mixed>
+     */
     public function onUpdateAuthentication(?array $input): ?array
     {
         if ($input === null) {
@@ -531,12 +608,17 @@ final class Configuration extends Base
 
         $sanitized = [
             'pair_sessions' => $this->sanitizeInteger((string) ($input['pair_sessions'] ?? 0), 2, 0) ?? 0,
-            'allow_fallback' => $this->sanitizeBoolean((string) $input['allow_fallback'] ?? '') ?? '',
+            'allow_fallback' => $this->sanitizeBoolean((string) ($input['allow_fallback'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
+    /**
+     * @param null|array<string|int|bool|null> $input
+     *
+     * @return null|array<mixed>
+     */
     public function onUpdateClientAdvanced(?array $input): ?array
     {
         if ($input === null) {
@@ -544,14 +626,19 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'custom_domain' => $this->sanitizeDomain($input['custom_domain'] ?? '') ?? '',
-            'apis' => $this->sanitizeString($input['apis'] ?? '') ?? '',
-            'organizations' => $this->sanitizeString($input['organizations'] ?? '') ?? '',
+            'custom_domain' => $this->sanitizeDomain((string) ($input['custom_domain'] ?? '')) ?? '',
+            'apis' => $this->sanitizeString((string) ($input['apis'] ?? '')) ?? '',
+            'organizations' => $this->sanitizeString((string) ($input['organizations'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
+    /**
+     * @param null|array<string|int|bool|null> $input
+     *
+     * @return null|array<mixed>
+     */
     public function onUpdateTokens(?array $input): ?array
     {
         if ($input === null) {
@@ -559,12 +646,17 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'caching' => $this->sanitizeString($input['caching'] ?? '') ?? '',
+            'caching' => $this->sanitizeString((string) ($input['caching'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
+    /**
+     * @param null|array<string|int|bool|null> $input
+     *
+     * @return null|array<mixed>
+     */
     public function onUpdateSessions(?array $input): ?array
     {
         if ($input === null) {
@@ -572,15 +664,20 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'method' => $this->sanitizeString($input['method'] ?? '') ?? '',
+            'method' => $this->sanitizeString((string) ($input['method'] ?? '')) ?? '',
             'session_ttl' => $this->sanitizeInteger((string) ($input['session_ttl'] ?? 0), 2592000, 0) ?? 0,
-            'rolling_sessions' => $this->sanitizeBoolean((string) $input['rolling_sessions'] ?? '') ?? '',
-            'refresh_tokens' => $this->sanitizeBoolean((string) $input['refresh_tokens'] ?? '') ?? '',
+            'rolling_sessions' => $this->sanitizeBoolean((string) ($input['rolling_sessions'] ?? '')) ?? '',
+            'refresh_tokens' => $this->sanitizeBoolean((string) ($input['refresh_tokens'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
     }
 
+    /**
+     * @param null|array<string|int|bool|null> $input
+     *
+     * @return null|array<mixed>
+     */
     public function onUpdateCookies(?array $input): ?array
     {
         if ($input === null) {
@@ -588,17 +685,17 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'secret' => $this->sanitizeString($input['secret'] ?? '') ?? '',
-            'domain' => $this->sanitizeDomain($input['domain'] ?? '') ?? '',
-            'path' => $this->sanitizeCookiePath($input['path'] ?? '') ?? '',
-            'secure' => $this->sanitizeBoolean((string) $input['secure'] ?? '') ?? '',
-            'samesite' => $this->sanitizeDomain($input['samesite'] ?? '') ?? '',
+            'secret' => $this->sanitizeString((string) ($input['secret'] ?? '')) ?? '',
+            'domain' => $this->sanitizeDomain((string) ($input['domain'] ?? '')) ?? '',
+            'path' => $this->sanitizeCookiePath((string) ($input['path'] ?? '')),
+            'secure' => $this->sanitizeBoolean((string) ($input['secure'] ?? '')) ?? '',
+            'samesite' => $this->sanitizeDomain((string) ($input['samesite'] ?? '')) ?? '',
             'ttl' => $this->sanitizeInteger((string) ($input['ttl'] ?? 0), 2592000, 0) ?? 0,
         ];
 
         if (strlen($sanitized['domain']) >= 1) {
-            $allowed = explode('.', $this->sanitizeDomain(site_url()));
-            $assigned = explode('.', $sanitized['domain']);
+            $allowed = explode('.', (string) $this->sanitizeDomain(site_url()));
+            $assigned = explode('.', (string) $sanitized['domain']);
             $matched = null;
 
             if (count($allowed) >= 2 && count($assigned) >= 2) {
@@ -621,49 +718,48 @@ final class Configuration extends Base
     public function onMenu(): void
     {
         add_menu_page(
-            'Auth0 — Options', // Page title
-            'Auth0', // Menu title
-            'manage_options', // User capability necessary to see
-            'auth0', // Unique menu slug
-            static function () {
+            page_title: 'Auth0 — Options',
+            menu_title: 'Auth0',
+            capability: 'manage_options',
+            menu_slug: 'auth0',
+            callback: static function () {
                 do_action('auth0_ui_configuration');
             },
-            'dashicons-shield-alt', // Dashicon class name for font icon, or a base64-encoded SVG beginning with "data:image/svg+xml;base64,".
-            $this->getPriority('MENU_POSITION', 70, 'AUTH0_ADMIN') // Position of the menu item in the admin UI
+            icon_url: 'dashicons-shield-alt',
+            position: $this->getPriority('MENU_POSITION', 70, 'AUTH0_ADMIN')
         );
 
         add_submenu_page(
-            'auth0',
-            'Auth0 — Options',
-            'Options',
-            'manage_options',
-            'auth0',
-            '',
-            $this->getPriority('MENU_POSITION_GENERAL', 0, 'AUTH0_ADMIN')
+            parent_slug: 'auth0',
+            page_title: 'Auth0 — Options',
+            menu_title: 'Options',
+            capability: 'manage_options',
+            menu_slug: 'auth0',
+            position: $this->getPriority('MENU_POSITION_GENERAL', 0, 'AUTH0_ADMIN')
         );
 
         add_submenu_page(
-            'auth0',
-            'Auth0 — Sync Options',
-            'Sync',
-            'manage_options',
-            'auth0_sync',
-            static function () {
+            parent_slug: 'auth0',
+            page_title: 'Auth0 — Sync Options',
+            menu_title: 'Sync',
+            capability: 'manage_options',
+            menu_slug: 'auth0_sync',
+            callback: static function () {
                 do_action('auth0_ui_sync');
             },
-            $this->getPriority('MENU_POSITION_SYNC', 1, 'AUTH0_ADMIN')
+            position: $this->getPriority('MENU_POSITION_SYNC', 1, 'AUTH0_ADMIN')
         );
 
         add_submenu_page(
-            'auth0',
-            'Auth0 — Advanced Options',
-            'Advanced',
-            'manage_options',
-            'auth0_advanced',
-            static function () {
+            parent_slug: 'auth0',
+            page_title: 'Auth0 — Advanced Options',
+            menu_title: 'Advanced',
+            capability: 'manage_options',
+            menu_slug: 'auth0_advanced',
+            callback: static function () {
                 do_action('auth0_ui_advanced');
             },
-            $this->getPriority('MENU_POSITION_ADVANCED', 2, 'AUTH0_ADMIN')
+            position: $this->getPriority('MENU_POSITION_ADVANCED', 2, 'AUTH0_ADMIN')
         );
     }
 
@@ -712,10 +808,20 @@ final class Configuration extends Base
         $this->renderPageEnd();
     }
 
+    /**
+     * @param string $element
+     * @param string $name
+     * @param string|int|bool|null $value
+     * @param string $type
+     * @param string $description
+     * @param string $placeholder
+     * @param null|array<string|int|bool> $select
+     * @param null|bool $disabled
+     */
     private function renderOption(
         string $element,
         string $name,
-        mixed $value,
+        string|int|bool|null $value,
         string $type = 'text',
         string $description = '',
         string $placeholder = '',
@@ -808,8 +914,16 @@ final class Configuration extends Base
 
     private function renderPageBegin(string $pageId, string $formAction = 'options.php'): void
     {
+        $pages = $this->pages;
+
+        /**
+         * @var array<array<string>> $pages
+         */
+
+        $title = $pages[$pageId]['title'];
+
         echo '<div class="wrap">';
-        echo '<h1>' . $this->pages[$pageId]['title'] . '</h1>';
+        echo '<h1>' . $title . '</h1>';
 
         if ($formAction) {
             echo '<form method="post" action="' . $formAction . '">';
@@ -822,45 +936,60 @@ final class Configuration extends Base
         echo '</div>';
     }
 
+    /**
+     * @param string $args
+     */
     private function getOptionDescription(...$args): string
     {
-        if (count($args) !== 0) {
-            if ($args[0] === 'cookie_domain') {
-                return sprintf('Must include origin domain of <code>`%s`</code>', $this->sanitizeDomain(site_url()));
+        if ($args === []) {
+            return '';
+        }
+
+        $context = (string) $args[0];
+
+        if ($context === 'cookie_domain') {
+            return sprintf('Must include origin domain of <code>`%s`</code>', $this->sanitizeDomain(site_url()) ?? '');
+        }
+
+        if ($context === 'enable') {
+            if ($this->isPluginReady()) {
+                return 'Manage WordPress authentication with Auth0.';
             }
 
-            if ($args[0] === 'enable') {
-                if ($this->isPluginReady()) {
-                    return 'Manage WordPress authentication with Auth0.';
-                }
+            return 'Plugin requires configuration.';
+        }
 
-                return 'Plugin requires configuration.';
+        if ($context === 'sync_enable') {
+            if ($this->isPluginReady()) {
+                return 'If enabled, configuration of <a href="https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/" target="_blank">WP-Cron</a> is recommended for best performance.';
             }
 
-            if ($args[0] === 'sync_enable') {
-                if ($this->isPluginReady()) {
-                    return 'If enabled, configuration of <a href="https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/" target="_blank">WP-Cron</a> is recommended for best performance.';
-                }
-
-                return 'Plugin requires configuration.';
-            }
+            return 'Plugin requires configuration.';
         }
 
         return '';
     }
 
+    /**
+     * @param string $args
+     */
     private function getOptionPlaceholder(...$args): string
     {
         if (count($args) !== 0) {
-            if ($args[0] === 'cookie_domain') {
-                return $this->sanitizeDomain(site_url());
+            $context = (string) $args[0];
+
+            if ($context === 'cookie_domain') {
+                return $this->sanitizeDomain(site_url()) ?? '';
             }
         }
 
         return '';
     }
 
-    private function getRoleOptions(): ?array
+    /**
+     * @return string[]
+     */
+    private function getRoleOptions(): array
     {
         $roles = get_editable_roles();
         $response = [];
@@ -923,7 +1052,7 @@ final class Configuration extends Base
         return $string;
     }
 
-    private function sanitizeCookiePath(string $path): ?string
+    private function sanitizeCookiePath(string $path): string
     {
         $path = trim(sanitize_text_field($path));
         $path = trim(str_replace(['../', './'], '', $path));

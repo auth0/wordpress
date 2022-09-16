@@ -20,10 +20,13 @@ final class WpObjectCachePool implements CacheItemPoolInterface
      */
     public const CONST_CACHE_GROUP = 'auth0';
 
+    /**
+     *
+     * @var array<array{item: CacheItemInterface, expiration: int|null}>
+     */
     private array $deferred = [];
 
     public function __construct(
-        SdkConfiguration $sdkConfiguration,
         private string $group = 'auth0'
     ) {
     }
@@ -38,6 +41,12 @@ final class WpObjectCachePool implements CacheItemPoolInterface
         return $this->wpGetItem($key);
     }
 
+    /**
+     *
+     * @param string[] $keys
+     *
+     * @return CacheItemInterface[]
+     */
     public function getItems(array $keys = []): iterable
     {
         if ($keys === []) {
@@ -125,10 +134,10 @@ final class WpObjectCachePool implements CacheItemPoolInterface
     {
         $success = true;
 
-        foreach ($this->deferred as $singleDeferred) {
+        foreach (array_keys($this->deferred) as $singleDeferred) {
             $item = $this->wpGetItemDeferred((string) $singleDeferred);
 
-            if ($item && ! $this->save($item)) {
+            if ($item !== null && ! $this->save($item)) {
                 $success = false;
             }
         }
@@ -137,7 +146,7 @@ final class WpObjectCachePool implements CacheItemPoolInterface
         return $success;
     }
 
-    private function wpCreateItem(string $key, $value): WpObjectCacheItem
+    private function wpCreateItem(string $key, mixed $value): CacheItemInterface
     {
         if (! is_string($value)) {
             return WpObjectCacheItem::miss($key);
@@ -152,7 +161,7 @@ final class WpObjectCachePool implements CacheItemPoolInterface
         return new WpObjectCacheItem($key, $value, true);
     }
 
-    private function wpGetItem(string $key): WpObjectCacheItem
+    private function wpGetItem(string $key): CacheItemInterface
     {
         $value = wp_cache_get($key, $this->group, true);
 
@@ -163,14 +172,14 @@ final class WpObjectCachePool implements CacheItemPoolInterface
         return $this->wpCreateItem($key, $value);
     }
 
-    private function wpGetItemDeferred(string $key): WpObjectCacheItem
+    private function wpGetItemDeferred(string $key): ?CacheItemInterface
     {
         if (! isset($this->deferred[$key])) {
             return null;
         }
 
         $deferred = $this->deferred[$key];
-        $item = clone $deferred['time'];
+        $item = clone $deferred['item'];
         $expires = $deferred['expiration'];
 
         if ($expires !== null && $expires <= time()) {

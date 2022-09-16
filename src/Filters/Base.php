@@ -9,6 +9,9 @@ use Auth0\WordPress\Plugin;
 
 abstract class Base
 {
+    /**
+     * @var array<string, string|array<int, int|string>>
+     */
     protected array $registry = [];
 
     public function __construct(private Plugin $plugin)
@@ -27,33 +30,31 @@ abstract class Base
 
     public function register(): self
     {
-        if (isset($this->registry) && is_array($this->registry) && $this->registry !== []) {
-            foreach ($this->registry as $event => $method) {
-                if (is_string($method)) {
-                    $this->plugin->filters()
-                        ->add($event, $this, $method, $this->getPriority($event));
-                    continue;
-                }
+        foreach ($this->registry as $event => $method) {
+            $callback = null;
+            $arguments = 1;
 
-                if (is_array($method) && $method !== []) {
-                    if (isset($method['method'])) {
-                        $arguments = $method['arguments'] ?? 1;
-                        $this->plugin->filters()
-                            ->add($event, $this, $method['method'], $this->getPriority($event), $arguments);
-                        continue;
-                    }
+            if (is_string($method)) {
+                $callback = $method;
+            }
 
-                    continue;
-                }
+            if (is_array($method) && count($method) >= 1 && is_string($method[0]) && is_numeric($method[1])) {
+                $callback = $method[0];
+                $arguments = (int) $method[1];
+            }
+
+            if ($callback !== null) {
+                $this->plugin->filters()
+                    ->add($event, $this, $callback, $this->getPriority($event), $arguments);
             }
         }
 
         return $this;
     }
 
-    public function getPriority(string $event, int $default = 10): int
+    public function getPriority(string $event, int $default = 10, string $prefix = 'AUTH0_FILTER_PRIORITY'): int
     {
-        $noramlized = 'AUTH0_FILTER_PRIORITY_' . strtoupper($event);
+        $noramlized = strtoupper($prefix . '_' . $event);
 
         if (defined($noramlized)) {
             $constant = constant($noramlized);

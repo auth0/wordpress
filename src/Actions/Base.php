@@ -9,6 +9,9 @@ use Auth0\WordPress\Plugin;
 
 abstract class Base
 {
+    /**
+     * @var array<string, string|array<int, int|string>>
+     */
     protected array $registry = [];
 
     public function __construct(private Plugin $plugin)
@@ -27,36 +30,22 @@ abstract class Base
 
     public function register(): self
     {
-        if (isset($this->registry) && is_array($this->registry) && $this->registry !== []) {
-            foreach ($this->registry as $event => $methods) {
-                if (is_string($methods)) {
-                    $this->plugin->actions()
-                        ->add($event, $this, $methods, $this->getPriority($event));
-                    continue;
-                }
+        foreach ($this->registry as $event => $method) {
+            $callback = null;
+            $arguments = 1;
 
-                if (is_array($methods) && $methods !== []) {
-                    foreach ($methods as $method) {
-                        $callback = null;
-                        $arguments = 1;
+            if (is_string($method)) {
+                $callback = $method;
+            }
 
-                        if (is_string($method)) {
-                            $callback = $method;
-                        }
+            if (is_array($method) && count($method) >= 1 && is_string($method[0]) && is_numeric($method[1])) {
+                $callback = $method[0];
+                $arguments = (int) $method[1];
+            }
 
-                        if (is_array($method) && count($method) >= 1) {
-                            $callback = $method[0];
-                            $arguments = (int) $method[1] ?? 1;
-                        }
-
-                        if ($callback !== null) {
-                            $this->plugin->actions()
-                                ->add($event, $this, $callback, $this->getPriority($event), $arguments);
-                        }
-                    }
-
-                    continue;
-                }
+            if ($callback !== null) {
+                $this->plugin->actions()
+                    ->add($event, $this, $callback, $this->getPriority($event), $arguments);
             }
         }
 

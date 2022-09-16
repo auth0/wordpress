@@ -15,7 +15,7 @@ final class WpObjectCacheItem implements CacheItemInterface
 
     public function __construct(
         private string $key,
-        private $value,
+        private mixed $value,
         private bool $is_hit
     ) {
     }
@@ -43,7 +43,7 @@ final class WpObjectCacheItem implements CacheItemInterface
     }
 
     /**
-     * @param int|null $dateTime
+     * @param DateTimeInterface|null $dateTime
      */
     public function expiresAt(?DateTimeInterface $dateTime): static
     {

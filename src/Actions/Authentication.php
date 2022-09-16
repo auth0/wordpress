@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Actions;
 
+use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Exception\StateException;
+use Throwable;
+use WP_Error;
+use WP_User;
 
 final class Authentication extends Base
 {
     protected array $registry = [
         'init' => 'onInit',
-        'auth_cookie_valid' => ['onAuthCookieValid', 2],
         'auth_cookie_malformed' => ['onAuthCookieMalformed', 2],
         'auth_cookie_expired' => 'onAuthCookieExpired',
         'auth_cookie_bad_username' => 'onAuthCookieBadUsername',
@@ -44,8 +47,9 @@ final class Authentication extends Base
             return;
         }
 
-        $session = $this->getSdk()
-            ->getCredentials();
+        /** @var object{user: array<string, mixed[]|int|string>, idToken?: string, accessToken?: string, accessTokenScope?: array<string, string>, accessTokenExpiration?: int, accessTokenExpired: bool, refreshToken?: string}|null $session */
+        $session = $this->getSdk()->getCredentials();
+        $expired = $session?->accessTokenExpired ?? true;
         $wordpress = wp_get_current_user();
 
         if (! $this->getPlugin()->isEnabled()) {
@@ -65,7 +69,7 @@ final class Authentication extends Base
             }
 
             // Is an Auth0 session available?
-            if ($session === null) {
+            if (! is_object($session)) {
                 // No; is there a WordPress session?
                 if ($wordpress->ID !== 0) {
                     // There is. Invalidate the WP session.
@@ -77,50 +81,41 @@ final class Authentication extends Base
 
             // Is an WP session available?
             if ($wordpress->ID === 0) {
-                // No; is there an Auth0 session?
-                if ($session !== null) {
-                    // There is. Invalidate the WP session.
-                    $this->getSdk()
-                        ->clear();
-                }
+                $this->getSdk()
+                    ->clear();
 
                 return;
             }
 
             // Verify the WordPress user signed in is linked to the Auth0 Connection 'sub'.
-            if ($wordpress->ID !== 0) {
-                $sub = $session->user['sub'] ?? null;
+            $sub = $session->user['sub'] ?? null;
+            if ($sub !== null) {
+                $match = $this->getAccountByConnection($sub);
 
-                if ($sub !== null) {
-                    $match = $this->getAccountByConnection($sub);
-
-                    if (! $match instanceof \WP_User || $match->ID !== $wordpress->ID) {
-                        $this->getSdk()
-                            ->clear();
-                        wp_logout();
-                        return;
-                    }
-                }
-            }
-
-            // Verify that the Auth0 token cookie has not expired
-            if ($session->accessTokenExpired === true) {
-                if ($this->getPlugin()->getOption('sessions', 'refresh_tokens') === 'true') {
-                    try {
-                        // Token has expired, attempt to refresh it.
-                        $this->getSdk()
-                            ->renew();
-                        return;
-                    } catch (StateException $e) {
-                        // Refresh failed.
-                    }
-
-                    // Invalidation authentication state.
+                if (! $match instanceof WP_User || $match->ID !== $wordpress->ID) {
                     $this->getSdk()
                         ->clear();
                     wp_logout();
                     return;
                 }
+            }
+
+            // Verify that the Auth0 token cookie has not expired
+            if ($expired && $this->getPlugin()->getOption('sessions', 'refresh_tokens') === 'true') {
+                try {
+                    // Token has expired, attempt to refresh it.
+                    $this->getSdk()
+                        ->renew();
+                    return;
+                } catch (StateException) {
+                    // Refresh failed.
+                }
+
+                // Invalidation authentication state.
+                $this->getSdk()
+                    ->clear();
+                wp_logout();
+                return;
             }
         }
 
@@ -131,13 +126,13 @@ final class Authentication extends Base
         }
     }
 
-    public function onAuthCookieValid(array $cookieElements, ?\WP_User $user = null): void
-    {
-        // TODO: Refresh rolling session cookie.
-        // var_dump($cookieElements);
-        // exit;
-    }
-
+    /**
+     * Fires when 'auth_cookie_malformed' is triggered by WordPress.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/auth_cookie_malformed/
+     * @param string $cookie
+     * @param string|null $scheme
+     */
     public function onAuthCookieMalformed(string $cookie, ?string $scheme = null): void
     {
         if ($cookie === '') {
@@ -148,24 +143,48 @@ final class Authentication extends Base
             ->clear();
     }
 
+    /**
+     * Fires when 'auth_cookie_expired' is triggered by WordPress.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/auth_cookie_expired/
+     * @param array<mixed> $cookieElements
+     */
     public function onAuthCookieExpired(array $cookieElements): void
     {
         $this->getSdk()
             ->clear();
     }
 
+    /**
+     * Fires when 'auth_cookie_bad_username' is triggered by WordPress.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/auth_cookie_bad_username/
+     * @param array<mixed> $cookieElements
+     */
     public function onAuthCookieBadUsername(array $cookieElements): void
     {
         $this->getSdk()
             ->clear();
     }
 
+    /**
+     * Fires when 'auth_cookie_bad_session_token' is triggered by WordPress.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/auth_cookie_bad_session_token/
+     * @param array<mixed> $cookieElements
+     */
     public function onAuthCookieBadSessionToken(array $cookieElements): void
     {
         $this->getSdk()
             ->clear();
     }
 
+    /**
+     * Fires when 'auth_cookie_bad_hash' is triggered by WordPress.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/auth_cookie_bad_hash/
+     * @param array<mixed> $cookieElements
+     */
     public function onAuthCookieBadHash(array $cookieElements): void
     {
         $this->getSdk()
@@ -174,7 +193,11 @@ final class Authentication extends Base
 
     public function onLogin(): void
     {
-        if (! $this->getPlugin()->isReady() || ! $this->getPlugin()->isEnabled()) {
+        if (! $this->getPlugin()->isReady()) {
+            return;
+        }
+
+        if (! $this->getPlugin()->isEnabled()) {
             return;
         }
 
@@ -182,7 +205,7 @@ final class Authentication extends Base
         nocache_headers();
 
         // Check if authentication flow parameters are present (?code and ?state)
-        $exchange = $this->getSdk()
+        $exchangeParameters = $this->getSdk()
             ->getExchangeParameters();
 
         // Check if authentication flow error parameter is present (?error)
@@ -190,17 +213,17 @@ final class Authentication extends Base
             ->getRequestParameter('error');
 
         // Are token exchange parameters present?
-        if ($exchange !== null) {
+        if ($exchangeParameters !== null) {
             try {
                 // Attempt completion of the authentication flow using
-                $success = $this->getSdk()
+                $this->getSdk()
                     ->exchange(
-                        code: sanitize_text_field($exchange->code),
-                        state: sanitize_text_field($exchange->state)
+                        code: sanitize_text_field($exchangeParameters?->code ?? ''),
+                        state: sanitize_text_field($exchangeParameters?->state ?? '')
                     );
-            } catch (\Throwable $th) {
+            } catch (Throwable $throwable) {
                 // Exchange failed; throw an error
-                var_dump('ERROR', $th->getMessage());
+                var_dump('ERROR', $throwable->getMessage());
                 echo "<p><a href='/wp-login.php'>Again</a></p>";
                 exit;
             }
@@ -214,25 +237,25 @@ final class Authentication extends Base
                 $email = sanitize_email($session->user['email'] ?? '');
                 $verified = $session->user['email_verified'] ?? null;
 
-                if (strlen($email) === 0) {
+                if ((string) $email === '') {
                     $email = null;
                     $verified = null;
                 }
 
-                $user = $this->resolveIdentity(sub: $sub, email: $email, verified: $verified);
+                $wpUser = $this->resolveIdentity(sub: $sub, email: $email, verified: $verified);
 
-                if ($user) {
+                if ($wpUser !== null) {
                     if ($sub !== null) {
-                        $this->addAccountConnection($user, $sub);
+                        $this->addAccountConnection($wpUser, $sub);
                     }
 
-                    if ($email !== null && $verified === true && $email !== $user->user_email) {
-                        $this->setAccountEmail($user, $email);
+                    if ($email !== null && $verified === true && $email !== $wpUser->user_email) {
+                        $this->setAccountEmail($wpUser, $email);
                     }
 
-                    wp_set_current_user($user->ID);
-                    wp_set_auth_cookie($user->ID, true);
-                    do_action('wp_login', $user->user_login, $user);
+                    wp_set_current_user($wpUser->ID);
+                    wp_set_auth_cookie($wpUser->ID, true);
+                    do_action('wp_login', $wpUser->user_login, $wpUser);
                     wp_redirect('/');
                     exit;
                 }
@@ -241,17 +264,15 @@ final class Authentication extends Base
             }
         }
 
-        if ($exchange === null && $error !== null) {
+        if ($exchangeParameters === null && $error !== null) {
             var_dump('ERROR', $error);
             echo "<p<a href='/wp-login.php'>Again</a></p>";
             exit;
         }
 
-        if ($exchange === null && $error === null) {
-            if (wp_get_current_user()->ID !== 0 || $this->getSdk()->getCredentials() !== null) {
-                wp_redirect('/');
-                exit;
-            }
+        if ($exchangeParameters === null && $error === null && (wp_get_current_user()->ID !== 0 || $this->getSdk()->getCredentials() !== null)) {
+            wp_redirect('/');
+            exit;
         }
 
         wp_redirect($this->getSdk()->login());
@@ -271,10 +292,10 @@ final class Authentication extends Base
         exit;
     }
 
-    public function onLoginComplete(string $user_login, \WP_User $user): void
+    public function onLoginComplete(string $user_login, WP_User $wpUser): void
     {
         var_dump($user_login);
-        var_dump($user);
+        var_dump($wpUser);
         exit;
     }
 
@@ -282,27 +303,27 @@ final class Authentication extends Base
         ?string $sub = null,
         ?string $email = null,
         ?bool $verified = null,
-    ): ?\WP_User {
-        $email = sanitize_email(filter_var($email, FILTER_SANITIZE_EMAIL, FILTER_NULL_ON_FAILURE));
+    ): ?WP_User {
+        $email = sanitize_email(filter_var($email ?? '', FILTER_SANITIZE_EMAIL, FILTER_NULL_ON_FAILURE) ?? '');
 
         if ($sub !== null) {
             $sub = sanitize_text_field($sub);
             $found = $this->getAccountByConnection($sub);
 
-            if ($found instanceof \WP_User) {
+            if ($found instanceof WP_User) {
                 return $found;
             }
         }
 
         // If an email is not marked as verified by the connection, dismiss it.
-        if ($verified !== true || ! is_string($email) || strlen($email) === 0) {
+        if ($verified !== true || ! is_string($email) || $email === '') {
             $email = null;
         }
 
         if ($email !== null) {
             $found = get_user_by('email', $email);
 
-            if ($found instanceof \WP_User) {
+            if ($found instanceof WP_User) {
                 // Are we allowed to match loosely by email?
                 if ($this->getPlugin()->getOption('accounts', 'matching') !== 'strict') {
                     return $found;
@@ -321,28 +342,31 @@ final class Authentication extends Base
 
         if ($this->getPlugin()->getOption('accounts', 'missing') === 'create') {
             $username = ($email !== null) ? explode('@', $email, 2)[0] : explode('|', $sub ?? '', 2)[1];
-            $user = wp_create_user($username, wp_generate_password(rand(12, 64), true, true), $email ?? '');
+            $user = wp_create_user($username, wp_generate_password(random_int(12, 64), true, true), $email ?? '');
 
-            if (! $user instanceof \WP_Error) {
+            if (! $user instanceof WP_Error) {
                 $user = get_user_by('ID', $user);
-                $role = $this->getPlugin()
-                    ->getOption('accounts', 'default_role', get_option('default_role'));
 
-                if ($user->role !== $role) {
-                    $user->set_role($role);
-                    wp_update_user($user);
+                if ($user instanceof WP_User) {
+                    $role = $this->getPlugin()
+                        ->getOption('accounts', 'default_role', get_option('default_role'));
+
+                    if (is_string($role) && ! in_array($role, $user->roles)) {
+                        $user->set_role($role);
+                        wp_update_user($user);
+                    }
+
+                    return $user;
                 }
-
-                return $user;
             }
         }
 
         return null;
     }
 
-    private function addAccountConnection(\WP_User $user, string $sub): void
+    private function addAccountConnection(WP_User $wpUser, string $sub): void
     {
-        $connections = get_user_meta($user->ID, 'auth0_connections', true);
+        $connections = get_user_meta($wpUser->ID, 'auth0_connections', true);
 
         if (! is_array($connections)) {
             $connections = [];
@@ -350,25 +374,25 @@ final class Authentication extends Base
 
         if (! in_array($sub, $connections, true)) {
             $connections[] = $sub;
-            update_user_meta($user->ID, 'auth0_connections', array_values(array_unique($connections)));
+            update_user_meta($wpUser->ID, 'auth0_connections', array_values(array_unique($connections)));
         }
     }
 
-    private function setAccountEmail(\WP_User $user, string $email): ?\WP_User
+    private function setAccountEmail(WP_User $wpUser, string $email): ?WP_User
     {
-        if ($user->user_email !== $email) {
-            $user->user_email = $email;
-            $status = wp_update_user($user);
+        if ($wpUser->user_email !== $email) {
+            $wpUser->user_email = $email;
+            $status = wp_update_user($wpUser);
 
-            if ($status instanceof \WP_Error) {
+            if ($status instanceof WP_Error) {
                 return null;
             }
         }
 
-        return $user;
+        return $wpUser;
     }
 
-    private function getAccountByConnection(string $connection): ?\WP_User
+    private function getAccountByConnection(string $connection): ?WP_User
     {
         $query = [
             [
@@ -381,11 +405,14 @@ final class Authentication extends Base
             'number' => 1,
             'meta_query' => $query,
         ]);
-
-        if (is_array($found) && count($found) >= 1) {
-            return $found[0];
+        if (! is_array($found)) {
+            return null;
         }
 
-        return null;
+        if (count($found) < 1) {
+            return null;
+        }
+
+        return $found[0];
     }
 }

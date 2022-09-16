@@ -10,6 +10,7 @@ use Auth0\WordPress\Actions\Authentication as AuthenticationActions;
 use Auth0\WordPress\Actions\Base as Actions;
 use Auth0\WordPress\Actions\Configuration as ConfigurationActions;
 use Auth0\WordPress\Cache\WpObjectCachePool;
+use Auth0\WordPress\Filters\Authentication as AuthenticationFilters;
 use Auth0\WordPress\Filters\Base as Filters;
 use Auth0\WordPress\Http\Factory;
 
@@ -23,8 +24,11 @@ final class Plugin
     /**
      * @var array<class-string<Filters>>
      */
-    private const FILTERS = [];
+    private const FILTERS = [AuthenticationFilters::class];
 
+    /**
+     * @var mixed[]
+     */
     private array $registry = [];
 
     public function __construct(
@@ -76,7 +80,7 @@ final class Plugin
     {
         static $instance = null;
 
-        $instance ??= $instance ?? new Hooks(Hooks::CONST_ACTION_HOOK, $this);
+        $instance ??= $instance ?? new Hooks(Hooks::CONST_ACTION_HOOK);
 
         return $instance;
     }
@@ -88,7 +92,7 @@ final class Plugin
     {
         static $instance = null;
 
-        $instance ??= $instance ?? new Hooks(Hooks::CONST_ACTION_FILTER, $this);
+        $instance ??= $instance ?? new Hooks(Hooks::CONST_ACTION_FILTER);
 
         return $instance;
     }
@@ -99,11 +103,23 @@ final class Plugin
     public function run(): self
     {
         foreach (self::FILTERS as $filter) {
-            call_user_func([$this->getClassInstance((string) $filter), 'register']);
+            $callback = [$this->getClassInstance((string) $filter), 'register'];
+
+            /**
+             * @var callable $callback
+             */
+
+            call_user_func($callback);
         }
 
         foreach (self::ACTIONS as $action) {
-            call_user_func([$this->getClassInstance((string) $action), 'register']);
+            $callback = [$this->getClassInstance((string) $action), 'register'];
+
+            /**
+             * @var callable $callback
+             */
+
+            call_user_func($callback);
         }
 
         return $this;
@@ -140,18 +156,27 @@ final class Plugin
      */
     public function isEnabled(): bool
     {
-        $clientOptions = get_option('auth0_state', []);
-        $enabled = $clientOptions['enable'] ?? 'false';
+        $state = get_option('auth0_state', []);
+        $enabled = 'false';
+
+        /**
+         * @var string[] $state
+         */
+
+        if (isset($state['enable']) && is_string($state['enable'])) {
+            $enabled = $state['enable'];
+        }
+
         return $enabled === 'true';
     }
 
-    public function getOption(
-        string $group,
-        string $key,
-        mixed $default = null,
-        string $prefix = 'auth0_'
-    ): mixed {
+    public function getOption(string $group, string $key, mixed $default = null, string $prefix = 'auth0_'): mixed
+    {
         $options = get_option($prefix . $group, []);
+
+        /**
+         * @var array<mixed> $options
+         */
 
         if (isset($options[$key])) {
             return $options[$key];
@@ -160,35 +185,53 @@ final class Plugin
         return $default;
     }
 
+    public function getOptionString(string $group, string $key, string $prefix = 'auth0_'): ?string
+    {
+        $result = $this->getOption($group, $key, null, $prefix);
+
+        if (is_string($result)) {
+            return (string) $result;
+        }
+
+        return null;
+    }
+
+    public function getOptionBoolean(string $group, string $key, string $prefix = 'auth0_'): ?bool
+    {
+        $result = $this->getOption($group, $key, null, $prefix);
+
+        if (is_string($result)) {
+            if ($result === 'true' || $result === '1') {
+                return true;
+            }
+
+            return false;
+        }
+
+        return null;
+    }
+
     /**
      * Import configuration settings from database.
      */
     private function importConfiguration(): SdkConfiguration
     {
-        $options = [
-            'client' => get_option('auth0_client', []),
-            'advanced' => get_option('auth0_advanced', []),
-            'tokens' => get_option('auth0_tokens', []),
-            'sessions' => get_option('auth0_sessions', []),
-            'cookies' => get_option('auth0_cookies', []),
-        ];
+        $audiences = $this->getOptionString('advanced', 'apis');
+        $organizations = $this->getOptionString('advanced', 'organizations');
+        $caching = $this->getOption('tokens', 'caching');
 
-        $audiences = null;
-        $organizations = null;
-        $caching = $options['tokens']['caching'] ?? null;
+        if ($audiences !== null) {
+            $audiences = array_values(array_unique(explode("\n", trim($audiences))));
 
-        if (isset($options['advanced']['apis']) && is_string($options['advanced']['apis'])) {
-            $audiences = array_values(array_unique(explode("\n", trim(($options['advanced']['apis'])))));
-
-            if ($audiences === []) {
+            if (count($audiences) !== 0) {
                 $audiences = null;
             }
         }
 
-        if (isset($options['advanced']['organizations']) && is_string($options['advanced']['organizations'])) {
-            $organizations = array_values(array_unique(explode("\n", trim(($options['advanced']['organizations'])))));
+        if ($organizations !== null) {
+            $organizations = array_values(array_unique(explode("\n", trim($organizations))));
 
-            if ($organizations === []) {
+            if (count($organizations) !== 0) {
                 $organizations = null;
             }
         }
@@ -199,30 +242,30 @@ final class Plugin
             httpResponseFactory: Factory::getResponseFactory(),
             httpStreamFactory: Factory::getStreamFactory(),
             httpClient: Factory::getClient(),
-            domain: $options['client']['domain'] ?? null,
-            clientId: $options['client']['id'] ?? null,
-            clientSecret: $options['client']['secret'] ?? null,
-            customDomain: $options['advanced']['custom_domain'] ?? null,
+            domain: $this->getOptionString('client', 'domain'),
+            clientId: $this->getOptionString('client', 'id'),
+            clientSecret: $this->getOptionString('client', 'secret'),
+            customDomain: $this->getOptionString('advanced', 'custom_domainin'),
             audience: $audiences,
             organization: $organizations,
-            cookieSecret: $options['cookies']['secret'] ?? null,
-            cookieDomain: $options['cookies']['domain'] ?? null,
-            cookiePath: $options['cookies']['path'] ?? '/',
-            cookieExpires: $options['cookies']['ttl'] ?? 0,
-            cookieSecure: (bool) ($options['cookies']['secure'] ?? is_ssl()),
-            cookieSameSite: $options['cookies']['samesite'] ?? null,
+            cookieSecret: $this->getOptionString('cookies', 'secret'),
+            cookieDomain: $this->getOptionString('cookies', 'domain'),
+            cookiePath: $this->getOptionString('cookies', 'path') ?? '/',
+            cookieExpires: intval($this->getOptionString('cookies', 'ttl') ?? 0),
+            cookieSecure: $this->getOptionBoolean('cookies', 'secure') ?? is_ssl(),
+            cookieSameSite: $this->getOptionString('cookies', 'samesite'),
             redirectUri: get_site_url(null, 'wp-login.php')
         );
 
         if ($caching !== 'disable') {
-            $wpObjectCachePool = new WpObjectCachePool($sdkConfiguration);
+            $wpObjectCachePool = new WpObjectCachePool();
             $sdkConfiguration->setTokenCache($wpObjectCachePool);
         }
 
         return $sdkConfiguration;
     }
 
-    private function getClassInstance(string $class)
+    private function getClassInstance(string $class): mixed
     {
         if (! array_key_exists($class, $this->registry)) {
             $this->registry[$class] = new $class($this);
