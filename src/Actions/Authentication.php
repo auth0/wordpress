@@ -25,18 +25,6 @@ final class Authentication extends Base
         'login_form_logout' => 'onLogout',
         'auth0_logout' => 'onLogout',
 
-        // https://developer.wordpress.org/reference/hooks/wp_login/
-        // 'wp_login' => 'onLoginComplete',
-
-        // https://developer.wordpress.org/reference/hooks/set_current_user/
-        // 'set_current_user' => 'onSetCurrentUser',
-
-        // https://developer.wordpress.org/reference/hooks/set_logged_in_cookie/
-        // 'set_logged_in_cookie' => 'onSetCookie',
-
-        // https://developer.wordpress.org/reference/hooks/clear_auth_cookie/
-        // 'clear_auth_cookie' => 'onClearCookie',
-
         'before_signup_header' => 'onRegistration',
     ];
 
@@ -218,9 +206,7 @@ final class Authentication extends Base
                     );
             } catch (Throwable $throwable) {
                 // Exchange failed; throw an error
-                var_dump('ERROR', $throwable->getMessage());
-                echo "<p><a href='/wp-login.php'>Again</a></p>";
-                exit;
+                die($throwable->getMessage());
             }
 
             $session = $this->getSdk()
@@ -260,9 +246,7 @@ final class Authentication extends Base
         }
 
         if ($exchangeParameters === null && $error !== null) {
-            var_dump('ERROR', $error);
-            echo "<p<a href='/wp-login.php'>Again</a></p>";
-            exit;
+            die($error);
         }
 
         if ($exchangeParameters === null && $error === null && (wp_get_current_user()->ID !== 0 || $this->getSdk()->getCredentials() !== null)) {
@@ -283,14 +267,7 @@ final class Authentication extends Base
 
     public function onRegistration(): void
     {
-        var_dump('TEST');
-        exit;
-    }
-
-    public function onLoginComplete(string $user_login, WP_User $wpUser): void
-    {
-        var_dump($user_login);
-        var_dump($wpUser);
+        // Block registration attempts from the API.
         exit;
     }
 
