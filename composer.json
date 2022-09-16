@@ -1,15 +1,23 @@
 {
   "name": "auth0/wp-auth0",
   "description": "WordPress Plugin for Auth0",
-  "homepage": "https://auth0.com/wordpress",
   "license": "MIT",
   "type": "wordpress-plugin",
   "keywords": [
-    "wordpress",
-    "wp",
+    "auth0",
     "authentication",
+    "authorization",
+    "login",
     "auth",
-    "auth0"
+    "jwt",
+    "json web token",
+    "jwk",
+    "json web key",
+    "oauth",
+    "openid",
+    "secure",
+    "protect",
+    "api"
   ],
   "authors": [
     {
@@ -19,57 +27,99 @@
     }
   ],
   "support": {
+    "issues": "https://github.com/auth0/wp-auth0/issues",
     "forum": "https://community.auth0.com/tags/wordpress",
     "source": "https://github.com/auth0/wp-auth0",
-    "issues": "https://github.com/auth0/wp-auth0/issues",
-    "docs": "https://auth0.com/docs/cms/wordpress"
+    "docs": "https://auth0.com/docs/customize/integrations/cms/wordpress-plugin"
   },
   "require": {
     "php": "^7.4 || ^8.0",
+    "ext-filter": "*",
     "ext-json": "*",
+    "ext-mbstring": "*",
     "ext-openssl": "*",
-    "auth0/php-jwt": "^3.3.4",
-    "composer/installers": "~1.0"
+    "auth0/auth0-php": "^8.0",
+    "php-http/message-factory": "^1.0",
+    "psr/http-client": "^1.0",
+    "psr/http-factory": "^1.0",
+    "psr/http-message": "^1.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.0",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-    "phpcompatibility/phpcompatibility-wp": "*",
-    "wp-coding-standards/wpcs": "*",
-    "phpstan/phpstan": "^0.12.64",
-    "szepeviktor/phpstan-wordpress": "^0.7.2"
+    "firebase/php-jwt": "^6.2",
+    "hyperf/event": "^2.2",
+    "laravel/pint": "^1.0",
+    "mockery/mockery": "^1.4",
+    "nyholm/psr7": "^1.5",
+    "pestphp/pest": "^1.21",
+    "php-http/mock-client": "^1.5",
+    "phpstan/phpstan": "^1.7",
+    "phpstan/phpstan-strict-rules": "^1.3",
+    "phpunit/phpunit": "^9.5",
+    "rector/rector": "^0.13.6",
+    "squizlabs/php_codesniffer": "^3.7",
+    "symfony/cache": "^4.4 || ^5.4 || ^6.1",
+    "symplify/easy-coding-standard": "^11.1",
+    "szepeviktor/phpstan-wordpress": "^1.1",
+    "vimeo/psalm": "^4.24",
+    "wikimedia/composer-merge-plugin": "^2.0"
   },
-  "scripts": {
-    "tests": [
-      "Composer\\Config::disableProcessTimeout",
-      "@test:7.4"
-    ],
-    "test:7.4": [
-      "Composer\\Config::disableProcessTimeout",
-      "docker-compose -f docker/mysql.docker-compose.yml -f docker/php-7.4.docker-compose.yml up --abort-on-container-exit --exit-code-from phpunit",
-      "docker-compose -f docker/mysql.docker-compose.yml -f docker/php-7.4.docker-compose.yml down --rmi local -v"
-    ]
-  },
-  "config": {
-    "classmap-authoritative": true,
-    "preferred-install": "dist",
-    "sort-packages": true,
-    "optimize-autoloader": true
-  },
+  "prefer-stable": true,
   "autoload": {
-    "classmap": [
-      "lib/"
-    ],
-    "files": [
-      "functions.php"
-    ]
+    "psr-4": {
+      "Auth0\\WordPress\\": "src/"
+    }
   },
   "autoload-dev": {
-    "classmap": [
-      "tests/classes/",
-      "tests/traits/"
-    ]
+    "psr-4": {
+      "Auth0\\Tests\\": "tests/"
+    }
   },
-  "minimum-stability": "stable",
-  "prefer-stable": true
+  "extra": {
+    "merge-plugin": {
+      "include": [
+        "composer.local.json"
+      ],
+      "recurse": true,
+      "replace": true,
+      "ignore-duplicates": false,
+      "merge-dev": true,
+      "merge-extra": false,
+      "merge-extra-deep": false,
+      "merge-scripts": false
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "pestphp/pest-plugin": true,
+      "ergebnis/composer-normalize": true,
+      "wikimedia/composer-merge-plugin": true
+    },
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "process-timeout": 0
+  },
+  "scripts": {
+    "package": "composer install && composer update && TODO: Bundle and prefix dependencies",
+    "fix": [
+      "@pint:fix",
+      "@psalm:fix",
+      "@rector:fix"
+    ],
+    "test": [
+      "@rector",
+      "@pint",
+      "@phpstan",
+      "@psalm",
+      "@pest"
+    ],
+    "pest": "pest --coverage-clover coverage/coverage.xml --no-interaction",
+    "phpstan": "phpstan analyze --no-progress",
+    "pint": "pint --test",
+    "pint:fix": "pint",
+    "psalm": "psalm --no-progress",
+    "psalm:fix": "psalm --alter --issues=all --php-version=7.4",
+    "rector": "rector process src --dry-run",
+    "rector:fix": "rector process src"
+  }
 }
