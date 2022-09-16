@@ -366,9 +366,7 @@ final class Configuration extends Base
                 $sectionType = (isset($section['type']) && is_string($section['type'])) ? $section['type'] : 'array';
                 $sectionCallback = [
                     $this,
-                    'onUpdate' . str_replace(' ', '', ucwords(
-                        str_replace(['auth0_', '_'], ' ', $sectionId)
-                    )),
+                    'onUpdate' . str_replace(' ', '', ucwords(str_replace(['auth0_', '_'], ' ', $sectionId))),
                 ];
 
                 /**
@@ -403,9 +401,7 @@ final class Configuration extends Base
                     $optionValues = get_option($sectionId, false);
                 }
 
-                /**
-                 * @var array<mixed>|null $optionValues
-                 */
+                /** @var array<mixed>|null $optionValues */
 
                 $options = (isset($section['options']) && is_array($section['options'])) ? $section['options'] : [];
 
@@ -426,50 +422,34 @@ final class Configuration extends Base
                     if (is_array($optionDescription)) {
                         $callback = [$this, $optionDescription[0]];
 
-                        /**
-                         * @var callable $callback
-                         */
+                        /** @var callable $callback */
 
-                        $optionDescription = call_user_func_array(
-                            $callback,
-                            array_slice($optionDescription, 1)
-                        );
+                        $optionDescription = call_user_func_array($callback, array_slice($optionDescription, 1));
                     }
 
                     if (is_array($optionPlaceholder)) {
                         $callback = [$this, $optionPlaceholder[0]];
 
-                        /**
-                         * @var callable $callback
-                         */
+                        /** @var callable $callback */
 
-                        $optionPlaceholder = call_user_func_array(
-                            $callback,
-                            array_slice($optionPlaceholder, 1)
-                        );
+                        $optionPlaceholder = call_user_func_array($callback, array_slice($optionPlaceholder, 1));
                     }
 
                     if (is_string($optionDisabled)) {
                         $callback = [$this, $optionDisabled];
-                        /**
-                         * @var callable $callback
-                         */
+                        /** @var callable $callback */
                         $optionDisabled = (call_user_func($callback) === true);
                     }
 
                     if (is_string($optionEnabled)) {
                         $callback = [$this, $optionEnabled];
-                        /**
-                         * @var callable $callback
-                         */
+                        /** @var callable $callback */
                         $optionDisabled = (call_user_func($callback) === false);
                     }
 
                     if (is_string($optionSelections)) {
                         $callback = [$this, $optionSelections];
-                        /**
-                         * @var callable $callback
-                         */
+                        /** @var callable $callback */
                         $optionSelections = call_user_func($callback) ?? [];
                     }
 
@@ -809,14 +789,7 @@ final class Configuration extends Base
     }
 
     /**
-     * @param string $element
-     * @param string $name
-     * @param string|int|bool|null $value
-     * @param string $type
-     * @param string $description
-     * @param string $placeholder
      * @param null|array<string|int|bool> $select
-     * @param null|bool $disabled
      */
     private function renderOption(
         string $element,
@@ -916,9 +889,7 @@ final class Configuration extends Base
     {
         $pages = $this->pages;
 
-        /**
-         * @var array<array<string>> $pages
-         */
+        /** @var array<array<string>> $pages */
 
         $title = $pages[$pageId]['title'];
 

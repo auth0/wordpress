@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Cache;
 
-use Auth0\SDK\Configuration\SdkConfiguration;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use WP_Object_Cache;
@@ -21,7 +20,6 @@ final class WpObjectCachePool implements CacheItemPoolInterface
     public const CONST_CACHE_GROUP = 'auth0';
 
     /**
-     *
      * @var array<array{item: CacheItemInterface, expiration: int|null}>
      */
     private array $deferred = [];
@@ -42,7 +40,6 @@ final class WpObjectCachePool implements CacheItemPoolInterface
     }
 
     /**
-     *
      * @param string[] $keys
      *
      * @return CacheItemInterface[]

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Actions;
 
-use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Exception\StateException;
 use Throwable;
 use WP_Error;
@@ -48,7 +47,8 @@ final class Authentication extends Base
         }
 
         /** @var object{user: array<string, mixed[]|int|string>, idToken?: string, accessToken?: string, accessTokenScope?: array<string, string>, accessTokenExpiration?: int, accessTokenExpired: bool, refreshToken?: string}|null $session */
-        $session = $this->getSdk()->getCredentials();
+        $session = $this->getSdk()
+            ->getCredentials();
         $expired = $session?->accessTokenExpired ?? true;
         $wordpress = wp_get_current_user();
 
@@ -130,8 +130,6 @@ final class Authentication extends Base
      * Fires when 'auth_cookie_malformed' is triggered by WordPress.
      *
      * @link https://developer.wordpress.org/reference/hooks/auth_cookie_malformed/
-     * @param string $cookie
-     * @param string|null $scheme
      */
     public function onAuthCookieMalformed(string $cookie, ?string $scheme = null): void
     {
@@ -351,7 +349,7 @@ final class Authentication extends Base
                     $role = $this->getPlugin()
                         ->getOption('accounts', 'default_role', get_option('default_role'));
 
-                    if (is_string($role) && ! in_array($role, $user->roles)) {
+                    if (is_string($role) && ! in_array($role, $user->roles, true)) {
                         $user->set_role($role);
                         wp_update_user($user);
                     }
