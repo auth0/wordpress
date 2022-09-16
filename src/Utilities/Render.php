@@ -7,6 +7,25 @@ namespace Auth0\WordPress\Utilities;
 final class Render
 {
     /**
+     * @var string[]
+     */
+    private const TREAT_AS_TEXT = [
+        'color',
+        'date',
+        'datetime-local',
+        'email',
+        'password',
+        'month',
+        'number',
+        'search',
+        'tel',
+        'text',
+        'time',
+        'url',
+        'week',
+    ];
+
+    /**
      * @param null|array<string|int|bool> $select
      */
     public static function option(
@@ -23,27 +42,10 @@ final class Render
             $placeholder = ' placeholder="' . $placeholder . '"';
         }
 
-        $treatAsText = [
-            'color',
-            'date',
-            'datetime-local',
-            'email',
-            'password',
-            'month',
-            'number',
-            'search',
-            'tel',
-            'text',
-            'time',
-            'url',
-            'week',
-        ];
         $disabledString = '';
 
-        if ($disabled !== null) {
-            if ($disabled === true) {
-                $disabledString = ' disabled';
-            }
+        if ($disabled !== null && $disabled) {
+            $disabledString = ' disabled';
         }
 
         if ($select !== null && count($select) >= 1) {
@@ -73,8 +75,8 @@ final class Render
             return;
         }
 
-        if (in_array($type, $treatAsText, true)) {
-            echo '<input name="' . $name . '" type="' . $type . '" id="' . $element . '" value="' . (string) $value . '" class="regular-text"' . $placeholder . $disabledString . ' />';
+        if (in_array($type, self::TREAT_AS_TEXT, true)) {
+            echo '<input name="' . $name . '" type="' . $type . '" id="' . $element . '" value="' . $value . '" class="regular-text"' . $placeholder . $disabledString . ' />';
 
             if (strlen($description) >= 1) {
                 echo '<p class="description">' . $description . '</p>';
@@ -98,8 +100,6 @@ final class Render
                 (bool) $value,
                 'true'
             ) . $disabledString . '/> ' . $description;
-
-            return;
         }
     }
 

@@ -63,13 +63,8 @@ trait MessageTrait
      */
     public function getHeader($name): array
     {
-        $normalized = $this->normalizeHeaderKey($name);
-
-        if (! isset($this->headerNames[$normalized])) {
-            return [];
-        }
-
-        return $this->headers[$this->headerNames[$normalized]];
+        $this->normalizeHeaderKey($name);
+        return [];
     }
 
     public function getHeaderLine($name): string
@@ -79,7 +74,7 @@ trait MessageTrait
 
     public function withHeader($name, $value): MessageInterface
     {
-        $value = $this->sanitizeHeader($name, $value);
+        $value = $this->sanitizeHeader($value);
         $normalized = $this->normalizeHeaderKey($name);
 
         $new = clone $this;
@@ -163,23 +158,8 @@ trait MessageTrait
     /**
      * @return string[]
      */
-    private function sanitizeHeader($header, $values): array
+    private function sanitizeHeader($values): array
     {
-        if (! is_string($header) || preg_match("#^[!\#$%&'*+.^_`|~0-9A-Za-z-]+$#", $header) !== 1) {
-            throw new InvalidArgumentException('Header name must be an RFC 7230 compatible string.');
-        }
-
-        if (! is_array($values)) {
-            if ((! is_numeric($values) && ! is_string($values)) || preg_match(
-                "@^[ \t\x21-\x7E\x80-\xFF]*$@",
-                (string) $values
-            ) !== 1) {
-                throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
-            }
-
-            return [trim((string) $values, " \t")];
-        }
-
         if (empty($values)) {
             throw new InvalidArgumentException(
                 'Header values must be a string or an array of strings, empty array given.'
@@ -187,14 +167,9 @@ trait MessageTrait
         }
 
         $returnValues = [];
-        foreach ($values as $v) {
-            if ((! is_numeric($v) && ! is_string($v)) || preg_match(
-                "@^[ \t\x21-\x7E\x80-\xFF]*$@",
-                (string) $v
-            ) !== 1) {
-                throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
-            }
-            $returnValues[] = trim((string) $v, " \t");
+
+        foreach ($values as $value) {
+            $returnValues[] = trim((string) $value, " \t");
         }
 
         return $returnValues;

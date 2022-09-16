@@ -9,26 +9,30 @@ use Auth0\WordPress\Utilities\Sanitize;
 
 final class Configuration extends Base
 {
+    /**
+     * @var string
+     */
     public const CONST_SECTION_PREFIX = 'auth0';
 
+    /**
+     * @var string
+     */
     public const CONST_PAGE_GENERAL = 'auth0_configuration';
 
+    /**
+     * @var string
+     */
     public const CONST_PAGE_SYNC = 'auth0_sync';
 
+    /**
+     * @var string
+     */
     public const CONST_PAGE_ADVANCED = 'auth0_advanced';
 
-    protected array $registry = [
-        'admin_init' => 'onSetup',
-        'admin_menu' => 'onMenu',
-        'auth0_ui_configuration' => 'renderConfiguration',
-        'auth0_ui_sync' => 'renderSyncConfiguration',
-        'auth0_ui_advanced' => 'renderAdvancedConfiguration',
-    ];
-
     /**
-     * @var array<array{title: string, sections: array<mixed>}>
+     * @var array<string, array<string, array<string, array<string, array<string, array<string, string[]|string>|array<string, array<string, string>|array<int, string>|string>>|array<string, array<string, array<string, string>|array<int, string>|string>>|array<string, array<string, array<string, string>|string>>|array<string, array<string, string>>|array<string, array<string, array<string, string>|string[]|string>>|string>>|array<string, array<string, array<string, array<string, string>|array<string, string[]|array<string, string>|string>>|string>>|array<string, array<string, array<string, array<string, string>>|array<string, array<string, array<string, string>|string>>|array<string, array<string, string[]|array<string, string>|string>>|string>>|string>>
      */
-    protected array $pages = [
+    private const PAGES = [
         self::CONST_PAGE_GENERAL => [
             'title' => 'Auth0 — Options',
             'sections' => [
@@ -353,12 +357,20 @@ final class Configuration extends Base
         ],
     ];
 
+    protected array $registry = [
+        'admin_init' => 'onSetup',
+        'admin_menu' => 'onMenu',
+        'auth0_ui_configuration' => 'renderConfiguration',
+        'auth0_ui_sync' => 'renderSyncConfiguration',
+        'auth0_ui_advanced' => 'renderAdvancedConfiguration',
+    ];
+
     public function onSetup(): void
     {
         /**
          * @var array<mixed> $page
          */
-        foreach ($this->pages as $pageId => $page) {
+        foreach (self::PAGES as $pageId => $page) {
             $sections = (isset($page['sections']) && is_array($page['sections'])) ? $page['sections'] : [];
 
             /**
@@ -388,28 +400,32 @@ final class Configuration extends Base
                 add_settings_section(
                     id: $sectionId,
                     title: $section['title'],
-                    callback: static function () use ($section) {
+                    callback: static function () use ($section): void {
                         echo $section['description'] ?? '';
                     },
                     page: $pageId
                 );
 
-                $optionValues = null;
+                // $optionValues = null;
 
-                if ($sectionType === 'array') {
-                    $optionValues = get_option($sectionId, []);
-                }
+                // if ($sectionType === 'array') {
+                //     $optionValues = get_option($sectionId, []);
+                // }
 
-                if ($sectionType === 'boolean') {
-                    $optionValues = get_option($sectionId, false);
-                }
+                // if ($sectionType === 'boolean') {
+                //     $optionValues = get_option($sectionId, false);
 
-                /** @var array<mixed>|null $optionValues */
+                //     if (! is_bool($optionValues)) {
 
+                //     }
+                // }
+
+                /** @var array<string, mixed> $optionValues */
+                $optionValues = get_option($sectionId, []);
                 $options = (isset($section['options']) && is_array($section['options'])) ? $section['options'] : [];
 
                 /**
-                 * @var array<array{title: string, type: string, description?: string|array<string>, placeholder?: string|array<string>, select?: string|array<mixed>, disabled?: string|bool, enabled?: string|bool}> $options
+                 * @var array<string, array{title: string, type: string, description?: string|array<string>, placeholder?: string|array<string>, select?: string|array<mixed>, disabled?: string|bool, enabled?: string|bool}> $options
                  */
                 foreach ($options as $optionId => $option) {
                     $elementId = uniqid();
@@ -466,7 +482,7 @@ final class Configuration extends Base
                     add_settings_field(
                         id: $elementId,
                         title: $option['title'],
-                        callback: function () use (
+                        callback: static function () use (
                             $elementId,
                             $optionName,
                             $optionType,
@@ -475,7 +491,7 @@ final class Configuration extends Base
                             $optionValue,
                             $optionSelections,
                             $optionDisabled
-                        ) {
+                        ): void {
                             Render::option(
                                 element: $elementId,
                                 name: $optionName,
@@ -648,7 +664,7 @@ final class Configuration extends Base
 
         $sanitized = [
             'method' => Sanitize::string((string) ($input['method'] ?? '')) ?? '',
-            'session_ttl' => Sanitize::integer((string) ($input['session_ttl'] ?? 0), 2592000, 0) ?? 0,
+            'session_ttl' => Sanitize::integer((string) ($input['session_ttl'] ?? 0), 2_592_000, 0) ?? 0,
             'rolling_sessions' => Sanitize::boolean((string) ($input['rolling_sessions'] ?? '')) ?? '',
             'refresh_tokens' => Sanitize::boolean((string) ($input['refresh_tokens'] ?? '')) ?? '',
         ];
@@ -673,12 +689,12 @@ final class Configuration extends Base
             'path' => Sanitize::cookiePath((string) ($input['path'] ?? '')),
             'secure' => Sanitize::boolean((string) ($input['secure'] ?? '')) ?? '',
             'samesite' => Sanitize::domain((string) ($input['samesite'] ?? '')) ?? '',
-            'ttl' => Sanitize::integer((string) ($input['ttl'] ?? 0), 2592000, 0) ?? 0,
+            'ttl' => Sanitize::integer((string) ($input['ttl'] ?? 0), 2_592_000, 0) ?? 0,
         ];
 
         if (strlen($sanitized['domain']) >= 1) {
             $allowed = explode('.', (string) Sanitize::domain(site_url()));
-            $assigned = explode('.', (string) $sanitized['domain']);
+            $assigned = explode('.', $sanitized['domain']);
             $matched = null;
 
             if (count($allowed) >= 2 && count($assigned) >= 2) {
@@ -705,7 +721,7 @@ final class Configuration extends Base
             menu_title: 'Auth0',
             capability: 'manage_options',
             menu_slug: 'auth0',
-            callback: static function () {
+            callback: static function (): void {
                 do_action('auth0_ui_configuration');
             },
             icon_url: 'dashicons-shield-alt',
@@ -727,7 +743,7 @@ final class Configuration extends Base
             menu_title: 'Sync',
             capability: 'manage_options',
             menu_slug: 'auth0_sync',
-            callback: static function () {
+            callback: static function (): void {
                 do_action('auth0_ui_sync');
             },
             position: $this->getPriority('MENU_POSITION_SYNC', 1, 'AUTH0_ADMIN')
@@ -739,7 +755,7 @@ final class Configuration extends Base
             menu_title: 'Advanced',
             capability: 'manage_options',
             menu_slug: 'auth0_advanced',
-            callback: static function () {
+            callback: static function (): void {
                 do_action('auth0_ui_advanced');
             },
             position: $this->getPriority('MENU_POSITION_ADVANCED', 2, 'AUTH0_ADMIN')
@@ -748,7 +764,7 @@ final class Configuration extends Base
 
     public function renderConfiguration(): void
     {
-        Render::pageBegin($this->pages[self::CONST_PAGE_GENERAL]['title']);
+        Render::pageBegin(self::PAGES[self::CONST_PAGE_GENERAL]['title']);
 
         settings_fields(self::CONST_PAGE_GENERAL);
         do_settings_sections(self::CONST_PAGE_GENERAL);
@@ -759,7 +775,7 @@ final class Configuration extends Base
 
     public function renderSyncConfiguration(): void
     {
-        Render::pageBegin($this->pages[self::CONST_PAGE_SYNC]['title']);
+        Render::pageBegin(self::PAGES[self::CONST_PAGE_SYNC]['title']);
 
         settings_fields(self::CONST_PAGE_SYNC);
         do_settings_sections(self::CONST_PAGE_SYNC);
@@ -770,7 +786,7 @@ final class Configuration extends Base
 
     public function renderAdvancedConfiguration(): void
     {
-        Render::pageBegin($this->pages[self::CONST_PAGE_ADVANCED]['title']);
+        Render::pageBegin(self::PAGES[self::CONST_PAGE_ADVANCED]['title']);
 
         settings_fields(self::CONST_PAGE_ADVANCED);
         do_settings_sections(self::CONST_PAGE_ADVANCED);
@@ -779,17 +795,8 @@ final class Configuration extends Base
         Render::pageEnd();
     }
 
-    /**
-     * @param string $args
-     */
-    private function getOptionDescription(...$args): string
+    private function getOptionDescription(string $context): string
     {
-        if ($args === []) {
-            return '';
-        }
-
-        $context = (string) $args[0];
-
         if ($context === 'cookie_domain') {
             return sprintf('Must include origin domain of <code>`%s`</code>', Sanitize::domain(site_url()) ?? '');
         }
@@ -813,17 +820,10 @@ final class Configuration extends Base
         return '';
     }
 
-    /**
-     * @param string $args
-     */
-    private function getOptionPlaceholder(...$args): string
+    private function getOptionPlaceholder(string $context): string
     {
-        if (count($args) !== 0) {
-            $context = (string) $args[0];
-
-            if ($context === 'cookie_domain') {
-                return Sanitize::domain(site_url()) ?? '';
-            }
+        if ($context === 'cookie_domain') {
+            return Sanitize::domain(site_url()) ?? '';
         }
 
         return '';

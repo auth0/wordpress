@@ -134,24 +134,31 @@ final class Plugin
         if (! $config->hasClientId()) {
             return false;
         }
+
         if ((string) $config->getClientId() === '') {
             return false;
         }
+
         if (! $config->hasClientSecret()) {
             return false;
         }
+
         if ((string) $config->getClientSecret() === '') {
             return false;
         }
+
         if (! $config->hasDomain()) {
             return false;
         }
+
         if ($config->getDomain() === '') {
             return false;
         }
-        if (!$config->hasCookieSecret()) {
+
+        if (! $config->hasCookieSecret()) {
             return false;
         }
+
         return (string) $config->getCookieSecret() !== '';
     }
 

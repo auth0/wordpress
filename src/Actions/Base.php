@@ -30,13 +30,13 @@ abstract class Base
 
     public function isPluginReady(): bool
     {
-        return $this->getPlugin()
+        return $this->plugin
             ->isReady();
     }
 
     public function isPluginEnabled(): bool
     {
-        return $this->getPlugin()
+        return $this->plugin
             ->isEnabled();
     }
 

@@ -11,7 +11,7 @@ use Psr\Cache\CacheItemInterface;
 
 final class WpObjectCacheItem implements CacheItemInterface
 {
-    private ?int $expiration_timestamp = null;
+    private ?int $expires = null;
 
     public function __construct(
         private string $key,
@@ -42,39 +42,38 @@ final class WpObjectCacheItem implements CacheItemInterface
         return $this;
     }
 
-
-    /**
-     * @param DateTimeInterface|null $dateTime
-     */
     public function expiresAt(?DateTimeInterface $dateTime): static
     {
         if ($dateTime instanceof DateTimeInterface) {
-            $this->expiration_timestamp = $dateTime->getTimestamp();
-        } elseif ($dateTime === null) {
-            $this->expiration_timestamp = $dateTime;
+            $this->expires = $dateTime->getTimestamp();
+            return $this;
         }
 
+        $this->expires = $dateTime;
         return $this;
     }
 
     public function expiresAfter(int|DateInterval|null $time): static
     {
         if ($time === null) {
-            $this->expiration_timestamp = null;
-        } elseif ($time instanceof DateInterval) {
-            $dateTime = new DateTime();
-            $dateTime->add($time);
-            $this->expiration_timestamp = $dateTime->getTimestamp();
-        } elseif (is_int($time)) {
-            $this->expiration_timestamp = time() + $time;
+            $this->expires = null;
+            return $this;
         }
 
+        if ($time instanceof DateInterval) {
+            $dateTime = new DateTime();
+            $dateTime->add($time);
+            $this->expires = $dateTime->getTimestamp();
+            return $this;
+        }
+
+        $this->expires = time() + $time;
         return $this;
     }
 
     public function expirationTimestamp(): ?int
     {
-        return $this->expiration_timestamp;
+        return $this->expires;
     }
 
     public static function miss(string $key): self

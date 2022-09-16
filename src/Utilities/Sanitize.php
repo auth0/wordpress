@@ -10,7 +10,7 @@ final class Sanitize
     {
         $string = trim(sanitize_text_field($string));
 
-        if (strlen($string) === 0) {
+        if ($string === '') {
             return null;
         }
 
@@ -18,7 +18,7 @@ final class Sanitize
             return null;
         }
 
-        $int = intval($string);
+        $int = (int) $string;
 
         if ($int < $min) {
             return 0;
@@ -35,11 +35,15 @@ final class Sanitize
     {
         $string = trim(sanitize_text_field($string));
 
-        if (strlen($string) === 0) {
+        if ($string === '') {
             return null;
         }
 
-        if ($string === 'true' || $string === '1') {
+        if ($string === 'true') {
+            return 'true';
+        }
+
+        if ($string === '1') {
             return 'true';
         }
 
@@ -50,7 +54,7 @@ final class Sanitize
     {
         $string = trim(sanitize_text_field($string));
 
-        if (strlen($string) === 0) {
+        if ($string === '') {
             return null;
         }
 
@@ -64,7 +68,7 @@ final class Sanitize
         $path = trim($path, "/ \t\n\r\0\x0B");
 
         if (strlen($path) !== 0) {
-            $path = '/' . $path;
+            return '/' . $path;
         }
 
         return $path;
@@ -73,8 +77,11 @@ final class Sanitize
     public static function domain(string $path): ?string
     {
         $path = self::string($path);
+        if (is_string($path) && $path === '') {
+            return null;
+        }
 
-        if (is_string($path) && strlen($path) === 0 || $path === null) {
+        if ($path === null) {
             return null;
         }
 
@@ -85,8 +92,11 @@ final class Sanitize
         }
 
         $host = parse_url($path, PHP_URL_HOST);
+        if (! is_string($host)) {
+            return null;
+        }
 
-        if (! is_string($host) || strlen($host) === 0) {
+        if ($host === '') {
             return null;
         }
 
@@ -97,8 +107,11 @@ final class Sanitize
         }
 
         $tld = end($parts);
+        if (! is_string($tld)) {
+            return null;
+        }
 
-        if (! is_string($tld) || strlen($tld) < 2) {
+        if (strlen($tld) < 2) {
             return null;
         }
 
