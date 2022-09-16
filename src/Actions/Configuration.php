@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Actions;
 
+use Auth0\WordPress\Utilities\Render;
+use Auth0\WordPress\Utilities\Sanitize;
+
 final class Configuration extends Base
 {
     public const CONST_SECTION_PREFIX = 'auth0';
@@ -23,7 +26,7 @@ final class Configuration extends Base
     ];
 
     /**
-     * @var array<mixed>
+     * @var array<array{title: string, sections: array<mixed>}>
      */
     protected array $pages = [
         self::CONST_PAGE_GENERAL => [
@@ -473,7 +476,7 @@ final class Configuration extends Base
                             $optionSelections,
                             $optionDisabled
                         ) {
-                            $this->renderOption(
+                            Render::option(
                                 element: $elementId,
                                 name: $optionName,
                                 type: $optionType,
@@ -508,7 +511,7 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'enable' => $this->sanitizeBoolean((string) ($input['enable'] ?? '')) ?? '',
+            'enable' => Sanitize::boolean((string) ($input['enable'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
@@ -526,10 +529,10 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'matching' => $this->sanitizeString((string) ($input['matching'] ?? '')) ?? '',
-            'missing' => $this->sanitizeString((string) ($input['missing'] ?? '')) ?? '',
-            'default_role' => $this->sanitizeString((string) ($input['default_role'] ?? '')) ?? '',
-            'passwordless' => $this->sanitizeBoolean((string) ($input['passwordless'] ?? '')) ?? '',
+            'matching' => Sanitize::string((string) ($input['matching'] ?? '')) ?? '',
+            'missing' => Sanitize::string((string) ($input['missing'] ?? '')) ?? '',
+            'default_role' => Sanitize::string((string) ($input['default_role'] ?? '')) ?? '',
+            'passwordless' => Sanitize::boolean((string) ($input['passwordless'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
@@ -547,9 +550,9 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'id' => $this->sanitizeString((string) ($input['id'] ?? '')) ?? '',
-            'secret' => $this->sanitizeString((string) ($input['secret'] ?? '')) ?? '',
-            'domain' => $this->sanitizeDomain((string) ($input['domain'] ?? '')) ?? '',
+            'id' => Sanitize::string((string) ($input['id'] ?? '')) ?? '',
+            'secret' => Sanitize::string((string) ($input['secret'] ?? '')) ?? '',
+            'domain' => Sanitize::domain((string) ($input['domain'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
@@ -567,9 +570,9 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'database' => $this->sanitizeString((string) ($input['database'] ?? '')) ?? '',
-            'schedule' => $this->sanitizeString((string) ($input['schedule'] ?? '')) ?? '',
-            'push' => $this->sanitizeString((string) ($input['push'] ?? '')) ?? '',
+            'database' => Sanitize::string((string) ($input['database'] ?? '')) ?? '',
+            'schedule' => Sanitize::string((string) ($input['schedule'] ?? '')) ?? '',
+            'push' => Sanitize::string((string) ($input['push'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
@@ -587,8 +590,8 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'pair_sessions' => $this->sanitizeInteger((string) ($input['pair_sessions'] ?? 0), 2, 0) ?? 0,
-            'allow_fallback' => $this->sanitizeBoolean((string) ($input['allow_fallback'] ?? '')) ?? '',
+            'pair_sessions' => Sanitize::integer((string) ($input['pair_sessions'] ?? 0), 2, 0) ?? 0,
+            'allow_fallback' => Sanitize::boolean((string) ($input['allow_fallback'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
@@ -606,9 +609,9 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'custom_domain' => $this->sanitizeDomain((string) ($input['custom_domain'] ?? '')) ?? '',
-            'apis' => $this->sanitizeString((string) ($input['apis'] ?? '')) ?? '',
-            'organizations' => $this->sanitizeString((string) ($input['organizations'] ?? '')) ?? '',
+            'custom_domain' => Sanitize::domain((string) ($input['custom_domain'] ?? '')) ?? '',
+            'apis' => Sanitize::string((string) ($input['apis'] ?? '')) ?? '',
+            'organizations' => Sanitize::string((string) ($input['organizations'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
@@ -626,7 +629,7 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'caching' => $this->sanitizeString((string) ($input['caching'] ?? '')) ?? '',
+            'caching' => Sanitize::string((string) ($input['caching'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
@@ -644,10 +647,10 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'method' => $this->sanitizeString((string) ($input['method'] ?? '')) ?? '',
-            'session_ttl' => $this->sanitizeInteger((string) ($input['session_ttl'] ?? 0), 2592000, 0) ?? 0,
-            'rolling_sessions' => $this->sanitizeBoolean((string) ($input['rolling_sessions'] ?? '')) ?? '',
-            'refresh_tokens' => $this->sanitizeBoolean((string) ($input['refresh_tokens'] ?? '')) ?? '',
+            'method' => Sanitize::string((string) ($input['method'] ?? '')) ?? '',
+            'session_ttl' => Sanitize::integer((string) ($input['session_ttl'] ?? 0), 2592000, 0) ?? 0,
+            'rolling_sessions' => Sanitize::boolean((string) ($input['rolling_sessions'] ?? '')) ?? '',
+            'refresh_tokens' => Sanitize::boolean((string) ($input['refresh_tokens'] ?? '')) ?? '',
         ];
 
         return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
@@ -665,16 +668,16 @@ final class Configuration extends Base
         }
 
         $sanitized = [
-            'secret' => $this->sanitizeString((string) ($input['secret'] ?? '')) ?? '',
-            'domain' => $this->sanitizeDomain((string) ($input['domain'] ?? '')) ?? '',
-            'path' => $this->sanitizeCookiePath((string) ($input['path'] ?? '')),
-            'secure' => $this->sanitizeBoolean((string) ($input['secure'] ?? '')) ?? '',
-            'samesite' => $this->sanitizeDomain((string) ($input['samesite'] ?? '')) ?? '',
-            'ttl' => $this->sanitizeInteger((string) ($input['ttl'] ?? 0), 2592000, 0) ?? 0,
+            'secret' => Sanitize::string((string) ($input['secret'] ?? '')) ?? '',
+            'domain' => Sanitize::domain((string) ($input['domain'] ?? '')) ?? '',
+            'path' => Sanitize::cookiePath((string) ($input['path'] ?? '')),
+            'secure' => Sanitize::boolean((string) ($input['secure'] ?? '')) ?? '',
+            'samesite' => Sanitize::domain((string) ($input['samesite'] ?? '')) ?? '',
+            'ttl' => Sanitize::integer((string) ($input['ttl'] ?? 0), 2592000, 0) ?? 0,
         ];
 
         if (strlen($sanitized['domain']) >= 1) {
-            $allowed = explode('.', (string) $this->sanitizeDomain(site_url()));
+            $allowed = explode('.', (string) Sanitize::domain(site_url()));
             $assigned = explode('.', (string) $sanitized['domain']);
             $matched = null;
 
@@ -743,168 +746,37 @@ final class Configuration extends Base
         );
     }
 
-    public function isPluginReady(): bool
-    {
-        return $this->getPlugin()
-            ->isReady();
-    }
-
-    public function isPluginEnabled(): bool
-    {
-        return $this->getPlugin()
-            ->isEnabled();
-    }
-
     public function renderConfiguration(): void
     {
-        $this->renderPageBegin(self::CONST_PAGE_GENERAL);
+        Render::pageBegin($this->pages[self::CONST_PAGE_GENERAL]['title']);
 
         settings_fields(self::CONST_PAGE_GENERAL);
         do_settings_sections(self::CONST_PAGE_GENERAL);
         submit_button();
 
-        $this->renderPageEnd();
+        Render::pageEnd();
     }
 
     public function renderSyncConfiguration(): void
     {
-        $this->renderPageBegin(self::CONST_PAGE_SYNC);
+        Render::pageBegin($this->pages[self::CONST_PAGE_SYNC]['title']);
 
         settings_fields(self::CONST_PAGE_SYNC);
         do_settings_sections(self::CONST_PAGE_SYNC);
         submit_button();
 
-        $this->renderPageEnd();
+        Render::pageEnd();
     }
 
     public function renderAdvancedConfiguration(): void
     {
-        $this->renderPageBegin(self::CONST_PAGE_ADVANCED);
+        Render::pageBegin($this->pages[self::CONST_PAGE_ADVANCED]['title']);
 
         settings_fields(self::CONST_PAGE_ADVANCED);
         do_settings_sections(self::CONST_PAGE_ADVANCED);
         submit_button();
 
-        $this->renderPageEnd();
-    }
-
-    /**
-     * @param null|array<string|int|bool> $select
-     */
-    private function renderOption(
-        string $element,
-        string $name,
-        string|int|bool|null $value,
-        string $type = 'text',
-        string $description = '',
-        string $placeholder = '',
-        ?array $select = null,
-        ?bool $disabled = null
-    ): void {
-        if (strlen($placeholder) >= 1) {
-            $placeholder = ' placeholder="' . $placeholder . '"';
-        }
-
-        $treatAsText = [
-            'color',
-            'date',
-            'datetime-local',
-            'email',
-            'password',
-            'month',
-            'number',
-            'search',
-            'tel',
-            'text',
-            'time',
-            'url',
-            'week',
-        ];
-        $disabledString = '';
-
-        if ($disabled !== null) {
-            if ($disabled === true) {
-                $disabledString = ' disabled';
-            }
-        }
-
-        if ($select !== null && count($select) >= 1) {
-            if ($disabled) {
-                echo '<input type="hidden" name="' . $name . '" value="' . $value . '">';
-                echo '<select id="' . $element . '"' . $disabledString . '>';
-            } else {
-                echo '<select name="' . $name . '" id="' . $element . '"' . $disabledString . '>';
-            }
-
-            foreach ($select as $optVal => $optText) {
-                $selected = '';
-
-                if ($optVal === $value) {
-                    $selected = ' selected';
-                }
-
-                echo '<option value="' . $optVal . '"' . $selected . '>' . $optText . '</option>';
-            }
-
-            echo '</select>';
-
-            if (strlen($description) >= 1) {
-                echo '<p class="description">' . $description . '</p>';
-            }
-
-            return;
-        }
-
-        if (in_array($type, $treatAsText, true)) {
-            echo '<input name="' . $name . '" type="' . $type . '" id="' . $element . '" value="' . (string) $value . '" class="regular-text"' . $placeholder . $disabledString . ' />';
-
-            if (strlen($description) >= 1) {
-                echo '<p class="description">' . $description . '</p>';
-            }
-
-            return;
-        }
-
-        if ($type === 'textarea') {
-            echo '<textarea name="' . $name . '" id="' . $element . '" rows="10" cols="50" spellcheck="false" class="large-text code"' . $placeholder . $disabledString . '>' . $value . '</textarea>';
-
-            if (strlen($description) >= 1) {
-                echo '<p class="description">' . $description . '</p>';
-            }
-
-            return;
-        }
-
-        if ($type === 'boolean') {
-            echo '<input name="' . $name . '" type="checkbox" id="' . $element . '" value="true" ' . checked(
-                (bool) $value,
-                'true'
-            ) . $disabledString . '/> ' . $description;
-
-            return;
-        }
-    }
-
-    private function renderPageBegin(string $pageId, string $formAction = 'options.php'): void
-    {
-        $pages = $this->pages;
-
-        /** @var array<array<string>> $pages */
-
-        $title = $pages[$pageId]['title'];
-
-        echo '<div class="wrap">';
-        echo '<h1>' . $title . '</h1>';
-
-        if ($formAction) {
-            echo '<form method="post" action="' . $formAction . '">';
-        }
-    }
-
-    private function renderPageEnd(): void
-    {
-        echo '</form>';
-        echo '</div>';
+        Render::pageEnd();
     }
 
     /**
@@ -919,7 +791,7 @@ final class Configuration extends Base
         $context = (string) $args[0];
 
         if ($context === 'cookie_domain') {
-            return sprintf('Must include origin domain of <code>`%s`</code>', $this->sanitizeDomain(site_url()) ?? '');
+            return sprintf('Must include origin domain of <code>`%s`</code>', Sanitize::domain(site_url()) ?? '');
         }
 
         if ($context === 'enable') {
@@ -950,7 +822,7 @@ final class Configuration extends Base
             $context = (string) $args[0];
 
             if ($context === 'cookie_domain') {
-                return $this->sanitizeDomain(site_url()) ?? '';
+                return Sanitize::domain(site_url()) ?? '';
             }
         }
 
@@ -970,104 +842,5 @@ final class Configuration extends Base
         }
 
         return array_reverse($response, true);
-    }
-
-    private function sanitizeInteger(string $string, int $max = 10, int $min = 0): ?int
-    {
-        $string = trim(sanitize_text_field($string));
-
-        if (strlen($string) === 0) {
-            return null;
-        }
-
-        if (! is_numeric($string)) {
-            return null;
-        }
-
-        $int = intval($string);
-
-        if ($int < $min) {
-            return 0;
-        }
-
-        if ($int > $max) {
-            return $max;
-        }
-
-        return $int;
-    }
-
-    private function sanitizeBoolean(string $string): ?string
-    {
-        $string = trim(sanitize_text_field($string));
-
-        if (strlen($string) === 0) {
-            return null;
-        }
-
-        if ($string === 'true' || $string === '1') {
-            return 'true';
-        }
-
-        return 'false';
-    }
-
-    private function sanitizeString(string $string): ?string
-    {
-        $string = trim(sanitize_text_field($string));
-
-        if (strlen($string) === 0) {
-            return null;
-        }
-
-        return $string;
-    }
-
-    private function sanitizeCookiePath(string $path): string
-    {
-        $path = trim(sanitize_text_field($path));
-        $path = trim(str_replace(['../', './'], '', $path));
-        $path = trim($path, "/ \t\n\r\0\x0B");
-
-        if (strlen($path) !== 0) {
-            $path = '/' . $path;
-        }
-
-        return $path;
-    }
-
-    private function sanitizeDomain(string $path): ?string
-    {
-        $path = $this->sanitizeString($path);
-
-        if (is_string($path) && strlen($path) === 0 || $path === null) {
-            return null;
-        }
-
-        $scheme = parse_url($path, PHP_URL_SCHEME);
-
-        if ($scheme === null) {
-            return $this->sanitizeDomain('http://' . $path);
-        }
-
-        $host = parse_url($path, PHP_URL_HOST);
-
-        if (! is_string($host) || strlen($host) === 0) {
-            return null;
-        }
-
-        $parts = explode('.', $host);
-
-        if (count($parts) < 2) {
-            return null;
-        }
-
-        $tld = end($parts);
-
-        if (! is_string($tld) || strlen($tld) < 2) {
-            return null;
-        }
-
-        return $host;
     }
 }

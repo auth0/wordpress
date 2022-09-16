@@ -43,6 +43,9 @@ final class WpObjectCacheItem implements CacheItemInterface
     }
 
 
+    /**
+     * @param DateTimeInterface|null $dateTime
+     */
     public function expiresAt(?DateTimeInterface $dateTime): static
     {
         if ($dateTime instanceof DateTimeInterface) {

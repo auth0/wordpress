@@ -103,7 +103,7 @@ final class Plugin
     public function run(): self
     {
         foreach (self::FILTERS as $filter) {
-            $callback = [$this->getClassInstance((string) $filter), 'register'];
+            $callback = [$this->getClassInstance($filter), 'register'];
 
             /**
              * @var callable $callback
@@ -131,24 +131,28 @@ final class Plugin
     public function isReady(): bool
     {
         $config = $this->getConfiguration();
-
-        if (! $config->hasClientId() || (string) $config->getClientId() === '') {
+        if (! $config->hasClientId()) {
             return false;
         }
-
-        if (! $config->hasClientSecret() || (string) $config->getClientSecret() === '') {
+        if ((string) $config->getClientId() === '') {
             return false;
         }
-
-        if (! $config->hasDomain() || $config->getDomain() === '') {
+        if (! $config->hasClientSecret()) {
             return false;
         }
-
-        if (! $config->hasCookieSecret() || (string) $config->getCookieSecret() === '') {
+        if ((string) $config->getClientSecret() === '') {
             return false;
         }
-
-        return true;
+        if (! $config->hasDomain()) {
+            return false;
+        }
+        if ($config->getDomain() === '') {
+            return false;
+        }
+        if (!$config->hasCookieSecret()) {
+            return false;
+        }
+        return (string) $config->getCookieSecret() !== '';
     }
 
     /**
@@ -190,7 +194,7 @@ final class Plugin
         $result = $this->getOption($group, $key, null, $prefix);
 
         if (is_string($result)) {
-            return (string) $result;
+            return $result;
         }
 
         return null;
@@ -201,11 +205,7 @@ final class Plugin
         $result = $this->getOption($group, $key, null, $prefix);
 
         if (is_string($result)) {
-            if ($result === 'true' || $result === '1') {
-                return true;
-            }
-
-            return false;
+            return $result === 'true' || $result === '1';
         }
 
         return null;
@@ -221,17 +221,17 @@ final class Plugin
         $caching = $this->getOption('tokens', 'caching');
 
         if ($audiences !== null) {
-            $audiences = array_values(array_unique(explode("\n", trim($audiences))));
+            $audiences = (array) array_values(array_unique(explode("\n", trim($audiences))));
 
-            if (count($audiences) !== 0) {
+            if ($audiences === []) {
                 $audiences = null;
             }
         }
 
         if ($organizations !== null) {
-            $organizations = array_values(array_unique(explode("\n", trim($organizations))));
+            $organizations = (array) array_values(array_unique(explode("\n", trim($organizations))));
 
-            if (count($organizations) !== 0) {
+            if ($organizations === []) {
                 $organizations = null;
             }
         }
@@ -251,7 +251,7 @@ final class Plugin
             cookieSecret: $this->getOptionString('cookies', 'secret'),
             cookieDomain: $this->getOptionString('cookies', 'domain'),
             cookiePath: $this->getOptionString('cookies', 'path') ?? '/',
-            cookieExpires: intval($this->getOptionString('cookies', 'ttl') ?? 0),
+            cookieExpires: (int) ($this->getOptionString('cookies', 'ttl') ?? 0),
             cookieSecure: $this->getOptionBoolean('cookies', 'secure') ?? is_ssl(),
             cookieSameSite: $this->getOptionString('cookies', 'samesite'),
             redirectUri: get_site_url(null, 'wp-login.php')

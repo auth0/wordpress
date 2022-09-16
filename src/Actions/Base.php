@@ -28,6 +28,18 @@ abstract class Base
         return $this->plugin->getSdk();
     }
 
+    public function isPluginReady(): bool
+    {
+        return $this->getPlugin()
+            ->isReady();
+    }
+
+    public function isPluginEnabled(): bool
+    {
+        return $this->getPlugin()
+            ->isEnabled();
+    }
+
     public function register(): self
     {
         foreach ($this->registry as $event => $method) {

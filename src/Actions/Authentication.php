@@ -46,17 +46,14 @@ final class Authentication extends Base
             return;
         }
 
-        /** @var object{user: array<string, mixed[]|int|string>, idToken?: string, accessToken?: string, accessTokenScope?: array<string, string>, accessTokenExpiration?: int, accessTokenExpired: bool, refreshToken?: string}|null $session */
         $session = $this->getSdk()
             ->getCredentials();
         $expired = $session?->accessTokenExpired ?? true;
         $wordpress = wp_get_current_user();
 
         if (! $this->getPlugin()->isEnabled()) {
-            if ($session !== null) {
-                $this->getSdk()
-                    ->clear();
-            }
+            $this->getSdk()
+                ->clear();
 
             return;
         }

@@ -23,7 +23,6 @@ return static function (RectorConfig $rectorConfig): void {
 
     $rectorConfig->skip([
         DOCUMENT_ROOT . 'vendor',
-        DOCUMENT_ROOT . 'src' . DIRECTORY_SEPARATOR . 'Http',
     ]);
 
     $rectorConfig->sets([
