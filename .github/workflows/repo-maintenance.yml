@@ -2,7 +2,7 @@ name: 'Repository Maintenance'
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -20,4 +20,3 @@ jobs:
         with:
           issue-inactive-days: '30'
           pr-inactive-days: '30'
-          exclude-any-issue-labels: 'selected for development'
