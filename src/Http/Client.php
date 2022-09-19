@@ -14,6 +14,8 @@ final class Client implements ClientInterface
 {
     public array $options = [];
 
+    private bool $telemetrySet = false;
+
     public function __construct(private ResponseFactoryInterface $responseFactory)
     {
     }
@@ -25,6 +27,8 @@ final class Client implements ClientInterface
 
         $destinationUri = (string) $request->getUri();
         $arguments = $this->getArguments($request);
+
+        $this->setupTelemetry();
 
         $responseData = wp_remote_request($destinationUri, $arguments);
 
@@ -75,5 +79,31 @@ final class Client implements ClientInterface
         }
 
         return $headers;
+    }
+
+    private function setupTelemetry(): void
+    {
+        if ($this->telemetrySet === true) {
+            return;
+        }
+
+        require ABSPATH . WPINC . '/version.php';
+
+        if (! isset($wp_version)) {
+            try {
+                $wp_version = get_site_transient('update_core')->version_checked;
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+
+        if (! isset($wp_version)) {
+            $wp_version = '0.0.0';
+        }
+
+        \Auth0\SDK\Utility\HttpTelemetry::setEnvProperty('WordPress', $wp_version);
+        \Auth0\SDK\Utility\HttpTelemetry::setPackage('wp-auth0', WP_AUTH0_VERSION);
+
+        $this->telemetrySet = true;
     }
 }

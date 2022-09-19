@@ -6,7 +6,6 @@ namespace Auth0\WordPress\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
-use resource;
 use RuntimeException;
 use Stringable;
 
@@ -87,7 +86,7 @@ final class Stream implements StreamInterface, Stringable
         return $this->getContents();
     }
 
-    public static function create(string|\resource|StreamInterface $body = ''): StreamInterface
+    public static function create(string|StreamInterface $body = ''): StreamInterface
     {
         if ($body instanceof StreamInterface) {
             return $body;
@@ -141,7 +140,7 @@ final class Stream implements StreamInterface, Stringable
         }
     }
 
-    public function detach(): ?\resource
+    public function detach(): mixed
     {
         if ($this->stream === null) {
             return null;
