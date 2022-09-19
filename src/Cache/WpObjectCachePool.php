@@ -151,7 +151,7 @@ final class WpObjectCachePool implements CacheItemPoolInterface
 
         $value = unserialize($value);
 
-        if ($value === false && $value !== 'b:0;') {
+        if ($value === false || $value !== 'b:0;') {
             return WpObjectCacheItem::miss($key);
         }
 

@@ -113,7 +113,7 @@ final class Plugin
         }
 
         foreach (self::ACTIONS as $action) {
-            $callback = [$this->getClassInstance((string) $action), 'register'];
+            $callback = [$this->getClassInstance($action), 'register'];
 
             /**
              * @var callable $callback
@@ -223,25 +223,12 @@ final class Plugin
      */
     private function importConfiguration(): SdkConfiguration
     {
-        $audiences = $this->getOptionString('advanced', 'apis');
-        $organizations = $this->getOptionString('advanced', 'organizations');
+        $audiences = $this->getOptionString('advanced', 'apis') ?? '';
+        $organizations = $this->getOptionString('advanced', 'organizations') ?? '';
         $caching = $this->getOption('tokens', 'caching');
 
-        if ($audiences !== null) {
-            $audiences = (array) array_values(array_unique(explode("\n", trim($audiences))));
-
-            if ($audiences === []) {
-                $audiences = null;
-            }
-        }
-
-        if ($organizations !== null) {
-            $organizations = (array) array_values(array_unique(explode("\n", trim($organizations))));
-
-            if ($organizations === []) {
-                $organizations = null;
-            }
-        }
+        $audiences = array_filter(array_values(array_unique(explode("\n", trim($audiences)))));
+        $organizations = array_filter(array_values(array_unique(explode("\n", trim($organizations)))));
 
         $sdkConfiguration = new SdkConfiguration(
             strategy: SdkConfiguration::STRATEGY_NONE,
@@ -253,8 +240,8 @@ final class Plugin
             clientId: $this->getOptionString('client', 'id'),
             clientSecret: $this->getOptionString('client', 'secret'),
             customDomain: $this->getOptionString('advanced', 'custom_domainin'),
-            audience: $audiences,
-            organization: $organizations,
+            audience: count($audiences) !== 0 ? $audiences : null,
+            organization: count($organizations) !== 0 ? $organizations : null,
             cookieSecret: $this->getOptionString('cookies', 'secret'),
             cookieDomain: $this->getOptionString('cookies', 'domain'),
             cookiePath: $this->getOptionString('cookies', 'path') ?? '/',

@@ -77,6 +77,7 @@ final class Sanitize
     public static function domain(string $path): ?string
     {
         $path = self::string($path);
+
         if (is_string($path) && $path === '') {
             return null;
         }
@@ -107,9 +108,6 @@ final class Sanitize
         }
 
         $tld = end($parts);
-        if (! is_string($tld)) {
-            return null;
-        }
 
         if (strlen($tld) < 2) {
             return null;

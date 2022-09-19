@@ -49,7 +49,7 @@ final class Render
         }
 
         if ($select !== null && count($select) >= 1) {
-            if ($disabled) {
+            if ($disabled === true) {
                 echo '<input type="hidden" name="' . $name . '" value="' . $value . '">';
                 echo '<select id="' . $element . '"' . $disabledString . '>';
             } else {

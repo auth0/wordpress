@@ -214,11 +214,11 @@ final class Authentication extends Base
 
             // Do we indeed have a session now?
             if ($session !== null) {
-                $sub = sanitize_text_field($session->user['sub'] ?? null);
+                $sub = sanitize_text_field($session->user['sub'] ?? '');
                 $email = sanitize_email($session->user['email'] ?? '');
                 $verified = $session->user['email_verified'] ?? null;
 
-                if ((string) $email === '') {
+                if ($email === '') {
                     $email = null;
                     $verified = null;
                 }
@@ -226,7 +226,7 @@ final class Authentication extends Base
                 $wpUser = $this->resolveIdentity(sub: $sub, email: $email, verified: $verified);
 
                 if ($wpUser !== null) {
-                    if ($sub !== null) {
+                    if ($sub !== '') {
                         $this->addAccountConnection($wpUser, $sub);
                     }
 
@@ -288,7 +288,7 @@ final class Authentication extends Base
         }
 
         // If an email is not marked as verified by the connection, dismiss it.
-        if ($verified !== true || ! is_string($email) || $email === '') {
+        if ($verified !== true || $email === '') {
             $email = null;
         }
 
@@ -366,20 +366,16 @@ final class Authentication extends Base
 
     private function getAccountByConnection(string $connection): ?WP_User
     {
-        $query = [
-            [
-                'key' => 'auth0_connections',
-                'value' => '"' . $connection . '"',
-                'compare' => 'LIKE',
-            ],
-        ];
         $found = get_users([
             'number' => 1,
-            'meta_query' => $query,
+            'meta_query' => [
+                [
+                    'key' => 'auth0_connections',
+                    'value' => '"' . $connection . '"',
+                    'compare' => 'LIKE',
+                ],
+            ],
         ]);
-        if (! is_array($found)) {
-            return null;
-        }
 
         if (count($found) < 1) {
             return null;

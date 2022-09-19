@@ -18,11 +18,15 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->parallel();
 
     $rectorConfig->paths([
-        DOCUMENT_ROOT
+        DOCUMENT_ROOT . 'wpAuth0.php',
+        DOCUMENT_ROOT . 'functions.php',
+        DOCUMENT_ROOT . 'src',
     ]);
 
+    // Rector has challenges processing some classes in these folders; skip until we can find a better solution:
     $rectorConfig->skip([
-        DOCUMENT_ROOT . 'vendor',
+        DOCUMENT_ROOT . 'src' . DIRECTORY_SEPARATOR . 'Http',
+        DOCUMENT_ROOT . 'src' . DIRECTORY_SEPARATOR . 'Cache',
     ]);
 
     $rectorConfig->sets([

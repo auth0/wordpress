@@ -530,7 +530,7 @@ final class Configuration extends Base
             'enable' => Sanitize::boolean((string) ($input['enable'] ?? '')) ?? '',
         ];
 
-        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== '');
     }
 
     /**
@@ -551,7 +551,7 @@ final class Configuration extends Base
             'passwordless' => Sanitize::boolean((string) ($input['passwordless'] ?? '')) ?? '',
         ];
 
-        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== '');
     }
 
     /**
@@ -571,7 +571,7 @@ final class Configuration extends Base
             'domain' => Sanitize::domain((string) ($input['domain'] ?? '')) ?? '',
         ];
 
-        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== '');
     }
 
     /**
@@ -591,7 +591,7 @@ final class Configuration extends Base
             'push' => Sanitize::string((string) ($input['push'] ?? '')) ?? '',
         ];
 
-        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== '');
     }
 
     /**
@@ -610,7 +610,7 @@ final class Configuration extends Base
             'allow_fallback' => Sanitize::boolean((string) ($input['allow_fallback'] ?? '')) ?? '',
         ];
 
-        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== '');
     }
 
     /**
@@ -630,7 +630,7 @@ final class Configuration extends Base
             'organizations' => Sanitize::string((string) ($input['organizations'] ?? '')) ?? '',
         ];
 
-        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== '');
     }
 
     /**
@@ -648,7 +648,7 @@ final class Configuration extends Base
             'caching' => Sanitize::string((string) ($input['caching'] ?? '')) ?? '',
         ];
 
-        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== '');
     }
 
     /**
@@ -669,7 +669,7 @@ final class Configuration extends Base
             'refresh_tokens' => Sanitize::boolean((string) ($input['refresh_tokens'] ?? '')) ?? '',
         ];
 
-        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== '');
     }
 
     /**
@@ -711,7 +711,7 @@ final class Configuration extends Base
             }
         }
 
-        return array_filter($sanitized, static fn ($value) => $value !== null && $value !== '');
+        return array_filter($sanitized, static fn ($value) => $value !== '');
     }
 
     public function onMenu(): void
