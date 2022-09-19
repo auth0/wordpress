@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Http;
 
+use Auth0\SDK\Utility\HttpTelemetry;
 use Auth0\WordPress\Http\Message\Stream;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 final class Client implements ClientInterface
 {
@@ -83,7 +85,7 @@ final class Client implements ClientInterface
 
     private function setupTelemetry(): void
     {
-        if ($this->telemetrySet === true) {
+        if ($this->telemetrySet) {
             return;
         }
 
@@ -91,18 +93,19 @@ final class Client implements ClientInterface
 
         if (! isset($wp_version)) {
             try {
-                $wp_version = get_site_transient('update_core')->version_checked;
-            } catch (\Throwable $th) {
-                //throw $th;
+                $wp_version = get_site_transient('update_core')
+                    ->version_checked;
+            } catch (Throwable) {
+                // Silently ignore if unavailable.
             }
         }
 
-        if (! isset($wp_version)) {
+        if (! isset($wp_version) || $wp_version === false) {
             $wp_version = '0.0.0';
         }
 
-        \Auth0\SDK\Utility\HttpTelemetry::setEnvProperty('WordPress', $wp_version);
-        \Auth0\SDK\Utility\HttpTelemetry::setPackage('wp-auth0', WP_AUTH0_VERSION);
+        HttpTelemetry::setEnvProperty('WordPress', $wp_version);
+        HttpTelemetry::setPackage('wp-auth0', WP_AUTH0_VERSION);
 
         $this->telemetrySet = true;
     }
