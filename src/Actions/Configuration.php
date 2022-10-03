@@ -622,7 +622,7 @@ final class Configuration extends Base
         }
 
         if ($filteredDatabase !== '' && $input['schedule'] !== 0) {
-            wp_schedule_event(time(), $input['schedule'], 'a0_cron_hook');
+            wp_schedule_event(time(), (string) $input['schedule'], 'a0_cron_hook');
         }
 
         $sanitized['database'] = $filteredDatabase;
