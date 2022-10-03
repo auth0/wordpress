@@ -1,6 +1,6 @@
 # Auth0 WordPress Plugin
 
-> ⚠️ Version 5 of our plugin is currently in [**First Availability**](https://auth0.com/docs/troubleshoot/product-lifecycle/product-release-stages). We do not recommend using this version in production yet. As we move toward General Availability, please be aware that releases may contain breaking changes.
+> ⚠️ **Version 5.0 of our plugin is now available in Beta.** This release adds a number of features. Do not use this in production yet, as there are a considerable number of breaking changes and some functionality remaining to be implemented. The migration sync processed is not fully functional in this release. As we move toward General Availability, please be aware that releases may contain breaking changes.
 
 ![Auth0 WordPress Plugin](https://ps.w.org/auth0/assets/banner-772x250.png)
 
