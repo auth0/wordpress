@@ -9,6 +9,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\WordPress\Actions\Authentication as AuthenticationActions;
 use Auth0\WordPress\Actions\Base as Actions;
 use Auth0\WordPress\Actions\Configuration as ConfigurationActions;
+use Auth0\WordPress\Actions\Sync as SyncActions;
 use Auth0\WordPress\Cache\WpObjectCachePool;
 use Auth0\WordPress\Filters\Authentication as AuthenticationFilters;
 use Auth0\WordPress\Filters\Base as Filters;
@@ -19,7 +20,7 @@ final class Plugin
     /**
      * @var array<class-string<Actions>>
      */
-    private const ACTIONS = [AuthenticationActions::class, ConfigurationActions::class];
+    private const ACTIONS = [AuthenticationActions::class, ConfigurationActions::class, SyncActions::class];
 
     /**
      * @var array<class-string<Filters>>

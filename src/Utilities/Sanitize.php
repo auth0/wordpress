@@ -6,6 +6,24 @@ namespace Auth0\WordPress\Utilities;
 
 final class Sanitize
 {
+    public static function alphanumeric(string|null $item, string $allowed = 'A-Za-z0-9 '): string|null
+    {
+        if ($item === '' || $item === null) {
+            return $item;
+        }
+
+        return preg_replace('/[^' . $allowed . ']/', '', $item);
+    }
+
+    public static function arrayUnique(array $array): array
+    {
+        if ($array === []) {
+            return [];
+        }
+
+        return array_values(array_filter(array_unique(array_map('trim', $array))));
+    }
+
     public static function integer(string $string, int $max = 10, int $min = 0): ?int
     {
         $string = trim(\sanitize_text_field($string));
@@ -53,6 +71,17 @@ final class Sanitize
     public static function string(string $string): ?string
     {
         $string = trim(\sanitize_text_field($string));
+
+        if ($string === '') {
+            return null;
+        }
+
+        return $string;
+    }
+
+    public static function textarea(string $string): ?string
+    {
+        $string = trim(\sanitize_textarea_field($string));
 
         if ($string === '') {
             return null;

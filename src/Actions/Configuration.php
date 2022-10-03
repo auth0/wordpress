@@ -137,14 +137,21 @@ final class Configuration extends Base
                         ],
                         'schedule' => [
                             'title' => 'Background Frequency',
-                            'type' => 'boolean',
+                            'type' => 'number',
                             'enabled' => 'isPluginReady',
                             'description' => ['getOptionDescription', 'sync_enable'],
                             'select' => [
-                                'disabled' => 'Disabled',
-                                'hourly' => 'Hourly',
-                                'daily' => 'Daily',
-                                'weekly' => 'Weekly',
+                                0 => 'Disabled',
+                                300 => '5 minutes',
+                                900 => '15 minutes',
+                                1800 => '30 minutes',
+                                3600 => '1 hour',
+                                3600 * 6 => '6 hours',
+                                3600 * 12 => '12 hours',
+                                3600 * 24 => '1 day',
+                                86400 * 2 => '2 days',
+                                86400 * 4 => '4 days',
+                                86400 * 7 => '1 week',
                             ],
                         ],
                         'push' => [
@@ -475,6 +482,10 @@ final class Configuration extends Base
                         $optionSelections = call_user_func($callback) ?? [];
                     }
 
+                    if ($optionValue !== null && $pageId === 'auth0_advanced' && ($optionId === 'organizations' || $optionId === 'apis')) {
+                        $optionValue = implode("\n", explode(" ", $optionValue));
+                    }
+
                     /**
                      * @var string $optionDescription
                      * @var string $optionPlaceholder
@@ -590,9 +601,33 @@ final class Configuration extends Base
 
         $sanitized = [
             'database' => Sanitize::string((string) ($input['database'] ?? '')) ?? '',
-            'schedule' => Sanitize::string((string) ($input['schedule'] ?? '')) ?? '',
+            'schedule' => Sanitize::integer((string) ($input['schedule'] ?? 0), 2_592_000, 0) ?? 0,
             'push' => Sanitize::string((string) ($input['push'] ?? '')) ?? '',
         ];
+
+        $filteredDatabase = '';
+
+        if ($sanitized['database'] !== '') {
+            $database = Sanitize::alphanumeric($sanitized['database'], "A-Za-z0-9\-_");
+
+            if (strlen($database) >= 3 && strlen($database) <= 64 && substr($database, 0, 4) === 'con_') {
+                $filteredDatabase = $database;
+            }
+        }
+
+        $nextCronRun = wp_next_scheduled('a0_cron_hook');
+
+        if ($nextCronRun !== false) {
+            wp_unschedule_event($nextCronRun, 'a0_cron_hook');
+        }
+
+        if ($filteredDatabase !== '' && $input['schedule'] !== 0) {
+            wp_schedule_event(time(), $input['schedule'], 'a0_cron_hook');
+        }
+
+        $sanitized['database'] = $filteredDatabase;
+
+        syslog(LOG_NOTICE, "Saved sync settings");
 
         return array_filter($sanitized, static fn ($value) => $value !== '');
     }
@@ -629,9 +664,34 @@ final class Configuration extends Base
 
         $sanitized = [
             'custom_domain' => Sanitize::domain((string) ($input['custom_domain'] ?? '')) ?? '',
-            'apis' => Sanitize::string((string) ($input['apis'] ?? '')) ?? '',
-            'organizations' => Sanitize::string((string) ($input['organizations'] ?? '')) ?? '',
+            'apis' => Sanitize::textarea((string) ($input['apis'] ?? '')) ?? '',
+            'organizations' => Sanitize::textarea((string) ($input['organizations'] ?? '')) ?? '',
         ];
+
+        $apis = explode("\n", Sanitize::alphanumeric($sanitized['apis'], "a-z0-9\-_\n"));
+        $orgs = explode("\n", Sanitize::alphanumeric($sanitized['organizations'], "A-Za-z0-9_\n"));
+
+        $filteredApis = [];
+        $filteredOrgs = [];
+
+        for ($i=0; $i < count($apis); $i++) {
+            $apis[$i] = trim($apis[$i]);
+
+            if (strlen($apis[$i]) >= 3 && strlen($apis[$i]) <= 64 && preg_match('/^[a-z0-9]/', $apis[$i]) === 1) {
+                $filteredApis[] = $apis[$i];
+            }
+        }
+
+        for ($i=0; $i < count($orgs); $i++) {
+            $orgs[$i] = trim($orgs[$i]);
+
+            if (strlen($orgs[$i]) >= 4 && strlen($orgs[$i]) <= 64 && substr($orgs[$i], 0, 4) === 'org_') {
+                $filteredOrgs[] = $orgs[$i];
+            }
+        }
+
+        $sanitized['apis'] = trim(implode(' ', Sanitize::arrayUnique($filteredApis)));
+        $sanitized['organizations'] = trim(implode(' ', Sanitize::arrayUnique($filteredOrgs)));
 
         return array_filter($sanitized, static fn ($value) => $value !== '');
     }

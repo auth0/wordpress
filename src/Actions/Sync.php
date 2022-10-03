@@ -10,16 +10,16 @@ final class Sync extends Base
      * @var array<string, string|array<int, int|string>>
      */
     protected array $registry = [
-        'init' => 'onInit',
+        'a0_cron_hook' => 'onBackgroundSync',
     ];
 
     public function onBackgroundSync(): void
     {
-        //
+        error_log("onBackgroundSync");
     }
 
     public function syncUsers(): void
     {
-        //
+        error_log("syncUsers");
     }
 }
