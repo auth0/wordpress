@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-define('WP_AUTH0_VERSION', '5.0.0');
+define('WP_AUTH0_VERSION', '5.0.0-BETA0');
 
 // Require loading through WordPress
 if (! defined('ABSPATH')) {
