@@ -18,6 +18,8 @@ final class Factory
     {
         static $instance = [];
 
+        /** @var Client[] $instance */
+
         if ($responseFactory === null) {
             $responseFactory = self::getResponseFactory();
         }

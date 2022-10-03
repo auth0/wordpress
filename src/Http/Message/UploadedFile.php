@@ -34,7 +34,7 @@ final class UploadedFile implements UploadedFileInterface
     private ?StreamInterface $stream = null;
 
     /**
-     * @param StreamInterface|string|resource $stream
+     * @param StreamInterface|string $stream
      */
     public function __construct(
         string|StreamInterface $stream,
@@ -43,7 +43,7 @@ final class UploadedFile implements UploadedFileInterface
         private ?string $clientFilename = null,
         private ?string $clientMediaType = null
     ) {
-        if (! is_int($errorStatus) || ! isset(self::ERRORS[$errorStatus])) {
+        if (! isset(self::ERRORS[$errorStatus])) {
             throw new InvalidArgumentException(
                 'Upload file error status must be an integer value and one of the "UPLOAD_ERR_*" constants.'
             );
@@ -56,8 +56,6 @@ final class UploadedFile implements UploadedFileInterface
                 $this->file = $stream;
             } elseif ($stream instanceof StreamInterface) {
                 $this->stream = $stream;
-            } elseif (is_resource($stream)) {
-                $this->stream = Stream::create($stream);
             } else {
                 throw new InvalidArgumentException('Invalid stream or file provided for UploadedFile');
             }
@@ -85,7 +83,7 @@ final class UploadedFile implements UploadedFileInterface
     {
         $this->validateActive();
 
-        if (! is_string($targetPath) || $targetPath === '') {
+        if ($targetPath === '') {
             throw new InvalidArgumentException('Invalid path provided for move operation; must be a non-empty string');
         }
 

@@ -80,7 +80,9 @@ final class Plugin
     {
         static $instance = null;
 
-        $instance ??= $instance ?? new Hooks(Hooks::CONST_ACTION_HOOK);
+        if ($instance === null) {
+            $instance = new Hooks(Hooks::CONST_ACTION_HOOK);
+        }
 
         return $instance;
     }
@@ -92,7 +94,9 @@ final class Plugin
     {
         static $instance = null;
 
-        $instance ??= $instance ?? new Hooks(Hooks::CONST_ACTION_FILTER);
+        if ($instance === null) {
+            $instance = new Hooks(Hooks::CONST_ACTION_FILTER);
+        }
 
         return $instance;
     }
@@ -167,21 +171,15 @@ final class Plugin
      */
     public function isEnabled(): bool
     {
-        $state = get_option('auth0_state', []);
-        $enabled = 'false';
-
-        /**
-         * @var string[] $state
-         */
-
-        if (isset($state['enable']) && is_string($state['enable'])) {
-            $enabled = $state['enable'];
-        }
-
-        return $enabled === 'true';
+        return $this->getOptionString('state', 'enable') === 'true';
     }
 
-    public function getOption(string $group, string $key, mixed $default = null, string $prefix = 'auth0_'): mixed
+    /**
+     * @param int|null $default
+     *
+     * @psalm-param 0|null $default
+     */
+    public function getOption(string $group, string $key, ?int $default = null, string $prefix = 'auth0_'): mixed
     {
         $options = get_option($prefix . $group, []);
 
@@ -218,6 +216,21 @@ final class Plugin
         return null;
     }
 
+    public function getOptionInteger(string $group, string $key, string $prefix = 'auth0_'): ?int
+    {
+        $result = $this->getOption($group, $key, null, $prefix);
+
+        if (is_int($result)) {
+            return $result;
+        }
+
+        if (is_numeric($result)) {
+            return (int) $result;
+        }
+
+        return null;
+    }
+
     /**
      * Import configuration settings from database.
      */
@@ -229,6 +242,8 @@ final class Plugin
 
         $audiences = array_filter(array_values(array_unique(explode("\n", trim($audiences)))));
         $organizations = array_filter(array_values(array_unique(explode("\n", trim($organizations)))));
+        $secure = $this->getOptionBoolean('cookies', 'secure') ?? \is_ssl();
+        $expires = $this->getOptionInteger('cookies', 'ttl') ?? 0;
 
         $sdkConfiguration = new SdkConfiguration(
             strategy: SdkConfiguration::STRATEGY_NONE,
@@ -239,14 +254,14 @@ final class Plugin
             domain: $this->getOptionString('client', 'domain'),
             clientId: $this->getOptionString('client', 'id'),
             clientSecret: $this->getOptionString('client', 'secret'),
-            customDomain: $this->getOptionString('advanced', 'custom_domainin'),
-            audience: count($audiences) !== 0 ? $audiences : null,
-            organization: count($organizations) !== 0 ? $organizations : null,
+            customDomain: $this->getOptionString('advanced', 'custom_domain'),
+            audience: $audiences !== [] ? $audiences : null,
+            organization: $organizations !== [] ? $organizations : null,
             cookieSecret: $this->getOptionString('cookies', 'secret'),
             cookieDomain: $this->getOptionString('cookies', 'domain'),
             cookiePath: $this->getOptionString('cookies', 'path') ?? '/',
-            cookieExpires: (int) ($this->getOptionString('cookies', 'ttl') ?? 0),
-            cookieSecure: $this->getOptionBoolean('cookies', 'secure') ?? is_ssl(),
+            cookieExpires: $expires,
+            cookieSecure: $secure ? true : false,
             cookieSameSite: $this->getOptionString('cookies', 'samesite'),
             redirectUri: get_site_url(null, 'wp-login.php')
         );

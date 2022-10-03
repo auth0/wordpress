@@ -10,6 +10,10 @@
         <directory name="src" />
     </projectFiles>
 
+    <stubs>
+        <file name="vendor/php-stubs/wordpress-stubs/wordpress-stubs.php" />
+    </stubs>
+
     <issueHandlers>
         <InvalidStringClass errorLevel="suppress" />
         <MixedArgument errorLevel="suppress" />

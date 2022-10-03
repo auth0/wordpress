@@ -42,18 +42,21 @@ final class WpObjectCacheItem implements CacheItemInterface
         return $this;
     }
 
-    public function expiresAt(?DateTimeInterface $dateTime): static
+    public function expiresAt(?\DateTimeInterface $expiration)
     {
-        if ($dateTime instanceof DateTimeInterface) {
-            $this->expires = $dateTime->getTimestamp();
+        if ($expiration instanceof DateTimeInterface) {
+            $this->expires = $expiration->getTimestamp();
             return $this;
         }
 
-        $this->expires = $dateTime;
+        $this->expires = $expiration;
         return $this;
     }
 
-    public function expiresAfter(int|DateInterval|null $time): static
+    /**
+     * @param DateInterval|int|null $time
+     */
+    public function expiresAfter(DateInterval|int|null $time): static
     {
         if ($time === null) {
             $this->expires = null;

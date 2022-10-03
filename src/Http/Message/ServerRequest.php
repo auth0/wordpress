@@ -35,7 +35,7 @@ final class ServerRequest implements ServerRequestInterface
      * @param string                               $method       HTTP method
      * @param string|UriInterface                  $uri          URI
      * @param array<string, string|string[]>       $headers      Request headers
-     * @param string|resource|StreamInterface|null $body         Request body
+     * @param StreamInterface|null|string $body
      * @param string                               $version      Protocol version
      * @param array                                $serverParams Typically the $_SERVER superglobal
      */
@@ -134,7 +134,7 @@ final class ServerRequest implements ServerRequestInterface
 
     public function withParsedBody($data): static
     {
-        if (! \is_array($data) && ! \is_object($data) && $data !== null) {
+        if ($data !== null && $data !== [] && \is_object($data)) {
             throw new InvalidArgumentException('First parameter to withParsedBody MUST be object, array or null');
         }
 
@@ -152,31 +152,31 @@ final class ServerRequest implements ServerRequestInterface
         return $this->attributes;
     }
 
-    public function getAttribute($attribute, $default = null): mixed
+    public function getAttribute($name, $default = null): mixed
     {
-        if (! array_key_exists($attribute, $this->attributes)) {
+        if (! array_key_exists($name, $this->attributes)) {
             return $default;
         }
 
-        return $this->attributes[$attribute];
+        return $this->attributes[$name];
     }
 
-    public function withAttribute($attribute, $value): self
+    public function withAttribute($name, $value): ServerRequestInterface
     {
         $new = clone $this;
-        $new->attributes[$attribute] = $value;
+        $new->attributes[$name] = $value;
 
         return $new;
     }
 
-    public function withoutAttribute($attribute): self
+    public function withoutAttribute($name): ServerRequestInterface
     {
-        if (! array_key_exists($attribute, $this->attributes)) {
+        if (! array_key_exists($name, $this->attributes)) {
             return $this;
         }
 
         $new = clone $this;
-        unset($new->attributes[$attribute]);
+        unset($new->attributes[$name]);
 
         return $new;
     }

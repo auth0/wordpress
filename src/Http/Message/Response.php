@@ -83,7 +83,7 @@ final class Response implements ResponseInterface
         array $headers = [],
         string|StreamInterface|null $body = null,
         string $version = '1.1',
-        string $reason = null
+        string $reason = ''
     ) {
         if ($body !== '' && $body !== null) {
             $this->stream = Stream::create($body);
@@ -91,10 +91,8 @@ final class Response implements ResponseInterface
 
         $this->setHeaders($headers);
 
-        if ($reason === null && isset(self::PHRASES[$this->statusCode])) {
+        if ($reason === '' && isset(self::PHRASES[$this->statusCode])) {
             $this->reasonPhrase = self::PHRASES[$statusCode];
-        } else {
-            $this->reasonPhrase = $reason ?? '';
         }
 
         $this->protocol = $version;
@@ -110,12 +108,8 @@ final class Response implements ResponseInterface
         return $this->reasonPhrase;
     }
 
-    public function withStatus($code, $reasonPhrase = ''): self
+    public function withStatus($code, $reasonPhrase = ''): ResponseInterface
     {
-        if (! is_int($code) && ! is_string($code)) {
-            throw new InvalidArgumentException('Status code has to be an integer');
-        }
-
         if ($code < 100 || $code > 599) {
             throw new InvalidArgumentException(sprintf(
                 'Status code has to be an integer between 100 and 599. A status code of %d was given',
@@ -123,14 +117,12 @@ final class Response implements ResponseInterface
             ));
         }
 
+        $phrase = isset(self::PHRASES[$code]) ? self::PHRASES[$code] : '';
+        $phrase = $reasonPhrase !== '' ? $reasonPhrase : $phrase;
+
         $new = clone $this;
         $new->statusCode = $code;
-
-        if (($reasonPhrase === null || $reasonPhrase === '') && isset(self::PHRASES[$new->statusCode])) {
-            $reasonPhrase = self::PHRASES[$new->statusCode];
-        }
-
-        $new->reasonPhrase = $reasonPhrase;
+        $new->reasonPhrase = $phrase;
 
         return $new;
     }

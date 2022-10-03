@@ -357,6 +357,9 @@ final class Configuration extends Base
         ],
     ];
 
+    /**
+     * @var array<string, string|array<int, int|string>>
+     */
     protected array $registry = [
         'admin_init' => 'onSetup',
         'admin_menu' => 'onMenu',
@@ -830,7 +833,9 @@ final class Configuration extends Base
     }
 
     /**
-     * @return string[]
+     * Returns an array of role tags (as strings) identifying all available role options
+     *
+     * @return mixed[]
      */
     private function getRoleOptions(): array
     {
@@ -838,9 +843,12 @@ final class Configuration extends Base
         $response = [];
 
         foreach ($roles as $roleId => $role) {
-            $response[$roleId] = $role['name'];
+            $response[$roleId] = (string) $role['name'];
         }
 
-        return array_reverse($response, true);
+        $response = array_reverse($response, true);
+
+        /** @var string[] $response */
+        return $response;
     }
 }

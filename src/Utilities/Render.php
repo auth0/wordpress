@@ -50,7 +50,7 @@ final class Render
 
         if ($select !== null && count($select) >= 1) {
             if ($disabled === true) {
-                echo '<input type="hidden" name="' . $name . '" value="' . $value . '">';
+                echo '<input type="hidden" name="' . $name . '" value="' . ($value ?? '') . '">';
                 echo '<select id="' . $element . '"' . $disabledString . '>';
             } else {
                 echo '<select name="' . $name . '" id="' . $element . '"' . $disabledString . '>';
@@ -76,7 +76,7 @@ final class Render
         }
 
         if (in_array($type, self::TREAT_AS_TEXT, true)) {
-            echo '<input name="' . $name . '" type="' . $type . '" id="' . $element . '" value="' . $value . '" class="regular-text"' . $placeholder . $disabledString . ' />';
+            echo '<input name="' . $name . '" type="' . $type . '" id="' . $element . '" value="' . ($value ?? '') . '" class="regular-text"' . $placeholder . $disabledString . ' />';
 
             if (strlen($description) >= 1) {
                 echo '<p class="description">' . $description . '</p>';
@@ -86,7 +86,7 @@ final class Render
         }
 
         if ($type === 'textarea') {
-            echo '<textarea name="' . $name . '" id="' . $element . '" rows="10" cols="50" spellcheck="false" class="large-text code"' . $placeholder . $disabledString . '>' . $value . '</textarea>';
+            echo '<textarea name="' . $name . '" id="' . $element . '" rows="10" cols="50" spellcheck="false" class="large-text code"' . $placeholder . $disabledString . '>' . ($value ?? '') . '</textarea>';
 
             if (strlen($description) >= 1) {
                 echo '<p class="description">' . $description . '</p>';
@@ -96,7 +96,7 @@ final class Render
         }
 
         if ($type === 'boolean') {
-            echo '<input name="' . $name . '" type="checkbox" id="' . $element . '" value="true" ' . checked(
+            echo '<input name="' . $name . '" type="checkbox" id="' . $element . '" value="true" ' . \checked(
                 (bool) $value,
                 'true'
             ) . $disabledString . '/> ' . $description;

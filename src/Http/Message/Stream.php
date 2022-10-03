@@ -57,18 +57,18 @@ final class Stream implements StreamInterface, Stringable
     /**
      * @var resource|null A resource reference
      */
-    private $stream;
+    private mixed $stream = null;
 
-    private bool $seekable;
+    private ?bool $seekable = null;
 
-    private bool $readable;
+    private ?bool $readable = null;
 
-    private bool $writable;
+    private ?bool $writable = null;
 
     private ?int $size = null;
 
     /**
-     * @var null|mixed|bool
+     * @var string|null $uri
      */
     private $uri;
 
@@ -86,7 +86,10 @@ final class Stream implements StreamInterface, Stringable
         return $this->getContents();
     }
 
-    public static function create(string|StreamInterface $body = ''): StreamInterface
+    /**
+     * @param StreamInterface|resource|string $body
+     */
+    public static function create(mixed $body = ''): StreamInterface
     {
         if ($body instanceof StreamInterface) {
             return $body;
@@ -131,13 +134,15 @@ final class Stream implements StreamInterface, Stringable
 
     public function close(): void
     {
-        if ($this->stream !== null) {
-            if (is_resource($this->stream)) {
-                fclose($this->stream);
-            }
+        $stream = $this->stream;
 
-            $this->detach();
+        /** @var resource|closed-resource|null $stream */
+
+        if (is_resource($stream)) {
+            fclose($stream);
         }
+
+        $this->detach();
     }
 
     public function detach(): mixed
@@ -169,12 +174,7 @@ final class Stream implements StreamInterface, Stringable
             return null;
         }
 
-        $uri = $this->getUri();
-
-        if ($uri !== []) {
-            clearstatcache(true, $uri);
-        }
-
+        clearstatcache(true, $this->getUri());
         $stats = fstat($this->stream);
 
         if (isset($stats['size'])) {
@@ -187,17 +187,17 @@ final class Stream implements StreamInterface, Stringable
 
     public function isReadable(): bool
     {
-        return $this->readable;
+        return $this->readable ?? false;
     }
 
     public function isWritable(): bool
     {
-        return $this->writable;
+        return $this->writable ?? false;
     }
 
     public function isSeekable(): bool
     {
-        return $this->seekable;
+        return $this->seekable ?? false;
     }
 
     public function tell(): int
@@ -309,10 +309,16 @@ final class Stream implements StreamInterface, Stringable
         return $meta[$key] ?? null;
     }
 
-    private function getUri(): array
+    private function getUri(): string
     {
-        $this->uri = $this->getMetadata('uri') ?? false;
+        $uri = $this->getMetadata('uri');
 
-        return $this->uri;
+        if (! is_string($uri)) {
+            $this->uri = '';
+            return '';
+        }
+
+        $this->uri = $uri;
+        return $uri;
     }
 }

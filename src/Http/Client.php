@@ -83,18 +83,32 @@ final class Client implements ClientInterface
         return $headers;
     }
 
+    /**
+     * Configure the HTTP telemetry for Auth0 API calls.
+     *
+     * @psalm-suppress UnresolvableInclude,UndefinedConstant
+     */
     private function setupTelemetry(): void
     {
-        if ($this->telemetrySet) {
+        $wp_version = '5.0.0';
+
+        if (! $this->telemetrySet) {
             return;
         }
 
         require ABSPATH . WPINC . '/version.php';
 
-        if (! isset($wp_version)) {
+        /** @var string $wp_version */
+
+        if ($wp_version === '') {
             try {
-                $wp_version = get_site_transient('update_core')
-                    ->version_checked;
+                $core = get_site_transient('update_core');
+
+                /** @var object $core */
+
+                if (property_exists($core, 'version_checked')) {
+                    $wp_version = $core->version_checked;
+                }
             } catch (Throwable) {
                 // Silently ignore if unavailable.
             }

@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Auth0\WordPress\Actions;
 
 use Auth0\SDK\Exception\StateException;
+use Auth0\SDK\Store\CookieStore;
 use Throwable;
 use WP_Error;
 use WP_User;
 
 final class Authentication extends Base
 {
+    /**
+     * @var array<string, string|array<int, int|string>>
+     */
     protected array $registry = [
         'init' => 'onInit',
         'auth_cookie_malformed' => ['onAuthCookieMalformed', 2],
@@ -36,6 +40,7 @@ final class Authentication extends Base
 
         $session = $this->getSdk()
             ->getCredentials();
+
         $expired = $session?->accessTokenExpired ?? true;
         $wordpress = wp_get_current_user();
 
@@ -105,8 +110,13 @@ final class Authentication extends Base
         }
 
         if ($this->getPlugin()->getOption('authentication', 'rolling_sessions') !== 'false') {
-            // TODO: Update PHP SDK rolling session state.
-            // $this->getSdk()->renewSession();
+            $store = $this->getSdk()->configuration()->getSessionStorage();
+
+            /**
+             * @var CookieStore $store
+             */
+
+            $store->setState(true);
             wp_set_auth_cookie($wordpress->ID, true);
         }
     }
@@ -188,21 +198,22 @@ final class Authentication extends Base
         nocache_headers();
 
         // Check if authentication flow parameters are present (?code and ?state)
-        $exchangeParameters = $this->getSdk()
-            ->getExchangeParameters();
+        $code = $this->getSdk()->getRequestParameter('code');
+        $state = $this->getSdk()->getRequestParameter('state');
+        $exchangeParameters = $code !== null && $state !== null;
 
         // Check if authentication flow error parameter is present (?error)
         $error = $this->getSdk()
             ->getRequestParameter('error');
 
         // Are token exchange parameters present?
-        if ($exchangeParameters !== null) {
+        if ($exchangeParameters) {
             try {
                 // Attempt completion of the authentication flow using
                 $this->getSdk()
                     ->exchange(
-                        code: sanitize_text_field($exchangeParameters?->code ?? ''),
-                        state: sanitize_text_field($exchangeParameters?->state ?? '')
+                        code: \sanitize_text_field($code),
+                        state: \sanitize_text_field($state)
                     );
             } catch (Throwable $throwable) {
                 // Exchange failed; throw an error
@@ -214,8 +225,8 @@ final class Authentication extends Base
 
             // Do we indeed have a session now?
             if ($session !== null) {
-                $sub = sanitize_text_field($session->user['sub'] ?? '');
-                $email = sanitize_email($session->user['email'] ?? '');
+                $sub = \sanitize_text_field($session->user['sub'] ?? '');
+                $email = \sanitize_email($session->user['email'] ?? '');
                 $verified = $session->user['email_verified'] ?? null;
 
                 if ($email === '') {
@@ -245,11 +256,11 @@ final class Authentication extends Base
             }
         }
 
-        if ($exchangeParameters === null && $error !== null) {
+        if ($exchangeParameters && $error !== null) {
             die($error);
         }
 
-        if ($exchangeParameters === null && $error === null && (wp_get_current_user()->ID !== 0 || $this->getSdk()->getCredentials() !== null)) {
+        if ($exchangeParameters && $error === null && (wp_get_current_user()->ID !== 0 || $this->getSdk()->getCredentials() !== null)) {
             wp_redirect('/');
             exit;
         }
@@ -276,10 +287,10 @@ final class Authentication extends Base
         ?string $email = null,
         ?bool $verified = null,
     ): ?WP_User {
-        $email = sanitize_email(filter_var($email ?? '', FILTER_SANITIZE_EMAIL, FILTER_NULL_ON_FAILURE) ?? '');
+        $email = \sanitize_email(filter_var($email ?? '', FILTER_SANITIZE_EMAIL, FILTER_NULL_ON_FAILURE) ?? '');
 
         if ($sub !== null) {
-            $sub = sanitize_text_field($sub);
+            $sub = \sanitize_text_field($sub);
             $found = $this->getAccountByConnection($sub);
 
             if ($found instanceof WP_User) {
@@ -320,8 +331,7 @@ final class Authentication extends Base
                 $user = get_user_by('ID', $user);
 
                 if ($user instanceof WP_User) {
-                    $role = $this->getPlugin()
-                        ->getOption('accounts', 'default_role', get_option('default_role'));
+                    $role = $this->getPlugin()->getOptionString('accounts', 'default_role');
 
                     if (is_string($role) && ! in_array($role, $user->roles, true)) {
                         $user->set_role($role);
@@ -377,7 +387,7 @@ final class Authentication extends Base
             ],
         ]);
 
-        if (count($found) < 1) {
+        if ($found === []) {
             return null;
         }
 

@@ -8,7 +8,7 @@ final class Sanitize
 {
     public static function integer(string $string, int $max = 10, int $min = 0): ?int
     {
-        $string = trim(sanitize_text_field($string));
+        $string = trim(\sanitize_text_field($string));
 
         if ($string === '') {
             return null;
@@ -33,7 +33,7 @@ final class Sanitize
 
     public static function boolean(string $string): ?string
     {
-        $string = trim(sanitize_text_field($string));
+        $string = trim(\sanitize_text_field($string));
 
         if ($string === '') {
             return null;
@@ -52,7 +52,7 @@ final class Sanitize
 
     public static function string(string $string): ?string
     {
-        $string = trim(sanitize_text_field($string));
+        $string = trim(\sanitize_text_field($string));
 
         if ($string === '') {
             return null;
@@ -63,7 +63,7 @@ final class Sanitize
 
     public static function cookiePath(string $path): string
     {
-        $path = trim(sanitize_text_field($path));
+        $path = trim(\sanitize_text_field($path));
         $path = trim(str_replace(['../', './'], '', $path));
         $path = trim($path, "/ \t\n\r\0\x0B");
 

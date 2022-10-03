@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\WordPress\Http\Message;
 
 use InvalidArgumentException;
-use Psr\Http\Message\UriInterface;
 
 trait RequestTrait
 {
@@ -13,7 +12,7 @@ trait RequestTrait
 
     private ?string $requestTarget = null;
 
-    private ?UriInterface $uri = null;
+    private \Psr\Http\Message\UriInterface $uri;
 
     public function getRequestTarget(): string
     {
@@ -29,15 +28,19 @@ trait RequestTrait
 
         $query = $this->uri->getQuery();
 
-        if ($query !== null) {
+        if ($query !== '') {
             $target .= '?' . $query;
         }
 
         return $target;
     }
 
-    public function withRequestTarget($requestTarget): self
+    public function withRequestTarget(mixed $requestTarget): static
     {
+        if (! is_string($requestTarget)) {
+            throw new InvalidArgumentException('Invalid request target provided; cannot contain whitespace');
+        }
+
         if (preg_match('#\s#', $requestTarget)) {
             throw new InvalidArgumentException('Invalid request target provided; cannot contain whitespace');
         }
@@ -53,7 +56,12 @@ trait RequestTrait
         return $this->method;
     }
 
-    public function withMethod($method): self
+    /**
+     * @param string $method
+     *
+     * @return static
+     */
+    public function withMethod($method): static
     {
         $new = clone $this;
         $new->method = $method;
@@ -61,12 +69,18 @@ trait RequestTrait
         return $new;
     }
 
-    public function getUri(): UriInterface
+    public function getUri(): \Psr\Http\Message\UriInterface
     {
         return $this->uri;
     }
 
-    public function withUri(UriInterface $uri, $preserveHost = false): self
+    /**
+     * @param \Psr\Http\Message\UriInterface $uri
+     * @param bool $preserveHost
+     *
+     * @return static
+     */
+    public function withUri(\Psr\Http\Message\UriInterface $uri, $preserveHost = false): static
     {
         if ($this->uri === $uri) {
             return $this;
