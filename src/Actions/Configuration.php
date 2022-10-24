@@ -647,16 +647,16 @@ final class Configuration extends Base
         if ($sanitized['database'] !== '') {
             $database = Sanitize::alphanumeric($sanitized['database'], "A-Za-z0-9\-_");
 
-            if (strlen($database) >= 3 && strlen($database) <= 64 && substr($database, 0, 4) === 'con_') {
+            if (strlen($database) >= 3 && strlen($database) <= 64 && str_starts_with($database, 'con_')) {
                 $filteredDatabase = $database;
             }
         }
 
         // Check if connection is valid
 
-        $api = $this->getSdk()->management()->connections()->get($filteredDatabase);
+        $response = $this->getSdk()->management()->connections()->get($filteredDatabase);
 
-        if (! HttpResponse::wasSuccessful($api)) {
+        if (! HttpResponse::wasSuccessful($response)) {
             $filteredDatabase = '';
         }
 
@@ -748,19 +748,22 @@ final class Configuration extends Base
 
         $filteredApis = [];
         $filteredOrgs = [];
+        $apisCount = is_countable($apis) ? count($apis) : 0;
 
-        for ($i=0; $i < count($apis); $i++) {
+        for ($i=0; $i < $apisCount; ++$i) {
             $apis[$i] = trim($apis[$i]);
 
-            if (strlen($apis[$i]) >= 3 && strlen($apis[$i]) <= 64 && preg_match('/^[a-z0-9]/', $apis[$i]) === 1) {
+            if (strlen($apis[$i]) >= 3 && strlen($apis[$i]) <= 64 && preg_match('#^[a-z0-9]#', $apis[$i]) === 1) {
                 $filteredApis[] = $apis[$i];
             }
         }
 
-        for ($i=0; $i < count($orgs); $i++) {
+        $orgsCount = is_countable($orgs) ? count($orgs) : 0;
+
+        for ($i=0; $i < $orgsCount; ++$i) {
             $orgs[$i] = trim($orgs[$i]);
 
-            if (strlen($orgs[$i]) >= 4 && strlen($orgs[$i]) <= 64 && substr($orgs[$i], 0, 4) === 'org_') {
+            if (strlen($orgs[$i]) >= 4 && strlen($orgs[$i]) <= 64 && str_starts_with($orgs[$i], 'org_')) {
                 $filteredOrgs[] = $orgs[$i];
             }
         }

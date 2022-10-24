@@ -8,13 +8,20 @@ final class Sanitize
 {
     public static function alphanumeric(string|null $item, string $allowed = 'A-Za-z0-9 '): string|null
     {
-        if ($item === '' || $item === null) {
+        if ($item === '') {
+            return $item;
+        }
+
+        if ($item === null) {
             return $item;
         }
 
         return preg_replace('/[^' . $allowed . ']/', '', $item);
     }
 
+    /**
+     * @return mixed[]
+     */
     public static function arrayUnique(array $array): array
     {
         if ($array === []) {

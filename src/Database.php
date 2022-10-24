@@ -4,11 +4,27 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress;
 
+use Throwable;
 final class Database
 {
+    /**
+     * @var string
+     */
     public const CONST_TABLE_OPTIONS = 'options';
+
+    /**
+     * @var string
+     */
     public const CONST_TABLE_ACCOUNTS = 'accounts';
+
+    /**
+     * @var string
+     */
     public const CONST_TABLE_SYNC = 'sync';
+
+    /**
+     * @var string
+     */
     public const CONST_TABLE_LOG = 'log';
 
     public function createTable(string $table)
@@ -29,7 +45,7 @@ final class Database
     ): int|bool {
         try {
             return $this->getWpdb()->insert($table, $data, $formats);
-        } catch (\Throwable $th) {
+        } catch (Throwable) {
             return false;
         }
     }
@@ -38,7 +54,7 @@ final class Database
         string $select,
         string $from,
         string $query,
-        ...$args
+        array $args = []
     ): array|object|null {
         $query = $this->getWpdb()->prepare($query, ...$args);
         return $this->getWpdb()->get_row(sprintf('SELECT %s FROM %s ', $select, $from) . $query);
@@ -56,7 +72,7 @@ final class Database
         string $select,
         string $from,
         string $query,
-        ...$args
+        array $args = []
     ): array|object|null {
         $query = $this->getWpdb()->prepare($query, ...$args);
         return $this->getWpdb()->get_results(sprintf('SELECT %s FROM %s ', $select, $from) . $query);
@@ -66,7 +82,7 @@ final class Database
         string $select,
         string $from,
         string $query,
-        ...$args
+        array $args = []
     ): array|object|null {
         $query = $this->getWpdb()->prepare($query, ...$args);
         return $this->getWpdb()->get_results(sprintf('SELECT DISTINCT %s FROM %s ', $select, $from) . $query);

@@ -191,8 +191,6 @@ final class Plugin
     }
 
     /**
-     * @param int|null $default
-     *
      * @psalm-param 0|null $default
      */
     public function getOption(string $group, string $key, ?int $default = null, string $prefix = 'auth0_'): mixed
@@ -301,7 +299,7 @@ final class Plugin
                 cookieDomain: $this->getOptionString('cookies', 'domain'),
                 cookiePath: $this->getOptionString('cookies', 'path') ?? '/',
                 cookieExpires: $expires,
-                cookieSecure: $secure ? true : false,
+                cookieSecure: (bool) $secure,
                 cookieSameSite: $this->getOptionString('cookies', 'samesite'),
                 redirectUri: get_site_url(null, 'wp-login.php')
             );

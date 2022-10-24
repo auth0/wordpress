@@ -4,16 +4,31 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Actions;
 
+use WP_User;
 use Auth0\SDK\Utility\HttpResponse;
 use Auth0\WordPress\Database;
 use Psr\Http\Message\ResponseInterface;
 
 final class Sync extends Base
 {
+    /**
+     * @var string
+     */
     public const CONST_JOB_BACKGROUND_SYNC = 'AUTH0_CRON_SYNC';
+
+    /**
+     * @var string
+     */
     public const CONST_JOB_BACKGROUND_MAINTENANCE = 'AUTH0_CRON_MAINTENANCE';
 
+    /**
+     * @var string
+     */
     public const CONST_SCHEDULE_BACKGROUND_SYNC = 'AUTH0_SYNC';
+
+    /**
+     * @var string
+     */
     public const CONST_SCHEDULE_BACKGROUND_MAINTENANCE = 'AUTH0_MAINTENANCE';
 
     /**
@@ -25,17 +40,14 @@ final class Sync extends Base
         'cron_schedules' => 'updateCronSchedule',
     ];
 
+    /**
+     * @return mixed[]
+     */
     public function updateCronSchedule($schedules): array
     {
-        $schedules[self::CONST_SCHEDULE_BACKGROUND_SYNC] = array(
-            'interval'  => $this->getPlugin()->getOptionInteger('sync', 'schedule') ?? 3600,
-            'display'   => 'Plugin Configuration'
-        );
+        $schedules[self::CONST_SCHEDULE_BACKGROUND_SYNC] = ['interval'  => $this->getPlugin()->getOptionInteger('sync', 'schedule') ?? 3600, 'display'   => 'Plugin Configuration'];
 
-        $schedules[self::CONST_SCHEDULE_BACKGROUND_MAINTENANCE] = array(
-            'interval'  => 300,
-            'display'   => 'Every 5 Minutes'
-        );
+        $schedules[self::CONST_SCHEDULE_BACKGROUND_MAINTENANCE] = ['interval'  => 300, 'display'   => 'Every 5 Minutes'];
 
         return $schedules;
     }
@@ -69,7 +81,7 @@ final class Sync extends Base
 
         $this->getPlugin()->database()->createTable(Database::CONST_TABLE_SYNC);
 
-        $queue = $database->selectResults('*', $table, 'WHERE `site` = %d AND `blog` = %d ORDER BY created LIMIT 10', $network, $blog);
+        $queue = $database->selectResults('*', $table, 'WHERE `site` = %d AND `blog` = %d ORDER BY created LIMIT 10', [$network, $blog]);
 
         $enabledEvents = [
             'wp_user_created' => $this->getPlugin()->getOptionBoolean('sync_events', 'user_creation') ?? true,
@@ -79,26 +91,26 @@ final class Sync extends Base
 
         $dbConnection = $this->getPlugin()->getOptionString('sync', 'database');
 
-        foreach ($queue as $event) {
+        foreach ($queue as $singleQueue) {
             if (null !== $dbConnection) {
-                $payload = json_decode($event->payload, true);
+                $payload = json_decode($singleQueue->payload, true, 512, JSON_THROW_ON_ERROR);
 
                 if (isset($payload['event'])) {
-                    if ($payload['event'] === 'wp_user_created' && $enabledEvents['wp_user_created'] === true) {
+                    if ($payload['event'] === 'wp_user_created' && $enabledEvents['wp_user_created']) {
                         $this->eventUserCreated($dbConnection, $payload);
                     }
 
-                    if ($payload['event'] === 'wp_user_deleted' && $enabledEvents['wp_user_deleted'] === true) {
+                    if ($payload['event'] === 'wp_user_deleted' && $enabledEvents['wp_user_deleted']) {
                         $this->eventUserDeleted($dbConnection, $payload);
                     }
 
-                    if ($payload['event'] === 'wp_user_updated' && $enabledEvents['wp_user_updated'] === true) {
+                    if ($payload['event'] === 'wp_user_updated' && $enabledEvents['wp_user_updated']) {
                         $this->eventUserUpdated($dbConnection, $payload);
                     }
                 }
             }
 
-            $database->deleteRow($table, ['id' => $event->id], ['%d']);
+            $database->deleteRow($table, ['id' => $singleQueue->id], ['%d']);
         }
     }
 
@@ -157,9 +169,9 @@ final class Sync extends Base
 
             if (null !== $user && null !== $connection) {
                 // Verify that the connection has not been claimed by another account already
-                $claimed = $this->authentication()->getAccountByConnection($connection);
+                $wpUser = $this->authentication()->getAccountByConnection($connection);
 
-                if (null === $claimed) {
+                if (!$wpUser instanceof WP_User) {
                     // Determine if the Auth0 counterpart account still exists
                     $api = $this->getResults($this->getSdk()->management()->users()->get($connection));
 
@@ -233,15 +245,20 @@ final class Sync extends Base
 
         $this->getPlugin()->database()->createTable(Database::CONST_TABLE_ACCOUNTS);
 
-        $users = $database->selectDistinctResults('user', $table, 'WHERE `site` = %d AND `blog` = %d', $network, $blog);
+        $users = $database->selectDistinctResults('user', $table, 'WHERE `site` = %d AND `blog` = %d', [$network, $blog]);
+        if (!is_array($users)) {
+            return;
+        }
 
-        if (is_array($users) && [] !== $users) {
-            foreach ($users as $user) {
-                $found = get_user_by('ID', $user->user);
+        if ([] === $users) {
+            return;
+        }
 
-                if (! $found) {
-                    $this->authentication()->deleteAccountConnections((int) $user->user);
-                }
+        foreach ($users as $user) {
+            $found = get_user_by('ID', $user->user);
+
+            if (! $found) {
+                $this->authentication()->deleteAccountConnections((int) $user->user);
             }
         }
     }

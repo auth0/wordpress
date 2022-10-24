@@ -39,7 +39,11 @@ final class Authentication extends Base
 
     public function onInit(): void
     {
-        if (! $this->getPlugin()->isReady() || ! $this->getPlugin()->isEnabled()) {
+        if (! $this->getPlugin()->isReady()) {
+            return;
+        }
+
+        if (! $this->getPlugin()->isEnabled()) {
             return;
         }
 
@@ -292,11 +296,11 @@ final class Authentication extends Base
         $payload = json_encode([
             'event' => 'wp_user_created',
             'user' => $userId
-        ]);
+        ], JSON_THROW_ON_ERROR);
         $checksum = hash('sha256', $payload);
 
         // TODO: Optimize this by creating an InsertIgnoreRow() method with a custom query.
-        $dupe = $database->selectRow('id', $table, 'WHERE `hashsum` = "%s";', $checksum);
+        $dupe = $database->selectRow('id', $table, 'WHERE `hashsum` = "%s";', [$checksum]);
 
         if (! $dupe) {
             $database->insertRow($table, [
@@ -334,11 +338,11 @@ final class Authentication extends Base
                     'event' => 'wp_user_deleted',
                     'user' => $userId,
                     'connection' => $connection->auth0
-                ]);
+                ], JSON_THROW_ON_ERROR);
                 $checksum = hash('sha256', $payload);
 
                 // TODO: Optimize this by creating an InsertIgnoreRow() method with a custom query.
-                $dupe = $database->selectRow('id', $table, 'WHERE `hashsum` = "%s";', $checksum);
+                $dupe = $database->selectRow('id', $table, 'WHERE `hashsum` = "%s";', [$checksum]);
 
                 if (! $dupe) {
                     $database->insertRow($table, [
@@ -377,11 +381,11 @@ final class Authentication extends Base
         $payload = json_encode([
             'event' => 'wp_user_updated',
             'user' => $userId
-        ]);
+        ], JSON_THROW_ON_ERROR);
         $checksum = hash('sha256', $payload);
 
         // TODO: Optimize this by creating an InsertIgnoreRow() method with a custom query.
-        $dupe = $database->selectRow('id', $table, 'WHERE `hashsum` = "%s";', $checksum);
+        $dupe = $database->selectRow('id', $table, 'WHERE `hashsum` = "%s";', [$checksum]);
 
         if (! $dupe) {
             $database->insertRow($table, [
@@ -470,17 +474,17 @@ final class Authentication extends Base
 
     private function prepDatabase(string $databaseName)
     {
-        // $cacheKey = 'auth0_db_check_' . hash('sha256', $databaseName);
+        $cacheKey = 'auth0_db_check_' . hash('sha256', $databaseName);
 
-        // $found = false;
-        // wp_cache_get($cacheKey, '', false, $found);
+        $found = false;
+        wp_cache_get($cacheKey, '', false, $found);
 
-        // if (! $found && false === get_transient($cacheKey)) {
-        //     set_transient($cacheKey, true, 1800);
-        //     wp_cache_set($cacheKey, true, 1800);
+        if (! $found && false === get_transient($cacheKey)) {
+            set_transient($cacheKey, true, 1800);
+            wp_cache_set($cacheKey, true, 1800);
 
-        return $this->getPlugin()->database()->createTable($databaseName);
-        // }
+            return $this->getPlugin()->database()->createTable($databaseName);
+        }
     }
 
     public function setAccountEmail(WP_User $wpUser, string $email): ?WP_User
@@ -506,17 +510,17 @@ final class Authentication extends Base
         $found = false;
         wp_cache_get($cacheKey, '', false, $found);
 
-        if (! $found) { //  && false === get_transient($cacheKey)
+        if (! $found && false === get_transient($cacheKey)) {
             $database = $this->getPlugin()->database();
             $table = $database->getTableName(Database::CONST_TABLE_ACCOUNTS);
             $found = null;
 
             $this->prepDatabase(Database::CONST_TABLE_ACCOUNTS);
 
-            $found = $database->selectRow('*', $table, 'WHERE `user` = %d AND `site` = %d AND `blog` = %d AND `auth0` = "%s" LIMIT 1', $wpUser->ID, $network, $blog, $connection);
+            $found = $database->selectRow('*', $table, 'WHERE `user` = %d AND `site` = %d AND `blog` = %d AND `auth0` = "%s" LIMIT 1', [$wpUser->ID, $network, $blog, $connection]);
 
             if (null === $found) {
-                // set_transient($cacheKey, $wpUser->ID, 120);
+                set_transient($cacheKey, $wpUser->ID, 120);
                 wp_cache_set($cacheKey, $found, 120);
 
                 $database->insertRow($table, [
@@ -548,14 +552,14 @@ final class Authentication extends Base
         }
 
         if (! $found) {
-            // $found = get_transient($cacheKey);
+            $found = get_transient($cacheKey);
 
             if (false === $found) {
                 $database = $this->getPlugin()->database();
                 $table = $database->getTableName(Database::CONST_TABLE_ACCOUNTS);
 
                 $this->prepDatabase(Database::CONST_TABLE_ACCOUNTS);
-                $found = $database->selectRow('user', $table, 'WHERE `site` = %d AND `blog` = %d AND `auth0` = "%s" LIMIT 1', $network, $blog, $connection);
+                $found = $database->selectRow('user', $table, 'WHERE `site` = %d AND `blog` = %d AND `auth0` = "%s" LIMIT 1', [$network, $blog, $connection]);
 
                 if (null === $found) {
                     return null;
@@ -565,8 +569,11 @@ final class Authentication extends Base
             }
         }
 
+
+        $found = $found->user;
+
         if ($found) {
-            // set_transient($cacheKey, $found, 120);
+            set_transient($cacheKey, $found, 120);
             wp_cache_set($cacheKey, $found, 120);
 
             $user = get_user_by('ID', $found);
@@ -588,7 +595,7 @@ final class Authentication extends Base
 
         $this->prepDatabase(Database::CONST_TABLE_ACCOUNTS);
 
-        $connections = $database->selectResults('auth0', $table, 'WHERE `site` = %d AND `blog` = %d AND `user` = "%s" LIMIT 1', $network, $blog, $userId);
+        $connections = $database->selectResults('auth0', $table, 'WHERE `site` = %d AND `blog` = %d AND `user` = "%s" LIMIT 1', [$network, $blog, $userId]);
 
         if ($connections) {
             return $connections;
@@ -606,7 +613,7 @@ final class Authentication extends Base
 
         $this->prepDatabase(Database::CONST_TABLE_ACCOUNTS);
 
-        $connections = $database->selectResults('auth0', $table, 'WHERE `site` = %d AND `blog` = %d AND `user` = "%s" LIMIT 1', $network, $blog, $userId);
+        $connections = $database->selectResults('auth0', $table, 'WHERE `site` = %d AND `blog` = %d AND `user` = "%s" LIMIT 1', [$network, $blog, $userId]);
 
         if ($connections) {
             $database->deleteRow($table, ['user' => $userId, 'site' => $network, 'blog' => $blog], ['%d', '%s', '%s']);
