@@ -54,7 +54,7 @@
     "php-http/mock-client": "^1.5",
     "php-stubs/wordpress-stubs": "^6.0",
     "phpstan/phpstan": "^1.7",
-    "phpstan/phpstan-strict-rules": "^1.4.3",
+    "phpstan/phpstan-strict-rules": "1.4.3",
     "phpunit/phpunit": "^9.5",
     "rector/rector": "^0.13.6",
     "squizlabs/php_codesniffer": "^3.7",

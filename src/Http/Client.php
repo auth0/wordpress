@@ -34,6 +34,9 @@ final class Client implements ClientInterface
 
         $responseData = wp_remote_request($destinationUri, $arguments);
 
+        // error_log($arguments['method'] . ' -> ' . $destinationUri);
+        // error_log(str_repeat(' ', strlen($arguments['method']) + 4) . json_encode($responseData));
+
         $code = wp_remote_retrieve_response_code($responseData);
         $code = is_numeric($code) ? (int) $code : 400;
 

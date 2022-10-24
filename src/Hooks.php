@@ -34,7 +34,7 @@ final class Hooks
          */
 
         if ($this->hookType === self::CONST_ACTION_HOOK) {
-            add_action($hook, $callback, $priority);
+            add_action($hook, $callback, $priority, $arguments);
         }
 
         if ($this->hookType === self::CONST_ACTION_FILTER) {
@@ -44,7 +44,7 @@ final class Hooks
         return $this;
     }
 
-    public function remove(string $hook, object $class, string $method, int $priority = 10): self
+    public function remove(string $hook, object $class, string $method, int $priority = 10, int $arguments = 1): self
     {
         $callback = [$class, $method];
 
@@ -53,11 +53,11 @@ final class Hooks
          */
 
         if ($this->hookType === self::CONST_ACTION_HOOK) {
-            remove_action($hook, $callback, $priority);
+            remove_action($hook, $callback, $priority, $arguments);
         }
 
         if ($this->hookType === self::CONST_ACTION_FILTER) {
-            remove_filter($hook, $callback, $priority);
+            remove_filter($hook, $callback, $priority, $arguments);
         }
 
         return $this;

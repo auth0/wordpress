@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Actions;
 
+use Auth0\SDK\Utility\HttpResponse;
 use Auth0\WordPress\Utilities\Render;
 use Auth0\WordPress\Utilities\Sanitize;
 
@@ -133,10 +134,10 @@ final class Configuration extends Base
                             'type' => 'text',
                             'enabled' => 'isPluginReady',
                             'sanitizer' => 'string',
-                            'description' => 'The ID of a Database Connection to synchronise WordPresss with. Should begin with <code>con_</code>.',
+                            'description' => 'Database Connection to sync WordPress with for non-social connections. Must begin with <code>con_</code>.',
                         ],
                         'schedule' => [
-                            'title' => 'Background Frequency',
+                            'title' => 'Sync Frequency',
                             'type' => 'number',
                             'enabled' => 'isPluginReady',
                             'description' => ['getOptionDescription', 'sync_enable'],
@@ -163,6 +164,42 @@ final class Configuration extends Base
                                 'disable' => 'Disabled',
                                 'enable_email' => 'Enabled for email addresses',
                                 'enable' => 'Enabled for all changes',
+                            ],
+                        ],
+                    ],
+                ],
+                'sync_events' => [
+                    'title' => 'Synchronised Events',
+                    'description' => '',
+                    'options' => [
+                        'user_creation' => [
+                            'title' => 'User Creation',
+                            'type' => 'boolean',
+                            'enabled' => 'isPluginReady',
+                            'description' => 'Create matching Auth0 user when a WordPress user is created (and vice versa.)',
+                            'select' => [
+                                'true' => 'Enabled',
+                                'false' => 'Disabled',
+                            ],
+                        ],
+                        'user_deletion' => [
+                            'title' => 'User Deletion',
+                            'type' => 'boolean',
+                            'enabled' => 'isPluginReady',
+                            'description' => 'Delete matching Auth0 user when a WordPress user is deleted (and vice versa.)',
+                            'select' => [
+                                'true' => 'Enabled',
+                                'false' => 'Disabled',
+                            ],
+                        ],
+                        'user_updates' => [
+                            'title' => 'User Updates',
+                            'type' => 'boolean',
+                            'enabled' => 'isPluginReady',
+                            'description' => 'Update matching Auth0 user when a WordPress user is updated (and vice versa.)',
+                            'select' => [
+                                'true' => 'Enabled',
+                                'false' => 'Disabled',
                             ],
                         ],
                     ],
@@ -615,19 +652,57 @@ final class Configuration extends Base
             }
         }
 
-        $nextCronRun = wp_next_scheduled('a0_cron_hook');
+        // Check if connection is valid
+
+        $api = $this->getSdk()->management()->connections()->get($filteredDatabase);
+
+        if (! HttpResponse::wasSuccessful($api)) {
+            $filteredDatabase = '';
+        }
+
+        // Setup background sync task: -----
+
+        $nextCronRun = wp_next_scheduled(Sync::CONST_JOB_BACKGROUND_SYNC);
 
         if ($nextCronRun !== false) {
-            wp_unschedule_event($nextCronRun, 'a0_cron_hook');
+            wp_unschedule_event($nextCronRun, Sync::CONST_JOB_BACKGROUND_SYNC);
         }
 
         if ($filteredDatabase !== '' && $input['schedule'] !== 0) {
-            wp_schedule_event(time(), (string) $input['schedule'], 'a0_cron_hook');
+            $next = wp_schedule_event(time(), Sync::CONST_SCHEDULE_BACKGROUND_SYNC, Sync::CONST_JOB_BACKGROUND_SYNC);
         }
 
         $sanitized['database'] = $filteredDatabase;
 
-        syslog(LOG_NOTICE, "Saved sync settings");
+        // Setup background maintenance task: -----
+
+        $nextCronRun = wp_next_scheduled(Sync::CONST_JOB_BACKGROUND_MAINTENANCE);
+
+        if ($nextCronRun !== false) {
+            wp_unschedule_event($nextCronRun, Sync::CONST_JOB_BACKGROUND_MAINTENANCE);
+        }
+
+        $next = wp_schedule_event(time(), Sync::CONST_SCHEDULE_BACKGROUND_MAINTENANCE, Sync::CONST_JOB_BACKGROUND_MAINTENANCE);
+
+        return array_filter($sanitized, static fn ($value) => $value !== '');
+    }
+
+    /**
+     * @param null|array<string|int|bool|null> $input
+     *
+     * @return null|array<mixed>
+     */
+    public function onUpdateSyncEvents(?array $input): ?array
+    {
+        if ($input === null) {
+            return null;
+        }
+
+        $sanitized = [
+            'user_creation' => Sanitize::boolean((string) ($input['user_creation'] ?? '')) ?? '',
+            'user_deletion' => Sanitize::boolean((string) ($input['user_deletion'] ?? '')) ?? '',
+            'user_updates' => Sanitize::boolean((string) ($input['user_updates'] ?? '')) ?? '',
+        ];
 
         return array_filter($sanitized, static fn ($value) => $value !== '');
     }

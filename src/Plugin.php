@@ -44,6 +44,7 @@ final class Plugin
     public function getSdk(): Auth0
     {
         $this->auth0 ??= new Auth0($this->getConfiguration());
+
         return $this->auth0;
     }
 
@@ -72,6 +73,20 @@ final class Plugin
     {
         $this->sdkConfiguration = $sdkConfiguration;
         return $this;
+    }
+
+    /**
+     * Returns a singleton instance of Database.
+     */
+    public function database(): Database
+    {
+        static $instance = null;
+
+        if ($instance === null) {
+            $instance = new Database();
+        }
+
+        return $instance;
     }
 
     /**
@@ -232,13 +247,22 @@ final class Plugin
         return null;
     }
 
+    public function getClassInstance(string $class): mixed
+    {
+        if (! array_key_exists($class, $this->registry)) {
+            $this->registry[$class] = new $class($this);
+        }
+
+        return $this->registry[$class];
+    }
+
     /**
      * Import configuration settings from database.
      */
     private function importConfiguration(): SdkConfiguration
     {
-        $audiences = $this->getOptionString('advanced', 'apis') ?? '';
-        $organizations = $this->getOptionString('advanced', 'organizations') ?? '';
+        $audiences = $this->getOptionString('client_advanced', 'apis') ?? '';
+        $organizations = $this->getOptionString('client_advanced', 'organizations') ?? '';
         $caching = $this->getOption('tokens', 'caching');
 
         $audiences = array_filter(array_values(array_unique(explode("\n", trim($audiences)))));
@@ -246,26 +270,42 @@ final class Plugin
         $secure = $this->getOptionBoolean('cookies', 'secure') ?? \is_ssl();
         $expires = $this->getOptionInteger('cookies', 'ttl') ?? 0;
 
-        $sdkConfiguration = new SdkConfiguration(
-            strategy: SdkConfiguration::STRATEGY_NONE,
-            httpRequestFactory: Factory::getRequestFactory(),
-            httpResponseFactory: Factory::getResponseFactory(),
-            httpStreamFactory: Factory::getStreamFactory(),
-            httpClient: Factory::getClient(),
-            domain: $this->getOptionString('client', 'domain'),
-            clientId: $this->getOptionString('client', 'id'),
-            clientSecret: $this->getOptionString('client', 'secret'),
-            customDomain: $this->getOptionString('advanced', 'custom_domain'),
-            audience: $audiences !== [] ? $audiences : null,
-            organization: $organizations !== [] ? $organizations : null,
-            cookieSecret: $this->getOptionString('cookies', 'secret'),
-            cookieDomain: $this->getOptionString('cookies', 'domain'),
-            cookiePath: $this->getOptionString('cookies', 'path') ?? '/',
-            cookieExpires: $expires,
-            cookieSecure: $secure ? true : false,
-            cookieSameSite: $this->getOptionString('cookies', 'samesite'),
-            redirectUri: get_site_url(null, 'wp-login.php')
-        );
+        if (defined('DOING_CRON')) {
+            // When invoked from a WP_Cron task, just use a minimum configuration for those needs (namely, no sessions invoked.)
+            $sdkConfiguration = new SdkConfiguration(
+                strategy: SdkConfiguration::STRATEGY_NONE,
+                httpRequestFactory: Factory::getRequestFactory(),
+                httpResponseFactory: Factory::getResponseFactory(),
+                httpStreamFactory: Factory::getStreamFactory(),
+                httpClient: Factory::getClient(),
+                domain: $this->getOptionString('client', 'domain'),
+                clientId: $this->getOptionString('client', 'id'),
+                clientSecret: $this->getOptionString('client', 'secret'),
+                audience: $audiences !== [] ? $audiences : null,
+                organization: $organizations !== [] ? $organizations : null
+            );
+        } else {
+            $sdkConfiguration = new SdkConfiguration(
+                strategy: SdkConfiguration::STRATEGY_REGULAR,
+                httpRequestFactory: Factory::getRequestFactory(),
+                httpResponseFactory: Factory::getResponseFactory(),
+                httpStreamFactory: Factory::getStreamFactory(),
+                httpClient: Factory::getClient(),
+                domain: $this->getOptionString('client', 'domain'),
+                clientId: $this->getOptionString('client', 'id'),
+                clientSecret: $this->getOptionString('client', 'secret'),
+                customDomain: $this->getOptionString('client_advanced', 'custom_domain'),
+                audience: $audiences !== [] ? $audiences : null,
+                organization: $organizations !== [] ? $organizations : null,
+                cookieSecret: $this->getOptionString('cookies', 'secret'),
+                cookieDomain: $this->getOptionString('cookies', 'domain'),
+                cookiePath: $this->getOptionString('cookies', 'path') ?? '/',
+                cookieExpires: $expires,
+                cookieSecure: $secure ? true : false,
+                cookieSameSite: $this->getOptionString('cookies', 'samesite'),
+                redirectUri: get_site_url(null, 'wp-login.php')
+            );
+        }
 
         if ($caching !== 'disable') {
             $wpObjectCachePool = new WpObjectCachePool();
@@ -273,14 +313,5 @@ final class Plugin
         }
 
         return $sdkConfiguration;
-    }
-
-    private function getClassInstance(string $class): mixed
-    {
-        if (! array_key_exists($class, $this->registry)) {
-            $this->registry[$class] = new $class($this);
-        }
-
-        return $this->registry[$class];
     }
 }
