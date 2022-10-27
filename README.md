@@ -46,7 +46,7 @@ We appreciate feedback and contribution to this repo! Before you get started, pl
 To provide feedback or report a bug, [please raise an issue on our issue tracker](https://github.com/auth0/wp-auth0/issues).
 
 ### Vulnerability Reporting
-Please do not report security vulnerabilities on the public Github issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
 ---
 
