@@ -18,7 +18,7 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 - PHP 8.0+
 - Latest version of WordPress (6+)
 
-## Installation
+### Installation
 
 1. Log in to an existing WordPress site as an administrator.
 2. Go to Plugins → Add New in the admin menu on the left.
