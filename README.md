@@ -27,7 +27,7 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 
 Addition information can be found in the [installation docs](https://auth0.com/docs/cms/wordpress/installation).
 
-## Getting Started
+### Configure the SDK
 
 Please see the [configuration docs](https://auth0.com/docs/cms/wordpress/configuration) for instructions on how to configure Login by Auth0 for your site.
 
