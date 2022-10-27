@@ -1,4 +1,4 @@
-![wp-auth0](.github/header.png)
+![wp-auth0](https://cdn.auth0.com/website/sdks/banners/wp-auth0-banner.png)
 
 WordPress Plugin for [Auth0](https://auth0.com) Authentication
 
