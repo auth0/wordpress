@@ -117,6 +117,14 @@ class WP_Auth0_ErrorLog {
 		return update_option( self::OPTION_NAME, $log );
 	}
 
+	public static function check_is_disabled() {
+		$flag = wp_auth0_get_option( 'auth0_disable_logging' );
+		if ( is_bool( $flag ) ) {
+			return $flag;
+		}
+		return false;
+	}
+
 	/**
 	 * Create a row in the error log.
 	 *
@@ -126,6 +134,10 @@ class WP_Auth0_ErrorLog {
 	 * @return bool
 	 */
 	public static function insert_error( $section, $error ) {
+
+		if ( self::check_is_disabled() ) {
+			return false;
+		}
 
 		$new_entry = [
 			'section' => $section,
