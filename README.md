@@ -70,7 +70,7 @@ It's important to configure your WordPress site's built-in background task syste
 ## Support Policy
 
 - Our PHP version support window mirrors the [PHP release support schedule](https://www.php.net/supported-versions.php). Our support for PHP versions end when they stop receiving security fixes.
-- As Automattic's stated policy is "security patches are backported when possible, but this is not guaranteed", wee only support [the latest release](https://wordpress.org/news/category/releases/) marked as ["actively support"](https://endoflife.date/wordpress) by Automattic.
+- As Automattic's stated policy is "security patches are backported when possible, but this is not guaranteed", we only support [the latest release](https://wordpress.org/news/category/releases/) marked as ["actively support"](https://endoflife.date/wordpress) by Automattic.
 
 | Plugin Version | WordPress Version  | PHP Version  | Support Ends  |
 |----------------|--------------------|--------------|---------------|
