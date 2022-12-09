@@ -11,7 +11,7 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 ### Requirements
 
 - PHP 8.0+
-- Latest version of WordPress (6+)
+- [Most recent version of WordPress](https://wordpress.org/news/category/releases/)
 - WP configured with databases priviledges to create tables
 
 ### Installation
