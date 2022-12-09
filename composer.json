@@ -1,5 +1,5 @@
 {
-  "name": "auth0/wp-auth0",
+  "name": "auth0/wordpress",
   "description": "WordPress Plugin for Auth0",
   "license": "MIT",
   "type": "wordpress-plugin",
