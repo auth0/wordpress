@@ -74,7 +74,7 @@ It's important to configure your WordPress site's built-in background task syste
 
 | Plugin Version | WordPress Version  | PHP Version  | Support Ends  |
 |----------------|--------------------|--------------|---------------|
-| 5              | 6.x                | 8.2          | Dec 2025      |
+| 5              | 6                  | 8.2          | Dec 2025      |
 |                |                    | 8.1          | Nov 2024      |
 |                |                    | 8.0          | Nov 2023      |
 
