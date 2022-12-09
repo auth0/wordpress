@@ -12,7 +12,9 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 
 - PHP 8.0+
 - [Most recent version of WordPress](https://wordpress.org/news/category/releases/)
-- WP configured with databases priviledges to create tables
+- WordPress configured with databases priviledges allowing database table creation
+
+> Please review our [support policy](#support-policy) to learn when language and framework versions will exit support in the future.
 
 ### Installation
 
@@ -64,6 +66,19 @@ For performance reasons, V5 of the WordPress plugin as adopted it's own database
 ### Cron Configuration
 
 It's important to configure your WordPress site's built-in background task system, [WP-Cron](https://developer.wordpress.org/plugins/cron/). This is the mechanism that V5 of the WordPress plugin keeps WordPress and Auth0 in sync.
+
+## Support Policy
+
+- Our PHP version support window mirrors the [PHP release support schedule](https://www.php.net/supported-versions.php). Our support for PHP versions end when they stop receiving security fixes.
+- As Automattic's stated policy is "security patches are backported when possible, but this is not guaranteed", wee only support [the latest release](https://wordpress.org/news/category/releases/) marked as ["actively support"](https://endoflife.date/wordpress) by Automattic.
+
+| Plugin Version | WordPress Version  | PHP Version  | Support Ends  |
+|----------------|--------------------|--------------|---------------|
+| 5              | 6.x                | 8.2          | Dec 2025      |
+|                |                    | 8.1          | Nov 2024      |
+|                |                    | 8.0          | Nov 2023      |
+
+Deprecations of EOL'd language or framework versions are not considered a breaking change. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions. Please ensure your PHP and WordPress environments always remain up to date.
 
 ## Feedback
 
