@@ -21,7 +21,7 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 Add the dependency to your application with [Composer](https://getcomposer.org/):
 
 ```
-composer require auth0/wp-auth0
+composer require auth0/wordpress
 ```
 
 Then,
