@@ -6,10 +6,12 @@ job_original.sh
 wp-phptidy.php
 /account_cleanup/config.json
 /account_cleanup/vendor/
+/vendor/
 /rules/
 /tests-wordpress
 /tests-wordpress-config
 .phpcs.xml
 phpcs.xml
+composer.lock
 composer.local.json
 .vscode/
