@@ -34,8 +34,8 @@ if (! defined('ABSPATH')) {
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
 register_activation_hook(
-	__FILE__,
-    function() {
+    __FILE__,
+    function () {
         $cookies = get_option('auth0_cookies', []);
 
         if (! is_array($cookies) || [] === $cookies || ! isset($cookies['secret'])) {

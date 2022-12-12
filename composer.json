@@ -118,7 +118,7 @@
     "pint": "pint --test",
     "pint:fix": "pint",
     "psalm": "psalm --no-progress",
-    "psalm:fix": "psalm --alter --issues=all --php-version=7.4",
+    "psalm:fix": "psalm --alter --issues=all --php-version=8.0",
     "rector": "rector process src --dry-run",
     "rector:fix": "rector process src"
   }
