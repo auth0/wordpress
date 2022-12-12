@@ -39,11 +39,11 @@ final class Authentication extends Base
 
     public function onInit(): void
     {
-        if (! $this->getPlugin()->isReady()) {
+        if (! $this->getPlugin()->isEnabled()) {
             return;
         }
 
-        if (! $this->getPlugin()->isEnabled()) {
+        if (! $this->getPlugin()->isReady()) {
             return;
         }
 
@@ -59,45 +59,48 @@ final class Authentication extends Base
             }
 
             // Is an Auth0 session available?
-            if (! is_object($session)) {
+            if (! is_object($session) && $wordpress->ID !== 0) {
                 wp_logout();
 
                 return;
             }
 
             // Is an WP session available?
-            if ($wordpress->ID === 0) {
+            if (is_object($session) && $wordpress->ID === 0) {
                 $this->getSdk()->clear();
 
                 return;
             }
 
-            // Verify the WordPress user signed in is linked to the Auth0 Connection 'sub'.
-            $sub = $session->user['sub'] ?? null;
-            if ($sub !== null) {
-                $match = $this->getAccountByConnection($sub);
+            if (is_object($session)) {
+                // Verify the WordPress user signed in is linked to the Auth0 Connection 'sub'.
+                $sub = $session->user['sub'] ?? null;
 
-                if (! $match instanceof WP_User || $match->ID !== $wordpress->ID) {
+                if ($sub !== null) {
+                    $match = $this->getAccountByConnection($sub);
+
+                    if (! $match instanceof WP_User || $match->ID !== $wordpress->ID) {
+                        $this->getSdk()->clear();
+                        wp_logout();
+                        return;
+                    }
+                }
+
+                // Verify that the Auth0 token cookie has not expired
+                if ($expired && $this->getPlugin()->getOption('sessions', 'refresh_tokens') === 'true') {
+                    try {
+                        // Token has expired, attempt to refresh it.
+                        $this->getSdk()->renew();
+                        return;
+                    } catch (StateException) {
+                        // Refresh failed.
+                    }
+
+                    // Invalidation authentication state.
                     $this->getSdk()->clear();
                     wp_logout();
                     return;
                 }
-            }
-
-            // Verify that the Auth0 token cookie has not expired
-            if ($expired && $this->getPlugin()->getOption('sessions', 'refresh_tokens') === 'true') {
-                try {
-                    // Token has expired, attempt to refresh it.
-                    $this->getSdk()->renew();
-                    return;
-                } catch (StateException) {
-                    // Refresh failed.
-                }
-
-                // Invalidation authentication state.
-                $this->getSdk()->clear();
-                wp_logout();
-                return;
             }
         }
 
@@ -178,11 +181,11 @@ final class Authentication extends Base
 
     public function onLogin(): void
     {
-        if (! $this->getPlugin()->isReady()) {
+        if (! $this->getPlugin()->isEnabled()) {
             return;
         }
 
-        if (! $this->getPlugin()->isEnabled()) {
+        if (! $this->getPlugin()->isReady()) {
             return;
         }
 
@@ -568,9 +571,6 @@ final class Authentication extends Base
                 $found = $found->user;
             }
         }
-
-
-        $found = $found->user;
 
         if ($found) {
             set_transient($cacheKey, $found, 120);

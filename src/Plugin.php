@@ -150,7 +150,12 @@ final class Plugin
      */
     public function isReady(): bool
     {
-        $config = $this->getConfiguration();
+        try {
+            $config = $this->getConfiguration();
+        } catch (\Throwable $th) {
+            return false;
+        }
+
         if (! $config->hasClientId()) {
             return false;
         }
@@ -197,11 +202,7 @@ final class Plugin
     {
         $options = get_option($prefix . $group, []);
 
-        /**
-         * @var array<mixed> $options
-         */
-
-        if (isset($options[$key])) {
+        if (is_array($options) && isset($options[$key])) {
             return $options[$key];
         }
 
