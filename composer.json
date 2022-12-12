@@ -100,7 +100,7 @@
     "process-timeout": 0
   },
   "scripts": {
-    "package": "composer install && composer update && TODO: Bundle and prefix dependencies",
+    "package": "mv composer.local.json composer.local.old && composer install --no-dev --optimize-autoloader --no-ansi --no-interaction --no-plugins --no-progress --no-scripts && composer update && mv composer.local.old composer.local.json",
     "fix": [
       "@pint:fix",
       "@psalm:fix",
