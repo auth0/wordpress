@@ -1,6 +1,15 @@
 # Change Log
 
-## [5.0](https://github.com/auth0/wp-auth0/tree/5.0.0) (2022-10-28)
+## [5.0.1](https://github.com/auth0/wp-auth0/tree/5.0.1) (2022-12-12)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/5.0.0...5.0.1)
+
+**Fixed**
+
+- Resolves an issue which sometimes prevented the plugin from being activated on WordPress 6
+
+## [5.0.0](https://github.com/auth0/wp-auth0/tree/5.0.0) (2022-10-28)
+
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/4.4.0...5.0.0)
 
 Introducing V5 of WP-Auth0 ("Login by Auth0"), a major redesign and upgrade to our WordPress integration plugin. V5 includes many new features and changes:
