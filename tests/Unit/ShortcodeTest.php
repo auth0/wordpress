@@ -30,7 +30,7 @@ class ShortcodeTest extends WP_Auth0_Test_Case {
 	public function testThatShortcodeEnqueuesLockScript() {
 		$shortcode = wp_auth0_shortcode([]);
 
-		$this->assertContains('<div id="auth0-login-form">', $shortcode);
+		$this->assertStringContainsString('<div id="auth0-login-form">', $shortcode);
 
 		$script  = $this->getScript('wpa0_lock_init', 'wpAuth0LockGlobal');
 

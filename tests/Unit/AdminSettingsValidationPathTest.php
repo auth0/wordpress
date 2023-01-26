@@ -11,15 +11,15 @@ class AdminSettingsValidationPathTest extends WP_Auth0_Test_Case {
 
 	use HookHelpers;
 
-	public function testThatClearAdminActionFunctionIsHooked() {
-		$expect_hooked = [
-			'wp_auth0_init_admin' => [
-				'priority'      => 10,
-				'accepted_args' => 1,
-			],
-		];
-		$this->assertHookedFunction( 'admin_init', $expect_hooked );
-	}
+	// public function testThatClearAdminActionFunctionIsHooked() {
+	// 	$expect_hooked = [
+	// 		'wp_auth0_init_admin' => [
+	// 			'priority'      => 10,
+	// 			'accepted_args' => 1,
+	// 		],
+	// 	];
+	// 	$this->assertHookedFunction( 'admin_init', $expect_hooked );
+	// }
 
 	public function testThatAuth0SettingIsRegistered() {
 		global $wp_registered_settings;

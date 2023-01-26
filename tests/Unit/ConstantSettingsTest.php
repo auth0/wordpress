@@ -147,12 +147,12 @@ class ConstantSettingsTest extends WP_Auth0_Test_Case {
 
 			$input = $this->getDomListFromTagName( $field_html, 'input' );
 			$this->assertTrue( $input->item( 0 )->hasAttribute( 'disabled' ) );
-			$this->assertContains( 'Value is set in the constant', $field_html );
-			$this->assertContains( $constant_name, $field_html );
+			$this->assertStringContainsString( 'Value is set in the constant', $field_html );
+			$this->assertStringContainsString( $constant_name, $field_html );
 
 			// Sensitive fields will not output the current value.
 			$expected_value = 'client_secret' === $field['opt_name'] ? '[REDACTED]' : $field['value'];
-			$this->assertContains( 'value="' . $expected_value . '"', $field_html );
+			$this->assertStringContainsString( 'value="' . $expected_value . '"', $field_html );
 		}
 	}
 }

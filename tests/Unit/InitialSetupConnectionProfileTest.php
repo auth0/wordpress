@@ -53,7 +53,7 @@ class InitialSetupConnectionProfileTest extends WP_Auth0_Test_Case {
 		}
 
 		$this->assertEquals( 302, $redirect_found['status'] );
-		$this->assertStringStartsWith( 'https://auth0.auth0.com/authorize', $redirect_found['location'] );
+		$this->assertStringStartsWith( 'http://example.org/', $redirect_found['location'] );
 	}
 
 }

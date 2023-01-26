@@ -32,7 +32,7 @@ class AdminAppearanceValidationTest extends WP_Auth0_Test_Case {
 		$this->assertEquals( '', $validated['form_title'] );
 
 		$validated = self::$admin->input_validator( [ 'form_title' => '<script>alert("hi")</script>' ] );
-		$this->assertNotContains( '<script>', $validated['form_title'] );
+		$this->assertStringNotContainsString( '<script>', $validated['form_title'] );
 	}
 
 	/**
@@ -54,6 +54,6 @@ class AdminAppearanceValidationTest extends WP_Auth0_Test_Case {
 		$this->assertEquals( '', $validated['primary_color'] );
 
 		$validated = self::$admin->input_validator( [ 'primary_color' => '<script>alert("hi")</script>' ] );
-		$this->assertNotContains( '<script>', $validated['primary_color'] );
+		$this->assertStringNotContainsString( '<script>', $validated['primary_color'] );
 	}
 }

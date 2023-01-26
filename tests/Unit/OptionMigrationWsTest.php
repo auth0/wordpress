@@ -77,9 +77,9 @@ class OptionMigrationWsTest extends WP_Auth0_Test_Case {
 		$admin->render_migration_ws( $field_args );
 		$field_html = ob_get_clean();
 
-		$this->assertContains( 'User migration endpoints deactivated', $field_html );
-		$this->assertContains( 'Custom database connections can be deactivated', $field_html );
-		$this->assertContains( 'https://manage.auth0.com/#/connections/database', $field_html );
+		$this->assertStringContainsString( 'User migration endpoints deactivated', $field_html );
+		$this->assertStringContainsString( 'Custom database connections can be deactivated', $field_html );
+		$this->assertStringContainsString( 'https://manage.auth0.com/#/connections/database', $field_html );
 	}
 
 	/**
@@ -101,9 +101,9 @@ class OptionMigrationWsTest extends WP_Auth0_Test_Case {
 		$admin->render_migration_ws( $field_args );
 		$field_html = ob_get_clean();
 
-		$this->assertContains( 'User migration endpoints activated', $field_html );
-		$this->assertContains( 'The custom database scripts need to be configured manually', $field_html );
-		$this->assertContains( 'https://auth0.com/docs/cms/wordpress/user-migration', $field_html );
+		$this->assertStringContainsString( 'User migration endpoints activated', $field_html );
+		$this->assertStringContainsString( 'The custom database scripts need to be configured manually', $field_html );
+		$this->assertStringContainsString( 'https://auth0.com/docs/cms/wordpress/user-migration', $field_html );
 
 		$code_block = $this->getDomListFromTagName( $field_html, 'code' );
 		$this->assertEquals( 'code-block', $code_block->item( 0 )->getAttribute( 'class' ) );
@@ -114,11 +114,11 @@ class OptionMigrationWsTest extends WP_Auth0_Test_Case {
 		$token_button = $this->getDomListFromTagName( $field_html, 'button' );
 		$this->assertEquals( 'auth0_rotate_migration_token', $token_button->item( 0 )->getAttribute( 'id' ) );
 		$this->assertEquals( 'Generate New Migration Token', trim( $token_button->item( 0 )->nodeValue ) );
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'This will change your migration token immediately',
 			$token_button->item( 0 )->getAttribute( 'data-confirm-msg' )
 		);
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'The new token must be changed in the custom scripts for your database Connection',
 			$token_button->item( 0 )->getAttribute( 'data-confirm-msg' )
 		);

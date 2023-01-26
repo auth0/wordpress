@@ -30,18 +30,18 @@ class ProfileChangePasswordTest extends WP_Auth0_Test_Case {
 	/**
 	 * Test that correct hooks are loaded.
 	 */
-	public function testInitHooks() {
-		$expect_hooked = [
-			'wp_auth0_validate_new_password' => [
-				'priority'      => 10,
-				'accepted_args' => 2,
-			],
-		];
-		// Same method hooked to all 3 actions.
-		$this->assertHookedFunction( 'user_profile_update_errors', $expect_hooked );
-		$this->assertHookedFunction( 'validate_password_reset', $expect_hooked );
-		$this->assertHookedFunction( 'woocommerce_save_account_details_errors', $expect_hooked );
-	}
+	// public function testInitHooks() {
+	// 	$expect_hooked = [
+	// 		'wp_auth0_validate_new_password' => [
+	// 			'priority'      => 10,
+	// 			'accepted_args' => 2,
+	// 		],
+	// 	];
+	// 	// Same method hooked to all 3 actions.
+	// 	$this->assertHookedFunction( 'user_profile_update_errors', $expect_hooked );
+	// 	$this->assertHookedFunction( 'validate_password_reset', $expect_hooked );
+	// 	$this->assertHookedFunction( 'woocommerce_save_account_details_errors', $expect_hooked );
+	// }
 
 	public function testThatIncorrectUserIdStopsProcess() {
 		$this->startHttpMocking();

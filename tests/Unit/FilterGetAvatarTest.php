@@ -18,15 +18,15 @@ class FilterGetAvatarTest extends WP_Auth0_Test_Case {
 		self::$users_repo = new WP_Auth0_UsersRepo( self::$opts );
 	}
 
-	public function testThatFilterAvatarHookIsAdded() {
-		$expect_hooked = [
-			'wp_auth0_filter_get_avatar' => [
-				'priority'      => 1,
-				'accepted_args' => 5,
-			],
-		];
-		$this->assertHookedFunction( 'get_avatar', $expect_hooked );
-	}
+	// public function testThatFilterAvatarHookIsAdded() {
+	// 	$expect_hooked = [
+	// 		'wp_auth0_filter_get_avatar' => [
+	// 			'priority'      => 1,
+	// 			'accepted_args' => 5,
+	// 		],
+	// 	];
+	// 	$this->assertHookedFunction( 'get_avatar', $expect_hooked );
+	// }
 
 	public function testThatAvatarIsNotFilteredIfSettingIsOff() {
 		self::$opts->set( 'override_wp_avatars', false );

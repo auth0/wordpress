@@ -12,8 +12,8 @@ class FunctionProfileEnqueueScriptsTest extends WP_Auth0_Test_Case {
 	public function testThatNotProfilePageDoesNotLoadScripts() {
 		global $pagenow;
 
-		$this->assertNotContains( 'profile.php', $pagenow );
-		$this->assertNotContains( 'user-edit.php', $pagenow );
+		$this->assertStringNotContainsString( 'profile.php', $pagenow );
+		$this->assertStringNotContainsString( 'user-edit.php', $pagenow );
 		$this->assertFalse( wp_auth0_profile_enqueue_scripts() );
 	}
 
@@ -30,7 +30,7 @@ class FunctionProfileEnqueueScriptsTest extends WP_Auth0_Test_Case {
 		$profile_script = $scripts->registered['wpa0_user_profile'];
 		$this->assertEquals( WPA0_VERSION, $profile_script->ver );
 		$this->assertContains( 'jquery', $profile_script->deps );
-		$this->assertContains( 'assets/js/edit-user-profile.js', $profile_script->src );
+		$this->assertStringContainsString( 'assets/js/edit-user-profile.js', $profile_script->src );
 
 		$localization_json = trim( str_replace( 'var wpa0UserProfile = ', '', $profile_script->extra['data'] ), ';' );
 		$localization      = json_decode( $localization_json, true );

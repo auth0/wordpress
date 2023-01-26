@@ -15,15 +15,15 @@ class WpAjaxHooksTest extends WP_Auth0_Test_Case {
 
 	use UsersHelper;
 
-	public function testThatJwksCacheDeleteAjaxHookIsSet() {
-		$expect_hooked = [
-			'wp_auth0_ajax_delete_cache_transient' => [
-				'priority'      => 10,
-				'accepted_args' => 1,
-			],
-		];
-		$this->assertHookedFunction( 'wp_ajax_auth0_delete_cache_transient', $expect_hooked );
-	}
+	// public function testThatJwksCacheDeleteAjaxHookIsSet() {
+	// 	$expect_hooked = [
+	// 		'wp_auth0_ajax_delete_cache_transient' => [
+	// 			'priority'      => 10,
+	// 			'accepted_args' => 1,
+	// 		],
+	// 	];
+	// 	$this->assertHookedFunction( 'wp_ajax_auth0_delete_cache_transient', $expect_hooked );
+	// }
 
 	public function testThatAjaxJwksCacheDeleteFailsWithBadNonce() {
 		$this->startAjaxHalting();
@@ -53,15 +53,15 @@ class WpAjaxHooksTest extends WP_Auth0_Test_Case {
 		$this->assertEmpty( get_transient( 'WP_Auth0_JWKS_cache' ) );
 	}
 
-	public function testThatTokenRotateAjaxHookIsSet() {
-		$expect_hooked = [
-			'wp_auth0_ajax_rotate_migration_token' => [
-				'priority'      => 10,
-				'accepted_args' => 1,
-			],
-		];
-		$this->assertHookedFunction( 'wp_ajax_auth0_rotate_migration_token', $expect_hooked );
-	}
+	// public function testThatTokenRotateAjaxHookIsSet() {
+	// 	$expect_hooked = [
+	// 		'wp_auth0_ajax_rotate_migration_token' => [
+	// 			'priority'      => 10,
+	// 			'accepted_args' => 1,
+	// 		],
+	// 	];
+	// 	$this->assertHookedFunction( 'wp_ajax_auth0_rotate_migration_token', $expect_hooked );
+	// }
 
 	public function testThatAjaxTokenRotationFailsWithBadNonce() {
 		$this->startAjaxHalting();

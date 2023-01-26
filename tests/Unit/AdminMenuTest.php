@@ -19,7 +19,7 @@ class AdminMenuTest extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'manage_options', $menu[86][1] );
 		$this->assertEquals( 'wpa0', $menu[86][2] );
 		$this->assertEquals( 'Auth0', $menu[86][3] );
-		$this->assertContains( 'assets/img/a0icon.png', $menu[86][6] );
+		$this->assertStringContainsString( 'assets/img/a0icon.png', $menu[86][6] );
 
 		$this->assertArrayHasKey( 'wpa0', $_wp_submenu_nopriv );
 		$submenu_items = array_keys( $_wp_submenu_nopriv['wpa0'] );
@@ -39,7 +39,7 @@ class AdminMenuTest extends WP_Auth0_Test_Case {
 		$this->assertEquals( 'manage_options', $menu[86][1] );
 		$this->assertEquals( 'wpa0-setup', $menu[86][2] );
 		$this->assertEquals( 'Auth0', $menu[86][3] );
-		$this->assertContains( 'assets/img/a0icon.png', $menu[86][6] );
+		$this->assertStringContainsString( 'assets/img/a0icon.png', $menu[86][6] );
 
 		$this->assertArrayHasKey( 'wpa0-setup', $_wp_submenu_nopriv );
 		$submenu_items = array_keys( $_wp_submenu_nopriv['wpa0-setup'] );

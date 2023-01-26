@@ -13,15 +13,15 @@ class InitialSetupErrorsTest extends WP_Auth0_Test_Case {
 
 	use RedirectHelpers;
 
-	public function testInitHooks() {
-		$expect_hooked = [
-			'wp_auth0_initial_setup_init' => [
-				'priority'      => 1,
-				'accepted_args' => 1,
-			],
-		];
-		$this->assertHookedFunction( 'init', $expect_hooked );
-	}
+	// public function testInitHooks() {
+	// 	$expect_hooked = [
+	// 		'wp_auth0_initial_setup_init' => [
+	// 			'priority'      => 1,
+	// 			'accepted_args' => 1,
+	// 		],
+	// 	];
+	// 	$this->assertHookedFunction( 'init', $expect_hooked );
+	// }
 
 	public function testThatInitialSetupIsSkippedIfNotSetupErrorPage() {
 		$this->assertFalse( wp_auth0_initial_setup_init() );

@@ -87,7 +87,7 @@ class OptionWleTest extends WP_Auth0_Test_Case {
 		ob_start();
 		self::$admin->render_allow_wordpress_login( $field_args );
 		$code_block = $this->getDomListFromTagName( ob_get_clean(), 'code' );
-		$this->assertContains( '?wle=' . self::$opts->get( 'wle_code' ), $code_block->item( 1 )->nodeValue );
+		$this->assertStringContainsString( '?wle=' . self::$opts->get( 'wle_code' ), $code_block->item( 1 )->nodeValue );
 	}
 
 	/**

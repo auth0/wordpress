@@ -1,15 +1,14 @@
 <?php
 
-class Boostrap
+class Bootstrap
 {
-	private string $wpVersion = '5.8.1';
-	private ?string $phpUnitVersion = null;
+	private string $wpVersion = '6.0';
 
 	private string $pathRoot = '';
 	private string $pathConfig = '';
 	private string $pathWordPress = '';
 
-	private string $dbHost = 'mysql:3306';
+	private string $dbHost = 'localhost:3306';
 	private string $dbName = 'wp_auth0_test';
 	private string $dbUser = 'wp_auth0_test';
 	private string $dbPass = 'wp_auth0_test';
@@ -17,10 +16,9 @@ class Boostrap
 	private string $regexConfigSearch = '/^define\((?:.*)\'%KEY%\',(.*)\);$/m';
 	private string $regexConfigReplace = 'define( \'%KEY%\', \'%VALUE%\' );';
 
-	public function __construct(?string $wpVersion = null, ?string $phpUnitVersion = null, ?string $pathRoot = null, ?string $pathConfig = null, ?string $pathWordPress = null, ?string $dbHost = null, ?string $dbName = null, ?string $dbUser = null, ?string $dbPass = null)
+	public function __construct(?string $wpVersion = null, ?string $pathRoot = null, ?string $pathConfig = null, ?string $pathWordPress = null, ?string $dbHost = null, ?string $dbName = null, ?string $dbUser = null, ?string $dbPass = null)
 	{
 		$this->wpVersion = $wpVersion ?? $this->wpVersion;
-		$this->phpUnitVersion = $phpUnitVersion ?? $this->phpUnitVersion;
 
 		$this->pathRoot = $pathRoot ?? realpath(join(DIRECTORY_SEPARATOR, [realpath(__DIR__), '..']));
 		$this->pathConfig = $pathConfig ?? join(DIRECTORY_SEPARATOR, [$this->pathRoot, 'tests-wordpress-config']);
@@ -30,18 +28,13 @@ class Boostrap
 		$this->dbName = $dbName ?? $this->dbName;
 		$this->dbUser = $dbUser ?? $this->dbUser;
 		$this->dbPass = $dbPass ?? $this->dbPass;
-
-		if ($this->phpUnitVersion === null) {
-			$this->phpUnitVersion = '9.0';
-
-			if (version_compare($this->wpVersion, '5.9.0', '<')) {
-				$this->phpUnitVersion = '7.0';
-			}
-		}
 	}
 
 	public function run()
 	{
+		global $GLOBALS;
+		global $wp_filter;
+
 		$this->setup();
 
 		define('WP_TESTS_CONFIG_FILE_PATH', join(DIRECTORY_SEPARATOR, [$this->pathConfig, 'wp-tests-config.php']));
@@ -50,13 +43,13 @@ class Boostrap
 
 		require_once join(DIRECTORY_SEPARATOR, [$this->pathWordPress, 'tests', 'phpunit', 'includes', 'functions.php']);
 
-		tests_add_filter('muplugins_loaded', [$this, 'invokeHook']);
-
 		$this->setupDatabase();
 
-		require_once join(DIRECTORY_SEPARATOR, [$this->pathWordPress, 'tests', 'phpunit', 'includes', 'bootstrap.php']);
-
 		require_once join(DIRECTORY_SEPARATOR, [$this->pathRoot, 'vendor', 'autoload.php']);
+
+		tests_add_filter('muplugins_loaded', [$this, 'invokeHook']);
+
+		require_once join(DIRECTORY_SEPARATOR, [$this->pathWordPress, 'tests', 'phpunit', 'includes', 'bootstrap.php']);
 	}
 
 	public function setup()
@@ -83,6 +76,7 @@ class Boostrap
 
 		if ( ! file_exists(join(DIRECTORY_SEPARATOR, [$this->pathWordPress, 'composer.lock']))) {
 			exec('git clone https://github.com/WordPress/WordPress-develop . --branch ' . $this->wpVersion . ' --single-branch');
+			exec('composer install');
 			$this->setupPatches();
 		}
 	}
@@ -144,6 +138,8 @@ class Boostrap
 
 	public function invokeHook()
 	{
+		global $wp_filter;
+
 		require_once join(DIRECTORY_SEPARATOR, [$this->pathRoot, 'WP_Auth0.php']);
 	}
 
@@ -153,4 +149,4 @@ class Boostrap
 	}
 }
 
-$bootstrap = (new Boostrap())->run();
+$bootstrap = (new Bootstrap())->run();

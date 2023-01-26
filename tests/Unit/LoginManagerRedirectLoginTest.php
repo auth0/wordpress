@@ -233,8 +233,8 @@ class LoginManagerRedirectLoginTest extends WP_Auth0_Test_Case {
 
 		$error_log = self::$error_log->get();
 		$this->assertCount( 1, $error_log );
-		$this->assertContains( 'WP_Auth0_Api_Exchange_Code::handle_response', $error_log[0]['section'] );
-		$this->assertContains( 'Please check the Client Secret', $error_log[0]['message'] );
+		$this->assertStringContainsString( 'WP_Auth0_Api_Exchange_Code::handle_response', $error_log[0]['section'] );
+		$this->assertStringContainsString( 'Please check the Client Secret', $error_log[0]['message'] );
 	}
 
 	/**

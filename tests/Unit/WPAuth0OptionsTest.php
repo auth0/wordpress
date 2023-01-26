@@ -17,7 +17,7 @@ class WPAuth0OptionsTest extends WP_Auth0_Test_Case {
 	/**
 	 * Total number of options.
 	 */
-	const DEFAULT_OPTIONS_COUNT = 39;
+	const DEFAULT_OPTIONS_COUNT = 41;
 
 	/**
 	 * Test the basic options functionality.

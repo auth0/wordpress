@@ -11,12 +11,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
 >
-	<coverage>
-		<include>
-			<directory suffix=".php">src</directory>
+	<filter>
+		<whitelist>
+			<directory suffix=".php">lib</directory>
 			<file>WP_Auth0.php</file>
-		</include>
-	</coverage>
+		</whitelist>
+	</filter>
 
   <testsuites>
     <testsuite name="unit">

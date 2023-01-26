@@ -38,17 +38,25 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 	public static $home_url;
 
 	/**
-	 * Runs before test suite starts.
+	 * This method is called before the first test of a test class is run.
 	 */
 	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
+
 		self::$opts      = WP_Auth0_Options::Instance();
 		self::$error_log = new WP_Auth0_ErrorLog();
 		self::$home_url  = home_url();
 	}
 
 	/**
-	 * Runs before each test method.
+	 * This method is called after the last test of a test class is run.
+	 */
+	public static function tearDownAfterClass(): void {
+		parent::tearDownAfterClass();
+	}
+
+	/**
+	 * Sets up the fixture, for example, open a network connection. This method is called before each test.
 	 */
 	public function setUp(): void {
 		parent::setUp();
@@ -64,7 +72,7 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 	}
 
 	/**
-	 * Runs after each test method.
+	 * Tears down the fixture, for example, close a network connection.. This method is called after each test.
 	 */
 	public function tearDown(): void {
 		parent::tearDown();

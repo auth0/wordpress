@@ -86,12 +86,12 @@ class RoutesTest extends WP_Auth0_Test_Case {
 
 		$output = wp_auth0_custom_requests( self::$wp, true );
 
-		$this->assertContains( '<script src="' . WPA0_AUTH0_JS_CDN_URL . '"></script>', $output );
-		$this->assertContains( 'var auth0 = new auth0.WebAuth({', $output );
-		$this->assertContains( 'clientID:"' . self::$opts->get( 'client_id' ) . '"', $output );
-		$this->assertContains( 'domain:"' . self::$opts->get( 'domain' ) . '"', $output );
-		$this->assertContains( 'redirectUri:"http://example.org/index.php?auth0=1"', $output );
-		$this->assertContains( 'auth0.crossOriginAuthenticationCallback()', $output );
+		$this->assertStringContainsString( '<script src="' . WPA0_AUTH0_JS_CDN_URL . '"></script>', $output );
+		$this->assertStringContainsString( 'var auth0 = new auth0.WebAuth({', $output );
+		$this->assertStringContainsString( 'clientID:"' . self::$opts->get( 'client_id' ) . '"', $output );
+		$this->assertStringContainsString( 'domain:"' . self::$opts->get( 'domain' ) . '"', $output );
+		$this->assertStringContainsString( 'redirectUri:"http://example.org/index.php?auth0=1"', $output );
+		$this->assertStringContainsString( 'auth0.crossOriginAuthenticationCallback()', $output );
 
 		self::$wp->set_query_var( 'a0_action', null );
 		self::$wp->set_query_var( 'auth0fallback', 1 );

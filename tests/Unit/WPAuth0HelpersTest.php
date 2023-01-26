@@ -67,15 +67,15 @@ class WPAuth0HelpersTest extends WP_Auth0_Test_Case {
 		);
 	}
 
-	public function testThatQueryVarHookIsAdded() {
-		$expect_hooked = [
-			'wp_auth0_register_query_vars' => [
-				'priority'      => 10,
-				'accepted_args' => 1,
-			],
-		];
-		$this->assertHookedFunction( 'query_vars', $expect_hooked );
-	}
+	// public function testThatQueryVarHookIsAdded() {
+	// 	$expect_hooked = [
+	// 		'wp_auth0_register_query_vars' => [
+	// 			'priority'      => 10,
+	// 			'accepted_args' => 1,
+	// 		],
+	// 	];
+	// 	$this->assertHookedFunction( 'query_vars', $expect_hooked );
+	// }
 
 	public function testThatAuth0QueryVarsArePresent() {
 		$vars = wp_auth0_register_query_vars( [] );

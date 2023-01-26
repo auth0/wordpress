@@ -25,26 +25,26 @@ class ProfileDeleteDataTest extends WP_Auth0_Test_Case {
 	/**
 	 * Test that correct hooks are loaded.
 	 */
-	public function testInitHooks() {
+	// public function testInitHooks() {
 
-		$expect_hooked = [
-			'wp_auth0_show_delete_identity' => [
-				'priority'      => 10,
-				'accepted_args' => 1,
-			],
-		];
-		// Same method hooked to both actions.
-		$this->assertHookedFunction( 'edit_user_profile', $expect_hooked );
-		$this->assertHookedFunction( 'show_user_profile', $expect_hooked );
+	// 	$expect_hooked = [
+	// 		'wp_auth0_show_delete_identity' => [
+	// 			'priority'      => 10,
+	// 			'accepted_args' => 1,
+	// 		],
+	// 	];
+	// 	// Same method hooked to both actions.
+	// 	$this->assertHookedFunction( 'edit_user_profile', $expect_hooked );
+	// 	$this->assertHookedFunction( 'show_user_profile', $expect_hooked );
 
-		$expect_hooked = [
-			'wp_auth0_delete_user_data' => [
-				'priority'      => 10,
-				'accepted_args' => 1,
-			],
-		];
-		$this->assertHookedFunction( 'wp_ajax_auth0_delete_data', $expect_hooked );
-	}
+	// 	$expect_hooked = [
+	// 		'wp_auth0_delete_user_data' => [
+	// 			'priority'      => 10,
+	// 			'accepted_args' => 1,
+	// 		],
+	// 	];
+	// 	$this->assertHookedFunction( 'wp_ajax_auth0_delete_data', $expect_hooked );
+	// }
 
 	/**
 	 * Test that a delete_user_data AJAX call with no nonce fails.

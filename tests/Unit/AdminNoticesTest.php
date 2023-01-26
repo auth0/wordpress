@@ -31,11 +31,11 @@ class AdminNoticesTest extends WP_Auth0_Test_Case {
 		$this->assertTrue( wp_auth0_create_account_message() );
 
 		$notice_html = ob_get_clean();
-		$this->assertContains( 'class="update-nag"', $notice_html );
-		$this->assertContains( 'Login by Auth0 is not yet configured', $notice_html );
-		$this->assertContains( 'wp-admin/admin.php?page=wpa0-setup', $notice_html );
-		$this->assertContains( 'Setup Wizard', $notice_html );
-		$this->assertContains( 'https://auth0.com/docs/cms/wordpress/installation', $notice_html );
-		$this->assertContains( 'Manual setup instructions', $notice_html );
+		$this->assertStringContainsString( 'class="update-nag"', $notice_html );
+		$this->assertStringContainsString( 'Login by Auth0 is not yet configured', $notice_html );
+		$this->assertStringContainsString( 'wp-admin/admin.php?page=wpa0-setup', $notice_html );
+		$this->assertStringContainsString( 'Setup Wizard', $notice_html );
+		$this->assertStringContainsString( 'https://auth0.com/docs/cms/wordpress/installation', $notice_html );
+		$this->assertStringContainsString( 'Manual setup instructions', $notice_html );
 	}
 }

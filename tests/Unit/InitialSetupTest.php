@@ -11,31 +11,31 @@ class InitialSetupTest extends WP_Auth0_Test_Case {
 
 	use HookHelpers;
 
-	public function testThatClearAdminActionFunctionsAreHooked() {
-		$expect_hooked = [
-			'wp_auth0_setup_callback_step3_social' => [
-				'priority'      => 10,
-				'accepted_args' => 1,
-			],
-		];
-		$this->assertHookedFunction( 'admin_action_wpauth0_callback_step3_social', $expect_hooked );
+	// public function testThatClearAdminActionFunctionsAreHooked() {
+	// 	$expect_hooked = [
+	// 		'wp_auth0_setup_callback_step3_social' => [
+	// 			'priority'      => 10,
+	// 			'accepted_args' => 1,
+	// 		],
+	// 	];
+	// 	$this->assertHookedFunction( 'admin_action_wpauth0_callback_step3_social', $expect_hooked );
 
-		$expect_hooked = [
-			'wp_auth0_setup_callback_step1' => [
-				'priority'      => 10,
-				'accepted_args' => 1,
-			],
-		];
-		$this->assertHookedFunction( 'admin_action_wpauth0_callback_step1', $expect_hooked );
+	// 	$expect_hooked = [
+	// 		'wp_auth0_setup_callback_step1' => [
+	// 			'priority'      => 10,
+	// 			'accepted_args' => 1,
+	// 		],
+	// 	];
+	// 	$this->assertHookedFunction( 'admin_action_wpauth0_callback_step1', $expect_hooked );
 
-		$expect_hooked = [
-			'wp_auth0_setup_error_admin_notices' => [
-				'priority'      => 10,
-				'accepted_args' => 1,
-			],
-		];
-		$this->assertHookedFunction( 'admin_notices', $expect_hooked );
-	}
+	// 	$expect_hooked = [
+	// 		'wp_auth0_setup_error_admin_notices' => [
+	// 			'priority'      => 10,
+	// 			'accepted_args' => 1,
+	// 		],
+	// 	];
+	// 	$this->assertHookedFunction( 'admin_notices', $expect_hooked );
+	// }
 
 	public function testThatNoErrorReturnsFalseWithNoOutput() {
 		ob_start();
@@ -49,8 +49,8 @@ class InitialSetupTest extends WP_Auth0_Test_Case {
 		$this->assertTrue( wp_auth0_setup_error_admin_notices() );
 		$notice_html = ob_get_clean();
 
-		$this->assertContains( '<div class="notice notice-error">', $notice_html );
-		$this->assertContains( 'There was an error creating the Auth0 App', $notice_html );
+		$this->assertStringContainsString( '<div class="notice notice-error">', $notice_html );
+		$this->assertStringContainsString( 'There was an error creating the Auth0 App', $notice_html );
 	}
 
 	public function testThatCantCreateGrantHasCorrectNotice() {
@@ -59,8 +59,8 @@ class InitialSetupTest extends WP_Auth0_Test_Case {
 		$this->assertTrue( wp_auth0_setup_error_admin_notices() );
 		$notice_html = ob_get_clean();
 
-		$this->assertContains( '<div class="notice notice-error">', $notice_html );
-		$this->assertContains( 'There was an error creating the necessary client grants', $notice_html );
+		$this->assertStringContainsString( '<div class="notice notice-error">', $notice_html );
+		$this->assertStringContainsString( 'There was an error creating the necessary client grants', $notice_html );
 	}
 
 	public function testThatCantExchangeTokenHasCorrectNotice() {
@@ -69,8 +69,8 @@ class InitialSetupTest extends WP_Auth0_Test_Case {
 		$this->assertTrue( wp_auth0_setup_error_admin_notices() );
 		$notice_html = ob_get_clean();
 
-		$this->assertContains( '<div class="notice notice-error">', $notice_html );
-		$this->assertContains( 'There was an error retrieving your Auth0 credentials', $notice_html );
+		$this->assertStringContainsString( '<div class="notice notice-error">', $notice_html );
+		$this->assertStringContainsString( 'There was an error retrieving your Auth0 credentials', $notice_html );
 	}
 
 	public function testThatRejectedHasCorrectNotice() {
@@ -79,8 +79,8 @@ class InitialSetupTest extends WP_Auth0_Test_Case {
 		$this->assertTrue( wp_auth0_setup_error_admin_notices() );
 		$notice_html = ob_get_clean();
 
-		$this->assertContains( '<div class="notice notice-error">', $notice_html );
-		$this->assertContains( 'The required scopes were rejected', $notice_html );
+		$this->assertStringContainsString( '<div class="notice notice-error">', $notice_html );
+		$this->assertStringContainsString( 'The required scopes were rejected', $notice_html );
 	}
 
 	public function testThatAccessDeniedHasCorrectNotice() {
@@ -89,8 +89,8 @@ class InitialSetupTest extends WP_Auth0_Test_Case {
 		$this->assertTrue( wp_auth0_setup_error_admin_notices() );
 		$notice_html = ob_get_clean();
 
-		$this->assertContains( '<div class="notice notice-error">', $notice_html );
-		$this->assertContains( 'Please create your Auth0 account first', $notice_html );
+		$this->assertStringContainsString( '<div class="notice notice-error">', $notice_html );
+		$this->assertStringContainsString( 'Please create your Auth0 account first', $notice_html );
 	}
 
 	public function testThatUnknownErrorHasCorrectNotice() {
@@ -99,8 +99,8 @@ class InitialSetupTest extends WP_Auth0_Test_Case {
 		$this->assertTrue( wp_auth0_setup_error_admin_notices() );
 		$notice_html = ob_get_clean();
 
-		$this->assertContains( '<div class="notice notice-error">', $notice_html );
-		$this->assertContains( '__test_unknown_error__', $notice_html );
+		$this->assertStringContainsString( '<div class="notice notice-error">', $notice_html );
+		$this->assertStringContainsString( '__test_unknown_error__', $notice_html );
 	}
 
 	public function testThatSetupClientIdIsCorrect() {

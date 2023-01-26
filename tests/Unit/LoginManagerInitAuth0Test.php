@@ -75,11 +75,11 @@ class LoginManagerInitAuth0Test extends WP_Auth0_Test_Case {
 			$output = $e->getMessage();
 		}
 
-		$this->assertContains( 'There was a problem with your log in', $output );
-		$this->assertContains( '__test_error_description__', $output );
-		$this->assertContains( 'error code', $output );
-		$this->assertContains( '__test_error_code__', $output );
-		$this->assertContains( '<a href="https://test.auth0.com/v2/logout?client_id=__test_client_id__', $output );
+		$this->assertStringContainsString( 'There was a problem with your log in', $output );
+		$this->assertStringContainsString( '__test_error_description__', $output );
+		$this->assertStringContainsString( 'error code', $output );
+		$this->assertStringContainsString( '__test_error_code__', $output );
+		$this->assertStringContainsString( '<a href="https://test.auth0.com/v2/logout?client_id=__test_client_id__', $output );
 	}
 
 	/**
@@ -121,7 +121,7 @@ class LoginManagerInitAuth0Test extends WP_Auth0_Test_Case {
 			$output = $e->getMessage();
 		}
 
-		$this->assertNotContains( '<script>', $output );
+		$this->assertStringNotContainsString( '<script>', $output );
 	}
 
 	/**
@@ -163,11 +163,11 @@ class LoginManagerInitAuth0Test extends WP_Auth0_Test_Case {
 			$output = $e->getMessage();
 		}
 
-		$this->assertContains( 'There was a problem with your log in', $output );
-		$this->assertContains( 'Missing state', $output );
-		$this->assertContains( 'error code', $output );
-		$this->assertContains( 'unknown', $output );
-		$this->assertContains( '<a href="https://test.auth0.com/v2/logout?client_id=__test_client_id__', $output );
+		$this->assertStringContainsString( 'There was a problem with your log in', $output );
+		$this->assertStringContainsString( 'Missing state', $output );
+		$this->assertStringContainsString( 'error code', $output );
+		$this->assertStringContainsString( 'unknown', $output );
+		$this->assertStringContainsString( '<a href="https://test.auth0.com/v2/logout?client_id=__test_client_id__', $output );
 	}
 
 	/**
@@ -191,10 +191,10 @@ class LoginManagerInitAuth0Test extends WP_Auth0_Test_Case {
 			$output = $e->getMessage();
 		}
 
-		$this->assertContains( 'There was a problem with your log in', $output );
-		$this->assertContains( 'Invalid state', $output );
-		$this->assertContains( 'error code', $output );
-		$this->assertContains( 'unknown', $output );
-		$this->assertContains( '<a href="https://test.auth0.com/v2/logout?client_id=__test_client_id__', $output );
+		$this->assertStringContainsString( 'There was a problem with your log in', $output );
+		$this->assertStringContainsString( 'Invalid state', $output );
+		$this->assertStringContainsString( 'error code', $output );
+		$this->assertStringContainsString( 'unknown', $output );
+		$this->assertStringContainsString( '<a href="https://test.auth0.com/v2/logout?client_id=__test_client_id__', $output );
 	}
 }

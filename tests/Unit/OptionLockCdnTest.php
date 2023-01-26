@@ -51,8 +51,8 @@ class OptionLockCdnTest extends WP_Auth0_Test_Case {
 		// Check field HTML for required attributes.
 		$input = $this->getDomListFromTagName( $field_html, 'input' );
 
-		$this->assertContains( 'Currently using', $field_html );
-		$this->assertContains( WPA0_LOCK_CDN_URL, $field_html );
+		$this->assertStringContainsString( 'Currently using', $field_html );
+		$this->assertStringContainsString( WPA0_LOCK_CDN_URL, $field_html );
 
 		// Should only have one input field.
 		$this->assertEquals( 1, $input->length );
@@ -83,7 +83,7 @@ class OptionLockCdnTest extends WP_Auth0_Test_Case {
 
 		$input = $this->getDomListFromTagName( $field_html, 'input' );
 		$this->assertEquals( 1, $input->item( 0 )->getAttribute( 'value' ) );
-		$this->assertNotContains( WPA0_LOCK_CDN_URL, $field_html );
+		$this->assertStringNotContainsString( WPA0_LOCK_CDN_URL, $field_html );
 	}
 
 	/**
