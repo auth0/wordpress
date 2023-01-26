@@ -176,13 +176,21 @@ class WP_Auth0_Nonce_Handler {
 	 *
 	 * @return bool
 	 */
-	protected function handle_cookie( $cookie_name, $cookie_value, $cookie_exp ) {
+	protected function handle_cookie( $cookie_name, $cookie_value, $cookie_exp, $cookie_domain = null ) {
+		$options = WP_Auth0_Options::Instance();
+		$cookie_domain ??= $options->get( 'cookie_domain' ) ?? '';
+		$cookie_domain = trim($cookie_domain);
+
+		if ('' === $cookie_domain) {
+			$cookie_domain = trim($options->get( 'cookie_domain' ) ?? '');
+		}
+
 		if ( $cookie_exp <= time() ) {
 			unset( $_COOKIE[ $cookie_name ] );
-			return setcookie( $cookie_name, $cookie_value, 0, '/' );
+			return setcookie( $cookie_name, $cookie_value, 0, '/', $cookie_domain ?? '' );
 		} else {
 			$_COOKIE[ $cookie_name ] = $cookie_value;
-			return setcookie( $cookie_name, $cookie_value, $cookie_exp, '/', '', false, true );
+			return setcookie( $cookie_name, $cookie_value, $cookie_exp, '/', $cookie_domain ?? '', false, true );
 		}
 	}
 
