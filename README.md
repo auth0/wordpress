@@ -4,7 +4,7 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 
 [![License](https://img.shields.io/packagist/l/auth0/auth0-php)](https://doge.mit-license.org/)
 
-:rocket: [Getting Started](#getting-started) - :speech_balloon: [Feedback](#feedback)
+:rocket: [Getting Started](#getting-started) - :computer: [SDK Usage](#sdk-usage) - 📆 [Support Policy](#support-policy) - :speech_balloon: [Feedback](#feedback)
 
 ## Getting Started
 
@@ -14,7 +14,7 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 - [Most recent version of WordPress](https://wordpress.org/news/category/releases/)
 - Database credentials with table creation permissions
 
-> Please review our [support policy](#support-policy) on PHP and WordPress versions to review when versions may exit support in the future.
+> Please review our [support policy](#support-policy) on specific PHP and WordPress versions and when they may exit support in the future.
 
 ### Installation
 
@@ -151,6 +151,23 @@ Please ensure your configured credentials have appropriate privileges to create 
 The plugin uses WordPress' [background task manager](https://developer.wordpress.org/plugins/cron/) to perform important periodic tasks. Proper synchronization between WordPress and Auth0 relies on this.
 
 By default, WordPress' task manager runs on every page load, which is inadvisable for production sites. For best performance and reliability, please ensure you have configured WordPress to use a [cron job](https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/) to run these tasks periodically instead.
+
+## SDK Usage
+
+The plugin is built on top of [Auth0-PHP v8](https://github.com/auth0/auth0-PHP) — Auth0's full-featured PHP SDK for Authentication and Management APIs.
+
+For custom WordPress development, please do not extend the plugin's classes themselves, as this is not supported. Nearly all of the plugin's APIs are considered `internal` and will change over time, most likely breaking any custom extension built upon them.
+
+Instead, please take advantage of the full PHP SDK that the plugin is built upon. You can use the plugin's `getSdk()` method to retrieve a configured instance of the SDK, ready for use. This method can be called from the plugin's global `wpAuth0()` helper, which returns the WordPress plugin itself.
+
+```php
+<?php
+
+$plugin = wpAuth0(); // Returns an instanceof Auth0\WordPress\Plugin
+   $sdk =  wpAuth0()->getSdk(); // Returns an instanceof Auth0\SDK\Auth0
+```
+
+Please direct questions about developing with the Auth0-PHP SDK to the [Auth0 Community](https://community.auth0.com), and issues or feature requests to [it's respective repository](https://github.com/auth0/auth0-PHP). Documentations and examples on working with the Auth0-PHP SDKs are also available from [it's repository](https://github.com/auth0/auth0-PHP).
 
 ## Support Policy
 
