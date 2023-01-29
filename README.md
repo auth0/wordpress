@@ -45,8 +45,8 @@ openssl dgst -verify signing.key.pub -keyform PEM -sha256 -signature RELEASE.zip
 #### Composer
 [Composer](https://getcomposer.org/) installations are fully supported. This approach is preferred when using [Bedrock](https://roots.io/bedrock/) or [WordPress Core](https://github.com/johnpbloch/wordpress-core-installer) configurations.
 
-- For installations using [WPackagist](https://wpackagist.org/) configurations (like Bedrock or Core), run this command from your WordPress installation's root directory.
-- For standard installations, run this command from your `wp-content/plugins` sub-directory.
+- Most [WPackagist](https://wpackagist.org/) configurations (like Bedrock or Core) should have this command run from thier WordPress' root directory.
+- Otherwise, this command should be run from the `wp-content/plugins` sub-directory.
 
 ```
 composer require symfony/http-client nyholm/psr7 auth0/wordpress:^5.0
