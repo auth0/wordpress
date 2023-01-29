@@ -43,7 +43,7 @@ openssl dgst -verify signing.key.pub -keyform PEM -sha256 -signature RELEASE.zip
 -->
 
 #### Composer
-[Composer](https://getcomposer.org/) instllations are fully supported. This approach is preferred when using [Bedrock](https://roots.io/bedrock/) or [WordPress Core](https://github.com/johnpbloch/wordpress-core-installer) configurations.
+[Composer](https://getcomposer.org/) installations are fully supported. This approach is preferred when using [Bedrock](https://roots.io/bedrock/) or [WordPress Core](https://github.com/johnpbloch/wordpress-core-installer) configurations.
 
 - For installations using [WPackagist](https://wpackagist.org/) configurations (like Bedrock or Core), run this command from your WordPress installation's root directoru.
 - For standard installations, run this command from your `wp-content/plugins` sub-directory.
