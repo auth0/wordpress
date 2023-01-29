@@ -12,9 +12,9 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 
 - PHP 8.0+
 - [Most recent version of WordPress](https://wordpress.org/news/category/releases/)
-- WordPress configured with database privileges allowing database table creation
+- Database credentials with table creation permissions
 
-> Please review our [support policy](#support-policy) to learn when language and framework versions will exit support in the future.
+> Please review our [support policy](#support-policy) on PHP and WordPress versions to review when versions may exit support in the future.
 
 ### Installation
 
