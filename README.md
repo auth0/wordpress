@@ -43,16 +43,16 @@ openssl dgst -verify signing.key.pub -keyform PEM -sha256 -signature RELEASE.zip
 -->
 
 #### Composer
-Plugin installation using [Composer](https://getcomposer.org/) is fully supported. This approach is preferred for installations using [Bedrock](https://roots.io/bedrock/) or [WordPress Core Installer](https://github.com/johnpbloch/wordpress-core-installer).
+[Composer](https://getcomposer.org/) instllations are fully supported. This approach is preferred when using [Bedrock](https://roots.io/bedrock/) or [WordPress Core](https://github.com/johnpbloch/wordpress-core-installer) configurations.
 
-- For installations using [WPackagist](https://wpackagist.org/)-based configurations (like Bedrock), run the following command from your WordPress installation's root folder.
-- For standard installations, run this command from your `wp-content/plugins` directory.
+- For installations using [WPackagist](https://wpackagist.org/) configurations (like Bedrock or Core), run this command from your WordPress installation's root directoru.
+- For standard installations, run this command from your `wp-content/plugins` sub-directory.
 
 ```
 composer require symfony/http-client nyholm/psr7 auth0/wordpress:^5.0
 ```
 
-> **Note**  When installing with Composer, you will also need to install [PSR-18](https://packagist.org/providers/psr/http-client-implementation) and [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) compatible libraries to support the plugin. The above example includes well known defaults, but any libraries compatible with those PSRs will work.
+> **Note**  When installing with Composer, you will also need to install [PSR-18](https://packagist.org/providers/psr/http-client-implementation) and [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) compatible suppoty libraries. The above command includes some well known defaults, but any libraries compatible with those PSRs will work.
 
 
 <!-- // Disabled while we complete this distribution configuration
