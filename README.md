@@ -67,10 +67,11 @@ Installation from your WordPress dashboard is also supported. This approach firs
 
 ### Acivation
 
-Once installed, you will need to activate the plugin from your WordPress Dashboard. Under
+Once installed, you will need to activate the plugin from your WordPress Dashboard.
 
-1. Open your WordPress Dashboard, then select 'Plugins', and then 'Installed Plugins'.
-2. Choose 'Activate' under the plugin's name.
+1. Open your WordPress Dashboard.
+2. Select 'Plugins', and then 'Installed Plugins'.
+3. Choose 'Activate' under the plugin's name.
 
 Once installed, you'll need to configure the plugin with your Auth0 tenant and application details.
 
