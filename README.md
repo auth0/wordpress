@@ -20,12 +20,12 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 
 <!-- // Disabled while we complete this distribution configuration
 #### Release Package
-Releases are available from the Github repository [github.com/auth0/wordpress/releases](https://github.com/auth0/wordpress/releases), packaged as ZIP archives. Every release has an accompanying signature file for verification, if desired.
+Releases are available from the GitHub repository [github.com/auth0/wordpress/releases](https://github.com/auth0/wordpress/releases), packaged as ZIP archives. Every release has an accompanying signature file for verification if desired.
 
 <details>
 <summary><b>Verify a release signature with OpenSSL (recommended)</b></summary>
 
-1. Download the public siging key from this repository
+1. Download the public signing key from this repository
 2. Put the repository's public signing key, the release's ZIP archive, and the release's signature file (ending in `.sign`) in the same directory.
 3. Run the following command, substituting `RELEASE` with the filename of the release you downloaded:
 
@@ -43,61 +43,114 @@ openssl dgst -verify signing.key.pub -keyform PEM -sha256 -signature RELEASE.zip
 -->
 
 #### Composer
-The plugin supports installation through [Composer](https://getcomposer.org/), and is [WPackagist](https://wpackagist.org/) compatible. This approach is preferred when using [Bedrock](https://roots.io/bedrock/) or [WordPress Core](https://github.com/johnpbloch/wordpress-core-installer) configurations.
 
-When using Composer-based WordPress configurations like Bedrock, you'll usually run this command from the root WordPress installation directory, but it's advisable to check the documentation provided by the project's maintainers for best guidance. For standard installs, this command should just be run from the `wp-content/plugins` sub-directory.
+The plugin supports installation through [Composer](https://getcomposer.org/), and is [WPackagist](https://wpackagist.org/) compatible. This approach is preferred when using [Bedrock](https://roots.io/bedrock/) or [WordPress Core](https://github.com/johnpbloch/wordpress-core-installer), but will work with virtually any WordPress installation.
+
+When using Composer-based WordPress configurations like Bedrock, you'll usually run this command from the root WordPress installation directory. Still, it's advisable to check the documentation the project's maintainers provided for the best guidance. This command can be run from the `wp-content/plugins` sub-directory for standard WordPress installations.
 
 ```
 composer require symfony/http-client nyholm/psr7 auth0/wordpress:^5.0
 ```
 
-> **Note**  When installing with Composer, you will also need to install [PSR-18](https://packagist.org/providers/psr/http-client-implementation) and [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) compatible support libraries. The above command includes some well known defaults, but any libraries compatible with those PSRs will work.
+<p><details>
+<summary><b>Note on Composer Dependencies</b></summary>
 
+When using Composer, the plugin depends on the availability of [PSR-18](https://packagist.org/providers/psr/http-client-implementation) and [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) library implementations.
+
+These implementations are satisfied by the `symfony/http-client` and `nyholm/psr7` packages installed with the command above, respectively. If you prefer different libraries, you can install those instead.
+
+If you are using Bedrock or another Composer-based configuration, you can try installing `auth0/wordpress` without any other packages, as the implementations may already be satisfied by installed packages.
+
+> **Note** PHP Standards Recommendations (PSRs) are standards for PHP libraries and applications that enable greater interoperability and choice. You can learn more about them and the PHP-FIG organization that maintains them [here](https://www.php-fig.org/).
+
+</details></p>
 
 <!-- // Disabled while we complete this distribution configuration
 #### WordPress Dashboard
 
-Installation from your WordPress dashboard is also supported. This approach first installs a small setup script that will verify that your host environment is compatible. Afterward, the latest plugin release will be downloaded from the GitHub repository, have it's file signature verified, and ultimately installed.
+Installation from your WordPress dashboard is also supported. This approach first installs a small setup script that will verify that your host environment is compatible. Afterward, the latest plugin release will be downloaded from the GitHub repository, have its file signature verified, and ultimately installed.
 
 - Open your WordPress Dashboard.
-- Click 'Plugins", then 'Add New', and search for 'Auth0'.
+- Click 'Plugins", then 'Add New,' and search for 'Auth0'.
 - Choose 'Install Now' to install the plugin.
 -->
 
 ### Activation
 
-Once the package is installed, you will need to activate the plugin for use with your WordPress site.
+After installation, you must activate the plugin within your WordPress site:
 
-1. Open your Dashboard.
-2. Select 'Plugins' from the sidebar, and then 'Installed Plugins'.
-3. Choose 'Activate' under the Auth0 plugin's name.
+1. Open your WordPress Dashboard.
+2. Select 'Plugins' from the sidebar, and then 'Installed Plugins.'
+3. Choose 'Activate' underneath the plugin's name.
 
 ### Configure Auth0
 
-Create a **Regular Web Application** in the [Auth0 Dashboard](https://manage.auth0.com/#/applications). Verify that the "Token Endpoint Authentication Method" is set to `POST`.
+1. Sign into Auth0. If you don't have an account, [it's free to create one](https://auth0.com/signup).
+2. [Open 'Applications' from your Auth0 Dashboard](https://manage.auth0.com/#/applications/create), and select 'Create Application.'
+3. Choose 'Regular Web Application' and then 'Create.'
+4. From the newly created application's page, select the Settings tab.
 
-Next, configure the callback and logout URLs for your application under the "Application URIs" section of the "Settings" page:
+Please prepare the following information:
 
-- **Allowed Callback URLs**: The URL of your application where Auth0 will redirect to during authentication, e.g., `http://localhost:3000/callback`.
-- **Allowed Logout URLs**: The URL of your application where Auth0 will redirect to after the user logout, e.g., `http://localhost:3000/login`.
+- Note the **Domain**, **Client ID**, and **Client Secret**, available from the newly created Application's Settings page. You will need these to configure the plugin in the next step.
+- From your WordPress Dashboard's General Settings page, note your **WordPress Address** and **Site Address** URLs. We recommend you read our guidance on [common WordPress URL issues](#common-wordpress-url-issues).
 
-Note the **Domain**, **Client ID**, and **Client Secret**. These values will be used later.
+Continue configuring your Auth0 application from its Settings page:
 
-### Configure the SDK
+- **Allowed Callback URLs** should include the URL to your WordPress site's `wp-login.php`.
+  - In most (but not all) cases, this will be your WordPress Address with `/wp-login.php` appended.
+  - Please ensure your site is configured never to cache this URL, or you may see an "invalid state" error during login.
+- **Allowed Web Origins** should include both your WordPress Address and Site Address URLs.
+- **Allowed Logout URLs** should consist of your WordPress Address.
 
-Upon activating the Auth0 WordPress plugin, you will find a new "Auth0" section on the left-hand side of your WordPress Dashboard. This section enables you to configure the plugin.
+<p><details id="common-wordpress-url-issues">
+<summary><b>Common WordPress URL Issues</b></summary>
 
-At a minimum, you will need to configure the Domain, Client ID, and Client Secret sections for the plugin to function.
+- These must be the URLs your visitors will use to access your WordPress site. If you are using a reverse proxy, you may need to manually configure your WordPress Address and Site Address URLs to match the URL you use to access your site.
+- Make sure these URLs match your site's configured protocol. When using a reverse proxy, you may need to update these to reflect serving over SSL/HTTPS.
+</details></p>
 
-We recommend testing on a staging/development site using a separate Auth0 Application before putting the plugin live on your production site. Be sure to enable the plugin from the Auth0's plugins admin settings page for authentication with Auth0 to function.
+<p><details>
+<summary><b>Troubleshooting</b></summary>
 
-### Plugin Database Tables
+If you're encountering issues, check that your Auth0 Application is configured with the following settings:
 
-For performance reasons, V5 of the WordPress plugin has adopted its own database tables. This means the WordPress database credentials [you have configured](https://wordpress.org/support/article/creating-database-for-wordpress/) must have appropriate privileges to create new tables.
+- **Application Type** must be set to **Regular Web Application**.
+- **Token Endpoint Authentication Method** must be set to **Post**.
+- **Allowed Origins (CORS)** should be blank.
 
-### Cron Configuration
+Scroll down and expand the "Advanced Settings" panel, then:
 
-It's essential to configure your WordPress site's built-in background task system, [WP-Cron](https://developer.wordpress.org/plugins/cron/). This is the mechanism by which the plugin keeps WordPress and Auth0 in sync. If this is not enabled, changes within WordPress may not be reflected fully on Auth0, and vice versa.
+- Under **OAuth**:
+  - Ensure that **JsonWebToken Signature Algorithm** is set to **RS256**.
+  - Check that **OIDC Conformant** is enabled.
+- Under **Grant Types**:
+  - Ensure that **Implicit**, **Authorization Code**, and **Client Credentials** are enabled.
+  - You may also want to enable **Refresh Token**.
+
+</details></p>
+
+### Configure the Plugin
+
+Upon activating the Auth0 plugin, you will find a new "Auth0" section in the sidebar of your WordPress Dashboard. This section enables you to configure the plugin in a variety of ways.
+
+For the plugin to operate, at a minimum, you will need to configure the Domain, Client ID, and Client Secret fields. These are available from the Auth0 Application you created in the previous step. Once configured, select the "Enable Authentication" option to have the plugin begin handling authentication for you.
+
+We recommend testing on a staging/development site using a separate Auth0 Application before putting the plugin live on your production site.
+
+### Configure WordPress
+
+#### Plugin Database Tables
+
+The plugin uses dedicated database tables to guarantee high performance. When the plugin is activated, it will use the database credentials you have configured for WordPress to create these tables.
+
+Please ensure your configured credentials have appropriate privileges to create new tables.
+
+#### Cron Configuration
+
+The plugin uses WordPress' [background task manager](https://developer.wordpress.org/plugins/cron/) to perform important periodic tasks. Proper synchronization between WordPress and Auth0 relies on this.
+
+By default, WordPress' task manager runs on every page load, which is inadvisable for production sites. For best performance and reliability, please ensure you have configured WordPress to use a [cron job](https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/) to run these tasks periodically instead.
 
 ## Support Policy
 
@@ -139,6 +192,7 @@ Please do not report security vulnerabilities on the public GitHub issue tracker
   </picture>
 </p>
 
-<p align="center">Auth0 is an easy-to-implement, adaptable authentication and authorization platform. To learn more checkout <a href="https://auth0.com/why-auth0">Why Auth0?</a></p>
+<p align="center">Auth0 is an easy-to-implement, adaptable authentication and authorization platform.<br />
+To learn more checkout <a href="https://auth0.com/why-auth0">Why Auth0?</a></p>
 
 <p align="center">This project is licensed under the MIT license. See the <a href="./LICENSE"> LICENSE</a> file for more info.</p>

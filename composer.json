@@ -36,8 +36,7 @@
     "php": "^8.0",
     "ext-json": "*",
     "ext-openssl": "*",
-    "auth0/auth0-php": "^8.0",
-    "symfony/polyfill-mbstring": "^1.0"
+    "auth0/auth0-php": "^8.0"
   },
   "require-dev": {
     "firebase/php-jwt": "^6.2",
