@@ -118,7 +118,7 @@ class WP_Auth0_ErrorLog {
 	}
 
 	public static function check_is_disabled() {
-		$flag = wp_auth0_get_option( 'auth0_disable_logging' );
+		$flag = wp_auth0_get_option( 'disable_logging' );
 		if ( is_bool( $flag ) ) {
 			return $flag;
 		}

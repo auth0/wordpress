@@ -115,10 +115,16 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_auth0_server_domain',
 			],
 			[
+				'name'     => __( 'Cookie Domain', 'wp-auth0' ),
+				'opt'      => 'cookie_domain',
+				'id'       => 'wpa0_cookie_domain',
+				'function' => 'render_cookie_domain',
+			],
+			[
 				'name'     => __( 'Disable Auth0 logging in Wordpress', 'wp-auth0' ),
-				'opt'      => 'auth0_disable_logging',
-				'id'       => 'wpa0_auth0_disable_logging',
-				'function' => 'render_auth0_disable_logging',
+				'opt'      => 'disable_logging',
+				'id'       => 'wpa0_disable_logging',
+				'function' => 'render_disable_logging',
 			],
 		];
 
@@ -227,13 +233,13 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	public function render_auto_provisioning( $args = [] ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'Disables Auth0 logging within WordPress. ', 'wp-auth0' ) .
-			__( 'If enabled, Auth0 logging will be disabled in WordPress. Other Auth0 logs are unaffected by this switch', 'wp-auth0' )
+			__( 'Create new users in the WordPress database when signups are off. ', 'wp-auth0' ) .
+			__( 'Signups will not be allowed but successful Auth0 logins will add the user in WordPress', 'wp-auth0' )
 		);
 	}
 
 	/**
-	 * Render form field and description for the `auth0_disable_logging` option.
+	 * Render form field and description for the `disable_logging` option.
 	 * IMPORTANT: Internal callback use only, do not call this function directly!
 	 *
 	 * @param array $args - callback args passed in from add_settings_field().
@@ -241,11 +247,27 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	 * @see WP_Auth0_Admin_Generic::init_option_section()
 	 * @see add_settings_field()
 	 */
-	public function render_auth0_disable_logging( $args = [] ) {
+	public function render_disable_logging( $args = [] ) {
 		$this->render_switch( $args['label_for'], $args['opt_name'] );
 		$this->render_field_description(
-			__( 'A user session by default is kept for two days. ', 'wp-auth0' ) .
-			__( 'Enabling this setting will extend that and make the session be kept for 14 days', 'wp-auth0' )
+			__( 'Disables Auth0 logging within WordPress. ', 'wp-auth0' ) .
+			__( 'If enabled, Auth0 logging will be disabled in WordPress. Other Auth0 logs are unaffected by this switch', 'wp-auth0' )
+		);
+	}
+
+	/**
+	 * Render form field and description for the `cookie_domain` option.
+	 * IMPORTANT: Internal callback use only, do not call this function directly!
+	 *
+	 * @param array $args - callback args passed in from add_settings_field().
+	 *
+	 * @see WP_Auth0_Admin_Generic::init_option_section()
+	 * @see add_settings_field()
+	 */
+	public function render_cookie_domain( $args = [] ) {
+		$this->render_text_field( $args['label_for'], $args['opt_name'] );
+		$this->render_field_description(
+			__( 'Overrides the default domain assignment for cookie storage. Use with caution.', 'wp-auth0' )
 		);
 	}
 
@@ -386,7 +408,8 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		// `migration_ips` is sanitized in $this->migration_ips_validation() below.
 		$input['valid_proxy_ip']        = ( isset( $input['valid_proxy_ip'] ) ? $input['valid_proxy_ip'] : null );
 		$input['auth0_server_domain']   = $this->sanitize_text_val( $input['auth0_server_domain'] ?? null );
-		$input['auth0_disable_logging'] = $this->sanitize_switch_val( $input['auth0_disable_logging'] ?? null );
+		$input['cookie_domain']   = $this->sanitize_text_val( $input['cookie_domain'] ?? null );
+		$input['disable_logging'] = $this->sanitize_switch_val( $input['disable_logging'] ?? null );
 		return $input;
 	}
 
