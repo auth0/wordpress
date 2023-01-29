@@ -155,7 +155,7 @@ By default, WordPress' task manager runs on every page load, which is inadvisabl
 ## Support Policy
 
 - Our PHP version support window mirrors the [PHP release support schedule](https://www.php.net/supported-versions.php). Our support for PHP versions ends when they stop receiving security fixes.
-- As Automattic's stated policy is "security patches are backported when possible, but this is not guaranteed", we only support [the latest release](https://wordpress.org/news/category/releases/) marked as ["actively supported"](https://endoflife.date/wordpress) by Automattic.
+- As Automattic's stated policy is "security patches are backported when possible, but this is not guaranteed," we only support [the latest release](https://wordpress.org/news/category/releases/) marked as ["actively supported"](https://endoflife.date/wordpress) by Automattic.
 
 | Plugin Version | WordPress Version | PHP Version | Support Ends |
 | -------------- | ----------------- | ----------- | ------------ |
@@ -163,7 +163,9 @@ By default, WordPress' task manager runs on every page load, which is inadvisabl
 |                |                   | 8.1         | Nov 2024     |
 |                |                   | 8.0         | Nov 2023     |
 
-Deprecations of EOL'd language, or framework versions are not considered a breaking change. Legacy applications will stop receiving updates from us but will continue to function on those unsupported SDK versions. Please ensure your PHP and WordPress environments always remain up to date.
+Composer and WordPress do not offer upgrades to incompatible versions. Therefore, we regularly deprecate support within the plugin for PHP or WordPress versions that have reached end-of-life. These deprecations are not considered breaking changes and will not result in a major version bump.
+
+Sites running unsupported versions of PHP or WordPress will continue to function but will not receive updates until their environment is upgraded. For your security, please ensure your PHP runtime and WordPress remain up to date.
 
 ## Feedback
 
