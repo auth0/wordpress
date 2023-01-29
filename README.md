@@ -1,4 +1,4 @@
-![wp-auth0](https://cdn.auth0.com/website/sdks/banners/wp-auth0-banner.png)
+![WordPress by Auth0](https://cdn.auth0.com/website/sdks/banners/wp-auth0-banner.png)
 
 WordPress Plugin for [Auth0](https://auth0.com) Authentication
 
@@ -18,27 +18,61 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 
 ### Installation
 
+<!-- // Disabled while we complete this distribution configuration
+#### Release Package
+Releases are available from the Github repository [github.com/auth0/wordpress/releases](https://github.com/auth0/wordpress/releases), packaged as ZIP archives. Every release has an accompanying signature file for verification, if desired.
+
+<details>
+<summary><b>Verify a release signature with OpenSSL (recommended)</b></summary>
+
+1. Download the public siging key from this repository
+2. Put the repository's public signing key, the release's ZIP archive, and the release's signature file (ending in `.sign`) in the same directory.
+3. Run the following command, substituting `RELEASE` with the filename of the release you downloaded:
+
+```bash
+openssl dgst -verify signing.key.pub -keyform PEM -sha256 -signature RELEASE.zip.sign -binary RELEASE.zip
+```
+
+'Verified OK' should be returned. If this is not the case, do not proceed with the installation.
+</details>
+
+1. Open your WordPress Dashboard, then click 'Plugins', and then 'Add New'.
+2. Find the 'Upload Plugin' function at the top of the page, and use it to upload the release package you downloaded.
+
+> **Note** Alternatively, you can extract the release package to your WordPress installation's `wp-content/plugins` directory.
+-->
+
 #### Composer
+Plugin installation using [Composer](https://getcomposer.org/) is fully supported. This approach is preferred for installations using [Bedrock](https://roots.io/bedrock/) or [WordPress Core Installer](https://github.com/johnpbloch/wordpress-core-installer).
 
-Add the dependency to your application with [Composer](https://getcomposer.org/):
+- For installations using [WPackagist](https://wpackagist.org/)-based configurations (like Bedrock), run the following command from your WordPress installation's root folder.
+- For standard installations, run this command from your `wp-content/plugins` directory.
 
 ```
-composer require auth0/wordpress
+composer require symfony/http-client nyholm/psr7 auth0/wordpress:^5.0
 ```
 
-Then,
+> **Note**  When installing with Composer, you will also need to install [PSR-18](https://packagist.org/providers/psr/http-client-implementation) and [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) compatible libraries to support the plugin. The above example includes well known defaults, but any libraries compatible with those PSRs will work.
 
-1. Log in to your WordPress site as an administrator.
-2. Go to Plugins menu.
-3. Look for "Login by Auth0" in the list.
-4. Click Install Now, and then Activate.
 
-#### WordPress.org
+<!-- // Disabled while we complete this distribution configuration
+#### WordPress Dashboard
 
-1. Log in to your WordPress site as an administrator.
-2. Go to Plugins menu, then click 'Add New.'
-3. Search for "Login by Auth0".
-4. Click Install Now, and then Activate.
+Installation from your WordPress dashboard is also supported. This approach first installs a small setup script that will verify that your host environment is compatible. Afterward, the latest plugin release will be downloaded from the GitHub repository, have it's file signature verified, and ultimately installed.
+
+- Open your WordPress Dashboard.
+- Click 'Plugins", then 'Add New', and search for 'Auth0'.
+- Choose 'Install Now' to install the plugin.
+-->
+
+### Acivation
+
+Once installed, you will need to activate the plugin from your WordPress Dashboard. Under
+
+1. Open your WordPress Dashboard, then select 'Plugins', and then 'Installed Plugins'.
+2. Choose 'Activate' under the plugin's name.
+
+Once installed, you'll need to configure the plugin with your Auth0 tenant and application details.
 
 ### Configure Auth0
 
@@ -53,7 +87,7 @@ Note the **Domain**, **Client ID**, and **Client Secret**. These values will be 
 
 ### Configure the SDK
 
-Upon activating the Auth0 WordPress plugin, you will find a new "Auth0" section on the left-hand side of your administrative dashboard. This section enables you to configure the plugin.
+Upon activating the Auth0 WordPress plugin, you will find a new "Auth0" section on the left-hand side of your WordPress Dashboard. This section enables you to configure the plugin.
 
 At a minimum, you will need to configure the Domain, Client ID, and Client Secret sections for the plugin to function.
 
