@@ -113,7 +113,7 @@ Continue configuring your Auth0 application from its Settings page:
 <p><details>
 <summary><b>Troubleshooting</b></summary>
 
-If you're encountering issues, check that your Auth0 Application is configured with the following settings:
+If you're encountering issues, start by checking that your Auth0 Application is setup like so:
 
 - **Application Type** must be set to **Regular Web Application**.
 - **Token Endpoint Authentication Method** must be set to **Post**.
