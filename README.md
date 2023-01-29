@@ -51,7 +51,7 @@ When using Composer-based WordPress configurations like Bedrock, you'll usually 
 composer require symfony/http-client nyholm/psr7 auth0/wordpress:^5.0
 ```
 
-> **Note**  When installing with Composer, you will also need to install [PSR-18](https://packagist.org/providers/psr/http-client-implementation) and [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) compatible suppoty libraries. The above command includes some well known defaults, but any libraries compatible with those PSRs will work.
+> **Note**  When installing with Composer, you will also need to install [PSR-18](https://packagist.org/providers/psr/http-client-implementation) and [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) compatible support libraries. The above command includes some well known defaults, but any libraries compatible with those PSRs will work.
 
 
 <!-- // Disabled while we complete this distribution configuration
