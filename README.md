@@ -65,7 +65,7 @@ Installation from your WordPress dashboard is also supported. This approach firs
 - Choose 'Install Now' to install the plugin.
 -->
 
-### Acivation
+### Activation
 
 Once the package is installed, you will need to activate the plugin for use with your WordPress site.
 
