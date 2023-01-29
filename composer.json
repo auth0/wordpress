@@ -34,15 +34,10 @@
   },
   "require": {
     "php": "^8.0",
-    "ext-filter": "*",
     "ext-json": "*",
-    "ext-mbstring": "*",
     "ext-openssl": "*",
     "auth0/auth0-php": "^8.0",
-    "php-http/message-factory": "^1.0",
-    "psr/http-client": "^1.0",
-    "psr/http-factory": "^1.0",
-    "psr/http-message": "^1.0"
+    "symfony/polyfill-mbstring": "^1.0"
   },
   "require-dev": {
     "firebase/php-jwt": "^6.2",
