@@ -16,3 +16,4 @@ composer.lock
 composer.local.json
 .vscode/
 .phpunit.result.cache
+composer.local.json_
