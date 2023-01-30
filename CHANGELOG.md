@@ -1,5 +1,19 @@
 # Change Log
 
+## [4.5.0](https://github.com/auth0/wp-auth0/tree/4.5.0) (2023-01-29)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/4.4.0...4.5.0)
+
+**Added**
+
+- Cookie domain configuration to Advanced Options. [\#864](https://github.com/auth0/wordpress/pull/864) ([evansims](https://github.com/evansims))
+- Option to disable plugin logging. [\#848](https://github.com/auth0/wordpress/pull/848) ([adamstraube](https://github.com/adamstraube))
+
+**Fixed**
+
+- `auth0_update_meta` filter not passing `$value` [\#847](https://github.com/auth0/wp-auth0/pull/847) ([QWp6t](https://github.com/QWp6t))
+- `wpa0_should_create_user` filter not registering with correct parameter count [\#843](https://github.com/auth0/wp-auth0/pull/843) ([alyxb](https://github.com/alyxb))
+
 ## [4.4.0](https://github.com/auth0/wp-auth0/tree/4.4.0) (2021-10-15)
 
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/4.3.1...4.4.0)

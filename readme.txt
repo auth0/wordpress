@@ -1,11 +1,11 @@
 === Login by Auth0 ===
 Tags: authentication, security, multi-factor, single sign-on, social, passwordless, mfa, 2fa, sso, oauth2, openid, saml
-Tested up to: 5.8.1
+Tested up to: 6.1.1
 Requires at least: 5.4.2
 Requires PHP: 7.4
 License: MIT
-License URI: https://github.com/auth0/wp-auth0/blob/master/LICENSE
-Stable tag: 4.4.0
+License URI: https://github.com/auth0/wp-auth0/blob/4.x/LICENSE
+Stable tag: 4.5.0
 Contributors: auth0, auth0josh, evansims
 
 Login by Auth0 provides improved username/password login, Passwordless login, Social login and Single Sign On for all your sites.
