@@ -55,11 +55,9 @@ composer require symfony/http-client nyholm/psr7 auth0/wordpress:^5.0
 <p><details>
 <summary><b>Note on Composer Dependencies</b></summary>
 
-When using Composer, the plugin depends on the availability of [PSR-18](https://packagist.org/providers/psr/http-client-implementation) and [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) library implementations.
+When installed with Composer, the plugin depends on the presence of [PSR-18](https://packagist.org/providers/psr/http-client-implementation) and [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) library implementations. The `require` command above includes two such libraries (`symfony/http-client` and `nyholm/psr7`) that satisfy these requirements, but you can use any other compatible libraries that you prefer. Visit Packagist for a list of [PSR-18](https://packagist.org/providers/psr/http-client-implementation) and [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) providers.
 
-These implementations are satisfied by the `symfony/http-client` and `nyholm/psr7` packages installed with the command above, respectively. If you prefer different libraries, you can install those instead.
-
-If you are using Bedrock or another Composer-based configuration, you can try installing `auth0/wordpress` without any other packages, as the implementations may already be satisfied by installed packages.
+If you are using Bedrock or another Composer-based configuration, you can try installing `auth0/wordpress` without any other dependencies, as the implementations may be satisfied by other already installed packages.
 
 > **Note** PHP Standards Recommendations (PSRs) are standards for PHP libraries and applications that enable greater interoperability and choice. You can learn more about them and the PHP-FIG organization that maintains them [here](https://www.php-fig.org/).
 
