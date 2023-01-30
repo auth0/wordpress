@@ -162,7 +162,7 @@ Instead, please take advantage of the full PHP SDK that the plugin is built upon
 <?php
 
 $plugin = wpAuth0(); // Returns an instanceof Auth0\WordPress\Plugin
-   $sdk =  wpAuth0()->getSdk(); // Returns an instanceof Auth0\SDK\Auth0
+   $sdk = wpAuth0()->getSdk(); // Returns an instanceof Auth0\SDK\Auth0
 ```
 
 Please direct questions about developing with the Auth0-PHP SDK to the [Auth0 Community](https://community.auth0.com), and issues or feature requests to [it's respective repository](https://github.com/auth0/auth0-PHP). Documentations and examples on working with the Auth0-PHP SDKs are also available from [it's repository](https://github.com/auth0/auth0-PHP).
