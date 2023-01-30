@@ -177,6 +177,9 @@ Please direct questions about developing with the Auth0-PHP SDK to the [Auth0 Co
 | 5              | 6                 | 8.2         | Dec 2025     |
 |                |                   | 8.1         | Nov 2024     |
 |                |                   | 8.0         | Nov 2023     |
+| -------------- | ----------------- | ----------- | ------------ |
+| 4              | 5                 | 8.0         | Jun 2023     |
+|                |                   | 7.4         | Jun 2023     |
 
 Composer and WordPress do not offer upgrades to incompatible versions. Therefore, we regularly deprecate support within the plugin for PHP or WordPress versions that have reached end-of-life. These deprecations are not considered breaking changes and will not result in a major version bump.
 
