@@ -14,4 +14,6 @@ wp-phptidy.php
 phpcs.xml
 composer.lock
 composer.local.json
+composer.local.json_
 .phpunit.result.cache
+.vscode

@@ -1,0 +1,13 @@
+.github/
+examples/
+tests/
+.gitattributes
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+codecov.yml
+CONTRIBUTING.md
+functions.php
+MIGRATE-v3-TO-v4.md
+phpcs.xml.dist
+phpunit.xml.dist
+phpunit7.xml.dist
