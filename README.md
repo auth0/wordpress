@@ -2,14 +2,7 @@
 
 ![Login by Auth0](https://ps.w.org/auth0/assets/banner-772x250.png)
 
-This plugin replaces standard WordPress login forms with one powered by Auth0 that enables social, passwordless, and enterprise connection login as well as additional security, multifactor auth, and user statistics. Please see the [WP.org plugin page](https://wordpress.org/plugins/auth0/) for more details on functionality.
-
-**Important note:** The `master` branch is now the latest reviewed and tested functionality for version 4.0.0 and may contain breaking changes. Please see the [4.0.0 milestone, closed tab](https://github.com/auth0/wp-auth0/milestone/15?closed=1) for a list of merged changes. The latest [WP.org](https://wordpress.org/plugins/auth0/) release can be found in the [`wordpress-org-plugin`](https://github.com/auth0/wp-auth0/tree/wordpress-org-plugin) branch.
-
-[![CircleCI](https://img.shields.io/circleci/project/github/auth0/wp-auth0/master.svg)](https://circleci.com/gh/auth0/wp-auth0)
-[![WordPress plugin downloads](https://img.shields.io/wordpress/plugin/dt/auth0.svg)](https://wordpress.org/plugins/auth0/)
-[![WordPress plugin rating](https://img.shields.io/wordpress/plugin/r/auth0.svg)](https://wordpress.org/plugins/auth0/)
-[![WordPress plugin version](https://img.shields.io/wordpress/plugin/v/auth0.svg)](https://wordpress.org/plugins/auth0/)
+This plugin replaces standard WordPress login forms with one powered by Auth0 that enables social, passwordless, and enterprise connection login as well as additional security, multifactor auth, and user statistics. Please see the [WordPress.org plugin page](https://wordpress.org/plugins/auth0/) for more details on functionality.
 
 ## Table of Contents
 
