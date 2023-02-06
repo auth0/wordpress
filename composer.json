@@ -47,7 +47,9 @@
     "optimize-autoloader": true,
     "allow-plugins": {
       "composer/installers": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "pestphp/pest-plugin": true,
+      "wikimedia/composer-merge-plugin": true
     }
   },
   "autoload": {
