@@ -122,7 +122,7 @@ final class Client implements ClientInterface
         }
 
         HttpTelemetry::setEnvProperty('WordPress', $wp_version);
-        HttpTelemetry::setPackage('wp-auth0', WP_AUTH0_VERSION);
+        HttpTelemetry::setPackage('wordpress', WP_AUTH0_VERSION);
 
         $this->telemetrySet = true;
     }

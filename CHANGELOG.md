@@ -8,7 +8,9 @@
 
 ### Updated
 
-- Bumped tested WordPress version to 6.3.0.
+- Bumped tested WordPress version to forthcoming 6.3.0 release.
+- Bumped `auth0-php` dependency version range to `^8.7`.
+- Updated telemetry to indicate `wordpress` package (previously `wp-auth0`.)
 
 > **Note**
 > ¹ To use this feature, an Auth0 tenant must have support for it enabled. This feature is not yet available to all tenants.
@@ -25,7 +27,7 @@ Introducing V5 of WP-Auth0 ("Login by Auth0"), a major redesign and upgrade to o
 
 - [WordPress 6](https://wordpress.org/support/wordpress-version/version-6-0/) and [PHP 8](https://www.php.net/releases/8.0/en.php) support
 - Integration with the [Auth0-PHP SDK](https://github.com/auth0/auth0-php), and access to its entire API (including Management API calls)
-High-performance background sync using [WordPress' Cron](https://developer.wordpress.org/plugins/cron/) feature
+  High-performance background sync using [WordPress' Cron](https://developer.wordpress.org/plugins/cron/) feature
 - "Flexible identifier" support, allowing users to sign in using multiple connection types without requiring extra configuration
 - Expanded control over how sign-ins without matching existing WordPress accounts are handled
 - Enhanced session pairing between WordPress and Auth0, including session invalidation, access token refresh, and more.
