@@ -61,14 +61,18 @@ class WP_Auth0_LoginManager {
 
 		// If the user has a WP session, determine where they should end up and redirect.
 		if ( is_user_logged_in() ) {
-			$login_redirect = empty( $_REQUEST['redirect_to'] ) ?
-				$this->a0_options->get( 'default_login_redirection' ) :
-				filter_var( wp_unslash( $_REQUEST['redirect_to'] ), FILTER_SANITIZE_URL );
+			if ( isset($_REQUEST['reauth']) && $_REQUEST['reauth']==1 ) {
+				//	Skip the default login redirection as 'reauth' has been requsted
+			} else {
+				$login_redirect = empty( $_REQUEST['redirect_to'] ) ?
+					$this->a0_options->get( 'default_login_redirection' ) :
+					filter_var( wp_unslash( $_REQUEST['redirect_to'] ), FILTER_SANITIZE_URL );
 
-			// Add a cache buster to avoid an infinite redirect loop on pages that check for auth.
-			$login_redirect = add_query_arg( time(), '', $login_redirect );
-			wp_safe_redirect( $login_redirect );
-			exit;
+				// Add a cache buster to avoid an infinite redirect loop on pages that check for auth.
+				$login_redirect = add_query_arg( time(), '', $login_redirect );
+				wp_safe_redirect( $login_redirect );
+				exit;
+			}
 		}
 
 		// Do not use the ULP if the setting is off or if the plugin is not configured.
@@ -135,12 +139,6 @@ class WP_Auth0_LoginManager {
 			$error_code = sanitize_text_field( rawurldecode( wp_unslash( $_REQUEST['error'] ) ) );
 			// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$this->die_on_login( $error_msg, $error_code );
-		}
-
-		// No need to process a login if the user is already logged in and there is no error.
-		if ( is_user_logged_in() ) {
-			wp_safe_redirect( $this->a0_options->get( 'default_login_redirection' ) );
-			exit;
 		}
 
 		// Check for valid state value returned from Auth0.
