@@ -44,10 +44,7 @@ class WP_Auth0_Nonce_Handler {
 	 */
 	private function __clone() {}
 
-	/**
-	 * Private to prevent unserializing.
-	 */
-	private function __wakeup() {}
+	public function __wakeup() {}
 
 	/**
 	 * WP_Auth0_Nonce_Handler constructor.
