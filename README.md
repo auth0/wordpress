@@ -10,7 +10,8 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 
 The Auth0 WordPress plugin replaces the standard WordPress login flow with a new authentication process using Auth0's Universal Login experience. This enables you to secure your WordPress site with Auth0's advanced features, such as MFA, SSO, Passwordless, PassKey, and so on.
 
-Critically, this plugin is **NOT** an SDK (Software Development Kit.) We do not provide support for customizing the plugin's behavior or integrating it into WordPress in any way beyond what is expressly explained here. If you are looking for an SDK, please build a custom solution from the [Auth0-PHP SDK](https://github.com/auth0/auth0-php) instead.
+> [!IMPORTANT]  
+> This plugin is **NOT** a SDK (Software Development Kit.) We do not provide support for customizing the plugin's behavior or integrating it into WordPress in any way beyond what is expressly explained here. If you are looking for an SDK, please build a custom solution from the [Auth0-PHP SDK](https://github.com/auth0/auth0-php) instead.
 
 ## Getting Started
 
