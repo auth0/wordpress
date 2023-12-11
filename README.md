@@ -10,13 +10,16 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 
 ### Requirements
 
-- PHP 8.0+
+- PHP 8.1+
 - [Most recent version of WordPress](https://wordpress.org/news/category/releases/)
 - Database credentials with table creation permissions
 
 > Please review our [support policy](#support-policy) on specific PHP and WordPress versions and when they may exit support in the future.
 
 ### Installation
+
+> [!WARNING]  
+> v4 of the plugin is no longer supported as of June 2023. We are no longer providing new features or bugfixes for that release. Please upgrade to v5 as soon as possible.
 
 <!-- // Disabled while we complete this distribution configuration
 #### Release Package
@@ -176,6 +179,9 @@ Please direct questions about developing with the Auth0-PHP SDK to the [Auth0 Co
 | -------------- | ----------------- | ----------- | ------------ |
 | 5              | 6                 | 8.2         | Dec 2025     |
 |                |                   | 8.1         | Nov 2024     |
+
+
+
 |                |                   | 8.0         | Nov 2023     |
 | 4              | 6.0, 6.1          | 8.0         | Jun 2023     |
 |                | 5                 | 7.4, 8.0    | Jun 2023     |
