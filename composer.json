@@ -36,7 +36,8 @@
         "php": "^8.1",
         "ext-json": "*",
         "ext-openssl": "*",
-        "auth0/auth0-php": "^8.10"
+        "auth0/auth0-php": "^8.10",
+        "psr/cache": "^3.0"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2",
