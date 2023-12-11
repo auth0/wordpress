@@ -31,7 +31,9 @@ if (! defined('ABSPATH')) {
 }
 
 // Load dependencies
-require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
+if (is_file($file = plugin_dir_path(__FILE__) . 'vendor/autoload.php')) {
+  require_once $file;
+}
 
 register_activation_hook(
     __FILE__,
