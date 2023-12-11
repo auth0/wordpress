@@ -7,16 +7,16 @@ namespace Auth0\WordPress\Http;
 use Auth0\SDK\Utility\HttpTelemetry;
 use Auth0\WordPress\Http\Message\Stream;
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\{RequestInterface, ResponseFactoryInterface, ResponseInterface};
 use Throwable;
+
+use function is_array;
 
 final class Client implements ClientInterface
 {
-    public array $options = [];
-
     private bool $telemetrySet = false;
+
+    public array $options = [];
 
     public function __construct(private ResponseFactoryInterface $responseFactory)
     {
@@ -60,6 +60,8 @@ final class Client implements ClientInterface
     }
 
     /**
+     * @param RequestInterface $request
+     *
      * @return mixed[]
      */
     private function getArguments(RequestInterface $request): array
@@ -73,6 +75,8 @@ final class Client implements ClientInterface
     }
 
     /**
+     * @param RequestInterface $request
+     *
      * @return string[]
      */
     private function getHeaders(RequestInterface $request): array
@@ -102,13 +106,11 @@ final class Client implements ClientInterface
         require ABSPATH . WPINC . '/version.php';
 
         /** @var string $wp_version */
-
-        if ($wp_version === '') {
+        if ('' === $wp_version) {
             try {
                 $core = get_site_transient('update_core');
 
                 /** @var object $core */
-
                 if (property_exists($core, 'version_checked')) {
                     $wp_version = $core->version_checked;
                 }
@@ -117,7 +119,7 @@ final class Client implements ClientInterface
             }
         }
 
-        if (! isset($wp_version) || $wp_version === false) {
+        if (! isset($wp_version) || false === $wp_version) {
             $wp_version = '0.0.0';
         }
 

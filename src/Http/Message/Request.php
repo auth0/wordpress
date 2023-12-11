@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Http\Message;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UriInterface;
+use Psr\Http\Message\{RequestInterface, StreamInterface, UriInterface};
 
 final class Request implements RequestInterface
 {
     use MessageTrait;
+
     use RequestTrait;
 
     public function __construct(
         string $method,
-        string|UriInterface $uri,
+        string | UriInterface $uri,
         array $headers = [],
-        string|StreamInterface|null $body = null,
-        string $version = '1.1'
+        string | StreamInterface | null $body = null,
+        string $version = '1.1',
     ) {
         if (! ($uri instanceof UriInterface)) {
             $uri = new Uri($uri);
@@ -33,11 +32,11 @@ final class Request implements RequestInterface
             $this->updateHostFromUri();
         }
 
-        if ($body === '') {
+        if ('' === $body) {
             return;
         }
 
-        if ($body === null) {
+        if (null === $body) {
             return;
         }
 

@@ -8,8 +8,18 @@ use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
 use Stringable;
 
-final class Uri implements UriInterface, Stringable
+final class Uri implements Stringable, UriInterface
 {
+    /**
+     * @var string
+     */
+    private const CHAR_SUB_DELIMS = '!\$&\'\(\)\*\+,;=';
+
+    /**
+     * @var string
+     */
+    private const CHAR_UNRESERVED = 'a-zA-Z0-9_\-\.~';
+
     /**
      * @var array<string, int>
      */
@@ -18,49 +28,39 @@ final class Uri implements UriInterface, Stringable
         'https' => 443,
     ];
 
-    /**
-     * @var string
-     */
-    private const CHAR_UNRESERVED = 'a-zA-Z0-9_\-\.~';
+    private string $fragment = '';
 
-    /**
-     * @var string
-     */
-    private const CHAR_SUB_DELIMS = '!\$&\'\(\)\*\+,;=';
+    private string $host = '';
+
+    private string $path = '';
+
+    private ?int $port = null;
+
+    private string $query = '';
 
     private string $scheme = '';
 
     private string $userInfo = '';
 
-    private string $host = '';
-
-    private ?int $port = null;
-
-    private string $path = '';
-
-    private string $query = '';
-
-    private string $fragment = '';
-
     public function __construct(string $uri = '')
     {
-        if ($uri !== '') {
+        if ('' !== $uri) {
             $parts = parse_url($uri);
 
-            if ($parts === false) {
+            if (false === $parts) {
                 throw new InvalidArgumentException(sprintf('Unable to parse URI: "%s"', $uri));
             }
 
             $this->scheme = isset($parts['scheme']) ? strtr(
                 $parts['scheme'],
                 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-                'abcdefghijklmnopqrstuvwxyz'
+                'abcdefghijklmnopqrstuvwxyz',
             ) : '';
             $this->userInfo = $parts['user'] ?? '';
             $this->host = isset($parts['host']) ? strtr(
                 $parts['host'],
                 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-                'abcdefghijklmnopqrstuvwxyz'
+                'abcdefghijklmnopqrstuvwxyz',
             ) : '';
             $this->port = isset($parts['port']) ? $this->filterPort($parts['port']) : null;
             $this->path = isset($parts['path']) ? $this->filterPath($parts['path']) : '';
@@ -78,33 +78,28 @@ final class Uri implements UriInterface, Stringable
         return self::createUriString($this->scheme, $this->getAuthority(), $this->path, $this->query, $this->fragment);
     }
 
-    public function getScheme(): string
-    {
-        return $this->scheme;
-    }
-
     public function getAuthority(): string
     {
-        if ($this->host === '') {
+        if ('' === $this->host) {
             return '';
         }
 
         $authority = $this->host;
 
-        if ($this->userInfo !== '') {
+        if ('' !== $this->userInfo) {
             $authority = $this->userInfo . '@' . $authority;
         }
 
-        if ($this->port !== null) {
+        if (null !== $this->port) {
             $authority .= ':' . $this->port;
         }
 
         return $authority;
     }
 
-    public function getUserInfo(): string
+    public function getFragment(): string
     {
-        return $this->userInfo;
+        return $this->fragment;
     }
 
     public function getHost(): string
@@ -112,14 +107,14 @@ final class Uri implements UriInterface, Stringable
         return $this->host;
     }
 
-    public function getPort(): ?int
-    {
-        return $this->port;
-    }
-
     public function getPath(): string
     {
         return $this->path;
+    }
+
+    public function getPort(): ?int
+    {
+        return $this->port;
     }
 
     public function getQuery(): string
@@ -127,9 +122,84 @@ final class Uri implements UriInterface, Stringable
         return $this->query;
     }
 
-    public function getFragment(): string
+    public function getScheme(): string
     {
-        return $this->fragment;
+        return $this->scheme;
+    }
+
+    public function getUserInfo(): string
+    {
+        return $this->userInfo;
+    }
+
+    public function withFragment($fragment): UriInterface
+    {
+        $fragment = $this->filterQueryAndFragment($fragment);
+
+        if ($this->fragment === $fragment) {
+            return $this;
+        }
+
+        $new = clone $this;
+        $new->fragment = $fragment;
+
+        return $new;
+    }
+
+    public function withHost($host): UriInterface
+    {
+        $host = strtr($host, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+
+        if ($this->host === $host) {
+            return $this;
+        }
+
+        $new = clone $this;
+        $new->host = $host;
+
+        return $new;
+    }
+
+    public function withPath($path): UriInterface
+    {
+        $path = $this->filterPath($path);
+
+        if ($this->path === $path) {
+            return $this;
+        }
+
+        $new = clone $this;
+        $new->path = $path;
+
+        return $new;
+    }
+
+    public function withPort($port): UriInterface
+    {
+        $port = $this->filterPort($port);
+
+        if ($this->port === $port) {
+            return $this;
+        }
+
+        $new = clone $this;
+        $new->port = $port;
+
+        return $new;
+    }
+
+    public function withQuery($query): UriInterface
+    {
+        $query = $this->filterQueryAndFragment($query);
+
+        if ($this->query === $query) {
+            return $this;
+        }
+
+        $new = clone $this;
+        $new->query = $query;
+
+        return $new;
     }
 
     public function withScheme($scheme): UriInterface
@@ -151,7 +221,7 @@ final class Uri implements UriInterface, Stringable
     {
         $info = $user;
 
-        if ($password !== null && $password !== '') {
+        if (null !== $password && '' !== $password) {
             $info .= ':' . $password;
         }
 
@@ -165,74 +235,38 @@ final class Uri implements UriInterface, Stringable
         return $new;
     }
 
-    public function withHost($host): UriInterface
+    private function filterPath(string $path): ?string
     {
-        $host = strtr($host, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
-
-        if ($this->host === $host) {
-            return $this;
-        }
-
-        $new = clone $this;
-        $new->host = $host;
-
-        return $new;
+        return preg_replace_callback(
+            '/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/]++|%(?![A-Fa-f0-9]{2}))/',
+            static fn (array $match): string => self::rawurlencodeMatchZero($match),
+            $path,
+        );
     }
 
-    public function withPort($port): UriInterface
+    /**
+     * @param null|int $port
+     */
+    private function filterPort(?int $port): ?int
     {
-        $port = $this->filterPort($port);
-
-        if ($this->port === $port) {
-            return $this;
+        if (null === $port) {
+            return null;
         }
 
-        $new = clone $this;
-        $new->port = $port;
+        if ($port < 0 || $port > 0xFFFF) {
+            throw new InvalidArgumentException(sprintf('Invalid port: %d. Must be between 0 and 65535', $port));
+        }
 
-        return $new;
+        return self::isNonStandardPort($this->scheme, $port) ? $port : null;
     }
 
-    public function withPath($path): UriInterface
+    private function filterQueryAndFragment(string $str): ?string
     {
-        $path = $this->filterPath($path);
-
-        if ($this->path === $path) {
-            return $this;
-        }
-
-        $new = clone $this;
-        $new->path = $path;
-
-        return $new;
-    }
-
-    public function withQuery($query): UriInterface
-    {
-        $query = $this->filterQueryAndFragment($query);
-
-        if ($this->query === $query) {
-            return $this;
-        }
-
-        $new = clone $this;
-        $new->query = $query;
-
-        return $new;
-    }
-
-    public function withFragment($fragment): UriInterface
-    {
-        $fragment = $this->filterQueryAndFragment($fragment);
-
-        if ($this->fragment === $fragment) {
-            return $this;
-        }
-
-        $new = clone $this;
-        $new->fragment = $fragment;
-
-        return $new;
+        return preg_replace_callback(
+            '/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/\?]++|%(?![A-Fa-f0-9]{2}))/',
+            static fn (array $match): string => self::rawurlencodeMatchZero($match),
+            $str,
+        );
     }
 
     private static function createUriString(
@@ -240,37 +274,37 @@ final class Uri implements UriInterface, Stringable
         string $authority,
         string $path,
         string $query,
-        string $fragment
+        string $fragment,
     ): string {
         $uri = '';
 
-        if ($scheme !== '') {
+        if ('' !== $scheme) {
             $uri .= $scheme . ':';
         }
 
-        if ($authority !== '') {
+        if ('' !== $authority) {
             $uri .= '//' . $authority;
         }
 
-        if ($path !== '') {
-            if ($path[0] !== '/') {
-                if ($authority !== '') {
+        if ('' !== $path) {
+            if ('/' !== $path[0]) {
+                if ('' !== $authority) {
                     $path = '/' . $path;
                 }
-            } elseif (isset($path[1]) && $path[1] === '/') {
-                if ($authority === '') {
-                    $path = '/' . \ltrim($path, '/');
+            } elseif (isset($path[1]) && '/' === $path[1]) {
+                if ('' === $authority) {
+                    $path = '/' . ltrim($path, '/');
                 }
             }
 
             $uri .= $path;
         }
 
-        if ($query !== '') {
+        if ('' !== $query) {
             $uri .= '?' . $query;
         }
 
-        if ($fragment !== '') {
+        if ('' !== $fragment) {
             $uri .= '#' . $fragment;
         }
 
@@ -280,40 +314,6 @@ final class Uri implements UriInterface, Stringable
     private static function isNonStandardPort(string $scheme, int $port): bool
     {
         return ! isset(self::SCHEMES[$scheme]) || $port !== self::SCHEMES[$scheme];
-    }
-
-    /**
-     * @param int|null $port
-     */
-    private function filterPort(?int $port): ?int
-    {
-        if ($port === null) {
-            return null;
-        }
-
-        if ($port < 0 || $port > 0xffff) {
-            throw new InvalidArgumentException(\sprintf('Invalid port: %d. Must be between 0 and 65535', $port));
-        }
-
-        return self::isNonStandardPort($this->scheme, $port) ? $port : null;
-    }
-
-    private function filterPath(string $path): ?string
-    {
-        return preg_replace_callback(
-            '/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/]++|%(?![A-Fa-f0-9]{2}))/',
-            static fn (array $match): string => self::rawurlencodeMatchZero($match),
-            $path
-        );
-    }
-
-    private function filterQueryAndFragment(string $str): ?string
-    {
-        return preg_replace_callback(
-            '/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/\?]++|%(?![A-Fa-f0-9]{2}))/',
-            static fn (array $match): string => self::rawurlencodeMatchZero($match),
-            $str
-        );
     }
 
     private static function rawurlencodeMatchZero(array $match): string

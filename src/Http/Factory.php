@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Http;
 
-use Auth0\WordPress\Http\MessageFactory\RequestFactory;
-use Auth0\WordPress\Http\MessageFactory\ResponseFactory;
-use Auth0\WordPress\Http\MessageFactory\StreamFactory;
+use Auth0\WordPress\Http\MessageFactory\{RequestFactory, ResponseFactory, StreamFactory};
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\{RequestFactoryInterface, ResponseFactoryInterface, StreamFactoryInterface};
 
 final class Factory
 {
@@ -19,8 +15,7 @@ final class Factory
         static $instance = [];
 
         /** @var Client[] $instance */
-
-        if ($responseFactory === null) {
+        if (! $responseFactory instanceof \Psr\Http\Message\ResponseFactoryInterface) {
             $responseFactory = self::getResponseFactory();
         }
 
@@ -37,7 +32,7 @@ final class Factory
     {
         static $instance = null;
 
-        if ($instance === null) {
+        if (null === $instance) {
             $instance = new RequestFactory();
         }
 
@@ -48,7 +43,7 @@ final class Factory
     {
         static $instance = null;
 
-        if ($instance === null) {
+        if (null === $instance) {
             $instance = new ResponseFactory();
         }
 
@@ -59,7 +54,7 @@ final class Factory
     {
         static $instance = null;
 
-        if ($instance === null) {
+        if (null === $instance) {
             $instance = new StreamFactory();
         }
 

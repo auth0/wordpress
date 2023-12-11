@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Utilities;
 
+use function count;
+use function in_array;
+
 final class Render
 {
     /**
@@ -26,30 +29,37 @@ final class Render
     ];
 
     /**
-     * @param null|array<string|int|bool> $select
+     * @param null|array<bool|int|string> $select
+     * @param string                      $element
+     * @param string                      $name
+     * @param null|bool|int|string        $value
+     * @param string                      $type
+     * @param string                      $description
+     * @param string                      $placeholder
+     * @param ?bool                       $disabled
      */
     public static function option(
         string $element,
         string $name,
-        string|int|bool|null $value,
+        string | int | bool | null $value,
         string $type = 'text',
         string $description = '',
         string $placeholder = '',
         ?array $select = null,
-        ?bool $disabled = null
+        ?bool $disabled = null,
     ): void {
-        if (strlen($placeholder) >= 1) {
+        if ('' !== $placeholder) {
             $placeholder = ' placeholder="' . $placeholder . '"';
         }
 
         $disabledString = '';
 
-        if ($disabled !== null && $disabled) {
+        if (null !== $disabled && $disabled) {
             $disabledString = ' disabled';
         }
 
-        if ($select !== null && count($select) >= 1) {
-            if ($disabled === true) {
+        if (null !== $select && count($select) >= 1) {
+            if (true === $disabled) {
                 echo '<input type="hidden" name="' . $name . '" value="' . ($value ?? '') . '">';
                 echo '<select id="' . $element . '"' . $disabledString . '>';
             } else {
@@ -68,7 +78,7 @@ final class Render
 
             echo '</select>';
 
-            if (strlen($description) >= 1) {
+            if ('' !== $description) {
                 echo '<p class="description">' . $description . '</p>';
             }
 
@@ -78,27 +88,27 @@ final class Render
         if (in_array($type, self::TREAT_AS_TEXT, true)) {
             echo '<input name="' . $name . '" type="' . $type . '" id="' . $element . '" value="' . ($value ?? '') . '" class="regular-text"' . $placeholder . $disabledString . ' />';
 
-            if (strlen($description) >= 1) {
+            if ('' !== $description) {
                 echo '<p class="description">' . $description . '</p>';
             }
 
             return;
         }
 
-        if ($type === 'textarea') {
+        if ('textarea' === $type) {
             echo '<textarea name="' . $name . '" id="' . $element . '" rows="10" cols="50" spellcheck="false" class="large-text code"' . $placeholder . $disabledString . '>' . ($value ?? '') . '</textarea>';
 
-            if (strlen($description) >= 1) {
+            if ('' !== $description) {
                 echo '<p class="description">' . $description . '</p>';
             }
 
             return;
         }
 
-        if ($type === 'boolean') {
-            echo '<input name="' . $name . '" type="checkbox" id="' . $element . '" value="true" ' . \checked(
+        if ('boolean' === $type) {
+            echo '<input name="' . $name . '" type="checkbox" id="' . $element . '" value="true" ' . checked(
                 (bool) $value,
-                'true'
+                'true',
             ) . $disabledString . '/> ' . $description;
         }
     }
@@ -108,7 +118,7 @@ final class Render
         echo '<div class="wrap">';
         echo '<h1>' . $title . '</h1>';
 
-        if ($action !== null) {
+        if (null !== $action) {
             echo '<form method="post" action="' . $action . '">';
         }
     }

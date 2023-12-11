@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace Auth0\WordPress\Actions;
 
 use Auth0\SDK\Auth0;
-use Auth0\WordPress\Hooks;
-use Auth0\WordPress\Plugin;
+use Auth0\WordPress\{Hooks, Plugin};
+
+use function constant;
+use function count;
+use function defined;
+use function is_array;
+use function is_string;
 
 abstract class Base
 {
     /**
-     * @var array<string, string|array<int, int|string>>
+     * @var array<string, array<int, int|string>|string>
      */
     protected array $registry = [];
 
@@ -19,38 +24,7 @@ abstract class Base
     {
     }
 
-    public function getPlugin(): Plugin
-    {
-        return $this->plugin;
-    }
-
-    public function getSdk(): Auth0
-    {
-        return $this->plugin->getSdk();
-    }
-
-    public function isPluginReady(): bool
-    {
-        return $this->plugin
-            ->isReady();
-    }
-
-    public function isPluginEnabled(): bool
-    {
-        return $this->plugin
-            ->isEnabled();
-    }
-
-    public function register(): self
-    {
-        foreach ($this->registry as $event => $method) {
-            $this->addAction($event, $method);
-        }
-
-        return $this;
-    }
-
-    public function addAction(string $event, $method = null): ?Hooks
+    final public function addAction(string $event, $method = null): ?Hooks
     {
         $callback = null;
         $method ??= $this->registry[$event] ?? null;
@@ -66,7 +40,7 @@ abstract class Base
                 $arguments = (int) $method[1];
             }
 
-            if ($callback !== null) {
+            if (null !== $callback) {
                 return $this->plugin->actions()
                     ->add($event, $this, $callback, $this->getPriority($event), $arguments);
             }
@@ -75,32 +49,12 @@ abstract class Base
         return null;
     }
 
-    public function removeAction(string $event, $method = null): ?Hooks
+    final public function getPlugin(): Plugin
     {
-        $callback = null;
-        $method ??= $this->registry[$event] ?? null;
-        $arguments = 1;
-
-        if (null !== $method) {
-            if (is_string($method)) {
-                $callback = $method;
-            }
-
-            if (is_array($method) && count($method) >= 1 && is_string($method[0]) && is_numeric($method[1])) {
-                $callback = $method[0];
-                $arguments = (int) $method[1];
-            }
-
-            if ($callback !== null) {
-                return $this->plugin->actions()
-                    ->remove($event, $this, $callback, $this->getPriority($event), $arguments);
-            }
-        }
-
-        return null;
+        return $this->plugin;
     }
 
-    public function getPriority(string $event, int $default = 10, string $prefix = 'AUTH0_ACTION_PRIORITY'): int
+    final public function getPriority(string $event, int $default = 10, string $prefix = 'AUTH0_ACTION_PRIORITY'): int
     {
         $noramlized = strtoupper($prefix . '_' . $event);
 
@@ -113,5 +67,56 @@ abstract class Base
         }
 
         return $default;
+    }
+
+    final public function getSdk(): Auth0
+    {
+        return $this->plugin->getSdk();
+    }
+
+    final public function isPluginEnabled(): bool
+    {
+        return $this->plugin
+            ->isEnabled();
+    }
+
+    final public function isPluginReady(): bool
+    {
+        return $this->plugin
+            ->isReady();
+    }
+
+    final public function register(): self
+    {
+        foreach ($this->registry as $event => $method) {
+            $this->addAction($event, $method);
+        }
+
+        return $this;
+    }
+
+    final public function removeAction(string $event, $method = null): ?Hooks
+    {
+        $callback = null;
+        $method ??= $this->registry[$event] ?? null;
+        $arguments = 1;
+
+        if (null !== $method) {
+            if (is_string($method)) {
+                $callback = $method;
+            }
+
+            if (is_array($method) && count($method) >= 1 && is_string($method[0]) && is_numeric($method[1])) {
+                $callback = $method[0];
+                $arguments = (int) $method[1];
+            }
+
+            if (null !== $callback) {
+                return $this->plugin->actions()
+                    ->remove($event, $this, $callback, $this->getPriority($event), $arguments);
+            }
+        }
+
+        return null;
     }
 }

@@ -152,7 +152,7 @@ final class Plugin
     {
         try {
             $config = $this->getConfiguration();
-        } catch (\Throwable $th) {
+        } catch (\Throwable) {
             return false;
         }
 
