@@ -5,26 +5,26 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="false"
+    allowStringToStandInForClass="true"
 >
     <projectFiles>
-        <directory name="src" />
+        <directory name="src"/>
+        <directory name="deprecated"/>
     </projectFiles>
 
-    <stubs>
-        <file name="vendor/php-stubs/wordpress-stubs/wordpress-stubs.php" />
-    </stubs>
-
     <issueHandlers>
-        <InvalidStringClass errorLevel="suppress" />
-        <MixedArgument errorLevel="suppress" />
-        <MixedArgumentTypeCoercion errorLevel="suppress" />
-        <MixedArrayAccess errorLevel="suppress" />
-        <MixedAssignment errorLevel="suppress" />
-        <MixedInferredReturnType errorLevel="suppress" />
-        <MixedPropertyTypeCoercion errorLevel="suppress" />
-        <MixedReturnStatement errorLevel="suppress" />
-        <PossiblyNullArgument errorLevel="suppress" />
-        <PossiblyNullPropertyAssignmentValue errorLevel="suppress" />
-        <PossiblyNullReference errorLevel="suppress" />
+        <MixedArgument errorLevel="suppress"/>
+        <MixedArgumentTypeCoercion errorLevel="suppress"/>
+        <MixedAssignment errorLevel="suppress"/>
+        <MixedInferredReturnType errorLevel="suppress"/>
+        <MixedReturnStatement errorLevel="suppress"/>
+        <DeprecatedClass errorLevel="suppress"/>
+        <DeprecatedInterface errorLevel="suppress"/>
     </issueHandlers>
+
+    <plugins>
+        <pluginClass class="Psalm\LaravelPlugin\Plugin" />
+    </plugins>
 </psalm>

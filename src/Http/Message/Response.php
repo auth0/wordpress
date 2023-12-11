@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Auth0\WordPress\Http\Message;
 
 use InvalidArgumentException;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\{ResponseInterface, StreamInterface};
 
 final class Response implements ResponseInterface
 {
@@ -81,26 +80,21 @@ final class Response implements ResponseInterface
     public function __construct(
         private int $statusCode = 200,
         array $headers = [],
-        string|StreamInterface|null $body = null,
+        string | StreamInterface | null $body = null,
         string $version = '1.1',
-        string $reason = ''
+        string $reason = '',
     ) {
-        if ($body !== '' && $body !== null) {
+        if ('' !== $body && null !== $body) {
             $this->stream = Stream::create($body);
         }
 
         $this->setHeaders($headers);
 
-        if ($reason === '' && isset(self::PHRASES[$this->statusCode])) {
+        if ('' === $reason && isset(self::PHRASES[$this->statusCode])) {
             $this->reasonPhrase = self::PHRASES[$statusCode];
         }
 
         $this->protocol = $version;
-    }
-
-    public function getStatusCode(): int
-    {
-        return $this->statusCode;
     }
 
     public function getReasonPhrase(): string
@@ -108,17 +102,19 @@ final class Response implements ResponseInterface
         return $this->reasonPhrase;
     }
 
+    public function getStatusCode(): int
+    {
+        return $this->statusCode;
+    }
+
     public function withStatus($code, $reasonPhrase = ''): ResponseInterface
     {
         if ($code < 100 || $code > 599) {
-            throw new InvalidArgumentException(sprintf(
-                'Status code has to be an integer between 100 and 599. A status code of %d was given',
-                $code
-            ));
+            throw new InvalidArgumentException(sprintf('Status code has to be an integer between 100 and 599. A status code of %d was given', $code));
         }
 
-        $phrase = isset(self::PHRASES[$code]) ? self::PHRASES[$code] : '';
-        $phrase = $reasonPhrase !== '' ? $reasonPhrase : $phrase;
+        $phrase = self::PHRASES[$code] ?? '';
+        $phrase = '' !== $reasonPhrase ? $reasonPhrase : $phrase;
 
         $new = clone $this;
         $new->statusCode = $code;

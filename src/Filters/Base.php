@@ -7,10 +7,16 @@ namespace Auth0\WordPress\Filters;
 use Auth0\SDK\Auth0;
 use Auth0\WordPress\Plugin;
 
+use function constant;
+use function count;
+use function defined;
+use function is_array;
+use function is_string;
+
 abstract class Base
 {
     /**
-     * @var array<string, string|array<int, int|string>>
+     * @var array<string, array<int, int|string>|string>
      */
     protected array $registry = [];
 
@@ -18,17 +24,32 @@ abstract class Base
     {
     }
 
-    public function getPlugin(): Plugin
+    final public function getPlugin(): Plugin
     {
         return $this->plugin;
     }
 
-    public function getSdk(): Auth0
+    final public function getPriority(string $event, int $default = 10, string $prefix = 'AUTH0_FILTER_PRIORITY'): int
+    {
+        $noramlized = strtoupper($prefix . '_' . $event);
+
+        if (defined($noramlized)) {
+            $constant = constant($noramlized);
+
+            if (is_numeric($constant)) {
+                return (int) $constant;
+            }
+        }
+
+        return $default;
+    }
+
+    final public function getSdk(): Auth0
     {
         return $this->plugin->getSdk();
     }
 
-    public function register(): self
+    final public function register(): self
     {
         foreach ($this->registry as $event => $method) {
             $callback = null;
@@ -43,27 +64,12 @@ abstract class Base
                 $arguments = (int) $method[1];
             }
 
-            if ($callback !== null) {
+            if (null !== $callback) {
                 $this->plugin->filters()
                     ->add($event, $this, $callback, $this->getPriority($event), $arguments);
             }
         }
 
         return $this;
-    }
-
-    public function getPriority(string $event, int $default = 10, string $prefix = 'AUTH0_FILTER_PRIORITY'): int
-    {
-        $noramlized = strtoupper($prefix . '_' . $event);
-
-        if (defined($noramlized)) {
-            $constant = constant($noramlized);
-
-            if (is_numeric($constant)) {
-                return (int) $constant;
-            }
-        }
-
-        return $default;
     }
 }

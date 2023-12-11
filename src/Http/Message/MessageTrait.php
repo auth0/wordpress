@@ -7,60 +7,33 @@ namespace Auth0\WordPress\Http\Message;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 
+use function is_array;
+use function is_int;
+use function is_string;
+
 trait MessageTrait
 {
-    /**
-     * @var array<string, string[]> Map of all registered headers, as original name => array of values
-     */
-    private array $headers = [];
-
     /**
      * @var array<string, string> Map of lowercase header name => original name at registration
      */
     private array $headerNames = [];
 
+    /**
+     * @var array<string, string[]> Map of all registered headers, as original name => array of values
+     */
+    private array $headers = [];
+
     private string $protocol = '1.1';
 
-    private StreamInterface|null $stream = null;
+    private StreamInterface | null $stream = null;
 
-    public function getProtocolVersion(): string
+    public function getBody(): StreamInterface
     {
-        return $this->protocol;
-    }
-
-    /**
-     * @param string $version
-     */
-    public function withProtocolVersion($version): static
-    {
-        if ($this->protocol === $version) {
-            return $this;
+        if (null === $this->stream) {
+            $this->stream = Stream::create('');
         }
 
-        $new = clone $this;
-        $new->protocol = $version;
-
-        return $new;
-    }
-
-    /**
-     * @return string[][]
-     */
-    public function getHeaders(): array
-    {
-        return $this->headers;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function hasHeader($name): bool
-    {
-        return isset($this->headerNames[strtr(
-            $name,
-            'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-            'abcdefghijklmnopqrstuvwxyz'
-        )]);
+        return $this->stream;
     }
 
     /**
@@ -90,7 +63,62 @@ trait MessageTrait
     }
 
     /**
+     * @return string[][]
+     */
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    public function getProtocolVersion(): string
+    {
+        return $this->protocol;
+    }
+
+    /**
      * @param string $name
+     */
+    public function hasHeader($name): bool
+    {
+        return isset($this->headerNames[strtr(
+            $name,
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            'abcdefghijklmnopqrstuvwxyz',
+        )]);
+    }
+
+    /**
+     * @param string          $name
+     * @param string|string[] $value
+     */
+    public function withAddedHeader($name, $value): static
+    {
+        if ('' === trim($name)) {
+            throw new InvalidArgumentException('Header name must be an RFC 7230 compatible string.');
+        }
+
+        $new = clone $this;
+        $new->setHeaders([
+            $name => $value,
+        ]);
+
+        return $new;
+    }
+
+    public function withBody(StreamInterface $body): static
+    {
+        if ($body === $this->stream) {
+            return $this;
+        }
+
+        $new = clone $this;
+        $new->stream = $body;
+
+        return $new;
+    }
+
+    /**
+     * @param string          $name
      * @param string|string[] $value
      */
     public function withHeader($name, $value): static
@@ -112,50 +140,75 @@ trait MessageTrait
 
     /**
      * @param string $name
-     * @param string|string[] $value
-     */
-    public function withAddedHeader($name, $value): static
-    {
-        if (trim($name) === '') {
-            throw new InvalidArgumentException('Header name must be an RFC 7230 compatible string.');
-        }
-
-        $new = clone $this;
-        $new->setHeaders([
-            $name => $value,
-        ]);
-
-        return $new;
-    }
-
-    /**
-     * @param string $name
      */
     public function withoutHeader($name): static
     {
         $this->normalizeHeaderKey($name);
+
         return $this;
     }
 
-    public function getBody(): StreamInterface
+    /**
+     * @param string $version
+     */
+    public function withProtocolVersion($version): static
     {
-        if ($this->stream === null) {
-            $this->stream = Stream::create('');
-        }
-
-        return $this->stream;
-    }
-
-    public function withBody(StreamInterface $body): static
-    {
-        if ($body === $this->stream) {
+        if ($this->protocol === $version) {
             return $this;
         }
 
         $new = clone $this;
-        $new->stream = $body;
+        $new->protocol = $version;
 
         return $new;
+    }
+
+    private function normalizeHeaderKey(string $header): string
+    {
+        return strtr($header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+    }
+
+    /**
+     * @param string          $header
+     * @param string|string[] $values
+     *
+     * @return string[]
+     */
+    private function sanitizeHeader($header, $values): array
+    {
+        if (1 !== preg_match("#^[!\\#$%&'*+.^_`|~0-9A-Za-z-]+$#", $header)) {
+            throw new InvalidArgumentException('Header name must be an RFC 7230 compatible string.');
+        }
+
+        if (! is_array($values)) {
+            if ((! is_numeric($values) && ! is_string($values)) || 1 !== preg_match(
+                "@^[ \t\x21-\x7E\x80-\xFF]*$@",
+                $values,
+            )) {
+                throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
+            }
+
+            return [trim($values, " \t")];
+        }
+
+        if (empty($values)) {
+            throw new InvalidArgumentException('Header values must be a string or an array of strings, empty array given.');
+        }
+
+        $returnValues = [];
+
+        foreach ($values as $value) {
+            if ((! is_numeric($value) && ! is_string($value)) || 1 !== preg_match(
+                "@^[ \t\x21-\x7E\x80-\xFF]*$@",
+                $value,
+            )) {
+                throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
+            }
+
+            $returnValues[] = trim($value, " \t");
+        }
+
+        return $returnValues;
     }
 
     private function setHeaders(array $headers): void
@@ -176,55 +229,5 @@ trait MessageTrait
                 $this->headers[$header] = $value;
             }
         }
-    }
-
-    private function normalizeHeaderKey(string $header): string
-    {
-        return strtr($header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
-    }
-
-    /**
-      * @param string $header
-      * @param string|string[] $values
-
-     * @return string[]
-     */
-    private function sanitizeHeader($header, $values): array
-    {
-        if (preg_match("#^[!\#$%&'*+.^_`|~0-9A-Za-z-]+$#", $header) !== 1) {
-            throw new InvalidArgumentException('Header name must be an RFC 7230 compatible string.');
-        }
-
-        if (! is_array($values)) {
-            if ((! is_numeric($values) && ! is_string($values)) || preg_match(
-                "@^[ \t\x21-\x7E\x80-\xFF]*$@",
-                $values
-            ) !== 1) {
-                throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
-            }
-
-            return [trim($values, " \t")];
-        }
-
-        if (empty($values)) {
-            throw new InvalidArgumentException(
-                'Header values must be a string or an array of strings, empty array given.'
-            );
-        }
-
-        $returnValues = [];
-
-        foreach ($values as $v) {
-            if ((! is_numeric($v) && ! is_string($v)) || preg_match(
-                "@^[ \t\x21-\x7E\x80-\xFF]*$@",
-                $v
-            ) !== 1) {
-                throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
-            }
-
-            $returnValues[] = trim($v, " \t");
-        }
-
-        return $returnValues;
     }
 }

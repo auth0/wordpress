@@ -9,12 +9,12 @@ final class Hooks
     /**
      * @var int
      */
-    public const CONST_ACTION_HOOK = 0;
+    public const CONST_ACTION_FILTER = 1;
 
     /**
      * @var int
      */
-    public const CONST_ACTION_FILTER = 1;
+    public const CONST_ACTION_HOOK = 0;
 
     public function __construct(public int $hookType = self::CONST_ACTION_HOOK)
     {
@@ -25,19 +25,18 @@ final class Hooks
         object $class,
         string $method,
         int $priority = 10,
-        int $arguments = 1
+        int $arguments = 1,
     ): self {
         $callback = [$class, $method];
 
         /**
          * @var callable $callback
          */
-
-        if ($this->hookType === self::CONST_ACTION_HOOK) {
+        if (self::CONST_ACTION_HOOK === $this->hookType) {
             add_action($hook, $callback, $priority, $arguments);
         }
 
-        if ($this->hookType === self::CONST_ACTION_FILTER) {
+        if (self::CONST_ACTION_FILTER === $this->hookType) {
             add_filter($hook, $callback, $priority, $arguments);
         }
 
@@ -51,12 +50,11 @@ final class Hooks
         /**
          * @var callable $callback
          */
-
-        if ($this->hookType === self::CONST_ACTION_HOOK) {
+        if (self::CONST_ACTION_HOOK === $this->hookType) {
             remove_action($hook, $callback, $priority, $arguments);
         }
 
-        if ($this->hookType === self::CONST_ACTION_FILTER) {
+        if (self::CONST_ACTION_FILTER === $this->hookType) {
             remove_filter($hook, $callback, $priority, $arguments);
         }
 

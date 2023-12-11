@@ -6,6 +6,8 @@ namespace Auth0\WordPress\Http\Message;
 
 use InvalidArgumentException;
 
+use function is_string;
+
 trait RequestTrait
 {
     private string $method;
@@ -14,25 +16,46 @@ trait RequestTrait
 
     private \Psr\Http\Message\UriInterface $uri;
 
+    public function getMethod(): string
+    {
+        return $this->method;
+    }
+
     public function getRequestTarget(): string
     {
-        if ($this->requestTarget !== null) {
+        if (null !== $this->requestTarget) {
             return $this->requestTarget;
         }
 
         $target = $this->uri->getPath();
 
-        if ($target === '') {
+        if ('' === $target) {
             $target = '/';
         }
 
         $query = $this->uri->getQuery();
 
-        if ($query !== '') {
+        if ('' !== $query) {
             $target .= '?' . $query;
         }
 
         return $target;
+    }
+
+    public function getUri(): \Psr\Http\Message\UriInterface
+    {
+        return $this->uri;
+    }
+
+    /**
+     * @param string $method
+     */
+    public function withMethod($method): static
+    {
+        $new = clone $this;
+        $new->method = $method;
+
+        return $new;
     }
 
     public function withRequestTarget(mixed $requestTarget): static
@@ -51,34 +74,9 @@ trait RequestTrait
         return $new;
     }
 
-    public function getMethod(): string
-    {
-        return $this->method;
-    }
-
-    /**
-     * @param string $method
-     *
-     * @return static
-     */
-    public function withMethod($method): static
-    {
-        $new = clone $this;
-        $new->method = $method;
-
-        return $new;
-    }
-
-    public function getUri(): \Psr\Http\Message\UriInterface
-    {
-        return $this->uri;
-    }
-
     /**
      * @param \Psr\Http\Message\UriInterface $uri
-     * @param bool $preserveHost
-     *
-     * @return static
+     * @param bool                           $preserveHost
      */
     public function withUri(\Psr\Http\Message\UriInterface $uri, $preserveHost = false): static
     {
@@ -100,13 +98,13 @@ trait RequestTrait
     {
         $host = $this->uri->getHost();
 
-        if ($host === '') {
+        if ('' === $host) {
             return;
         }
 
         $port = $this->uri->getPort();
 
-        if ($port !== null) {
+        if (null !== $port) {
             $host .= ':' . $port;
         }
 

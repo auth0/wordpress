@@ -6,9 +6,10 @@ namespace Auth0\WordPress\Http\MessageFactory;
 
 use Auth0\WordPress\Http\Message\Stream;
 use InvalidArgumentException;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\{StreamFactoryInterface, StreamInterface};
 use RuntimeException;
+
+use function in_array;
 
 final class StreamFactory implements StreamFactoryInterface
 {
@@ -19,15 +20,15 @@ final class StreamFactory implements StreamFactoryInterface
 
     public function createStreamFromFile(string $filename, string $mode = 'r'): StreamInterface
     {
-        if ($filename === '') {
+        if ('' === $filename) {
             throw new RuntimeException('Path cannot be empty');
         }
 
         $resource = fopen($filename, $mode);
 
-        if ($resource === false) {
-            if ($mode === '' || ! in_array($mode[0], ['r', 'w', 'a', 'x', 'c'], true)) {
-                throw new InvalidArgumentException(\sprintf('The mode "%s" is invalid.', $mode));
+        if (false === $resource) {
+            if ('' === $mode || ! in_array($mode[0], ['r', 'w', 'a', 'x', 'c'], true)) {
+                throw new InvalidArgumentException(sprintf('The mode "%s" is invalid.', $mode));
             }
 
             throw new RuntimeException(sprintf('The file "%s" cannot be opened', $filename));

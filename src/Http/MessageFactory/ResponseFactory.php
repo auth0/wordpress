@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Auth0\WordPress\Http\MessageFactory;
 
 use Auth0\WordPress\Http\Message\Response;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\{ResponseFactoryInterface, ResponseInterface};
+
+use function func_num_args;
 
 final class ResponseFactory implements ResponseFactoryInterface
 {
