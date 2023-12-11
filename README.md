@@ -162,7 +162,7 @@ By default, WordPress' task manager runs on every page load, which is inadvisabl
 
 ## SDK Usage
 
-The plugin is built on top of [Auth0-PHP v8](https://github.com/auth0/auth0-PHP) — Auth0's full-featured PHP SDK for Authentication and Management APIs.
+The plugin is built on top of [Auth0-PHP](https://github.com/auth0/auth0-PHP) — Auth0's full-featured PHP SDK for Authentication and Management APIs.
 
 For custom WordPress development, please do not extend the plugin's classes themselves, as this is not supported. Nearly all of the plugin's APIs are considered `internal` and will change over time, most likely breaking any custom extension built upon them.
 
