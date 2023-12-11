@@ -11,7 +11,6 @@
 >
     <projectFiles>
         <directory name="src"/>
-        <directory name="deprecated"/>
     </projectFiles>
 
     <issueHandlers>
@@ -24,7 +23,7 @@
         <DeprecatedInterface errorLevel="suppress"/>
     </issueHandlers>
 
-    <plugins>
-        <pluginClass class="Psalm\LaravelPlugin\Plugin" />
-    </plugins>
+    <stubs>
+        <file name="vendor/php-stubs/wordpress-stubs/wordpress-stubs.php" />
+    </stubs>
 </psalm>
