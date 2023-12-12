@@ -1,5 +1,14 @@
 # Change Log
 
+## [5.2.0](https://github.com/auth0/wp-auth0/tree/5.1.0) (2023-12-11)
+
+### Added
+
+- feat(SDK-4734): Implement support for Back-Channel Logout  [\#882](https://github.com/auth0/wordpress/pull/882) ([evansims](https://github.com/evansims))
+
+> **Note**
+> ¹ To use this feature, an Auth0 tenant must have support for it enabled.
+
 ## [5.1.0](https://github.com/auth0/wp-auth0/tree/5.1.0) (2023-07-24)
 
 ### Added
