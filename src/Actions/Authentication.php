@@ -7,6 +7,7 @@ namespace Auth0\WordPress\Actions;
 use Auth0\SDK\Exception\StateException;
 use Auth0\SDK\Store\CookieStore;
 use Auth0\WordPress\Database;
+use Auth0\WordPress\Utilities\Sanitize;
 use Throwable;
 use WP_Error;
 use WP_User;
@@ -413,6 +414,34 @@ final class Authentication extends Base
 
         if (! $this->getPlugin()->isReady()) {
             return;
+        }
+
+        if (isset($_GET['auth0_fb'])) {
+            $incomingFallbackRequest = Sanitize::string($_GET['auth0_fb']);
+            $fallbackSecret = $this->getPlugin()->getOptionString('authentication', 'fallback_secret');
+
+            if ($incomingFallbackRequest === $fallbackSecret) {
+                return;
+            }
+
+            // Ignore invalid requests; continue as normal.
+        }
+
+        if (isset($_GET['auth0_bcl']) && isset($_POST['logout_token'])) {
+            $incomingBackchannelLogoutRequest = Sanitize::string($_GET['auth0_bcl']);
+            $backchannelLogoutSecret = $this->getPlugin()->getOptionString('authentication', 'backchannel_logout_secret');
+
+            if ($incomingBackchannelLogoutRequest === $backchannelLogoutSecret) {
+                $logoutToken = Sanitize::string($_POST['logout_token']);
+
+                try {
+                    $this->getSdk()->handleBackchannelLogout($logoutToken);
+                    exit();
+                } catch (Throwable) {
+                }
+            }
+
+            // Ignore invalid requests; continue as normal.
         }
 
         // Don't allow caching of this route
