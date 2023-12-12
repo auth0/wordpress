@@ -390,13 +390,13 @@ final class Configuration extends Base
                 ],
                 'backchannel_logout' => [
                     'title' => 'Back-Channel Logout',
-                    'description' => 'You must configure your <a href="https://auth0.com/docs/authenticate/login/logout/back-channel-logout/configure-back-channel-logout" target="_blank">Auth0 tenant</a> to enable this feature.',
+                    'description' => '<a href="https://auth0.com/docs/authenticate/login/logout/back-channel-logout" target="_blank">OIDC Back-Channel Logout</a> enables coordination of session termination via back-channel communication.',
                     'options' => [
                         'enabled' => [
                             'title' => 'Enabled',
                             'type' => 'boolean',
                             'enabled' => 'isPluginReady',
-                            'description' => 'Enable this if your site is <b>exclusively</b> served over HTTPS.',
+                            'description' => 'You must also configure your <a href="https://auth0.com/docs/authenticate/login/logout/back-channel-logout/configure-back-channel-logout" target="_blank">Auth0 tenant</a> to fully enable this feature.',
                             'select' => [
                                 'false' => 'Disabled',
                                 'true' => 'Enabled',
