@@ -6,12 +6,15 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 
 :rocket: [Getting Started](#getting-started) - :computer: [SDK Usage](#sdk-usage) - 📆 [Support Policy](#support-policy) - :speech_balloon: [Feedback](#feedback)
 
-## Plugin Overview
+## Overview
 
 The Auth0 WordPress plugin replaces the standard WordPress login flow with a new authentication process using Auth0's Universal Login experience. This enables you to secure your WordPress site with Auth0's advanced features, such as MFA, SSO, Passwordless, PassKey, and so on.
 
 > [!IMPORTANT]  
-> This plugin is **NOT** a SDK (Software Development Kit.) We do not provide support for customizing the plugin's behavior or integrating it into WordPress in any way beyond what is expressly explained here. If you are looking for an SDK, please build a custom solution from the [Auth0-PHP SDK](https://github.com/auth0/auth0-php) instead.
+> This plugin is **NOT** a SDK (Software Development Kit.) It's APIs are internal and not intended for developers to extend directly. We do not support altering the plugin's behavior or integrating it in any way beyond what is outlined in this README. If you're looking to build a more extensive integration, please create a solution using the [Auth0-PHP SDK](https://github.com/auth0/auth0-php) instead.
+
+> [!WARNING]  
+> v4 of the plugin is no longer supported as of June 2023. We are no longer providing new features or bugfixes for that release. Please upgrade to v5 as soon as possible.
 
 ## Getting Started
 
@@ -24,9 +27,6 @@ The Auth0 WordPress plugin replaces the standard WordPress login flow with a new
 > Please review our [support policy](#support-policy) on specific PHP and WordPress versions and when they may exit support in the future.
 
 ### Installation
-
-> [!WARNING]  
-> v4 of the plugin is no longer supported as of June 2023. We are no longer providing new features or bugfixes for that release. Please upgrade to v5 as soon as possible.
 
 <!-- // Disabled while we complete this distribution configuration
 #### Release Package
@@ -54,9 +54,11 @@ openssl dgst -verify signing.key.pub -keyform PEM -sha256 -signature RELEASE.zip
 
 #### Composer
 
-The plugin supports installation through [Composer](https://getcomposer.org/), and is [WPackagist](https://wpackagist.org/) compatible. This approach is preferred when using [Bedrock](https://roots.io/bedrock/) or [WordPress Core](https://github.com/johnpbloch/wordpress-core-installer), but will work with virtually any WordPress installation.
+The plugin supports installation through [Composer](https://getcomposer.org/), and is [WPackagist](https://wpackagist.org/) compatible. This approach is preferred when using [Bedrock](https://roots.io/bedrock/), but will work with virtually any WordPress installation.
 
-When using Composer-based WordPress configurations like Bedrock, you'll usually run this command from the root WordPress installation directory. Still, it's advisable to check the documentation the project's maintainers provided for the best guidance. This command can be run from the `wp-content/plugins` sub-directory for standard WordPress installations.
+For [Bedrock](https://roots.io/bedrock/) installations, you'll usually run this command from the root WordPress installation directory, but check the documentation the project's maintainers provide for the best guidance.
+
+For standard WordPress installations, this command can be run from the `wp-content/plugins` sub-directory.
 
 ```
 composer require symfony/http-client nyholm/psr7 auth0/wordpress:^5.0
@@ -76,7 +78,10 @@ If you are using Bedrock or another Composer-based configuration, you can try in
 <!-- // Disabled while we complete this distribution configuration
 #### WordPress Dashboard
 
-Installation from your WordPress dashboard is also supported. This approach first installs a small setup script that will verify that your host environment is compatible. Afterward, the latest plugin release will be downloaded from the GitHub repository, have its file signature verified, and ultimately installed.
+> [!CAUTION]
+> We recommend against using the WordPress Dashboard or Marketplace to install or update the plugin. Automattic does not implement reliable security measures to protect plugins from tampering, and this approach presents a supply chain risk. It is not recommended for production sites.
+
+Installation from your WordPress dashboard is supported. This approach first installs a small setup script that will verify that your host environment is compatible. Afterward, the latest plugin release will be downloaded from the GitHub repository, have its file signature verified, and ultimately installed.
 
 - Open your WordPress Dashboard.
 - Click 'Plugins", then 'Add New,' and search for 'Auth0'.

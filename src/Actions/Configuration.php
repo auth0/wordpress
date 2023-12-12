@@ -27,7 +27,7 @@ final class Configuration extends Base
                     'description' => '',
                     'options' => [
                         'enable' => [
-                            'title' => 'Manage Authentication',
+                            'title' => 'Enable Authentication',
                             'type' => 'boolean',
                             'enabled' => 'isPluginReady',
                             'description' => ['getOptionDescription', 'enable'],
@@ -39,7 +39,7 @@ final class Configuration extends Base
                     ],
                 ],
                 'accounts' => [
-                    'title' => 'WordPress Account Management',
+                    'title' => 'WordPress Users Management',
                     'description' => '',
                     'options' => [
                         'matching' => [
@@ -48,15 +48,15 @@ final class Configuration extends Base
                             'enabled' => 'isPluginReady',
                             'description' => '<b>Flexible</b> allows users to sign in using more than one connection type.<br /><b>Strict</b> is more secure, but may lead to confusion for users who forget their sign in method.',
                             'select' => [
-                                'flexible' => 'Flexible: Match Verified Email Addresses to Accounts',
-                                'strict' => 'Strict: Match Unique Connections to Accounts',
+                                'flexible' => 'Flexible: Match Verified Email Addresses to Users',
+                                'strict' => 'Strict: Match Unique Connections to Users',
                             ],
                         ],
                         'missing' => [
-                            'title' => 'Absentee Accounts',
+                            'title' => 'Missing Users',
                             'type' => 'text',
                             'enabled' => 'isPluginReady',
-                            'description' => 'What to do after a successful sign in, but there is no matching WordPress account.<br />For Database Connections, the "Disable Sign Ups" setting will be honored prior to this.',
+                            'description' => 'What to do after a successful sign in, but there is no matching WordPress account.<br />For Database Connections, the "Disable Sign Ups" setting takes priority over this option.',
                             'select' => [
                                 'reject' => 'Deny access',
                                 'create' => 'Create account',
@@ -66,7 +66,7 @@ final class Configuration extends Base
                             'title' => 'Default Role',
                             'type' => 'text',
                             'enabled' => 'isPluginReady',
-                            'description' => 'The role to assign new WordPress accounts created by the plugin.',
+                            'description' => 'The role to assign new WordPress users created by the plugin.',
                             'select' => 'getRoleOptions',
                         ],
                         'passwordless' => [
@@ -218,6 +218,12 @@ final class Configuration extends Base
                                 'true' => 'Enabled',
                                 'false' => 'Disabled',
                             ],
+                        ],
+                        'fallback_secret' => [
+                            'title' => 'Fallback Secret',
+                            'type' => 'password',
+                            'enabled' => 'isPluginReady',
+                            'description' => ['getOptionDescription', 'fallback_secret'],
                         ],
                     ],
                 ],
@@ -382,9 +388,59 @@ final class Configuration extends Base
                         ],
                     ],
                 ],
+                'backchannel_logout' => [
+                    'title' => 'Back-Channel Logout',
+                    'description' => 'You must configure your <a href="https://auth0.com/docs/authenticate/login/logout/back-channel-logout/configure-back-channel-logout" target="_blank">Auth0 tenant</a> to enable this feature.',
+                    'options' => [
+                        'enabled' => [
+                            'title' => 'Enabled',
+                            'type' => 'boolean',
+                            'enabled' => 'isPluginReady',
+                            'description' => 'Enable this if your site is <b>exclusively</b> served over HTTPS.',
+                            'select' => [
+                                'false' => 'Disabled',
+                                'true' => 'Enabled',
+                            ],
+                        ],
+                        'ttl' => [
+                            'title' => 'Logout Expiration',
+                            'type' => 'int',
+                            'enabled' => 'isPluginReady',
+                            'description' => 'How long before unclaimed Back-Channel Logout tokens expire.',
+                            'select' => [
+                                0 => 'Default (1 month)',
+                                1800 => '30 minutes',
+                                3600 => '1 hour',
+                                3600 * 6 => '6 hours',
+                                3600 * 12 => '12 hours',
+                                3600 * 24 => '1 day',
+                                86400 * 2 => '2 days',
+                                86400 * 4 => '4 days',
+                                86400 * 7 => '1 week',
+                                86400 * 14 => '2 weeks',
+                                86400 * 30 => '1 month',
+                            ],
+                        ],
+                        'secret' => [
+                            'title' => 'Secret',
+                            'type' => 'password',
+                            'enabled' => 'isPluginReady',
+                            'description' => ['getOptionDescription', 'backchannel_logout_secret'],
+                        ],
+                    ],
+                ],
             ],
         ],
+        self::CONST_PAGE_TOOLS => [
+            'title' => 'Auth0 — Tools',
+            'sections' => []
+        ],
     ];
+
+    /**
+     * @var string
+     */
+    public const CONST_PAGE_TOOLS = 'auth0_tools';
 
     /**
      * @var string
@@ -415,6 +471,7 @@ final class Configuration extends Base
         'auth0_ui_configuration' => 'renderConfiguration',
         'auth0_ui_sync' => 'renderSyncConfiguration',
         'auth0_ui_advanced' => 'renderAdvancedConfiguration',
+        'auth0_ui_tools' => 'renderToolsConfiguration',
     ];
 
     public function onMenu(): void
@@ -462,6 +519,18 @@ final class Configuration extends Base
                 do_action('auth0_ui_advanced');
             },
             position: $this->getPriority('MENU_POSITION_ADVANCED', 2, 'AUTH0_ADMIN'),
+        );
+
+        add_submenu_page(
+            parent_slug: 'auth0',
+            page_title: 'Auth0 — Tools',
+            menu_title: 'Tools',
+            capability: 'manage_options',
+            menu_slug: 'auth0_tools',
+            callback: static function (): void {
+                do_action('auth0_ui_tools');
+            },
+            position: $this->getPriority('MENU_POSITION_ADVANCED', 3, 'AUTH0_ADMIN'),
         );
     }
 
@@ -651,7 +720,14 @@ final class Configuration extends Base
         $sanitized = [
             'pair_sessions' => Sanitize::integer((string) ($input['pair_sessions'] ?? 0), 2, 0) ?? 0,
             'allow_fallback' => Sanitize::boolean((string) ($input['allow_fallback'] ?? '')) ?? '',
+            'fallback_secret' => Sanitize::string((string) ($input['fallback_secret'] ?? '')) ?? '',
         ];
+
+        if ($sanitized['fallback_secret'] === '') {
+            $sanitized['fallback_secret'] = bin2hex(random_bytes(64));
+        }
+
+        set_site_transient('auth0_updated_fallback', true, 60);
 
         return array_filter($sanitized, static fn ($value): bool => '' !== $value);
     }
@@ -905,6 +981,43 @@ final class Configuration extends Base
         return array_filter($sanitized, static fn ($value): bool => '' !== $value);
     }
 
+    /**
+     * @param null|array<null|bool|int|string> $input
+     *
+     * @return null|array<mixed>
+     */
+    public function onUpdateBackchannelLogout(?array $input): ?array
+    {
+        if (null === $input) {
+            return null;
+        }
+
+        $sanitized = [
+            'enabled' => Sanitize::string((string) ($input['secret'] ?? '')) ?? '',
+            'secret' => Sanitize::string((string) ($input['secret'] ?? '')) ?? '',
+            'ttl' => Sanitize::integer((string) ($input['ttl'] ?? 0), 2_592_000, 0) ?? 0,
+        ];
+
+        if ($sanitized['secret'] === '') {
+            $sanitized['secret'] = bin2hex(random_bytes(64));
+        }
+
+        set_site_transient('auth0_updated_backchannel', true, 60);
+
+        return array_filter($sanitized, static fn ($value): bool => '' !== $value);
+    }
+
+    public function renderToolsConfiguration(): void
+    {
+        Render::pageBegin(self::PAGES[self::CONST_PAGE_TOOLS]['title']);
+
+        // settings_fields(self::CONST_PAGE_ADVANCED);
+        // do_settings_sections(self::CONST_PAGE_ADVANCED);
+        // submit_button();
+
+        Render::pageEnd();
+    }
+
     public function renderAdvancedConfiguration(): void
     {
         Render::pageBegin(self::PAGES[self::CONST_PAGE_ADVANCED]['title']);
@@ -942,6 +1055,50 @@ final class Configuration extends Base
     {
         if ('cookie_domain' === $context) {
             return sprintf('Must include origin domain of <code>`%s`</code>', Sanitize::domain(site_url()) ?? '');
+        }
+
+        if ('fallback_secret' === $context) {
+            if ($this->isPluginReady()) {
+                $fallbackAllowed = $this->getPlugin()->getOption('authentication', 'allow_fallback', 0);
+
+                if (1 === $fallbackAllowed) {
+                    $updated = get_site_transient('auth0_updated_fallback');
+
+                    if (! $updated) {
+                        return 'Save your changes to view your fallback URI. Erase the secret to generate a new one.';
+                    } else {
+                        delete_site_transient('auth0_updated_fallback');
+                    }
+
+                    $fallbackSecret = $this->getPlugin()->getOption('authentication', 'fallback_secret');
+
+                    if (null !== $fallbackSecret) {
+                        return sprintf('Your fallback URI is <code>`%s?auth0_fb=%s`</code>', wp_login_url(), $fallbackSecret);
+                    }
+                }
+            }
+        }
+
+        if ('backchannel_logout_secret' === $context) {
+            if ($this->isPluginReady()) {
+                $backchannelLogoutEnabled = $this->getPlugin()->getOption('backchannel_logout', 'enabled', 0);
+
+                if (0 !== $backchannelLogoutEnabled) {
+                    $updated = get_site_transient('auth0_updated_backchannel');
+
+                    if (! $updated) {
+                        return 'Save your changes to view your Back-Channel Logout URI. Erase the secret to generate a new one.';
+                    } else {
+                        delete_site_transient('auth0_updated_backchannel');
+                    }
+
+                    $backchannelLogoutSecret = $this->getPlugin()->getOption('backchannel_logout', 'secret');
+
+                    if (null !== $backchannelLogoutSecret) {
+                        return sprintf('Your Back-Channel Logout URI is <code>`%s?auth0_bcl=%s`</code>', wp_login_url(), $backchannelLogoutSecret);
+                    }
+                }
+            }
         }
 
         if ('enable' === $context) {

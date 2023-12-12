@@ -45,6 +45,22 @@ register_activation_hook(
                 'secret' => bin2hex(random_bytes(64))
             ]);
         }
+
+        $backchannelLogout = get_option('auth0_backchannel_logout', []);
+
+        if (! is_array($backchannelLogout) || [] === $backchannelLogout || ! isset($backchannelLogout['secret'])) {
+            add_option('auth0_backchannel_logout', [
+                'secret' => bin2hex(random_bytes(64))
+            ]);
+        }
+
+        $authentication = get_option('auth0_authentication', []);
+
+        if (! is_array($authentication) || [] === $authentication || ! isset($authentication['fallback_secret'])) {
+            add_option('auth0_authentication', [
+                'fallback_secret' => bin2hex(random_bytes(64))
+            ]);
+        }
     }
 );
 
