@@ -6,9 +6,9 @@
  * Description:       Supercharge your WordPress website with Auth0. Improve account security, add support for multifactor, enable social, passwordless and enterprise connections, and much more.
  * Version:           5.1.0
  * Requires at least: 6.0
- * Tested up to:      6.3
+ * Tested up to:      6.4
  * Stable tag:        5.1.0
- * Requires PHP:      8.0
+ * Requires PHP:      8.1
  * Author:            Auth0
  * Author URI:        https://auth0.com
  * License:           MIT
@@ -43,6 +43,22 @@ register_activation_hook(
         if (! is_array($cookies) || [] === $cookies || ! isset($cookies['secret'])) {
             add_option('auth0_cookies', [
                 'secret' => bin2hex(random_bytes(64))
+            ]);
+        }
+
+        $backchannelLogout = get_option('auth0_backchannel_logout', []);
+
+        if (! is_array($backchannelLogout) || [] === $backchannelLogout || ! isset($backchannelLogout['secret'])) {
+            add_option('auth0_backchannel_logout', [
+                'secret' => bin2hex(random_bytes(64))
+            ]);
+        }
+
+        $authentication = get_option('auth0_authentication', []);
+
+        if (! is_array($authentication) || [] === $authentication || ! isset($authentication['fallback_secret'])) {
+            add_option('auth0_authentication', [
+                'fallback_secret' => bin2hex(random_bytes(64))
             ]);
         }
     }

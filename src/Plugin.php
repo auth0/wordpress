@@ -10,6 +10,7 @@ use Auth0\WordPress\Actions\Authentication as AuthenticationActions;
 use Auth0\WordPress\Actions\Base as Actions;
 use Auth0\WordPress\Actions\Configuration as ConfigurationActions;
 use Auth0\WordPress\Actions\Sync as SyncActions;
+use Auth0\WordPress\Actions\Tools as ToolsActions;
 use Auth0\WordPress\Cache\WpObjectCachePool;
 use Auth0\WordPress\Filters\Authentication as AuthenticationFilters;
 use Auth0\WordPress\Filters\Base as Filters;
@@ -20,7 +21,7 @@ final class Plugin
     /**
      * @var array<class-string<Actions>>
      */
-    private const ACTIONS = [AuthenticationActions::class, ConfigurationActions::class, SyncActions::class];
+    private const ACTIONS = [AuthenticationActions::class, ConfigurationActions::class, SyncActions::class, ToolsActions::class];
 
     /**
      * @var array<class-string<Filters>>
@@ -309,6 +310,7 @@ final class Plugin
         if ($caching !== 'disable') {
             $wpObjectCachePool = new WpObjectCachePool();
             $sdkConfiguration->setTokenCache($wpObjectCachePool);
+            $sdkConfiguration->setBackchannelLogoutCache($wpObjectCachePool);
         }
 
         return $sdkConfiguration;
