@@ -202,17 +202,6 @@ function wp_auth0_plugin_action_links( $links ) {
 		)
 	);
 
-	if ( ! wp_auth0_is_ready() ) {
-		array_unshift(
-			$links,
-			sprintf(
-				'<a href="%s">%s</a>',
-				admin_url( 'admin.php?page=wpa0-setup' ),
-				__( 'Setup Wizard', 'wp-auth0' )
-			)
-		);
-	}
-
 	return $links;
 }
 add_filter( 'plugin_action_links_' . WPA0_PLUGIN_BASENAME, 'wp_auth0_plugin_action_links' );
@@ -271,62 +260,6 @@ function wp_auth0_filter_get_avatar( $avatar, $id_or_email, $size, $default, $al
 	);
 }
 add_filter( 'get_avatar', 'wp_auth0_filter_get_avatar', 1, 5 );
-
-function wp_auth0_setup_error_admin_notices() {
-	// Not processing form data, just using a redirect parameter if present.
-	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
-
-	if ( empty( $_GET['error'] ) ) {
-		return false;
-	}
-
-	$initial_setup = new WP_Auth0_InitialSetup( WP_Auth0_Options::Instance() );
-
-	switch ( $_GET['error'] ) {
-
-		case 'cant_create_client':
-			$initial_setup->cant_create_client_message();
-			break;
-
-		case 'cant_create_client_grant':
-			$initial_setup->cant_create_client_grant_message();
-			break;
-
-		case 'cant_exchange_token':
-			$initial_setup->cant_exchange_token_message();
-			break;
-
-		case 'rejected':
-			$initial_setup->rejected_message();
-			break;
-
-		case 'access_denied':
-			$initial_setup->access_denied_message();
-			break;
-
-		default:
-			// Output is sanitized in the notify_error method.
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$initial_setup->notify_error( wp_unslash( $_GET['error'] ) );
-	}
-
-	return true;
-
-	// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
-}
-add_action( 'admin_notices', 'wp_auth0_setup_error_admin_notices' );
-
-function wp_auth0_setup_callback_step1() {
-	$setup_conn = new WP_Auth0_InitialSetup_ConnectionProfile( WP_Auth0_Options::Instance() );
-	$setup_conn->callback();
-}
-add_action( 'admin_action_wpauth0_callback_step1', 'wp_auth0_setup_callback_step1' );
-
-function wp_auth0_setup_callback_step3_social() {
-	$setup_admin = new WP_Auth0_InitialSetup_AdminUser( WP_Auth0_Options::Instance() );
-	$setup_admin->callback();
-}
-add_action( 'admin_action_wpauth0_callback_step3_social', 'wp_auth0_setup_callback_step3_social' );
 
 /**
  * Function to call the method that clears out the error log.
@@ -405,36 +338,6 @@ function wp_auth0_settings_admin_action_error() {
 }
 add_action( 'admin_notices', 'wp_auth0_settings_admin_action_error' );
 
-function wp_auth0_initial_setup_init() {
-	// Not processing form data, just using a redirect parameter if present.
-	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
-
-	// Null coalescing validates input variable.
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-	if ( 'wpa0-setup' !== ( $_REQUEST['page'] ?? null ) || ! isset( $_REQUEST['callback'] ) ) {
-		return false;
-	}
-
-	// Null coalescing validates input variable.
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-	if ( 'rejected' === ( $_REQUEST['error'] ?? null ) ) {
-		wp_safe_redirect( admin_url( 'admin.php?page=wpa0-setup&error=rejected' ) );
-		exit;
-	}
-
-	// Null coalescing validates input variable.
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-	if ( 'access_denied' === ( $_REQUEST['error'] ?? null ) ) {
-		wp_safe_redirect( admin_url( 'admin.php?page=wpa0-setup&error=access_denied' ) );
-		exit;
-	}
-
-	(new WP_Auth0_InitialSetup_Consent( WP_Auth0_Options::Instance() ))->callback();
-
-	// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification
-}
-add_action( 'init', 'wp_auth0_initial_setup_init', 1 );
-
 function wp_auth0_profile_change_email( $wp_user_id, $old_user_data ) {
 	$options              = WP_Auth0_Options::Instance();
 	$api_client_creds     = new WP_Auth0_Api_Client_Credentials( $options );
@@ -482,19 +385,14 @@ function wp_auth0_init_admin_menu() {
 	}
 
 	$options       = WP_Auth0_Options::Instance();
-	$initial_setup = new WP_Auth0_InitialSetup( $options );
 	$routes        = new WP_Auth0_Routes( $options );
 	$admin         = new WP_Auth0_Admin( $options, $routes );
-
-	$setup_slug  = 'wpa0-setup';
-	$setup_title = __( 'Setup Wizard', 'wp-auth0' );
-	$setup_func  = [ $initial_setup, 'render_setup_page' ];
 
 	$settings_slug  = 'wpa0';
 	$settings_title = __( 'Settings', 'wp-auth0' );
 	$settings_func  = [ $admin, 'render_settings_page' ];
 
-	$menu_parent = ! wp_auth0_is_ready() ? $setup_slug : $settings_slug;
+	$menu_parent = $settings_slug;
 	$cap         = 'manage_options';
 
 	add_menu_page(
@@ -502,13 +400,12 @@ function wp_auth0_init_admin_menu() {
 		'Auth0',
 		$cap,
 		$menu_parent,
-		! wp_auth0_is_ready() ? $setup_func : $settings_func,
+		$settings_func,
 		WPA0_PLUGIN_IMG_URL . 'a0icon.png',
 		86
 	);
 
 	if ( ! wp_auth0_is_ready() ) {
-		add_submenu_page( $menu_parent, $setup_title, $setup_title, $cap, $setup_slug, $setup_func );
 		add_submenu_page( $menu_parent, $settings_title, $settings_title, $cap, $settings_slug, $settings_func );
 	} else {
 		add_submenu_page( $menu_parent, $settings_title, $settings_title, $cap, $settings_slug, $settings_func );
@@ -520,7 +417,6 @@ function wp_auth0_init_admin_menu() {
 			'wpa0-help',
 			'__return_false'
 		);
-		add_submenu_page( null, $setup_title, $setup_title, $cap, 'wpa0-setup', $setup_func );
 	}
 
 	add_submenu_page(
@@ -556,14 +452,11 @@ function wp_auth0_create_account_message() {
 	}
 
 	printf(
-		'<div class="update-nag">%s<strong><a href="%s">%s</a></strong>%s
+		'<div class="update-nag">%s
 			<strong><a href="https://auth0.com/docs/cms/wordpress/installation#manual-setup" target="_blank">
 			%s</a></strong>.</div>',
-		__( 'Login by Auth0 is not yet configured. Please use the ', 'wp-auth0' ),
-		admin_url( 'admin.php?page=wpa0-setup' ),
-		__( 'Setup Wizard', 'wp-auth0' ),
-		__( ' or follow the ', 'wp-auth0' ),
-		__( 'Manual setup instructions', 'wp-auth0' )
+		__( 'Plugin is not yet configured. Please follow the ', 'wp-auth0' ),
+		__( 'setup instructions', 'wp-auth0' )
 	);
 	return true;
 

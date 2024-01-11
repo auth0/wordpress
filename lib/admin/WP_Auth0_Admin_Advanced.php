@@ -109,12 +109,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 				'function' => 'render_valid_proxy_ip',
 			],
 			[
-				'name'     => __( 'Auth0 Server Domain', 'wp-auth0' ),
-				'opt'      => 'auth0_server_domain',
-				'id'       => 'wpa0_auth0_server_domain',
-				'function' => 'render_auth0_server_domain',
-			],
-			[
 				'name'     => __( 'Cookie Domain', 'wp-auth0' ),
 				'opt'      => 'cookie_domain',
 				'id'       => 'wpa0_cookie_domain',
@@ -373,22 +367,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 	}
 
 	/**
-	 * Render form field and description for the `auth0_server_domain` option.
-	 * IMPORTANT: Internal callback use only, do not call this function directly!
-	 *
-	 * @param array $args - callback args passed in from add_settings_field().
-	 *
-	 * @see WP_Auth0_Admin_Generic::init_option_section()
-	 * @see add_settings_field()
-	 */
-	public function render_auth0_server_domain( $args = [] ) {
-		$this->render_text_field( $args['label_for'], $args['opt_name'] );
-		$this->render_field_description(
-			__( 'The Auth0 domain used by the setup wizard to fetch your account information', 'wp-auth0' )
-		);
-	}
-
-	/**
 	 * Validate all settings without a specific validation method.
 	 *
 	 * @param array $input - New option values to validate.
@@ -407,7 +385,6 @@ class WP_Auth0_Admin_Advanced extends WP_Auth0_Admin_Generic {
 		$input['migration_ips_filter'] = $this->sanitize_switch_val( $input['migration_ips_filter'] ?? null );
 		// `migration_ips` is sanitized in $this->migration_ips_validation() below.
 		$input['valid_proxy_ip']        = ( isset( $input['valid_proxy_ip'] ) ? $input['valid_proxy_ip'] : null );
-		$input['auth0_server_domain']   = $this->sanitize_text_val( $input['auth0_server_domain'] ?? null );
 		$input['cookie_domain']   = $this->sanitize_text_val( $input['cookie_domain'] ?? null );
 		$input['disable_logging'] = $this->sanitize_switch_val( $input['disable_logging'] ?? null );
 		return $input;
