@@ -1,5 +1,17 @@
 # Change Log
 
+## [4.6.0](https://github.com/auth0/wp-auth0/tree/4.6.0) (2024-01-11)
+
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/4.5.0...4.6.0)
+
+**Added**
+
+- Add support for Wordpress 'reauth' [\#877](https://github.com/auth0/wordpress/pull/877) ([PeterGFernandez](https://github.com/PeterGFernandez))
+
+**Changed**
+- PHP 8.0+ compatibility improvements [\#878](https://github.com/auth0/wordpress/pull/878) ([PeterGFernandez](https://github.com/PeterGFernandez))
+- Remove Initial Setup Wizard [\#886](https://github.com/auth0/wordpress/pull/886) ([evansims](https://github.com/evansims))
+
 ## [4.5.0](https://github.com/auth0/wp-auth0/tree/4.5.0) (2023-01-29)
 
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/4.4.0...4.5.0)
