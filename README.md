@@ -45,7 +45,7 @@ We recommend testing on a staging/development site first using a separate Auth0 
 Using Organizations, you can:
 
 - Represent teams, business customers, partner companies, or any logical grouping of users that should have different ways of accessing your applications, as organizations.
-- Manage their membership in a variety of ways, including user invitation.
+- Manage their membership in a variety of ways, including user invitations.
 - Configure branded, federated login flows for each organization.
 - Implement role-based access control, such that users can have different roles when authenticating in the context of different organizations.
 - Build administration capabilities into your products, using Organizations APIs, so that those businesses can manage their own organizations.
@@ -66,13 +66,13 @@ Adding Organization support to your WordPress installation is simple. Configure 
 
 If you have existing users of your WordPress blog and Auth0, you should add those users to your new Organization using the Auth0 dashboard. Ensure 'membership on authentication' is enabled for the Organization's Connection to automatically add them upon signing in.
 
-With an organization configured, users logging into your WordPress installation will see your Universal Login Page customized for the Organization. You can further customize it's appearance from the Auth0 dashboard.
+With an organization configured, users logging into your WordPress installation will see your Universal Login Page customized for the Organization. You can further customize its appearance from the Auth0 dashboard.
 
-Organizations also support invitations. To use this feature, navigate to the Invitations tab for the corresponding Organization on your Auth0 dashboard and click 'invite member.' When the user clicks their invitation link, they'll be redirected to your WordPress installation, and then prompted to create their account or sign in.
+Organizations also support invitations. To use this feature, navigate to the Invitations tab for the corresponding Organization on your Auth0 dashboard and click 'invite member.' When the user clicks their invitation link, they'll be redirected to your WordPress installation and then prompted to create their account or sign in.
 
 ## Contribution
 
-We appreciate feedback and contribution to this plugin! Before you get started, please see the following:
+We appreciate your feedback and contribution to this plugin! Before you get started, please see the following:
 
 - [Auth0's general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
 - [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
@@ -94,12 +94,12 @@ Please do not report security vulnerabilities on the public GitHub issue tracker
 
 Auth0 helps you to easily:
 
-- implement authentication with multiple identity providers, including social (e.g., Google, Facebook, Microsoft, LinkedIn, GitHub, Twitter, etc), or enterprise (e.g., Windows Azure AD, Google Apps, Active Directory, ADFS, SAML, etc.)
-- log in users with username/password databases, passwordless, or multi-factor authentication
-- link multiple user accounts together
-- generate signed JSON Web Tokens to authorize your API calls and flow the user identity securely
-- access demographics and analytics detailing how, when, and where users are logging in
-- enrich user profiles from other data sources using customizable JavaScript rules
+- Implement authentication with multiple identity providers, including social (e.g., Google, Facebook, Microsoft, LinkedIn, GitHub, Twitter, etc), or enterprise (e.g., Windows Azure AD, Google Apps, Active Directory, ADFS, SAML, etc.)
+- Login users with username/password databases, passwordless, or multi-factor authentication
+- Link multiple user accounts together
+- Generate signed JSON Web Tokens to authorize your API calls and flow the user identity securely
+- Access demographics and analytics detailing how, when, and where users are logging in
+- Enrich user profiles from other data sources using customizable JavaScript rules
 
 [Why Auth0?](https://auth0.com/why-auth0)
 

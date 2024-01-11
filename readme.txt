@@ -1,7 +1,7 @@
 === Login by Auth0 ===
 Tags: authentication, security, multi-factor, single sign-on, social, passwordless, mfa, 2fa, sso, oauth2, openid, saml
-Tested up to: 6.1.1
-Requires at least: 5.4.2
+Tested up to: 6.4.2
+Requires at least: 6.4.2
 Requires PHP: 7.4
 License: MIT
 License URI: https://github.com/auth0/wp-auth0/blob/4.x/LICENSE
@@ -16,7 +16,7 @@ This plugin replaces standard WordPress login forms with one powered by [Auth0](
 
 - **Universal authentication**
     - Over 30 social login providers
-    - Enterprise connections (ADFS, Active directory / LDAP, SAML, Office 365, Google Apps and more)
+    - Enterprise connections (ADFS, Active Directory / LDAP, SAML, Office 365, Google Apps and more)
     - Connect your own database
     - Passwordless connections (using email or SMS)
 - **Ultra secure**
@@ -40,15 +40,15 @@ Please see our [How It Works page](https://auth0.com/docs/cms/wordpress/how-does
 
 = Migrating Existing Users =
 
-Auth0 allows multiple authentication providers. You can have social providers like Facebook, Twitter, Google+, and more, a database of users and passwords (just like WordPress but hosted in Auth0), or you can use an Enterprise directory like Active Directory, LDAP, Office365, Google Apps, or SAML. All those authentication providers might give you an email and a flag indicating whether the email was verified or not. We use that email (only if its verified) to associate a previous **existing** user with the one coming from Auth0.
+Auth0 allows multiple authentication providers. You can have social providers like Facebook, Twitter, Google+, and more, a database of users and passwords (just like WordPress but hosted in Auth0), or you can use an Enterprise directory like Active Directory, LDAP, Office365, Google Apps, or SAML. All those authentication providers might give you an email and a flag indicating whether the email was verified or not. We use that email (only if it is verified) to associate a previous **existing** user with the one coming from Auth0.
 
 If the email was not verified and there is an account with that email in WordPress, the user will be presented with a page saying that the email was not verified and a link to "Re-send the verification email." For either scenario, you can choose whether it is mandatory that the user has a verified email or not in the plugin settings.
 
-**Please note:** In order for a user to login using Auth0, they will need to sign up via the Auth0 login form (or have an account created for them in Auth0). Once signup is complete, their Auth0 user will be automatically associated with their WordPress user.
+**Please note:** In order for a user to log in using Auth0, they will need to sign up via the Auth0 login form (or have an account created for them in Auth0). Once signup is complete, their Auth0 user will be automatically associated with their WordPress user.
 
 = Widget =
 
-You can enable the Auth0 as a WordPress widget in order to show it in a sidebar. The widget inherits the main plugin settings but can be overridden with its own settings in the widget form. Note: this form will not display for logged-in users.
+You can enable Auth0 as a WordPress widget in order to show it in a sidebar. The widget inherits the main plugin settings but can be overridden with its own settings in the widget form. Note: this form will not display for logged-in users.
 
 = Shortcode =
 
@@ -56,15 +56,15 @@ Also, you can use the Auth0 widget as a shortcode in your editor. Just add the f
 
     [auth0]
 
-Like widgets, shortcode login forms will use the main plugins settings. It can be customized by adding the following attributes:
+Like widgets, shortcode login forms will use the settings of the plugin. It can be customized by adding the following attributes:
 
 - `icon_url` - A direct URL to an image used at the top of the login form
-- `form_title` - Text to appear at top of the login form
+- `form_title` - Text to appear at the top of the login form
 - `gravatar` - Display the user's Gravatar; set to `1` for yes
 - `redirect_to` - A direct URL to use after successful login
 - `dict` - Valid JSON to override form text ([see options here](https://github.com/auth0/lock/blob/master/src/i18n/en.js))
 - `extra_conf` - Valid JSON to override Lock configuration ([see options here](https://auth0.com/docs/libraries/lock/v11/configuration))
-- `show_as_modal` - Display a button which triggers the login form in a modal; set to `1` for yes
+- `show_as_modal` - Display a button that triggers the login form in a modal; set to `1` for yes
 - `modal_trigger_name` - Button text to display when using a modal
 
 Example:
@@ -83,15 +83,15 @@ The Auth0 login form is called Lock and it's [open source on GitHub](https://git
 
 The Auth0 plugin transparently handles login information for your WordPress site and the plugins you use, so that it looks like any other login. User profile data changes in WordPress **are not** currently sent to Auth0 but changes to the Auth0 user account **are** stored in WordPress user meta (under the key `auth0_obj` prefixed with `$wpdb->prefix`).
 
-= When I install this plugin, will existing users still be able to login? =
+= When I install this plugin, will existing users still be able to log in? =
 
-Yes, either allowing the WordPress login form to be displayed or by migrating existing users. See the **Technical Notes** section above.
+Yes, either by allowing the WordPress login form to be displayed or through migrating existing users. See the **Technical Notes** section above.
 
 = What authentication providers do you support? =
 
 Please see our [complete list of supported social and enterprise authentication providers](https://auth0.com/docs/identityproviders).
 
-= How can I use Lock configuration options that are not provided in the settings page? =
+= How can I use Lock configuration options that are not provided on the settings page? =
 
 Use the "Extra Settings" field on the plugin settings' **Advanced** tab to add a JSON object with all additional configurations. For more information on what else can be configured, see the [documentation](https://auth0.com/docs/libraries/lock/v11/configuration).
 
