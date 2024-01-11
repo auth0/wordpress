@@ -5,7 +5,7 @@ Requires at least: 6.4.2
 Requires PHP: 7.4
 License: MIT
 License URI: https://github.com/auth0/wp-auth0/blob/4.x/LICENSE
-Stable tag: 4.5.0
+Stable tag: 4.6.0
 Contributors: auth0, auth0josh, evansims
 
 Login by Auth0 provides improved username/password login, Passwordless login, Social login and Single Sign On for all your sites.
