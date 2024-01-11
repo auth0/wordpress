@@ -81,9 +81,6 @@ class WP_Auth0_Routes {
 
 		$json_header = true;
 		switch ( $page ) {
-			case 'oauth2-config':
-				$output = wp_json_encode( $this->oauth2_config() );
-				break;
 			case 'migration-ws-login':
 				$output = wp_json_encode( $this->migration_ws_login() );
 				break;
@@ -256,14 +253,6 @@ class WP_Auth0_Routes {
 		}
 
 		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
-	}
-
-	protected function oauth2_config() {
-
-		return [
-			'client_name'   => get_bloginfo( 'name' ),
-			'redirect_uris' => [ WP_Auth0_InitialSetup::get_setup_redirect_uri() ],
-		];
 	}
 
 	/**

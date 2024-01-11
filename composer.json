@@ -49,7 +49,9 @@
       "composer/installers": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "pestphp/pest-plugin": true,
-      "wikimedia/composer-merge-plugin": true
+      "wikimedia/composer-merge-plugin": true,
+      "php-http/discovery": false,
+      "ergebnis/composer-normalize": true
     }
   },
   "autoload": {
