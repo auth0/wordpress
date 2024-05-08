@@ -16,6 +16,9 @@ The Auth0 WordPress plugin replaces the standard WordPress login flow with a new
 > [!WARNING]  
 > v4 of the plugin is no longer supported as of June 2023. We are no longer providing new features or bugfixes for that release. Please upgrade to v5 as soon as possible.
 
+> [!WARNING]  
+> The version of this plugin on either the [WordPress plugins page](https://wordpress.com/plugins/auth0) or found by searching for plugins from your WordPress plugins settings page `./wp-admin/plugin-install.php` is version 4.6.0 which is not compatible with newer versions of WordPress. Please follow the installation instructions below to install v5.
+
 ## Getting Started
 
 ### Requirements
@@ -62,6 +65,13 @@ For standard WordPress installations, this command can be run from the `wp-conte
 
 ```
 composer require symfony/http-client nyholm/psr7 auth0/wordpress:^5.0
+```
+
+Composer will create the directory `vendor/auth0` in the  `./wp-content/plugins/` directory. The content of directory `./wp-content/plugins/vendor/auth0/wordpress/` must be moved to a directory named `auth0` in the `./wp-content/plugins/` directory. 
+
+From the `./wp-content/plugins/` directory run.
+```
+mv -r vendor/auth0/wordpress/* auth0/
 ```
 
 <p><details>
