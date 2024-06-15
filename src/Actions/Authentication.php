@@ -495,7 +495,7 @@ final class Authentication extends Base
                 } catch (Throwable) {
                 }
 
-                wp_redirect('/');
+                $this->onLogout();
                 exit;
             }
 
