@@ -23,7 +23,7 @@ use Auth0\WordPress\Plugin;
 use Auth0\SDK\Auth0 as Sdk;
 use Auth0\SDK\Configuration\SdkConfiguration as Configuration;
 
-define('WP_AUTH0_VERSION', '5.2.1');
+define('WP_AUTH0_VERSION', '5.3.0');
 
 // Require loading through WordPress
 if (! defined('ABSPATH')) {

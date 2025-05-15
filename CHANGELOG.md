@@ -1,5 +1,11 @@
 # Change Log
 
+## [5.3.0](https://github.com/auth0/wp-auth0/tree/5.3.0) (2025-05-16)
+
+### Fixed
+
+-  Security fix: Resolve CVE-2025-47275
+
 ## [5.2.1](https://github.com/auth0/wp-auth0/tree/5.2.1) (2024-06-03)
 
 ### Fixed
