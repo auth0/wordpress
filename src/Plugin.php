@@ -112,10 +112,19 @@ final class Plugin
      */
     public function getOption(string $group, string $key, ?int $default = null, string $prefix = 'auth0_'): mixed
     {
+        // First, check site-specific options
         $options = get_option($prefix . $group, []);
 
         if (is_array($options) && isset($options[$key])) {
             return $options[$key];
+        }
+
+        // For multisite networks, check network-wide options as fallback
+        if (is_multisite()) {
+            $networkOptions = get_site_option($prefix . $group, []);
+            if (is_array($networkOptions) && isset($networkOptions[$key])) {
+                return $networkOptions[$key];
+            }
         }
 
         return $default;
@@ -156,6 +165,54 @@ final class Plugin
         }
 
         return null;
+    }
+
+    /**
+     * Get network-wide option for multisite installations.
+     *
+     * @param string $group
+     * @param string $key
+     * @param mixed  $default
+     * @param string $prefix
+     */
+    public function getNetworkOption(string $group, string $key, mixed $default = null, string $prefix = 'auth0_'): mixed
+    {
+        if (! is_multisite()) {
+            return $default;
+        }
+
+        $options = get_site_option($prefix . $group, []);
+
+        if (is_array($options) && isset($options[$key])) {
+            return $options[$key];
+        }
+
+        return $default;
+    }
+
+    /**
+     * Set network-wide option for multisite installations.
+     *
+     * @param string $group
+     * @param string $key
+     * @param mixed  $value
+     * @param string $prefix
+     */
+    public function setNetworkOption(string $group, string $key, mixed $value, string $prefix = 'auth0_'): bool
+    {
+        if (! is_multisite()) {
+            return false;
+        }
+
+        $options = get_site_option($prefix . $group, []);
+        
+        if (! is_array($options)) {
+            $options = [];
+        }
+        
+        $options[$key] = $value;
+        
+        return update_site_option($prefix . $group, $options);
     }
 
     /**

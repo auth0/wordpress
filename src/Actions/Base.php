@@ -86,6 +86,30 @@ abstract class Base
             ->isReady();
     }
 
+    /**
+     * Check if this is a multisite installation.
+     */
+    final public function isMultisite(): bool
+    {
+        return is_multisite();
+    }
+
+    /**
+     * Check if we're in the network admin area.
+     */
+    final public function isNetworkAdmin(): bool
+    {
+        return is_network_admin();
+    }
+
+    /**
+     * Check if current user can manage network options.
+     */
+    final public function canManageNetworkOptions(): bool
+    {
+        return current_user_can('manage_network_options');
+    }
+
     final public function register(): self
     {
         foreach ($this->registry as $event => $method) {

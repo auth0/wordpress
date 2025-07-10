@@ -468,7 +468,10 @@ final class Configuration extends Base
     protected array $registry = [
         'admin_init' => 'onSetup',
         'admin_menu' => 'onMenu',
+        'network_admin_menu' => 'onNetworkMenu',
+        'network_admin_edit_auth0_network_update' => 'onNetworkUpdate',
         'auth0_ui_configuration' => 'renderConfiguration',
+        'auth0_ui_network_configuration' => 'renderNetworkConfiguration',
         'auth0_ui_sync' => 'renderSyncConfiguration',
         'auth0_ui_advanced' => 'renderAdvancedConfiguration',
         'auth0_ui_tools' => 'renderToolsConfiguration',
@@ -532,6 +535,164 @@ final class Configuration extends Base
             },
             position: $this->getPriority('MENU_POSITION_ADVANCED', 3, 'AUTH0_ADMIN'),
         );
+    }
+
+    /**
+     * Add network admin menu for multisite installations.
+     */
+    public function onNetworkMenu(): void
+    {
+        if (! is_multisite()) {
+            return;
+        }
+
+        add_menu_page(
+            page_title: 'Auth0 — Network Options',
+            menu_title: 'Auth0',
+            capability: 'manage_network_options',
+            menu_slug: 'auth0_network',
+            callback: static function (): void {
+                do_action('auth0_ui_network_configuration');
+            },
+            icon_url: 'dashicons-shield-alt',
+            position: $this->getPriority('MENU_POSITION', 70, 'AUTH0_ADMIN'),
+        );
+    }
+
+    /**
+     * Handle network admin settings update.
+     */
+    public function onNetworkUpdate(): void
+    {
+        if (! is_multisite() || ! current_user_can('manage_network_options')) {
+            wp_die(__('You do not have sufficient permissions to access this page.'));
+        }
+
+        if (! isset($_POST['_wpnonce']) || ! wp_verify_nonce($_POST['_wpnonce'], 'auth0_network_options')) {
+            wp_die(__('Security check failed.'));
+        }
+
+        // Process network settings
+        $this->processNetworkSettings($_POST);
+
+        // Redirect back with success message
+        wp_redirect(add_query_arg('updated', 'true', network_admin_url('admin.php?page=auth0_network')));
+        exit;
+    }
+
+    /**
+     * Process network settings from form submission.
+     */
+    private function processNetworkSettings(array $data): void
+    {
+        $plugin = $this->getPlugin();
+        
+        // Process state section (enable/disable)
+        if (isset($data['auth0_state'])) {
+            foreach ($data['auth0_state'] as $key => $value) {
+                $sanitizedValue = $key === 'enable' ? ($value === 'true' ? 'true' : 'false') : Sanitize::string((string) $value);
+                $plugin->setNetworkOption('state', $key, $sanitizedValue);
+            }
+        }
+        
+        // Process client section
+        if (isset($data['auth0_client'])) {
+            foreach ($data['auth0_client'] as $key => $value) {
+                $sanitizedValue = Sanitize::string((string) $value);
+                $plugin->setNetworkOption('client', $key, $sanitizedValue);
+            }
+        }
+        
+        // Process other sections as needed
+        foreach (['cookies', 'sessions', 'client_advanced'] as $section) {
+            if (isset($data['auth0_' . $section])) {
+                foreach ($data['auth0_' . $section] as $key => $value) {
+                    $sanitizedValue = is_string($value) ? Sanitize::string($value) : $value;
+                    $plugin->setNetworkOption($section, $key, $sanitizedValue);
+                }
+            }
+        }
+    }
+
+    /**
+     * Render network configuration page.
+     */
+    public function renderNetworkConfiguration(): void
+    {
+        if (! is_multisite() || ! current_user_can('manage_network_options')) {
+            wp_die(__('You do not have sufficient permissions to access this page.'));
+        }
+
+        $updated = isset($_GET['updated']) && $_GET['updated'] === 'true';
+        
+        echo '<div class="wrap">';
+        echo '<h1>Auth0 Network Configuration</h1>';
+        
+        if ($updated) {
+            echo '<div class="notice notice-success is-dismissible"><p>Network settings saved.</p></div>';
+        }
+        
+        echo '<p>Configure Auth0 settings for all sites in this network. Individual sites can override these settings if needed.</p>';
+        
+        echo '<form method="post" action="edit.php?action=auth0_network_update">';
+        wp_nonce_field('auth0_network_options');
+        
+        // Render basic configuration sections
+        $this->renderNetworkSections();
+        
+        submit_button('Save Network Settings');
+        echo '</form>';
+        echo '</div>';
+    }
+
+    /**
+     * Render network configuration sections.
+     */
+    private function renderNetworkSections(): void
+    {
+        $plugin = $this->getPlugin();
+        
+        // Render Enable Authentication section
+        echo '<h2>Authentication</h2>';
+        echo '<table class="form-table">';
+        echo '<tr>';
+        echo '<th scope="row">Enable Authentication</th>';
+        echo '<td>';
+        $enabled = $plugin->getNetworkOption('state', 'enable');
+        echo '<input type="checkbox" name="auth0_state[enable]" value="true"';
+        if ($enabled === 'true' || $enabled === true) {
+            echo ' checked';
+        }
+        echo ' /> Enable Auth0 authentication network-wide';
+        echo '<p class="description">This will enable Auth0 authentication for all sites in the network by default.</p>';
+        echo '</td>';
+        echo '</tr>';
+        echo '</table>';
+        
+        // Render Client Configuration section
+        echo '<h2>Client Configuration</h2>';
+        echo '<table class="form-table">';
+        
+        $clientFields = [
+            'domain' => ['title' => 'Domain', 'type' => 'text', 'description' => 'Your Auth0 domain (e.g., company.auth0.com)'],
+            'id' => ['title' => 'Client ID', 'type' => 'text', 'description' => 'Your Auth0 application Client ID'],
+            'secret' => ['title' => 'Client Secret', 'type' => 'password', 'description' => 'Your Auth0 application Client Secret'],
+        ];
+        
+        foreach ($clientFields as $key => $field) {
+            $value = $plugin->getNetworkOption('client', $key);
+            echo '<tr>';
+            echo '<th scope="row">' . $field['title'] . '</th>';
+            echo '<td>';
+            echo '<input type="' . $field['type'] . '" name="auth0_client[' . $key . ']" value="' . esc_attr($value ?? '') . '" class="regular-text" />';
+            if (!empty($field['description'])) {
+                echo '<p class="description">' . $field['description'] . '</p>';
+            }
+            echo '</td>';
+            echo '</tr>';
+        }
+        
+        echo '</table>';
     }
 
     public function onSetup(): void
