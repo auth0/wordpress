@@ -3,6 +3,7 @@
 WordPress Plugin for [Auth0](https://auth0.com) Authentication
 
 [![License](https://img.shields.io/packagist/l/auth0/auth0-php)](https://doge.mit-license.org/)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/auth0/wordpress)
 
 :rocket: [Getting Started](#getting-started) - :computer: [SDK Usage](#sdk-usage) - 📆 [Support Policy](#support-policy) - :speech_balloon: [Feedback](#feedback)
 
