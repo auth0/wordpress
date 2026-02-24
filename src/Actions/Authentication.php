@@ -579,10 +579,9 @@ final class Authentication extends Base
         if ('false' !== $this->getPlugin()->getOption('sessions', 'rolling_sessions')) {
             $store = $this->getSdk()->configuration()->getSessionStorage();
 
-            /**
-             * @var CookieStore $store
-             */
-            $store->setState(true);
+            if ($store instanceof CookieStore) {
+                $store->setState(true);
+            }
 
             wp_set_auth_cookie(get_current_user_id(), true);
         }
