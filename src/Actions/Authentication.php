@@ -579,12 +579,37 @@ final class Authentication extends Base
         if ('false' !== $this->getPlugin()->getOption('sessions', 'rolling_sessions')) {
             $store = $this->getSdk()->configuration()->getSessionStorage();
 
-            /**
-             * @var CookieStore $store
-             */
-            $store->setState(true);
+            if ($store instanceof CookieStore) {
+                $store->setState(true);
+            }
 
-            wp_set_auth_cookie(get_current_user_id(), true);
+            // Extend the existing session token's expiry and reissue the browser cookies.
+            //
+            // The naive approach — calling wp_set_auth_cookie() with no token — rotates the
+            // session token. Because nonces are cryptographically bound to the session token,
+            // any nonce generated during the current request (with the old token) becomes
+            // invalid the moment the new cookie is sent, causing REST requests to fail with
+            // rest_cookie_invalid_nonce.
+            //
+            // wp_set_auth_cookie() accepts a $token argument. Passing the existing token
+            // reissues the browser cookies with a fresh expiration without rotating the token,
+            // so nonces remain valid and the full rolling-session behaviour is preserved.
+            $userId = get_current_user_id();
+            $token  = wp_get_session_token();
+
+            if ('' !== $token) {
+                /** This filter is documented in wp-includes/pluggable.php */
+                $expiration = apply_filters('auth_cookie_expiration', 14 * DAY_IN_SECONDS, $userId, true);
+
+                // Update the server-side session record (wp_set_auth_cookie does not do this
+                // when a token is supplied).
+                \WP_Session_Tokens::get_instance($userId)->update($token, [
+                    'expiration' => time() + $expiration,
+                ]);
+
+                // Reissue the browser cookies with the same token and new expiration.
+                wp_set_auth_cookie($userId, true, '', $token);
+            }
         }
     }
 
