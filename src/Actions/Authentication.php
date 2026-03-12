@@ -601,11 +601,17 @@ final class Authentication extends Base
                 /** This filter is documented in wp-includes/pluggable.php */
                 $expiration = apply_filters('auth_cookie_expiration', 14 * DAY_IN_SECONDS, $userId, true);
 
-                // Update the server-side session record (wp_set_auth_cookie does not do this
-                // when a token is supplied).
-                \WP_Session_Tokens::get_instance($userId)->update($token, [
-                    'expiration' => time() + $expiration,
-                ]);
+                // Update the expiration date in the server-side session record
+                // (wp_set_auth_cookie does not do this when a token is supplied).
+                $manager = \WP_Session_Tokens::get_instance( $userId );
+                $session = $manager->get( $token );
+
+                if ( ! is_array( $session ) ) {
+                    return;
+                }
+
+                $session['expiration'] = time() + $expiration;
+                $manager->update( $token, $session );
 
                 // Reissue the browser cookies with the same token and new expiration.
                 wp_set_auth_cookie($userId, true, '', $token);
