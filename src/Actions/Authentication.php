@@ -101,6 +101,7 @@ final class Authentication extends Base
         if ($connections) {
             $database->deleteRow($table, ['user' => $userId, 'site' => $network, 'blog' => $blog], ['%d', '%s', '%s']);
             $cacheKey = 'auth0_account_' . hash('sha256', $connections[0] . '::' . $network . '!' . $blog);
+            delete_transient($cacheKey);
             wp_cache_delete($cacheKey);
 
             return $connections;
