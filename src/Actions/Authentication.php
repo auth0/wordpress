@@ -408,7 +408,7 @@ final class Authentication extends Base
 
                     // Create missing account record, can be missing when resuming a session
                     // or registering on auth0 for an existing WP user.
-                    if (! $match instanceof WP_User && $verified) {
+                    if (! $match instanceof WP_User && $email === $wordpress->user_email && $verified) {
                         $this->createAccountConnection($wordpress, $sub);
 
                         return;
