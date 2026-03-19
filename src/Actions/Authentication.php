@@ -70,7 +70,7 @@ final class Authentication extends Base
 
             if (null === $found) {
                 set_transient($cacheKey, $wpUser->ID, 120);
-                wp_cache_set($cacheKey, $found, 120);
+                wp_cache_set($cacheKey, $wpUser->ID, '', 120);
 
                 $database->insertRow($table, [
                     'user' => $wpUser->ID,
@@ -100,7 +100,8 @@ final class Authentication extends Base
 
         if ($connections) {
             $database->deleteRow($table, ['user' => $userId, 'site' => $network, 'blog' => $blog], ['%d', '%s', '%s']);
-            wp_cache_flush();
+            $cacheKey = 'auth0_account_' . hash('sha256', $connections[0] . '::' . $network . '!' . $blog);
+            wp_cache_delete($cacheKey);
 
             return $connections;
         }
@@ -399,7 +400,18 @@ final class Authentication extends Base
                 $sub = $session->user['sub'] ?? null;
 
                 if (null !== $sub) {
-                    $match = $this->getAccountByConnection($sub);
+                    $sub = sanitize_text_field($session->user['sub'] ?? '');
+                    $email = sanitize_text_field($session->user['email'] ?? '');
+                    $verified = $session->user['email_verified'] ?? null;
+                    $match = $this->resolveIdentity(sub: $sub, email: $email, verified: $verified);
+
+                    // Create missing account record, can be missing when resuming a session
+                    // or registering on auth0 for an existing WP user.
+                    if (! $match instanceof WP_User && $verified) {
+                        $this->createAccountConnection($wordpress, $sub);
+
+                        return;
+                    }
 
                     if (! $match instanceof WP_User || $match->ID !== $wordpress->ID) {
                         $this->getSdk()->clear();
