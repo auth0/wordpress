@@ -59,7 +59,10 @@ final class Authentication extends Base
         $found = false;
         wp_cache_get($cacheKey, '', false, $found);
 
-        if (! $found && false === get_transient($cacheKey)) {
+        if (! $found || false === get_transient($cacheKey)) {
+            set_transient($cacheKey, $wpUser->ID, 120);
+            wp_cache_set($cacheKey, $wpUser->ID, '', 120);
+        
             $database = $this->getPlugin()->database();
             $table = $database->getTableName(Database::CONST_TABLE_ACCOUNTS);
             $found = null;
@@ -69,9 +72,6 @@ final class Authentication extends Base
             $found = $database->selectRow('*', $table, 'WHERE `user` = %d AND `site` = %d AND `blog` = %d AND `auth0` = "%s" LIMIT 1', [$wpUser->ID, $network, $blog, $connection]);
 
             if (null === $found) {
-                set_transient($cacheKey, $wpUser->ID, 120);
-                wp_cache_set($cacheKey, $wpUser->ID, '', 120);
-
                 $database->insertRow($table, [
                     'user' => $wpUser->ID,
                     'site' => $network,
@@ -100,9 +100,11 @@ final class Authentication extends Base
 
         if ($connections) {
             $database->deleteRow($table, ['user' => $userId, 'site' => $network, 'blog' => $blog], ['%d', '%s', '%s']);
-            $cacheKey = 'auth0_account_' . hash('sha256', $connections[0] . '::' . $network . '!' . $blog);
-            delete_transient($cacheKey);
-            wp_cache_delete($cacheKey);
+            foreach ($connections as $connection) {
+                $cacheKey = 'auth0_account_' . hash('sha256', $connection . '::' . $network . '!' . $blog);
+                delete_transient($cacheKey);
+                wp_cache_delete($cacheKey);
+            }
 
             return $connections;
         }
