@@ -19,3 +19,6 @@ pest.log
 private-signing-key.pem
 build.zip
 build.zip.sig
+
+# AI tools
+.claude
