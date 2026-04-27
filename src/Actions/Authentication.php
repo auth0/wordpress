@@ -441,14 +441,20 @@ final class Authentication extends Base
         }
 
         if (isset($_GET['auth0_fb'])) {
-            $incomingFallbackRequest = Sanitize::string($_GET['auth0_fb']);
-            $fallbackSecret = $this->getPlugin()->getOptionString('authentication', 'fallback_secret');
+            $fallbackAllowed = $this->getPlugin()->getOption('authentication', 'allow_fallback');
 
-            if ($incomingFallbackRequest === $fallbackSecret) {
-                return;
+            if ('true' === $fallbackAllowed) {
+                $incomingFallbackRequest = Sanitize::string($_GET['auth0_fb']);
+                $fallbackSecret = $this->getPlugin()->getOptionString('authentication', 'fallback_secret');
+
+                if (null !== $incomingFallbackRequest
+                    && null !== $fallbackSecret
+                    && hash_equals($fallbackSecret, $incomingFallbackRequest)) {
+                    return;
+                }
             }
 
-            // Ignore invalid requests; continue as normal.
+            // Ignore invalid or disallowed requests; continue as normal.
         }
 
         if (isset($_GET['auth0_bcl'], $_POST['logout_token'])) {
