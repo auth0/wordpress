@@ -723,7 +723,7 @@ final class Configuration extends Base
             'fallback_secret' => Sanitize::string((string) ($input['fallback_secret'] ?? '')) ?? '',
         ];
 
-        if ('' === $sanitized['fallback_secret']) {
+        if ('' === $sanitized['fallback_secret'] || 'false' === ($sanitized['allow_fallback'] ?? '')) {
             $sanitized['fallback_secret'] = bin2hex(random_bytes(64));
         }
 
