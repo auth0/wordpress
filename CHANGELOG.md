@@ -1,5 +1,11 @@
 # Change Log
 
+## [5.6.1](https://github.com/auth0/wp-auth0/tree/5.6.1) (2026-05-05)
+
+### Fixed
+
+-   fix: Enforce allow_fallback setting during authentication ([kishore7snehil](https://github.com/kishore7snehil))
+
 ## [5.6.0](https://github.com/auth0/wp-auth0/tree/5.6.0) (2026-04-01)
 
 ### Fixed
