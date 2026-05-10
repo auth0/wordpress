@@ -6,6 +6,7 @@ namespace Auth0\WordPress;
 
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Store\SessionStore;
 use Auth0\WordPress\Actions\{Authentication as AuthenticationActions, Base as Actions, Configuration as ConfigurationActions, Sync as SyncActions, Tools as ToolsActions, Updates as UpdatesActions};
 use Auth0\WordPress\Cache\WpObjectCachePool;
 use Auth0\WordPress\Filters\{Authentication as AuthenticationFilters, Base as Filters};
@@ -317,6 +318,10 @@ final class Plugin
                 cookieSameSite: $this->getOptionString('cookies', 'samesite'),
                 redirectUri: get_site_url(null, 'wp-login.php'),
             );
+        }
+
+        if ('sessions' === $this->getOptionString('sessions', 'method')) {
+            $sdkConfiguration->setSessionStorage(new SessionStore($sdkConfiguration, $sdkConfiguration->getSessionStorageId()));
         }
 
         if ('disable' !== $caching) {
