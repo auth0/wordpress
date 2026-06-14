@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Actions;
 
-use Auth0\SDK\Utility\HttpResponse;
+use Auth0\SDK\API\Management\Exceptions\Auth0ApiException;
+use Auth0\SDK\API\Management\Tickets\Requests\{ChangePasswordTicketRequestContent, VerifyEmailTicketRequestContent};
+use Auth0\SDK\API\Management\Users\Requests\{CreateUserRequestContent, ListUsersByEmailRequestParameters, UpdateUserRequestContent};
 use Auth0\WordPress\Database;
-use Psr\Http\Message\ResponseInterface;
+use JsonSerializable;
+use Throwable;
 use WP_User;
 
 use function is_array;
@@ -85,27 +88,30 @@ final class Sync extends Base
             $user = get_user_by('ID', $user);
 
             if ($user) {
-                $exists = $this->getResults($this->getSdk()->management()->usersByEmail()->get($user->user_email));
+                $byEmail = $this->getManagement()->users->listUsersByEmail(new ListUsersByEmailRequestParameters([
+                    'email' => $user->user_email,
+                ]));
 
-                if (! is_array($exists) || [] === $exists) {
+                if (! is_array($byEmail) || [] === $byEmail) {
                     $dbConnectionName = $this->getDatabaseName($dbConnection);
 
-                    $response = $this->getSdk()->management()->users()->create($dbConnectionName, [
+                    $created = $this->getManagement()->users->create(new CreateUserRequestContent([
+                        'connection' => $dbConnectionName,
+                        'email' => $user->user_email,
                         'name' => $user->display_name,
                         'nickname' => $user->nickname,
-                        'given_name' => $user->user_firstname,
-                        'family_name' => $user->user_lastname,
-                        'email' => $user->user_email,
+                        'givenName' => $user->user_firstname,
+                        'familyName' => $user->user_lastname,
                         'password' => wp_generate_password(random_int(12, 123), true, true),
-                    ]);
+                    ]));
 
-                    $response = $this->getResults($response, 201);
+                    $response = $this->results($created);
 
-                    if (null !== $response) {
+                    if (null !== $response && isset($response['user_id'])) {
                         // Trigger a password change email to let them set their password
-                        $this->getSdk()->management()->tickets()->createPasswordChange([
-                            'user_id' => $response['user_id'],
-                        ]);
+                        $this->getManagement()->tickets->changePassword(new ChangePasswordTicketRequestContent([
+                            'userId' => $response['user_id'],
+                        ]));
 
                         $this->authentication()->createAccountConnection($user, $response['user_id']);
                     }
@@ -126,11 +132,11 @@ final class Sync extends Base
 
                 if (! $wpUser instanceof WP_User) {
                     // Determine if the Auth0 counterpart account still exists
-                    $api = $this->getResults($this->getSdk()->management()->users()->get($connection));
+                    $api = $this->results($this->getManagement()->users->get($connection));
 
                     if (null !== $api) {
                         // Delete the Auth0 counterpart account
-                        $this->getSdk()->management()->users()->delete($connection);
+                        $this->getManagement()->users->delete($connection);
                     }
                 }
             }
@@ -157,7 +163,7 @@ final class Sync extends Base
 
             if (null !== $connections) {
                 foreach ($connections as $connection) {
-                    $api = $this->getResults($this->getSdk()->management()->users()->get($connection->auth0));
+                    $api = $this->results($this->getManagement()->users->get($connection->auth0));
 
                     if (null !== $api) {
                         $connectionId = $api['user_id'] ?? null;
@@ -168,16 +174,18 @@ final class Sync extends Base
 
                         $currentEmail = $api['email'] ?? '';
 
-                        $this->getSdk()->management()->users()->update($connectionId, [
+                        $this->getManagement()->users->update($connectionId, new UpdateUserRequestContent([
+                            'email' => $user->user_email,
                             'name' => $user->display_name,
                             'nickname' => $user->nickname,
-                            'given_name' => $user->user_firstname,
-                            'family_name' => $user->user_lastname,
-                            'email' => $user->user_email,
-                        ]);
+                            'givenName' => $user->user_firstname,
+                            'familyName' => $user->user_lastname,
+                        ]));
 
                         if ($user->user_email !== $currentEmail) {
-                            $this->getSdk()->management()->tickets()->createEmailVerification($connectionId);
+                            $this->getManagement()->tickets->verifyEmail(new VerifyEmailTicketRequestContent([
+                                'userId' => $connectionId,
+                            ]));
                         }
                     }
                 }
@@ -194,12 +202,12 @@ final class Sync extends Base
         }
 
         if (null !== $dbConnection) {
-            $response = $this->getResults($this->getSdk()->management()->connections()->get($dbConnection));
+            $response = $this->results($this->getManagement()->connections->get($dbConnection));
 
-            if ($response) {
+            if (null !== $response && isset($response['name'])) {
                 $dbConnectionName[$dbConnection] = $response['name'];
 
-                return $response['name'] ?? $dbConnection;
+                return $response['name'];
             }
         }
 
@@ -232,19 +240,29 @@ final class Sync extends Base
 
         foreach ($queue as $singleQueue) {
             if (null !== $dbConnection) {
-                $payload = json_decode($singleQueue->payload, true, 512, JSON_THROW_ON_ERROR);
+                try {
+                    $payload = json_decode($singleQueue->payload, true, 512, JSON_THROW_ON_ERROR);
 
-                if (isset($payload['event'])) {
-                    if ('wp_user_created' === $payload['event'] && $enabledEvents['wp_user_created']) {
-                        $this->eventUserCreated($dbConnection, $payload);
+                    if (isset($payload['event'])) {
+                        if ('wp_user_created' === $payload['event'] && $enabledEvents['wp_user_created']) {
+                            $this->eventUserCreated($dbConnection, $payload);
+                        }
+
+                        if ('wp_user_deleted' === $payload['event'] && $enabledEvents['wp_user_deleted']) {
+                            $this->eventUserDeleted($dbConnection, $payload);
+                        }
+
+                        if ('wp_user_updated' === $payload['event'] && $enabledEvents['wp_user_updated']) {
+                            $this->eventUserUpdated($dbConnection, $payload);
+                        }
                     }
-
-                    if ('wp_user_deleted' === $payload['event'] && $enabledEvents['wp_user_deleted']) {
-                        $this->eventUserDeleted($dbConnection, $payload);
-                    }
-
-                    if ('wp_user_updated' === $payload['event'] && $enabledEvents['wp_user_updated']) {
-                        $this->eventUserUpdated($dbConnection, $payload);
+                } catch (Throwable $throwable) {
+                    // A single failed item must not abort draining the rest of
+                    // the queue; the row is still removed below to avoid a
+                    // poison message blocking the queue indefinitely.
+                    try {
+                        error_log($throwable->getMessage());
+                    } catch (Throwable) {
                     }
                 }
             }
@@ -272,12 +290,23 @@ final class Sync extends Base
         return $this->getPlugin()->getClassInstance(Authentication::class);
     }
 
-    private function getResults(ResponseInterface $response, int $expectedStatusCode = 200): ?array
+    /**
+     * Normalize a v9 Management response object into the snake_case array shape
+     * the rest of this class consumes. v9 endpoints return differently-typed
+     * response classes, but every one exposes a uniform jsonSerialize() that
+     * matches the v8 decoded-body shape, so serializing is the regeneration-safe
+     * way to read fields rather than relying on per-endpoint typed getters.
+     *
+     * @return ?array<string, mixed>
+     */
+    private function results(?JsonSerializable $response): ?array
     {
-        if (HttpResponse::wasSuccessful($response, $expectedStatusCode)) {
-            return HttpResponse::decodeContent($response);
+        if (! $response instanceof JsonSerializable) {
+            return null;
         }
 
-        return null;
+        $serialized = $response->jsonSerialize();
+
+        return is_array($serialized) ? $serialized : null;
     }
 }

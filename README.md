@@ -5,7 +5,7 @@ WordPress Plugin for [Auth0](https://auth0.com) Authentication
 [![License](https://img.shields.io/packagist/l/auth0/auth0-php)](https://doge.mit-license.org/)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/auth0/wordpress)
 
-:rocket: [Getting Started](#getting-started) - :computer: [SDK Usage](#sdk-usage) - 📆 [Support Policy](#support-policy) - :speech_balloon: [Feedback](#feedback)
+:rocket: [Getting Started](#getting-started) - :sparkles: [Features](#features) - :computer: [SDK Usage](#sdk-usage) - 📆 [Support Policy](#support-policy) - :speech_balloon: [Feedback](#feedback)
 
 ## Overview
 
@@ -14,14 +14,14 @@ The Auth0 WordPress plugin replaces the standard WordPress login flow with a new
 > [!IMPORTANT]  
 > This plugin is **NOT** a SDK (Software Development Kit.) It's APIs are internal and not intended for developers to extend directly. We do not support altering the plugin's behavior or integrating it in any way beyond what is outlined in this README. If you're looking to build a more extensive integration, please create a solution using the [Auth0-PHP SDK](https://github.com/auth0/auth0-php) instead.
 
-> [!WARNING]  
-> v4 of the plugin is no longer supported as of June 2023. We are no longer providing new features or bugfixes for that release. Please upgrade to v5 as soon as possible.
+> [!NOTE]  
+> Upgrading from 5.x? The 6.0 release moves the plugin onto [auth0-php v9](https://github.com/auth0/auth0-php/tree/v9) and raises the minimum PHP version to 8.2. The built-in features (login, logout, callback, sessions, and User Sync) work unchanged, but custom code that calls the Management API must move from `getSdk()->management()` to the new `getManagement()` accessor. See [UPGRADING.md](./UPGRADING.md) for details.
 
 ## Getting Started
 
 ### Requirements
 
-- PHP 8.1+
+- PHP 8.2+
 - [Most recent version of WordPress](https://wordpress.org/news/category/releases/)
 - Database credentials with table creation permissions
 
@@ -62,7 +62,7 @@ For [Bedrock](https://roots.io/bedrock/) installations, you'll usually run this 
 For standard WordPress installations, this command can be run from the `wp-content/plugins` sub-directory.
 
 ```
-composer require symfony/http-client nyholm/psr7 auth0/wordpress:^5.0
+composer require symfony/http-client nyholm/psr7 auth0/wordpress:^6.0
 ```
 
 <p><details>
@@ -166,20 +166,63 @@ The plugin uses WordPress' [background task manager](https://developer.wordpress
 
 By default, WordPress' task manager runs on every page load, which is inadvisable for production sites. For best performance and reliability, please ensure you have configured WordPress to use a [cron job](https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/) to run these tasks periodically instead.
 
+## Features
+
+### Authentication with Universal Login
+
+The plugin hands authentication over to Auth0's Universal Login. Visitors sign in through your Auth0 tenant rather than the default WordPress login form, which lets you layer on Auth0 capabilities such as MFA, SSO, Passwordless, and Passkeys without changing your WordPress site. Authentication is turned on with a single "Enable Authentication" toggle once your Domain, Client ID, and Client Secret are configured.
+
+### WordPress user management
+
+You control how Auth0 logins map onto WordPress accounts. You can match an incoming Auth0 user to an existing WordPress account flexibly (by email) or strictly, decide whether a login without a matching WordPress account is denied or provisions a brand-new account, assign the default role granted to newly created accounts, and optionally allow Passwordless connections.
+
+### User synchronization
+
+The plugin can keep an Auth0 database connection in sync with your WordPress users. When enabled, creating, updating, or deleting a WordPress user is mirrored to the matching Auth0 user: new accounts are created (with a password-change ticket so the user can set their own password), profile changes are pushed (with an email-verification ticket when the email changes), and deletions are propagated. For performance and reliability the sync runs in the background through [WordPress' Cron](https://developer.wordpress.org/plugins/cron/) rather than blocking the request, and you can choose the sync frequency and which of the three event types (creation, update, deletion) are synchronized.
+
+### Advanced configuration
+
+A dedicated Advanced screen exposes the deeper Auth0 capabilities for sites that need them:
+
+- **Custom Domain, API Audiences, and Organizations** support for the Authentication API and token handling.
+- **Session handling** — pairing WordPress and Auth0 sessions, rolling sessions, refresh tokens, configurable session lifetime, and a choice of device storage method.
+- **Session cookies** — control over the cookie secret, domain, path, SSL requirement, SameSite policy, and expiration.
+- **Token handling** — JWKS caching for signature verification.
+- **Back-Channel Logout** — accept Auth0-initiated logout so a session ended at Auth0 also ends in WordPress. (Requires a tenant with this feature enabled.)
+- **WordPress login fallback** — an optional escape hatch (with its own secret) to reach the standard WordPress login while Auth0 authentication is enabled.
+
 ## SDK Usage
 
 The plugin is built on top of [Auth0-PHP](https://github.com/auth0/auth0-PHP) — Auth0's full-featured PHP SDK for Authentication and Management APIs.
 
 For custom WordPress development, please do not extend the plugin's classes themselves, as this is not supported. Nearly all of the plugin's APIs are considered `internal` and will change over time, most likely breaking any custom extension built upon them.
 
-Instead, please take advantage of the full PHP SDK that the plugin is built upon. You can use the plugin's `getSdk()` method to retrieve a configured instance of the SDK, ready for use. This method can be called from the plugin's global `wpAuth0()` helper, which returns the WordPress plugin itself.
+Instead, please take advantage of the full PHP SDK that the plugin is built upon. The plugin exposes two accessors from its global `wpAuth0()` helper (which returns the WordPress plugin itself):
+
+- `getSdk()` returns a configured `Auth0\SDK\Auth0` instance for the Authentication API and session handling.
+- `getManagement()` returns a configured Management API client, built from the Domain, Client ID, and Client Secret in your plugin settings. It fetches and caches a client credentials token for you automatically.
 
 ```php
 <?php
 
-$plugin = wpAuth0(); // Returns an instanceof Auth0\WordPress\Plugin
-   $sdk = wpAuth0()->getSdk(); // Returns an instanceof Auth0\SDK\Auth0
+use Auth0\SDK\API\Management\Users\Requests\ListUsersRequestParameters;
+
+$plugin = wpAuth0();          // Returns an instanceof Auth0\WordPress\Plugin
+$sdk = wpAuth0()->getSdk();    // Returns an instanceof Auth0\SDK\Auth0
+
+// Management API (v9): sub-resources are reached by property access.
+$management = wpAuth0()->getManagement();
+$users = $management->users->list(
+    new ListUsersRequestParameters(['perPage' => 25, 'includeTotals' => true])
+);
+
+foreach ($users as $user) {
+    echo $user->getEmail();
+}
 ```
+
+> [!NOTE]  
+> As of 6.0, the Management API uses [auth0-php v9](https://github.com/auth0/auth0-php/tree/v9). The old `getSdk()->management()` entry point is no longer functional. If you are upgrading custom code from 5.x, see [UPGRADING.md](./UPGRADING.md) for the full set of changes.
 
 Please direct questions about developing with the Auth0-PHP SDK to the [Auth0 Community](https://community.auth0.com), and issues or feature requests to [it's respective repository](https://github.com/auth0/auth0-PHP). Documentations and examples on working with the Auth0-PHP SDKs are also available from [its repository](https://github.com/auth0/auth0-PHP).
 
@@ -190,9 +233,10 @@ Please direct questions about developing with the Auth0-PHP SDK to the [Auth0 Co
 
 | Plugin Version | WordPress Version | PHP Version | Support Ends |
 | -------------- | ----------------- | ----------- | ------------ |
-| 5              | 6                 | 8.3         | Nov 2026     |
-|                |                   | 8.2         | Dec 2025     |
-|                |                   | 8.1         | Nov 2024     |
+| 6              | 6                 | 8.4         | Dec 2028     |
+|                |                   | 8.3         | Dec 2027     |
+|                |                   | 8.2         | Dec 2026     |
+| 5              | 6                 | 8.1         | Dec 2025     |
 
 Composer and WordPress do not offer upgrades to incompatible versions. Therefore, we regularly deprecate support within the plugin for PHP or WordPress versions that have reached end-of-life. These deprecations are not considered breaking changes and will not result in a major version bump.
 

@@ -20,5 +20,10 @@ private-signing-key.pem
 build.zip
 build.zip.sig
 
+# build.sh output artifacts (renamed plugin folder + signed release zips)
+wp-auth0
+Auth0_WordPress_*.zip
+Auth0_WordPress_*.zip.sig
+
 # AI tools
 .claude

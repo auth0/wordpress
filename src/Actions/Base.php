@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Actions;
 
+use Auth0\SDK\API\Management\Wrapper\ManagementClient;
 use Auth0\SDK\Auth0;
 use Auth0\WordPress\{Hooks, Plugin};
 
@@ -67,6 +68,11 @@ abstract class Base
         }
 
         return $default;
+    }
+
+    final public function getManagement(): ManagementClient
+    {
+        return $this->plugin->getManagement();
     }
 
     final public function getSdk(): Auth0

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress;
 
+use Auth0\SDK\API\Management\Wrapper\{ManagementClient, ManagementClientOptions};
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\WordPress\Actions\{Authentication as AuthenticationActions, Base as Actions, Configuration as ConfigurationActions, Sync as SyncActions, Tools as ToolsActions, Updates as UpdatesActions};
@@ -34,6 +35,8 @@ final class Plugin
      * @var mixed[]
      */
     private array $registry = [];
+
+    private ?ManagementClient $management = null;
 
     public function __construct(
         private ?Auth0 $auth0,
@@ -166,6 +169,41 @@ final class Plugin
         $this->auth0 ??= new Auth0($this->getConfiguration());
 
         return $this->auth0;
+    }
+
+    /**
+     * Returns a v9 Management API client built from the plugin's existing
+     * configuration. Use this instead of the v8-style `getSdk()->management()`,
+     * which is non-functional in auth0-php v9.
+     *
+     * The wrapper fetches and caches a client-credentials token internally. The
+     * plugin's own PSR-18 HTTP client is injected so the scoped build is used
+     * rather than runtime discovery, and the token is cached in the same
+     * WP_Object_Cache pool the SDK config uses (unless caching is disabled).
+     */
+    public function getManagement(): ManagementClient
+    {
+        if (! $this->management instanceof ManagementClient) {
+            $configuration = $this->getConfiguration();
+
+            // The 'auth0' cache group is not registered as global, so in a
+            // multisite network WordPress prefixes its keys with the current
+            // blog id automatically. That keeps each site's Management token
+            // isolated without any per-site keying here.
+            $tokenCache = 'disable' !== $this->getOption('tokens', 'caching')
+                ? new WpObjectCachePool()
+                : null;
+
+            $this->management = new ManagementClient(new ManagementClientOptions(
+                domain: (string) $configuration->getDomain(),
+                clientId: $configuration->getClientId(),
+                clientSecret: $configuration->getClientSecret(),
+                httpClient: Factory::getClient(),
+                tokenCache: $tokenCache,
+            ));
+        }
+
+        return $this->management;
     }
 
     /**
