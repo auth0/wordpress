@@ -9,6 +9,7 @@ use Auth0\SDK\API\Management\Tickets\Requests\{ChangePasswordTicketRequestConten
 use Auth0\SDK\API\Management\Users\Requests\{CreateUserRequestContent, ListUsersByEmailRequestParameters, UpdateUserRequestContent};
 use Auth0\WordPress\Database;
 use JsonSerializable;
+use Psr\Http\Client\ClientExceptionInterface;
 use Throwable;
 use WP_User;
 
@@ -198,7 +199,7 @@ final class Sync extends Base
         static $dbConnectionName = [];
 
         if (isset($dbConnectionName[$dbConnection])) {
-            return $dbConnectionName[$dbConnectionName];
+            return $dbConnectionName[$dbConnection];
         }
 
         if (null !== $dbConnection) {
@@ -221,6 +222,11 @@ final class Sync extends Base
 
     public function onBackgroundSync(): void
     {
+        // Leave the queue intact until configured, rather than failing per item.
+        if (! $this->isPluginReady()) {
+            return;
+        }
+
         $database = $this->getPlugin()->database();
         $table = $database->getTableName(Database::CONST_TABLE_SYNC);
         $network = get_current_network_id();
@@ -256,14 +262,24 @@ final class Sync extends Base
                             $this->eventUserUpdated($dbConnection, $payload);
                         }
                     }
-                } catch (Throwable $throwable) {
-                    // A single failed item must not abort draining the rest of
-                    // the queue; the row is still removed below to avoid a
-                    // poison message blocking the queue indefinitely.
-                    try {
-                        error_log($throwable->getMessage());
-                    } catch (Throwable) {
+                } catch (Auth0ApiException $auth0ApiException) {
+                    $status = $auth0ApiException->getCode();
+
+                    // Keep the row for the next cron pass on transient failures.
+                    if (429 === $status || $status >= 500) {
+                        error_log($auth0ApiException->getMessage());
+
+                        continue;
                     }
+
+                    error_log($auth0ApiException->getMessage());
+                } catch (ClientExceptionInterface $clientException) {
+                    // Transport failures are transient, so keep the row for retry.
+                    error_log($clientException->getMessage());
+
+                    continue;
+                } catch (Throwable $throwable) {
+                    error_log($throwable->getMessage());
                 }
             }
 

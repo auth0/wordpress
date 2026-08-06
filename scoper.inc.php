@@ -83,11 +83,16 @@ return [
         '/^update_/',
         '/^delete_/',
         '/^set_/',
+        // WordPress globals not matched by the prefixes above.
+        'checked',
+        'maybe_create_table',
+        'nocache_headers',
+        'submit_button',
     ],
 
-	'expose-global-constants' => true,
-	'expose-global-classes'   => true,
-	'expose-global-functions' => true,
+	'expose-global-constants' => false,
+	'expose-global-classes'   => false,
+	'expose-global-functions' => false,
 
     'patchers' => [],
 ];

@@ -195,6 +195,7 @@ final class Plugin
                 : null;
 
             $this->management = new ManagementClient(new ManagementClientOptions(
+                // Management always uses the tenant domain, not a custom domain, for its audience and token endpoint.
                 domain: (string) $configuration->getDomain(),
                 clientId: $configuration->getClientId(),
                 clientSecret: $configuration->getClientSecret(),
