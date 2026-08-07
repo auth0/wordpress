@@ -81,3 +81,5 @@ Introducing V5 of WP-Auth0 ("Login by Auth0"), a major redesign and upgrade to o
 V5 represents a major step forward for our WordPress plugin, and we're excited to see what you build with it!
 
 It's important to note, if you wrote custom theme code or plugins for your WordPress site that targeted previous versions of the plugin, you may need to adjust those themes or plugins to adapt to the new version.
+
+<!-- release pipeline dry-run marker, safe to remove -->
