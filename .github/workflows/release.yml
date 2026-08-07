@@ -1,0 +1,70 @@
+name: Create GitHub Release
+
+# Creates a git tag and GitHub release when a release/* PR is merged. The version
+# is taken from the branch name (release/X.Y.Z) and a -beta/-rc suffix marks it as a
+# prerelease. The signed plugin zip is built and attached manually afterwards, so
+# this workflow does not build, sign, or publish to WordPress.org.
+
+on:
+  pull_request:
+    types:
+      - closed
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: version
+        name: Derive version and prerelease flag from the branch name
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          version="${HEAD_REF#release/}"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          if [[ "${version}" == *-* ]]; then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fail if the tag or release already exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.version.outputs.version }}
+        run: |
+          if gh release view "${TAG}" >/dev/null 2>&1; then
+            echo "Release ${TAG} already exists."
+            exit 1
+          fi
+          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+            echo "Tag ${TAG} already exists."
+            exit 1
+          fi
+
+      - name: Create tag and GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.version.outputs.version }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
+          BODY: ${{ github.event.pull_request.body }}
+          COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          notes="${BODY}"
+          if [ -z "${notes}" ]; then
+            notes="Release ${TAG}. See CHANGELOG.md for details."
+          fi
+
+          gh release create "${TAG}" \
+            --title "${TAG}" \
+            --target "${COMMIT}" \
+            --notes "${notes}" \
+            $([ "${PRERELEASE}" = "true" ] && echo "--prerelease")
