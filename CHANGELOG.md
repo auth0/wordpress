@@ -1,5 +1,29 @@
 # Change Log
 
+## [6.0.0-beta.0](https://github.com/auth0/wp-auth0/tree/6.0.0-beta.0) (2026-08-07)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/5.6.1...6.0.0-beta.0)
+
+This is a pre-release for the upcoming 6.x major. It moves the plugin onto auth0-php v9, which rewrites the Management API. The authentication flow is unchanged, and the migration is confined to the Management API surface used by background user sync.
+
+**Breaking Changes**
+
+- Bumped the `auth0/auth0-php` dependency from `^8.19` to `^9.0`, which rewrites the Management API
+- Raised the minimum PHP version from `8.1` to `8.2`
+- `getSdk()->management()` is non-functional with auth0-php v9 and throws a `TypeError`. Use the new `getManagement()` accessor instead
+
+**Added**
+
+- `Plugin::getManagement()` accessor returning a v9 `ManagementClient` built from the existing plugin configuration, with automatic client credentials token management and caching
+- `UPGRADING.md` 5.x to 6.x migration guide
+
+**Fixed**
+
+- Background user sync now retries transient Management API failures (429, 5xx) on the next cron pass instead of dropping the queued event
+
+**Unchanged**
+
+- The authentication flow (login, logout, callback, session handling) behaves exactly as in 5.x
+
 ## [5.6.1](https://github.com/auth0/wp-auth0/tree/5.6.1) (2026-05-05)
 
 ### Fixed

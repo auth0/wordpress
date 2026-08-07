@@ -4,10 +4,10 @@
  * Plugin Name:       Auth0
  * Plugin URL:        https://github.com/auth0/wordpress
  * Description:       Supercharge your WordPress website with Auth0. Improve account security, add support for multifactor, enable social, passwordless and enterprise connections, and much more.
- * Version:           5.6.1
+ * Version:           6.0.0-beta.0
  * Requires at least: 6.0
  * Tested up to:      7.0
- * Stable tag:        5.6.1
+ * Stable tag:        6.0.0-beta.0
  * Requires PHP:      8.2
  * Author:            Auth0
  * Author URI:        https://auth0.com
@@ -22,7 +22,7 @@ use Auth0\WordPress\Plugin;
 use Auth0\SDK\Auth0 as Sdk;
 use Auth0\SDK\Configuration\SdkConfiguration as Configuration;
 
-define('WP_AUTH0_VERSION', '5.6.1');
+define('WP_AUTH0_VERSION', '6.0.0-beta.0');
 
 // Require loading through WordPress
 if (! defined('ABSPATH')) {
