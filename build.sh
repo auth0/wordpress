@@ -34,18 +34,24 @@ echo "Version: $version"
 semver "$version" version
 filename="Auth0_WordPress_${version}.zip"
 
+PLUGIN_NAME="wp-auth0"
+
 echo "# Cleaning up environment..."
 rm -f build.zip
 rm -f build.zip.sig
 rm -rf build
+rm -rf ${PLUGIN_NAME}
 rm -rf vendor
-rm composer.lock
+rm -f composer.lock
 
 echo "# Executing Composer..."
 composer update --no-plugins
 
 echo "# Prefixing Dependencies..."
-vendor/bin/php-scoper add-prefix --force
+php -d memory_limit=512M vendor/bin/php-scoper add-prefix --force
+
+echo "# Copying plugin entry file..."
+cp wpAuth0.php build/wpAuth0.php
 
 echo "# Finalizing Build..."
 cd build
@@ -54,8 +60,21 @@ rm composer.json
 rm composer.lock
 cd ..
 
+echo "# Verifying scoped build (checking for incorrectly prefixed WordPress globals)..."
+if grep -rn 'Auth0\\WordPress\\Vendor\\WP_' build/src/; then
+    echo ""
+    echo "ERROR: php-scoper has incorrectly prefixed WordPress global classes!"
+    echo "The above files contain 'Auth0\\WordPress\\Vendor\\WP_*' references that will cause fatal errors."
+    echo "Check scoper.inc.php expose-global-classes setting."
+    exit 1
+fi
+echo "  No incorrectly prefixed WordPress globals found. Build OK."
+
+echo "# Renaming build folder to ${PLUGIN_NAME}..."
+mv build ${PLUGIN_NAME}
+
 echo "# Archiving Build..."
-zip -vr ${filename} build/ -x "*.DS_Store"
+zip -vr ${filename} ${PLUGIN_NAME}/ -x "*.DS_Store"
 
 echo "# Signing Build..."
 openssl dgst -sign private-signing-key.pem -sha256 -out ${filename}.sig -binary ${filename}

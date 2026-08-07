@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\WordPress\Actions;
 
-use Auth0\SDK\Utility\HttpResponse;
 use Auth0\WordPress\Utilities\{Render, Sanitize};
+use Throwable;
 
 use function array_slice;
 use function count;
@@ -934,12 +934,16 @@ final class Configuration extends Base
             }
         }
 
-        // Check if connection is valid
-
-        $response = $this->getSdk()->management()->connections()->get($filteredDatabase);
-
-        if (! HttpResponse::wasSuccessful($response)) {
-            $filteredDatabase = '';
+        // Check if connection is valid. In v9 a non-2xx (e.g. an unknown
+        // connection id) raises Auth0ApiException rather than returning a
+        // response to inspect, so a thrown error means "not valid" and we
+        // clear the selection.
+        if ('' !== $filteredDatabase) {
+            try {
+                $this->getManagement()->connections->get($filteredDatabase);
+            } catch (Throwable) {
+                $filteredDatabase = '';
+            }
         }
 
         // Setup background sync task: -----
