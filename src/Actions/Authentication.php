@@ -536,19 +536,19 @@ final class Authentication extends Base
                     wp_set_current_user($wpUser->ID);
                     wp_set_auth_cookie($wpUser->ID, true);
                     do_action('wp_login', $wpUser->user_login, $wpUser);
-                    wp_redirect('/');
+                    wp_redirect(get_site_url());
                     exit;
                 }
             }
         }
 
         if (null !== $error) {
-            wp_redirect('/');
+            wp_redirect(get_site_url());
             exit;
         }
 
         if ($exchangeParameters && null === $error && (0 !== wp_get_current_user()->ID || null !== $this->getSdk()->getCredentials())) {
-            wp_redirect('/');
+            wp_redirect(get_site_url());
             exit;
         }
 
@@ -559,7 +559,7 @@ final class Authentication extends Base
     public function onExchangeFailed(Throwable $_)
     {
         // Custom hook ('auth0_token_exchange_failed') to register when token exchange fails.
-        wp_redirect('/');
+        wp_redirect(get_site_url());
         exit;
     }
 
