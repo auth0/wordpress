@@ -537,7 +537,7 @@ final class Authentication extends Base
                     wp_set_auth_cookie($wpUser->ID, true);
                     do_action('wp_login', $wpUser->user_login, $wpUser);
 
-                    $destination = '/';
+                    $destination = get_site_url();
 
                     if (null !== $state) {
                         $transientKey = 'auth0_redirect_' . hash('sha256', $state);
