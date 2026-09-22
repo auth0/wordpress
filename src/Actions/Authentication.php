@@ -41,6 +41,7 @@ final class Authentication extends Base
 
         'login_form_logout' => 'onLogout',
         'auth0_logout' => 'onLogout',
+        'auth0_login_failed' => ['onLoginFailed', 2],
         'auth0_token_exchange_failed' => 'onExchangeFailed',
 
         'before_signup_header' => 'onRegistration',
@@ -482,9 +483,12 @@ final class Authentication extends Base
         $state = $this->getSdk()->getRequestParameter('state');
         $exchangeParameters = null !== $code && null !== $state;
 
-        // Check if authentication flow error parameter is present (?error)
+        // Check if authentication flow error parameters are present (?error, ?error_description)
         $error = $this->getSdk()
             ->getRequestParameter('error');
+
+        $errorDescription = $this->getSdk()
+            ->getRequestParameter('error_description');
 
         // Are token exchange parameters present?
         if ($exchangeParameters) {
@@ -543,8 +547,9 @@ final class Authentication extends Base
         }
 
         if (null !== $error) {
-            wp_redirect('/');
-            exit;
+            error_log('Auth0 login error: ' . $error . ' - ' . ($errorDescription ?? ''));
+            do_action('auth0_login_failed', $error, $errorDescription ?? '');
+            return;
         }
 
         if ($exchangeParameters && null === $error && (0 !== wp_get_current_user()->ID || null !== $this->getSdk()->getCredentials())) {
@@ -556,11 +561,14 @@ final class Authentication extends Base
         exit;
     }
 
-    public function onExchangeFailed(Throwable $_)
+    public function onLoginFailed(string $error, string $errorDescription): void
     {
-        // Custom hook ('auth0_token_exchange_failed') to register when token exchange fails.
-        wp_redirect('/');
-        exit;
+        wp_die('There was a problem with your log in.', 'Login Error', ['response' => 200]);
+    }
+
+    public function onExchangeFailed(Throwable $_): void
+    {
+        wp_die('There was a problem completing your sign-in.', 'Login Error', ['response' => 200]);
     }
 
     public function onLogout(): never
