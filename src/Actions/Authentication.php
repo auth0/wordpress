@@ -561,13 +561,16 @@ final class Authentication extends Base
         }
 
         if ($exchangeParameters && null === $error && (0 !== wp_get_current_user()->ID || null !== $this->getSdk()->getCredentials())) {
-            wp_redirect('/');
+            if (null !== $state) {
+                delete_transient('auth0_redirect_' . hash('sha256', $state));
+            }
+            wp_redirect(get_site_url());
             exit;
         }
 
         $loginParams = [];
 
-        if (isset($_REQUEST['redirect_to'])) {
+        if (isset($_REQUEST['redirect_to']) && is_string($_REQUEST['redirect_to'])) {
             $redirectTo = wp_validate_redirect(esc_url_raw($_REQUEST['redirect_to']), '');
 
             if ('' !== $redirectTo) {
