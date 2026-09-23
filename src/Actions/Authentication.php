@@ -556,7 +556,7 @@ final class Authentication extends Base
         }
 
         if (null !== $error) {
-            wp_redirect('/');
+            wp_redirect(get_site_url());
             exit;
         }
 
@@ -587,7 +587,7 @@ final class Authentication extends Base
     public function onExchangeFailed(Throwable $_)
     {
         // Custom hook ('auth0_token_exchange_failed') to register when token exchange fails.
-        wp_redirect('/');
+        wp_redirect(get_site_url());
         exit;
     }
 
