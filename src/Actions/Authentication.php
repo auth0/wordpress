@@ -540,7 +540,20 @@ final class Authentication extends Base
                     wp_set_current_user($wpUser->ID);
                     wp_set_auth_cookie($wpUser->ID, true);
                     do_action('wp_login', $wpUser->user_login, $wpUser);
-                    wp_redirect('/');
+
+                    $destination = get_site_url();
+
+                    if (null !== $state) {
+                        $transientKey = 'auth0_redirect_' . hash('sha256', $state);
+                        $stored = get_transient($transientKey);
+
+                        if (false !== $stored) {
+                            delete_transient($transientKey);
+                            $destination = (string) $stored;
+                        }
+                    }
+
+                    wp_redirect($destination);
                     exit;
                 }
             }
@@ -553,11 +566,26 @@ final class Authentication extends Base
         }
 
         if ($exchangeParameters && null === $error && (0 !== wp_get_current_user()->ID || null !== $this->getSdk()->getCredentials())) {
-            wp_redirect('/');
+            if (null !== $state) {
+                delete_transient('auth0_redirect_' . hash('sha256', $state));
+            }
+            wp_redirect(get_site_url());
             exit;
         }
 
-        wp_redirect($this->getSdk()->login());
+        $loginParams = [];
+
+        if (isset($_REQUEST['redirect_to']) && is_string($_REQUEST['redirect_to'])) {
+            $redirectTo = wp_validate_redirect(esc_url_raw($_REQUEST['redirect_to']), '');
+
+            if ('' !== $redirectTo) {
+                $stateKey = wp_generate_password(32, false);
+                set_transient('auth0_redirect_' . hash('sha256', $stateKey), $redirectTo, 10 * MINUTE_IN_SECONDS);
+                $loginParams['state'] = $stateKey;
+            }
+        }
+
+        wp_redirect($this->getSdk()->login(params: $loginParams));
         exit;
     }
 
