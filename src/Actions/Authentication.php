@@ -41,7 +41,7 @@ final class Authentication extends Base
 
         'login_form_logout' => 'onLogout',
         'auth0_logout' => 'onLogout',
-        'auth0_login_failed' => ['onLoginFailed', 2],
+        'auth0_login_failed' => ['onLoginFailed', 2, 20],
         'auth0_token_exchange_failed' => 'onExchangeFailed',
 
         'before_signup_header' => 'onRegistration',
@@ -560,7 +560,7 @@ final class Authentication extends Base
         }
 
         if (null !== $error) {
-            error_log('Auth0 login error: ' . $error . ' - ' . ($errorDescription ?? ''));
+            error_log('Auth0 login error: ' . str_replace(["\r", "\n"], ' ', $error) . ' - ' . str_replace(["\r", "\n"], ' ', $errorDescription ?? ''));
             do_action('auth0_login_failed', $error, $errorDescription ?? '');
             return;
         }
@@ -589,14 +589,14 @@ final class Authentication extends Base
         exit;
     }
 
-    public function onLoginFailed(string $error, string $errorDescription): void
+    public function onLoginFailed(string $_error, string $_errorDescription): void
     {
-        wp_die('There was a problem with your log in.', 'Login Error', ['response' => 200]);
+        wp_die('There was a problem signing in.', 'Login Error', ['response' => 200]);
     }
 
     public function onExchangeFailed(Throwable $_): void
     {
-        wp_die('There was a problem completing your sign-in.', 'Login Error', ['response' => 200]);
+        wp_die('There was a problem completing your sign in.', 'Login Error', ['response' => 200]);
     }
 
     public function onLogout(): never
