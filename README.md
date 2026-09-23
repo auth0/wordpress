@@ -170,7 +170,7 @@ By default, WordPress' task manager runs on every page load, which is inadvisabl
 
 ### Authentication with Universal Login
 
-The plugin hands authentication over to Auth0's Universal Login. Visitors sign in through your Auth0 tenant rather than the default WordPress login form, which lets you layer on Auth0 capabilities such as MFA, SSO, Passwordless, and Passkeys without changing your WordPress site. Authentication is turned on with a single "Enable Authentication" toggle once your Domain, Client ID, and Client Secret are configured.
+The plugin hands authentication over to Auth0's Universal Login. Visitors sign in through your Auth0 tenant rather than the default WordPress login form, which lets you layer on Auth0 capabilities such as MFA, SSO, Passwordless, and Passkeys without changing your WordPress site. Authentication is turned on with a single "Enable Authentication" toggle once your Domain, Client ID, and Client Secret are configured. After a successful login, the plugin respects WordPress's standard `redirect_to` parameter. If a logged-out user visits a protected page, they are returned to that page after authenticating.
 
 ### WordPress user management
 
