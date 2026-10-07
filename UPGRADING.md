@@ -2,7 +2,7 @@
 
 ## 5.x to 6.x
 
-The 6.0 release moves the plugin onto [auth0-php v9](https://github.com/auth0/auth0-php/tree/v9), which rewrites the Management API. The authentication surface (login, logout, callback, session handling) is unchanged, so most sites only need the environment updates below.
+The 6.0 release moves the plugin onto [auth0-php v9](https://github.com/auth0/auth0-php/tree/main), which rewrites the Management API. The authentication surface (login, logout, callback, session handling) is unchanged, so most sites only need the environment updates below.
 
 Check that your environment is compatible with 6.0's requirements before upgrading:
 
@@ -42,7 +42,7 @@ Update your customizations, if necessary:
 
   Inside a plugin action or filter class (anything extending `Auth0\WordPress\Actions\Base` or `Auth0\WordPress\Filters\Base`), the same client is available as `$this->getManagement()`.
 
-- If your custom code calls the Management API directly, review the [auth0-php v9 migration guide](https://github.com/auth0/auth0-php/blob/v9/v9_MIGRATION_GUIDE.md) for the full set of changes. The most common adjustments are:
+- If your custom code calls the Management API directly, review the [auth0-php v9 migration guide](https://github.com/auth0/auth0-php/blob/main/v9_MIGRATION_GUIDE.md) for the full set of changes. The most common adjustments are:
   - Sub-resources are reached by property access, not method calls: `->users->list()` rather than `->users()->getAll()`.
   - `users->list()` returns a `Pager` you iterate with `foreach`. It is a lazy iterator that makes further requests as you consume it, so `count()` and array access will not behave the way a plain array would.
   - Responses are typed objects instead of raw PSR-7 responses. Call `$response->jsonSerialize()` to get the same snake_case array the v8 `HttpResponse::decodeContent()` returned, or use the typed getters (`$response->getEmail()`).
