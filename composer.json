@@ -36,7 +36,7 @@
         "php": "^8.2",
         "ext-json": "*",
         "ext-openssl": "*",
-        "auth0/auth0-php": "^9.0@beta",
+        "auth0/auth0-php": "^9.0",
         "nyholm/psr7": "^1",
         "psr/cache": "^3.0"
     },

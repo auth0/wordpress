@@ -15,7 +15,7 @@ The Auth0 WordPress plugin replaces the standard WordPress login flow with a new
 > This plugin is **NOT** a SDK (Software Development Kit.) It's APIs are internal and not intended for developers to extend directly. We do not support altering the plugin's behavior or integrating it in any way beyond what is outlined in this README. If you're looking to build a more extensive integration, please create a solution using the [Auth0-PHP SDK](https://github.com/auth0/auth0-php) instead.
 
 > [!NOTE]  
-> Upgrading from 5.x? The 6.0 release moves the plugin onto [auth0-php v9](https://github.com/auth0/auth0-php/tree/v9) and raises the minimum PHP version to 8.2. The built-in features (login, logout, callback, sessions, and User Sync) work unchanged, but custom code that calls the Management API must move from `getSdk()->management()` to the new `getManagement()` accessor. See [UPGRADING.md](./UPGRADING.md) for details.
+> Upgrading from 5.x? The 6.0 release moves the plugin onto [auth0-php v9](https://github.com/auth0/auth0-php/tree/main) and raises the minimum PHP version to 8.2. The built-in features (login, logout, callback, sessions, and User Sync) work unchanged, but custom code that calls the Management API must move from `getSdk()->management()` to the new `getManagement()` accessor. See [UPGRADING.md](./UPGRADING.md) for details.
 
 ## Getting Started
 
@@ -222,7 +222,7 @@ foreach ($users as $user) {
 ```
 
 > [!NOTE]  
-> As of 6.0, the Management API uses [auth0-php v9](https://github.com/auth0/auth0-php/tree/v9). The old `getSdk()->management()` entry point is no longer functional. If you are upgrading custom code from 5.x, see [UPGRADING.md](./UPGRADING.md) for the full set of changes.
+> As of 6.0, the Management API uses [auth0-php v9](https://github.com/auth0/auth0-php/tree/main). The old `getSdk()->management()` entry point is no longer functional. If you are upgrading custom code from 5.x, see [UPGRADING.md](./UPGRADING.md) for the full set of changes.
 
 Please direct questions about developing with the Auth0-PHP SDK to the [Auth0 Community](https://community.auth0.com), and issues or feature requests to [it's respective repository](https://github.com/auth0/auth0-PHP). Documentations and examples on working with the Auth0-PHP SDKs are also available from [its repository](https://github.com/auth0/auth0-PHP).
 
