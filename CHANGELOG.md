@@ -1,5 +1,18 @@
 # Change Log
 
+## [6.0.0-beta.1](https://github.com/auth0/wp-auth0/tree/6.0.0-beta.1) (2026-10-08)
+[Full Changelog](https://github.com/auth0/wp-auth0/compare/6.0.0-beta.0...6.0.0-beta.1)
+
+### Fixed
+
+-   fix: respect redirect_to parameter after login [\#965](https://github.com/auth0/wordpress/pull/965) ([kishore7snehil](https://github.com/kishore7snehil))
+-   fix: use subsite URL for post-login redirects on Multisite [\#966](https://github.com/auth0/wordpress/pull/966) ([kishore7snehil](https://github.com/kishore7snehil))
+-   fix: show error page when Auth0 returns a login error [\#967](https://github.com/auth0/wordpress/pull/967) ([kishore7snehil](https://github.com/kishore7snehil))
+
+### Changed
+
+-   chore: point auth0-php v9 references to the stable release [\#977](https://github.com/auth0/wordpress/pull/977) ([kishore7snehil](https://github.com/kishore7snehil))
+
 ## [6.0.0-beta.0](https://github.com/auth0/wp-auth0/tree/6.0.0-beta.0) (2026-08-07)
 [Full Changelog](https://github.com/auth0/wp-auth0/compare/5.6.1...6.0.0-beta.0)
 
